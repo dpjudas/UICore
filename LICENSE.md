@@ -1,5 +1,5 @@
 
-UICore
+UICore  
 Copyright (c) 2015 The UICore Team
 
 This software is provided 'as-is', without any express or implied
@@ -18,5 +18,5 @@ freely, subject to the following restrictions:
    misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
 
-Note: Some of the libraries UICore may link to may have additional
+*Note*: Some of the libraries UICore may link to may have additional
 requirements or restrictions.
