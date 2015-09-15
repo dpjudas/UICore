@@ -113,8 +113,6 @@
     <ResourceCompile Include="Win32\configure.rc" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Win32\res\clanlib_banner.bmp" />
-    <None Include="Win32\res\clanlib_logo_ascii.bmp" />
     <None Include="Win32\res\configure.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

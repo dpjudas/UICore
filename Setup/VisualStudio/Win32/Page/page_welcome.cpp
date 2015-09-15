@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore SDK
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -18,7 +18,7 @@
 **     misrepresented as being the original software.
 **  3. This notice may not be removed or altered from any source distribution.
 **
-**  Note: Some of the libraries ClanLib may link to may have additional
+**  Note: Some of the libraries UICore may link to may have additional
 **  requirements or restrictions.
 **
 **  File Author(s):
@@ -34,10 +34,11 @@ PageWelcome::PageWelcome()
 {
 	memset(&propsheetpage, 0, sizeof(PROPSHEETPAGE));
 	propsheetpage.dwSize = sizeof(PROPSHEETPAGE);
-	propsheetpage.dwFlags = PSP_HIDEHEADER;
+	propsheetpage.dwFlags = PSP_USEHEADERTITLE;
 	propsheetpage.pszTemplate = MAKEINTRESOURCE(IDD_WELCOME_PAGE);
 	propsheetpage.pfnDlgProc = &PageWelcome::dialog_proc;
 	propsheetpage.lParam = (LPARAM) this;
+	propsheetpage.pszHeaderTitle = TEXT("Welcome!");
 
 	handle_propsheetpage = CreatePropertySheetPage(&propsheetpage);
 }
@@ -53,14 +54,12 @@ INT_PTR CALLBACK PageWelcome::dialog_proc(HWND hWnd, UINT uMsg, WPARAM wParam, L
 			SetWindowLongPtr(hWnd, GWL_USERDATA, propsheetpage->lParam);
 
 			LPCTSTR welcome_text =
-				TEXT("Welcome!\n")
-				TEXT("\n")
-				TEXT("This is the ClanLib configuration wizard. It will help you set up ")
-				TEXT("a sane ClanLib build environment and customize the build process ")
+				TEXT("This is the UICore configuration wizard. It will help you set up ")
+				TEXT("a sane UICore build environment and customize the build process ")
 				TEXT("for your needs.\n")
 				TEXT("\n")
 				TEXT("Enjoy.\n")
-				TEXT("The ClanLib Development Team.");
+				TEXT("The UICore Development Team.");
 			SendMessage(GetDlgItem(hWnd, IDC_WELCOME_TEXT), WM_SETTEXT, 0, (LPARAM) welcome_text);
 
 			// return FALSE if we set the focus

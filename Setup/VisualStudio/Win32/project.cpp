@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore SDK
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -18,7 +18,7 @@
 **     misrepresented as being the original software.
 **  3. This notice may not be removed or altered from any source distribution.
 **
-**  Note: Some of the libraries ClanLib may link to may have additional
+**  Note: Some of the libraries UICore may link to may have additional
 **  requirements or restrictions.
 **
 **  File Author(s):
@@ -60,10 +60,10 @@ Project::Project(
 	libs_debug(libs_list_debug)
 {
 	std::string lib_main_header;
-	lib_main_header = std::string("Sources\\API\\") + headername;
+	lib_main_header = std::string("Sources\\Include\\") + headername;
  	files.push_back(lib_main_header);
 
-	generate_dir(std::string("Sources\\API\\")+name, ignore_list);
+	generate_dir(std::string("Sources\\Include\\")+name, ignore_list);
 	generate_dir(std::string("Sources\\")+name, ignore_list);
 }
 

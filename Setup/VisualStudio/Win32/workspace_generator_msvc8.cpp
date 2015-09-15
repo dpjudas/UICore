@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore SDK
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -18,7 +18,7 @@
 **     misrepresented as being the original software.
 **  3. This notice may not be removed or altered from any source distribution.
 **
-**  Note: Some of the libraries ClanLib may link to may have additional
+**  Note: Some of the libraries UICore may link to may have additional
 **  requirements or restrictions.
 **
 **  File Author(s):
@@ -102,7 +102,7 @@ void WorkspaceGenerator_MSVC8::write_solution(const Workspace &workspace)
 	
 	std::string sln_filename;
 	std::string vcproj_filename;
-	sln_filename = "ClanLib.sln";
+	sln_filename = "UICore.sln";
 	vcproj_filename = ".vcxproj";
 
 	OutputWriter writer(sln_filename);
@@ -320,9 +320,7 @@ void WorkspaceGenerator_MSVC8::write_install_batch_file(const Workspace &workspa
 {
 	// create the install_libname.bat installation batch file:
 	{
-		std::string bat_file = "Projects\\install_clan";
-		bat_file += project.name.c_str();
-		bat_file += ".bat";
+		std::string bat_file = "Projects\\install_" + project.name + ".bat";
 
 		std::ofstream bat(bat_file.c_str());
 		bat << "mode con cp select=" << GetACP() << " > nul" << std::endl;
@@ -330,9 +328,8 @@ void WorkspaceGenerator_MSVC8::write_install_batch_file(const Workspace &workspa
 		install_mkdir(bat, workspace.output_lib_dir);
 
 		std::string instdir = workspace.output_include_dir.c_str();
-		instdir += "\\ClanLib";
-		install_mkdir(bat, "API\\", std::string(instdir), &project);
-		install_copydir(bat, "API\\", std::string(instdir), &project);
+		install_mkdir(bat, project.name, std::string(instdir), &project);
+		install_copydir(bat, project.name, std::string(instdir), &project);
 
 		bat << "copy %1 \"" << workspace.output_lib_dir.c_str() << "\\%4\" > nul" << std::endl;
 		if (target_android)	//TODO: Fixme
@@ -381,16 +378,7 @@ void WorkspaceGenerator_MSVC8::install_mkdir(
 		firstCall = false;
 	}
 
-	bool win9x = (versionInfo.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS);
-
-	if (win9x)
-	{
-		bat << "if not exist \"" << dest_dir << "\\nul\"" << " mkdir \"" << dest_dir << "\"" << std::endl;
-	}
-	else
-	{
-		bat << "if not exist \"" << dest_dir << "\"" << " mkdir \"" << dest_dir << "\"" << std::endl;
-	}
+	bat << "if not exist \"" << dest_dir << "\"" << " mkdir \"" << dest_dir << "\"" << std::endl;
 
 	std::string path = src_dir.c_str();
 	if (path[path.length() - 1] != '\\')
@@ -410,14 +398,8 @@ void WorkspaceGenerator_MSVC8::install_mkdir(
 			path += '\\';
 
 		path_dest = path_dest + project->name.c_str();
-		if (win9x)
-		{
-			bat << "if not exist \"" << std::string(path_dest) << "\\nul\"" << " mkdir \"" << std::string(path_dest) << "\"" << std::endl;
-		}
-		else
-		{
-			bat << "if not exist \"" << std::string(path_dest) << "\"" << " mkdir \"" << std::string(path_dest) << "\"" << std::endl;
-		}
+
+		bat << "if not exist \"" << std::string(path_dest) << "\"" << " mkdir \"" << std::string(path_dest) << "\"" << std::endl;
 
 		if (path_dest[path_dest.length() - 1] != '\\')
 			path_dest += '\\';
@@ -478,19 +460,15 @@ void WorkspaceGenerator_MSVC8::install_copydir(
 	{
 		// first time call: 
 		// - make sure we copy the 'module' api header
-		// - make sure we get API\\ModuleName\*.h in this run
+		// - make sure we get Include\\ModuleName\*.h in this run
 
-		bat << "copy \"..\\Sources\\" << path.c_str() << project->headername.c_str() << "\" \"" << path_dest.c_str() << project->headername.c_str() << "\" > nul" << std::endl; // "\"\t";
+		bat << "copy \"..\\Sources\\Include\\" << project->headername.c_str() << "\" \"" << path_dest.c_str() << project->headername.c_str() << "\" > nul" << std::endl; // "\"\t";
 
-		path += project->name.c_str();
-		if (path[path.length() - 1] != '\\') path += '\\';
-		
 		path_dest += project->name.c_str();
 		if (path_dest[path_dest.length() - 1] != '\\') path_dest += '\\';
-
 	}
 
-	std::string prefix = "Sources\\";
+	std::string prefix = "Sources\\Include\\";
 
 	WIN32_FIND_DATAA data;
 	HANDLE handle = FindFirstFileA((prefix + path + "*.*").c_str(), &data);
@@ -527,7 +505,7 @@ void WorkspaceGenerator_MSVC8::install_copydir(
 		else
 		{
 			std::string file = data.cFileName;
-			bat << "copy \"..\\Sources\\" << path.c_str() << file.c_str() << "\" \"" << path_dest.c_str() << file.c_str() << "\" > nul" << std::endl; // "\"\t";
+			bat << "copy \"..\\Sources\\Include\\" << path.c_str() << file.c_str() << "\" \"" << path_dest.c_str() << file.c_str() << "\" > nul" << std::endl; // "\"\t";
 		}
 
 	} while (FindNextFileA(handle, &data));
@@ -593,7 +571,7 @@ MSVC8_Configuration *WorkspaceGenerator_MSVC8::create_android_config(const std::
 		shared.config->inherited_property_sheets_vs100.push_back("Sheets\\DisableIntrinsics.props");
 	}
 
-	std::string output_file = "clan$(ProjectName)-static";
+	std::string output_file = "$(ProjectName)-static";
 	if (config.runtime_type == runtime_static_debug || config.runtime_type == runtime_dll_debug)
 	{
 		output_file += "-debug";
@@ -797,7 +775,7 @@ std::string WorkspaceGenerator_MSVC8::make_target_name(
 	const std::string &platform,
 	const std::string &project_name)
 {
-	std::string output_file = "clan$(ProjectName)";
+	std::string output_file = "$(ProjectName)";
 
 	if (config.runtime_type != runtime_static_debug && config.runtime_type != runtime_static_release)
 	{
@@ -907,7 +885,7 @@ std::string WorkspaceGenerator_MSVC8::get_project_guid(const std::string &projec
 	// Check if we already made a GUID earlier. Reuse it if we did.
 	LONG result;
 	HKEY key = 0;
-	result = RegCreateKeyA(HKEY_CURRENT_USER, "SOFTWARE\\Clanlib.org\\ClanLib\\ProjectGUIDs", &key);
+	result = RegCreateKeyA(HKEY_CURRENT_USER, "SOFTWARE\\UICore\\UICore\\ProjectGUIDs", &key);
 	if (result != ERROR_SUCCESS)
 		key = 0;
 	if (key)
@@ -1160,7 +1138,7 @@ void MSVC8_Project::write(OutputWriter &output, int indent) const
   		output.write_line(indent, "    </Lib>");
   		output.write_line(indent, "    <PostBuildEvent>");
   		output.write_line(indent, "      <Message>Installing library and API headers...</Message>");
-  		output.write_line(indent, "      <Command>call install_clan" + name + ".bat \"$(TargetPath)\" \"$(TargetDir)$(TargetName).pdb\" \"$(TargetName).pdb\" \"$(Platform)\"</Command>");
+  		output.write_line(indent, "      <Command>call install_" + name + ".bat \"$(TargetPath)\" \"$(TargetDir)$(TargetName).pdb\" \"$(TargetName).pdb\" \"$(Platform)\"</Command>");
   		output.write_line(indent, "    </PostBuildEvent>");
   		output.write_line(indent, "  </ItemDefinitionGroup>");
 	}

@@ -10,10 +10,8 @@
 #define IDD_TARGET_PAGE                 129
 #define IDD_SYSTEM_PAGE                 130
 #define IDD_FINISHED_PAGE               131
-#define IDB_LOGO1                       132
 #define IDD_COMPILER_PAGE               132
 #define IDD_SYSTEM2_PAGE                134
-#define IDB_BANNER                      136
 #define IDC_WELCOME_TEXT                1000
 #define IDC_USE_OPENGL                  1003
 #define IDC_USE_NETWORK                 1004
@@ -50,7 +48,7 @@
 #define IDC_CHECK_WHOLE_PROGRAM_OPTIMIZE 1030
 #define IDC_RADIO_VC120                 1034
 #define IDC_RADIO_VC140                 1035
-#define IDC_RADIO_VC140_ANDROID		    1036
+#define IDC_RADIO_VC140_ANDROID         1036
 
 // Next default values for new objects
 // 

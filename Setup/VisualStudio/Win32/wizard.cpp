@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore SDK
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -18,7 +18,7 @@
 **     misrepresented as being the original software.
 **  3. This notice may not be removed or altered from any source distribution.
 **
-**  Note: Some of the libraries ClanLib may link to may have additional
+**  Note: Some of the libraries UICore may link to may have additional
 **  requirements or restrictions.
 **
 **  File Author(s):
@@ -34,71 +34,14 @@
 
 Wizard::Wizard()
 {
-	// Upscale bitmaps to correct DPI:
-	// (too bad this was all wasted effort as Microsoft didn't test WIZARD97 with other settings than 96 DPI!)
-
-	HBITMAP logo = (HBITMAP)LoadImage(GetModuleHandle(0), MAKEINTRESOURCE(IDB_LOGO1), IMAGE_BITMAP, 0, 0, LR_DEFAULTSIZE);
-	HBITMAP banner = (HBITMAP)LoadImage(GetModuleHandle(0), MAKEINTRESOURCE(IDB_BANNER), IMAGE_BITMAP, 0, 0, LR_DEFAULTSIZE);
-
-	BITMAP logo_info, banner_info;
-	GetObject(logo, sizeof(BITMAP), &logo_info);
-	GetObject(banner, sizeof(BITMAP), &banner_info);
-
-	SIZE logo_size, banner_size;
-	logo_size.cx = logo_info.bmWidth;
-	logo_size.cy = logo_info.bmHeight;
-	banner_size.cx = banner_info.bmWidth;
-	banner_size.cy = banner_info.bmHeight;
-
-	HDC dc = GetDC(0);
-	int dpi = GetDeviceCaps(dc, LOGPIXELSX);
-	float scale = dpi / 96.0f;
-
-	SIZE new_logo_size, new_banner_size;
-	new_logo_size.cx = (int)std::round(logo_size.cx * scale);
-	new_logo_size.cy = (int)std::round(logo_size.cy * scale);
-	new_banner_size.cx = (int)std::round(banner_size.cx * scale);
-	new_banner_size.cy = (int)std::round(banner_size.cy * scale);
-
-	HBITMAP new_logo = CreateCompatibleBitmap(dc, new_logo_size.cx, new_logo_size.cy);
-	HBITMAP new_banner = CreateCompatibleBitmap(dc, new_banner_size.cx, new_banner_size.cy);
-
-	HDC dest_dc = CreateCompatibleDC(dc);
-	HDC src_dc = CreateCompatibleDC(dc);
-	HGDIOBJ old_dest_bitmap;
-	HGDIOBJ old_src_bitmap;
-
-	int old_stretch_mode = SetStretchBltMode(dest_dc, HALFTONE);
-	SetBrushOrgEx(dest_dc, 0, 0, 0);
-
-	old_dest_bitmap = SelectObject(dest_dc, new_logo);
-	old_src_bitmap = SelectObject(src_dc, logo);
-	StretchBlt(dest_dc, 0, 0, new_logo_size.cx, new_logo_size.cy, src_dc, 0, 0, logo_size.cx, logo_size.cy, SRCCOPY);
-
-	SelectObject(dest_dc, new_banner);
-	SelectObject(src_dc, banner);
-	StretchBlt(dest_dc, 0, 0, new_banner_size.cx, new_banner_size.cy, src_dc, 0, 0, banner_size.cx, banner_size.cy, SRCCOPY);
-
-	SelectObject(dest_dc, old_dest_bitmap);
-	SelectObject(src_dc, old_src_bitmap);
-
-	SetStretchBltMode(dest_dc, old_stretch_mode);
-
-	DeleteDC(dest_dc);
-	DeleteDC(src_dc);
-
-	ReleaseDC(0, dc);
-
 	memset(&propsheetheader, 0, sizeof(PROPSHEETHEADER));
 	propsheetheader.dwSize = sizeof(PROPSHEETHEADER);
-	propsheetheader.dwFlags = PSH_WIZARD97 | PSH_WATERMARK | PSH_HEADER | PSH_USEHBMWATERMARK | PSH_USEHBMHEADER;
+	propsheetheader.dwFlags = PSH_AEROWIZARD | PSH_HEADER;
 	propsheetheader.hInstance = GetModuleHandle(0);
 	propsheetheader.pszIcon = MAKEINTRESOURCE(IDR_MAINFRAME);
 	propsheetheader.pszCaption = MAKEINTRESOURCE(IDS_PROPSHT_CAPTION);
 	propsheetheader.nPages = 5;
 	propsheetheader.phpage = pages;
-	propsheetheader.hbmWatermark = new_logo;
-	propsheetheader.hbmHeader = new_banner;
 	pages[0] = page_welcome.handle_propsheetpage;
 	pages[1] = page_target.handle_propsheetpage;
 	pages[2] = page_system.handle_propsheetpage;
@@ -109,7 +52,7 @@ Wizard::Wizard()
 
 INT_PTR Wizard::exec()
 {
-	// Simple check to see if we are in ClanLib root directory - check if we can locate the Sources directory
+	// Simple check to see if we are in UICore root directory - check if we can locate the Sources directory
 	DWORD file_attributes = GetFileAttributes(TEXT("Sources"));
 	if (file_attributes != INVALID_FILE_ATTRIBUTES && (file_attributes & FILE_ATTRIBUTE_DIRECTORY))
 	{
@@ -117,7 +60,7 @@ INT_PTR Wizard::exec()
 	}
 	else
 	{
-		MessageBox(0, TEXT("Unable to locate ClanLib directory.\n\nPlease start this application from the ClanLib root directory\n(where the Sources and Projects directories are located),\nor start the application directly from Visual Studio."), TEXT("Unable to locate ClanLib"), MB_ICONERROR|MB_OK);
+		MessageBox(0, TEXT("Unable to locate UICore directory.\n\nPlease start this application from the UICore root directory\n(where the Sources and Projects directories are located),\nor start the application directly from Visual Studio."), TEXT("Unable to locate UICore"), MB_ICONERROR|MB_OK);
 		return 0;
 	}
 }
@@ -126,7 +69,7 @@ BOOL Wizard::finish()
 {
 	HKEY hKey = 0;
 	LONG result = RegCreateKeyEx(
-		HKEY_CURRENT_USER, TEXT("Software\\Clanlib.org\\ClanLib Configure\\InstallLocation"),
+		HKEY_CURRENT_USER, TEXT("Software\\UICore\\UICore Configure\\InstallLocation"),
 		0, 0, 0, KEY_ALL_ACCESS, 0, &hKey, 0);
 	if (result == ERROR_SUCCESS)
 	{
@@ -264,85 +207,15 @@ Workspace Wizard::create_workspace(bool target_android)
 	ignore_list.push_back("font_engine_cocoa.h");
 	ignore_list.push_back("font_engine_cocoa.mm");
 
-	Project clanCore(
-		"Core",
-		"clanCore",
-		"core.h",
+	Project uicore(
+		"UICore",
+		"uicore",
+		"uicore.h",
 		libs_list_shared,
 		libs_list_release,
 		libs_list_debug, ignore_list);
 
-	Project clanApp(
-		"App",
-		"clanApp",
-		"application.h",
-		libs_list_shared,
-		libs_list_release,
-		libs_list_debug, ignore_list);
-
-	Project clanNetwork(
-		"Network",
-		"clanNetwork",
-		"network.h",
-		libs_list_shared,
-		libs_list_release,
-		libs_list_debug, ignore_list);
-
-	Project clanDisplay(
-		"Display",
-		"clanDisplay",
-		"display.h",
-		libs_list_shared,
-		libs_list_release,
-		libs_list_debug, ignore_list);
-
-	Project clanSound(
-		"Sound",
-		"clanSound",
-		"sound.h",
-		libs_list_shared,
-		libs_list_release,
-		libs_list_debug, ignore_list);
-
-	Project clanGL(
-		"GL",
-		"clanGL",
-		"gl.h",
-		libs_list_shared,
-		libs_list_release,
-		libs_list_debug, ignore_list);
-
-	Project clanUI(
-		"UI",
-		"clanUI",
-		"ui.h",
-		libs_list_shared,
-		libs_list_release,
-		libs_list_debug, ignore_list);
-
-
-	// Add projects to workspace:
-	workspace.projects.push_back(clanCore);
-	workspace.projects.push_back(clanApp);
-	workspace.projects.push_back(clanNetwork);
-	workspace.projects.push_back(clanDisplay);
-	workspace.projects.push_back(clanSound);
-	workspace.projects.push_back(clanGL);
-	workspace.projects.push_back(clanUI);
-
-	if (!target_android)
-	{
-		Project clanD3D(
-			"D3D",
-			"clanD3D",
-			"d3d.h",
-			libs_list_shared,
-			libs_list_release,
-			libs_list_debug, ignore_list);
-
-		workspace.projects.push_back(clanD3D);
-	}
-
+	workspace.projects.push_back(uicore);
 
 	return workspace;
 }

@@ -71,3 +71,8 @@ Makefile.in
 xcuserdata
 xcshareddata
 *.opensdf
+/Projects/install_UICore.bat
+/Projects/uicore.vcxproj
+/Projects/uicore.vcxproj.filters
+/Setup/VisualStudio/Win32/configure.aps
+/UICore.sln

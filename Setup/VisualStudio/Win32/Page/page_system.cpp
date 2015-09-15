@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore SDK
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -18,7 +18,7 @@
 **     misrepresented as being the original software.
 **  3. This notice may not be removed or altered from any source distribution.
 **
-**  Note: Some of the libraries ClanLib may link to may have additional
+**  Note: Some of the libraries UICore may link to may have additional
 **  requirements or restrictions.
 **
 **  File Author(s):
@@ -38,12 +38,12 @@ PageSystem::PageSystem()
 	memset(path_input_include, 0, sizeof(TCHAR) * MAX_PATH);
 	memset(path_input_lib, 0, sizeof(TCHAR) * MAX_PATH);
 
-	_tcscpy(path_input_include, TEXT("C:\\Development\\Environment\\ClanLib\\Include"));
-	_tcscpy(path_input_lib, TEXT("C:\\Development\\Environment\\ClanLib\\Lib"));
+	_tcscpy(path_input_include, TEXT("C:\\Development\\Environment\\UICore\\Include"));
+	_tcscpy(path_input_lib, TEXT("C:\\Development\\Environment\\UICore\\Lib"));
 
 	HKEY hKey = 0;
 	LONG result = RegOpenKeyEx(
-		HKEY_CURRENT_USER, TEXT("Software\\Clanlib.org\\ClanLib Configure\\InstallLocation"),
+		HKEY_CURRENT_USER, TEXT("Software\\UICore\\UICore Configure\\InstallLocation"),
 		0, KEY_READ, &hKey);
 	if (result == ERROR_SUCCESS)
 	{

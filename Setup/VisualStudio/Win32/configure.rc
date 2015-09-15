@@ -89,42 +89,42 @@ IDR_MAINFRAME           ICON                    "res\\Configure.ico"
 // Dialog
 //
 
-IDD_WELCOME_PAGE DIALOGEX 0, 0, 317, 193
+IDD_WELCOME_PAGE DIALOGEX 0, 0, 317, 162
 STYLE DS_SETFONT | WS_CHILD | WS_DISABLED | WS_CAPTION
-CAPTION "ClanLib Setup Wizard"
-FONT 8, "Tahoma", 400, 0, 0x0
+CAPTION "UICore Setup Wizard"
+FONT 9, "Segoe UI", 400, 0, 0x0
 BEGIN
-    LTEXT           "welcome text string...",IDC_WELCOME_TEXT,120,7,190,178
+    LTEXT           "welcome text string...",IDC_WELCOME_TEXT,7,7,303,149
 END
 
 IDD_SYSTEM_PAGE DIALOGEX 0, 0, 317, 143
 STYLE DS_SETFONT | WS_CHILD | WS_DISABLED | WS_CAPTION
-CAPTION "ClanLib Setup Wizard"
-FONT 8, "Tahoma", 400, 0, 0x0
+CAPTION "UICore Setup Wizard"
+FONT 9, "Segoe UI", 400, 0, 0x0
 BEGIN
-    LTEXT           "Please specify the include and library directories where libs used by ClanLib are installed:\n(jpeg, png, zlib and then possibly any of the add-on libs supported)",IDC_STATIC,8,7,290,19
-    LTEXT           "Include directory:",IDC_STATIC,7,31,147,9
-    EDITTEXT        IDC_INPUT_INCLUDE,7,42,262,12,ES_AUTOHSCROLL
-    PUSHBUTTON      "Browse",IDC_INPUT_INCLUDE_BROWSE,273,41,37,15
-    LTEXT           "Library directory:",IDC_STATIC,8,60,147,9
-    EDITTEXT        IDC_INPUT_LIB,7,72,262,12,ES_AUTOHSCROLL
-    PUSHBUTTON      "Browse",IDC_INPUT_LIB_BROWSE,273,71,37,15
+    LTEXT           "Please specify the include and library directories where libs used by UICore are installed:",IDC_STATIC,8,7,302,13
+    LTEXT           "Include directory:",IDC_STATIC,7,22,147,9
+    EDITTEXT        IDC_INPUT_INCLUDE,7,33,262,12,ES_AUTOHSCROLL
+    PUSHBUTTON      "Browse",IDC_INPUT_INCLUDE_BROWSE,273,32,37,15
+    LTEXT           "Library directory:",IDC_STATIC,8,51,147,9
+    EDITTEXT        IDC_INPUT_LIB,7,63,262,12,ES_AUTOHSCROLL
+    PUSHBUTTON      "Browse",IDC_INPUT_LIB_BROWSE,273,62,37,15
 END
 
-IDD_FINISHED_PAGE DIALOGEX 0, 0, 317, 193
+IDD_FINISHED_PAGE DIALOGEX 0, 0, 317, 154
 STYLE DS_SETFONT | WS_CHILD | WS_DISABLED | WS_CAPTION
-CAPTION "ClanLib Setup Wizard"
-FONT 8, "Tahoma", 400, 0, 0x0
+CAPTION "UICore Setup Wizard"
+FONT 9, "Segoe UI", 400, 0, 0x0
 BEGIN
-    LTEXT           "some finish text...",IDC_FINISHED_TEXT,120,7,190,179
+    LTEXT           "some finish text...",IDC_FINISHED_TEXT,7,7,303,140
 END
 
 IDD_SYSTEM2_PAGE DIALOGEX 0, 0, 317, 143
 STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "ClanLib Setup Wizard"
-FONT 8, "Tahoma", 400, 0, 0x0
+CAPTION "UICore Setup Wizard"
+FONT 9, "Segoe UI", 400, 0, 0x0
 BEGIN
-    LTEXT           "Please enter where ClanLib should be installed:",IDC_STATIC,7,7,303,11
+    LTEXT           "Please enter where UICore should be installed:",IDC_STATIC,7,7,303,11
     LTEXT           "Include directory:",IDC_STATIC,7,23,147,9
     EDITTEXT        IDC_OUTPUT_INCLUDE,7,36,262,12,ES_AUTOHSCROLL
     PUSHBUTTON      "Browse",IDC_OUTPUT_INCLUDE_BROWSE,273,35,37,15
@@ -133,29 +133,30 @@ BEGIN
     PUSHBUTTON      "Browse",IDC_OUTPUT_LIB_BROWSE,273,66,37,15
 END
 
-IDD_TARGET_PAGE DIALOGEX 0, 0, 317, 188
+IDD_TARGET_PAGE DIALOGEX 0, 0, 317, 161
 STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "ClanLib Setup Wizard"
-FONT 8, "Tahoma", 400, 0, 0x0
+CAPTION "UICore Setup Wizard"
+FONT 9, "Segoe UI", 400, 0, 0x0
 BEGIN
     LTEXT           "Select the development environment to generate project files for:",IDC_STATIC,7,7,303,8
     CONTROL         "Include 64-bit configurations",IDC_CHECK_INCLUDE_X64,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,16,96,173,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,16,82,286,10
     CONTROL         "Include static libraries using DLL runtime configurations (MTDLL)",IDC_CHECK_INCLUDE_MTDLL,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,16,83,225,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,16,71,286,10
     CONTROL         "Compile using SSE2 Minimum CPU Architecture",IDC_CHECK_INCLUDE_SSE2,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,16,109,173,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,16,93,286,10
     CONTROL         "Compile using SSE2 Intrinsics",IDC_CHECK_INCLUDE_INTRINSICS,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,16,122,173,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,16,104,286,10
     CONTROL         "Compile Debug with optimizations",IDC_CHECK_DEBUG_OPTIMIZE,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,16,135,173,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,16,115,287,10
     CONTROL         "Compile Release using Whole Program Optimizations",IDC_CHECK_WHOLE_PROGRAM_OPTIMIZE,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,16,148,173,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,16,126,287,10
+    CONTROL         "Visual C++ .NET 201&3 (12.0)",IDC_RADIO_VC120,"Button",BS_AUTORADIOBUTTON,16,23,284,10
+    CONTROL         "Visual C++ .NET 201&5 (14.0)",IDC_RADIO_VC140,"Button",BS_AUTORADIOBUTTON,16,34,281,10
+    CONTROL         "Visual C++ .NET 201&5 (14.0) - Android (experimental)",IDC_RADIO_VC140_ANDROID,
+                    "Button",BS_AUTORADIOBUTTON,16,45,280,10
+END
 
-	CONTROL         "Visual C++ .NET 201&3 (12.0)",IDC_RADIO_VC120,"Button",BS_AUTORADIOBUTTON,16,31,105,10
-    CONTROL         "Visual C++ .NET 201&5 (14.0)",IDC_RADIO_VC140,"Button",BS_AUTORADIOBUTTON,16,45,105,10
-	CONTROL         "Visual C++ .NET 201&5 (14.0) - Android (experimental)", IDC_RADIO_VC140_ANDROID, "Button", BS_AUTORADIOBUTTON, 16, 59, 200, 10
-	END
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -168,9 +169,9 @@ BEGIN
     IDD_WELCOME_PAGE, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 272
+        RIGHTMARGIN, 310
         TOPMARGIN, 7
-        BOTTOMMARGIN, 179
+        BOTTOMMARGIN, 156
     END
 
     IDD_SYSTEM_PAGE, DIALOG
@@ -186,7 +187,7 @@ BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 310
         TOPMARGIN, 7
-        BOTTOMMARGIN, 186
+        BOTTOMMARGIN, 147
     END
 
     IDD_SYSTEM2_PAGE, DIALOG
@@ -202,19 +203,11 @@ BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 310
         TOPMARGIN, 7
-        BOTTOMMARGIN, 161
+        BOTTOMMARGIN, 154
     END
 END
 #endif    // APSTUDIO_INVOKED
 
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// Bitmap
-//
-
-IDB_LOGO1               BITMAP                  "res\\clanlib_logo_ascii.bmp"
-IDB_BANNER              BITMAP                  "res\\clanlib_banner.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -238,13 +231,13 @@ BEGIN
     BEGIN
         BLOCK "040904b0"
         BEGIN
-            VALUE "Comments", "This program is part of the ClanLib SDK."
-            VALUE "FileDescription", "ClanLib Win32 Configure Application"
+            VALUE "Comments", "This program is part of the UICore SDK."
+            VALUE "FileDescription", "UICore Win32 Configure Application"
             VALUE "FileVersion", "1, 0, 0, 1"
             VALUE "InternalName", "Configure"
-            VALUE "LegalCopyright", "The ClanLib Team"
+            VALUE "LegalCopyright", "The UICore Team"
             VALUE "OriginalFilename", "Configure.EXE"
-            VALUE "ProductName", "ClanLib Wizard"
+            VALUE "ProductName", "UICore Wizard"
             VALUE "ProductVersion", "1, 0, 0, 1"
         END
     END
@@ -262,12 +255,12 @@ END
 
 STRINGTABLE
 BEGIN
-    IDS_PROPSHT_CAPTION     "Wizard"
+    IDS_PROPSHT_CAPTION     "UICore Project Wizard"
 END
 
 STRINGTABLE
 BEGIN
-    AFX_IDS_APP_TITLE       "ClanLib Configure"
+    AFX_IDS_APP_TITLE       "UICore Configure"
 END
 
 #endif    // English (United States) resources

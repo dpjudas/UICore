@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore SDK
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -18,7 +18,7 @@
 **     misrepresented as being the original software.
 **  3. This notice may not be removed or altered from any source distribution.
 **
-**  Note: Some of the libraries ClanLib may link to may have additional
+**  Note: Some of the libraries UICore may link to may have additional
 **  requirements or restrictions.
 **
 **  File Author(s):
@@ -57,12 +57,12 @@ INT_PTR CALLBACK PageFinished::dialog_proc(HWND hWnd, UINT uMsg, WPARAM wParam, 
 			LPCTSTR finished_text =
 				TEXT("Congratulations!\n")
 				TEXT("\n")
-				TEXT("You have finished the ClanLib configuration. Now press finish to finally ")
-				TEXT("produce the ClanLib solution and project files. \n")
+				TEXT("You have finished the UICore configuration. Now press finish to finally ")
+				TEXT("produce the UICore solution and project files. \n")
 				TEXT("\n")
 				TEXT("When the installation process is completed, please open the ")
-				TEXT("ClanLib.sln file this wizard has produced for you. ")
-				TEXT("It contains all the ClanLib libraries.\n")
+				TEXT("UICore.sln file this wizard has produced for you. ")
+				TEXT("It contains all the UICore libraries.\n")
 				TEXT("\n");
 			SendMessage(GetDlgItem(hWnd, IDC_FINISHED_TEXT), WM_SETTEXT, 0, (LPARAM) finished_text);
 
