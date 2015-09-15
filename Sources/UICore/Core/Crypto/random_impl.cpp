@@ -26,10 +26,10 @@
 **    Mark Page
 */
 
-#include "Core/precomp.h"
+#include "UICore/precomp.h"
 #include "random_impl.h"
-#include "API/Core/Math/cl_math.h"
-#include "API/Core/IOData/file.h"
+#include "UICore/Core/Math/cl_math.h"
+#include "UICore/Core/IOData/file.h"
 
 #ifndef WIN32
 #include <cstring>

@@ -30,8 +30,8 @@
 #pragma once
 
 #include <memory>
-#include "API/Display/Image/pixel_buffer.h"
-#include "API/Display/Font/glyph_metrics.h"
+#include "UICore/Display/Image/pixel_buffer.h"
+#include "UICore/Display/Font/glyph_metrics.h"
 
 namespace clan
 {

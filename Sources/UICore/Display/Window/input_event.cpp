@@ -26,8 +26,8 @@
 **    Magnus Norddahl
 */
 
-#include "Display/precomp.h"
-#include "API/Display/Window/input_event.h"
+#include "UICore/precomp.h"
+#include "UICore/Display/Window/input_event.h"
 
 namespace clan
 {

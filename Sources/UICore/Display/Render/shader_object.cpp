@@ -27,17 +27,15 @@
 **    Kenneth Gangstoe
 */
 
-#include "Display/precomp.h"
-#include "API/Core/IOData/file_system.h"
-#include "API/Core/IOData/path_help.h"
-#include "API/Core/Text/string_format.h"
-#include "API/Core/Text/string_help.h"
-#include "API/Core/Resources/xml_resource_node.h"
-#include "API/Core/IOData/iodevice.h"
-#include "API/Core/XML/dom_element.h"
-#include "API/Display/Render/shader_object.h"
-#include "API/Display/TargetProviders/shader_object_provider.h"
-#include "API/Display/TargetProviders/graphic_context_provider.h"
+#include "UICore/precomp.h"
+#include "UICore/Core/IOData/file_system.h"
+#include "UICore/Core/IOData/path_help.h"
+#include "UICore/Core/Text/string_format.h"
+#include "UICore/Core/Text/text.h"
+#include "UICore/Core/IOData/iodevice.h"
+#include "UICore/Display/Render/shader_object.h"
+#include "UICore/Display/TargetProviders/shader_object_provider.h"
+#include "UICore/Display/TargetProviders/graphic_context_provider.h"
 
 namespace clan
 {

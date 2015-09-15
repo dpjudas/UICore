@@ -30,13 +30,13 @@
 
 #pragma once
 
-#include "API/Display/TargetProviders/display_window_provider.h"
-#include "API/Display/Render/graphic_context.h"
-#include "API/Display/Window/input_device.h"
-#include "Display/Platform/Win32/win32_window.h"
+#include "UICore/Display/TargetProviders/display_window_provider.h"
+#include "UICore/Display/Render/graphic_context.h"
+#include "UICore/Display/Window/input_device.h"
+#include "UICore/Display/Platform/Win32/win32_window.h"
 #include <memory>
-#include "API/GL/opengl_context_description.h"
-#include "API/GL/opengl_wrap.h"
+#include "UICore/GL/opengl_context_description.h"
+#include "UICore/GL/opengl_wrap.h"
 
 namespace clan
 {

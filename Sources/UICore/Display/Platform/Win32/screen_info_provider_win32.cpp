@@ -27,9 +27,9 @@
 **    Magnus Norddahl
 */
 
-#include "Display/precomp.h"
+#include "UICore/precomp.h"
 #include "screen_info_provider_win32.h"
-#include "API/Core/Math/rect.h"
+#include "UICore/Core/Math/rect.h"
 
 namespace clan
 {

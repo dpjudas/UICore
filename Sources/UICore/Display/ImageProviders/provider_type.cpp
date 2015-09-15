@@ -26,10 +26,10 @@
 **    Magnus Norddahl
 */
 
-#include "Display/precomp.h"
-#include "API/Display/ImageProviders/provider_type.h"
-#include "API/Display/ImageProviders/provider_factory.h"
-#include "Display/setup_display.h"
+#include "UICore/precomp.h"
+#include "UICore/Display/ImageProviders/provider_type.h"
+#include "UICore/Display/ImageProviders/provider_factory.h"
+#include "UICore/Display/setup_display.h"
 
 namespace clan
 {

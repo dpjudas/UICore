@@ -37,6 +37,8 @@ namespace clan
 	class Path;
 	class Colorf;
 	class Pointf;
+	class Rectf;
+	class Sizef;
 	class BrushGradientStop;
 	class StyleCascade;
 	class StyleGetValue;

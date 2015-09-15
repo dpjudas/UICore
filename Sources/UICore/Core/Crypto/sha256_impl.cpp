@@ -26,11 +26,11 @@
 **    Mark Page
 */
 
-#include "Core/precomp.h"
+#include "UICore/precomp.h"
 #include "sha256_impl.h"
-#include "API/Core/Math/cl_math.h"
-#include "API/Core/Crypto/sha224.h"
-#include "API/Core/Crypto/sha256.h"
+#include "UICore/Core/Math/cl_math.h"
+#include "UICore/Core/Crypto/sha224.h"
+#include "UICore/Core/Crypto/sha256.h"
 
 #ifndef WIN32
 #include <cstring>

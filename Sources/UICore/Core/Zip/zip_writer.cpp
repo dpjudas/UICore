@@ -26,16 +26,16 @@
 **    Magnus Norddahl
 */
 
-#include "Core/precomp.h"
-#include "API/Core/Zip/zip_writer.h"
-#include "API/Core/Text/string_help.h"
+#include "UICore/precomp.h"
+#include "UICore/Core/Zip/zip_writer.h"
+#include "UICore/Core/Text/text.h"
 #include "zip_archive_impl.h"
 #include "zip_local_file_header.h"
 #include "zip_compression_method.h"
 #include "zip_file_header.h"
 #include "zip_end_of_central_directory_record.h"
 #include "zip_flags.h"
-#include "Core/Zip/miniz.h"
+#include "UICore/Core/Zip/miniz.h"
 
 namespace clan
 {

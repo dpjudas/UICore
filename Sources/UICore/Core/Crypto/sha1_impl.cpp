@@ -26,10 +26,10 @@
 **    Mark Page
 */
 
-#include "Core/precomp.h"
+#include "UICore/precomp.h"
 #include "sha1_impl.h"
-#include "API/Core/Math/cl_math.h"
-#include "API/Core/Crypto/sha1.h"
+#include "UICore/Core/Math/cl_math.h"
+#include "UICore/Core/Crypto/sha1.h"
 
 #ifndef WIN32
 #include <cstring>

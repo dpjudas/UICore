@@ -1,9 +1,9 @@
 
-#include "Network/precomp.h"
-#include "API/Network/Socket/tcp_connection.h"
-#include "API/Network/Socket/socket_name.h"
+#include "UICore/precomp.h"
+#include "UICore/Network/Socket/tcp_connection.h"
+#include "UICore/Network/Socket/socket_name.h"
 #include "tcp_socket.h"
-#include "API/Core/System/exception.h"
+#include "UICore/Core/System/exception.h"
 
 namespace clan
 {

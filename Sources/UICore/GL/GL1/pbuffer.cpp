@@ -26,7 +26,7 @@
 **    Mark Page
 */
 
-#include "GL/precomp.h"
+#include "UICore/precomp.h"
 
 #ifdef WIN32
 #include "../Platform/WGL/pbuffer_impl.h"

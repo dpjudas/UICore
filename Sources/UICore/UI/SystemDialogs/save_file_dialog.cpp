@@ -26,8 +26,8 @@
 **    Kenneth Gangstoe
 */
 
-#include "UI/precomp.h"
-#include "API/UI/SystemDialogs/save_file_dialog.h"
+#include "UICore/precomp.h"
+#include "UICore/UI/SystemDialogs/save_file_dialog.h"
 #include "file_dialog_impl.h"
 
 namespace clan

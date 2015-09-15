@@ -27,13 +27,13 @@
 **    Mark Page
 */
 
-#include "D3D/precomp.h"
+#include "UICore/precomp.h"
 #include "setup_d3d_impl.h"
 #include "setup_d3d.h"
-#include "API/D3D/d3d_target.h"
+#include "UICore/D3D/d3d_target.h"
 #include <mutex>
 #include "../Display/setup_display.h"
-#include "API/Core/Math/cl_math.h"
+#include "UICore/Core/Math/cl_math.h"
 
 //#pragma comment(lib, "D3D11.lib")
 //#pragma comment(lib, "D3dcompiler.lib")

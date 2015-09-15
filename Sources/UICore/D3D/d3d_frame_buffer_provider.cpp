@@ -26,14 +26,14 @@
 **    Magnus Norddahl
 */
 
-#include "D3D/precomp.h"
+#include "UICore/precomp.h"
 #include "d3d_frame_buffer_provider.h"
-#include "API/Display/Render/texture_1d.h"
-#include "API/Display/Render/texture_1d_array.h"
-#include "API/Display/Render/texture_2d.h"
-#include "API/Display/Render/texture_2d_array.h"
-#include "API/Display/Render/texture_3d.h"
-#include "API/Display/Render/texture_cube.h"
+#include "UICore/Display/Render/texture_1d.h"
+#include "UICore/Display/Render/texture_1d_array.h"
+#include "UICore/Display/Render/texture_2d.h"
+#include "UICore/Display/Render/texture_2d_array.h"
+#include "UICore/Display/Render/texture_3d.h"
+#include "UICore/Display/Render/texture_cube.h"
 
 namespace clan
 {

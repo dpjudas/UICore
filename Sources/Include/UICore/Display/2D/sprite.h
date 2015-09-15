@@ -33,8 +33,7 @@
 #include "../../Core/Math/origin.h"
 #include "../../Core/Signals/signal.h"
 #include "../../Core/IOData/file_system.h"
-#include "../../Core/Resources/resource.h"
-#include "../Render/graphic_context.h"
+#include "UICore/Display/Render/graphic_context.h"
 #include "../Image/image_import_description.h"
 #include "color.h"
 
@@ -89,16 +88,6 @@ namespace clan
 		Sprite(Canvas &canvas);
 
 		virtual ~Sprite();
-
-		/// \brief Retrieves a Sprite resource from the resource manager
-		///
-		/// \param gc = canvas = Canvas
-		/// \param resources = Resource manager
-		/// \param id = id
-		static Resource<Sprite> resource(Canvas &canvas, const std::string &id, const ResourceManager &resources);
-
-		/// \brief Loads a Sprite from a XML resource definition
-		static Sprite load(Canvas &canvas, const std::string &id, const XMLResourceDocument &doc);
 
 		/// \brief Returns true if this object is invalid.
 		bool is_null() const { return !impl; }

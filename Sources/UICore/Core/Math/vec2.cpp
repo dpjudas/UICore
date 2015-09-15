@@ -27,9 +27,9 @@
 **    Mark Page
 */
 
-#include "Core/precomp.h"
-#include "API/Core/Math/vec2.h"
-#include "API/Core/Math/point.h"
+#include "UICore/precomp.h"
+#include "UICore/Core/Math/vec2.h"
+#include "UICore/Core/Math/point.h"
 
 namespace clan
 {

@@ -29,7 +29,7 @@
 
 #pragma once
 
-#include "API/Display/Window/cursor_description.h"
+#include "UICore/Display/Window/cursor_description.h"
 
 namespace clan
 {

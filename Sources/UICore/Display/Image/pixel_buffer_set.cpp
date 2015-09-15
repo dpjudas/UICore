@@ -26,9 +26,9 @@
 **    Magnus Norddahl
 */
 
-#include "Display/precomp.h"
-#include "API/Display/Image/pixel_buffer_set.h"
-#include "API/Display/Image/pixel_buffer.h"
+#include "UICore/precomp.h"
+#include "UICore/Display/Image/pixel_buffer_set.h"
+#include "UICore/Display/Image/pixel_buffer.h"
 
 namespace clan
 {

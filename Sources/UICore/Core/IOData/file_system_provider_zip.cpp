@@ -27,11 +27,11 @@
 **    Harry Storbacka
 */
 
-#include "Core/precomp.h"
+#include "UICore/precomp.h"
 #include "file_system_provider_zip.h"
-#include "API/Core/IOData/iodevice.h"
-#include "API/Core/IOData/directory_listing_entry.h"
-#include "API/Core/Text/string_format.h"
+#include "UICore/Core/IOData/iodevice.h"
+#include "UICore/Core/IOData/directory_listing_entry.h"
+#include "UICore/Core/Text/string_format.h"
 
 namespace clan
 {

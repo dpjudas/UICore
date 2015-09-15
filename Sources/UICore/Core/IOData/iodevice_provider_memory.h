@@ -28,8 +28,8 @@
 
 #pragma once
 
-#include "API/Core/IOData/iodevice_provider.h"
-#include "API/Core/System/databuffer.h"
+#include "UICore/Core/IOData/iodevice_provider.h"
+#include "UICore/Core/System/databuffer.h"
 
 namespace clan
 {

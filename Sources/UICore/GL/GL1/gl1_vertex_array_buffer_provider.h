@@ -28,7 +28,7 @@
 
 #pragma once
 
-#include "API/Display/TargetProviders/vertex_array_buffer_provider.h"
+#include "UICore/Display/TargetProviders/vertex_array_buffer_provider.h"
 
 namespace clan
 {

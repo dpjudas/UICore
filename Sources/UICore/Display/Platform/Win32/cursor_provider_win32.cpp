@@ -26,14 +26,14 @@
 **    Magnus Norddahl
 */
 
-#include "Display/precomp.h"
+#include "UICore/precomp.h"
 #include "cursor_provider_win32.h"
-#include "API/Core/System/databuffer.h"
-#include "API/Core/IOData/memory_device.h"
-#include "API/Display/Image/pixel_buffer.h"
-#include "API/Display/Window/cursor_description.h"
+#include "UICore/Core/System/databuffer.h"
+#include "UICore/Core/IOData/memory_device.h"
+#include "UICore/Display/Image/pixel_buffer.h"
+#include "UICore/Display/Window/cursor_description.h"
 #ifdef __MINGW32__
-#include "API/Display/Window/display_window.h"
+#include "UICore/Display/Window/display_window.h"
 #endif
 #include "win32_window.h"
 

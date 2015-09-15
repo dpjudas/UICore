@@ -27,10 +27,10 @@
 **    Harry Storbacka
 */
 	
-#include "Display/precomp.h"
-#include "API/Display/Font/font_description.h"
-#include "API/Core/Text/string_help.h"
-#include "API/Core/Text/string_format.h"
+#include "UICore/precomp.h"
+#include "UICore/Display/Font/font_description.h"
+#include "UICore/Core/Text/text.h"
+#include "UICore/Core/Text/string_format.h"
 #include "font_description_impl.h"
 
 namespace clan

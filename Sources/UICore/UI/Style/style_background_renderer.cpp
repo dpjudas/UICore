@@ -26,17 +26,19 @@
 **    Magnus Norddahl
 */
 
-#include "UI/precomp.h"
+#include "UICore/precomp.h"
 #include "style_background_renderer.h"
-#include "API/UI/View/view_geometry.h"
-#include "API/UI/Style/style_cascade.h"
-#include "API/UI/Style/style_get_value.h"
-#include "API/UI/UIThread/ui_thread.h"
-#include "API/Display/2D/canvas.h"
-#include "API/Display/2D/image.h"
-#include "API/Display/2D/path.h"
-#include "API/Display/2D/brush.h"
-#include "API/UI/Image/image_source.h"
+#include "UICore/UI/View/view_geometry.h"
+#include "UICore/UI/Style/style_cascade.h"
+#include "UICore/UI/Style/style_get_value.h"
+#include "UICore/UI/UIThread/ui_thread.h"
+#include "UICore/Display/2D/canvas.h"
+#include "UICore/Display/2D/image.h"
+#include "UICore/Display/2D/path.h"
+#include "UICore/Display/2D/brush.h"
+#include "UICore/UI/Image/image_source.h"
+#include "UICore/Core/Text/text.h"
+#include "UICore/Core/Math/line.h"
 
 namespace clan
 {

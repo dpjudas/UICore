@@ -27,11 +27,11 @@
 **    Harry Storbacka
 */
 
-#include "Display/precomp.h"
-#include "API/Display/Render/texture_3d.h"
-#include "API/Display/TargetProviders/texture_provider.h"
-#include "API/Display/TargetProviders/graphic_context_provider.h"
-#include "API/Display/Image/pixel_buffer.h"
+#include "UICore/precomp.h"
+#include "UICore/Display/Render/texture_3d.h"
+#include "UICore/Display/TargetProviders/texture_provider.h"
+#include "UICore/Display/TargetProviders/graphic_context_provider.h"
+#include "UICore/Display/Image/pixel_buffer.h"
 #include "texture_impl.h"
 
 namespace clan

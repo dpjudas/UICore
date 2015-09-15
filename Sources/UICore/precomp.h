@@ -32,13 +32,14 @@
 #ifdef _MSC_VER
 # pragma warning (disable:4786)
 #endif
+#include <WinSock2.h>
 #include <windows.h>
 #include <cstdlib>
 #else
 #include <unistd.h>
 #endif
 
-#include "API/Core/System/exception.h"
+#include "UICore/Core/System/exception.h"
 
 #if defined(_DEBUG) && !defined(DEBUG)
 #define DEBUG

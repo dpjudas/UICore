@@ -26,9 +26,9 @@
 **    Magnus Norddahl
 */
 
-#include "Core/precomp.h"
-#include "API/Core/Math/point.h"
-#include "API/Core/Math/size.h"
+#include "UICore/precomp.h"
+#include "UICore/Core/Math/point.h"
+#include "UICore/Core/Math/size.h"
 
 namespace clan
 {

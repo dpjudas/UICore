@@ -27,10 +27,11 @@
 **    Mark Page
 */
 
-#include "GL/precomp.h"
-#include "API/Display/display_target.h"
-#include "API/GL/opengl_context_description.h"
-#include "API/GL/opengl_target.h"
+#include "UICore/precomp.h"
+#include "UICore/Display/display_target.h"
+#include "UICore/GL/opengl_context_description.h"
+#include "UICore/GL/opengl_target.h"
+#include "UICore/Core/Text/text.h"
 #include "opengl_graphic_context_provider.h"
 #include "opengl_target_provider.h"
 #include "GL3/gl3_graphic_context_provider.h"

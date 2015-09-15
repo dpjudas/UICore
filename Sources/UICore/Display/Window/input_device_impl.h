@@ -28,8 +28,8 @@
 
 #pragma once
 
-#include "API/Core/Signals/signal.h"
-#include "API/Display/TargetProviders/input_device_provider.h"
+#include "UICore/Core/Signals/signal.h"
+#include "UICore/Display/TargetProviders/input_device_provider.h"
 
 namespace clan
 {

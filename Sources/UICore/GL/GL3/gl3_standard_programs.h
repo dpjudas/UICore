@@ -29,14 +29,14 @@
 
 #pragma once
 
-#include "API/GL/opengl.h"
-#include "API/Core/Math/mat4.h"
-#include "API/Core/Signals/signal.h"
-#include "API/Display/Render/program_object.h"
-#include "API/Display/Render/rasterizer_state_description.h"
-#include "API/Display/Render/blend_state_description.h"
-#include "API/Display/Render/depth_stencil_state_description.h"
-#include "API/Core/System/disposable_object.h"
+#include "UICore/GL/opengl.h"
+#include "UICore/Core/Math/mat4.h"
+#include "UICore/Core/Signals/signal.h"
+#include "UICore/Display/Render/program_object.h"
+#include "UICore/Display/Render/rasterizer_state_description.h"
+#include "UICore/Display/Render/blend_state_description.h"
+#include "UICore/Display/Render/depth_stencil_state_description.h"
+#include "UICore/Core/System/disposable_object.h"
 #include <map>
 
 namespace clan

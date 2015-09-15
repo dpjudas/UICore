@@ -26,15 +26,14 @@
 **    Harry Storbacka
 */
 
-#include "Display/precomp.h"
-#include "API/Core/System/databuffer.h"
-#include "API/Core/Text/string_format.h"
-#include "API/Core/System/thread_local_storage.h"
-#include "API/Display/Window/display_window.h"
+#include "UICore/precomp.h"
+#include "UICore/Core/System/databuffer.h"
+#include "UICore/Core/Text/string_format.h"
+#include "UICore/Display/Window/display_window.h"
 #include "display_message_queue_win32.h"
 #include "win32_window.h"
 #include "../../setup_display.h"
-#include "API/Core/System/system.h"
+#include "UICore/Core/System/system.h"
 
 namespace clan
 {

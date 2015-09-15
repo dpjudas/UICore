@@ -27,9 +27,9 @@
 **    Magnus Norddahl
 */
 
-#include "Core/precomp.h"
-#include "API/Core/Math/point.h"
-#include "API/Core/Math/bezier_curve.h"
+#include "UICore/precomp.h"
+#include "UICore/Core/Math/point.h"
+#include "UICore/Core/Math/bezier_curve.h"
 #include "bezier_curve_impl.h"
 
 namespace clan

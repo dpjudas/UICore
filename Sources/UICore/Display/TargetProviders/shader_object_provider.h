@@ -30,7 +30,7 @@
 #pragma once
 
 #include "shader_object_provider.h"
-#include "../Render/shader_object.h"
+#include "UICore/Display/Render/shader_object.h"
 
 namespace clan
 {

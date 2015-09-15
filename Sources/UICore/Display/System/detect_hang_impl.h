@@ -28,8 +28,8 @@
 
 #pragma once
 
-#include "API/Core/ErrorReporting/crash_reporter.h"
-#include "API/Display/System/run_loop.h"
+#include "UICore/Core/ErrorReporting/crash_reporter.h"
+#include "UICore/Display/System/run_loop.h"
 #include <mutex>
 #include <thread>
 #include <condition_variable>

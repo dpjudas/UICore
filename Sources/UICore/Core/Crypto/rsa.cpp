@@ -26,10 +26,10 @@
 **    Mark Page
 */
 
-#include "Core/precomp.h"
-#include "API/Core/Crypto/rsa.h"
-#include "API/Core/System/databuffer.h"
-#include "API/Core/Crypto/secret.h"
+#include "UICore/precomp.h"
+#include "UICore/Core/Crypto/rsa.h"
+#include "UICore/Core/System/databuffer.h"
+#include "UICore/Core/Crypto/secret.h"
 #include "rsa_impl.h"
 
 namespace clan

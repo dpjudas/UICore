@@ -26,9 +26,9 @@
 **    Magnus Norddahl
 */
 
-#include "D3D/precomp.h"
+#include "UICore/precomp.h"
 #include "sampler_state.h"
-#include "API/D3D/d3d_target.h"
+#include "UICore/D3D/d3d_target.h"
 #include <float.h>
 
 namespace clan

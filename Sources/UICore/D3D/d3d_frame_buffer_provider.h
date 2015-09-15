@@ -28,9 +28,9 @@
 
 #pragma once
 
-#include "API/Display/TargetProviders/frame_buffer_provider.h"
-#include "API/Display/Render/render_buffer.h"
-#include "API/Display/Render/texture_2d.h"
+#include "UICore/Display/TargetProviders/frame_buffer_provider.h"
+#include "UICore/Display/Render/render_buffer.h"
+#include "UICore/Display/Render/texture_2d.h"
 #include "d3d_render_buffer_provider.h"
 #include "d3d_texture_provider.h"
 

@@ -28,24 +28,21 @@
 **    Mark Page
 */
 
-#include "Display/precomp.h"
+#include "UICore/precomp.h"
 #include "font_impl.h"
-#include "API/Display/Font/font.h"
-#include "API/Display/Font/font_metrics.h"
-#include "API/Display/Font/font_description.h"
-#include "API/Display/TargetProviders/graphic_context_provider.h"
-#include "API/Display/2D/canvas.h"
-#include "API/Display/2D/path.h"
-#include "API/Display/Resources/display_cache.h"
-#include "API/Core/Text/string_help.h"
-#include "API/Core/Text/string_format.h"
-#include "API/Core/Text/utf8_reader.h"
-#include "API/Core/XML/dom_element.h"
-#include "API/Core/IOData/path_help.h"
-#include "API/Core/Resources/xml_resource_node.h"
-#include "Display/2D/canvas_impl.h"
-#include "Display/Font/FontEngine/font_engine.h"
-#include "Display/2D/sprite_impl.h"
+#include "UICore/Display/Font/font.h"
+#include "UICore/Display/Font/font_metrics.h"
+#include "UICore/Display/Font/font_description.h"
+#include "UICore/Display/TargetProviders/graphic_context_provider.h"
+#include "UICore/Display/2D/canvas.h"
+#include "UICore/Display/2D/path.h"
+#include "UICore/Core/Text/text.h"
+#include "UICore/Core/Text/string_format.h"
+#include "UICore/Core/Text/utf8_reader.h"
+#include "UICore/Core/IOData/path_help.h"
+#include "UICore/Display/2D/canvas_impl.h"
+#include "UICore/Display/Font/FontEngine/font_engine.h"
+#include "UICore/Display/2D/sprite_impl.h"
 
 namespace clan
 {

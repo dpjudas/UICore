@@ -29,8 +29,8 @@
 
 #pragma once
 
-#include "API/Display/Image/pixel_buffer.h"
-#include "API/Display/TargetProviders/pixel_buffer_provider.h"
+#include "UICore/Display/Image/pixel_buffer.h"
+#include "UICore/Display/TargetProviders/pixel_buffer_provider.h"
 
 namespace clan
 {

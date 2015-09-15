@@ -28,7 +28,7 @@
 
 #pragma once
 
-#include "../Render/transfer_buffer.h"
+#include "UICore/Display/Render/transfer_buffer.h"
 
 namespace clan
 {

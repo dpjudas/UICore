@@ -28,8 +28,9 @@
 
 #pragma once
 
-#include "API/UI/StandardViews/span_layout_view.h"
-#include "API/UI/Style/style.h"
+#include "UICore/UI/StandardViews/span_layout_view.h"
+#include "UICore/UI/Style/style.h"
+#include <map>
 
 namespace clan
 {

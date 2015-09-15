@@ -33,6 +33,7 @@ namespace clan
 	class Canvas;
 	class Image;
 	class Colorf;
+	class Rectf;
 	class StyleCascade;
 	class StyleGetValue;
 	class ViewGeometry;

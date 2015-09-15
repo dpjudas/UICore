@@ -28,13 +28,13 @@
 
 #pragma once
 
-#include "API/Core/System/databuffer.h"
-#include "API/Core/IOData/iodevice.h"
-#include "API/Core/IOData/iodevice_provider.h"
-#include "API/Core/Crypto/secret.h"
-#include "API/Core/Crypto/random.h"
-#include "API/Core/Crypto/rsa.h"
-#include "API/Core/Crypto/hash_functions.h"
+#include "UICore/Core/System/databuffer.h"
+#include "UICore/Core/IOData/iodevice.h"
+#include "UICore/Core/IOData/iodevice_provider.h"
+#include "UICore/Core/Crypto/secret.h"
+#include "UICore/Core/Crypto/random.h"
+#include "UICore/Core/Crypto/rsa.h"
+#include "UICore/Core/Crypto/hash_functions.h"
 #include "x509.h"
 
 namespace clan

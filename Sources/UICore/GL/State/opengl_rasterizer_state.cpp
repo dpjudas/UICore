@@ -27,10 +27,10 @@
 **    Mark Page
 */
 
-#include "GL/precomp.h"
+#include "UICore/precomp.h"
 #include "opengl_rasterizer_state.h"
-#include "API/GL/opengl.h"
-#include "API/GL/opengl_wrap.h"
+#include "UICore/GL/opengl.h"
+#include "UICore/GL/opengl_wrap.h"
 
 namespace clan
 {

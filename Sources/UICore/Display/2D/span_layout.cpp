@@ -26,8 +26,8 @@
 **    Magnus Norddahl
 */
 
-#include "Display/precomp.h"
-#include "API/Display/2D/span_layout.h"
+#include "UICore/precomp.h"
+#include "UICore/Display/2D/span_layout.h"
 #include "span_layout_impl.h"
 
 namespace clan

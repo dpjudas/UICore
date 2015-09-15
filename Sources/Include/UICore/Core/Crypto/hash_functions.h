@@ -29,7 +29,7 @@
 
 #pragma once
 
-#include "../System/cl_platform.h"
+#include <cstdint>
 #include "../Crypto/sha1.h"
 #include "../Crypto/md5.h"
 #include "../Crypto/sha224.h"

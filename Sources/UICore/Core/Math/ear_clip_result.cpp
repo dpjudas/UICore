@@ -26,9 +26,9 @@
 **    Harry Storbacka
 */
 
-#include "Core/precomp.h"
-#include "API/Core/Math/ear_clip_result.h"
-#include "API/Core/Math/ear_clip_triangulator.h"
+#include "UICore/precomp.h"
+#include "UICore/Core/Math/ear_clip_result.h"
+#include "UICore/Core/Math/ear_clip_triangulator.h"
 
 namespace clan
 {

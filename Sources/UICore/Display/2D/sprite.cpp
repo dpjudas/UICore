@@ -28,24 +28,21 @@
 **    Mark Page
 */
 
-#include "Display/precomp.h"
-#include "API/Core/IOData/file_system.h"
-#include "API/Core/IOData/path_help.h"
-#include "API/Core/Resources/xml_resource_node.h"
-#include "API/Core/XML/dom_element.h"
-#include "API/Core/Text/string_help.h"
-#include "API/Core/Text/string_format.h"
-#include "API/Display/2D/sprite.h"
-#include "API/Display/2D/canvas.h"
-#include "API/Display/Render/primitives_array.h"
-#include "API/Display/Image/pixel_buffer.h"
-#include "API/Display/ImageProviders/provider_factory.h"
-#include "API/Display/ImageProviders/targa_provider.h"
-#include "API/Display/ImageProviders/png_provider.h"
+#include "UICore/precomp.h"
+#include "UICore/Core/IOData/file_system.h"
+#include "UICore/Core/IOData/path_help.h"
+#include "UICore/Core/Text/text.h"
+#include "UICore/Core/Text/string_format.h"
+#include "UICore/Display/2D/sprite.h"
+#include "UICore/Display/2D/canvas.h"
+#include "UICore/Display/Render/primitives_array.h"
+#include "UICore/Display/Image/pixel_buffer.h"
+#include "UICore/Display/ImageProviders/provider_factory.h"
+#include "UICore/Display/ImageProviders/targa_provider.h"
+#include "UICore/Display/ImageProviders/png_provider.h"
 #include "sprite_impl.h"
 #include "render_batch_triangle.h"
-#include "API/Display/Resources/display_cache.h"
-#include "API/Display/2D/subtexture.h"
+#include "UICore/Display/2D/subtexture.h"
 
 namespace clan
 {
@@ -82,11 +79,6 @@ namespace clan
 
 	Sprite::~Sprite()
 	{
-	}
-
-	Resource<Sprite> Sprite::resource(Canvas &canvas, const std::string &id, const ResourceManager &resources)
-	{
-		return DisplayCache::get(resources).get_sprite(canvas, id);
 	}
 
 	void Sprite::throw_if_null() const

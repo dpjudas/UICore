@@ -26,9 +26,9 @@
 **    Mark Page
 */
 
-#include "Core/precomp.h"
+#include "UICore/precomp.h"
 #include "aes256_encrypt_impl.h"
-#include "API/Core/Math/cl_math.h"
+#include "UICore/Core/Math/cl_math.h"
 
 #ifndef WIN32
 #include <cstring>

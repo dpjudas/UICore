@@ -26,7 +26,7 @@
 **    Magnus Norddahl
 */
 
-#include "D3D/precomp.h"
+#include "UICore/precomp.h"
 #include "d3d_unit_map.h"
 #include "d3d_graphic_context_provider.h"
 #include "d3d_program_object_provider.h"

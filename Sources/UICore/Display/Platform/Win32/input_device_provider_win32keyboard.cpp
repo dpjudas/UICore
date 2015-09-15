@@ -27,13 +27,13 @@
 **    Harry Storbacka
 */
 
-#include "Display/precomp.h"
+#include "UICore/precomp.h"
 #include "input_device_provider_win32keyboard.h"
 #ifdef __MINGW32__
-#include "API/Display/Window/display_window.h"
+#include "UICore/Display/Window/display_window.h"
 #endif
 #include "win32_window.h"
-#include "API/Core/Text/string_help.h"
+#include "UICore/Core/Text/text.h"
 
 namespace clan
 {

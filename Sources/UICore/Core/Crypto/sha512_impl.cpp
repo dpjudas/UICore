@@ -26,13 +26,13 @@
 **    Mark Page
 */
 
-#include "Core/precomp.h"
+#include "UICore/precomp.h"
 #include "sha512_impl.h"
-#include "API/Core/Math/cl_math.h"
-#include "API/Core/Crypto/sha384.h"
-#include "API/Core/Crypto/sha512.h"
-#include "API/Core/Crypto/sha512_224.h"
-#include "API/Core/Crypto/sha512_256.h"
+#include "UICore/Core/Math/cl_math.h"
+#include "UICore/Core/Crypto/sha384.h"
+#include "UICore/Core/Crypto/sha512.h"
+#include "UICore/Core/Crypto/sha512_224.h"
+#include "UICore/Core/Crypto/sha512_256.h"
 
 #ifndef WIN32
 #include <cstring>

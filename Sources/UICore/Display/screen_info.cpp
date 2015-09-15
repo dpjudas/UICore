@@ -26,10 +26,10 @@
 **    Harry Storbacka
 */
 
-#include "Display/precomp.h"
-#include "API/Display/screen_info.h"
+#include "UICore/precomp.h"
+#include "UICore/Display/screen_info.h"
 #include "screen_info_provider.h"
-#include "API/Core/Math/rect.h"
+#include "UICore/Core/Math/rect.h"
 
 #ifdef WIN32
  #include "Platform/Win32/screen_info_provider_win32.h"

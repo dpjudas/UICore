@@ -26,17 +26,36 @@
 **    Magnus Norddahl
 */
 
-#include "Core/precomp.h"
-#include "API/Core/System/service.h"
-#include "API/Core/IOData/file.h"
-#include "API/Core/Text/string_help.h"
-#include "API/Core/Text/console.h"
-#include "API/Core/System/exception.h"
+#include "UICore/precomp.h"
+#include "UICore/Core/System/service.h"
+#include "UICore/Core/IOData/file.h"
+#include "UICore/Core/Text/text.h"
+#include "UICore/Core/Text/string_format.h"
+#include "UICore/Core/System/exception.h"
 #include "service_win32.h"
 #include <iostream>
 
 namespace clan
 {
+	namespace
+	{
+		class Console
+		{
+		public:
+			static void write_line(const std::string &text)
+			{
+				write(text + "\r\n");
+			}
+
+			static void write(const std::string &text)
+			{
+				DWORD written = 0;
+				std::wstring str = StringHelp::utf8_to_ucs2(text);
+				WriteConsole(GetStdHandle(STD_OUTPUT_HANDLE), str.c_str(), str.length(), &written, 0);
+			}
+		};
+	}
+
 	Service_Win32::Service_Win32(Service *service, const std::string &service_name)
 		: Service_Impl(service, service_name), debug_mode(false), check_point(1)
 	{
@@ -248,7 +267,7 @@ namespace clan
 		CloseServiceHandle(handle_service);
 		CloseServiceHandle(handle_manager);
 
-		Console::write_line("%1 installed.", service_name);
+		Console::write_line(string_format("%1 installed.", service_name));
 		return 0;
 	}
 
@@ -274,7 +293,7 @@ namespace clan
 		memset(&service_status, 0, sizeof(SERVICE_STATUS));
 		if (ControlService(handle_service, SERVICE_CONTROL_STOP, &service_status))
 		{
-			Console::write("Stopping %1..", service_name);
+			Console::write(string_format("Stopping %1..", service_name));
 			Sleep(1000);
 			while (QueryServiceStatus(handle_service, &service_status))
 			{
@@ -290,13 +309,13 @@ namespace clan
 			}
 			Console::write_line("");
 			if (service_status.dwCurrentState == SERVICE_STOPPED)
-				Console::write_line("%1 stopped.", service_name);
+				Console::write_line(string_format("%1 stopped.", service_name));
 			else
-				Console::write_line("%1 failed to stop.", service_name);
+				Console::write_line(string_format("%1 failed to stop.", service_name));
 		}
 
 		if (DeleteService(handle_service))
-			Console::write_line("%1 removed.", service_name);
+			Console::write_line(string_format("%1 removed.", service_name));
 		else
 			Console::write_line("Unable to uninstall service. DeleteService failed.");
 

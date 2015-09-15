@@ -26,8 +26,8 @@
 **    Magnus Norddahl
 */
 
-#include "Core/precomp.h"
-#include "API/Core/IOData/directory_scanner.h"
+#include "UICore/precomp.h"
+#include "UICore/Core/IOData/directory_scanner.h"
 #include "directory_scanner_impl.h"
 
 #ifdef WIN32

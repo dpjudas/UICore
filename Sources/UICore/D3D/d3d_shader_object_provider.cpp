@@ -26,10 +26,10 @@
 **    Magnus Norddahl
 */
 
-#include "D3D/precomp.h"
+#include "UICore/precomp.h"
 #include "d3d_shader_object_provider.h"
-#include "API/D3D/d3d_target.h"
-#include "API/Core/Text/string_format.h"
+#include "UICore/D3D/d3d_target.h"
+#include "UICore/Core/Text/string_format.h"
 
 namespace clan
 {

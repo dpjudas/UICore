@@ -26,9 +26,9 @@
 **    Mark Page
 */
 
-#include "Core/precomp.h"
-#include "API/Core/Crypto/sha1.h"
-#include "API/Core/System/databuffer.h"
+#include "UICore/precomp.h"
+#include "UICore/Core/Crypto/sha1.h"
+#include "UICore/Core/System/databuffer.h"
 #include "sha1_impl.h"
 
 namespace clan

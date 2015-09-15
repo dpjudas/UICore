@@ -29,15 +29,15 @@
 
 #pragma once
 
-#include "API/Display/Render/graphic_context.h"
-#include "Display/2D/render_batch_buffer.h"
-#include "Display/2D/render_batch_triangle.h"
-#include "Display/2D/render_batch_line.h"
-#include "Display/2D/render_batch_line_texture.h"
-#include "Display/2D/render_batch_point.h"
-#include "Display/2D/render_batch_path.h"
-#include "API/Display/2D/canvas.h"
-#include "API/Display/Window/display_window.h"
+#include "UICore/Display/Render/graphic_context.h"
+#include "UICore/Display/2D/render_batch_buffer.h"
+#include "UICore/Display/2D/render_batch_triangle.h"
+#include "UICore/Display/2D/render_batch_line.h"
+#include "UICore/Display/2D/render_batch_line_texture.h"
+#include "UICore/Display/2D/render_batch_point.h"
+#include "UICore/Display/2D/render_batch_path.h"
+#include "UICore/Display/2D/canvas.h"
+#include "UICore/Display/Window/display_window.h"
 
 namespace clan
 {

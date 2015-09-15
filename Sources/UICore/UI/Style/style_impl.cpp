@@ -26,8 +26,9 @@
 **    Magnus Norddahl
 */
 
-#include "UI/precomp.h"
-#include "API/UI/Style/style.h"
+#include "UICore/precomp.h"
+#include "UICore/UI/Style/style.h"
+#include "UICore/Core/Text/text.h"
 #include "style_impl.h"
 
 namespace clan

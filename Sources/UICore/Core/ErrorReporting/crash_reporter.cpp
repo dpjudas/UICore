@@ -26,9 +26,10 @@
 **    Magnus Norddahl
 */
 
-#include "Core/precomp.h"
-#include "API/Core/ErrorReporting/crash_reporter.h"
-#include "API/Core/Text/string_help.h"
+#include "UICore/precomp.h"
+#include "UICore/Core/ErrorReporting/crash_reporter.h"
+#include "UICore/Core/Text/text.h"
+#include <cstdint>
 #include "crash_reporter_impl.h"
 
 namespace clan

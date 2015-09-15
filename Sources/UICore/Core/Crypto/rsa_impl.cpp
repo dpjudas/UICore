@@ -26,11 +26,11 @@
 **    Mark Page
 */
 
-#include "Core/precomp.h"
+#include "UICore/precomp.h"
 #include "rsa_impl.h"
-#include "API/Core/Math/cl_math.h"
-#include "API/Core/Crypto/secret.h"
-#include "API/Core/Crypto/random.h"
+#include "UICore/Core/Math/cl_math.h"
+#include "UICore/Core/Crypto/secret.h"
+#include "UICore/Core/Crypto/random.h"
 
 #ifndef WIN32
 #include <cstring>

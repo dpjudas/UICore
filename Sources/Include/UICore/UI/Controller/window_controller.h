@@ -29,6 +29,7 @@
 #pragma once
 
 #include <memory>
+#include "../../Core/Signals/signal.h"
 
 namespace clan
 {

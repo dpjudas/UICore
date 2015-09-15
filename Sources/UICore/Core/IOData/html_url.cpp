@@ -26,9 +26,9 @@
 **    Magnus Norddahl
 */
 
-#include "Core/precomp.h"
-#include "API/Core/IOData/html_url.h"
-#include "API/Core/Text/string_help.h"
+#include "UICore/precomp.h"
+#include "UICore/Core/IOData/html_url.h"
+#include "UICore/Core/Text/text.h"
 
 namespace clan
 {

@@ -27,11 +27,12 @@
 **    Mark Page
 */
 
-#include "Core/precomp.h"
-#include "API/Core/Math/mat4.h"
-#include "API/Core/Math/vec4.h"
-#include "API/Core/Math/angle.h"
-#include "API/Core/Math/quaternion.h"
+#include "UICore/precomp.h"
+#include "UICore/Core/Math/mat4.h"
+#include "UICore/Core/Math/vec4.h"
+#include "UICore/Core/Math/angle.h"
+#include "UICore/Core/Math/quaternion.h"
+#include "UICore/Core/Math/pi.h"
 #include <limits>
 
 #ifndef CL_DISABLE_SSE2

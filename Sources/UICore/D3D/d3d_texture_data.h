@@ -29,7 +29,8 @@
 #pragma once
 
 #include "d3d_share_list.h"
-#include "API/Display/TargetProviders/texture_provider.h"
+#include "UICore/Display/TargetProviders/texture_provider.h"
+#include "UICore/Core/System/comptr.h"
 
 namespace clan
 {

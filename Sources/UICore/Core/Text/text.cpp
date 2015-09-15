@@ -26,12 +26,11 @@
 **    Magnus Norddahl
 */
 
-#include "Core/precomp.h"
-#include "API/Core/Text/string_help.h"
-#include "API/Core/Text/logger.h"
-#include "API/Core/Text/utf8_reader.h"
-#include "API/Core/System/exception.h"
-#include "API/Core/System/databuffer.h"
+#include "UICore/precomp.h"
+#include "UICore/Core/Text/text.h"
+#include "UICore/Core/Text/utf8_reader.h"
+#include "UICore/Core/System/exception.h"
+#include "UICore/Core/System/databuffer.h"
 #ifndef WIN32
 #include <wchar.h>
 #include <wctype.h>

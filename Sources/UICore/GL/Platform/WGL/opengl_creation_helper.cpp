@@ -26,10 +26,10 @@
 **    Magnus Norddahl
 */
 
-#include "GL/precomp.h"
+#include "UICore/precomp.h"
 #include "opengl_creation_helper.h"
 #include "../../opengl_context_description_impl.h"
-#include "API/GL/opengl_context_description.h"
+#include "UICore/GL/opengl_context_description.h"
 #include <commctrl.h>
 
 namespace clan

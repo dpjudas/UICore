@@ -28,24 +28,23 @@
 **    Mark Page
 */
 
-#include "Display/precomp.h"
-#include "API/Display/Image/pixel_buffer.h"
-#include "API/Display/Image/pixel_converter.h"
-#include "API/Display/Image/pixel_buffer_lock.h"
-#include "API/Display/2D/color.h"
-#include "API/Core/System/cl_platform.h"
+#include "UICore/precomp.h"
+#include "UICore/Display/Image/pixel_buffer.h"
+#include "UICore/Display/Image/pixel_converter.h"
+#include "UICore/Display/Image/pixel_buffer_lock.h"
+#include "UICore/Display/2D/color.h"
 #include "pixel_buffer_impl.h"
-#include "API/Core/System/exception.h"
-#include "API/Core/IOData/file_system.h"
-#include "API/Core/IOData/path_help.h"
-#include "API/Core/Resources/xml_resource_node.h"
-#include "API/Display/ImageProviders/provider_factory.h"
-#include "API/Display/TargetProviders/pixel_buffer_provider.h"
-#include "API/Display/Render/transfer_texture.h"
-#include "API/Core/Text/string_format.h"
-#include "API/Core/Text/string_help.h"
-#include "API/Display/Image/texture_format.h"
-#include "API/Core/Math/half_float.h"
+#include "UICore/Core/System/exception.h"
+#include "UICore/Core/IOData/file_system.h"
+#include "UICore/Core/IOData/path_help.h"
+#include "UICore/Display/ImageProviders/provider_factory.h"
+#include "UICore/Display/TargetProviders/pixel_buffer_provider.h"
+#include "UICore/Display/Render/transfer_texture.h"
+#include "UICore/Core/Text/string_format.h"
+#include "UICore/Core/Text/text.h"
+#include "UICore/Display/Image/texture_format.h"
+#include "UICore/Core/Math/half_float.h"
+#include <cstdint>
 
 namespace clan
 {

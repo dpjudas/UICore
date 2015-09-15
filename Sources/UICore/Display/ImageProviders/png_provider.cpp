@@ -27,16 +27,16 @@
 **    Harry Storbacka
 */
 
-#include "Display/precomp.h"
-#include "API/Core/System/exception.h"
-#include "API/Core/IOData/file_system.h"
-#include "API/Core/IOData/path_help.h"
-#include "API/Core/Text/string_help.h"
-#include "API/Display/Image/pixel_buffer.h"
-#include "API/Display/ImageProviders/png_provider.h"
-#include "Display/ImageProviders/PNGLoader/png_loader.h"
-#include "Display/ImageProviders/PNGWriter/png_writer.h"
-#include "Core/Zip/miniz.h"
+#include "UICore/precomp.h"
+#include "UICore/Core/System/exception.h"
+#include "UICore/Core/IOData/file_system.h"
+#include "UICore/Core/IOData/path_help.h"
+#include "UICore/Core/Text/text.h"
+#include "UICore/Display/Image/pixel_buffer.h"
+#include "UICore/Display/ImageProviders/png_provider.h"
+#include "UICore/Display/ImageProviders/PNGLoader/png_loader.h"
+#include "UICore/Display/ImageProviders/PNGWriter/png_writer.h"
+#include "UICore/Core/Zip/miniz.h"
 #include <stdlib.h>
 
 namespace clan

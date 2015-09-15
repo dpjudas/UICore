@@ -28,13 +28,13 @@
 **    Kenneth Gangstoe
 */
 
-#include "GL/precomp.h"
+#include "UICore/precomp.h"
 #include "gl3_shader_object_provider.h"
 #include "gl3_graphic_context_provider.h"
-#include "API/Core/System/exception.h"
-#include "API/Core/Text/string_help.h"
-#include "API/Core/Text/string_format.h"
-#include "API/Display/Render/shared_gc_data.h"
+#include "UICore/Core/System/exception.h"
+#include "UICore/Core/Text/text.h"
+#include "UICore/Core/Text/string_format.h"
+#include "UICore/Display/Render/shared_gc_data.h"
 
 namespace clan
 {

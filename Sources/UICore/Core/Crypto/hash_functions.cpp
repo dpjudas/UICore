@@ -26,10 +26,10 @@
 **    Mark Page
 */
 
-#include "Core/precomp.h"
-#include "API/Core/Crypto/hash_functions.h"
-#include "API/Core/System/databuffer.h"
-#include "Core/Zip/miniz.h"
+#include "UICore/precomp.h"
+#include "UICore/Core/Crypto/hash_functions.h"
+#include "UICore/Core/System/databuffer.h"
+#include "UICore/Core/Zip/miniz.h"
 
 namespace clan
 {

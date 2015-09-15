@@ -28,9 +28,10 @@
 
 #pragma once
 
-#include "API/Display/TargetProviders/vertex_array_buffer_provider.h"
-#include "API/Core/System/databuffer.h"
+#include "UICore/Display/TargetProviders/vertex_array_buffer_provider.h"
+#include "UICore/Core/System/databuffer.h"
 #include "d3d_share_list.h"
+#include "UICore/Core/System/comptr.h"
 
 namespace clan
 {

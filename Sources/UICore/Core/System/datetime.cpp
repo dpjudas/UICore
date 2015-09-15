@@ -29,11 +29,11 @@
 **    Harry Storbacka
 */
 
-#include "Core/precomp.h"
-#include "API/Core/System/datetime.h"
-#include "API/Core/System/exception.h"
-#include "API/Core/Text/string_help.h"
-#include "API/Core/Text/string_format.h"
+#include "UICore/precomp.h"
+#include "UICore/Core/System/datetime.h"
+#include "UICore/Core/System/exception.h"
+#include "UICore/Core/Text/text.h"
+#include "UICore/Core/Text/string_format.h"
 #ifndef WIN32
 #include <cstring>
 #include <ctime>

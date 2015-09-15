@@ -26,10 +26,10 @@
 **    Magnus Norddahl
 */
 
-#include "Display/precomp.h"
+#include "UICore/precomp.h"
 #include "graphic_context_impl.h"
 #include "primitives_array_impl.h"
-#include "API/Display/Render/shared_gc_data.h"
+#include "UICore/Display/Render/shared_gc_data.h"
 
 namespace clan
 {

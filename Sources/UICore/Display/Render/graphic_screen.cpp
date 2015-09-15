@@ -26,10 +26,10 @@
 **    Mark Page
 */
 
-#include "Display/precomp.h"
+#include "UICore/precomp.h"
 #include "graphic_screen.h"
-#include "API/Display/TargetProviders/graphic_context_provider.h"
-#include "API/Display/Render/shared_gc_data.h"
+#include "UICore/Display/TargetProviders/graphic_context_provider.h"
+#include "UICore/Display/Render/shared_gc_data.h"
 #include "graphic_context_impl.h"
 
 namespace clan

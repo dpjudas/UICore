@@ -28,8 +28,8 @@
 
 #pragma once
 
-#include "API/Core/Zip/zip_file_entry.h"
-#include "API/Core/IOData/iodevice.h"
+#include "UICore/Core/Zip/zip_file_entry.h"
+#include "UICore/Core/IOData/iodevice.h"
 #include "zip_flags.h"
 
 namespace clan

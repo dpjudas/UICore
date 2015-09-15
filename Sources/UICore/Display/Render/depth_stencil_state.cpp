@@ -26,10 +26,10 @@
 **    Magnus Norddahl
 */
 
-#include "Display/precomp.h"
-#include "API/Display/Render/depth_stencil_state.h"
-#include "API/Display/Render/graphic_context.h"
-#include "API/Display/TargetProviders/graphic_context_provider.h"
+#include "UICore/precomp.h"
+#include "UICore/Display/Render/depth_stencil_state.h"
+#include "UICore/Display/Render/graphic_context.h"
+#include "UICore/Display/TargetProviders/graphic_context_provider.h"
 
 namespace clan
 {

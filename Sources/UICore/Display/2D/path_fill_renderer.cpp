@@ -27,11 +27,11 @@
 **    Mark Page
 */
 
-#include "Display/precomp.h"
+#include "UICore/precomp.h"
 #include "path_fill_renderer.h"
-#include "API/Display/Render/texture_1d.h"
-#include "API/Display/2D/subtexture.h"
-#include "API/Core/System/system.h"
+#include "UICore/Display/Render/texture_1d.h"
+#include "UICore/Display/2D/subtexture.h"
+#include "UICore/Core/System/system.h"
 #include <algorithm>
 
 #if !defined __ANDROID__ && ! defined CL_DISABLE_SSE2

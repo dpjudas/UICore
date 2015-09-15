@@ -27,12 +27,12 @@
 **    Harry Storbacka
 */
 
-#include "Display/precomp.h"
-#include "API/Display/Render/frame_buffer.h"
-#include "API/Display/Render/texture_2d.h"
-#include "API/Display/Render/graphic_context.h"
-#include "API/Display/TargetProviders/graphic_context_provider.h"
-#include "API/Display/TargetProviders/frame_buffer_provider.h"
+#include "UICore/precomp.h"
+#include "UICore/Display/Render/frame_buffer.h"
+#include "UICore/Display/Render/texture_2d.h"
+#include "UICore/Display/Render/graphic_context.h"
+#include "UICore/Display/TargetProviders/graphic_context_provider.h"
+#include "UICore/Display/TargetProviders/frame_buffer_provider.h"
 
 namespace clan
 {

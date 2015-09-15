@@ -28,7 +28,7 @@
 
 #pragma once
 
-#include "API/UI/Style/style_property_parser.h"
+#include "UICore/UI/Style/style_property_parser.h"
 
 namespace clan
 {

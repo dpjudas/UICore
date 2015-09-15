@@ -27,12 +27,12 @@
 **    Harry Storbacka
 */
 
-#include "GL/precomp.h"
-#include "API/Display/TargetProviders/render_buffer_provider.h"
-#include "API/GL/opengl_wrap.h"
-#include "API/GL/opengl.h"
+#include "UICore/precomp.h"
+#include "UICore/Display/TargetProviders/render_buffer_provider.h"
+#include "UICore/GL/opengl_wrap.h"
+#include "UICore/GL/opengl.h"
 #include "gl3_render_buffer_provider.h"
-#include "API/Display/Render/shared_gc_data.h"
+#include "UICore/Display/Render/shared_gc_data.h"
 
 namespace clan
 {

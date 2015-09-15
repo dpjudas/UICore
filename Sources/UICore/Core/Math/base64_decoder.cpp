@@ -26,9 +26,9 @@
 **    Magnus Norddahl
 */
 
-#include "Core/precomp.h"
-#include "API/Core/Math/base64_decoder.h"
-#include "API/Core/System/databuffer.h"
+#include "UICore/precomp.h"
+#include "UICore/Core/Math/base64_decoder.h"
+#include "UICore/Core/System/databuffer.h"
 
 namespace clan
 {

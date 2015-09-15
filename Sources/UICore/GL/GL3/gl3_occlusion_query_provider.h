@@ -29,9 +29,9 @@
 #pragma once
 
 
-#include "API/Display/TargetProviders/occlusion_query_provider.h"
-#include "API/GL/opengl.h"
-#include "API/Core/System/disposable_object.h"
+#include "UICore/Display/TargetProviders/occlusion_query_provider.h"
+#include "UICore/GL/opengl.h"
+#include "UICore/Core/System/disposable_object.h"
 
 namespace clan
 {

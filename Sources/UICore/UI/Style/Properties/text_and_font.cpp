@@ -26,8 +26,9 @@
 **    Magnus Norddahl
 */
 
-#include "UI/precomp.h"
-#include "text.h"
+#include "UICore/precomp.h"
+#include "UICore/Core/Text/text.h"
+#include "text_and_font.h"
 
 namespace clan
 {

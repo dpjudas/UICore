@@ -27,21 +27,18 @@
 **    Harry Storbacka
 */
 
-#include "Display/precomp.h"
-#include "API/Display/Render/texture_2d.h"
-#include "API/Display/TargetProviders/texture_provider.h"
-#include "API/Display/Image/pixel_buffer.h"
-#include "API/Display/Image/pixel_buffer.h"
-#include "API/Display/2D/color.h"
-#include "API/Display/ImageProviders/provider_factory.h"
-#include "API/Core/IOData/file_system.h"
-#include "API/Core/IOData/path_help.h"
-#include "API/Core/XML/dom_element.h"
-#include "API/Core/Text/string_format.h"
-#include "API/Core/Resources/xml_resource_document.h"
+#include "UICore/precomp.h"
+#include "UICore/Display/Render/texture_2d.h"
+#include "UICore/Display/TargetProviders/texture_provider.h"
+#include "UICore/Display/Image/pixel_buffer.h"
+#include "UICore/Display/Image/pixel_buffer.h"
+#include "UICore/Display/2D/color.h"
+#include "UICore/Display/ImageProviders/provider_factory.h"
+#include "UICore/Core/IOData/file_system.h"
+#include "UICore/Core/IOData/path_help.h"
+#include "UICore/Core/Text/string_format.h"
 #include "graphic_context_impl.h"
 #include "texture_impl.h"
-#include "API/Display/Resources/display_cache.h"
 
 namespace clan
 {

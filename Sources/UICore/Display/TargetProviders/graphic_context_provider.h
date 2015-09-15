@@ -30,11 +30,11 @@
 #pragma once
 
 #include <memory>
-#include "../Render/graphic_context.h"
-#include "../Render/primitives_array.h"
-#include "../Render/texture.h"
-#include "../../Core/Math/mat4.h"
-#include "../../Core/Signals/signal.h"
+#include "UICore/Display/Render/graphic_context.h"
+#include "UICore/Display/Render/primitives_array.h"
+#include "UICore/Display/Render/texture.h"
+#include "UICore/Core/Math/mat4.h"
+#include "UICore/Core/Signals/signal.h"
 
 namespace clan
 {

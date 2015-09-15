@@ -28,11 +28,11 @@
 
 #pragma once
 
-#include "API/Display/Font/font.h"
-#include "API/Display/Render/graphic_context.h"
-#include "API/Display/Font/font_metrics.h"
-#include "API/Display/2D/span_layout.h"
-#include "API/Display/2D/image.h"
+#include "UICore/Display/Font/font.h"
+#include "UICore/Display/Render/graphic_context.h"
+#include "UICore/Display/Font/font_metrics.h"
+#include "UICore/Display/2D/span_layout.h"
+#include "UICore/Display/2D/image.h"
 
 namespace clan
 {

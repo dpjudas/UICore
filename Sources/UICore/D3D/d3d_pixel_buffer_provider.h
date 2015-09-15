@@ -28,7 +28,8 @@
 
 #pragma once
 
-#include "API/Display/TargetProviders/pixel_buffer_provider.h"
+#include "UICore/Display/TargetProviders/pixel_buffer_provider.h"
+#include "UICore/Core/System/comptr.h"
 #include "d3d_share_list.h"
 
 namespace clan

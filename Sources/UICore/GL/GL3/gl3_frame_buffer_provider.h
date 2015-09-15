@@ -30,10 +30,10 @@
 #pragma once
 
 #include "gl3_graphic_context_provider.h"
-#include "API/Display/Render/texture_2d.h"
-#include "API/Display/TargetProviders/frame_buffer_provider.h"
-#include "API/Core/System/disposable_object.h"
-#include "API/Display/Render/render_buffer.h"
+#include "UICore/Display/Render/texture_2d.h"
+#include "UICore/Display/TargetProviders/frame_buffer_provider.h"
+#include "UICore/Core/System/disposable_object.h"
+#include "UICore/Display/Render/render_buffer.h"
 
 namespace clan
 {

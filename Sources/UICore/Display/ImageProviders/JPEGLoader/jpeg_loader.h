@@ -28,8 +28,8 @@
 
 #pragma once
 
-#include "API/Core/IOData/iodevice.h"
-#include "API/Display/Image/pixel_buffer.h"
+#include "UICore/Core/IOData/iodevice.h"
+#include "UICore/Display/Image/pixel_buffer.h"
 #include "jpeg_file_reader.h"
 #include "jpeg_start_of_frame.h"
 #include "jpeg_start_of_scan.h"

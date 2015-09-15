@@ -30,9 +30,9 @@
 
 #pragma once
 
-#include "API/Display/Window/display_window.h"
+#include "UICore/Display/Window/display_window.h"
 #include <map>
-#include "API/Core/Math/rect.h"
+#include "UICore/Core/Math/rect.h"
 
 namespace clan
 {

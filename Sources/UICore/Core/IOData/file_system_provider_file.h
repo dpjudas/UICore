@@ -29,9 +29,9 @@
 
 #pragma once
 
-#include "API/Core/IOData/file_system_provider.h"
-#include "API/Core/IOData/directory_scanner.h"
-#include "API/Core/IOData/file.h"
+#include "UICore/Core/IOData/file_system_provider.h"
+#include "UICore/Core/IOData/directory_scanner.h"
+#include "UICore/Core/IOData/file.h"
 
 namespace clan
 {

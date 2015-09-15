@@ -28,8 +28,8 @@
 
 #pragma once
 
-#include "API/Core/System/cl_platform.h"
-#include "API/Core/System/datetime.h"
+#include <cstdint>
+#include "UICore/Core/System/datetime.h"
 #include <memory>
 
 namespace clan

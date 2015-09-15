@@ -26,8 +26,8 @@
 **    Magnus Norddahl
 */
 
-#include "Core/precomp.h"
-#include "API/Core/Zip/zip_file_entry.h"
+#include "UICore/precomp.h"
+#include "UICore/Core/Zip/zip_file_entry.h"
 #include "zip_file_entry_impl.h"
 
 namespace clan

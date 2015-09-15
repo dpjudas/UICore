@@ -26,11 +26,11 @@
 **    Magnus Norddahl
 */
 
-#include "Display/precomp.h"
-#include "API/Display/Window/cursor.h"
-#include "API/Display/Window/display_window.h"
-#include "API/Display/TargetProviders/cursor_provider.h"
-#include "API/Display/TargetProviders/display_window_provider.h"
+#include "UICore/precomp.h"
+#include "UICore/Display/Window/cursor.h"
+#include "UICore/Display/Window/display_window.h"
+#include "UICore/Display/TargetProviders/cursor_provider.h"
+#include "UICore/Display/TargetProviders/display_window_provider.h"
 
 namespace clan
 {

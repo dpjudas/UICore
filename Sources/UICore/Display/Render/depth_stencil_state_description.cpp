@@ -26,8 +26,8 @@
 **    Magnus Norddahl
 */
 
-#include "Display/precomp.h"
-#include "API/Display/Render/depth_stencil_state_description.h"
+#include "UICore/precomp.h"
+#include "UICore/Display/Render/depth_stencil_state_description.h"
 
 namespace clan
 {

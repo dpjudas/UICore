@@ -27,12 +27,12 @@
 **    Harry Storbacka
 */
 
-#include "Display/precomp.h"
-#include "API/Display/Window/input_device.h"
-#include "API/Display/TargetProviders/input_device_provider.h"
-#include "API/Display/Window/keys.h"
-#include "API/Core/Text/string_format.h"
-#include "API/Core/Text/string_help.h"
+#include "UICore/precomp.h"
+#include "UICore/Display/Window/input_device.h"
+#include "UICore/Display/TargetProviders/input_device_provider.h"
+#include "UICore/Display/Window/keys.h"
+#include "UICore/Core/Text/string_format.h"
+#include "UICore/Core/Text/text.h"
 #include "input_device_impl.h"
 #include <map>
 

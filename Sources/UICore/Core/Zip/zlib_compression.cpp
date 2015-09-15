@@ -26,10 +26,10 @@
 **    Magnus Norddahl
 */
 
-#include "Core/precomp.h"
-#include "API/Core/Zip/zlib_compression.h"
-#include "API/Core/System/databuffer.h"
-#include "API/Core/IOData/memory_device.h"
+#include "UICore/precomp.h"
+#include "UICore/Core/Zip/zlib_compression.h"
+#include "UICore/Core/System/databuffer.h"
+#include "UICore/Core/IOData/memory_device.h"
 
 #define INCLUDED_FROM_ZLIB_COMPRESSION_CPP
 #include "miniz.h"

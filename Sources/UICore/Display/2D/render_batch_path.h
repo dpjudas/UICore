@@ -29,15 +29,15 @@
 
 #pragma once
 
-#include "API/Display/Render/texture.h"
-#include "API/Display/Render/graphic_context.h"
-#include "API/Display/Render/blend_state.h"
-#include "API/Display/Render/render_batcher.h"
-#include "API/Display/Render/texture_2d.h"
+#include "UICore/Display/Render/texture.h"
+#include "UICore/Display/Render/graphic_context.h"
+#include "UICore/Display/Render/blend_state.h"
+#include "UICore/Display/Render/render_batcher.h"
+#include "UICore/Display/Render/texture_2d.h"
 #include "render_batch_buffer.h"
-#include "API/Display/2D/pen.h"
-#include "API/Display/2D/path.h"
-#include "API/Display/2D/brush.h"
+#include "UICore/Display/2D/pen.h"
+#include "UICore/Display/2D/path.h"
+#include "UICore/Display/2D/brush.h"
 #include "path_fill_renderer.h"
 #include "path_stroke_renderer.h"
 

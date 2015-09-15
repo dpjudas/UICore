@@ -27,8 +27,8 @@
 **    Kenneth Gangstoe
 */
 
-#include "Network/precomp.h"
-#include "API/Network/Socket/network_condition_variable.h"
+#include "UICore/precomp.h"
+#include "UICore/Network/Socket/network_condition_variable.h"
 #include "tcp_socket.h"
 
 #ifndef WIN32

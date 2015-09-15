@@ -26,9 +26,9 @@
 **    Magnus Norddahl
 */
 
-#include "GL/precomp.h"
+#include "UICore/precomp.h"
 #include "gl1_vertex_array_buffer_provider.h"
-#include "API/Display/Render/transfer_buffer.h"
+#include "UICore/Display/Render/transfer_buffer.h"
 
 namespace clan
 {

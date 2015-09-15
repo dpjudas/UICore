@@ -26,8 +26,8 @@
 **    Mark Page
 */
 
-#include "Core/precomp.h"
-#include "API/Core/Text/utf8_reader.h"
+#include "UICore/precomp.h"
+#include "UICore/Core/Text/utf8_reader.h"
 
 namespace clan
 {

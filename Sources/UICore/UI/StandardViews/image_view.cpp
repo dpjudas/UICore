@@ -26,11 +26,11 @@
 **    Magnus Norddahl
 */
 
-#include "UI/precomp.h"
-#include "API/UI/StandardViews/button_view.h"
-#include "API/UI/UIThread/ui_thread.h"
-#include "API/Display/2D/image.h"
-#include "API/Display/2D/canvas.h"
+#include "UICore/precomp.h"
+#include "UICore/UI/StandardViews/button_view.h"
+#include "UICore/UI/UIThread/ui_thread.h"
+#include "UICore/Display/2D/image.h"
+#include "UICore/Display/2D/canvas.h"
 #include <algorithm>
 
 namespace clan

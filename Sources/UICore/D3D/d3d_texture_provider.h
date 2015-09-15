@@ -28,8 +28,8 @@
 
 #pragma once
 
-#include "API/Display/TargetProviders/texture_provider.h"
-#include "API/Display/Image/pixel_buffer.h"
+#include "UICore/Display/TargetProviders/texture_provider.h"
+#include "UICore/Display/Image/pixel_buffer.h"
 #include "d3d_share_list.h"
 #include "sampler_state.h"
 #include "d3d_texture_data.h"

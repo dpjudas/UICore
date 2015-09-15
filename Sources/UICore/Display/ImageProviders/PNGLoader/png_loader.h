@@ -28,9 +28,9 @@
 
 #pragma once
 
-#include "API/Core/IOData/iodevice.h"
-#include "API/Display/Image/pixel_buffer.h"
-#include "API/Core/System/databuffer.h"
+#include "UICore/Core/IOData/iodevice.h"
+#include "UICore/Display/Image/pixel_buffer.h"
+#include "UICore/Core/System/databuffer.h"
 #include <map>
 
 namespace clan

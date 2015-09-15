@@ -28,7 +28,7 @@
 
 #pragma once
 
-#include "API/GL/opengl_wrap.h"
+#include "UICore/GL/opengl_wrap.h"
 
 namespace clan
 {

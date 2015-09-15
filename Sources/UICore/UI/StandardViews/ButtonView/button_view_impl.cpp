@@ -27,11 +27,11 @@
 **    Mark Page
 */
 
-#include "UI/precomp.h"
-#include "API/UI/StandardViews/button_view.h"
-#include "API/UI/StandardViews/image_view.h"
+#include "UICore/precomp.h"
+#include "UICore/UI/StandardViews/button_view.h"
+#include "UICore/UI/StandardViews/image_view.h"
 #include "button_view_impl.h"
-#include "API/UI/Events/pointer_event.h"
+#include "UICore/UI/Events/pointer_event.h"
 
 namespace clan
 {

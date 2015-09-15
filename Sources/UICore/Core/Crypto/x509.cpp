@@ -26,10 +26,10 @@
 **    Mark Page
 */
 
-#include "Core/precomp.h"
+#include "UICore/precomp.h"
 #include "x509.h"
 #include "x509_impl.h"
-#include "API/Core/System/databuffer.h"
+#include "UICore/Core/System/databuffer.h"
 
 namespace clan
 {

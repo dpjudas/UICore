@@ -27,10 +27,10 @@
 **    Mark Page
 */
 
-#include "Display/precomp.h"
+#include "UICore/precomp.h"
 #include "cpu_pixel_buffer_provider.h"
 #include "pixel_buffer_impl.h"
-#include "API/Core/System/system.h"
+#include "UICore/Core/System/system.h"
 
 namespace clan
 {

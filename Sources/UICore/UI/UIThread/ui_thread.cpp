@@ -26,11 +26,11 @@
 **    Magnus Norddahl
 */
 
-#include "UI/precomp.h"
-#include "API/Core/Resources/resource_manager.h"
-#include "API/Display/2D/canvas.h"
-#include "API/Display/System/run_loop.h"
-#include "API/UI/UIThread/ui_thread.h"
+#include "UICore/precomp.h"
+#include "UICore/Display/2D/canvas.h"
+#include "UICore/Display/System/run_loop.h"
+#include "UICore/UI/UIThread/ui_thread.h"
+#include "UICore/Core/ErrorReporting/exception_dialog.h"
 
 namespace clan
 {

@@ -46,10 +46,10 @@
 
 #pragma once
 
-#include "API/Core/System/cl_platform.h"
-#include "API/Core/System/databuffer.h"
+#include <cstdint>
+#include "UICore/Core/System/databuffer.h"
 
-#include "API/Core/Math/big_int.h"
+#include "UICore/Core/Math/big_int.h"
 
 namespace clan
 {

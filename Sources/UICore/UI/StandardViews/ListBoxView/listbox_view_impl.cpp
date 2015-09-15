@@ -27,11 +27,11 @@
 **    Mark Page
 */
 
-#include "UI/precomp.h"
-#include "API/UI/StandardViews/listbox_view.h"
-#include "API/UI/StandardViews/text_field_view.h"
-#include "API/UI/Events/pointer_event.h"
-#include "API/UI/Events/key_event.h"
+#include "UICore/precomp.h"
+#include "UICore/UI/StandardViews/listbox_view.h"
+#include "UICore/UI/StandardViews/text_field_view.h"
+#include "UICore/UI/Events/pointer_event.h"
+#include "UICore/UI/Events/key_event.h"
 #include "listbox_view_impl.h"
 
 namespace clan

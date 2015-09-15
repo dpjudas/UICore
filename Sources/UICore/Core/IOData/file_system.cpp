@@ -27,13 +27,13 @@
 **    Harry Storbacka
 */
 
-#include "Core/precomp.h"
-#include "API/Core/IOData/file_system.h"
-#include "API/Core/IOData/file_system_provider.h"
-#include "API/Core/IOData/iodevice.h"
-#include "API/Core/IOData/path_help.h"
-#include "API/Core/IOData/directory_listing.h"
-#include "API/Core/Text/string_format.h"
+#include "UICore/precomp.h"
+#include "UICore/Core/IOData/file_system.h"
+#include "UICore/Core/IOData/file_system_provider.h"
+#include "UICore/Core/IOData/iodevice.h"
+#include "UICore/Core/IOData/path_help.h"
+#include "UICore/Core/IOData/directory_listing.h"
+#include "UICore/Core/Text/string_format.h"
 #include "file_system_provider_file.h"
 #include "file_system_provider_zip.h"
 

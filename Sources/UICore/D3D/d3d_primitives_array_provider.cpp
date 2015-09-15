@@ -26,11 +26,11 @@
 **    Magnus Norddahl
 */
 
-#include "D3D/precomp.h"
+#include "UICore/precomp.h"
 #include "d3d_primitives_array_provider.h"
 #include "d3d_program_object_provider.h"
 #include "d3d_vertex_array_buffer_provider.h"
-#include "API/D3D/d3d_target.h"
+#include "UICore/D3D/d3d_target.h"
 
 namespace clan
 {

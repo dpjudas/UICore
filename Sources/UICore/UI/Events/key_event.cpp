@@ -1,7 +1,7 @@
 
-#include "UI/precomp.h"
-#include "API/UI/Events/key_event.h"
-#include "API/UI/View/view.h"
+#include "UICore/precomp.h"
+#include "UICore/UI/Events/key_event.h"
+#include "UICore/UI/View/view.h"
 
 namespace clan
 {

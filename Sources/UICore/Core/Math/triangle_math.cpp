@@ -27,8 +27,8 @@
 **    Mark Page
 */
 
-#include "Core/precomp.h"
-#include "API/Core/Math/triangle_math.h"
+#include "UICore/precomp.h"
+#include "UICore/Core/Math/triangle_math.h"
 
 namespace clan
 {

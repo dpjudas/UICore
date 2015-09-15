@@ -26,13 +26,13 @@
 **    Magnus Norddahl
 */
 
-#include "UI/precomp.h"
+#include "UICore/precomp.h"
 #include "style_tokenizer_impl.h"
-#include "API/Core/Math/cl_math.h"
-#include "API/Core/System/databuffer.h"
-#include "API/Core/IOData/iodevice.h"
-#include "API/Core/Text/string_help.h"
-#include "API/UI/Style/style_token.h"
+#include "UICore/Core/Math/cl_math.h"
+#include "UICore/Core/System/databuffer.h"
+#include "UICore/Core/IOData/iodevice.h"
+#include "UICore/Core/Text/text.h"
+#include "UICore/UI/Style/style_token.h"
 
 namespace clan
 {

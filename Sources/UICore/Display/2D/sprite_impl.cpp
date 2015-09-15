@@ -27,20 +27,19 @@
 **    Mark Page
 */
 
-#include "Display/precomp.h"
+#include "UICore/precomp.h"
 #include "sprite_impl.h"
 #include "render_batch_triangle.h"
-#include "API/Display/Image/pixel_buffer.h"
-#include "API/Core/Math/cl_math.h"
-#include "API/Core/Text/string_help.h"
-#include "API/Core/Text/string_format.h"
-#include "API/Core/XML/dom_element.h"
-#include "API/Core/System/system.h"
-#include "Display/Render/graphic_context_impl.h"
+#include "UICore/Display/Image/pixel_buffer.h"
+#include "UICore/Core/Math/cl_math.h"
+#include "UICore/Core/Text/text.h"
+#include "UICore/Core/Text/string_format.h"
+#include "UICore/Core/System/system.h"
+#include "UICore/Display/Render/graphic_context_impl.h"
 #include <list>
-#include "API/Display/2D/canvas.h"
+#include "UICore/Display/2D/canvas.h"
 #include "canvas_impl.h"
-#include "API/Core/IOData/path_help.h"
+#include "UICore/Core/IOData/path_help.h"
 
 namespace clan
 {

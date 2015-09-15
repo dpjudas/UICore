@@ -28,14 +28,14 @@
 **    Mark Page
 */
 
-#include "GL/precomp.h"
-#include "API/Display/Render/render_buffer.h"
-#include "API/Display/TargetProviders/render_buffer_provider.h"
-#include "API/Core/Text/string_format.h"
-#include "API/Display/Render/texture.h"
-#include "API/GL/opengl_wrap.h"
-#include "API/GL/opengl.h"
-#include "API/Display/Render/shared_gc_data.h"
+#include "UICore/precomp.h"
+#include "UICore/Display/Render/render_buffer.h"
+#include "UICore/Display/TargetProviders/render_buffer_provider.h"
+#include "UICore/Core/Text/string_format.h"
+#include "UICore/Display/Render/texture.h"
+#include "UICore/GL/opengl_wrap.h"
+#include "UICore/GL/opengl.h"
+#include "UICore/Display/Render/shared_gc_data.h"
 #include "gl1_frame_buffer_provider.h"
 #include "gl1_render_buffer_provider.h"
 #include "gl1_texture_provider.h"

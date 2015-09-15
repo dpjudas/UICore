@@ -27,10 +27,10 @@
 **    Magnus Norddahl
 */
 
-#include "Core/precomp.h"
-#include "API/Core/Math/angle.h"
-#include "API/Core/Math/line_math.h"
-#include "API/Core/Math/cl_math.h"
+#include "UICore/precomp.h"
+#include "UICore/Core/Math/angle.h"
+#include "UICore/Core/Math/line_math.h"
+#include "UICore/Core/Math/cl_math.h"
 
 namespace clan
 {

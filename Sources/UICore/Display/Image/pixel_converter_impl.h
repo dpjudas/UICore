@@ -29,8 +29,8 @@
 
 #pragma once
 
-#include "API/Core/Math/vec4.h"
-#include "API/Core/Math/half_float_vector.h"
+#include "UICore/Core/Math/vec4.h"
+#include "UICore/Core/Math/half_float_vector.h"
 #include <memory>
 #include <vector>
 

@@ -26,14 +26,14 @@
 **    Magnus Norddahl
 */
 
-#include "UI/precomp.h"
+#include "UICore/precomp.h"
 
 #include "span_layout_view_impl.h"
-#include "API/Display/2D/canvas.h"
-#include "API/Display/2D/brush.h"
-#include "API/Display/Font/glyph_metrics.h"
-#include "API/Display/Font/font_metrics.h"
-#include "API/Display/Render/shared_gc_data.h"
+#include "UICore/Display/2D/canvas.h"
+#include "UICore/Display/2D/brush.h"
+#include "UICore/Display/Font/glyph_metrics.h"
+#include "UICore/Display/Font/font_metrics.h"
+#include "UICore/Display/Render/shared_gc_data.h"
 #include <algorithm>
 
 namespace clan

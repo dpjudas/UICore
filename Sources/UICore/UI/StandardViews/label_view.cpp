@@ -26,17 +26,18 @@
 **    Magnus Norddahl
 */
 
-#include "UI/precomp.h"
-#include "API/UI/StandardViews/label_view.h"
-#include "API/UI/UIThread/ui_thread.h"
-#include "API/UI/Style/style.h"
-#include "API/Display/2D/canvas.h"
-#include "API/Display/2D/path.h"
-#include "API/Display/2D/pen.h"
-#include "API/Display/2D/brush.h"
-#include "API/Display/Font/font.h"
-#include "API/Display/Font/font_metrics.h"
-#include "API/Display/Font/glyph_metrics.h"
+#include "UICore/precomp.h"
+#include "UICore/UI/StandardViews/label_view.h"
+#include "UICore/UI/UIThread/ui_thread.h"
+#include "UICore/UI/Style/style.h"
+#include "UICore/Display/2D/canvas.h"
+#include "UICore/Display/2D/path.h"
+#include "UICore/Display/2D/pen.h"
+#include "UICore/Display/2D/brush.h"
+#include "UICore/Display/Font/font.h"
+#include "UICore/Display/Font/font_metrics.h"
+#include "UICore/Display/Font/glyph_metrics.h"
+#include "UICore/Core/Text/text.h"
 #include <cmath>
 
 namespace clan

@@ -28,8 +28,8 @@
 
 #pragma once
 
-#include "API/Core/System/cl_platform.h"
-#include "API/Core/System/databuffer.h"
+#include <cstdint>
+#include "UICore/Core/System/databuffer.h"
 #include "aes_impl.h"
 
 namespace clan

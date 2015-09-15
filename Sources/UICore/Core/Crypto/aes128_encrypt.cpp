@@ -26,9 +26,9 @@
 **    Mark Page
 */
 
-#include "Core/precomp.h"
-#include "API/Core/Crypto/aes128_encrypt.h"
-#include "API/Core/System/databuffer.h"
+#include "UICore/precomp.h"
+#include "UICore/Core/Crypto/aes128_encrypt.h"
+#include "UICore/Core/System/databuffer.h"
 #include "aes128_encrypt_impl.h"
 
 namespace clan

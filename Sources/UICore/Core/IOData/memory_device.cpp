@@ -26,8 +26,8 @@
 **    Magnus Norddahl
 */
 
-#include "Core/precomp.h"
-#include "API/Core/IOData/memory_device.h"
+#include "UICore/precomp.h"
+#include "UICore/Core/IOData/memory_device.h"
 #include "iodevice_impl.h"
 #include "iodevice_provider_memory.h"
 

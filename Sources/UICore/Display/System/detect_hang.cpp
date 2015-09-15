@@ -26,8 +26,8 @@
 **    Magnus Norddahl
 */
 
-#include "Display/precomp.h"
-#include "API/Display/System/detect_hang.h"
+#include "UICore/precomp.h"
+#include "UICore/Display/System/detect_hang.h"
 #include "detect_hang_impl.h"
 
 namespace clan

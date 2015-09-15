@@ -26,9 +26,9 @@
 **    Magnus Norddahl
 */
 
-#include "Core/precomp.h"
-#include "API/Core/System/disposable_object.h"
-#include "API/Core/System/exception.h"
+#include "UICore/precomp.h"
+#include "UICore/Core/System/disposable_object.h"
+#include "UICore/Core/System/exception.h"
 
 namespace clan
 {

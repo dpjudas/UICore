@@ -30,9 +30,9 @@
 #pragma once
 
 #include <vector>
-#include "API/Display/2D/canvas.h"
-#include "API/Display/2D/path.h"
-#include "API/Display/2D/pen.h"
+#include "UICore/Display/2D/canvas.h"
+#include "UICore/Display/2D/path.h"
+#include "UICore/Display/2D/pen.h"
 #include "path_renderer.h"
 
 namespace clan

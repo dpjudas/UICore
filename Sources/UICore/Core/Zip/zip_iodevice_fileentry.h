@@ -28,12 +28,12 @@
 
 #pragma once
 
-#include "API/Core/IOData/iodevice_provider.h"
-#include "API/Core/Zip/zip_file_entry.h"
-#include "API/Core/System/databuffer.h"
+#include "UICore/Core/IOData/iodevice_provider.h"
+#include "UICore/Core/Zip/zip_file_entry.h"
+#include "UICore/Core/System/databuffer.h"
 #include "zip_local_file_header.h"
 #include <stack>
-#include "Core/Zip/miniz.h"
+#include "UICore/Core/Zip/miniz.h"
 
 namespace clan
 {

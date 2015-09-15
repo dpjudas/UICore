@@ -27,12 +27,12 @@
 **    Mark Page
 */
 
-#include "Display/precomp.h"
+#include "UICore/precomp.h"
 #include "canvas_impl.h"
-#include "API/Display/Render/render_batcher.h"
-#include "API/Display/Render/shared_gc_data.h"
-#include "API/Display/TargetProviders/graphic_context_provider.h"
-#include "API/Display/2D/gradient.h"
+#include "UICore/Display/Render/render_batcher.h"
+#include "UICore/Display/Render/shared_gc_data.h"
+#include "UICore/Display/TargetProviders/graphic_context_provider.h"
+#include "UICore/Display/2D/gradient.h"
 
 namespace clan
 {

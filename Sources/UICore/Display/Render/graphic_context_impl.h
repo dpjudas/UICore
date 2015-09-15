@@ -28,9 +28,9 @@
 
 #pragma once
 
-#include "API/Display/TargetProviders/graphic_context_provider.h"
-#include "API/Display/Font/font.h"
-#include "API/Core/Math/mat4.h"
+#include "UICore/Display/TargetProviders/graphic_context_provider.h"
+#include "UICore/Display/Font/font.h"
+#include "UICore/Core/Math/mat4.h"
 #include "graphic_screen.h"
 
 namespace clan

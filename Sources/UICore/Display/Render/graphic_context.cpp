@@ -28,23 +28,23 @@
 **    Kenneth Gangstoe
 */
 
-#include "Display/precomp.h"
-#include "API/Display/Render/graphic_context.h"
-#include "API/Display/Image/pixel_buffer.h"
-#include "API/Display/Render/texture.h"
-#include "API/Display/Font/font.h"
-#include "API/Display/Font/font_metrics.h"
-#include "API/Display/Window/display_window.h"
-#include "API/Display/Render/element_array_buffer.h"
-#include "API/Display/Render/primitives_array.h"
-#include "API/Core/System/databuffer.h"
-#include "API/Core/Math/angle.h"
+#include "UICore/precomp.h"
+#include "UICore/Display/Render/graphic_context.h"
+#include "UICore/Display/Image/pixel_buffer.h"
+#include "UICore/Display/Render/texture.h"
+#include "UICore/Display/Font/font.h"
+#include "UICore/Display/Font/font_metrics.h"
+#include "UICore/Display/Window/display_window.h"
+#include "UICore/Display/Render/element_array_buffer.h"
+#include "UICore/Display/Render/primitives_array.h"
+#include "UICore/Core/System/databuffer.h"
+#include "UICore/Core/Math/angle.h"
 #include "primitives_array_impl.h"
 #include "graphic_context_impl.h"
-#include "API/Display/Render/shared_gc_data.h"
-#include "API/Display/Render/depth_stencil_state_description.h"
-#include "API/Display/Render/blend_state_description.h"
-#include "API/Display/Render/rasterizer_state_description.h"
+#include "UICore/Display/Render/shared_gc_data.h"
+#include "UICore/Display/Render/depth_stencil_state_description.h"
+#include "UICore/Display/Render/blend_state_description.h"
+#include "UICore/Display/Render/rasterizer_state_description.h"
 
 namespace clan
 {

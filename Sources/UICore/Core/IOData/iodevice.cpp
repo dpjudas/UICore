@@ -27,10 +27,10 @@
 **    Mark Page
 */
 
-#include "Core/precomp.h"
-#include "API/Core/IOData/iodevice.h"
-#include "API/Core/IOData/iodevice_provider.h"
-#include "API/Core/IOData/cl_endian.h"
+#include "UICore/precomp.h"
+#include "UICore/Core/IOData/iodevice.h"
+#include "UICore/Core/IOData/iodevice_provider.h"
+#include "UICore/Core/IOData/cl_endian.h"
 #include "iodevice_impl.h"
 
 namespace clan

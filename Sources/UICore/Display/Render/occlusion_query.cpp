@@ -26,11 +26,11 @@
 **    Harry Storbacka
 */
 
-#include "Display/precomp.h"
-#include "API/Display/Render/occlusion_query.h"
-#include "API/Display/TargetProviders/occlusion_query_provider.h"
-#include "API/Display/Render/graphic_context.h"
-#include "API/Display/TargetProviders/graphic_context_provider.h"
+#include "UICore/precomp.h"
+#include "UICore/Display/Render/occlusion_query.h"
+#include "UICore/Display/TargetProviders/occlusion_query_provider.h"
+#include "UICore/Display/Render/graphic_context.h"
+#include "UICore/Display/TargetProviders/graphic_context_provider.h"
 
 namespace clan
 {

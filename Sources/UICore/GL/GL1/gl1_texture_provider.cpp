@@ -27,20 +27,21 @@
 **    Harry Storbacka
 */
 
-#include "GL/precomp.h"
+#include "UICore/precomp.h"
 #include "gl1_texture_provider.h"
 #include "gl1_graphic_context_provider.h"
-#include "API/Display/Image/pixel_buffer.h"
-#include "API/Display/Render/texture.h"
-#include "API/GL/opengl_wrap.h"
-#include "API/GL/opengl.h"
-#include "API/Core/IOData/cl_endian.h"
-#include "API/Core/System/databuffer.h"
-#include "API/Display/Render/shared_gc_data.h"
+#include "UICore/Display/Image/pixel_buffer.h"
+#include "UICore/Display/Render/texture.h"
+#include "UICore/GL/opengl_wrap.h"
+#include "UICore/GL/opengl.h"
+#include "UICore/Core/IOData/cl_endian.h"
+#include "UICore/Core/System/databuffer.h"
+#include "UICore/Core/Text/string_format.h"
+#include "UICore/Display/Render/shared_gc_data.h"
 #include "gl1_vertex_array_buffer_provider.h"
 
 #ifndef WIN32
-#include "API/Core/Text/console.h"
+#include "UICore/Core/Text/console.h"
 #endif
 
 namespace clan

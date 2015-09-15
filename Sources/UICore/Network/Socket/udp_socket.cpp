@@ -1,8 +1,8 @@
 
-#include "Network/precomp.h"
-#include "API/Network/Socket/udp_socket.h"
-#include "API/Network/Socket/socket_name.h"
-#include "API/Core/System/exception.h"
+#include "UICore/precomp.h"
+#include "UICore/Network/Socket/udp_socket.h"
+#include "UICore/Network/Socket/socket_name.h"
+#include "UICore/Core/System/exception.h"
 #include "tcp_socket.h"
 #include "../setupnetwork.h"
 

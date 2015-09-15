@@ -26,9 +26,9 @@
 **    Magnus Norddahl
 */
 
-#include "Display/precomp.h"
+#include "UICore/precomp.h"
 #include "png_writer.h"
-#include "API/Core/Zip/zlib_compression.h"
+#include "UICore/Core/Zip/zlib_compression.h"
 
 namespace clan
 {

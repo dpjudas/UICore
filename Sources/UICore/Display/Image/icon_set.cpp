@@ -26,12 +26,12 @@
 **    Magnus Norddahl
 */
 
-#include "Display/precomp.h"
-#include "API/Display/Image/icon_set.h"
-#include "API/Display/Image/pixel_buffer.h"
-#include "API/Core/System/cl_platform.h"
-#include "API/Core/System/databuffer.h"
-#include "API/Core/IOData/memory_device.h"
+#include "UICore/precomp.h"
+#include "UICore/Display/Image/icon_set.h"
+#include "UICore/Display/Image/pixel_buffer.h"
+#include "UICore/Core/System/databuffer.h"
+#include "UICore/Core/IOData/memory_device.h"
+#include <cstdint>
 
 namespace clan
 {

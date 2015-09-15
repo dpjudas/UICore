@@ -28,7 +28,7 @@
 
 #pragma once
 
-#include "API/Core/Math/rect_packer.h"
+#include "UICore/Core/Math/rect_packer.h"
 
 namespace clan
 {

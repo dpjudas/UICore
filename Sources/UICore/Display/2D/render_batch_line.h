@@ -28,10 +28,10 @@
 
 #pragma once
 
-#include "API/Display/Render/render_batcher.h"
-#include "API/Display/Render/texture.h"
-#include "API/Display/Render/graphic_context.h"
-#include "API/Display/Render/blend_state.h"
+#include "UICore/Display/Render/render_batcher.h"
+#include "UICore/Display/Render/texture.h"
+#include "UICore/Display/Render/graphic_context.h"
+#include "UICore/Display/Render/blend_state.h"
 #include "render_batch_buffer.h"
 
 namespace clan

@@ -26,20 +26,20 @@
 **    Mark Page
 */
 
-#include "Core/precomp.h"
+#include "UICore/precomp.h"
 #include "tls_client_impl.h"
-#include "API/Core/Text/string_format.h"
-#include "API/Core/Text/string_help.h"
-#include "API/Core/System/databuffer.h"
-#include "API/Core/Crypto/aes128_encrypt.h"
-#include "API/Core/Crypto/aes128_decrypt.h"
-#include "API/Core/Crypto/aes256_encrypt.h"
-#include "API/Core/Crypto/aes256_decrypt.h"
-#include "API/Core/IOData/file.h"
+#include "UICore/Core/Text/string_format.h"
+#include "UICore/Core/Text/text.h"
+#include "UICore/Core/System/databuffer.h"
+#include "UICore/Core/Crypto/aes128_encrypt.h"
+#include "UICore/Core/Crypto/aes128_decrypt.h"
+#include "UICore/Core/Crypto/aes256_encrypt.h"
+#include "UICore/Core/Crypto/aes256_decrypt.h"
+#include "UICore/Core/IOData/file.h"
 #include <ctime>
 #include <algorithm>
 #include "x509.h"
-#include "API/Core/Math/cl_math.h"
+#include "UICore/Core/Math/cl_math.h"
 
 namespace clan
 {

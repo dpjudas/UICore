@@ -26,9 +26,9 @@
 **    Mark Page
 */
 
-#include "Core/precomp.h"
-#include "API/Core/Crypto/md5.h"
-#include "API/Core/System/databuffer.h"
+#include "UICore/precomp.h"
+#include "UICore/Core/Crypto/md5.h"
+#include "UICore/Core/System/databuffer.h"
 #include "md5_impl.h"
 
 namespace clan

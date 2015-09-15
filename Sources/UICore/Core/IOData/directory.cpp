@@ -26,12 +26,12 @@
 **    Magnus Norddahl
 */
 
-#include "Core/precomp.h"
-#include "API/Core/IOData/directory.h"
-#include "API/Core/IOData/directory_scanner.h"
-#include "API/Core/IOData/path_help.h"
-#include "API/Core/Text/string_help.h"
-#include "API/Core/System/system.h"
+#include "UICore/precomp.h"
+#include "UICore/Core/IOData/directory.h"
+#include "UICore/Core/IOData/directory_scanner.h"
+#include "UICore/Core/IOData/path_help.h"
+#include "UICore/Core/Text/text.h"
+#include "UICore/Core/System/system.h"
 
 #ifdef __MINGW32__
 #define _WIN32_IE 0x0500

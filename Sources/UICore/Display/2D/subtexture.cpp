@@ -26,10 +26,10 @@
 **    Magnus Norddahl
 */
 
-#include "Display/precomp.h"
-#include "API/Display/2D/subtexture.h"
-#include "API/Display/Render/texture_2d.h"
-#include "API/Core/Math/rect.h"
+#include "UICore/precomp.h"
+#include "UICore/Display/2D/subtexture.h"
+#include "UICore/Display/Render/texture_2d.h"
+#include "UICore/Core/Math/rect.h"
 
 namespace clan
 {

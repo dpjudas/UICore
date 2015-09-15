@@ -26,7 +26,7 @@
 **    Magnus Norddahl
 */
 
-#include "D3D/precomp.h"
+#include "UICore/precomp.h"
 #include "d3d_share_list.h"
 
 namespace clan

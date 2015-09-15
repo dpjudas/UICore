@@ -27,14 +27,14 @@
 **    Mark Page
 */
 
-#include "Display/precomp.h"
+#include "UICore/precomp.h"
 #include "font_engine.h"
 #include "font_engine_win32.h"
-#include "API/Display/Font/font_metrics.h"
-#include "API/Core/System/databuffer.h"
-#include "API/Core/Text/string_help.h"
-#include "API/Display/2D/path.h"
-#include "API/Core/Math/bezier_curve.h"
+#include "UICore/Display/Font/font_metrics.h"
+#include "UICore/Core/System/databuffer.h"
+#include "UICore/Core/Text/text.h"
+#include "UICore/Display/2D/path.h"
+#include "UICore/Core/Math/bezier_curve.h"
 
 namespace clan
 {

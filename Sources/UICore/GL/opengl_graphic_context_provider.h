@@ -28,8 +28,8 @@
 
 #pragma once
 
-#include "API/Display/TargetProviders/graphic_context_provider.h"
-#include "API/GL/opengl.h"
+#include "UICore/Display/TargetProviders/graphic_context_provider.h"
+#include "UICore/GL/opengl.h"
 
 namespace clan
 {

@@ -27,10 +27,10 @@
 **    Mark Page
 */
 
-#include "Core/precomp.h"
-#include "API/Core/System/cl_platform.h"
-#include "API/Core/System/databuffer.h"
-#include "API/Core/Math/cl_math.h"
+#include "UICore/precomp.h"
+#include <cstdint>
+#include "UICore/Core/System/databuffer.h"
+#include "UICore/Core/Math/cl_math.h"
 #include "aes_impl.h"
 
 #ifndef WIN32

@@ -30,8 +30,8 @@
 
 #pragma once
 
-#include "../../Core/Signals/signal.h"
-#include "../Window/display_window.h"
+#include "UICore/Core/Signals/signal.h"
+#include "UICore/Display/Window/display_window.h"
 #include <memory>
 
 namespace clan

@@ -27,12 +27,12 @@
 **    Harry Storbacka
 */
 
-#include "Display/precomp.h"
-#include "API/Core/System/disposable_object.h"
-#include "API/Display/Render/shared_gc_data.h"
+#include "UICore/precomp.h"
+#include "UICore/Core/System/disposable_object.h"
+#include "UICore/Display/Render/shared_gc_data.h"
 #include <algorithm>
 #include "shared_gc_data_impl.h"
-#include "API/Display/Window/display_window_description.h"
+#include "UICore/Display/Window/display_window_description.h"
 
 namespace clan
 {

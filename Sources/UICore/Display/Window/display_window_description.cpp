@@ -28,8 +28,8 @@
 **    Kenneth Gangstoe
 */
 
-#include "Display/precomp.h"
-#include "API/Display/Window/display_window_description.h"
+#include "UICore/precomp.h"
+#include "UICore/Display/Window/display_window_description.h"
 #include "display_window_description_impl.h"
 
 namespace clan

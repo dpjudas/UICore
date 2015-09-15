@@ -26,9 +26,9 @@
 **    Magnus Norddahl
 */
 
-#include "Core/precomp.h"
-#include "API/Core/System/game_time.h"
-#include "API/Core/System/system.h"
+#include "UICore/precomp.h"
+#include "UICore/Core/System/game_time.h"
+#include "UICore/Core/System/system.h"
 #include "game_time_impl.h"
 
 namespace clan

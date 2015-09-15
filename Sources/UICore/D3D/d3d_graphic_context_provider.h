@@ -28,12 +28,12 @@
 
 #pragma once
 
-#include "API/Display/TargetProviders/graphic_context_provider.h"
-#include "API/Display/Font/font.h"
-#include "API/Display/Render/blend_state_description.h"
-#include "API/Display/Render/depth_stencil_state_description.h"
-#include "API/Display/Render/graphic_context.h"
-#include "API/Display/Render/program_object.h"
+#include "UICore/Display/TargetProviders/graphic_context_provider.h"
+#include "UICore/Display/Font/font.h"
+#include "UICore/Display/Render/blend_state_description.h"
+#include "UICore/Display/Render/depth_stencil_state_description.h"
+#include "UICore/Display/Render/graphic_context.h"
+#include "UICore/Display/Render/program_object.h"
 #include "d3d_rasterizer_state_provider.h"
 #include "d3d_blend_state_provider.h"
 #include "d3d_depth_stencil_state_provider.h"

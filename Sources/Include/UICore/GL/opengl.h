@@ -32,7 +32,14 @@
 #include "opengl_defines.h"
 #include <utility>
 #include "../Display/Render/texture.h"
-#include "../Core/System/thread_local_storage.h"
+
+#if defined(_MSC_VER)
+#define cl_tls_variable _declspec(thread)
+#elif defined(__APPLE__) // To do: change check to only apply to iOS/ARM target
+#define cl_tls_variable
+#else
+#define cl_tls_variable __thread
+#endif
 
 namespace clan
 {

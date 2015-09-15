@@ -27,10 +27,10 @@
 **    Harry Storbacka
 */
 
-#include "Display/precomp.h"
-#include "API/Display/2D/color.h"
-#include "API/Core/Text/string_format.h"
-#include "API/Core/Text/string_help.h"
+#include "UICore/precomp.h"
+#include "UICore/Display/2D/color.h"
+#include "UICore/Core/Text/string_format.h"
+#include "UICore/Core/Text/text.h"
 #include <map>
 
 #ifndef WIN32

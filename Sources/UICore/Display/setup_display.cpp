@@ -27,20 +27,12 @@
 **    Mark Page
 */
 
-#include "Display/precomp.h"
+#include "UICore/precomp.h"
 #include "setup_display.h"
-#include "API/Display/ImageProviders/provider_type_register.h"
-#include "API/Display/ImageProviders/targa_provider.h"
-#include "API/Display/ImageProviders/jpeg_provider.h"
-#include "API/Display/ImageProviders/png_provider.h"
-#include "API/Display/Resources/display_cache.h"
-#include "API/Core/Resources/resource_manager.h"
-#include "API/Core/Resources/xml_resource_manager.h"
-#include "API/Core/Resources/xml_resource_document.h"
-#include "API/Core/Resources/file_resource_manager.h"
-#include "API/Core/Resources/file_resource_document.h"
-#include "Display/Resources/XML/xml_display_cache.h"
-#include "Display/Resources/file_display_cache.h"
+#include "UICore/Display/ImageProviders/provider_type_register.h"
+#include "UICore/Display/ImageProviders/targa_provider.h"
+#include "UICore/Display/ImageProviders/jpeg_provider.h"
+#include "UICore/Display/ImageProviders/png_provider.h"
 #include "../Core/System/setup_core.h"
 
 #ifdef WIN32
@@ -63,9 +55,6 @@ namespace clan
 	public:
 		SetupDisplay_Impl();
 		virtual ~SetupDisplay_Impl();
-
-		static void add_cache_factory_xml(ResourceManager &manager, const XMLResourceDocument &doc);
-		static void add_cache_factory_file(ResourceManager &manager, const FileResourceDocument &doc);
 
 		static SetupDisplay_Impl *instance;
 
@@ -116,9 +105,6 @@ namespace clan
 		png_provider = new ProviderType_Register<PNGProvider>("png");
 		targa_provider = new ProviderType_Register<TargaProvider>("targa");
 		tga_provider = new ProviderType_Register<TargaProvider>("tga");
-
-		XMLResourceManager::add_cache_factory(std::function<void(ResourceManager &, const XMLResourceDocument &)>(&SetupDisplay_Impl::add_cache_factory_xml));
-		FileResourceManager::add_cache_factory(std::function<void(ResourceManager &, const FileResourceDocument &)>(&SetupDisplay_Impl::add_cache_factory_file));
 	}
 
 	SetupDisplay_Impl::~SetupDisplay_Impl()
@@ -130,16 +116,6 @@ namespace clan
 		delete tga_provider;
 
 		instance = nullptr;
-	}
-
-	void SetupDisplay_Impl::add_cache_factory_xml(ResourceManager &manager, const XMLResourceDocument &doc)
-	{
-		DisplayCache::set(manager, std::shared_ptr<DisplayCache>(new XMLDisplayCache(doc)));
-	}
-
-	void SetupDisplay_Impl::add_cache_factory_file(ResourceManager &manager, const FileResourceDocument &doc)
-	{
-		DisplayCache::set(manager, std::shared_ptr<DisplayCache>(new FileDisplayCache(doc)));
 	}
 
 #ifdef WIN32

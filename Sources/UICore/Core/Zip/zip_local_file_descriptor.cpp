@@ -26,9 +26,9 @@
 **    Magnus Norddahl
 */
 
-#include "Core/precomp.h"
+#include "UICore/precomp.h"
 #include "zip_local_file_descriptor.h"
-#include "API/Core/IOData/iodevice.h"
+#include "UICore/Core/IOData/iodevice.h"
 
 namespace clan
 {

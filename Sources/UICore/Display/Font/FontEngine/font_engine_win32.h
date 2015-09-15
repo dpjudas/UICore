@@ -30,9 +30,9 @@
 #pragma once
 
 #include "font_engine.h"
-#include "API/Display/Font/font.h"
-#include "API/Display/Font/font_description.h"
-#include "API/Display/Font/font_metrics.h"
+#include "UICore/Display/Font/font.h"
+#include "UICore/Display/Font/font_description.h"
+#include "UICore/Display/Font/font_metrics.h"
 
 namespace clan
 {

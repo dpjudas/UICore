@@ -28,7 +28,7 @@
 
 #pragma once
 
-#include "API/Display/TargetProviders/display_target_provider.h"
+#include "UICore/Display/TargetProviders/display_target_provider.h"
 
 namespace clan
 {

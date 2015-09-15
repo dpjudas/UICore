@@ -28,8 +28,8 @@
 **    Mark Page
 */
 
-#include "Display/precomp.h"
-#include "API/Display/Font/font_metrics.h"
+#include "UICore/precomp.h"
+#include "UICore/Display/Font/font_metrics.h"
 #include "font_metrics_impl.h"
 
 namespace clan

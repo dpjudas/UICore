@@ -27,8 +27,8 @@
 **    Magnus Norddahl
 */
 
-#include "Network/precomp.h"
-#include "API/Core/Text/string_format.h"
+#include "UICore/precomp.h"
+#include "UICore/Core/Text/string_format.h"
 #include "socket_error.h"
 
 #ifndef WIN32

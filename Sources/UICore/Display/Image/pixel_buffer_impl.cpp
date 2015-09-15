@@ -27,15 +27,15 @@
 **    Mark Page
 */
 
-#include "Display/precomp.h"
-#include "API/Display/Image/pixel_buffer.h"
-#include "API/Core/System/exception.h"
+#include "UICore/precomp.h"
+#include "UICore/Display/Image/pixel_buffer.h"
+#include "UICore/Core/System/exception.h"
 #include "pixel_buffer_impl.h"
 #include "cpu_pixel_buffer_provider.h"
-#include "API/Display/Render/graphic_context.h"
-#include "API/Display/TargetProviders/graphic_context_provider.h"
-#include "API/Display/TargetProviders/pixel_buffer_provider.h"
-#include "API/Display/Image/pixel_converter.h"
+#include "UICore/Display/Render/graphic_context.h"
+#include "UICore/Display/TargetProviders/graphic_context_provider.h"
+#include "UICore/Display/TargetProviders/pixel_buffer_provider.h"
+#include "UICore/Display/Image/pixel_converter.h"
 
 namespace clan
 {

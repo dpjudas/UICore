@@ -29,9 +29,9 @@
 
 #pragma once
 
-#include "API/Display/Render/texture.h"
-#include "API/Display/Render/shared_gc_data.h"
-#include "API/Display/TargetProviders/texture_provider.h"
+#include "UICore/Display/Render/texture.h"
+#include "UICore/Display/Render/shared_gc_data.h"
+#include "UICore/Display/TargetProviders/texture_provider.h"
 
 namespace clan
 {

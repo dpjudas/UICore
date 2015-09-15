@@ -26,10 +26,10 @@
 **    Kenneth Gangstoe
 */
 
-#include "Display/precomp.h"
-#include "API/Display/2D/subtexture.h"
-#include "API/Core/Math/point.h"
-#include "API/Core/Math/rect.h"
+#include "UICore/precomp.h"
+#include "UICore/Display/2D/subtexture.h"
+#include "UICore/Core/Math/point.h"
+#include "UICore/Core/Math/rect.h"
 #include "texture_group_impl.h"
 
 namespace clan

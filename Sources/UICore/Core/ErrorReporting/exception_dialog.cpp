@@ -26,11 +26,12 @@
 **    Magnus Norddahl
 */
 
-#include "Core/precomp.h"
-#include "API/Core/ErrorReporting/exception_dialog.h"
-#include "API/Core/Text/string_help.h"
+#include "UICore/precomp.h"
+#include "UICore/Core/ErrorReporting/exception_dialog.h"
+#include "UICore/Core/Text/text.h"
+#include <cstdint>
 #include "exception_dialog_impl.h"
-#include "API/Core/Math/cl_math.h"
+#include "UICore/Core/Math/cl_math.h"
 
 #ifdef WIN32
 #include <commctrl.h>

@@ -26,12 +26,12 @@
 **    Magnus Norddahl
 */
 
-#include "Display/precomp.h"
+#include "UICore/precomp.h"
 #include "png_loader.h"
-#include "API/Display/Image/pixel_buffer_lock.h"
-#include "API/Core/Zip/zlib_compression.h"
-#include "API/Core/System/system.h"
-#include "Display/ImageProviders/PNGWriter/png_writer.h"
+#include "UICore/Display/Image/pixel_buffer_lock.h"
+#include "UICore/Core/Zip/zlib_compression.h"
+#include "UICore/Core/System/system.h"
+#include "UICore/Display/ImageProviders/PNGWriter/png_writer.h"
 
 namespace clan
 {

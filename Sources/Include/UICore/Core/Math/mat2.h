@@ -30,7 +30,7 @@
 
 #pragma once
 
-#include "../System/cl_platform.h"
+#include <cstdint>
 #include "mat3.h"
 #include "mat4.h"
 #include "vec2.h"

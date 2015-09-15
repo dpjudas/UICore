@@ -27,9 +27,9 @@
 **    Mark Page
 */
 
-#include "Core/precomp.h"
-#include "API/Core/Math/quad.h"
-#include "API/Core/Math/rect.h"
+#include "UICore/precomp.h"
+#include "UICore/Core/Math/quad.h"
+#include "UICore/Core/Math/rect.h"
 
 namespace clan
 {

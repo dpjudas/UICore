@@ -30,13 +30,13 @@
 
 #pragma once
 
-#include "API/Display/Window/display_window.h"
-#include "API/Display/TargetProviders/display_window_provider.h"
-#include "API/Display/Window/display_window_description.h"
-#include "API/Display/TargetProviders/display_target_provider.h"
-#include "API/Display/Render/graphic_context.h"
-#include "API/Display/Window/cursor.h"
-#include "API/Display/Render/shared_gc_data.h"
+#include "UICore/Display/Window/display_window.h"
+#include "UICore/Display/TargetProviders/display_window_provider.h"
+#include "UICore/Display/Window/display_window_description.h"
+#include "UICore/Display/TargetProviders/display_target_provider.h"
+#include "UICore/Display/Render/graphic_context.h"
+#include "UICore/Display/Window/cursor.h"
+#include "UICore/Display/Render/shared_gc_data.h"
 
 namespace clan
 {

@@ -26,8 +26,8 @@
 **    Magnus Norddahl
 */
 
-#include "Core/precomp.h"
-#include "API/Core/System/service.h"
+#include "UICore/precomp.h"
+#include "UICore/Core/System/service.h"
 #include "service_impl.h"
 #ifdef WIN32
 #include "Win32/service_win32.h"

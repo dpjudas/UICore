@@ -28,13 +28,13 @@
 **    Mark Page
 */
 
-#include "UI/precomp.h"
-#include "API/UI/StandardViews/checkbox_view.h"
-#include "API/UI/Style/style_property_parser.h"
-#include "API/Display/2D/path.h"
-#include "API/Display/System/timer.h"
-#include "API/Display/2D/brush.h"
-#include "API/UI/Events/pointer_event.h"
+#include "UICore/precomp.h"
+#include "UICore/UI/StandardViews/checkbox_view.h"
+#include "UICore/UI/Style/style_property_parser.h"
+#include "UICore/Display/2D/path.h"
+#include "UICore/Display/System/timer.h"
+#include "UICore/Display/2D/brush.h"
+#include "UICore/UI/Events/pointer_event.h"
 #include <algorithm>
 #include "checkbox_view_impl.h"
 

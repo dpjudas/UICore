@@ -26,11 +26,11 @@
 **    Magnus Norddahl
 */
 
-#include "Display/precomp.h"
+#include "UICore/precomp.h"
 #include "jpeg_rgb_decoder.h"
 #include "jpeg_mcu_decoder.h"
 #include "jpeg_loader.h"
-#include "API/Core/System/system.h"
+#include "UICore/Core/System/system.h"
 
 #ifndef CL_DISABLE_SSE2
 #ifndef ARM_PLATFORM

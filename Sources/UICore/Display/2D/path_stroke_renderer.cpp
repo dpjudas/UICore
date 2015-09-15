@@ -27,7 +27,7 @@
 **    Mark Page
 */
 
-#include "Display/precomp.h"
+#include "UICore/precomp.h"
 #include "path_stroke_renderer.h"
 
 namespace clan

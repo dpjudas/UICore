@@ -30,7 +30,7 @@
 
 #pragma once
 
-#include "../System/cl_platform.h"
+#include <cstdint>
 
 namespace clan
 {

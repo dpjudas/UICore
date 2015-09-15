@@ -26,10 +26,10 @@
 **    Magnus Norddahl
 */
 
-#include "UI/precomp.h"
-#include "API/UI/View/view_geometry.h"
-#include "API/UI/Style/style_cascade.h"
-#include "API/UI/Style/style_get_value.h"
+#include "UICore/precomp.h"
+#include "UICore/UI/View/view_geometry.h"
+#include "UICore/UI/Style/style_cascade.h"
+#include "UICore/UI/Style/style_get_value.h"
 
 namespace clan
 {

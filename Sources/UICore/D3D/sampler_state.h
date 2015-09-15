@@ -28,7 +28,8 @@
 
 #pragma once
 
-#include "API/Display/TargetProviders/texture_provider.h"
+#include "UICore/Display/TargetProviders/texture_provider.h"
+#include "UICore/Core/System/comptr.h"
 #include <map>
 
 namespace clan

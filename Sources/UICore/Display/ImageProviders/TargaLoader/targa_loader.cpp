@@ -26,9 +26,9 @@
 **    Magnus Norddahl
 */
 
-#include "Display/precomp.h"
+#include "UICore/precomp.h"
 #include "targa_loader.h"
-#include "API/Display/Image/pixel_buffer_lock.h"
+#include "UICore/Display/Image/pixel_buffer_lock.h"
 
 namespace clan
 {

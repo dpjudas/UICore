@@ -31,16 +31,16 @@
 
 #include <climits>
 #include <vector>
-#include "API/Display/2D/canvas.h"
-#include "API/Display/2D/path.h"
-#include "API/Display/2D/brush.h"
-#include "API/Display/Render/blend_state_description.h"
-#include "API/Display/Render/blend_state.h"
-#include "API/Display/Render/shader_object.h"
-#include "API/Display/Render/texture_2d.h"
-#include "API/Display/Render/transfer_texture.h"
-#include "API/Display/Image/pixel_buffer.h"
-#include "API/Display/Render/program_object.h"
+#include "UICore/Display/2D/canvas.h"
+#include "UICore/Display/2D/path.h"
+#include "UICore/Display/2D/brush.h"
+#include "UICore/Display/Render/blend_state_description.h"
+#include "UICore/Display/Render/blend_state.h"
+#include "UICore/Display/Render/shader_object.h"
+#include "UICore/Display/Render/texture_2d.h"
+#include "UICore/Display/Render/transfer_texture.h"
+#include "UICore/Display/Image/pixel_buffer.h"
+#include "UICore/Display/Render/program_object.h"
 #include "render_batch_buffer.h"
 #include "path_renderer.h"
 

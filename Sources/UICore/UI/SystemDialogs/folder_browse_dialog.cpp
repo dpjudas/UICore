@@ -26,16 +26,16 @@
 **    Kenneth Gangstoe
 */
 
-#include "UI/precomp.h"
-#include "API/UI/SystemDialogs/folder_browse_dialog.h"
-#include "API/UI/View/view.h"
-#include "API/UI/TopLevel/view_tree.h"
-#include "API/Core/Text/string_help.h"
-#include "API/Core/System/system.h"
-#include "API/Display/Window/display_window.h"
+#include "UICore/precomp.h"
+#include "UICore/UI/SystemDialogs/folder_browse_dialog.h"
+#include "UICore/UI/View/view.h"
+#include "UICore/UI/TopLevel/view_tree.h"
+#include "UICore/Core/Text/text.h"
+#include "UICore/Core/System/system.h"
+#include "UICore/Display/Window/display_window.h"
 
 #if defined(WIN32)
-#include "API/Core/System/comptr.h"
+#include "UICore/Core/System/comptr.h"
 #include <Shlobj.h>
 #elif defined(__APPLE__)
 // TODO Add Cocoa includes here

@@ -27,12 +27,12 @@
 **    Mark Page
 */
 
-#include "D3D/precomp.h"
-#include "API/D3D/d3d_target.h"
-#include "API/Display/display_target.h"
-#include "API/Display/Render/render_buffer.h"
-#include "API/Display/Render/uniform_buffer.h"
-#include "API/Core/Text/string_format.h"
+#include "UICore/precomp.h"
+#include "UICore/D3D/d3d_target.h"
+#include "UICore/Display/display_target.h"
+#include "UICore/Display/Render/render_buffer.h"
+#include "UICore/Display/Render/uniform_buffer.h"
+#include "UICore/Core/Text/string_format.h"
 #include "d3d_target_provider.h"
 #include "d3d_texture_provider.h"
 #include "d3d_pixel_buffer_provider.h"

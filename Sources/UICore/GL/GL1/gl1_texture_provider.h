@@ -29,11 +29,11 @@
 
 #pragma once
 
-#include "API/Display/TargetProviders/texture_provider.h"
-#include "API/Display/TargetProviders/graphic_context_provider.h"
-#include "API/Display/TargetProviders/primitives_array_provider.h"
-#include "API/Core/System/disposable_object.h"
-#include "API/GL/opengl.h"
+#include "UICore/Display/TargetProviders/texture_provider.h"
+#include "UICore/Display/TargetProviders/graphic_context_provider.h"
+#include "UICore/Display/TargetProviders/primitives_array_provider.h"
+#include "UICore/Core/System/disposable_object.h"
+#include "UICore/GL/opengl.h"
 
 namespace clan
 {

@@ -26,7 +26,7 @@
 **    Harry Storbacka
 */
 
-#include "Display/precomp.h"
+#include "UICore/precomp.h"
 #include "font_metrics_impl.h"
 #include <cmath>
 

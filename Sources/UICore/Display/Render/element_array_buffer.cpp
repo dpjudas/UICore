@@ -26,12 +26,12 @@
 **    Magnus Norddahl
 */
 
-#include "Display/precomp.h"
-#include "API/Display/Render/element_array_buffer.h"
-#include "API/Display/TargetProviders/element_array_buffer_provider.h"
-#include "API/Display/Render/graphic_context.h"
-#include "API/Display/TargetProviders/graphic_context_provider.h"
-#include "API/Core/System/exception.h"
+#include "UICore/precomp.h"
+#include "UICore/Display/Render/element_array_buffer.h"
+#include "UICore/Display/TargetProviders/element_array_buffer_provider.h"
+#include "UICore/Display/Render/graphic_context.h"
+#include "UICore/Display/TargetProviders/graphic_context_provider.h"
+#include "UICore/Core/System/exception.h"
 
 namespace clan
 {

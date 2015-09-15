@@ -26,9 +26,9 @@
 **    Magnus Norddahl
 */
 
-#include "Display/precomp.h"
-#include "API/Core/Math/cl_math.h"
-#include "API/Display/2D/canvas.h"
+#include "UICore/precomp.h"
+#include "UICore/Core/Math/cl_math.h"
+#include "UICore/Display/2D/canvas.h"
 #include "span_layout_impl.h"
 
 namespace clan

@@ -26,10 +26,10 @@
 **    Magnus Norddahl
 */
 
-#include "Core/precomp.h"
-#include "API/Core/System/registry_key.h"
-#include "API/Core/Text/string_format.h"
-#include "API/Core/Text/string_help.h"
+#include "UICore/precomp.h"
+#include "UICore/Core/System/registry_key.h"
+#include "UICore/Core/Text/string_format.h"
+#include "UICore/Core/Text/text.h"
 
 #ifdef WIN32
 

@@ -28,7 +28,8 @@
 
 #pragma once
 
-#include "API/Display/TargetProviders/transfer_buffer_provider.h"
+#include "UICore/Display/TargetProviders/transfer_buffer_provider.h"
+#include "UICore/Core/System/comptr.h"
 
 namespace clan
 {

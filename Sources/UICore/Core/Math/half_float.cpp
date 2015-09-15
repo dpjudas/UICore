@@ -26,8 +26,8 @@
 **    Jeroen van der Zijp (Based on the paper "Fast Half Float Conversions" by Jeroen van der Zijp)
 */
 
-#include "Core/precomp.h"
-#include "API/Core/Math/half_float.h"
+#include "UICore/precomp.h"
+#include "UICore/Core/Math/half_float.h"
 
 namespace clan
 {

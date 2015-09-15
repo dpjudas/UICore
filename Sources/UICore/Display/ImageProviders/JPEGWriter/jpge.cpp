@@ -8,7 +8,7 @@
 //                       Code tweaks to fix VS2008 static code analysis warnings (all looked harmless).
 //                       Code review revealed method load_block_16_8_8() (used for the non-default H2V1 sampling mode to downsample chroma) somehow didn't get the rounding factor fix from v1.02.
 
-#include "Display/precomp.h"
+#include "UICore/precomp.h"
 #include "jpge.h"
 
 #include <stdlib.h>

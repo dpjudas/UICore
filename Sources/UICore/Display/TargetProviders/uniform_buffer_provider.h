@@ -28,7 +28,7 @@
 
 #pragma once
 
-#include "../Render/uniform_buffer.h"
+#include "UICore/Display/Render/uniform_buffer.h"
 
 namespace clan
 {

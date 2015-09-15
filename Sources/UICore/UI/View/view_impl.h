@@ -26,13 +26,14 @@
 **    Magnus Norddahl
 */
 
-#include "API/UI/View/view.h"
-#include "API/UI/View/focus_policy.h"
-#include "API/UI/Style/style.h"
-#include "API/Display/Window/display_window.h"
-#include "API/Display/Window/cursor.h"
-#include "API/Display/Window/cursor_description.h"
+#include "UICore/UI/View/view.h"
+#include "UICore/UI/View/focus_policy.h"
+#include "UICore/UI/Style/style.h"
+#include "UICore/Display/Window/display_window.h"
+#include "UICore/Display/Window/cursor.h"
+#include "UICore/Display/Window/cursor_description.h"
 #include "../Animation/animation_group.h"
+#include <map>
 
 namespace clan
 {

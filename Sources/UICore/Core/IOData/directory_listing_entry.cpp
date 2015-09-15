@@ -26,8 +26,8 @@
 **    Harry Storbacka
 */
 
-#include "Core/precomp.h"
-#include "API/Core/IOData/directory_listing_entry.h"
+#include "UICore/precomp.h"
+#include "UICore/Core/IOData/directory_listing_entry.h"
 
 namespace clan
 {

@@ -26,7 +26,7 @@
 **    Magnus Norddahl
 */
 
-#include "D3D/precomp.h"
+#include "UICore/precomp.h"
 #include "d3d_graphic_context_provider.h"
 #include "d3d_display_window_provider.h"
 #include "d3d_texture_provider.h"
@@ -43,12 +43,12 @@
 #include "d3d_storage_buffer_provider.h"
 #include "d3d_element_array_buffer_provider.h"
 #include "d3d_transfer_buffer_provider.h"
-#include "API/Display/Font/font.h"
-#include "API/Display/Font/font_metrics.h"
-#include "API/Display/Render/transfer_texture.h"
-#include "API/Display/Render/shared_gc_data.h"
-#include "API/Display/Window/display_window_description.h"
-#include "API/D3D/d3d_target.h"
+#include "UICore/Display/Font/font.h"
+#include "UICore/Display/Font/font_metrics.h"
+#include "UICore/Display/Render/transfer_texture.h"
+#include "UICore/Display/Render/shared_gc_data.h"
+#include "UICore/Display/Window/display_window_description.h"
+#include "UICore/D3D/d3d_target.h"
 
 namespace clan
 {

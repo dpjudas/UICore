@@ -45,9 +45,9 @@
 // kind, not even the implied warranty of merchantability or fitness for
 // a particular purpose.
 
-#include "Core/precomp.h"
-#include "API/Core/Math/big_int.h"
-#include "API/Core/Math/cl_math.h"
+#include "UICore/precomp.h"
+#include "UICore/Core/Math/big_int.h"
+#include "UICore/Core/Math/cl_math.h"
 #include "big_int_impl.h"
 #include <cstdlib>
 

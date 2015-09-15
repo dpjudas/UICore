@@ -27,13 +27,11 @@
 **    Mark Page
 */
 
-#include "Core/precomp.h"
+#include "UICore/precomp.h"
 #include "setup_core.h"
-#include "API/Core/System/exception.h"
-#include "API/Core/System/thread_local_storage.h"
-#include "API/Core/System/system.h"
-#include "tls_instance.h"
-#include "API/Core/Math/cl_math.h"
+#include "UICore/Core/System/exception.h"
+#include "UICore/Core/System/system.h"
+#include "UICore/Core/Math/cl_math.h"
 
 namespace clan
 {
@@ -44,9 +42,6 @@ namespace clan
 	public:
 		SetupCore_Impl();
 		virtual ~SetupCore_Impl();
-
-		ThreadLocalStorage_Instance tls_instance;
-
 	};
 
 	SetupCore::SetupCore()

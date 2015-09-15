@@ -28,9 +28,9 @@
 
 #pragma once
 
-#include "API/Display/Render/graphic_context.h"
-#include "API/Display/Render/program_object.h"
-#include "API/Display/Render/shader_object.h"
+#include "UICore/Display/Render/graphic_context.h"
+#include "UICore/Display/Render/program_object.h"
+#include "UICore/Display/Render/shader_object.h"
 
 namespace clan
 {

@@ -26,7 +26,7 @@
 **    Magnus Norddahl
 */
 
-#include "Display/precomp.h"
+#include "UICore/precomp.h"
 #include "jpeg_loader.h"
 #include "jpeg_bit_reader.h"
 #include "jpeg_huffman_decoder.h"

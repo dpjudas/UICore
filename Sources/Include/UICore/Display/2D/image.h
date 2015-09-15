@@ -30,10 +30,9 @@
 
 #include <memory>
 #include "../../Core/Math/origin.h"
-#include "../../Core/Resources/resource.h"
 #include "color.h"
 #include "../Image/image_import_description.h"
-#include "../Render/texture.h"
+#include "UICore/Display/Render/texture.h"
 
 namespace clan
 {
@@ -95,16 +94,6 @@ namespace clan
 		Image(Canvas &canvas, const std::string &filename, const FileSystem &fs, const ImageImportDescription &import_desc = ImageImportDescription());
 
 		virtual ~Image();
-
-		/// \brief Retrieves a Sprite resource from the resource manager
-		///
-		/// \param canvas = Canvas
-		/// \param resources = Resource manager
-		/// \param id = id
-		static Resource<Image> resource(Canvas &canvas, const std::string &id, const ResourceManager &resources);
-
-		/// \brief Loads a Sprite from a XML resource definition
-		static Image load(Canvas &canvas, const std::string &id, const XMLResourceDocument &doc);
 
 		/// \brief Returns true if this object is invalid.
 		bool is_null() const { return !impl; }

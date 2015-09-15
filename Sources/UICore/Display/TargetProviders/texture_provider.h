@@ -29,7 +29,7 @@
 
 #pragma once
 
-#include "../Render/texture.h"
+#include "UICore/Display/Render/texture.h"
 #include <memory>
 
 namespace clan

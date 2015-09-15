@@ -26,8 +26,8 @@
 **    Mark Page
 */
 
-#include "Core/precomp.h"
-#include "API/Core/Crypto/tls_client.h"
+#include "UICore/precomp.h"
+#include "UICore/Core/Crypto/tls_client.h"
 #include "tls_client_impl.h"
 
 namespace clan

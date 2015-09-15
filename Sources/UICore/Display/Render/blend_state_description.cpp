@@ -26,8 +26,8 @@
 **    Magnus Norddahl
 */
 
-#include "Display/precomp.h"
-#include "API/Display/Render/blend_state_description.h"
+#include "UICore/precomp.h"
+#include "UICore/Display/Render/blend_state_description.h"
 
 namespace clan
 {

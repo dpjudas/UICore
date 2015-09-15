@@ -27,23 +27,19 @@
 **    Harry Storbacka
 */
 
-#include "Display/precomp.h"
-#include "API/Display/Render/texture.h"
-#include "API/Display/Render/texture_1d.h"
-#include "API/Display/Render/texture_1d_array.h"
-#include "API/Display/Render/texture_2d.h"
-#include "API/Display/Render/texture_2d_array.h"
-#include "API/Display/Render/texture_3d.h"
-#include "API/Display/Render/texture_cube.h"
-#include "API/Display/Render/texture_cube_array.h"
-#include "API/Display/Image/pixel_buffer.h"
-#include "API/Display/Image/pixel_buffer_set.h"
-#include "API/Display/Resources/display_cache.h"
-#include "API/Core/Resources/xml_resource_manager.h"
-#include "API/Core/Resources/xml_resource_node.h"
-#include "API/Core/XML/dom_element.h"
-#include "API/Core/IOData/path_help.h"
-#include "API/Core/Text/string_format.h"
+#include "UICore/precomp.h"
+#include "UICore/Display/Render/texture.h"
+#include "UICore/Display/Render/texture_1d.h"
+#include "UICore/Display/Render/texture_1d_array.h"
+#include "UICore/Display/Render/texture_2d.h"
+#include "UICore/Display/Render/texture_2d_array.h"
+#include "UICore/Display/Render/texture_3d.h"
+#include "UICore/Display/Render/texture_cube.h"
+#include "UICore/Display/Render/texture_cube_array.h"
+#include "UICore/Display/Image/pixel_buffer.h"
+#include "UICore/Display/Image/pixel_buffer_set.h"
+#include "UICore/Core/IOData/path_help.h"
+#include "UICore/Core/Text/string_format.h"
 #include "texture_impl.h"
 
 namespace clan
@@ -158,11 +154,6 @@ namespace clan
 
 	Texture::~Texture()
 	{
-	}
-
-	Resource<Texture> Texture::resource(GraphicContext &gc, const std::string &id, const ResourceManager &resources)
-	{
-		return DisplayCache::get(resources).get_texture(gc, id);
 	}
 
 	void Texture::throw_if_null() const

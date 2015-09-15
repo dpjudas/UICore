@@ -28,7 +28,7 @@
 
 #pragma once
 
-#include "../Render/primitives_array.h"
+#include "UICore/Display/Render/primitives_array.h"
 
 namespace clan
 {

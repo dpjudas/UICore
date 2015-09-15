@@ -29,10 +29,11 @@
 
 #pragma once
 
-#include "API/Display/TargetProviders/program_object_provider.h"
-#include "API/Display/Render/shader_object.h"
-#include "API/Display/Render/uniform_buffer.h"
-#include "API/Core/Math/vec4.h"
+#include "UICore/Display/TargetProviders/program_object_provider.h"
+#include "UICore/Display/Render/shader_object.h"
+#include "UICore/Display/Render/uniform_buffer.h"
+#include "UICore/Core/Math/vec4.h"
+#include "UICore/Core/System/comptr.h"
 #include <memory>
 #include <map>
 

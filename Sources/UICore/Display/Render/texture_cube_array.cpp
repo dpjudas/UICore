@@ -27,9 +27,9 @@
 **    Harry Storbacka
 */
 
-#include "Display/precomp.h"
-#include "API/Display/Render/texture_cube_array.h"
-#include "API/Display/TargetProviders/texture_provider.h"
+#include "UICore/precomp.h"
+#include "UICore/Display/Render/texture_cube_array.h"
+#include "UICore/Display/TargetProviders/texture_provider.h"
 #include "graphic_context_impl.h"
 #include "texture_impl.h"
 

@@ -36,16 +36,16 @@
 **    The win32 versions of SetupCore functions are also defined here.
 */
 
-#include "Core/precomp.h" // visual c++: precompiled header file MUST be mentioned FIRST.
+#include "UICore/precomp.h" // visual c++: precompiled header file MUST be mentioned FIRST.
 
 #ifdef BORLAND
 #include <stdio.h>
 #pragma hdrstop
 #endif
 
-#include "API/Core/System/system.h"
-#include "API/Core/System/exception.h"
-#include "API/Core/Text/string_help.h"
+#include "UICore/Core/System/system.h"
+#include "UICore/Core/System/exception.h"
+#include "UICore/Core/Text/text.h"
 #if defined UNICODE && !defined _UNICODE
 #define _UNICODE
 #endif

@@ -30,7 +30,7 @@
 
 #pragma once
 
-#include "../Core/System/cl_platform.h"
+#include <cstdint>
 
 #if defined(__IOS__)
 #include <OpenGLES/ES2/gl.h>

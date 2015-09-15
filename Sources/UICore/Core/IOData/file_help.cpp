@@ -27,11 +27,11 @@
 **    Kenneth Gangstoe
 */
 
-#include "Core/precomp.h"
-#include "API/Core/IOData/file_help.h"
-#include "API/Core/IOData/file.h"
-#include "API/Core/Text/string_help.h"
-#include "API/Core/System/exception.h"
+#include "UICore/precomp.h"
+#include "UICore/Core/IOData/file_help.h"
+#include "UICore/Core/IOData/file.h"
+#include "UICore/Core/Text/text.h"
+#include "UICore/Core/System/exception.h"
 
 #ifndef WIN32
 #include <sys/stat.h>

@@ -26,10 +26,10 @@
 **    Mark Page
 */
 
-#include "Core/precomp.h"
+#include "UICore/precomp.h"
 #include "md5_impl.h"
-#include "API/Core/Math/cl_math.h"
-#include "API/Core/Crypto/md5.h"
+#include "UICore/Core/Math/cl_math.h"
+#include "UICore/Core/Crypto/md5.h"
 #ifndef WIN32
 #include <cstring>
 #endif

@@ -27,10 +27,10 @@
 **    Mark Page
 */
 
-#include "GL/precomp.h"
+#include "UICore/precomp.h"
 #include "setup_gl_impl.h"
 #include "setup_gl.h"
-#include "API/GL/opengl_target.h"
+#include "UICore/GL/opengl_target.h"
 #include "../Display/setup_display.h"
 
 namespace clan
@@ -45,7 +45,7 @@ namespace clan
 			return;
 
 		SetupDisplay::start();	// GL depends on display
-		SetupCore::instance.module_gl = clan::make_unique<SetupGL_Impl>();
+		SetupCore::instance.module_gl = std::make_unique<SetupGL_Impl>();
 	}
 
 	SetupGL_Impl::SetupGL_Impl()

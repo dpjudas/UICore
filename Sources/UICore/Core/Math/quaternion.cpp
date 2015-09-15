@@ -26,9 +26,9 @@
 **    Mark Page
 */
 
-#include "Core/precomp.h"
-#include "API/Core/Math/quaternion.h"
-#include "API/Core/Math/mat4.h"
+#include "UICore/precomp.h"
+#include "UICore/Core/Math/quaternion.h"
+#include "UICore/Core/Math/mat4.h"
 #include <limits> // FLT_EPSILON
 #include <cfloat> // FLT_EPSILON on linux
 

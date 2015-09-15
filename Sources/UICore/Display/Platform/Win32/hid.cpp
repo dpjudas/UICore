@@ -26,7 +26,7 @@
 **    Magnus Norddahl
 */
 
-#include "Display/precomp.h"
+#include "UICore/precomp.h"
 #include "hid.h"
 
 namespace clan

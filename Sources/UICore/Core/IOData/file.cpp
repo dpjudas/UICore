@@ -26,11 +26,11 @@
 **    Magnus Norddahl
 */
 
-#include "Core/precomp.h"
-#include "API/Core/IOData/file.h"
-#include "API/Core/IOData/path_help.h"
-#include "API/Core/System/exception.h"
-#include "API/Core/Text/string_help.h"
+#include "UICore/precomp.h"
+#include "UICore/Core/IOData/file.h"
+#include "UICore/Core/IOData/path_help.h"
+#include "UICore/Core/System/exception.h"
+#include "UICore/Core/Text/text.h"
 #include "iodevice_impl.h"
 #include "iodevice_provider_file.h"
 

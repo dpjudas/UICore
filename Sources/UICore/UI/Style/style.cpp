@@ -26,8 +26,8 @@
 **    Magnus Norddahl
 */
 
-#include "UI/precomp.h"
-#include "API/UI/Style/style.h"
+#include "UICore/precomp.h"
+#include "UICore/UI/Style/style.h"
 #include "style_impl.h"
 #include "Properties/background.h"
 #include "Properties/border.h"
@@ -39,7 +39,7 @@
 #include "Properties/margin.h"
 #include "Properties/outline.h"
 #include "Properties/padding.h"
-#include "Properties/text.h"
+#include "Properties/text_and_font.h"
 
 namespace clan
 {

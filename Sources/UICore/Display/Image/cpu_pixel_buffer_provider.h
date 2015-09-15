@@ -29,7 +29,7 @@
 
 #pragma once
 
-#include "API/Display/TargetProviders/pixel_buffer_provider.h"
+#include "UICore/Display/TargetProviders/pixel_buffer_provider.h"
 
 namespace clan
 {

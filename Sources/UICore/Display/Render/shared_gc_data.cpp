@@ -28,10 +28,10 @@
 **    Mark Page
 */
 
-#include "Display/precomp.h"
-#include "API/Core/System/disposable_object.h"
-#include "API/Display/Render/shared_gc_data.h"
-#include "API/Display/2D/canvas.h"
+#include "UICore/precomp.h"
+#include "UICore/Core/System/disposable_object.h"
+#include "UICore/Display/Render/shared_gc_data.h"
+#include "UICore/Display/2D/canvas.h"
 #include <algorithm>
 #include "shared_gc_data_impl.h"
 

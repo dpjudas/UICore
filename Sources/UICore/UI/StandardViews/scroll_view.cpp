@@ -26,10 +26,10 @@
 **    Magnus Norddahl
 */
 
-#include "UI/precomp.h"
-#include "API/UI/StandardViews/scroll_view.h"
-#include "API/UI/StandardViews/scrollbar_view.h"
-#include "API/UI/Events/pointer_event.h"
+#include "UICore/precomp.h"
+#include "UICore/UI/StandardViews/scroll_view.h"
+#include "UICore/UI/StandardViews/scrollbar_view.h"
+#include "UICore/UI/Events/pointer_event.h"
 #include <algorithm>
 
 namespace clan

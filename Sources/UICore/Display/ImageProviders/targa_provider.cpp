@@ -26,13 +26,13 @@
 **    Magnus Norddahl
 */
 
-#include "Display/precomp.h"
-#include "API/Core/System/exception.h"
-#include "API/Core/IOData/file_system.h"
-#include "API/Core/IOData/path_help.h"
-#include "API/Display/ImageProviders/targa_provider.h"
-#include "API/Display/Image/pixel_buffer.h"
-#include "Display/ImageProviders/TargaLoader/targa_loader.h"
+#include "UICore/precomp.h"
+#include "UICore/Core/System/exception.h"
+#include "UICore/Core/IOData/file_system.h"
+#include "UICore/Core/IOData/path_help.h"
+#include "UICore/Display/ImageProviders/targa_provider.h"
+#include "UICore/Display/Image/pixel_buffer.h"
+#include "UICore/Display/ImageProviders/TargaLoader/targa_loader.h"
 
 namespace clan
 {

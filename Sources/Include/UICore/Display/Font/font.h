@@ -30,7 +30,7 @@
 #pragma once
 
 #include <memory>
-#include "../Render/graphic_context.h"
+#include "UICore/Display/Render/graphic_context.h"
 #include "../Image/pixel_buffer.h"
 #include "../2D/sprite.h"
 #include "font_description.h"
@@ -88,16 +88,6 @@ namespace clan
 		/// \param monospace = Force monospaced font (using widest sprite character)
 		/// \param metrics = Font metrics for the sprite font
 		Font(Canvas &canvas, const std::string &typeface_name, Sprite &sprite, const std::string &glyph_list, float spacelen, bool monospace, const FontMetrics &metrics);
-
-		/// \brief Retrieves a Font resource from the resource manager
-		///
-		/// \param canvas = Canvas
-		/// \param resources = Resource manager
-		/// \param id = id
-		static Resource<Font> resource(Canvas &canvas, const std::string &family_name, const FontDescription &desc, const ResourceManager &resources);
-
-		/// \brief Loads a Font from a XML resource definition
-		static Font load(Canvas &canvas, const std::string &family_name, const FontDescription &reference_desc, FontFamily &font_family, const XMLResourceDocument &doc, std::function<Resource<Sprite>(Canvas &, const std::string &)> cb_get_sprite = std::function<Resource<Sprite>(Canvas &, const std::string &)>());
 
 		/// \brief Returns true if this object is invalid.
 		bool is_null() const { return !impl; }

@@ -26,9 +26,9 @@
 **    Magnus Norddahl
 */
 
-#include "Core/precomp.h"
+#include "UICore/precomp.h"
 #include "directory_scanner_win32.h"
-#include "API/Core/Text/string_help.h"
+#include "UICore/Core/Text/text.h"
 
 namespace clan
 {

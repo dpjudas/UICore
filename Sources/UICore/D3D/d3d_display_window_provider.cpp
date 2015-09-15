@@ -27,16 +27,15 @@
 **	  Harry Storbacka
 */
 
-#include "D3D/precomp.h"
+#include "UICore/precomp.h"
 #include "d3d_display_window_provider.h"
 #include "d3d_target_provider.h"
 #include "d3d_graphic_context_provider.h"
-#include "API/Core/Math/rect.h"
-#include "API/Core/Text/logger.h"
-#include "API/Display/Render/graphic_context.h"
-#include "API/Display/Window/display_window_description.h"
-#include "API/D3D/d3d_target.h"
-#include "Display/Platform/Win32/cursor_provider_win32.h"
+#include "UICore/Core/Math/rect.h"
+#include "UICore/Display/Render/graphic_context.h"
+#include "UICore/Display/Window/display_window_description.h"
+#include "UICore/D3D/d3d_target.h"
+#include "UICore/Display/Platform/Win32/cursor_provider_win32.h"
 #include "d3d_share_list.h"
 
 namespace clan
@@ -440,10 +439,10 @@ namespace clan
 		if (debug)
 		{
 			HRESULT result = debug->ValidateContext(device_context);
-			if (FAILED(result) || result == S_FALSE)
+			/*if (FAILED(result) || result == S_FALSE)
 			{
 				log_event("d3d", "Direct3D context not valid before draw call!");
-			}
+			}*/
 		}
 	}
 
@@ -523,7 +522,7 @@ namespace clan
 					continue;
 
 				std::string text(message->pDescription, message->DescriptionByteLength);
-				log_event("d3d", "%4 (id=%1, category=%2, severity=%3)", message->ID, message->Category, message->Severity, text);
+				//log_event("d3d", "%4 (id=%1, category=%2, severity=%3)", message->ID, message->Category, message->Severity, text);
 			}
 			info_queue->ClearStoredMessages();
 		}

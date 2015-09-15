@@ -31,7 +31,6 @@
 
 #include <memory>
 #include "../../Core/IOData/file_system.h"
-#include "../../Core/Resources/resource.h"
 #include "graphic_context.h"
 #include "../Image/image_import_description.h"
 #include "../Image/texture_format.h"
@@ -119,16 +118,6 @@ namespace clan
 		Texture(TextureProvider *provider);
 
 		virtual ~Texture();
-
-		/// \brief Retrieves a Texture resource from the resource manager
-		///
-		/// \param gc = Graphic Context
-		/// \param resources = Resource manager
-		/// \param id = id
-		static Resource<Texture> resource(GraphicContext &gc, const std::string &id, const ResourceManager &resources);
-
-		/// \brief Loads a Texture from a XML resource definition
-		static Texture load(GraphicContext &gc, const std::string &id, const XMLResourceDocument &doc, const ImageImportDescription &import_desc = ImageImportDescription());
 
 		/// \brief Equality operator
 		bool operator==(const Texture &other) const

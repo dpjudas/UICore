@@ -30,11 +30,11 @@
 
 #pragma once
 
-#include "API/Display/Font/font_metrics.h"
-#include "API/Display/Font/glyph_metrics.h"
-#include "API/Display/Font/font.h"
-#include "API/Display/Font/font_family.h"
-#include "API/Display/Render/texture_2d.h"
+#include "UICore/Display/Font/font_metrics.h"
+#include "UICore/Display/Font/glyph_metrics.h"
+#include "UICore/Display/Font/font.h"
+#include "UICore/Display/Font/font_family.h"
+#include "UICore/Display/Render/texture_2d.h"
 #include <list>
 #include <map>
 #include "glyph_cache.h"

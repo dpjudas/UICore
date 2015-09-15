@@ -27,12 +27,12 @@
 **    Harry Storbacka
 */
 
-#include "Core/precomp.h"
-#include "API/Core/IOData/file.h"
-#include "API/Core/System/exception.h"
-#include "API/Core/Text/string_help.h"
-#include "API/Core/Text/string_format.h"
-#include "API/Core/Math/cl_math.h"
+#include "UICore/precomp.h"
+#include "UICore/Core/IOData/file.h"
+#include "UICore/Core/System/exception.h"
+#include "UICore/Core/Text/text.h"
+#include "UICore/Core/Text/string_format.h"
+#include "UICore/Core/Math/cl_math.h"
 #include "iodevice_provider_file.h"
 #ifndef WIN32
 #include <sys/types.h>

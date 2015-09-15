@@ -29,22 +29,22 @@
 **    Mark Page
 */
 
-#include "Display/precomp.h"
-#include "API/Core/Math/rect.h"
-#include "API/Core/Math/point.h"
-#include "API/Core/Text/logger.h"
-#include "API/Core/System/databuffer.h"
-#include "API/Core/IOData/memory_device.h"
-#include "API/Display/Window/display_window_description.h"
-#include "API/Display/Window/input_event.h"
-#include "API/Display/2D/color.h"
-#include "API/Display/display_target.h"
-#include "API/Display/Window/display_window.h"
-#include "API/Display/Window/keys.h"
-#include "API/Display/TargetProviders/display_window_provider.h"
-#include "API/Display/Image/pixel_buffer.h"
-#include "API/Display/ImageProviders/png_provider.h"
-#include "API/Display/screen_info.h"
+#include "UICore/precomp.h"
+#include "UICore/Core/Math/rect.h"
+#include "UICore/Core/Math/point.h"
+#include "UICore/Core/System/databuffer.h"
+#include "UICore/Core/IOData/memory_device.h"
+#include "UICore/Core/Text/text.h"
+#include "UICore/Display/Window/display_window_description.h"
+#include "UICore/Display/Window/input_event.h"
+#include "UICore/Display/2D/color.h"
+#include "UICore/Display/display_target.h"
+#include "UICore/Display/Window/display_window.h"
+#include "UICore/Display/Window/keys.h"
+#include "UICore/Display/TargetProviders/display_window_provider.h"
+#include "UICore/Display/Image/pixel_buffer.h"
+#include "UICore/Display/ImageProviders/png_provider.h"
+#include "UICore/Display/screen_info.h"
 #include "win32_window.h"
 #include "input_device_provider_win32keyboard.h"
 #include "input_device_provider_win32mouse.h"
@@ -1651,7 +1651,7 @@ namespace clan
 						}
 						catch (const Exception& error)
 						{
-							log_event("debug", "Could not setup game controller: %1", error.message);
+							//log_event("debug", "Could not setup game controller: %1", error.message);
 						}
 					}
 				}

@@ -26,13 +26,14 @@
 **    Kenneth Gangstoe
 */
 
-#include "UI/precomp.h"
-#include "API/Core/Text/string_help.h"
-#include "API/Core/IOData/path_help.h"
-#include "API/Core/System/system.h"
-#include "API/UI/View/view.h"
-#include "API/UI/TopLevel/view_tree.h"
-#include "API/Display/Window/display_window.h"
+#include "UICore/precomp.h"
+#include "UICore/Core/Text/text.h"
+#include "UICore/Core/IOData/path_help.h"
+#include "UICore/Core/System/databuffer.h"
+#include "UICore/Core/System/system.h"
+#include "UICore/UI/View/view.h"
+#include "UICore/UI/TopLevel/view_tree.h"
+#include "UICore/Display/Window/display_window.h"
 
 #if defined(WIN32)
 

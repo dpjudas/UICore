@@ -28,7 +28,7 @@
 **    Mark Page
 */
 
-#include "GL/precomp.h"
+#include "UICore/precomp.h"
 #include "opengl_target_provider.h"
 #if defined(__APPLE__)
 #include "Platform/OSX/opengl_window_provider_osx.h"

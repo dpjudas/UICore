@@ -26,10 +26,10 @@
 **    Magnus Norddahl
 */
 
-#include "Network/precomp.h"
-#include "API/Network/Socket/socket_name.h"
-#include "API/Core/Text/string_help.h"
-#include "API/Core/Text/string_format.h"
+#include "UICore/precomp.h"
+#include "UICore/Network/Socket/socket_name.h"
+#include "UICore/Core/Text/text.h"
+#include "UICore/Core/Text/string_format.h"
 #include "socket_name_impl.h"
 #ifdef WIN32
 typedef unsigned long in_addr_t;

@@ -28,8 +28,7 @@
 
 #pragma once
 
-#include "API/Core/System/thread_local_storage.h"
-#include "Display/System/run_loop_impl.h"
+#include "UICore/Display/System/run_loop_impl.h"
 #include <vector>
 #include <WinNT.h>
 

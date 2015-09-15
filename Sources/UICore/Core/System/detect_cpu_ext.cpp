@@ -26,8 +26,8 @@
 **    Animehunter
 */
 
-#include "Core/precomp.h"
-#include "API/Core/System/system.h"
+#include "UICore/precomp.h"
+#include "UICore/Core/System/system.h"
 
 namespace clan
 {

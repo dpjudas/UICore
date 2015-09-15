@@ -29,7 +29,8 @@
 #pragma once
 
 #include <cmath>
-#include "../System/cl_platform.h"
+#include <cstdint>
+#include "pi.h"
 #include "vec4.h"
 #include <memory>
 

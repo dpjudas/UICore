@@ -26,11 +26,11 @@
 **    Harry Storbacka
 */
 
-#include "Display/precomp.h"
-#include "API/Core/System/exception.h"
-#include "API/Core/System/datetime.h"
-#include "API/Display/2D/color.h"
-#include "API/Display/ImageProviders/png_output_description.h"
+#include "UICore/precomp.h"
+#include "UICore/Core/System/exception.h"
+#include "UICore/Core/System/datetime.h"
+#include "UICore/Display/2D/color.h"
+#include "UICore/Display/ImageProviders/png_output_description.h"
 
 namespace clan
 {

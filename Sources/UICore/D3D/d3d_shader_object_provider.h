@@ -28,7 +28,8 @@
 
 #pragma once
 
-#include "API/Display/TargetProviders/shader_object_provider.h"
+#include "UICore/Display/TargetProviders/shader_object_provider.h"
+#include "UICore/Core/System/comptr.h"
 #include <map>
 #include <D3Dcompiler.h>
 #include <mutex>

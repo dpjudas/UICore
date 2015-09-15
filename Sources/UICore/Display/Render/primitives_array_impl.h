@@ -29,7 +29,7 @@
 
 #pragma once
 
-#include "API/Display/TargetProviders/primitives_array_provider.h"
+#include "UICore/Display/TargetProviders/primitives_array_provider.h"
 
 namespace clan
 {

@@ -26,10 +26,10 @@
 **    Magnus Norddahl
 */
 
-#include "Core/precomp.h"
+#include "UICore/precomp.h"
 #include "zip_end_of_central_directory_record.h"
-#include "API/Core/IOData/iodevice.h"
-#include "API/Core/Text/string_help.h"
+#include "UICore/Core/IOData/iodevice.h"
+#include "UICore/Core/Text/text.h"
 
 namespace clan
 {

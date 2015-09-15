@@ -26,13 +26,14 @@
 **    Magnus Norddahl
 */
 
-#include "UI/precomp.h"
-#include "API/UI/Style/style.h"
-#include "API/UI/Style/style_cascade.h"
-#include "API/UI/View/view_geometry.h"
-#include "API/UI/UIThread/ui_thread.h"
-#include "API/Display/Font/font.h"
-#include "API/Display/2D/canvas.h"
+#include "UICore/precomp.h"
+#include "UICore/UI/Style/style.h"
+#include "UICore/UI/Style/style_cascade.h"
+#include "UICore/UI/View/view_geometry.h"
+#include "UICore/UI/UIThread/ui_thread.h"
+#include "UICore/Display/Font/font.h"
+#include "UICore/Display/2D/canvas.h"
+#include "UICore/Core/Text/text.h"
 #include "style_background_renderer.h"
 #include "style_border_image_renderer.h"
 #include "style_impl.h"

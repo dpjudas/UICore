@@ -26,11 +26,11 @@
 **    Mark Page
 */
 
-#include "Core/precomp.h"
+#include "UICore/precomp.h"
 #include "x509_impl.h"
 #include "asn1.h"
-#include "API/Core/Crypto/secret.h"
-#include "API/Core/System/databuffer.h"
+#include "UICore/Core/Crypto/secret.h"
+#include "UICore/Core/System/databuffer.h"
 
 namespace clan
 {

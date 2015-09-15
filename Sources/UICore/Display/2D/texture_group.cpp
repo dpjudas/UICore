@@ -26,9 +26,9 @@
 **    Kenneth Gangstoe
 */
 
-#include "Display/precomp.h"
-#include "API/Display/2D/texture_group.h"
-#include "API/Display/2D/subtexture.h"
+#include "UICore/precomp.h"
+#include "UICore/Display/2D/texture_group.h"
+#include "UICore/Display/2D/subtexture.h"
 #include "texture_group_impl.h"
 
 namespace clan

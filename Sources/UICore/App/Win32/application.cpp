@@ -26,20 +26,16 @@
 **    Magnus Norddahl
 */
 
+#include "UICore/precomp.h"
 #include <ctype.h>
 #include <windows.h>
 #include <vector>
-#if defined UNICODE && !defined _UNICODE
-#define _UNICODE
-#endif
 #include <tchar.h>
-#include "API/App/clanapp.h"
-#include "API/Core/Text/string_help.h"
-#include "API/Core/System/exception.h"
-#include "API/Core/System/console_window.h"
-#include "API/Core/Text/console.h"
-#include "API/Core/ErrorReporting/exception_dialog.h"
-#include "API/display.h"
+#include "UICore/Application/application.h"
+#include "UICore/Core/Text/text.h"
+#include "UICore/Core/System/exception.h"
+#include "UICore/Core/ErrorReporting/exception_dialog.h"
+#include "UICore/display.h"
 
 #ifdef _MSC_VER
 #include <crtdbg.h>

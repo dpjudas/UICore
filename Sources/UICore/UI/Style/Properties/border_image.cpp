@@ -26,7 +26,8 @@
 **    Magnus Norddahl
 */
 
-#include "UI/precomp.h"
+#include "UICore/precomp.h"
+#include "UICore/Core/Text/text.h"
 #include "border_image.h"
 
 namespace clan

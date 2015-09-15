@@ -26,8 +26,8 @@
 **    Magnus Norddahl
 */
 
-#include "Core/precomp.h"
-#include "API/Core/Math/easing.h"
+#include "UICore/precomp.h"
+#include "UICore/Core/Math/easing.h"
 #include <algorithm>
 #include <cmath>
 

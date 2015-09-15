@@ -28,9 +28,10 @@
 
 #pragma once
 
-#include "API/Display/TargetProviders/display_window_provider.h"
-#include "API/Display/Render/graphic_context.h"
-#include "Display/Platform/Win32/win32_window.h"
+#include "UICore/Display/TargetProviders/display_window_provider.h"
+#include "UICore/Display/Render/graphic_context.h"
+#include "UICore/Display/Platform/Win32/win32_window.h"
+#include "UICore/Core/System/comptr.h"
 #include <mutex>
 
 namespace clan

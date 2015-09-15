@@ -29,8 +29,8 @@
 #pragma once
 
 #include <list>
-#include "API/Display/Render/texture_2d.h"
-#include "API/Display/2D/texture_group.h"
+#include "UICore/Display/Render/texture_2d.h"
+#include "UICore/Display/2D/texture_group.h"
 
 namespace clan
 {

@@ -26,9 +26,10 @@
 **    Magnus Norddahl
 */
 
-#include "UI/precomp.h"
+#include "UICore/precomp.h"
+#include "UICore/Core/Text/text.h"
 #include "background.h"
-#include "API/UI/Image/image_source.h"
+#include "UICore/UI/Image/image_source.h"
 
 namespace clan
 {

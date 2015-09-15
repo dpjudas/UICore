@@ -26,10 +26,10 @@
 **    Mark Page
 */
 
-#include "Core/precomp.h"
-#include "API/Core/Math/vec3.h"
-#include "API/Core/Math/line_ray.h"
-#include "API/Core/Math/angle.h"
+#include "UICore/precomp.h"
+#include "UICore/Core/Math/vec3.h"
+#include "UICore/Core/Math/line_ray.h"
+#include "UICore/Core/Math/angle.h"
 
 namespace clan
 {

@@ -30,10 +30,10 @@
 #pragma once
 
 
-#include "API/GL/opengl_wrap.h"
-#include "API/GL/opengl.h"
-#include "API/Display/TargetProviders/program_object_provider.h"
-#include "API/Core/System/disposable_object.h"
+#include "UICore/GL/opengl_wrap.h"
+#include "UICore/GL/opengl.h"
+#include "UICore/Display/TargetProviders/program_object_provider.h"
+#include "UICore/Core/System/disposable_object.h"
 
 namespace clan
 {

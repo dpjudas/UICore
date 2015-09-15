@@ -28,8 +28,8 @@
 
 #pragma once
 
-#include "API/Display/TargetProviders/cursor_provider.h"
-#include "API/Core/System/databuffer.h"
+#include "UICore/Display/TargetProviders/cursor_provider.h"
+#include "UICore/Core/System/databuffer.h"
 #include <vector>
 
 namespace clan

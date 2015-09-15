@@ -26,7 +26,7 @@
 **    Magnus Norddahl
 */
 
-#include "UI/precomp.h"
+#include "UICore/precomp.h"
 #include "box_shadow.h"
 
 namespace clan

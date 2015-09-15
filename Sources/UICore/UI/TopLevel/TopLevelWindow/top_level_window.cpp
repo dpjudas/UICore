@@ -26,16 +26,16 @@
 **    Magnus Norddahl
 */
 
-#include "UI/precomp.h"
-#include "API/UI/TopLevel/top_level_window.h"
-#include "API/UI/Events/key_event.h"
-#include "API/UI/Events/pointer_event.h"
-#include "API/UI/Events/close_event.h"
-#include "API/UI/Events/activation_change_event.h"
-#include "API/Display/Window/display_window_description.h"
-#include "API/Display/Window/input_event.h"
-#include "API/Display/2D/canvas.h"
-#include "UI/View/positioned_layout.h"
+#include "UICore/precomp.h"
+#include "UICore/UI/TopLevel/top_level_window.h"
+#include "UICore/UI/Events/key_event.h"
+#include "UICore/UI/Events/pointer_event.h"
+#include "UICore/UI/Events/close_event.h"
+#include "UICore/UI/Events/activation_change_event.h"
+#include "UICore/Display/Window/display_window_description.h"
+#include "UICore/Display/Window/input_event.h"
+#include "UICore/Display/2D/canvas.h"
+#include "UICore/UI/View/positioned_layout.h"
 #include "top_level_window_impl.h"
 
 namespace clan

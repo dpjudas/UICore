@@ -26,14 +26,14 @@
 **    Magnus Norddahl
 */
 
-#include "Display/precomp.h"
+#include "UICore/precomp.h"
 #include <iostream>
-#include "API/Core/IOData/file_system.h"
-#include "API/Core/IOData/path_help.h"
-#include "API/Display/ImageProviders/dds_provider.h"
-#include "API/Display/Image/pixel_buffer.h"
-#include "API/Core/System/exception.h"
-#include "API/Core/Text/string_help.h"
+#include "UICore/Core/IOData/file_system.h"
+#include "UICore/Core/IOData/path_help.h"
+#include "UICore/Display/ImageProviders/dds_provider.h"
+#include "UICore/Display/Image/pixel_buffer.h"
+#include "UICore/Core/System/exception.h"
+#include "UICore/Core/Text/text.h"
 
 namespace clan
 {

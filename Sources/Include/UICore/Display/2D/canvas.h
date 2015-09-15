@@ -31,7 +31,7 @@
 
 #pragma once
 
-#include "../Render/graphic_context.h"
+#include "UICore/Display/Render/graphic_context.h"
 
 namespace clan
 {

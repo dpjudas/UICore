@@ -26,10 +26,10 @@
 **    Magnus Norddahl
 */
 
-#include "D3D/precomp.h"
+#include "UICore/precomp.h"
 #include "d3d_texture_data.h"
-#include "API/D3D/d3d_target.h"
-#include "API/Display/Render/shared_gc_data.h"
+#include "UICore/D3D/d3d_target.h"
+#include "UICore/Display/Render/shared_gc_data.h"
 #include "d3d_graphic_context_provider.h"
 #include "d3d_display_window_provider.h"
 

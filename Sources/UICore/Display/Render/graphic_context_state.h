@@ -28,14 +28,14 @@
 
 #pragma once
 
-#include "API/Display/Render/frame_buffer.h"
-#include "API/Display/Render/texture.h"
-#include "API/Display/Render/program_object.h"
-#include "API/Display/Render/uniform_buffer.h"
-#include "API/Display/Render/storage_buffer.h"
-#include "API/Display/Render/blend_state.h"
-#include "API/Display/Render/depth_stencil_state.h"
-#include "API/Display/Render/rasterizer_state.h"
+#include "UICore/Display/Render/frame_buffer.h"
+#include "UICore/Display/Render/texture.h"
+#include "UICore/Display/Render/program_object.h"
+#include "UICore/Display/Render/uniform_buffer.h"
+#include "UICore/Display/Render/storage_buffer.h"
+#include "UICore/Display/Render/blend_state.h"
+#include "UICore/Display/Render/depth_stencil_state.h"
+#include "UICore/Display/Render/rasterizer_state.h"
 
 namespace clan
 {

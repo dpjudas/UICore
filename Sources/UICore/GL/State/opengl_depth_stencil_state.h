@@ -29,10 +29,10 @@
 
 #pragma once
 
-#include "API/Display/TargetProviders/display_target_provider.h"
-#include "API/GL/opengl_context_description.h"
-#include "API/Display/Render/depth_stencil_state_description.h"
-#include "API/Display/TargetProviders/graphic_context_provider.h"
+#include "UICore/Display/TargetProviders/display_target_provider.h"
+#include "UICore/GL/opengl_context_description.h"
+#include "UICore/Display/Render/depth_stencil_state_description.h"
+#include "UICore/Display/TargetProviders/graphic_context_provider.h"
 #include <map>
 
 namespace clan

@@ -30,8 +30,8 @@
 
 #pragma once
 
-#include "API/Display/TargetProviders/display_target_provider.h"
-#include "API/GL/opengl_context_description.h"
+#include "UICore/Display/TargetProviders/display_target_provider.h"
+#include "UICore/GL/opengl_context_description.h"
 
 namespace clan
 {

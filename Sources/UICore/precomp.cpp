@@ -26,4 +26,4 @@
 **    Magnus Norddahl
 */
 
-#include "Core/precomp.h"
+#include "UICore/precomp.h"

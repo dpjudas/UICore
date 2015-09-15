@@ -31,8 +31,8 @@
 
 
 #include "gl3_graphic_context_provider.h"
-#include "API/Display/TargetProviders/render_buffer_provider.h"
-#include "API/Core/System/disposable_object.h"
+#include "UICore/Display/TargetProviders/render_buffer_provider.h"
+#include "UICore/Core/System/disposable_object.h"
 
 namespace clan
 {

@@ -26,8 +26,8 @@
 **    Magnus Norddahl
 */
 
-#include "UI/precomp.h"
-#include "API/UI/StandardViews/span_layout_view.h"
+#include "UICore/precomp.h"
+#include "UICore/UI/StandardViews/span_layout_view.h"
 #include "span_layout_view_impl.h"
 
 namespace clan

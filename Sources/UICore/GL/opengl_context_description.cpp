@@ -27,8 +27,8 @@
 **    Mark Page
 */
 
-#include "GL/precomp.h"
-#include "API/GL/opengl_context_description.h"
+#include "UICore/precomp.h"
+#include "UICore/GL/opengl_context_description.h"
 #include "opengl_context_description_impl.h"
 
 namespace clan

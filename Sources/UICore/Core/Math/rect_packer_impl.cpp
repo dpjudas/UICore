@@ -26,8 +26,8 @@
 **    Kenneth Gangstoe
 */
 
-#include "Core/precomp.h"
-#include "API/Core/Math/rect.h"
+#include "UICore/precomp.h"
+#include "UICore/Core/Math/rect.h"
 #include "rect_packer_impl.h"
 
 namespace clan

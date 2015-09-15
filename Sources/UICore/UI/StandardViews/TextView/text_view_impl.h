@@ -28,10 +28,10 @@
 
 #pragma once
 
-#include "API/Core/Signals/signal.h"
-#include "API/UI/Events/key_event.h"
-#include "API/Display/System/timer.h"
-#include "API/Display/Font/font.h"
+#include "UICore/Core/Signals/signal.h"
+#include "UICore/UI/Events/key_event.h"
+#include "UICore/Display/System/timer.h"
+#include "UICore/Display/Font/font.h"
 
 namespace clan
 {

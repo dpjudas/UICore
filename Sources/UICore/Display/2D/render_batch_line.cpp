@@ -26,11 +26,11 @@
 **    Mark Page
 */
 
-#include "Display/precomp.h"
+#include "UICore/precomp.h"
 #include "render_batch_line.h"
 #include "sprite_impl.h"
-#include "API/Display/Render/blend_state_description.h"
-#include "API/Display/2D/canvas.h"
+#include "UICore/Display/Render/blend_state_description.h"
+#include "UICore/Display/2D/canvas.h"
 
 namespace clan
 {

@@ -27,14 +27,14 @@
 **    Mark Page
 */
 
-#include "Network/precomp.h"
+#include "UICore/precomp.h"
 #ifdef _MSC_VER
 #pragma warning (disable:4786)
 #endif
 #include "setupnetwork.h"
-#include "API/Core/System/exception.h"
+#include "UICore/Core/System/exception.h"
 #include "../Core/System/setup_core.h"
-#include "API/Core/Math/cl_math.h"
+#include "UICore/Core/Math/cl_math.h"
 
 namespace clan
 {

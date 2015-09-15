@@ -28,8 +28,9 @@
 
 #pragma once
 
-#include "API/Display/TargetProviders/graphic_context_provider.h"
-#include "API/Display/Render/depth_stencil_state_description.h"
+#include "UICore/Display/TargetProviders/graphic_context_provider.h"
+#include "UICore/Display/Render/depth_stencil_state_description.h"
+#include "UICore/Core/System/comptr.h"
 
 namespace clan
 {

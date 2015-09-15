@@ -28,7 +28,8 @@
 
 #pragma once
 
-#include "API/Display/TargetProviders/storage_buffer_provider.h"
+#include "UICore/Display/TargetProviders/storage_buffer_provider.h"
+#include "UICore/Core/System/comptr.h"
 
 namespace clan
 {

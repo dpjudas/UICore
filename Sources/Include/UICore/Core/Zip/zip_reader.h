@@ -29,7 +29,7 @@
 #pragma once
 
 #include <memory>
-#include "../System/cl_platform.h"
+#include <cstdint>
 #include <vector>
 
 namespace clan

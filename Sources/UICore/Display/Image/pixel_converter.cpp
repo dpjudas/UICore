@@ -27,10 +27,10 @@
 **    Mark Page
 */
 
-#include "Display/precomp.h"
-#include "API/Display/Image/pixel_converter.h"
-#include "API/Core/System/databuffer.h"
-#include "API/Core/System/system.h"
+#include "UICore/precomp.h"
+#include "UICore/Display/Image/pixel_converter.h"
+#include "UICore/Core/System/databuffer.h"
+#include "UICore/Core/System/system.h"
 #include "pixel_converter_impl.h"
 #include "pixel_reader_cast.h"
 #include "pixel_reader_half_float.h"

@@ -26,12 +26,12 @@
 **    Magnus Norddahl
 */
 
-#include "Display/precomp.h"
-#include "API/Display/Window/input_event.h"
-#include "API/Core/Text/string_format.h"
-#include "API/Core/Text/string_help.h"
-#include "API/Core/System/databuffer.h"
-#include "API/Core/Math/cl_math.h"
+#include "UICore/precomp.h"
+#include "UICore/Display/Window/input_event.h"
+#include "UICore/Core/Text/string_format.h"
+#include "UICore/Core/Text/text.h"
+#include "UICore/Core/System/databuffer.h"
+#include "UICore/Core/Math/cl_math.h"
 #include "input_device_provider_win32hid.h"
 #include <algorithm>
 

@@ -26,11 +26,11 @@
 **    Magnus Norddahl
 */
 
-#include "Core/precomp.h"
-#include "API/Core/Math/intersection_test.h"
-#include "API/Core/Math/aabb.h"
-#include "API/Core/Math/obb.h"
-#include "API/Core/Math/frustum_planes.h"
+#include "UICore/precomp.h"
+#include "UICore/Core/Math/intersection_test.h"
+#include "UICore/Core/Math/aabb.h"
+#include "UICore/Core/Math/obb.h"
+#include "UICore/Core/Math/frustum_planes.h"
 
 namespace clan
 {

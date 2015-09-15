@@ -26,10 +26,10 @@
 **    Harry Storbacka
 */
 
-#include "GL/precomp.h"
+#include "UICore/precomp.h"
 #include "gl3_occlusion_query_provider.h"
-#include "API/GL/opengl_wrap.h"
-#include "API/Display/Render/shared_gc_data.h"
+#include "UICore/GL/opengl_wrap.h"
+#include "UICore/Display/Render/shared_gc_data.h"
 #include "gl3_graphic_context_provider.h"
 
 namespace clan

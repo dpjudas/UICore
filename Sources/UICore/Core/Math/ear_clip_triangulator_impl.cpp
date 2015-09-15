@@ -26,12 +26,12 @@
 **    Harry Storbacka
 */
 
-#include "Core/precomp.h"
-#include "API/Core/Math/ear_clip_triangulator.h"
-#include "API/Core/Math/ear_clip_result.h"
-#include "API/Core/Math/point.h"
-#include "API/Core/Math/triangle_math.h"
-#include "API/Core/Math/line_math.h"
+#include "UICore/precomp.h"
+#include "UICore/Core/Math/ear_clip_triangulator.h"
+#include "UICore/Core/Math/ear_clip_result.h"
+#include "UICore/Core/Math/point.h"
+#include "UICore/Core/Math/triangle_math.h"
+#include "UICore/Core/Math/line_math.h"
 #include "ear_clip_triangulator_impl.h"
 #include <cfloat>
 

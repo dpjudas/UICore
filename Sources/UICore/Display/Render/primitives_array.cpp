@@ -28,10 +28,10 @@
 **    Kenneth Gangstoe
 */
 
-#include "Display/precomp.h"
-#include "API/Display/Render/primitives_array.h"
-#include "API/Display/Render/graphic_context.h"
-#include "API/Display/Render/vertex_array_buffer.h"
+#include "UICore/precomp.h"
+#include "UICore/Display/Render/primitives_array.h"
+#include "UICore/Display/Render/graphic_context.h"
+#include "UICore/Display/Render/vertex_array_buffer.h"
 #include "graphic_context_impl.h"
 #include "primitives_array_impl.h"
 

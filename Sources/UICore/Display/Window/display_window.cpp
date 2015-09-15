@@ -28,11 +28,11 @@
 **    Mark Page
 */
 
-#include "Display/precomp.h"
+#include "UICore/precomp.h"
 #include "display_window_impl.h"
-#include "../Render/graphic_context_impl.h"
+#include "UICore/Display/Render/graphic_context_impl.h"
 #include "../setup_display.h"
-#include "API/Display/Window/input_device.h"
+#include "UICore/Display/Window/input_device.h"
 
 namespace clan
 {

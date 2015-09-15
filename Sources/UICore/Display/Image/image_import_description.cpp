@@ -26,9 +26,9 @@
 **    Mark Page
 */
 	
-#include "Display/precomp.h"
-#include "API/Display/Image/image_import_description.h"
-#include "API/Display/Image/pixel_buffer.h"
+#include "UICore/precomp.h"
+#include "UICore/Display/Image/image_import_description.h"
+#include "UICore/Display/Image/pixel_buffer.h"
 #include "image_import_description_impl.h"
 
 namespace clan

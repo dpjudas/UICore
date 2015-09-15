@@ -29,9 +29,9 @@
 
 #pragma once
 
-#include "Core/precomp.h"
+#include "UICore/precomp.h"
 #include <vector>
-#include "API/Core/Math/point.h"
+#include "UICore/Core/Math/point.h"
 
 namespace clan
 {

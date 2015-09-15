@@ -28,6 +28,8 @@
 
 #pragma once
 
+#include <cstdint>
+
 namespace clan
 {
 	struct JPEGHuffmanNode;

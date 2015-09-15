@@ -26,8 +26,8 @@
 **    Magnus Norddahl
 */
 
-#include "Display/precomp.h"
-#include "API/Display/display_target.h"
+#include "UICore/precomp.h"
+#include "UICore/Display/display_target.h"
 
 namespace clan
 {

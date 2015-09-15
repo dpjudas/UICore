@@ -32,17 +32,17 @@
 
 #include <list>
 #include <map>
-#include "API/Display/Window/display_window.h"
-#include "API/Display/Window/display_window_description.h"
-#include "API/Display/Window/input_device.h"
-#include "API/Display/TargetProviders/input_device_provider.h"
-#include "API/Core/Math/point.h"
-#include "API/Core/Math/rect.h"
-#include "API/Core/System/cl_platform.h"
-#include "API/Display/Image/pixel_buffer.h"
+#include "UICore/Display/Window/display_window.h"
+#include "UICore/Display/Window/display_window_description.h"
+#include "UICore/Display/Window/input_device.h"
+#include "UICore/Display/TargetProviders/input_device_provider.h"
+#include "UICore/Core/Math/point.h"
+#include "UICore/Core/Math/rect.h"
+#include "UICore/Display/Image/pixel_buffer.h"
 #include <memory>
 #include <thread>
 #include <condition_variable>
+#include <cstdint>
 
 namespace clan
 {

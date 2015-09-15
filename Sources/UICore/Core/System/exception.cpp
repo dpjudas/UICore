@@ -26,11 +26,11 @@
 **    Magnus Norddahl
 */
 
-#include "Core/precomp.h"
-#include "API/Core/System/exception.h"
-#include "API/Core/System/system.h"
-#include "API/Core/Text/string_help.h"
-#include "API/Core/Text/string_format.h"
+#include "UICore/precomp.h"
+#include "UICore/Core/System/exception.h"
+#include "UICore/Core/System/system.h"
+#include "UICore/Core/Text/text.h"
+#include "UICore/Core/Text/string_format.h"
 
 namespace clan
 {

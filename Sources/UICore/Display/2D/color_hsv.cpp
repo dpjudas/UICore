@@ -26,10 +26,10 @@
 **    Mark Page
 */
 
-#include "Display/precomp.h"
-#include "API/Core/Math/cl_math.h"
-#include "API/Display/2D/color_hsv.h"
-#include "API/Display/2D/color.h"
+#include "UICore/precomp.h"
+#include "UICore/Core/Math/cl_math.h"
+#include "UICore/Display/2D/color_hsv.h"
+#include "UICore/Display/2D/color.h"
 
 namespace clan
 {

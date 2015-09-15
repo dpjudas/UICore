@@ -26,10 +26,10 @@
 **    Magnus Norddahl
 */
 
-#include "UI/precomp.h"
-#include "API/UI/TopLevel/view_tree.h"
-#include "API/UI/Events/event.h"
-#include "API/UI/Events/focus_change_event.h"
+#include "UICore/precomp.h"
+#include "UICore/UI/TopLevel/view_tree.h"
+#include "UICore/UI/Events/event.h"
+#include "UICore/UI/Events/focus_change_event.h"
 #include "../View/view_impl.h"
 #include "../View/positioned_layout.h"
 #include <algorithm>

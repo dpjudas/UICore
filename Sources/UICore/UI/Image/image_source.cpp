@@ -26,11 +26,11 @@
 **    Magnus Norddahl
 */
 
-#include "UI/precomp.h"
-#include "API/UI/Image/image_source.h"
-#include "API/UI/UIThread/ui_thread.h"
-#include "API/Display/2D/image.h"
-#include "API/Display/2D/canvas.h"
+#include "UICore/precomp.h"
+#include "UICore/UI/Image/image_source.h"
+#include "UICore/UI/UIThread/ui_thread.h"
+#include "UICore/Display/2D/image.h"
+#include "UICore/Display/2D/canvas.h"
 
 namespace clan
 {
@@ -48,6 +48,7 @@ namespace clan
 		return std::make_shared<ImageSourceCallback>(get_image_callback);
 	}
 
+	/*
 	std::shared_ptr<ImageSource> ImageSource::from_resource(const std::string &resource_name)
 	{
 		return ImageSource::from_callback([=](Canvas &canvas)
@@ -55,12 +56,13 @@ namespace clan
 			return Image::resource(canvas, resource_name, UIThread::get_resources());
 		});
 	}
+	*/
+
 	std::shared_ptr<ImageSource> ImageSource::from_image(const Image &image)
 	{
-			return ImageSource::from_callback([=](Canvas &canvas)
-			{
-				return image;
-			});
+		return ImageSource::from_callback([=](Canvas &canvas)
+		{
+			return image;
+		});
 	}
-
 }

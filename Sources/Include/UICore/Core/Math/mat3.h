@@ -33,8 +33,8 @@
 #include "mat2.h"
 #include "mat4.h"
 #include "vec3.h"
-#include "../System/cl_platform.h"
 #include "angle.h"
+#include <cstdint>
 
 namespace clan
 {

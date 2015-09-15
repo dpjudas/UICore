@@ -28,7 +28,7 @@
 
 #pragma once
 
-#include "API/Display/TargetProviders/occlusion_query_provider.h"
+#include "UICore/Display/TargetProviders/occlusion_query_provider.h"
 
 namespace clan
 {

@@ -29,8 +29,8 @@
 
 #pragma once
 
-#include "../Render/element_array_buffer.h"
-#include "../Image/pixel_buffer.h"
+#include "UICore/Display/Render/element_array_buffer.h"
+#include "UICore/Display/Image/pixel_buffer.h"
 
 namespace clan
 {

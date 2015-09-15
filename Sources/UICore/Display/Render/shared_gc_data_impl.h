@@ -30,8 +30,8 @@
 
 #pragma once
 
-#include "API/Display/2D/canvas.h"
-#include "API/Display/Window/display_window.h"
+#include "UICore/Display/2D/canvas.h"
+#include "UICore/Display/Window/display_window.h"
 
 namespace clan
 {

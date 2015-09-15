@@ -26,13 +26,14 @@
 **    Magnus Norddahl
 */
 
-#include "UI/precomp.h"
-#include "API/UI/Controller/window_manager.h"
-#include "API/UI/TopLevel/top_level_window.h"
-#include "API/Display/Window/display_window_description.h"
-#include "API/Display/Window/display_window.h"
-#include "API/Display/2D/canvas.h"
-#include "API/Display/System/run_loop.h"
+#include "UICore/precomp.h"
+#include "UICore/UI/Controller/window_manager.h"
+#include "UICore/UI/TopLevel/top_level_window.h"
+#include "UICore/Display/Window/display_window_description.h"
+#include "UICore/Display/Window/display_window.h"
+#include "UICore/Display/2D/canvas.h"
+#include "UICore/Display/System/run_loop.h"
+#include <map>
 
 namespace clan
 {

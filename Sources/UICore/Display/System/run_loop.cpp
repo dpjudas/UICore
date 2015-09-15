@@ -26,8 +26,8 @@
 **    Magnus Norddahl
 */
 
-#include "Display/precomp.h"
-#include "API/Display/System/run_loop.h"
+#include "UICore/precomp.h"
+#include "UICore/Display/System/run_loop.h"
 #include "run_loop_impl.h"
 
 namespace clan

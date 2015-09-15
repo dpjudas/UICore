@@ -28,8 +28,8 @@
 
 #pragma once
 
-#include "API/Display/Window/display_window.h"
-#include "API/Display/Render/blend_state.h"
+#include "UICore/Display/Window/display_window.h"
+#include "UICore/Display/Render/blend_state.h"
 
 namespace clan
 {

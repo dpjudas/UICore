@@ -27,11 +27,11 @@
 **    Mark Page
 */
 
-#include "Display/precomp.h"
-#include "API/Display/Render/transfer_texture.h"
-#include "API/Display/Render/graphic_context.h"
-#include "API/Display/TargetProviders/graphic_context_provider.h"
-#include "API/Display/TargetProviders/pixel_buffer_provider.h"
+#include "UICore/precomp.h"
+#include "UICore/Display/Render/transfer_texture.h"
+#include "UICore/Display/Render/graphic_context.h"
+#include "UICore/Display/TargetProviders/graphic_context_provider.h"
+#include "UICore/Display/TargetProviders/pixel_buffer_provider.h"
 
 namespace clan
 {

@@ -27,13 +27,13 @@
 **    Harry Storbacka
 */
 
-#include "Core/precomp.h"
-#include "API/Core/Zip/zip_archive.h"
-#include "API/Core/IOData/file.h"
-#include "API/Core/IOData/memory_device.h"
-#include "API/Core/IOData/path_help.h"
-#include "API/Core/Text/string_format.h"
-#include "API/Core/Text/string_help.h"
+#include "UICore/precomp.h"
+#include "UICore/Core/Zip/zip_archive.h"
+#include "UICore/Core/IOData/file.h"
+#include "UICore/Core/IOData/memory_device.h"
+#include "UICore/Core/IOData/path_help.h"
+#include "UICore/Core/Text/string_format.h"
+#include "UICore/Core/Text/text.h"
 #include "zip_archive_impl.h"
 #include "zip_file_header.h"
 #include "zip_64_end_of_central_directory_record.h"

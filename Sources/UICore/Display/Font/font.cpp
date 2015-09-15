@@ -26,18 +26,16 @@
 **    Magnus Norddahl
 */
 
-#include "Display/precomp.h"
-#include "API/Display/Font/font.h"
-#include "API/Display/Font/font_metrics.h"
-#include "API/Display/Font/font_description.h"
-#include "API/Display/TargetProviders/graphic_context_provider.h"
-#include "API/Core/IOData/path_help.h"
-#include "API/Core/Text/string_help.h"
-#include "API/Core/Text/string_format.h"
-#include "API/Core/Text/utf8_reader.h"
-#include "API/Core/XML/dom_element.h"
-#include "API/Display/2D/canvas.h"
-#include "API/Display/Resources/display_cache.h"
+#include "UICore/precomp.h"
+#include "UICore/Display/Font/font.h"
+#include "UICore/Display/Font/font_metrics.h"
+#include "UICore/Display/Font/font_description.h"
+#include "UICore/Display/TargetProviders/graphic_context_provider.h"
+#include "UICore/Core/IOData/path_help.h"
+#include "UICore/Core/Text/text.h"
+#include "UICore/Core/Text/string_format.h"
+#include "UICore/Core/Text/utf8_reader.h"
+#include "UICore/Display/2D/canvas.h"
 #include "font_impl.h"
 
 namespace clan
@@ -99,11 +97,6 @@ namespace clan
 		FontFamily font_family(typeface_name);
 		font_family.add(canvas, sprite, glyph_list, spacelen, monospace, metrics);
 		impl = std::make_shared<Font_Impl>(font_family, desc);
-	}
-
-	Resource<Font> Font::resource(Canvas &canvas, const std::string &family_name, const FontDescription &desc, const ResourceManager &resources)
-	{
-		return DisplayCache::get(resources).get_font(canvas, family_name, desc);
 	}
 
 	void Font::throw_if_null() const

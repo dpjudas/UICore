@@ -28,10 +28,10 @@
 
 #pragma once
 
-#include "API/Display/2D/sprite.h"
-#include "API/Display/2D/texture_group.h"
-#include "API/Display/2D/subtexture.h"
-#include "API/Display/Render/texture_2d.h"
+#include "UICore/Display/2D/sprite.h"
+#include "UICore/Display/2D/texture_group.h"
+#include "UICore/Display/2D/subtexture.h"
+#include "UICore/Display/Render/texture_2d.h"
 #include "render_batch_triangle.h"
 #include <vector>
 

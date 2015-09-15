@@ -26,8 +26,8 @@
 **    Magnus Norddahl
 */
 
-#include "Core/precomp.h"
-#include "API/Core/IOData/cl_endian.h"
+#include "UICore/precomp.h"
+#include "UICore/Core/IOData/cl_endian.h"
 
 namespace clan
 {

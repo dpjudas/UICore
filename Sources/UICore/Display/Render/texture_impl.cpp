@@ -27,7 +27,7 @@
 **    Harry Storbacka
 */
 
-#include "Display/precomp.h"
+#include "UICore/precomp.h"
 #include "texture_impl.h"
 
 namespace clan

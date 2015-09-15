@@ -27,8 +27,8 @@
 **    Mark Page
 */
 
-#include "Core/precomp.h"
-#include "API/Core/Math/mat2.h"
+#include "UICore/precomp.h"
+#include "UICore/Core/Math/mat2.h"
 
 #include <cstring>
 
