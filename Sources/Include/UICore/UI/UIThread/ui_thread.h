@@ -32,7 +32,9 @@
 
 namespace clan
 {
-	class ResourceManager;
+	class Image;
+	class Font;
+	class FontDescription;
 	class Canvas;
 	class UIThreadImpl;
 
@@ -42,11 +44,11 @@ namespace clan
 		/// \brief Constructs a null instance.
 		UIThread();
 
-		UIThread(ResourceManager manager, const std::function<void(const std::exception_ptr &)> &exception_handler = std::function<void(const std::exception_ptr &)>());
+		UIThread(const std::string &resource_path, const std::function<void(const std::exception_ptr &)> &exception_handler = std::function<void(const std::exception_ptr &)>());
 		~UIThread();
 
-		static UIThread *get_instance();
-		static ResourceManager get_resources();
+		static Image get_image(Canvas &canvas, const std::string &name);
+		static Font get_font(const std::string &family, const FontDescription &desc);
 
 		static bool try_catch(const std::function<void()> &block);
 

@@ -67,10 +67,10 @@ namespace clan
 
 		int id = -1;
 
-		Font &get_font(Canvas &canvas)
+		Font &get_font()
 		{
 			if (font.is_null())
-				font = style_cascade.get_font(canvas);
+				font = style_cascade.get_font();
 			return font;
 		}
 

@@ -119,7 +119,7 @@ namespace clan
 
 		TextAlignment alignment = TextAlignment::left;
 
-		Font &get_font(Canvas &canvas);
+		Font &get_font();
 		Font font; // Do not use directly. Use get_font.
 
 		int preferred_size = 20;

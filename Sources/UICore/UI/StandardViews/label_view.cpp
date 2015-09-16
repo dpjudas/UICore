@@ -50,10 +50,10 @@ namespace clan
 		Font font;
 		LineBreakMode _line_break_mode = LineBreakMode::truncating_tail;
 
-		Font &get_font(LabelView *view, Canvas &canvas)
+		Font &get_font(LabelView *view)
 		{
 			if (font.is_null())
-				font = view->style_cascade().get_font(canvas);
+				font = view->style_cascade().get_font();
 			return font;
 		}
 	};
@@ -65,7 +65,7 @@ namespace clan
 	void LabelView::layout_subviews(Canvas &canvas)
 	{
 		View::layout_subviews(canvas);
-		impl->font = style_cascade().get_font(canvas);	// Reset the font on new layout
+		impl->font = style_cascade().get_font();	// Reset the font on new layout
 	}
 
 	std::string LabelView::text() const
@@ -102,7 +102,7 @@ namespace clan
 
 	void LabelView::render_content(Canvas &canvas)
 	{
-		Font font = impl->get_font(this, canvas);
+		Font font = impl->get_font(this);
 		FontMetrics font_metrics = font.get_font_metrics(canvas);
 		float baseline = font_metrics.get_baseline_offset();
 
@@ -162,7 +162,7 @@ namespace clan
 	{
 		if (style_cascade().computed_value("width").is_keyword("auto"))
 		{
-			Font font = impl->get_font(this, canvas);
+			Font font = impl->get_font(this);
 			return font.measure_text(canvas, impl->_text).advance.width + 1.0f;
 		}
 		else
@@ -173,7 +173,7 @@ namespace clan
 	{
 		if (style_cascade().computed_value("height").is_keyword("auto"))
 		{
-			Font font = impl->get_font(this, canvas);
+			Font font = impl->get_font(this);
 			return font.get_font_metrics(canvas).get_line_height();
 		}
 		else
@@ -182,7 +182,7 @@ namespace clan
 
 	float LabelView::calculate_first_baseline_offset(Canvas &canvas, float width)
 	{
-		Font font = impl->get_font(this, canvas);
+		Font font = impl->get_font(this);
 		return font.get_font_metrics(canvas).get_baseline_offset();
 	}
 

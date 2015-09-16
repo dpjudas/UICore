@@ -128,9 +128,9 @@ namespace clan
 
 					std::string obj_text = text.substr(obj_text_start, obj_text_length);
 
-					GlyphMetrics advance = object.get_font(canvas).measure_text(canvas, obj_text);
+					GlyphMetrics advance = object.get_font().measure_text(canvas, obj_text);
 
-					object.get_font(canvas).draw_text(canvas, x, y + metrics.ascent + object.baseline_offset, obj_text, object.style_cascade.computed_value("color").color());
+					object.get_font().draw_text(canvas, x, y + metrics.ascent + object.baseline_offset, obj_text, object.style_cascade.computed_value("color").color());
 
 					x += advance.advance.width;
 				}
@@ -178,7 +178,7 @@ namespace clan
 					size_t obj_text_end = obj_index == metrics.object_end ? metrics.text_end : object.end;
 					size_t obj_text_length = obj_text_end - obj_text_start;
 
-					GlyphMetrics advance = object.get_font(canvas).measure_text(canvas, text.substr(obj_text_start, obj_text_length));
+					GlyphMetrics advance = object.get_font().measure_text(canvas, text.substr(obj_text_start, obj_text_length));
 					x += advance.advance.width;
 				}
 				else if (object.type == SpanObjectType::view)
@@ -233,7 +233,7 @@ namespace clan
 		{
 			if (object.type == SpanObjectType::text)
 			{
-				GlyphMetrics advance = object.get_font(canvas).measure_text(canvas, text.substr(object.start, object.end - object.start));
+				GlyphMetrics advance = object.get_font().measure_text(canvas, text.substr(object.start, object.end - object.start));
 				x += advance.advance.width;
 			}
 			else if (object.type == SpanObjectType::view)
@@ -304,15 +304,15 @@ namespace clan
 			{
 				std::string obj_text = text.substr(obj_text_start, obj_text_length);
 
-				obj_advance_width = object.get_font(canvas).measure_text(canvas, obj_text).advance.width;
+				obj_advance_width = object.get_font().measure_text(canvas, obj_text).advance.width;
 
-				FontMetrics font_metrics = object.get_font(canvas).get_font_metrics(canvas);
+				FontMetrics font_metrics = object.get_font().get_font_metrics(canvas);
 				obj_ascent = font_metrics.get_baseline_offset();
 				obj_descent = font_metrics.get_line_height() - font_metrics.get_baseline_offset();
 
 				if (x + obj_advance_width > width)
 				{
-					size_t char_clip_pos = object.get_font(canvas).clip_from_left(canvas, obj_text, width - x);
+					size_t char_clip_pos = object.get_font().clip_from_left(canvas, obj_text, width - x);
 
 					size_t word_clip_pos = char_clip_pos;
 					if (word_clip_pos > 0)
@@ -329,7 +329,7 @@ namespace clan
 					if (x != 0.0f || word_clip_pos > 0)
 					{
 						obj_text_length = word_clip_pos;
-						obj_advance_width = object.get_font(canvas).measure_text(canvas, text.substr(obj_text_start, obj_text_length)).advance.width;
+						obj_advance_width = object.get_font().measure_text(canvas, text.substr(obj_text_start, obj_text_length)).advance.width;
 
 						obj_ascent = std::max(obj_ascent + object.baseline_offset, 0.0f);
 						obj_descent = std::max(obj_descent - object.baseline_offset, 0.0f);

@@ -48,7 +48,7 @@ namespace clan
 		if (!style.computed_value("border-image-source").is_url())
 			return;
 
-		Image &image = Image::resource(canvas, style.computed_value("border-image-source").text(), UIThread::get_resources());
+		Image &image = UIThread::get_image(canvas, style.computed_value("border-image-source").text());
 		if (!image.is_null())
 		{
 			int slice_left = get_left_slice_value(image.get_width());

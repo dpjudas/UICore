@@ -345,7 +345,7 @@ namespace clan
 			txt_after = impl->create_password(StringHelp::utf8_length(txt_after));
 		}
 
-		Font font = impl->get_font(canvas);
+		Font font = impl->get_font();
 
 		float advance_before = font.measure_text(canvas, txt_before).advance.width;
 		float advance_selected = font.measure_text(canvas, txt_selected).advance.width;
@@ -395,7 +395,7 @@ namespace clan
 	{
 		if (style_cascade().computed_value("width").is_keyword("auto"))
 		{
-			Font font = impl->get_font(canvas);
+			Font font = impl->get_font();
 			return font.measure_text(canvas, "X").advance.width * impl->preferred_size;
 		}
 		else
@@ -406,7 +406,7 @@ namespace clan
 	{
 		if (style_cascade().computed_value("height").is_keyword("auto"))
 		{
-			Font font = impl->get_font(canvas);
+			Font font = impl->get_font();
 			return font.get_font_metrics(canvas).get_line_height();
 		}
 		else
@@ -415,7 +415,7 @@ namespace clan
 
 	float TextFieldView::calculate_first_baseline_offset(Canvas &canvas, float width)
 	{
-		Font font = impl->get_font(canvas);
+		Font font = impl->get_font();
 		return font.get_font_metrics(canvas).get_baseline_offset();
 	}
 
@@ -426,10 +426,10 @@ namespace clan
 
 	/////////////////////////////////////////////////////////////////////////
 
-	Font &TextFieldViewImpl::get_font(Canvas &canvas)
+	Font &TextFieldViewImpl::get_font()
 	{
 		if (font.is_null())
-			font = textfield->style_cascade().get_font(canvas);
+			font = textfield->style_cascade().get_font();
 		return font;
 	}
 
@@ -1018,7 +1018,7 @@ namespace clan
 
 	Size TextFieldViewImpl::get_visual_text_size(Canvas &canvas, int pos, int npos)
 	{
-		Font font = get_font(canvas);
+		Font font = get_font();
 
 		return password_mode ? 
 			Size(font.measure_text(canvas, create_password(StringHelp::utf8_length(text.substr(pos, npos)))).bbox_size) :

@@ -393,10 +393,6 @@ void WorkspaceGenerator_MSVC8::install_mkdir(
 		// first time call: 
 		// - make sure we create Module specific directories
 
-		path = path + project->name.c_str();
-		if (path[path.length() - 1] != '\\')
-			path += '\\';
-
 		path_dest = path_dest + project->name.c_str();
 
 		bat << "if not exist \"" << std::string(path_dest) << "\"" << " mkdir \"" << std::string(path_dest) << "\"" << std::endl;
@@ -405,7 +401,7 @@ void WorkspaceGenerator_MSVC8::install_mkdir(
 			path_dest += '\\';
 	}
 
-	std::string prefix = "Sources\\";
+	std::string prefix = "Sources\\Include\\";
 
 	WIN32_FIND_DATAA data;
 	HANDLE handle = FindFirstFileA((prefix + path + "*.*").c_str(), &data);

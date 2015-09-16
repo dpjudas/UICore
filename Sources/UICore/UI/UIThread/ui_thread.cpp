@@ -28,9 +28,12 @@
 
 #include "UICore/precomp.h"
 #include "UICore/Display/2D/canvas.h"
+#include "UICore/Display/2D/image.h"
+#include "UICore/Display/Font/font.h"
 #include "UICore/Display/System/run_loop.h"
 #include "UICore/UI/UIThread/ui_thread.h"
 #include "UICore/Core/ErrorReporting/exception_dialog.h"
+#include "UICore/Core/IOData/path_help.h"
 
 namespace clan
 {
@@ -50,7 +53,7 @@ namespace clan
 			ui_thread_instance = nullptr;
 		}
 
-		ResourceManager resources;
+		std::string resource_path;
 		std::function<void(const std::exception_ptr &)> exception_handler;
 
 		static UIThreadImpl *get_instance()
@@ -64,9 +67,9 @@ namespace clan
 	{
 	}
 
-	UIThread::UIThread(ResourceManager manager, const std::function<void(const std::exception_ptr &)> &exception_handler) : impl(std::make_shared<UIThreadImpl>())
+	UIThread::UIThread(const std::string &resource_path, const std::function<void(const std::exception_ptr &)> &exception_handler) : impl(std::make_shared<UIThreadImpl>())
 	{
-		impl->resources = manager;
+		impl->resource_path = resource_path;
 		impl->exception_handler = exception_handler;
 
 		if (!exception_handler)
@@ -79,9 +82,14 @@ namespace clan
 	{
 	}
 
-	ResourceManager UIThread::get_resources()
+	Image UIThread::get_image(Canvas &canvas, const std::string &name)
 	{
-		return UIThreadImpl::get_instance()->resources;
+		return Image(canvas, PathHelp::combine(UIThreadImpl::get_instance()->resource_path, name));
+	}
+
+	Font UIThread::get_font(const std::string &family, const FontDescription &desc)
+	{
+		return Font(family, desc);
 	}
 
 	bool UIThread::try_catch(const std::function<void()> &block)

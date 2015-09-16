@@ -344,7 +344,7 @@ namespace clan
 	Font &TextViewImpl::get_font(Canvas &canvas)
 	{
 		if (font.is_null())
-			font = textfield->style_cascade().get_font(canvas);
+			font = textfield->style_cascade().get_font();
 		return font;
 	}
 

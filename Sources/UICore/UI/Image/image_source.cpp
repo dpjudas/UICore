@@ -48,15 +48,13 @@ namespace clan
 		return std::make_shared<ImageSourceCallback>(get_image_callback);
 	}
 
-	/*
 	std::shared_ptr<ImageSource> ImageSource::from_resource(const std::string &resource_name)
 	{
 		return ImageSource::from_callback([=](Canvas &canvas)
 		{
-			return Image::resource(canvas, resource_name, UIThread::get_resources());
+			return UIThread::get_image(canvas, resource_name);
 		});
 	}
-	*/
 
 	std::shared_ptr<ImageSource> ImageSource::from_image(const Image &image)
 	{

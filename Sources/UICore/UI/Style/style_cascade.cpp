@@ -184,7 +184,7 @@ namespace clan
 		image_renderer.render();
 	}
 
-	Font StyleCascade::get_font(Canvas &canvas) const
+	Font StyleCascade::get_font() const
 	{
 		auto font_size = computed_value("font-size");
 		auto line_height = computed_value("line-height");
@@ -228,7 +228,7 @@ namespace clan
 		else
 			family = "sans-serif";
 
-		return Font::resource(canvas, family, font_desc, UIThread::get_resources());
+		return UIThread::get_font(family, font_desc);
 	}
 
 	int StyleCascade::array_size(const char *property_name) const
