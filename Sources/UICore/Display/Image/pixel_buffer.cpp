@@ -37,7 +37,7 @@
 #include "UICore/Core/System/exception.h"
 #include "UICore/Core/IOData/file_system.h"
 #include "UICore/Core/IOData/path_help.h"
-#include "UICore/Display/ImageProviders/provider_factory.h"
+#include "UICore/Display/ImageFormats/image_file.h"
 #include "UICore/Display/TargetProviders/pixel_buffer_provider.h"
 #include "UICore/Display/Render/transfer_texture.h"
 #include "UICore/Core/Text/string_format.h"
@@ -72,12 +72,12 @@ namespace uicore
 
 	PixelBuffer::PixelBuffer(const std::string &filename, const FileSystem &fs, bool srgb)
 	{
-		*this = ImageProviderFactory::load(filename, fs, "", srgb);
+		*this = ImageFile::load(filename, fs, "", srgb);
 	}
 
 	PixelBuffer::PixelBuffer(IODevice &file, const std::string &image_type, bool srgb)
 	{
-		*this = ImageProviderFactory::load(file, image_type, srgb);
+		*this = ImageFile::load(file, image_type, srgb);
 	}
 
 	PixelBuffer::~PixelBuffer()

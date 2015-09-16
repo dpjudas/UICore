@@ -26,53 +26,31 @@
 **    Magnus Norddahl
 */
 
-#pragma once
-
-#include "../../Core/IOData/file_system.h"
-#include "provider_type.h"
+#include "UICore/precomp.h"
+#include "UICore/Display/ImageFormats/image_file_type.h"
+#include "UICore/Display/ImageFormats/image_file.h"
+#include "UICore/Display/setup_display.h"
 
 namespace uicore
 {
-	/// \brief Class template to register a provider type.
-	///
-	template<class ProviderClass>
-	class ProviderType_Register : public ImageProviderType
+	ImageFileType::ImageFileType(const std::string &type)
 	{
-	public:
-		/// \brief Registers provider type in the ProviderFactory.
-		ProviderType_Register(const std::string &type) : ImageProviderType(type)
-		{
-		}
+		auto &types = *SetupDisplay::get_image_provider_factory_types();
+		types[type] = this;
+	}
 
-		/// \brief Called to load an image with this provider type.
-		virtual PixelBuffer load(
-			const std::string &filename,
-			const FileSystem &fs,
-			bool srgb) override
-		{
-			return ProviderClass::load(filename, fs, srgb);
-		}
+	ImageFileType::~ImageFileType()
+	{
+		auto &types = *SetupDisplay::get_image_provider_factory_types();
+		std::map<std::string, ImageFileType *>::iterator it;
 
-		virtual PixelBuffer load(
-			IODevice &file,
-			bool srgb) override
+		for (it = types.begin(); it != types.end(); it++)
 		{
-			return ProviderClass::load(file, srgb);
+			if (it->second == this)
+			{
+				types.erase(it);
+				break;
+			}
 		}
-
-		virtual void save(
-			PixelBuffer buffer,
-			const std::string &filename,
-			FileSystem &fs) override
-		{
-			ProviderClass::save(buffer, filename, fs);
-		}
-
-		virtual void save(
-			PixelBuffer buffer,
-			IODevice &file) override
-		{
-			ProviderClass::save(buffer, file);
-		}
-	};
+	}
 }

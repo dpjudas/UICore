@@ -105,7 +105,7 @@ namespace uicore
 	};
 
 
-	/// \brief Set PNG output options. Used with PNGProvider::save().
+	/// \brief Set PNG output options. Used with PNGFormat::save().
 	class PNGOutputDescription
 	{
 	public:

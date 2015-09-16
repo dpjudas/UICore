@@ -31,7 +31,7 @@
 #include "UICore/Display/Image/pixel_buffer_lock.h"
 #include "UICore/Core/Zip/zlib_compression.h"
 #include "UICore/Core/System/system.h"
-#include "UICore/Display/ImageProviders/PNGWriter/png_writer.h"
+#include "UICore/Display/ImageFormats/PNGWriter/png_writer.h"
 
 namespace uicore
 {

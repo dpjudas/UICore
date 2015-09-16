@@ -33,7 +33,7 @@
 #include "UICore/Core/Text/string_format.h"
 #include "UICore/Core/Text/text.h"
 #include "UICore/Display/Window/cursor_description.h"
-#include "UICore/Display/ImageProviders/provider_factory.h"
+#include "UICore/Display/ImageFormats/image_file.h"
 #include "cursor_description_impl.h"
 
 namespace uicore
@@ -75,7 +75,7 @@ namespace uicore
 
 	void CursorDescription::add_frame(const std::string &filename, FileSystem &fs, const ImageImportDescription &import_desc)
 	{
-		PixelBuffer image = ImageProviderFactory::load(filename, fs, "");
+		PixelBuffer image = ImageFile::load(filename, fs, "");
 		image = import_desc.process(image);
 		add_frame(image);
 	}
@@ -90,7 +90,7 @@ namespace uicore
 
 	void CursorDescription::add_frame(IODevice &file, const std::string &image_type, const ImageImportDescription &import_desc)
 	{
-		PixelBuffer image = ImageProviderFactory::load(file, image_type);
+		PixelBuffer image = ImageFile::load(file, image_type);
 		image = import_desc.process(image);
 		add_frame(image);
 	}

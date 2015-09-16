@@ -33,7 +33,7 @@
 #include "UICore/Display/Image/pixel_buffer.h"
 #include "UICore/Display/Image/pixel_buffer.h"
 #include "UICore/Display/2D/color.h"
-#include "UICore/Display/ImageProviders/provider_factory.h"
+#include "UICore/Display/ImageFormats/image_file.h"
 #include "UICore/Core/IOData/file_system.h"
 #include "UICore/Core/IOData/path_help.h"
 #include "UICore/Core/Text/string_format.h"
@@ -92,7 +92,7 @@ namespace uicore
 
 	Texture2D::Texture2D(GraphicContext &context, const std::string &filename, const FileSystem &fs, const ImageImportDescription &import_desc)
 	{
-		PixelBuffer pb = ImageProviderFactory::load(filename, fs, std::string());
+		PixelBuffer pb = ImageFile::load(filename, fs, std::string());
 		pb = import_desc.process(pb);
 
 		*this = Texture2D(context, pb.get_width(), pb.get_height(), import_desc.is_srgb() ? tf_srgb8_alpha8 : tf_rgba8);
@@ -105,7 +105,7 @@ namespace uicore
 
 	Texture2D::Texture2D(GraphicContext &context, IODevice &file, const std::string &image_type, const ImageImportDescription &import_desc)
 	{
-		PixelBuffer pb = ImageProviderFactory::load(file, image_type);
+		PixelBuffer pb = ImageFile::load(file, image_type);
 		pb = import_desc.process(pb);
 		*this = Texture2D(context, pb.get_width(), pb.get_height(), import_desc.is_srgb() ? tf_srgb8_alpha8 : tf_rgba8);
 

@@ -36,7 +36,7 @@ namespace uicore
 	class FileSystem;
 
 	/// \brief Surface provider that can load PNG (.png) files.
-	class PNGProvider
+	class PNGFormat
 	{
 	public:
 		/// \brief Called to load an image with this provider type.

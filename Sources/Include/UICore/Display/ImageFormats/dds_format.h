@@ -35,14 +35,10 @@ namespace uicore
 {
 	class FileSystem;
 
-	/// \brief Image provider that can load Direct3D texture (.dds) files.
-	class DDSProvider
+	/// \brief Image format that can load Direct3D texture (.dds) files.
+	class DDSFormat
 	{
 	public:
-		/// \brief Called to load an image with this provider type.
-		///
-		/// \param filename Name of the file to load.
-		/// \param directory Directory that file name is relative to.
 		static PixelBufferSet load(const std::string &filename, const FileSystem &file_system);
 		static PixelBufferSet load(const std::string &fullname);
 		static PixelBufferSet load(IODevice &file);

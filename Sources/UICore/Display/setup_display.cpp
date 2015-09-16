@@ -29,10 +29,10 @@
 
 #include "UICore/precomp.h"
 #include "setup_display.h"
-#include "UICore/Display/ImageProviders/provider_type_register.h"
-#include "UICore/Display/ImageProviders/targa_provider.h"
-#include "UICore/Display/ImageProviders/jpeg_provider.h"
-#include "UICore/Display/ImageProviders/png_provider.h"
+#include "UICore/Display/ImageFormats/image_file_type_register.h"
+#include "UICore/Display/ImageFormats/targa_format.h"
+#include "UICore/Display/ImageFormats/jpeg_format.h"
+#include "UICore/Display/ImageFormats/png_format.h"
 #include "../Core/System/setup_core.h"
 
 #ifdef WIN32
@@ -49,7 +49,7 @@
 
 namespace uicore
 {
-	class ImageProviderType;
+	class ImageFileType;
 	class SetupDisplay_Impl : public SetupModule
 	{
 	public:
@@ -59,13 +59,13 @@ namespace uicore
 		static SetupDisplay_Impl *instance;
 
 		/// \brief Map of the class factories for each provider type.
-		std::map<std::string, ImageProviderType *> image_provider_factory_types;
+		std::map<std::string, ImageFileType *> image_provider_factory_types;
 
-		ProviderType_Register<JPEGProvider> *jpeg_provider = nullptr;
-		ProviderType_Register<JPEGProvider> *jpg_provider = nullptr;
-		ProviderType_Register<PNGProvider> *png_provider = nullptr;
-		ProviderType_Register<TargaProvider> *targa_provider = nullptr;
-		ProviderType_Register<TargaProvider> *tga_provider = nullptr;
+		ImageFileType_Register<JPEGFormat> *jpeg_provider = nullptr;
+		ImageFileType_Register<JPEGFormat> *jpg_provider = nullptr;
+		ImageFileType_Register<PNGFormat> *png_provider = nullptr;
+		ImageFileType_Register<TargaFormat> *targa_provider = nullptr;
+		ImageFileType_Register<TargaFormat> *tga_provider = nullptr;
 
 #if defined(WIN32)
 		DisplayMessageQueue_Win32 message_queue;
@@ -100,11 +100,11 @@ namespace uicore
 		// This function must be the first Xlib function a multi-threaded program calls, and it must complete before any other Xlib call is made.
 		XInitThreads();
 #endif
-		jpeg_provider = new ProviderType_Register<JPEGProvider>("jpeg");
-		jpg_provider = new ProviderType_Register<JPEGProvider>("jpg");
-		png_provider = new ProviderType_Register<PNGProvider>("png");
-		targa_provider = new ProviderType_Register<TargaProvider>("targa");
-		tga_provider = new ProviderType_Register<TargaProvider>("tga");
+		jpeg_provider = new ImageFileType_Register<JPEGFormat>("jpeg");
+		jpg_provider = new ImageFileType_Register<JPEGFormat>("jpg");
+		png_provider = new ImageFileType_Register<PNGFormat>("png");
+		targa_provider = new ImageFileType_Register<TargaFormat>("targa");
+		tga_provider = new ImageFileType_Register<TargaFormat>("tga");
 	}
 
 	SetupDisplay_Impl::~SetupDisplay_Impl()
@@ -133,7 +133,7 @@ namespace uicore
 		return &SetupDisplay_Impl::instance->message_queue;
 	}
 #endif
-	std::map<std::string, ImageProviderType *> *SetupDisplay::get_image_provider_factory_types()
+	std::map<std::string, ImageFileType *> *SetupDisplay::get_image_provider_factory_types()
 	{
 		if (!SetupDisplay_Impl::instance)
 			start();

@@ -35,7 +35,7 @@ namespace uicore
 {
 	class DisplayMessageQueue_Win32;
 	class DisplayMessageQueue_X11;
-	class ImageProviderType;
+	class ImageFileType;
 
 	class SetupDisplay
 	{
@@ -47,6 +47,6 @@ namespace uicore
 #elif !defined(__APPLE__) && !defined(__ANDROID__)
 		static DisplayMessageQueue_X11* get_message_queue();
 #endif
-		static std::map<std::string, ImageProviderType *> *get_image_provider_factory_types();
+		static std::map<std::string, ImageFileType *> *get_image_provider_factory_types();
 	};
 }

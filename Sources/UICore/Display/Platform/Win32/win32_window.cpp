@@ -43,7 +43,7 @@
 #include "UICore/Display/Window/keys.h"
 #include "UICore/Display/TargetProviders/display_window_provider.h"
 #include "UICore/Display/Image/pixel_buffer.h"
-#include "UICore/Display/ImageProviders/png_provider.h"
+#include "UICore/Display/ImageFormats/png_format.h"
 #include "UICore/Display/screen_info.h"
 #include "win32_window.h"
 #include "input_device_provider_win32keyboard.h"
@@ -1080,7 +1080,7 @@ namespace uicore
 	{
 		DataBuffer png_data_buf(1024*8);
 		MemoryDevice iodev_mem(png_data_buf);
-		PNGProvider::save(image, iodev_mem);
+		PNGFormat::save(image, iodev_mem);
 		DataBuffer png_data = iodev_mem.get_data();
 
 		unsigned int length = png_data.get_size();
@@ -1470,7 +1470,7 @@ namespace uicore
 	{
 		DataBuffer data_buffer(data, size);
 		MemoryDevice iodev(data_buffer);
-		PixelBuffer pbuf = PNGProvider::load(iodev);
+		PixelBuffer pbuf = PNGFormat::load(iodev);
 		return pbuf;
 	}
 

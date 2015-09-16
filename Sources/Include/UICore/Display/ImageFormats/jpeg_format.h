@@ -36,7 +36,7 @@ namespace uicore
 	class FileSystem;
 
 	/// \brief Image provider that can load JPEG (.jpg) files.
-	class JPEGProvider
+	class JPEGFormat
 	{
 	public:
 		/// \brief Called to load an image with this provider type.

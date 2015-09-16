@@ -24,91 +24,64 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    Harry Storbacka
 */
 
 #include "UICore/precomp.h"
 #include "UICore/Core/System/exception.h"
 #include "UICore/Core/IOData/file_system.h"
 #include "UICore/Core/IOData/path_help.h"
-#include "UICore/Core/Text/text.h"
+#include "UICore/Display/ImageFormats/targa_format.h"
 #include "UICore/Display/Image/pixel_buffer.h"
-#include "UICore/Display/ImageProviders/png_provider.h"
-#include "UICore/Display/ImageProviders/PNGLoader/png_loader.h"
-#include "UICore/Display/ImageProviders/PNGWriter/png_writer.h"
-#include "UICore/Core/Zip/miniz.h"
-#include <stdlib.h>
+#include "UICore/Display/ImageFormats/TargaLoader/targa_loader.h"
 
 namespace uicore
 {
-	PixelBuffer PNGProvider::load(
+	PixelBuffer TargaFormat::load(
 		const std::string &filename,
 		const FileSystem &fs,
 		bool srgb)
 	{
-		return PNGLoader::load(fs.open_file(filename), srgb);
+		IODevice datafile = fs.open_file(filename);
+		return TargaLoader::load(datafile, srgb);
 	}
 
-	PixelBuffer PNGProvider::load(
+	PixelBuffer TargaFormat::load(
 		const std::string &fullname,
 		bool srgb)
 	{
 		File file(fullname);
-		return PNGLoader::load(file, srgb);
+		return TargaLoader::load(file, srgb);
 	}
 
-	PixelBuffer PNGProvider::load(IODevice &file, bool srgb)
+	PixelBuffer TargaFormat::load(
+		IODevice &file,
+		bool srgb)
 	{
-		return PNGLoader::load(file, srgb);
+		return TargaLoader::load(file, srgb);
 	}
 
-	void PNGProvider::save(
+	void TargaFormat::save(
 		PixelBuffer buffer,
 		const std::string &filename,
 		FileSystem &fs)
 	{
-		IODevice file = fs.open_file(filename, File::create_always, File::access_read_write);
-		save(buffer, file);
+		throw Exception("TargaFormat doesn't support saving");
 	}
 
-	void PNGProvider::save(
+	void TargaFormat::save(
+		PixelBuffer buffer,
+		IODevice &file)
+	{
+		throw Exception("TargaFormat doesn't support saving");
+	}
+
+	void TargaFormat::save(
 		PixelBuffer buffer,
 		const std::string &fullname)
 	{
 		std::string path = PathHelp::get_fullpath(fullname, PathHelp::path_type_file);
 		std::string filename = PathHelp::get_filename(fullname, PathHelp::path_type_file);
 		FileSystem vfs(path);
-		PNGProvider::save(buffer, filename, vfs);
-	}
-
-	void PNGProvider::save(PixelBuffer buffer, IODevice &iodev)
-	{
-		PNGWriter::save(iodev, buffer);
-		/*
-		if (buffer.get_format() != tf_rgba8)
-		{
-			PixelBuffer newbuf(
-			buffer.get_width(),
-			buffer.get_height(),
-			tf_rgba8);
-			newbuf.set_image(buffer);
-			buffer = newbuf;
-		}
-
-		size_t size = 0;
-		void *data = tdefl_write_image_to_png_file_in_memory(buffer.get_data(), buffer.get_width(), buffer.get_height(), 4, &size);
-		try
-		{
-			iodev.write(data, size);
-			if (data)
-			free(data);
-		}
-		catch (...)
-		{
-			if (data)
-			free(data);
-			throw;
-		}
-		*/
+		TargaFormat::save(buffer, filename, vfs);
 	}
 }

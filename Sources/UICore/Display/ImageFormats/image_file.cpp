@@ -29,8 +29,8 @@
 #include "UICore/precomp.h"
 #include "UICore/Core/IOData/file_system.h"
 #include "UICore/Core/IOData/path_help.h"
-#include "UICore/Display/ImageProviders/provider_factory.h"
-#include "UICore/Display/ImageProviders/provider_type.h"
+#include "UICore/Display/ImageFormats/image_file.h"
+#include "UICore/Display/ImageFormats/image_file_type.h"
 #include "UICore/Display/Image/pixel_buffer.h"
 #include "UICore/Core/System/exception.h"
 #include "UICore/Core/Text/text.h"
@@ -39,7 +39,7 @@
 
 namespace uicore
 {
-	PixelBuffer ImageProviderFactory::try_load(
+	PixelBuffer ImageFile::try_load(
 		const std::string &filename,
 		const std::string &type,
 		const FileSystem &fs,
@@ -59,7 +59,7 @@ namespace uicore
 		}
 	}
 
-	PixelBuffer ImageProviderFactory::load(
+	PixelBuffer ImageFile::load(
 		const std::string &filename,
 		const FileSystem &fs,
 		const std::string &type,
@@ -71,7 +71,7 @@ namespace uicore
 		{
 			if (types.find(type) == types.end()) throw Exception("Unknown image provider type " + type);
 
-			ImageProviderType *factory = types[type];
+			ImageFileType *factory = types[type];
 			return factory->load(filename, fs, srgb);
 		}
 
@@ -80,11 +80,11 @@ namespace uicore
 		ext = StringHelp::text_to_lower(ext);
 		if (types.find(ext) == types.end()) throw Exception(std::string("Unknown image provider type ") + ext);
 
-		ImageProviderType *factory = types[ext];
+		ImageFileType *factory = types[ext];
 		return factory->load(filename, fs, srgb);
 	}
 
-	PixelBuffer ImageProviderFactory::load(
+	PixelBuffer ImageFile::load(
 		IODevice &file,
 		const std::string &type,
 		bool srgb)
@@ -93,11 +93,11 @@ namespace uicore
 		auto &types = *SetupDisplay::get_image_provider_factory_types();
 		if (types.find(type) == types.end()) throw Exception("Unknown image provider type " + type);
 
-		ImageProviderType *factory = types[type];
+		ImageFileType *factory = types[type];
 		return factory->load(file, srgb);
 	}
 
-	PixelBuffer ImageProviderFactory::load(
+	PixelBuffer ImageFile::load(
 		const std::string &fullname,
 		const std::string &type,
 		bool srgb)
@@ -106,10 +106,10 @@ namespace uicore
 		std::string path = PathHelp::get_fullpath(fullname, PathHelp::path_type_file);
 		std::string filename = PathHelp::get_filename(fullname, PathHelp::path_type_file);
 		FileSystem vfs(path);
-		return ImageProviderFactory::load(filename, vfs, type, srgb);
+		return ImageFile::load(filename, vfs, type, srgb);
 	}
 
-	void ImageProviderFactory::save(
+	void ImageFile::save(
 		PixelBuffer buffer,
 		const std::string &filename,
 		FileSystem &fs,
@@ -124,11 +124,11 @@ namespace uicore
 		auto &types = *SetupDisplay::get_image_provider_factory_types();
 		if (types.find(type) == types.end()) throw Exception("Unknown image provider type " + type);
 
-		ImageProviderType *factory = types[type];
+		ImageFileType *factory = types[type];
 		factory->save(buffer, filename, fs);
 	}
 
-	void ImageProviderFactory::save(
+	void ImageFile::save(
 		PixelBuffer buffer,
 		const std::string &fullname,
 		const std::string &type)
@@ -137,10 +137,10 @@ namespace uicore
 		std::string path = PathHelp::get_fullpath(fullname, PathHelp::path_type_file);
 		std::string filename = PathHelp::get_filename(fullname, PathHelp::path_type_file);
 		FileSystem vfs(path);
-		return ImageProviderFactory::save(buffer, filename, vfs, type);
+		return ImageFile::save(buffer, filename, vfs, type);
 	}
 
-	void ImageProviderFactory::save(
+	void ImageFile::save(
 		PixelBuffer buffer,
 		IODevice &file,
 		const std::string &type)
@@ -150,7 +150,7 @@ namespace uicore
 		auto &types = *SetupDisplay::get_image_provider_factory_types();
 		if (types.find(type) == types.end()) throw Exception("Unknown image provider type " + type);
 
-		ImageProviderType *factory = types[type];
+		ImageFileType *factory = types[type];
 		factory->save(buffer, file);
 	}
 }

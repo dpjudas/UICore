@@ -35,10 +35,10 @@
 namespace uicore
 {
 	class PixelBuffer;
-	class ImageProviderType;
+	class ImageFileType;
 
-	/// \brief Image Provider factory
-	class ImageProviderFactory
+	/// \brief Load or save an image
+	class ImageFile
 	{
 	public:
 		/// \brief  Attempts to load an image file from 'filename', using the provider identified by 'type'.

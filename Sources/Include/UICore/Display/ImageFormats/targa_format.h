@@ -36,7 +36,7 @@ namespace uicore
 	class FileSystem;
 
 	/// \brief Surface provider that can load targa (.tga) files.
-	class TargaProvider
+	class TargaFormat
 	{
 	public:
 		/// \brief Called to load an image with this provider type.

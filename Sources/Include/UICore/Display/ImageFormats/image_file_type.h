@@ -36,14 +36,14 @@ namespace uicore
 	class PixelBuffer;
 
 	/// \brief Provider type
-	class ImageProviderType
+	class ImageFileType
 	{
 	public:
-		/// \brief Registers a provider type in the ImageProviderFactory.
-		ImageProviderType(const std::string &type);
+		/// \brief Registers a provider type in the ImageFile.
+		ImageFileType(const std::string &type);
 
-		/// \brief Unregisters a provider type in the ImageProviderFactory.
-		virtual ~ImageProviderType();
+		/// \brief Unregisters a provider type in the ImageFile.
+		virtual ~ImageFileType();
 
 		/// \brief Called to load an image with this provider type.
 		virtual PixelBuffer load(

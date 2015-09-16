@@ -30,20 +30,20 @@
 #include <iostream>
 #include "UICore/Core/IOData/file_system.h"
 #include "UICore/Core/IOData/path_help.h"
-#include "UICore/Display/ImageProviders/dds_provider.h"
+#include "UICore/Display/ImageFormats/dds_format.h"
 #include "UICore/Display/Image/pixel_buffer.h"
 #include "UICore/Core/System/exception.h"
 #include "UICore/Core/Text/text.h"
 
 namespace uicore
 {
-	PixelBufferSet DDSProvider::load(const std::string &filename, const FileSystem &fs)
+	PixelBufferSet DDSFormat::load(const std::string &filename, const FileSystem &fs)
 	{
 		IODevice file = fs.open_file(filename);
 		return load(file);
 	}
 
-	PixelBufferSet DDSProvider::load(const std::string &fullname)
+	PixelBufferSet DDSFormat::load(const std::string &fullname)
 	{
 		std::string path = PathHelp::get_fullpath(fullname, PathHelp::path_type_file);
 		std::string filename = PathHelp::get_filename(fullname, PathHelp::path_type_file);
@@ -51,7 +51,7 @@ namespace uicore
 		return load(filename, vfs);
 	}
 
-	PixelBufferSet DDSProvider::load(IODevice &file)
+	PixelBufferSet DDSFormat::load(IODevice &file)
 	{
 #define fourccvalue(a,b,c,d) ((static_cast<unsigned int>(a)) | (static_cast<unsigned int>(b) << 8) | (static_cast<unsigned int>(c) << 16) | (static_cast<unsigned int>(d) << 24))
 #define isbitmask(r,g,b,a) (format_red_bit_mask == (r) && format_green_bit_mask == (g) && format_blue_bit_mask == (b) && format_alpha_bit_mask == (a))

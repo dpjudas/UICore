@@ -31,7 +31,7 @@
 #include <iostream>
 #include "UICore/Core/IOData/file_system.h"
 #include "UICore/Core/IOData/path_help.h"
-#include "UICore/Display/ImageProviders/jpeg_provider.h"
+#include "UICore/Display/ImageFormats/jpeg_format.h"
 #include "UICore/Core/System/exception.h"
 #include "UICore/Core/Text/text.h"
 #include "JPEGLoader/jpeg_loader.h"
@@ -39,7 +39,7 @@
 
 namespace uicore
 {
-	PixelBuffer JPEGProvider::load(
+	PixelBuffer JPEGFormat::load(
 		const std::string &filename,
 		const FileSystem &fs,
 		bool srgb)
@@ -47,24 +47,24 @@ namespace uicore
 		return JPEGLoader::load(fs.open_file(filename), srgb);
 	}
 
-	PixelBuffer JPEGProvider::load(
+	PixelBuffer JPEGFormat::load(
 		IODevice &file,
 		bool srgb)
 	{
 		return JPEGLoader::load(file, srgb);
 	}
 
-	PixelBuffer JPEGProvider::load(
+	PixelBuffer JPEGFormat::load(
 		const std::string &fullname,
 		bool srgb)
 	{
 		std::string path = PathHelp::get_fullpath(fullname, PathHelp::path_type_file);
 		std::string filename = PathHelp::get_filename(fullname, PathHelp::path_type_file);
 		FileSystem vfs(path);
-		return JPEGProvider::load(filename, vfs, srgb);
+		return JPEGFormat::load(filename, vfs, srgb);
 	}
 
-	void JPEGProvider::save(
+	void JPEGFormat::save(
 		PixelBuffer buffer,
 		const std::string &fullname,
 		int quality)
@@ -72,10 +72,10 @@ namespace uicore
 		std::string path = PathHelp::get_fullpath(fullname, PathHelp::path_type_file);
 		std::string filename = PathHelp::get_filename(fullname, PathHelp::path_type_file);
 		FileSystem vfs(path);
-		return JPEGProvider::save(buffer, filename, vfs, quality);
+		return JPEGFormat::save(buffer, filename, vfs, quality);
 	}
 
-	void JPEGProvider::save(
+	void JPEGFormat::save(
 		PixelBuffer buffer,
 		IODevice &file,
 		int quality)
@@ -99,7 +99,7 @@ namespace uicore
 		file.write(output.get_data(), size);
 	}
 
-	void JPEGProvider::save(
+	void JPEGFormat::save(
 		PixelBuffer buffer,
 		const std::string &filename,
 		FileSystem &fs,
