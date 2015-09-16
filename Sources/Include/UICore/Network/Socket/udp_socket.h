@@ -5,7 +5,7 @@
 #include <memory>
 #include <vector>
 
-namespace clan
+namespace uicore
 {
 	class SocketName;
 	class UDPSocketImpl;

@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -41,7 +41,7 @@
 #include "canvas_impl.h"
 #include "UICore/Core/IOData/path_help.h"
 
-namespace clan
+namespace uicore
 {
 	Sprite_Impl::Sprite_Impl() :
 		angle(Angle(0.0f, angle_radians)),

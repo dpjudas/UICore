@@ -5,7 +5,7 @@
 #include <vector>
 #include <mutex>
 
-namespace clan
+namespace uicore
 {
 	class SocketHandle;
 	class NetworkConditionVariableImpl;

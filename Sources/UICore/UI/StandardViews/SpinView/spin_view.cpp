@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -39,7 +39,7 @@
 #include <algorithm>
 #include "spin_view_impl.h"
 
-namespace clan
+namespace uicore
 {
 	SpinView::SpinView() : impl(std::make_shared<SpinView_Impl>())
 	{
@@ -66,7 +66,7 @@ namespace clan
 		slots.connect(impl->button_increment->sig_pointer_enter(), [&](PointerEvent &e) {impl->_state_increment_hot = true;  impl->update_increment_state(); });
 		slots.connect(impl->button_increment->sig_pointer_leave(), [&](PointerEvent &e) {impl->_state_increment_hot = false;  impl->update_increment_state(); });
 
-		impl->timer.func_expired() = clan::bind_member(impl.get(), &SpinView_Impl::timer_expired);
+		impl->timer.func_expired() = uicore::bind_member(impl.get(), &SpinView_Impl::timer_expired);
 	}
 
 	std::shared_ptr<View> SpinView::button_decrement() const

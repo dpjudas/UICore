@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -41,11 +41,8 @@
 #define cl_tls_variable __thread
 #endif
 
-namespace clan
+namespace uicore
 {
-	/// \addtogroup clanGL_System clanGL System
-	/// \{
-
 	class GLFunctions;
 	class GraphicContext;
 	class OpenGLGraphicContextProvider;
@@ -150,6 +147,4 @@ namespace clan
 		friend class GL3GraphicContextProvider;
 		friend class PBuffer_GL1_Impl;
 	};
-
-	/// \}
 }

@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -31,7 +31,7 @@
 #include "UICore/Display/Window/display_window.h"
 #include "UICore/Display/Render/blend_state.h"
 
-namespace clan
+namespace uicore
 {
 	class KeyEvent;
 	class PointerEvent;
@@ -62,29 +62,29 @@ namespace clan
 		void on_window_close();
 		void on_lost_focus();
 		void on_got_focus();
-		void on_key_down(const clan::InputEvent &);
-		void on_key_up(const clan::InputEvent &);
-		void on_mouse_down(const clan::InputEvent &);
-		void on_mouse_dblclk(const clan::InputEvent &);
-		void on_mouse_up(const clan::InputEvent &);
-		void on_mouse_move(const clan::InputEvent &);
+		void on_key_down(const uicore::InputEvent &);
+		void on_key_up(const uicore::InputEvent &);
+		void on_mouse_down(const uicore::InputEvent &);
+		void on_mouse_dblclk(const uicore::InputEvent &);
+		void on_mouse_up(const uicore::InputEvent &);
+		void on_mouse_move(const uicore::InputEvent &);
 
 	private:
 		void dispatch_hot_event(std::shared_ptr<View> &view, PointerEvent &e);
 		std::shared_ptr<View> get_capture_view(PointerEvent &e, std::shared_ptr<View> &view_above_cursor);
 		void release_capture();
 
-		PointerButton decode_id(clan::InputCode ic) const;
+		PointerButton decode_id(uicore::InputCode ic) const;
 		void window_key_event(KeyEvent &e);
 		void window_pointer_event(PointerEvent &e);
-		void transform_on_key_down(const clan::InputEvent &);
-		void transform_on_key_up(const clan::InputEvent &);
-		void transform_on_mouse_down(const clan::InputEvent &);
-		void transform_on_mouse_dblclk(const clan::InputEvent &);
-		void transform_on_mouse_up(const clan::InputEvent &);
-		void transform_on_mouse_move(const clan::InputEvent &);
+		void transform_on_key_down(const uicore::InputEvent &);
+		void transform_on_key_up(const uicore::InputEvent &);
+		void transform_on_mouse_down(const uicore::InputEvent &);
+		void transform_on_mouse_dblclk(const uicore::InputEvent &);
+		void transform_on_mouse_up(const uicore::InputEvent &);
+		void transform_on_mouse_move(const uicore::InputEvent &);
 
-		clan::InputEvent transform_input_event(const clan::InputEvent &event) { InputEvent e = event; e.mouse_pos = Vec2f(transform_mouse_matrix.get_transformed_point(Vec3f(e.mouse_pos.x, e.mouse_pos.y, 0))); return e; }
+		uicore::InputEvent transform_input_event(const uicore::InputEvent &event) { InputEvent e = event; e.mouse_pos = Vec2f(transform_mouse_matrix.get_transformed_point(Vec3f(e.mouse_pos.x, e.mouse_pos.y, 0))); return e; }
 
 		int capture_down_counter = 0;
 		std::shared_ptr<View> captured_view;

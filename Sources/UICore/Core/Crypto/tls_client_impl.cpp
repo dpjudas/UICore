@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -41,7 +41,7 @@
 #include "x509.h"
 #include "UICore/Core/Math/cl_math.h"
 
-namespace clan
+namespace uicore
 {
 	TLSClient_Impl::TLSClient_Impl() :
 		recv_in_data_read_pos(0), recv_out_data_read_pos(0), send_in_data_read_pos(0), send_out_data_read_pos(0), handshake_in_read_pos(0),
@@ -86,7 +86,7 @@ namespace clan
 
 		int insert_pos = send_in_data.get_size();
 		int buffer_space_available = desired_buffer_size - insert_pos;
-		int bytes_consumed = clan::min(size, buffer_space_available);
+		int bytes_consumed = uicore::min(size, buffer_space_available);
 
 		send_in_data.set_size(insert_pos + bytes_consumed);
 		memcpy(send_in_data.get_data() + insert_pos, data, bytes_consumed);
@@ -103,7 +103,7 @@ namespace clan
 
 		int insert_pos = recv_in_data.get_size();
 		int buffer_space_available = desired_buffer_size - insert_pos;
-		int bytes_consumed = clan::min(size, buffer_space_available);
+		int bytes_consumed = uicore::min(size, buffer_space_available);
 
 		recv_in_data.set_size(insert_pos + bytes_consumed);
 		memcpy(recv_in_data.get_data() + insert_pos, data, bytes_consumed);
@@ -217,7 +217,7 @@ namespace clan
 		int size = send_in_data.get_size() - send_in_data_read_pos;
 
 		unsigned int max_record_length_gcc_fix = max_record_length;
-		unsigned int data_in_record = clan::min((unsigned int)size, max_record_length_gcc_fix);
+		unsigned int data_in_record = uicore::min((unsigned int)size, max_record_length_gcc_fix);
 
 		int offset = 0;
 		int offset_tls_record = offset;					offset += sizeof(TLS_Record);

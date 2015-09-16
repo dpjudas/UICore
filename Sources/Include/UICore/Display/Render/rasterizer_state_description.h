@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -30,11 +30,8 @@
 
 #include "graphic_context.h"
 
-namespace clan
+namespace uicore
 {
-	/// \addtogroup clanDisplay_Display clanDisplay Display
-	/// \{
-
 	class RasterizerStateDescription_Impl;
 
 	/// \brief Rasterizer state description.
@@ -80,7 +77,7 @@ namespace clan
 		/// \brief Enables/disables if clipping rects are used
 		void enable_scissor(bool enabled);
 
-		/// \brief Enables/disables anti-aliasing.	(clanGL only)
+		/// \brief Enables/disables anti-aliasing.	(uicoreGL only)
 		void enable_antialiased(bool value);
 
 		/// \brief Enables/disables point offsetting.
@@ -95,16 +92,16 @@ namespace clan
 		/// \brief Sets the offset factor.
 		void set_polygon_offset(float factor, float units);
 
-		/// \brief The default value is 1.0	(clanGL only)
+		/// \brief The default value is 1.0	(uicoreGL only)
 		void set_point_size(float);
 
-		/// \brief Alpha fade point once minimum size treshold reached. Requires multisampling to be enabled.	(clanGL only)
+		/// \brief Alpha fade point once minimum size treshold reached. Requires multisampling to be enabled.	(uicoreGL only)
 		void set_point_fade_treshold_size(float);
 
-		/// \brief Enables if points sizes is set by the vertex shader.	(clanGL only)
+		/// \brief Enables if points sizes is set by the vertex shader.	(uicoreGL only)
 		void enable_point_size(bool enable);
 
-		/// \brief Sets the origin of texture point sprites.	(clanGL only)
+		/// \brief Sets the origin of texture point sprites.	(uicoreGL only)
 		void set_point_sprite_origin(PointSpriteOrigin origin);
 
 		bool operator==(const RasterizerStateDescription &other) const;
@@ -113,6 +110,4 @@ namespace clan
 	private:
 		std::shared_ptr<RasterizerStateDescription_Impl> impl;
 	};
-
-	/// \}
 }

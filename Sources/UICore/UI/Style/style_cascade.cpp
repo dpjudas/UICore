@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -38,7 +38,7 @@
 #include "style_border_image_renderer.h"
 #include "style_impl.h"
 
-namespace clan
+namespace uicore
 {
 	StyleGetValue StyleCascade::cascade_value(const char *property_name) const
 	{
@@ -191,7 +191,7 @@ namespace clan
 		auto font_weight = computed_value("font-weight");
 		auto font_style = computed_value("font-style");
 		//auto font_variant = computed_value("font-variant"); // To do: needs FontDescription support
-		auto font_rendering = computed_value("-clan-font-rendering");
+		auto font_rendering = computed_value("-uicore-font-rendering");
 		auto font_family_name = computed_value("font-family-names[0]");
 
 		FontDescription font_desc;

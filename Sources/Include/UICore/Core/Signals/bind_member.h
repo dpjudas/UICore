@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -31,13 +31,8 @@
 
 #include <functional>
 
-namespace clan
+namespace uicore
 {
-	/// \addtogroup clanCore_Signals clanCore Signals
-	/// \{
-
 	template<class R, class T, class... Args>
 	std::function<R(Args...)> bind_member(T* instance, R(T::*method)(Args...)) { return [=](Args && ... args) -> R { return (instance->*method)(std::forward<Args>(args)...); }; }
-
-	/// \}
 }

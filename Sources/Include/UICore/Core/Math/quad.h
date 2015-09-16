@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -34,11 +34,8 @@
 #include "point.h"
 #include "origin.h"
 
-namespace clan
+namespace uicore
 {
-	/// \addtogroup clanCore_Math clanCore Math
-	/// \{
-
 	/// \brief 2D quad structure.
 	///
 	/// These quads templates are defined for: int (Quad), float (Quadf), double (Quadd)
@@ -231,6 +228,4 @@ namespace clan
 		Quadd(const Rectd &rect) : Quadx<double>(rect) {}
 		Quadd(const Quadx<double> &quad) : Quadx<double>(quad) {}
 	};
-
-	/// \}
 }

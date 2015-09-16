@@ -3,7 +3,7 @@
 #include "UICore/UI/Events/key_event.h"
 #include "UICore/UI/View/view.h"
 
-namespace clan
+namespace uicore
 {
 	Pointf KeyEvent::pointer_pos(View *view) const
 	{

@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -30,11 +30,8 @@
 
 #include "UICore/Display/Render/transfer_buffer.h"
 
-namespace clan
+namespace uicore
 {
-	/// \addtogroup clanDisplay_Display clanDisplay Display
-	/// \{
-
 	class GraphicContext;
 
 	/// \brief Transfer Buffer provider.
@@ -65,6 +62,4 @@ namespace clan
 		/// \brief Uploads data to buffer.
 		virtual void upload_data(GraphicContext &gc, int offset, const void *data, int size) = 0;
 	};
-
-	/// \}
 }

@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -29,11 +29,8 @@
 
 #pragma once
 
-namespace clan
+namespace uicore
 {
-	/// \addtogroup clanCore_I_O_Data clanCore I/O Data
-	/// \{
-
 	/// \brief File operation helpers.
 	class FileHelp
 	{
@@ -55,6 +52,4 @@ namespace clan
 		/// \param filename File to check for existance
 		static bool file_exists(const std::string &filename);
 	};
-
-	/// \}
 }

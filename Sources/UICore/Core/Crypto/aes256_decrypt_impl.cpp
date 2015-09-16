@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -34,7 +34,7 @@
 #include <cstring>
 #endif
 
-namespace clan
+namespace uicore
 {
 	AES256_Decrypt_Impl::AES256_Decrypt_Impl() : initialisation_vector_set(false), cipher_key_set(false), padding_enabled(true), padding_pkcs7(true)
 	{

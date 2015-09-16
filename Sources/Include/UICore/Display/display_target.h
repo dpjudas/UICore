@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -30,14 +30,11 @@
 
 #include <memory>
 
-namespace clan
+namespace uicore
 {
-	/// \addtogroup clanDisplay_Display clanDisplay Display
-	/// \{
-
 	class DisplayTargetProvider;
 
-	/// \brief Display target for clanDisplay.
+	/// \brief Display target for uicoreDisplay.
 	///
 	/// Controls which target is used for window creation
 	class DisplayTarget
@@ -49,6 +46,4 @@ namespace clan
 		/// \brief Sets the currently selected display target.
 		static void set_current_target(const std::shared_ptr<DisplayTargetProvider> &target);
 	};
-
-	/// \}
 }

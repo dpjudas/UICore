@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -33,11 +33,8 @@
 
 struct sockaddr;
 
-namespace clan
+namespace uicore
 {
-	/// \addtogroup clanNetwork_Socket clanNetwork Socket
-	/// \{
-
 	class SocketName_Impl;
 
 	/// \brief Socket name; container class for an IP address and port.
@@ -114,6 +111,4 @@ namespace clan
 	private:
 		std::shared_ptr<SocketName_Impl> impl;
 	};
-
-	/// \}
 }

@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -31,7 +31,7 @@
 
 #include "UICore/Core/Math/point.h"
 
-namespace clan
+namespace uicore
 {
 	class PathRenderer
 	{
@@ -54,6 +54,6 @@ namespace clan
 
 	private:
 		void subdivide_bezier(int level, float cp0_x, float cp0_y, float cp1_x, float cp1_y, float cp2_x, float cp2_y, float cp3_x, float cp3_y, float t0, float t1);
-		static clan::Pointf point_on_bezier(float cp0_x, float cp0_y, float cp1_x, float cp1_y, float cp2_x, float cp2_y, float cp3_x, float cp3_y, float t);
+		static uicore::Pointf point_on_bezier(float cp0_x, float cp0_y, float cp1_x, float cp1_y, float cp2_x, float cp2_y, float cp3_x, float cp3_y, float t);
 	};
 }

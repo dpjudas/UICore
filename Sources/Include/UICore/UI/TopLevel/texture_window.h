@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -32,7 +32,7 @@
 #include "../../Display/Window/display_window.h"
 #include "../../Display/Window/keys.h"
 
-namespace clan
+namespace uicore
 {
 	class InputEvent;
 	class TextureWindow_Impl;
@@ -71,12 +71,12 @@ namespace clan
 		void on_window_close();
 		void on_lost_focus();
 		void on_got_focus();
-		void on_key_down(const clan::InputEvent &);
-		void on_key_up(const clan::InputEvent &);
-		void on_mouse_down(const clan::InputEvent &);
-		void on_mouse_dblclk(const clan::InputEvent &);
-		void on_mouse_up(const clan::InputEvent &);
-		void on_mouse_move(const clan::InputEvent &);
+		void on_key_down(const uicore::InputEvent &);
+		void on_key_up(const uicore::InputEvent &);
+		void on_mouse_down(const uicore::InputEvent &);
+		void on_mouse_dblclk(const uicore::InputEvent &);
+		void on_mouse_up(const uicore::InputEvent &);
+		void on_mouse_move(const uicore::InputEvent &);
 
 		DisplayWindow get_display_window() override;
 		Canvas get_canvas() const override;

@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -32,17 +32,14 @@
 
 #include <memory>
 
-namespace clan
+namespace uicore
 {
-	/// \addtogroup clanGL_Display clanGL Display
-	/// \{
-
 	class GraphicContext;
 	class OpenGLTargetProvider;
 	class OpenGLTarget_Impl;
 	class OpenGLContextDescription;
 
-	/// \brief Display target for clanDisplay.
+	/// \brief Display target for uicoreDisplay.
 	class OpenGLTarget
 	{
 	public:
@@ -89,6 +86,4 @@ namespace clan
 		/// \brief Set OpenGL context used by this GraphicContext to be active
 		static void set_active_context(const GraphicContext &gc);
 	};
-
-	/// \}
 }

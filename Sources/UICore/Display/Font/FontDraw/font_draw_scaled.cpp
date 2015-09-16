@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -44,7 +44,7 @@
 #include "UICore/Display/Font/glyph_cache.h"
 #include "UICore/Display/Font/path_cache.h"
 
-namespace clan
+namespace uicore
 {
 	void Font_DrawScaled::init(GlyphCache *cache, FontEngine *engine, float new_scaled_height)
 	{
@@ -66,7 +66,7 @@ namespace clan
 		RenderBatchTriangle *batcher = canvas.impl->batcher.get_triangle_batcher();
 
 		const Mat4f original_transform = canvas.get_transform();
-		clan::Mat4f scale_matrix = clan::Mat4f::scale(scaled_height, scaled_height, scaled_height);
+		uicore::Mat4f scale_matrix = uicore::Mat4f::scale(scaled_height, scaled_height, scaled_height);
 		Sizef advance;
 
 		while (!reader.is_end())

@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -32,11 +32,8 @@
 #include "UICore/Display/Render/element_array_buffer.h"
 #include "UICore/Display/Image/pixel_buffer.h"
 
-namespace clan
+namespace uicore
 {
-	/// \addtogroup clanDisplay_Display clanDisplay Display
-	/// \{
-
 	/// \brief Element Array Buffer provider.
 	class PixelBufferProvider
 	{
@@ -76,6 +73,4 @@ namespace clan
 		/// \brief Uploads data to buffer.
 		virtual void upload_data(GraphicContext &gc, const Rect &dest_rect, const void *data) = 0;
 	};
-
-	/// \}
 }

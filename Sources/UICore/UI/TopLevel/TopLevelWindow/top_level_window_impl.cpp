@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -36,23 +36,23 @@
 #include "UICore/Display/2D/canvas.h"
 #include "top_level_window_impl.h"
 
-namespace clan
+namespace uicore
 {
 	TopLevelWindow_Impl::TopLevelWindow_Impl(TopLevelWindow *view, const DisplayWindowDescription &desc) : window_view(view), window(desc)
 	{
 		canvas = Canvas(window);
 
-		slots.connect(window.sig_lost_focus(), clan::bind_member(this, &TopLevelWindow_Impl::on_lost_focus));
-		slots.connect(window.sig_got_focus(), clan::bind_member(this, &TopLevelWindow_Impl::on_got_focus));
-		slots.connect(window.sig_resize(), clan::bind_member(this, &TopLevelWindow_Impl::on_resize));
-		slots.connect(window.sig_paint(), clan::bind_member(this, &TopLevelWindow_Impl::on_paint));
-		slots.connect(window.sig_window_close(), clan::bind_member(this, &TopLevelWindow_Impl::on_window_close));
-		slots.connect(window.get_keyboard().sig_key_down(), clan::bind_member(this, &TopLevelWindow_Impl::on_key_down));
-		slots.connect(window.get_keyboard().sig_key_up(), clan::bind_member(this, &TopLevelWindow_Impl::on_key_up));
-		slots.connect(window.get_mouse().sig_key_down(), clan::bind_member(this, &TopLevelWindow_Impl::on_mouse_down));
-		slots.connect(window.get_mouse().sig_key_dblclk(), clan::bind_member(this, &TopLevelWindow_Impl::on_mouse_dblclk));
-		slots.connect(window.get_mouse().sig_key_up(), clan::bind_member(this, &TopLevelWindow_Impl::on_mouse_up));
-		slots.connect(window.get_mouse().sig_pointer_move(), clan::bind_member(this, &TopLevelWindow_Impl::on_mouse_move));
+		slots.connect(window.sig_lost_focus(), uicore::bind_member(this, &TopLevelWindow_Impl::on_lost_focus));
+		slots.connect(window.sig_got_focus(), uicore::bind_member(this, &TopLevelWindow_Impl::on_got_focus));
+		slots.connect(window.sig_resize(), uicore::bind_member(this, &TopLevelWindow_Impl::on_resize));
+		slots.connect(window.sig_paint(), uicore::bind_member(this, &TopLevelWindow_Impl::on_paint));
+		slots.connect(window.sig_window_close(), uicore::bind_member(this, &TopLevelWindow_Impl::on_window_close));
+		slots.connect(window.get_keyboard().sig_key_down(), uicore::bind_member(this, &TopLevelWindow_Impl::on_key_down));
+		slots.connect(window.get_keyboard().sig_key_up(), uicore::bind_member(this, &TopLevelWindow_Impl::on_key_up));
+		slots.connect(window.get_mouse().sig_key_down(), uicore::bind_member(this, &TopLevelWindow_Impl::on_mouse_down));
+		slots.connect(window.get_mouse().sig_key_dblclk(), uicore::bind_member(this, &TopLevelWindow_Impl::on_mouse_dblclk));
+		slots.connect(window.get_mouse().sig_key_up(), uicore::bind_member(this, &TopLevelWindow_Impl::on_mouse_up));
+		slots.connect(window.get_mouse().sig_pointer_move(), uicore::bind_member(this, &TopLevelWindow_Impl::on_mouse_move));
 	}
 
 	void TopLevelWindow_Impl::on_lost_focus()
@@ -74,7 +74,7 @@ namespace clan
 
 	void TopLevelWindow_Impl::on_paint()
 	{
-		canvas.clear(clan::Colorf::transparent);
+		canvas.clear(uicore::Colorf::transparent);
 		window_view->render(canvas, window.get_viewport());
 		canvas.flush();
 		window.flip();
@@ -191,7 +191,7 @@ namespace clan
 		return window_view->root_view()->to_root_pos(client_pos - window_view->root_view()->geometry().content_pos());
 	}
 
-	void TopLevelWindow_Impl::on_key_down(const clan::InputEvent &e)
+	void TopLevelWindow_Impl::on_key_down(const uicore::InputEvent &e)
 	{
 		KeyEventType type = KeyEventType::press;
 		Key key = decode_ic(e.id);
@@ -206,7 +206,7 @@ namespace clan
 		window_key_event(key_event);
 	}
 
-	void TopLevelWindow_Impl::on_key_up(const clan::InputEvent &e)
+	void TopLevelWindow_Impl::on_key_up(const uicore::InputEvent &e)
 	{
 		KeyEventType type = KeyEventType::release;
 		Key key = decode_ic(e.id);
@@ -221,7 +221,7 @@ namespace clan
 		window_key_event(key_event);
 	}
 
-	void TopLevelWindow_Impl::on_mouse_down(const clan::InputEvent &e)
+	void TopLevelWindow_Impl::on_mouse_down(const uicore::InputEvent &e)
 	{
 		PointerEventType type = PointerEventType::press;
 		PointerButton button = decode_id(e.id);
@@ -234,7 +234,7 @@ namespace clan
 		window_pointer_event(pointer_event);
 	}
 
-	void TopLevelWindow_Impl::on_mouse_dblclk(const clan::InputEvent &e)
+	void TopLevelWindow_Impl::on_mouse_dblclk(const uicore::InputEvent &e)
 	{
 		PointerEventType type = PointerEventType::double_click;
 		PointerButton button = decode_id(e.id);
@@ -247,7 +247,7 @@ namespace clan
 		window_pointer_event(pointer_event);
 	}
 
-	void TopLevelWindow_Impl::on_mouse_up(const clan::InputEvent &e)
+	void TopLevelWindow_Impl::on_mouse_up(const uicore::InputEvent &e)
 	{
 		PointerEventType type = PointerEventType::release;
 		PointerButton button = decode_id(e.id);
@@ -260,39 +260,39 @@ namespace clan
 		window_pointer_event(pointer_event);
 	}
 
-	void TopLevelWindow_Impl::on_mouse_move(const clan::InputEvent &clan_event)
+	void TopLevelWindow_Impl::on_mouse_move(const uicore::InputEvent &uicore_event)
 	{
-		PointerEvent e(PointerEventType::move, PointerButton::none, to_root_pos(clan_event.mouse_pos), clan_event.alt, clan_event.shift, clan_event.ctrl, false/*clan_event.cmd*/);
+		PointerEvent e(PointerEventType::move, PointerButton::none, to_root_pos(uicore_event.mouse_pos), uicore_event.alt, uicore_event.shift, uicore_event.ctrl, false/*uicore_event.cmd*/);
 		window_pointer_event(e);
 	}
 
-	PointerButton TopLevelWindow_Impl::decode_id(clan::InputCode ic) const
+	PointerButton TopLevelWindow_Impl::decode_id(uicore::InputCode ic) const
 	{
 		switch (ic)
 		{
 		default:
 			return PointerButton::none;
-		case clan::InputCode::mouse_left:
+		case uicore::InputCode::mouse_left:
 			return PointerButton::left;
-		case clan::InputCode::mouse_right:
+		case uicore::InputCode::mouse_right:
 			return PointerButton::right;
-		case clan::InputCode::mouse_middle:
+		case uicore::InputCode::mouse_middle:
 			return PointerButton::middle;
-		case clan::InputCode::mouse_wheel_up:
+		case uicore::InputCode::mouse_wheel_up:
 			return PointerButton::wheel_up;
-		case clan::InputCode::mouse_wheel_down:
+		case uicore::InputCode::mouse_wheel_down:
 			return PointerButton::wheel_down;
-		case clan::InputCode::mouse_xbutton1:
+		case uicore::InputCode::mouse_xbutton1:
 			return PointerButton::xbutton1;
-		case clan::InputCode::mouse_xbutton2:
+		case uicore::InputCode::mouse_xbutton2:
 			return PointerButton::xbutton2;
-			//case clan::InputCode::mouse_xbutton3:
+			//case uicore::InputCode::mouse_xbutton3:
 			// return PointerButton::xbutton3;
-			//case clan::InputCode::mouse_xbutton4:
+			//case uicore::InputCode::mouse_xbutton4:
 			// return PointerButton::xbutton4;
-			//case clan::InputCode::mouse_xbutton5:
+			//case uicore::InputCode::mouse_xbutton5:
 			// return PointerButton::xbutton5;
-			//case clan::InputCode::mouse_xbutton6:
+			//case uicore::InputCode::mouse_xbutton6:
 			// return PointerButton::xbutton6;
 		}
 	}

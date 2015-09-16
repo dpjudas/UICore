@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -35,7 +35,7 @@
 #include <cstring>
 #endif
 
-namespace clan
+namespace uicore
 {
 	Random_Impl::Random_Impl(int cache_size) : random_pool_size(cache_size), random_pool_free(0), random_pool(nullptr), random_bool_bits_free(0)
 #ifdef WIN32

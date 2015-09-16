@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -37,7 +37,7 @@
 #include "JPEGLoader/jpeg_loader.h"
 #include "JPEGWriter/jpge.h"
 
-namespace clan
+namespace uicore
 {
 	PixelBuffer JPEGProvider::load(
 		const std::string &filename,
@@ -90,9 +90,9 @@ namespace clan
 		DataBuffer output(buffer.get_width() * buffer.get_height() * 5);
 		int size = output.get_size();
 
-		clan_jpge::params desc;
+		uicore_jpge::params desc;
 		desc.m_quality = quality;
-		bool result = clan_jpge::compress_image_to_jpeg_file_in_memory(output.get_data(), size, buffer.get_width(), buffer.get_height(), 3, output.get_data<clan_jpge::uint8>(), desc);
+		bool result = uicore_jpge::compress_image_to_jpeg_file_in_memory(output.get_data(), size, buffer.get_width(), buffer.get_height(), 3, output.get_data<uicore_jpge::uint8>(), desc);
 		if (!result)
 			throw Exception("Unable to compress JPEG image");
 

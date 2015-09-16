@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -34,11 +34,8 @@
 #include <memory>
 #include "UICore/Core/Signals/signal.h"
 
-namespace clan
+namespace uicore
 {
-	/// \addtogroup clanDisplay_Input clanDisplay Input
-	/// \{
-
 	/// \brief Interface for implementing a InputDevice source.
 	class InputDeviceProvider : public DisposableObject
 	{
@@ -102,6 +99,4 @@ namespace clan
 		/// \brief Sets the actual position of the device. (Pointing devices only)
 		virtual void set_device_position(int x, int y) { }
 	};
-
-	/// \}
 }

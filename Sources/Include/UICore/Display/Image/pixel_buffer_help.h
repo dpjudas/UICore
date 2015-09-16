@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -30,11 +30,8 @@
 
 #include "pixel_buffer.h"
 
-namespace clan
+namespace uicore
 {
-	/// \addtogroup clanDisplay_Display clanDisplay Display
-	/// \{
-
 	/// \brief Pixel data helper class
 	class PixelBufferHelp
 	{
@@ -42,6 +39,4 @@ namespace clan
 		/// \brief Add a border around a pixelbuffer, duplicating the edge pixels
 		static PixelBuffer add_border(const PixelBuffer &pb, int border_size, const Rect &rect);
 	};
-
-	/// \}
 }

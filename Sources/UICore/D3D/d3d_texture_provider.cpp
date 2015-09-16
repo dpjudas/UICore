@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -35,7 +35,7 @@
 #include "UICore/Display/Render/transfer_texture.h"
 #include "UICore/D3D/d3d_target.h"
 
-namespace clan
+namespace uicore
 {
 	D3DTextureProvider::D3DTextureProvider(const ComPtr<ID3D11Device> &device, D3D_FEATURE_LEVEL feature_level, TextureDimensions texture_dimensions)
 	: data(new D3DTextureData(device, feature_level, texture_dimensions)), view_min_layer(-1)

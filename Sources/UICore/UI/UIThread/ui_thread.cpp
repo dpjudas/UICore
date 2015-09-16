@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -35,7 +35,7 @@
 #include "UICore/Core/ErrorReporting/exception_dialog.h"
 #include "UICore/Core/IOData/path_help.h"
 
-namespace clan
+namespace uicore
 {
 	static UIThreadImpl *ui_thread_instance = nullptr;
 

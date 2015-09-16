@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -36,11 +36,8 @@
 #include "UICore/Core/Math/mat4.h"
 #include "UICore/Core/Signals/signal.h"
 
-namespace clan
+namespace uicore
 {
-	/// \addtogroup clanDisplay_Display clanDisplay Display
-	/// \{
-
 	class Texture;
 	class Stencil;
 	class TextureProvider;
@@ -335,6 +332,4 @@ namespace clan
 
 		virtual void flush() = 0;
 	};
-
-	/// \}
 }

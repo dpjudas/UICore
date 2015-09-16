@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -34,11 +34,8 @@
 #include <memory>
 #include <mutex>
 
-namespace clan
+namespace uicore
 {
-	/// \addtogroup clanDisplay_Display clanDisplay Display
-	/// \{
-
 	class GraphicContext;
 	class GraphicContextProvider;
 	class DisposableObject;
@@ -90,6 +87,4 @@ namespace clan
 
 		std::shared_ptr<SharedGCData_Impl> impl;
 	};
-
-	/// \}
 }

@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -61,7 +61,7 @@
 // and although we could switch to newer more 'safe' versions, this may break
 // compilation in earlier versions of Visual Studio. -- mbn 13. sep 2006
 
-namespace clan
+namespace uicore
 {
 	#ifndef WIN32
 	#ifndef HAVE_WCSCASECMP

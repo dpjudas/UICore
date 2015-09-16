@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -34,7 +34,7 @@
 #include "UICore/UI/Events/key_event.h"
 #include "listbox_view_impl.h"
 
-namespace clan
+namespace uicore
 {
 	void ListBoxViewImpl::on_key_press(KeyEvent &e)
 	{
@@ -43,13 +43,13 @@ namespace clan
 
 		if (e.key() == Key::up)
 		{
-			listbox->set_selected_item(clan::max(selected_item - 1, 0));
+			listbox->set_selected_item(uicore::max(selected_item - 1, 0));
 			if (func_selection_changed)
 				func_selection_changed();
 		}
 		else if (e.key() == Key::down)
 		{
-			listbox->set_selected_item(clan::min(selected_item + 1, (int)listbox->content_view()->subviews().size() - 1));
+			listbox->set_selected_item(uicore::min(selected_item + 1, (int)listbox->content_view()->subviews().size() - 1));
 			if (func_selection_changed)
 				func_selection_changed();
 		}

@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -30,7 +30,7 @@
 #include "UICore/Core/Text/text.h"
 #include "text_and_font.h"
 
-namespace clan
+namespace uicore
 {
 	void force_link_style_parser_text()
 	{
@@ -54,7 +54,7 @@ namespace clan
 	StylePropertyDefault style_default_font_family("font-family", StyleGetValue::from_keyword("array"), true);
 	StylePropertyDefault style_default_font_family_names("font-family-names[0]", StyleGetValue::from_keyword("sans-serif"), true);
 
-	StylePropertyDefault style_default_clan_font_rendering("-clan-font-rendering", StyleGetValue::from_keyword("auto"), true);
+	StylePropertyDefault style_default_uicore_font_rendering("-uicore-font-rendering", StyleGetValue::from_keyword("auto"), true);
 
 	ColorPropertyParser style_parser_color;
 	TextAlignPropertyParser style_parser_text_align;
@@ -72,7 +72,7 @@ namespace clan
 	FontVariantPropertyParser style_parser_font_variant;
 	FontWeightPropertyParser style_parser_font_weight;
 
-	ClanFontRenderingPropertyParser style_parser_clan_font_rendering;
+	ClanFontRenderingPropertyParser style_parser_uicore_font_rendering;
 
 	void ColorPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
 	{
@@ -1151,6 +1151,6 @@ namespace clan
 			return;
 		}
 
-		setter->set_value("-clan-font-rendering", rendering);
+		setter->set_value("-uicore-font-rendering", rendering);
 	}
 }

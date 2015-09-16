@@ -20,7 +20,7 @@
 #define JPGE_MAX(a,b) (((a)>(b))?(a):(b))
 #define JPGE_MIN(a,b) (((a)<(b))?(a):(b))
 
-namespace clan_jpge {
+namespace uicore_jpge {
 
 	static inline void *jpge_malloc(size_t nSize) { return malloc(nSize); }
 	static inline void jpge_free(void *p) { free(p); }

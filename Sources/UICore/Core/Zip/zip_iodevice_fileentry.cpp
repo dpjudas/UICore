@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -35,7 +35,7 @@
 #include "UICore/Core/Math/cl_math.h"
 #include "UICore/Core/Text/string_format.h"
 
-namespace clan
+namespace uicore
 {
 	ZipIODevice_FileEntry::ZipIODevice_FileEntry(IODevice iodevice, const ZipFileEntry &entry)
 		: iodevice(iodevice), file_entry(entry), zstream_open(false), peeked_data(0)

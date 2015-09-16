@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -37,11 +37,8 @@
 #include "origin.h"
 #include "cl_math.h"
 
-namespace clan
+namespace uicore
 {
-	/// \addtogroup clanCore_Math clanCore Math
-	/// \{
-
 	/// \brief 2D (left,top,right,bottom) rectangle structure.
 	///
 	/// These line templates are defined for: int (Rect), float (Rectf), double (Rectd)
@@ -533,6 +530,4 @@ namespace clan
 	{
 		return Rectd(x, y, x + width, y + height);
 	}
-
-	/// \}
 }

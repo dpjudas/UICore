@@ -4,7 +4,7 @@
 
 #pragma once
 
-namespace clan_jpge
+namespace uicore_jpge
 {
 	typedef unsigned char  uint8;
 	typedef signed short   int16;

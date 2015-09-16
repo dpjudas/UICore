@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -34,11 +34,8 @@
 #include "../Image/image_import_description.h"
 #include "UICore/Display/Render/texture.h"
 
-namespace clan
+namespace uicore
 {
-	/// \addtogroup clanDisplay_2D clanDisplay 2D
-	/// \{
-
 	class GraphicContext;
 	class FileSystem;
 	class Rect;
@@ -245,6 +242,4 @@ namespace clan
 	private:
 		std::shared_ptr<Image_Impl> impl;
 	};
-
-	/// \}
 }

@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -38,7 +38,7 @@
 #include "UICore/Display/Platform/Win32/cursor_provider_win32.h"
 #include "d3d_share_list.h"
 
-namespace clan
+namespace uicore
 {
 	std::recursive_mutex D3DDisplayWindowProvider::d3d11_mutex;
 	HMODULE D3DDisplayWindowProvider::d3d11_dll = 0;
@@ -181,7 +181,7 @@ namespace clan
 		swap_chain_description.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 		swap_chain_description.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 
-		bool debug_mode = false; // To do: fetch this from DisplayWindowDescription using same method as clanGL (or maybe promote debug flag to clanDisplay?)
+		bool debug_mode = false; // To do: fetch this from DisplayWindowDescription
 
 		UINT device_flags = 0;
 		if (debug_mode)

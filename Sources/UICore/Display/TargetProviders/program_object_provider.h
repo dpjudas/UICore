@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -30,11 +30,8 @@
 
 #include <vector>
 
-namespace clan
+namespace uicore
 {
-	/// \addtogroup clanDisplay_Display clanDisplay Display
-	/// \{
-
 	class ShaderObject;
 	class UniformBuffer;
 
@@ -119,6 +116,4 @@ namespace clan
 
 		virtual void set_storage_buffer_index(int buffer_index, int bind_unit_index) = 0;
 	};
-
-	/// \}
 }

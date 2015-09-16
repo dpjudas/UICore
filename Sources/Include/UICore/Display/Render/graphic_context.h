@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -40,11 +40,8 @@
 #include "frame_buffer.h"
 #include "element_array_vector.h"
 
-namespace clan
+namespace uicore
 {
-	/// \addtogroup clanDisplay_Display clanDisplay Display
-	/// \{
-
 	class Size;
 	class Texture;
 	class FrameBuffer;
@@ -688,6 +685,4 @@ namespace clan
 	};
 
 	const float pixelcenter_constant = 0.375f;
-
-	/// \}
 }

@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -31,11 +31,8 @@
 
 #include <memory>
 
-namespace clan
+namespace uicore
 {
-	/// \addtogroup clanCore_Crypto clanCore Crypto
-	/// \{
-
 	class DataBuffer;
 	class Random_Impl;
 	class Random;
@@ -72,6 +69,4 @@ namespace clan
 	private:
 		std::shared_ptr<Random_Impl> impl;
 	};
-
-	/// \}
 }

@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -72,7 +72,7 @@ extern int posix_memalign(void **memptr, size_t alignment, size_t size);
 }  // extern "C"
 #endif
 
-namespace clan
+namespace uicore
 {
 	void *System::aligned_alloc(size_t size, size_t alignment)
 	{

@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -31,11 +31,8 @@
 #include "../../Core/Math/mat4.h"
 #include "graphic_context.h"
 
-namespace clan
+namespace uicore
 {
-	/// \addtogroup clanDisplay_Display clanDisplay Display
-	/// \{
-
 	class GraphicContext;
 	class Canvas;
 	enum TextureImageYAxis;
@@ -60,6 +57,4 @@ namespace clan
 		 */
 		virtual void matrix_changed(const Mat4f &modelview, const Mat4f &projection, TextureImageYAxis image_yaxis, float pixel_ratio) = 0;
 	};
-
-	/// \}
 }

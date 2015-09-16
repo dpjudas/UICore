@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -34,7 +34,7 @@
 #include "UICore/Display/Render/shared_gc_data.h"
 #include "opengl_window_provider_wgl.h"
 
-namespace clan
+namespace uicore
 {
 	PBuffer_GL1_Impl::PBuffer_GL1_Impl(GL1GraphicContextProvider *gc_provider) : gc_provider(gc_provider), pbuffer(0), pbuffer_context(0), pbuffer_dc(0)
 	{

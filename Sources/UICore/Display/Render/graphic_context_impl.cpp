@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -31,7 +31,7 @@
 #include "primitives_array_impl.h"
 #include "UICore/Display/Render/shared_gc_data.h"
 
-namespace clan
+namespace uicore
 {
 	GraphicContext_Impl::GraphicContext_Impl(GraphicContextProvider *provider)
 		: graphic_screen(new GraphicScreen(provider))

@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -28,11 +28,8 @@
 
 #pragma once
 
-namespace clan
+namespace uicore
 {
-	/// \addtogroup clanDisplay_2D clanDisplay 2D
-	/// \{
-
 	class Color;
 	class Colorf;
 
@@ -68,7 +65,5 @@ namespace clan
 	typedef ColorHSLx<int, Color> ColorHSLi;
 	typedef ColorHSLx<float, Colorf> ColorHSLf;
 	typedef ColorHSLx<double, Colorf> ColorHSLd;
-
-	/// \}
 }
 

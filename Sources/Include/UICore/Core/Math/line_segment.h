@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -28,11 +28,8 @@
 
 #pragma once
 
-namespace clan
+namespace uicore
 {
-	/// \addtogroup clanCore_Math clanCore Math
-	/// \{
-
 	template<typename Type>
 	class LineSegment2x;
 
@@ -235,6 +232,4 @@ namespace clan
 		LineSegment3d(const LineSegment3x<double> &copy) : LineSegment3x<double>(copy) {}
 		LineSegment3d(const Vec3<double> &point_p, const Vec3<double> &point_q) : LineSegment3x<double>(point_p, point_q) {}
 	};
-
-	/// \}
 }

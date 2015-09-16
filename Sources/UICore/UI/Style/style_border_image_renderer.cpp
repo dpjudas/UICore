@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -37,7 +37,7 @@
 #include "UICore/Display/2D/image.h"
 #include <algorithm>
 
-namespace clan
+namespace uicore
 {
 	StyleBorderImageRenderer::StyleBorderImageRenderer(Canvas &canvas, const ViewGeometry &geometry, const StyleCascade &style) : canvas(canvas), geometry(geometry), style(style)
 	{

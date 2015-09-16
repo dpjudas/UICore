@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -44,7 +44,7 @@
 #include "UICore/Core/Text/console.h"
 #endif
 
-namespace clan
+namespace uicore
 {
 	GL1TextureProvider::GL1TextureProvider(TextureDimensions texture_dimensions)
 	: width(0), height(0), depth(0), handle(0), texture_type(0)

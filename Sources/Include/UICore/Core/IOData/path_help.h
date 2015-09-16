@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -30,11 +30,8 @@
 
 #include <vector>
 
-namespace clan
+namespace uicore
 {
-	/// \addtogroup clanCore_I_O_Data clanCore I/O Data
-	/// \{
-
 	/// \brief Path helper functions.
 	class PathHelp
 	{
@@ -279,6 +276,4 @@ namespace clan
 		/// \param path_type The path type (of path)
 		static std::string combine(const std::string &part1, const std::string &part2, PathType path_type = path_type_file);
 	};
-
-	/// \}
 }

@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -30,7 +30,7 @@
 #include "d3d_rasterizer_state_provider.h"
 #include "UICore/D3D/d3d_target.h"
 
-namespace clan
+namespace uicore
 {
 	D3DRasterizerStateProvider::D3DRasterizerStateProvider(const ComPtr<ID3D11Device> &device, const RasterizerStateDescription &desc)
 	{

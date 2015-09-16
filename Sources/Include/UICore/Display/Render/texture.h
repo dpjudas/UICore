@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -35,11 +35,8 @@
 #include "../Image/image_import_description.h"
 #include "../Image/texture_format.h"
 
-namespace clan
+namespace uicore
 {
-	/// \addtogroup clanDisplay_Display clanDisplay Display
-	/// \{
-
 	class Color;
 	class Point;
 	class PixelBuffer;
@@ -180,7 +177,7 @@ namespace clan
 
 		/// \brief Get the implementation weakptr
 		///
-		/// This is used to assist is creating Texture caches internally within clanlib
+		/// This is used to assist is creating Texture caches internally within uicorelib
 		std::weak_ptr<Texture_Impl> get_impl() const;
 
 		/// \brief Generate the mipmap
@@ -239,6 +236,4 @@ namespace clan
 
 		friend class Texture2DArray;
 	};
-
-	/// \}
 }

@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -36,11 +36,8 @@
 #include "angle.h"
 #include <cstdint>
 
-namespace clan
+namespace uicore
 {
-	/// \addtogroup clanCore_Math clanCore Math
-	/// \{
-
 	template<typename Type>
 	class Mat2;
 
@@ -371,6 +368,4 @@ namespace clan
 	typedef Mat3<int> Mat3i;
 	typedef Mat3<float> Mat3f;
 	typedef Mat3<double> Mat3d;
-
-	/// \}
 }

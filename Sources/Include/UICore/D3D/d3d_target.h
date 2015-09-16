@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -32,11 +32,8 @@
 #include <memory>
 #include <d3d11.h>
 
-namespace clan
+namespace uicore
 {
-	/// \addtogroup clanD3D_Display clanD3D Display
-	/// \{
-
 	class Texture;
 	class PixelBuffer;
 	class VertexArrayBuffer;
@@ -45,7 +42,7 @@ namespace clan
 	class UniformBuffer;
 	class GraphicContext;
 
-	/// \brief Display target for clanDisplay.
+	/// \brief Display target for uicoreDisplay.
 	class D3DTarget
 	{
 	public:
@@ -115,6 +112,4 @@ namespace clan
 		/// \brief Set this display target to be the current target
 		static void set_current();
 	};
-
-	/// \}
 }

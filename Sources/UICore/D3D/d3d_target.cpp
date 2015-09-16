@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -45,7 +45,7 @@
 #include "setup_d3d_impl.h"
 #include "setup_d3d.h"
 
-namespace clan
+namespace uicore
 {
 	bool D3DTarget::is_current()
 	{
@@ -56,7 +56,7 @@ namespace clan
 	{
 		SetupD3D::start();
 		if (!SetupD3D_Impl::instance)
-			throw Exception("clanD3D instance invalid");
+			throw Exception("D3D instance invalid");
 
 		static std::shared_ptr<D3DTargetProvider> target = std::make_shared<D3DTargetProvider>();
 		DisplayTarget::set_current_target(target);

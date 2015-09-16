@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -31,11 +31,8 @@
 
 #include "texture.h"
 
-namespace clan
+namespace uicore
 {
-	/// \addtogroup clanDisplay_Display clanDisplay Display
-	/// \{
-
 	/// \brief 1D texture object class.
 	class Texture1D : public Texture
 	{
@@ -88,6 +85,4 @@ namespace clan
 
 		void set_wrap_mode(TextureWrapMode wrap_s);
 	};
-
-	/// \}
 }

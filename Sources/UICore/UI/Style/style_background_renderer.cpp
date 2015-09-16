@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -40,7 +40,7 @@
 #include "UICore/Core/Text/text.h"
 #include "UICore/Core/Math/line.h"
 
-namespace clan
+namespace uicore
 {
 	StyleBackgroundRenderer::StyleBackgroundRenderer(Canvas &canvas, const ViewGeometry &geometry, const StyleCascade &style) : canvas(canvas), geometry(geometry), style(style)
 	{
@@ -587,22 +587,22 @@ namespace clan
 		padding_points[6] = Pointf(padding_box.left, padding_box.bottom);
 		padding_points[7] = Pointf(padding_box.left, padding_box.top);
 
-		padding_points[0].x = clan::max(padding_points[0].x, border_points[0].x);
-		padding_points[0].y = clan::max(padding_points[0].y, border_points[0].y);
-		padding_points[1].x = clan::min(padding_points[1].x, border_points[1].x);
-		padding_points[1].y = clan::max(padding_points[1].y, border_points[1].y);
-		padding_points[2].x = clan::min(padding_points[2].x, border_points[2].x);
-		padding_points[2].y = clan::max(padding_points[2].y, border_points[2].y);
-		padding_points[3].x = clan::min(padding_points[3].x, border_points[3].x);
-		padding_points[3].y = clan::min(padding_points[3].y, border_points[3].y);
-		padding_points[4].x = clan::min(padding_points[4].x, border_points[4].x);
-		padding_points[4].y = clan::min(padding_points[4].y, border_points[4].y);
-		padding_points[5].x = clan::max(padding_points[5].x, border_points[5].x);
-		padding_points[5].y = clan::min(padding_points[5].y, border_points[5].y);
-		padding_points[6].x = clan::max(padding_points[6].x, border_points[6].x);
-		padding_points[6].y = clan::min(padding_points[6].y, border_points[6].y);
-		padding_points[7].x = clan::max(padding_points[7].x, border_points[7].x);
-		padding_points[7].y = clan::max(padding_points[7].y, border_points[7].y);
+		padding_points[0].x = uicore::max(padding_points[0].x, border_points[0].x);
+		padding_points[0].y = uicore::max(padding_points[0].y, border_points[0].y);
+		padding_points[1].x = uicore::min(padding_points[1].x, border_points[1].x);
+		padding_points[1].y = uicore::max(padding_points[1].y, border_points[1].y);
+		padding_points[2].x = uicore::min(padding_points[2].x, border_points[2].x);
+		padding_points[2].y = uicore::max(padding_points[2].y, border_points[2].y);
+		padding_points[3].x = uicore::min(padding_points[3].x, border_points[3].x);
+		padding_points[3].y = uicore::min(padding_points[3].y, border_points[3].y);
+		padding_points[4].x = uicore::min(padding_points[4].x, border_points[4].x);
+		padding_points[4].y = uicore::min(padding_points[4].y, border_points[4].y);
+		padding_points[5].x = uicore::max(padding_points[5].x, border_points[5].x);
+		padding_points[5].y = uicore::min(padding_points[5].y, border_points[5].y);
+		padding_points[6].x = uicore::max(padding_points[6].x, border_points[6].x);
+		padding_points[6].y = uicore::min(padding_points[6].y, border_points[6].y);
+		padding_points[7].x = uicore::max(padding_points[7].x, border_points[7].x);
+		padding_points[7].y = uicore::max(padding_points[7].y, border_points[7].y);
 
 		return padding_points;
 	}

@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -34,7 +34,7 @@
 #include <chrono>
 #include <vector>
 
-namespace clan
+namespace uicore
 {
 	class AnimationGroup
 	{
@@ -63,7 +63,7 @@ namespace clan
 					while (it != active_animations.end())
 					{
 						long long elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(current_time - it->start_time).count();
-						float t = clan::max(clan::min(static_cast<float>(elapsed) / it->duration, 1.0f), 0.0f);
+						float t = uicore::max(uicore::min(static_cast<float>(elapsed) / it->duration, 1.0f), 0.0f);
 
 						t = it->easing(t);
 						it->setter(it->from * (1.0f - t) + it->to * t);

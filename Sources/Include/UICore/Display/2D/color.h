@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -33,11 +33,8 @@
 #include "../../Core/Math/vec4.h"
 #include <vector>
 
-namespace clan
+namespace uicore
 {
-	/// \addtogroup clanDisplay_2D clanDisplay 2D
-	/// \{
-
 	class PixelFormat;
 	class Colorf;
 
@@ -632,8 +629,6 @@ namespace clan
 			b = (unsigned char) (new_blue * 255.0f);
 			a = (unsigned char) (new_alpha * 255.0f);
 		}
-
-	/// \}
 	};
 
 	/// \brief Floating point color description class (for float).
@@ -1233,6 +1228,4 @@ namespace clan
 		static Colorf gray80;
 		static Colorf gray90;
 	};
-
-	/// \}
 }

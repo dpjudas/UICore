@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -34,7 +34,7 @@
 #include "canvas_impl.h"
 #include "render_batch_path.h"
 
-namespace clan
+namespace uicore
 {
 	Path::Path() : impl(new PathImpl)
 	{
@@ -117,7 +117,7 @@ namespace clan
 	{
 		Path path;
 
-		clan::Sizef diameter = radius * 2.0f;
+		uicore::Sizef diameter = radius * 2.0f;
 
 		float x = center.x - radius.width;
 		float y = center.y - radius.height;
@@ -139,7 +139,7 @@ namespace clan
 		return path;
 	}
 
-	Path Path::rect(const Rectf &box, const clan::Sizef &corner)
+	Path Path::rect(const Rectf &box, const uicore::Sizef &corner)
 	{
 		Path path;
 

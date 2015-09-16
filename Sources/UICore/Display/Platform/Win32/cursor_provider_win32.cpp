@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -37,7 +37,7 @@
 #endif
 #include "win32_window.h"
 
-namespace clan
+namespace uicore
 {
 	CursorProvider_Win32::CursorProvider_Win32(const CursorDescription &cursor_description)
 		: handle(0)
@@ -184,8 +184,8 @@ namespace clan
 		ani_header.cy = cursor_description.get_hotspot().y;
 
 		ANIInfo ani_info;
-		ani_info.author = "clanlib";
-		ani_info.title = "clanlib";
+		ani_info.author = "uicorelib";
+		ani_info.title = "uicorelib";
 
 
 		int size_file_header = 8 + 4;

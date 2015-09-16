@@ -5,7 +5,7 @@
 #include "tcp_socket.h"
 #include "UICore/Core/System/exception.h"
 
-namespace clan
+namespace uicore
 {
 
 #if defined(WIN32)

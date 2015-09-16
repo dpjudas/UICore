@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -37,7 +37,7 @@
 #include "UICore/UI/View/positioned_layout.h"
 #include "texture_window_impl.h"
 
-namespace clan
+namespace uicore
 {
 	TextureWindow::TextureWindow(Canvas &canvas) : impl(std::make_shared<TextureWindow_Impl>(this, canvas))
 	{
@@ -122,32 +122,32 @@ namespace clan
 		impl->on_got_focus();
 	}
 
-	void TextureWindow::on_key_down(const clan::InputEvent &e)
+	void TextureWindow::on_key_down(const uicore::InputEvent &e)
 	{
 		impl->on_key_down(e);
 	}
 
-	void TextureWindow::on_key_up(const clan::InputEvent &e)
+	void TextureWindow::on_key_up(const uicore::InputEvent &e)
 	{
 		impl->on_key_up(e);
 	}
 
-	void TextureWindow::on_mouse_down(const clan::InputEvent &e)
+	void TextureWindow::on_mouse_down(const uicore::InputEvent &e)
 	{
 		impl->on_mouse_down(e);
 	}
 
-	void TextureWindow::on_mouse_dblclk(const clan::InputEvent &e)
+	void TextureWindow::on_mouse_dblclk(const uicore::InputEvent &e)
 	{
 		impl->on_mouse_dblclk(e);
 	}
 
-	void TextureWindow::on_mouse_up(const clan::InputEvent &e)
+	void TextureWindow::on_mouse_up(const uicore::InputEvent &e)
 	{
 		impl->on_mouse_up(e);
 	}
 
-	void TextureWindow::on_mouse_move(const clan::InputEvent &e)
+	void TextureWindow::on_mouse_move(const uicore::InputEvent &e)
 	{
 		impl->on_mouse_move(e);
 	}

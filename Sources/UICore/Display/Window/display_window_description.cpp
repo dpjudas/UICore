@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -32,21 +32,21 @@
 #include "UICore/Display/Window/display_window_description.h"
 #include "display_window_description_impl.h"
 
-namespace clan
+namespace uicore
 {
 	DisplayWindowDescription::DisplayWindowDescription()
-		: impl(clan::make_unique<DisplayWindowDescription_Impl>())
+		: impl(uicore::make_unique<DisplayWindowDescription_Impl>())
 	{
 	}
 
 	DisplayWindowDescription::DisplayWindowDescription(const std::string &title)
-		: impl(clan::make_unique<DisplayWindowDescription_Impl>())
+		: impl(uicore::make_unique<DisplayWindowDescription_Impl>())
 	{
 		impl->title = title;
 	}
 
 	DisplayWindowDescription::DisplayWindowDescription(const std::string &title, const Rectf &position, bool client_area)
-		: impl(clan::make_unique<DisplayWindowDescription_Impl>())
+		: impl(uicore::make_unique<DisplayWindowDescription_Impl>())
 	{
 		impl->title = title;
 		impl->position = position;
@@ -54,7 +54,7 @@ namespace clan
 	}
 
 	DisplayWindowDescription::DisplayWindowDescription(const std::string &title, const Sizef &size, bool client_area)
-		: impl(clan::make_unique<DisplayWindowDescription_Impl>())
+		: impl(uicore::make_unique<DisplayWindowDescription_Impl>())
 	{
 		impl->title = title;
 		impl->position.set_size(size);
@@ -62,14 +62,14 @@ namespace clan
 	}
 
 	DisplayWindowDescription::DisplayWindowDescription(const Rectf &position, bool client_area)
-		: impl(clan::make_unique<DisplayWindowDescription_Impl>())
+		: impl(uicore::make_unique<DisplayWindowDescription_Impl>())
 	{
 		impl->position = position;
 		impl->position_client_area = client_area;
 	}
 
 	DisplayWindowDescription::DisplayWindowDescription(const DisplayWindowDescription &copy)
-		: impl(clan::make_unique<DisplayWindowDescription_Impl>(*copy.impl.get()))
+		: impl(uicore::make_unique<DisplayWindowDescription_Impl>(*copy.impl.get()))
 	{
 	}
 

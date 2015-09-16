@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -35,11 +35,8 @@
 #include "vec4.h"
 #include "point.h"
 
-namespace clan
+namespace uicore
 {
-	/// \addtogroup clanCore_Math clanCore Math
-	/// \{
-
 	class Vec2hf;
 	class Vec3hf;
 	class Vec4hf;
@@ -146,6 +143,4 @@ namespace clan
 	inline Vec2hf::Vec2hf(const Vec4hf &copy) : x(copy.x), y(copy.y) {}
 
 	inline Vec3hf::Vec3hf(const Vec4hf &copy) : x(copy.x), y(copy.y), z(copy.z) {}
-
-	/// \}
 }

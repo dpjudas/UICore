@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -33,11 +33,8 @@
 #include "UICore/Display/Render/texture.h"
 #include "texture_format.h"
 
-namespace clan
+namespace uicore
 {
-	/// \addtogroup clanDisplay_Display clanDisplay Display
-	/// \{
-
 	class PixelBuffer;
 	class PixelBufferSet_Impl;
 
@@ -90,6 +87,4 @@ namespace clan
 	private:
 		std::shared_ptr<PixelBufferSet_Impl> impl;
 	};
-
-	/// \}
 }

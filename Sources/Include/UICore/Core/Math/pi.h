@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -40,14 +40,9 @@
 #endif
 #endif
 
-namespace clan
+namespace uicore
 {
-	/// \addtogroup clanCore_System clanCore System
-	/// \{
-
 	const float  PI_F = 3.14159274101257f;
 	const double PI_D = 3.141592653589793115998;
 	const float  PI = 3.14159274101257f;
-
-	/// \}
 }

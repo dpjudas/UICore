@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -39,11 +39,8 @@
 #include "../Crypto/sha512_224.h"
 #include "../Crypto/sha512_256.h"
 
-namespace clan
+namespace uicore
 {
-	/// \addtogroup clanCore_Crypto clanCore Crypto
-	/// \{
-
 	/// \brief A Collection of checksum functions.
 	class HashFunctions
 	{
@@ -360,6 +357,4 @@ namespace clan
 		/// \param out_hash = char
 		static void sha512_256(const DataBuffer &data, unsigned char out_hash[32]);
 	};
-
-	/// \}
 }

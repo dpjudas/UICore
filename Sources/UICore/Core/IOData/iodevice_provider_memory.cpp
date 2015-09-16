@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -31,7 +31,7 @@
 #include "iodevice_provider_memory.h"
 #include "UICore/Core/Math/cl_math.h"
 
-namespace clan
+namespace uicore
 {
 	IODeviceProvider_Memory::IODeviceProvider_Memory()
 		: position(0)
@@ -73,7 +73,7 @@ namespace clan
 			if (size_needed > data.get_capacity())	// Capacity exceeded
 			{
 				// Estimate the optimum databuffer capacity. TODO: Maybe adjust this class to be link list based, thus removing reallocation and block movement of the DataBuffer
-				data.set_capacity(clan::max(size_needed + clan::min(size_needed, 16 * 1024 * 1024), 16 * 1024));
+				data.set_capacity(uicore::max(size_needed + uicore::min(size_needed, 16 * 1024 * 1024), 16 * 1024));
 			}
 
 			data.set_size(size_needed);

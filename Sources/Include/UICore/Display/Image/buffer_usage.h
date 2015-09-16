@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -29,11 +29,8 @@
 
 #pragma once
 
-namespace clan
+namespace uicore
 {
-	/// \addtogroup clanDisplay_Display clanDisplay Display
-	/// \{
-
 	/// \brief Array Buffer usage enum
 	enum BufferUsage
 	{
@@ -56,6 +53,4 @@ namespace clan
 		access_read_write,
 		access_write_discard // TBD; requires usage usage_stream_draw on object
 	};
-
-	/// \}
 }

@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -33,7 +33,7 @@
 #include "UICore/Core/IOData/directory_listing_entry.h"
 #include "UICore/Core/Text/string_format.h"
 
-namespace clan
+namespace uicore
 {
 	int FileSystemProvider_Zip::zip_source_unique_id = 0;
 

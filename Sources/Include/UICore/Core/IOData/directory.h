@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -28,11 +28,8 @@
 
 #pragma once
 
-namespace clan
+namespace uicore
 {
-	/// \addtogroup clanCore_I_O_Data clanCore I/O Data
-	/// \{
-
 	/// \brief Directory utility class
 	class Directory
 	{
@@ -123,6 +120,4 @@ namespace clan
 		/// \return the application resource data directory.
 		static std::string get_resourcedata(const std::string &application_name, const std::string &data_dir_name = "Resources");
 	};
-
-	/// \}
 }

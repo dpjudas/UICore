@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -30,7 +30,7 @@
 #include "positioned_layout.h"
 #include <algorithm>
 
-namespace clan
+namespace uicore
 {
 	void PositionedLayout::layout_subviews(Canvas &canvas, View *view)
 	{
@@ -84,7 +84,7 @@ namespace clan
 		if (!view->style_cascade().computed_value("left").is_keyword("auto") && !view->style_cascade().computed_value("right").is_keyword("auto"))
 		{
 			x = view->style_cascade().computed_value("left").number();
-			width = clan::max(containing_box.get_width() - view->style_cascade().computed_value("right").number() - x, 0.0f);
+			width = uicore::max(containing_box.get_width() - view->style_cascade().computed_value("right").number() - x, 0.0f);
 		}
 		else if (!view->style_cascade().computed_value("left").is_keyword("auto") && !view->style_cascade().computed_value("width").is_keyword("auto"))
 		{
@@ -118,7 +118,7 @@ namespace clan
 		if (!view->style_cascade().computed_value("top").is_keyword("auto") && !view->style_cascade().computed_value("bottom").is_keyword("auto"))
 		{
 			y = view->style_cascade().computed_value("top").number();
-			height = clan::max(containing_box.get_height() - view->style_cascade().computed_value("bottom").number() - y, 0.0f);
+			height = uicore::max(containing_box.get_height() - view->style_cascade().computed_value("bottom").number() - y, 0.0f);
 		}
 		else if (!view->style_cascade().computed_value("top").is_keyword("auto") && !view->style_cascade().computed_value("height").is_keyword("auto"))
 		{

@@ -7,7 +7,7 @@
 #include <vector>
 #include <mutex>
 
-namespace clan
+namespace uicore
 {
 	class SocketName;
 	class Event;

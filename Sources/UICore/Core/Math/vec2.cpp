@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -31,7 +31,7 @@
 #include "UICore/Core/Math/vec2.h"
 #include "UICore/Core/Math/point.h"
 
-namespace clan
+namespace uicore
 {
 	template<typename Type>
 	Angle Vec2<Type>::angle(const Vec2<Type>& v) const

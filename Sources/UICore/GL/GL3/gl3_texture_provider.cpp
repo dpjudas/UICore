@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -39,7 +39,7 @@
 #include "UICore/Core/System/databuffer.h"
 #include "gl3_pixel_buffer_provider.h"
 
-namespace clan
+namespace uicore
 {
 	GL3TextureProvider::GL3TextureProvider(GLuint texture_type, GLuint handle)
 		: width(0), height(0), depth(0), array_size(0), handle(handle), texture_type(texture_type)

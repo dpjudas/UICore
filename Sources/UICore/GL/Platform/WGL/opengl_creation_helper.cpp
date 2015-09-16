@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -32,7 +32,7 @@
 #include "UICore/GL/opengl_context_description.h"
 #include <commctrl.h>
 
-namespace clan
+namespace uicore
 {
 	OpenGLCreationHelper::OpenGLCreationHelper(HWND window, HDC hdc)
 		: window(window), hdc(hdc), query_window(0), query_dc(0), query_context(0)

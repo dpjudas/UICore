@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -36,13 +36,13 @@
 #include "path_impl.h"
 #include "render_batch_buffer.h"
 
-namespace clan
+namespace uicore
 {
 	RenderBatchPath::RenderBatchPath(GraphicContext &gc, RenderBatchBuffer *batch_buffer) : batch_buffer(batch_buffer), fill_renderer(gc, batch_buffer), stroke_renderer(gc)
 	{
 	}
 
-	inline Pointf RenderBatchPath::to_position(const clan::Pointf &point) const
+	inline Pointf RenderBatchPath::to_position(const uicore::Pointf &point) const
 	{
 		return Pointf(
 			modelview_matrix.matrix[0 * 4 + 0] * point.x + modelview_matrix.matrix[1 * 4 + 0] * point.y + modelview_matrix.matrix[3 * 4 + 0],
@@ -83,7 +83,7 @@ namespace clan
 	{
 		for (const auto &subpath : path.get_impl()->subpaths)
 		{
-			clan::Pointf start_point = to_position(subpath.points[0]);
+			uicore::Pointf start_point = to_position(subpath.points[0]);
 			path_renderer->begin(start_point.x, start_point.y);
 
 			size_t i = 1;
@@ -91,24 +91,24 @@ namespace clan
 			{
 				if (command == PathCommand::line)
 				{
-					clan::Pointf next_point = to_position(subpath.points[i]);
+					uicore::Pointf next_point = to_position(subpath.points[i]);
 					i++;
 
 					path_renderer->line(next_point.x, next_point.y);
 				}
 				else if (command == PathCommand::quadradic)
 				{
-					clan::Pointf control = to_position(subpath.points[i]);
-					clan::Pointf next_point = to_position(subpath.points[i + 1]);
+					uicore::Pointf control = to_position(subpath.points[i]);
+					uicore::Pointf next_point = to_position(subpath.points[i + 1]);
 					i += 2;
 
 					path_renderer->quadratic_bezier(control.x, control.y, next_point.x, next_point.y);
 				}
 				else if (command == PathCommand::cubic)
 				{
-					clan::Pointf control1 = to_position(subpath.points[i]);
-					clan::Pointf control2 = to_position(subpath.points[i + 1]);
-					clan::Pointf next_point = to_position(subpath.points[i + 2]);
+					uicore::Pointf control1 = to_position(subpath.points[i]);
+					uicore::Pointf control2 = to_position(subpath.points[i + 1]);
+					uicore::Pointf next_point = to_position(subpath.points[i + 2]);
 					i += 3;
 
 					path_renderer->cubic_bezier(control1.x, control1.y, control2.x, control2.y, next_point.x, next_point.y);

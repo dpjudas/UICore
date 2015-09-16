@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -51,28 +51,28 @@
 #include "big_int_impl.h"
 #include <cstdlib>
 
-namespace clan
+namespace uicore
 {
-	BigInt::BigInt() : impl(clan::make_unique<BigInt_Impl>(BigInt_Impl::default_allocated_precision))
+	BigInt::BigInt() : impl(uicore::make_unique<BigInt_Impl>(BigInt_Impl::default_allocated_precision))
 	{
 	}
 
-	BigInt::BigInt(uint32_t value) : impl(clan::make_unique<BigInt_Impl>(BigInt_Impl::default_allocated_precision))
-	{
-		set(value);
-	}
-
-	BigInt::BigInt(int32_t value) : impl(clan::make_unique<BigInt_Impl>(BigInt_Impl::default_allocated_precision))
+	BigInt::BigInt(uint32_t value) : impl(uicore::make_unique<BigInt_Impl>(BigInt_Impl::default_allocated_precision))
 	{
 		set(value);
 	}
 
-	BigInt::BigInt(uint64_t value) : impl(clan::make_unique<BigInt_Impl>(BigInt_Impl::default_allocated_precision))
+	BigInt::BigInt(int32_t value) : impl(uicore::make_unique<BigInt_Impl>(BigInt_Impl::default_allocated_precision))
 	{
 		set(value);
 	}
 
-	BigInt::BigInt(int64_t value) : impl(clan::make_unique<BigInt_Impl>(BigInt_Impl::default_allocated_precision))
+	BigInt::BigInt(uint64_t value) : impl(uicore::make_unique<BigInt_Impl>(BigInt_Impl::default_allocated_precision))
+	{
+		set(value);
+	}
+
+	BigInt::BigInt(int64_t value) : impl(uicore::make_unique<BigInt_Impl>(BigInt_Impl::default_allocated_precision))
 	{
 		set(value);
 	}

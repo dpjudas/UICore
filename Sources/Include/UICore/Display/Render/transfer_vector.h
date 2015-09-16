@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -30,11 +30,8 @@
 
 #include "transfer_buffer.h"
 
-namespace clan
+namespace uicore
 {
-	/// \addtogroup clanDisplay_Display clanDisplay Display
-	/// \{
-
 	/// \brief Transfer Vector
 	///
 	template<typename Type>
@@ -97,6 +94,4 @@ namespace clan
 				TransferBuffer::upload_data(gc, offset * sizeof(Type), &data[0], data.size() * sizeof(Type));
 		}
 	};
-
-	/// \}
 }

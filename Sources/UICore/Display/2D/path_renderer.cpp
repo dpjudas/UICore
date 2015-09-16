@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -31,7 +31,7 @@
 #include "path_renderer.h"
 #include <algorithm>
 
-namespace clan
+namespace uicore
 {
 	void PathRenderer::begin(float x, float y)
 	{
@@ -73,8 +73,8 @@ namespace clan
 		int steps = (int)std::ceil(std::sqrt(segs * segs * 0.3f + min_segs));
 		for (int i = 0; i < steps; i++)
 		{
-			//clan::Pointf sp = point_on_bezier(cp0_x, cp0_y, cp1_x, cp1_y, cp2_x, cp2_y, cp3_x, cp3_y, i / (float)steps);
-			clan::Pointf ep = point_on_bezier(cp0_x, cp0_y, cp1_x, cp1_y, cp2_x, cp2_y, cp3_x, cp3_y, (i + 1) / (float)steps);
+			//uicore::Pointf sp = point_on_bezier(cp0_x, cp0_y, cp1_x, cp1_y, cp2_x, cp2_y, cp3_x, cp3_y, i / (float)steps);
+			uicore::Pointf ep = point_on_bezier(cp0_x, cp0_y, cp1_x, cp1_y, cp2_x, cp2_y, cp3_x, cp3_y, (i + 1) / (float)steps);
 			line(ep.x, ep.y);
 		}
 
@@ -88,14 +88,14 @@ namespace clan
 
 		float tc = (t0 + t1) * 0.5f;
 
-		clan::Pointf sp = point_on_bezier(cp0_x, cp0_y, cp1_x, cp1_y, cp2_x, cp2_y, cp3_x, cp3_y, t0);
-		clan::Pointf cp = point_on_bezier(cp0_x, cp0_y, cp1_x, cp1_y, cp2_x, cp2_y, cp3_x, cp3_y, tc);
-		clan::Pointf ep = point_on_bezier(cp0_x, cp0_y, cp1_x, cp1_y, cp2_x, cp2_y, cp3_x, cp3_y, t1);
+		uicore::Pointf sp = point_on_bezier(cp0_x, cp0_y, cp1_x, cp1_y, cp2_x, cp2_y, cp3_x, cp3_y, t0);
+		uicore::Pointf cp = point_on_bezier(cp0_x, cp0_y, cp1_x, cp1_y, cp2_x, cp2_y, cp3_x, cp3_y, tc);
+		uicore::Pointf ep = point_on_bezier(cp0_x, cp0_y, cp1_x, cp1_y, cp2_x, cp2_y, cp3_x, cp3_y, t1);
 
-		clan::Vec2f sp2cp(cp.x - sp.x, cp.y - sp.y);
-		clan::Vec2f cp2ep(ep.x - cp.x, ep.y - cp.y);
+		uicore::Vec2f sp2cp(cp.x - sp.x, cp.y - sp.y);
+		uicore::Vec2f cp2ep(ep.x - cp.x, ep.y - cp.y);
 
-		float dot = clan::Vec2f::dot(sp2cp.normalize(), cp2ep.normalize());
+		float dot = uicore::Vec2f::dot(sp2cp.normalize(), cp2ep.normalize());
 		if (dot < split_angle_cos && level < 15)
 		{
 			subdivide_bezier(level + 1, cp0_x, cp0_y, cp1_x, cp1_y, cp2_x, cp2_y, cp3_x, cp3_y, t0, tc);
@@ -107,7 +107,7 @@ namespace clan
 		}
 	}
 
-	clan::Pointf PathRenderer::point_on_bezier(float cp0_x, float cp0_y, float cp1_x, float cp1_y, float cp2_x, float cp2_y, float cp3_x, float cp3_y, float t)
+	uicore::Pointf PathRenderer::point_on_bezier(float cp0_x, float cp0_y, float cp1_x, float cp1_y, float cp2_x, float cp2_y, float cp3_x, float cp3_y, float t)
 	{
 		const int num_cp = 4;
 
@@ -127,6 +127,6 @@ namespace clan
 			}
 		}
 
-		return clan::Pointf(cp_x[0], cp_y[0]);
+		return uicore::Pointf(cp_x[0], cp_y[0]);
 	}
 }

@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -45,7 +45,7 @@ typedef unsigned long in_addr_t;
 #include "string.h"
 #endif
 
-namespace clan
+namespace uicore
 {
 	SocketName::SocketName()
 		: impl(std::make_shared<SocketName_Impl>())

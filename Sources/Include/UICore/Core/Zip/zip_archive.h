@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -33,11 +33,8 @@
 #include "zip_file_entry.h"
 #include <vector>
 
-namespace clan
+namespace uicore
 {
-	/// \addtogroup clanCore_I_O_Data clanCore I/O Data
-	/// \{
-
 	class IODevice;
 	class ZipArchive_Impl;
 
@@ -116,6 +113,4 @@ namespace clan
 	private:
 		std::shared_ptr<ZipArchive_Impl> impl;
 	};
-
-	/// \}
 }

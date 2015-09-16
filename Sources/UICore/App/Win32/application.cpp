@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -46,7 +46,7 @@
 #pragma comment(linker,"\"/manifestdependency:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 #endif
 
-namespace clan
+namespace uicore
 {
 	static void calc_commandline(std::vector<std::string> &out_args);
 
@@ -82,7 +82,7 @@ int WINAPI WinMain(
 	LPSTR lpCmdLine,
 	int nCmdShow)
 {
-	using namespace clan;
+	using namespace uicore;
 
 #if defined(_DEBUG) && defined(_MSC_VER)
 	// Visual C++ memoryleak debugging. By setting the _CRTDBG_LEAK_CHECK_DF
@@ -95,7 +95,7 @@ int WINAPI WinMain(
 
 	// Did the game developer remember to create one global application
 	// interface?
-	if (clan::app_instance == 0)
+	if (uicore::app_instance == 0)
 	{
 		MessageBox(NULL, TEXT("No program instance found"), TEXT("ClanLib/Win32"), 32);
 		return 0;
@@ -105,7 +105,7 @@ int WINAPI WinMain(
 
 	int retval = 0;
 
-	if (clan::enable_catch_exceptions)
+	if (uicore::enable_catch_exceptions)
 	{
 		try
 		{
@@ -117,7 +117,7 @@ int WINAPI WinMain(
 					if (!app->update())
 						break;
 
-					if (!clan::RunLoop::process(timing_timeout))
+					if (!uicore::RunLoop::process(timing_timeout))
 						break;
 				}
 				catch (...)
@@ -144,7 +144,7 @@ int WINAPI WinMain(
 			if (!app->update())
 				break;
 
-			if (!clan::RunLoop::process(timing_timeout))
+			if (!uicore::RunLoop::process(timing_timeout))
 				break;
 		}
 	}
@@ -155,7 +155,7 @@ int WINAPI WinMain(
 /////////////////////////////////////////////////////////////////////////////
 // calc_commandline:
 
-namespace clan
+namespace uicore
 {
 	static void calc_commandline(std::vector<std::string> &out_args)
 	{

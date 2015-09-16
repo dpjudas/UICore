@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -30,7 +30,7 @@
 
 #include "UICore/UI/Style/style_property_parser.h"
 
-namespace clan
+namespace uicore
 {
 	void force_link_style_parser_text();
 
@@ -142,7 +142,7 @@ namespace clan
 	class ClanFontRenderingPropertyParser : public StylePropertyParser
 	{
 	public:
-		ClanFontRenderingPropertyParser() : StylePropertyParser({ "-clan-font-rendering" }) { }
+		ClanFontRenderingPropertyParser() : StylePropertyParser({ "-uicore-font-rendering" }) { }
 		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser) override;
 	};
 }

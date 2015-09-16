@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -51,7 +51,7 @@
 #define cl_period_mask_z	permutation_table_mask
 #define cl_period_mask_w	permutation_table_mask
 
-namespace clan
+namespace uicore
 {
 	class PerlinNoise_PixelWriter
 	{

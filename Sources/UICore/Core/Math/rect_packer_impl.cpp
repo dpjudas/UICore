@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -30,7 +30,7 @@
 #include "UICore/Core/Math/rect.h"
 #include "rect_packer_impl.h"
 
-namespace clan
+namespace uicore
 {
 	RectPacker_Impl::RectPacker_Impl(const Size &max_group_size)
 		: active_root_node(nullptr), next_node_id(0), max_group_size(max_group_size)

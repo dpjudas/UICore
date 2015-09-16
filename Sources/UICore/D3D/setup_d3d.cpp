@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -38,7 +38,7 @@
 //#pragma comment(lib, "D3D11.lib")
 //#pragma comment(lib, "D3dcompiler.lib")
 
-namespace clan
+namespace uicore
 {
 	SetupD3D_Impl *SetupD3D_Impl::instance = nullptr;
 
@@ -50,7 +50,7 @@ namespace clan
 			return;
 
 		SetupDisplay::start();	// D3D depends on display
-		SetupCore::instance.module_d3d = clan::make_unique<SetupD3D_Impl>();
+		SetupCore::instance.module_d3d = uicore::make_unique<SetupD3D_Impl>();
 	}
 
 	SetupD3D_Impl::SetupD3D_Impl()

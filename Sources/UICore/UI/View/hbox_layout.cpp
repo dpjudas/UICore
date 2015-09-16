@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -31,7 +31,7 @@
 #include <algorithm>
 #include <cmath>
 
-namespace clan
+namespace uicore
 {
 	float HBoxLayout::get_preferred_width(Canvas &canvas, View *view)
 	{
@@ -118,7 +118,7 @@ namespace clan
 				margin_box_height += subview->style_cascade().computed_value("padding-bottom").number();
 				margin_box_height += subview->style_cascade().computed_value("border-bottom-width").number();
 				margin_box_height += subview->style_cascade().computed_value("margin-bottom").number();
-				height = clan::max(height, margin_box_height);
+				height = uicore::max(height, margin_box_height);
 			}
 		}
 		return height;

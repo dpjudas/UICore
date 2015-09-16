@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -33,11 +33,8 @@
 
 #include "UICore/Display/Render/graphic_context.h"
 
-namespace clan
+namespace uicore
 {
-	/// \addtogroup clanDisplay_Display clanDisplay Display
-	/// \{
-
 	class Canvas_Impl;
 	class GraphicContext;
 	class PrimitivesArray;
@@ -415,6 +412,4 @@ namespace clan
 		friend class Font_DrawScaled;
 		friend class Path;
 	};
-
-	/// \}
 }

@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -34,7 +34,7 @@
 #include "UICore/Display/2D/canvas.h"
 #include "UICore/Core/Math/quad.h"
 
-namespace clan
+namespace uicore
 {
 	// For use by the GL1 target, so it can reduce the number of textures. Now also used by the GL3 target to increase the number. Global vars should be banned!
 	// Warning: Ensure this number does not exceed RenderBatchTriangle::max_number_of_texture_coords

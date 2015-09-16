@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -30,11 +30,8 @@
 
 #include "graphic_context.h"
 
-namespace clan
+namespace uicore
 {
-	/// \addtogroup clanDisplay_Display clanDisplay Display
-	/// \{
-
 	class BlendStateDescription_Impl;
 
 	/// \brief Blend state description.
@@ -66,10 +63,10 @@ namespace clan
 		/// \brief Enable/disable writing to the color buffer
 		void enable_color_write(bool red, bool green, bool blue, bool alpha);
 
-		/// \brief Enable/disable logic op. (clanGL only)
+		/// \brief Enable/disable logic op. (uicoreGL only)
 		void enable_logic_op(bool enabled);
 
-		/// \brief Set logic operation. (clanGL only)
+		/// \brief Set logic operation. (uicoreGL only)
 		void set_logic_op(LogicOp op);
 
 		bool operator==(const BlendStateDescription &other) const;
@@ -78,6 +75,4 @@ namespace clan
 	private:
 		std::shared_ptr<BlendStateDescription_Impl> impl;
 	};
-
-	/// \}
 }

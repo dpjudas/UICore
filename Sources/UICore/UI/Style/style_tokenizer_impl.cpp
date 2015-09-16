@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -34,7 +34,7 @@
 #include "UICore/Core/Text/text.h"
 #include "UICore/UI/Style/style_token.h"
 
-namespace clan
+namespace uicore
 {
 	StyleTokenizer_Impl::StyleTokenizer_Impl(const std::string &text)
 	: doc(text), pos(0)

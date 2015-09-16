@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -31,11 +31,8 @@
 
 #include "color.h"
 
-namespace clan
+namespace uicore
 {
-	/// \addtogroup clanDisplay_2D clanDisplay 2D
-	/// \{
-
 	/// \brief Colorgradient description class.
 	class Gradient
 	{
@@ -93,6 +90,4 @@ namespace clan
 			return !(*this == other);
 		}
 	};
-
-	/// \}
 }

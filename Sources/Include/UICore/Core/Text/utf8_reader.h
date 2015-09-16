@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -30,11 +30,8 @@
 
 #include <memory>
 
-namespace clan
+namespace uicore
 {
-	/// \addtogroup clanCore_Text clanCore Text
-	/// \{
-
 	class UTF8_Reader_Impl;
 
 	/// \brief UTF8 reader helper functions.
@@ -73,6 +70,4 @@ namespace clan
 		std::string::size_type length = 0;
 		const unsigned char *data = nullptr;
 	};
-
-	/// \}
 }

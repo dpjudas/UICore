@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -34,7 +34,7 @@
 #include "../../Core/Math/mat4.h"
 #include "../../Display/2D/color.h"
 
-namespace clan
+namespace uicore
 {
 	class Font;
 	class PathImpl;
@@ -81,7 +81,7 @@ namespace clan
 		static Path line(const Pointf &start, const Pointf &end);
 		static Path line(float x1, float y1, float x2, float y2) { return Path::line(Pointf(x1, y1), Pointf(x2, y2)); }
 
-		static Path rect(const Rectf &box, const clan::Sizef &corner);
+		static Path rect(const Rectf &box, const uicore::Sizef &corner);
 
 		static Path circle(float center_x, float center_y, float radius) { return Path::ellipse(Pointf(center_x, center_y), Sizef(radius, radius)); }
 		static Path ellipse(float center_x, float center_y, float radius_x, float radius_y) { return Path::ellipse(Pointf(center_x, center_y), Sizef(radius_x, radius_y)); }

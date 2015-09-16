@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -31,11 +31,8 @@
 #include <memory>
 #include "uniform_buffer.h"
 
-namespace clan
+namespace uicore
 {
-	/// \addtogroup clanDisplay_Display clanDisplay Display
-	/// \{
-
 	/// \brief Uniform Buffer Vector
 	///
 	template<typename Type>
@@ -104,6 +101,4 @@ namespace clan
 			UniformBuffer::copy_to(gc, buffer, dest_pos * sizeof(Type), src_pos * sizeof(Type), size);
 		}
 	};
-
-	/// \}
 }

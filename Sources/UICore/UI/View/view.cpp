@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -44,7 +44,7 @@
 #include "hbox_layout.h"
 #include <algorithm>
 
-namespace clan
+namespace uicore
 {
 	View::View() : impl(new ViewImpl())
 	{
@@ -914,7 +914,7 @@ namespace clan
 			if (next_subview_index != 0)
 			{
 				if (next_index != 0)
-					next_index = clan::min(next_index, next_subview_index);
+					next_index = uicore::min(next_index, next_subview_index);
 				else
 					next_index = next_subview_index;
 			}
@@ -941,7 +941,7 @@ namespace clan
 			if (prev_subview_index != 0)
 			{
 				if (prev_index != 0)
-					prev_index = clan::max(prev_index, prev_subview_index);
+					prev_index = uicore::max(prev_index, prev_subview_index);
 				else
 					prev_index = prev_subview_index;
 			}
@@ -955,7 +955,7 @@ namespace clan
 		for (const auto &subview : _subviews)
 		{
 			if (!subview->hidden())
-				index = clan::max(subview->impl->find_highest_tab_index(), index);
+				index = uicore::max(subview->impl->find_highest_tab_index(), index);
 		}
 		return index;
 	}

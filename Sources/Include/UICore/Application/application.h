@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -32,14 +32,11 @@
 #include <string>
 #include <memory>
 
-namespace clan
+namespace uicore
 {
-	/// \addtogroup clanApp_System clanApp System
-	/// \{
-
 	/// \brief Base class for the application object
 	///
-	/// All applications using the clanApp module need to inherit from this class. See ApplicationInstance for more information.
+	/// All applications using the uicoreApp module need to inherit from this class. See ApplicationInstance for more information.
 	class Application
 	{
 	public:
@@ -70,16 +67,16 @@ namespace clan
 	/// To use this class, inherit from Application and make a single global instance of ApplicationInstance<YourClass>.
 	///
 	/// \code
-	/// class MyApplication : public clan::Application
+	/// class MyApplication : public uicore::Application
 	/// {
 	/// public:
 	///   bool update() override;
 	/// };
 	///
-	/// ApplicationInstance<MyApplication> clanapp;
+	/// ApplicationInstance<MyApplication> uicoreapp;
 	/// \endcode
 	/// If you do not want exceptions to be automatically caught, pass "false" to the optional catch_exceptions parameter in Application\n
-	/// Your program does not have to use this class. For more advanced usage use a normal main function for the target platform and interface with the RunLoop class in clanDisplay\n
+	/// Your program does not have to use this class. For more advanced usage use a normal main function for the target platform and interface with the RunLoop class\n
 	template<typename ApplicationClass>
 	class ApplicationInstance : ApplicationInstancePrivate
 	{
@@ -95,6 +92,4 @@ namespace clan
 			return std::unique_ptr<Application>(new ApplicationClass());
 		}
 	};
-
-	/// \}
 }

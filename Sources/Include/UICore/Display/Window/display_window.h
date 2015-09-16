@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -35,7 +35,7 @@
 #include <memory>
 
 #if !defined(WIN32) && !defined(__ANDROID__) && !defined(__APPLE__)
-// We prefer not to include Xlib.h in clanlib (to prevent namespace issues when "using namespace clan")
+// We prefer not to include Xlib.h in uicorelib (to prevent namespace issues when "using namespace uicore")
 struct _XDisplay;
 typedef struct _XDisplay Display;
 typedef unsigned long Window;
@@ -45,11 +45,8 @@ typedef unsigned long Window;
 struct ANativeWindow;
 #endif
 
-namespace clan
+namespace uicore
 {
-	/// \addtogroup clanDisplay_Window clanDisplay Window
-	/// \{
-
 	class Sizef;
 	class Rectf;
 	class Display;
@@ -383,6 +380,4 @@ namespace clan
 	private:
 		std::shared_ptr<DisplayWindow_Impl> impl;
 	};
-
-	/// \}
 }

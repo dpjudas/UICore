@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -27,7 +27,7 @@
 **
 **	File purpose:
 **
-**    This file is the WinMain entry point. It will setup the clanCore
+**    This file is the WinMain entry point. It will setup the uicoreCore
 **    win32 environment.
 **
 **    This file also contain the win32 specific implementations
@@ -52,7 +52,7 @@
 #include <tchar.h>
 #include <cstdlib>
 
-namespace clan
+namespace uicore
 {
 	// Win32 implementation of System functions:
 
@@ -76,7 +76,7 @@ namespace clan
 		}
 
 		// Note on Win32, this looses accuracy after approx 9 days (by 1 to 4 microseconds), due to the precision of a 64bit double.
-		// If you require ultra precision, modify this function to use clan::BigInt
+		// If you require ultra precision, modify this function to use uicore::BigInt
 
 		QueryPerformanceCounter(&perf_counter);
 		double quad_part = (double)perf_counter.QuadPart;

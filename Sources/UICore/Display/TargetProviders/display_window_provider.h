@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -34,11 +34,8 @@
 #include "UICore/Display/Window/display_window.h"
 #include <memory>
 
-namespace clan
+namespace uicore
 {
-	/// \addtogroup clanDisplay_Display clanDisplay Display
-	/// \{
-
 	class Rect;
 	class Size;
 	class Point;
@@ -286,6 +283,4 @@ namespace clan
 		 */
 		virtual void extend_frame_into_client_area(int left, int top, int right, int bottom) = 0;
 	};
-
-	/// \}
 }

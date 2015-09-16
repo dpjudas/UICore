@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -34,7 +34,7 @@
 #include "UICore/Display/TargetProviders/graphic_context_provider.h"
 #include "UICore/Display/2D/gradient.h"
 
-namespace clan
+namespace uicore
 {
 	Canvas_Impl::Canvas_Impl() : canvas_map_mode(map_user_projection)
 	{
@@ -178,7 +178,7 @@ namespace clan
 		if (!canvas_inverse_transform_set)
 		{
 			canvas_inverse_transform_set = true;
-			canvas_inverse_transform = clan::Mat4f::inverse(canvas_transform);
+			canvas_inverse_transform = uicore::Mat4f::inverse(canvas_transform);
 		}
 		return canvas_inverse_transform;
 	}

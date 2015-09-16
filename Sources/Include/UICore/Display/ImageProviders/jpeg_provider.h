@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -31,11 +31,8 @@
 #include "../Image/pixel_buffer.h"
 #include "../../Core/IOData/file_system.h"
 
-namespace clan
+namespace uicore
 {
-	/// \addtogroup clanDisplay_Image_Providers clanDisplay Image Providers
-	/// \{
-
 	class FileSystem;
 
 	/// \brief Image provider that can load JPEG (.jpg) files.
@@ -81,6 +78,4 @@ namespace clan
 			IODevice &file,
 			int quality = 85);
 	};
-
-	/// \}
 }

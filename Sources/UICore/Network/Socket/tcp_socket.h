@@ -19,7 +19,7 @@
 #define SOL_TCP IPPROTO_TCP
 #endif
 
-namespace clan
+namespace uicore
 {
 
 #if defined(WIN32)

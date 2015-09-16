@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -34,11 +34,8 @@
 #include "vec4.h"
 #include <memory>
 
-namespace clan
+namespace uicore
 {
-	/// \addtogroup clanCore_Math clanCore Math
-	/// \{
-
 	template<typename T, typename ...Args>
 	std::unique_ptr<T> make_unique(Args&& ...args)
 	{
@@ -197,6 +194,4 @@ namespace clan
 	{
 		return Vec4<Type>(step(edge.x, x.x), step(edge.y, x.y), step(edge.z, x.z), step(edge.w, x.w));
 	}
-
-	/// \}
 }

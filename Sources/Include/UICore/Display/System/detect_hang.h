@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -31,11 +31,8 @@
 #include <string>
 #include <memory>
 
-namespace clan
+namespace uicore
 {
-	/// \addtogroup clanCore_ErrorReporting clanCore ErrorReporting
-	/// \{
-
 	class DetectHang_Impl;
 
 	/// \brief Calls CrashReporter::invoke if the constructing thread does not call RunLoop::process for more than 30 seconds.
@@ -48,6 +45,4 @@ namespace clan
 	private:
 		std::shared_ptr<DetectHang_Impl> impl;
 	};
-
-	/// \}
 }

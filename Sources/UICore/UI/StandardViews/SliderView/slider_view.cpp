@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -37,7 +37,7 @@
 #include <algorithm>
 #include "slider_view_impl.h"
 
-namespace clan
+namespace uicore
 {
 	SliderView::SliderView() : impl(std::make_shared<SliderViewImpl>())
 	{
@@ -65,7 +65,7 @@ namespace clan
 		slots.connect(sig_activated(), impl.get(), &SliderViewImpl::on_activated);
 		slots.connect(sig_activated(), impl.get(), &SliderViewImpl::on_deactivated);
 
-		impl->scroll_timer.func_expired() = clan::bind_member(impl.get(), &SliderViewImpl::scroll_timer_expired);
+		impl->scroll_timer.func_expired() = uicore::bind_member(impl.get(), &SliderViewImpl::scroll_timer_expired);
 
 		set_vertical();
 	}

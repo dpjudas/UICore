@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -35,7 +35,7 @@
 #include "../../setup_display.h"
 #include "UICore/Core/System/system.h"
 
-namespace clan
+namespace uicore
 {
 	#define WM_ASYNC_WORK (WM_USER + 500)
 	#define WM_EXIT_LOOP (WM_USER + 501)

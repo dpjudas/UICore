@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -36,11 +36,8 @@
 #include <vcclr.h>
 #endif
 
-namespace clan
+namespace uicore
 {
-	/// \addtogroup clanCore_Text clanCore Text
-	/// \{
-
 	/// \brief String helper functions.
 	class StringHelp
 	{
@@ -606,8 +603,6 @@ namespace clan
 		static const char trailing_bytes_for_utf8[256];
 		static const unsigned char bitmask_leadbyte_for_utf8[6];
 	};
-
-	/// \}
 }
 
 #ifdef __cplusplus_cli

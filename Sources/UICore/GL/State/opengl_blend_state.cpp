@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -32,7 +32,7 @@
 #include "UICore/GL/opengl.h"
 #include "UICore/GL/opengl_wrap.h"
 
-namespace clan
+namespace uicore
 {
 	OpenGLBlendState::OpenGLBlendState()
 		: blend_color(Colorf::white), changed_desc(true), changed_blend_color(true)

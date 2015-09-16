@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -30,7 +30,7 @@
 #include "UICore/Core/Zip/zip_file_entry.h"
 #include "zip_file_entry_impl.h"
 
-namespace clan
+namespace uicore
 {
 	ZipFileEntry::ZipFileEntry()
 		: impl(std::make_shared<ZipFileEntry_Impl>())

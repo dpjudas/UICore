@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -39,7 +39,7 @@
 #pragma comment(linker,"\"/manifestdependency:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 #endif
 
-namespace clan
+namespace uicore
 {
 	void ExceptionDialog::show(const std::exception_ptr &exception)
 	{
@@ -147,8 +147,8 @@ namespace clan
 		RECT owner_box = { 0,0,0,0 };
 		GetWindowRect(owner, &owner_box);
 
-		int width = clan::min(rect.right, (long int)1350 * ppi / 96) + 50 * ppi / 96;
-		int height = clan::min(rect.bottom, (long int)700 * ppi / 96) + 100 * ppi / 96;
+		int width = uicore::min(rect.right, (long int)1350 * ppi / 96) + 50 * ppi / 96;
+		int height = uicore::min(rect.bottom, (long int)700 * ppi / 96) + 100 * ppi / 96;
 		SetWindowPos(window_handle, 0, (owner_box.left + owner_box.right - width) / 2, (owner_box.top + owner_box.bottom - height) / 2, width, height, SWP_NOZORDER);
 
 		RECT client_box = { 0,0,0,0 };

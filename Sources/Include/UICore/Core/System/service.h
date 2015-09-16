@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -31,11 +31,8 @@
 #include <memory>
 #include "../Signals/signal.h"
 
-namespace clan
+namespace uicore
 {
-	/// \addtogroup clanCore_System clanCore System
-	/// \{
-
 	class Service_Impl;
 
 	/// \brief Service/daemon class.
@@ -70,6 +67,4 @@ namespace clan
 
 		friend class Service_Impl;
 	};
-
-	/// \}
 }

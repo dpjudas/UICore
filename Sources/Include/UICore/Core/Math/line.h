@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -28,11 +28,8 @@
 
 #pragma once
 
-namespace clan
+namespace uicore
 {
-	/// \addtogroup clanCore_Math clanCore Math
-	/// \{
-
 	template<typename Type>
 	class Line2x;
 
@@ -176,6 +173,4 @@ namespace clan
 		Line3d(const Line3x<double> &copy) : Line3x<double>(copy) { }
 		Line3d(const Vec3<double> &podouble_p, const Vec3<double> &podouble_q) : Line3x<double>(podouble_p, podouble_q) { }
 	};
-
-	/// \}
 }

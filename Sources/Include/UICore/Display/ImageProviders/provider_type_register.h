@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -31,11 +31,8 @@
 #include "../../Core/IOData/file_system.h"
 #include "provider_type.h"
 
-namespace clan
+namespace uicore
 {
-	/// \addtogroup clanDisplay_Image_Providers clanDisplay Image Providers
-	/// \{
-
 	/// \brief Class template to register a provider type.
 	///
 	template<class ProviderClass>
@@ -78,6 +75,4 @@ namespace clan
 			ProviderClass::save(buffer, file);
 		}
 	};
-
-	/// \}
 }

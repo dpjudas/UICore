@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -32,11 +32,8 @@
 #include <memory>
 #include <vector>
 
-namespace clan
+namespace uicore
 {
-	/// \addtogroup clanCore_Math clanCore Math
-	/// \{
-
 	class BezierCurve_Impl;
 	class Pointf;
 	class Angle;
@@ -67,6 +64,4 @@ namespace clan
 	private:
 		std::shared_ptr<BezierCurve_Impl> impl;
 	};
-
-	/// \}
 }

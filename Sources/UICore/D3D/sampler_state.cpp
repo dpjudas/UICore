@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -31,7 +31,7 @@
 #include "UICore/D3D/d3d_target.h"
 #include <float.h>
 
-namespace clan
+namespace uicore
 {
 	SamplerState::SamplerState(const ComPtr<ID3D11Device> &device)
 		: device(device), max_anisotropy(0.0f), compare_mode(comparemode_none), min_filter(filter_linear_mipmap_linear), mag_filter(filter_linear)

@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -31,11 +31,8 @@
 #include "vec4.h"
 #include "vec3.h"
 
-namespace clan
+namespace uicore
 {
-	/// \addtogroup clanCore_Math clanCore Math
-	/// \{
-
 	class AxisAlignedBoundingBox;
 	class OrientedBoundingBox;
 	class FrustumPlanes;
@@ -65,6 +62,4 @@ namespace clan
 		static Result frustum_obb(const FrustumPlanes &frustum, const OrientedBoundingBox &box);
 		static OverlapResult ray_aabb(const Vec3f &ray_start, const Vec3f &ray_end, const AxisAlignedBoundingBox &box);
 	};
-
-	/// \}
 }

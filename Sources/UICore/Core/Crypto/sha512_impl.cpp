@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -38,7 +38,7 @@
 #include <cstring>
 #endif
 
-namespace clan
+namespace uicore
 {
 	SHA512_Impl::SHA512_Impl(cl_sha_type new_sha_type) : sha_type(new_sha_type)
 	{

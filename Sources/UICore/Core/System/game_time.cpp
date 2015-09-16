@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -31,7 +31,7 @@
 #include "UICore/Core/System/system.h"
 #include "game_time_impl.h"
 
-namespace clan
+namespace uicore
 {
 	GameTime::GameTime(int ticks_per_second, int max_updates_per_second)
 		: impl(std::make_shared<GameTime_Impl>(ticks_per_second, max_updates_per_second))

@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -30,7 +30,7 @@
 
 #include "UICore/Display/Window/display_window.h"
 
-namespace clan
+namespace uicore
 {
 	class KeyEvent;
 	class PointerEvent;
@@ -65,12 +65,12 @@ namespace clan
 		void on_got_focus();
 		void on_resize(float, float);
 		void on_paint();
-		void on_key_down(const clan::InputEvent &);
-		void on_key_up(const clan::InputEvent &);
-		void on_mouse_down(const clan::InputEvent &);
-		void on_mouse_dblclk(const clan::InputEvent &);
-		void on_mouse_up(const clan::InputEvent &);
-		void on_mouse_move(const clan::InputEvent &);
-		PointerButton decode_id(clan::InputCode ic) const;
+		void on_key_down(const uicore::InputEvent &);
+		void on_key_up(const uicore::InputEvent &);
+		void on_mouse_down(const uicore::InputEvent &);
+		void on_mouse_dblclk(const uicore::InputEvent &);
+		void on_mouse_up(const uicore::InputEvent &);
+		void on_mouse_move(const uicore::InputEvent &);
+		PointerButton decode_id(uicore::InputCode ic) const;
 	};
 }
