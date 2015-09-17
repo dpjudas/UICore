@@ -49,6 +49,8 @@ namespace uicore
 
 		static void add_font_face(const std::string &properties, const std::string &src);
 
+		static std::string resource_path();
+
 		static Image get_image(Canvas &canvas, const std::string &name);
 		static Font get_font(const std::string &family, const FontDescription &desc);
 

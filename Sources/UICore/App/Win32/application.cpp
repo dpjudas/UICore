@@ -52,7 +52,6 @@ namespace uicore
 
 	static ApplicationInstancePrivate *app_instance = 0;
 	static bool enable_catch_exceptions = false;
-	static int timing_timeout = 0;
 
 	static std::vector<std::string> command_line_args;
 
@@ -65,11 +64,6 @@ namespace uicore
 	const std::vector<std::string> &Application::main_args()
 	{
 		return command_line_args;
-	}
-
-	void Application::use_timeout_timing(int timeout)
-	{
-		timing_timeout = timeout;
 	}
 }
 
@@ -110,24 +104,7 @@ int WINAPI WinMain(
 		try
 		{
 			std::unique_ptr<Application> app = app_instance->create();
-			while (true)
-			{
-				try
-				{
-					if (!app->update())
-						break;
-
-					if (!uicore::RunLoop::process(timing_timeout))
-						break;
-				}
-				catch (...)
-				{
-					std::exception_ptr exception = std::current_exception();
-					ExceptionDialog::show(exception);
-					retval = -1;
-					break;
-				}
-			}
+			RunLoop::run();
 		}
 		catch (...)
 		{
@@ -139,14 +116,7 @@ int WINAPI WinMain(
 	else
 	{
 		std::unique_ptr<Application> app = app_instance->create();
-		while (true)
-		{
-			if (!app->update())
-				break;
-
-			if (!uicore::RunLoop::process(timing_timeout))
-				break;
-		}
+		RunLoop::run();
 	}
 
 	return retval;

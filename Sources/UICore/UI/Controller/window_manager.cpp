@@ -29,10 +29,14 @@
 #include "UICore/precomp.h"
 #include "UICore/UI/Controller/window_manager.h"
 #include "UICore/UI/TopLevel/top_level_window.h"
+#include "UICore/UI/UIThread/ui_thread.h"
 #include "UICore/Display/Window/display_window_description.h"
 #include "UICore/Display/Window/display_window.h"
 #include "UICore/Display/2D/canvas.h"
 #include "UICore/Display/System/run_loop.h"
+#include "UICore/Display/Image/pixel_buffer.h"
+#include "UICore/Display/ImageFormats/image_file.h"
+#include "UICore/Core/IOData/path_help.h"
 #include <map>
 
 namespace uicore
@@ -40,8 +44,14 @@ namespace uicore
 	class WindowManagerImpl
 	{
 	public:
-		bool exit_on_last_close = false;
+		bool exit_on_last_close = true;
 		std::map<WindowController *, std::shared_ptr<WindowController>> windows;
+
+		static WindowManagerImpl *instance()
+		{
+			static WindowManagerImpl impl;
+			return &impl;
+		}
 	};
 
 	/////////////////////////////////////////////////////////////////////////
@@ -50,65 +60,63 @@ namespace uicore
 	{
 	public:
 		std::string title;
+		Sizef initial_size;
+		bool frame_geometry = true;
+		bool resizable = true;
+		std::vector<std::string> icon_images;
 		std::shared_ptr<View> root_view = std::make_shared<View>();
 
-		WindowManager *manager = nullptr;
 		std::shared_ptr<TopLevelWindow> window;
 		std::weak_ptr<View> modal_owner;
 	};
 
 	/////////////////////////////////////////////////////////////////////////
 
-	WindowManager::WindowManager() : impl(new WindowManagerImpl)
-	{
-	}
-
-	WindowManager::~WindowManager()
-	{
-	}
-
 	void WindowManager::set_exit_on_last_close(bool enable)
 	{
-		impl->exit_on_last_close = enable;
+		WindowManagerImpl::instance()->exit_on_last_close = enable;
 	}
 
 	void WindowManager::present_main(const std::shared_ptr<WindowController> &controller)
 	{
-		if (controller->impl->manager)
-			return;
-
 		DisplayWindowDescription desc;
 		desc.set_main_window();
 		desc.set_visible(false);
 		desc.set_title(controller->title());
-		desc.set_allow_resize();
+		desc.set_allow_resize(controller->impl->resizable);
 
-		controller->impl->manager = this;
+		if (controller->impl->initial_size != Sizef())
+			desc.set_size(controller->impl->initial_size, !controller->impl->frame_geometry);
+
 		controller->impl->window = std::make_shared<TopLevelWindow>(desc);
 		controller->impl->window->set_root_view(controller->root_view());
 
 		DisplayWindow display_window = controller->impl->window->get_display_window();
-		if (!display_window.is_null())
-			controller->slots.connect(display_window.sig_window_close(), bind_member(controller.get(), &WindowController::dismiss));
+		controller->slots.connect(display_window.sig_window_close(), bind_member(controller.get(), &WindowController::dismiss));
 
-		impl->windows[controller.get()] = controller;
+		WindowManagerImpl::instance()->windows[controller.get()] = controller;
 
-		Canvas canvas = controller->root_view()->get_canvas();
-		float width = controller->root_view()->calculate_preferred_width(canvas);
-		float height = controller->root_view()->calculate_preferred_height(canvas, width);
-		Rectf content_box(0.0f, 0.0f, width, height);
-		Rectf margin_box = ViewGeometry::from_content_box(controller->root_view()->style_cascade(), content_box).margin_box();
-		if (!display_window.is_null())
+		if (controller->impl->initial_size == Sizef())
+		{
+			Canvas canvas = controller->root_view()->get_canvas();
+			float width = controller->root_view()->calculate_preferred_width(canvas);
+			float height = controller->root_view()->calculate_preferred_height(canvas, width);
+			Rectf content_box(0.0f, 0.0f, width, height);
+			Rectf margin_box = ViewGeometry::from_content_box(controller->root_view()->style_cascade(), content_box).margin_box();
 			display_window.set_size(margin_box.get_width(), margin_box.get_height(), true);
+		}
+
+		if (!controller->impl->icon_images.empty())
+		{
+			display_window.set_large_icon(ImageFile::load(PathHelp::combine(UIThread::resource_path(), controller->impl->icon_images.front())));
+			display_window.set_small_icon(ImageFile::load(PathHelp::combine(UIThread::resource_path(), controller->impl->icon_images.back())));
+		}
 
 		controller->impl->window->show(WindowShowType::show);
 	}
 
 	void WindowManager::present_modal(View *owner, const std::shared_ptr<WindowController> &controller)
 	{
-		if (controller->impl->manager)
-			return;
-
 		Pointf screen_pos = owner->to_screen_pos(owner->geometry().content_box().get_center());
 
 		DisplayWindowDescription desc;
@@ -121,10 +129,12 @@ namespace uicore
 		desc.set_title(controller->title());
 		desc.show_minimize_button(false);
 		desc.show_maximize_button(false);
-		desc.set_allow_resize();
+		desc.set_allow_resize(controller->impl->resizable);
+
+		if (controller->impl->initial_size != Sizef())
+			desc.set_size(controller->impl->initial_size, !controller->impl->frame_geometry);
 
 		controller->impl->modal_owner = owner->shared_from_this();
-		controller->impl->manager = this;
 		controller->impl->window = std::make_shared<TopLevelWindow>(desc);
 		controller->impl->window->set_root_view(controller->root_view());
 
@@ -132,15 +142,24 @@ namespace uicore
 		if (!controller_display_window.is_null())
 			controller->slots.connect(controller_display_window.sig_window_close(), bind_member(controller.get(), &WindowController::dismiss));
 
-		impl->windows[controller.get()] = controller;
+		WindowManagerImpl::instance()->windows[controller.get()] = controller;
 
-		Canvas canvas = controller->root_view()->get_canvas();
-		float width = controller->root_view()->calculate_preferred_width(canvas);
-		float height = controller->root_view()->calculate_preferred_height(canvas, width);
-		Rectf content_box(screen_pos.x - width * 0.5f, screen_pos.y - height * 0.5f, screen_pos.x + width * 0.5f, screen_pos.y + height * 0.5f);
-		Rectf margin_box = ViewGeometry::from_content_box(controller->root_view()->style_cascade(), content_box).margin_box();
-		if (!controller_display_window.is_null())
-			controller_display_window.set_position(margin_box, true);
+		if (controller->impl->initial_size == Sizef())
+		{
+			Canvas canvas = controller->root_view()->get_canvas();
+			float width = controller->root_view()->calculate_preferred_width(canvas);
+			float height = controller->root_view()->calculate_preferred_height(canvas, width);
+			Rectf content_box(screen_pos.x - width * 0.5f, screen_pos.y - height * 0.5f, screen_pos.x + width * 0.5f, screen_pos.y + height * 0.5f);
+			Rectf margin_box = ViewGeometry::from_content_box(controller->root_view()->style_cascade(), content_box).margin_box();
+			if (!controller_display_window.is_null())
+				controller_display_window.set_position(margin_box, true);
+		}
+
+		if (!controller->impl->icon_images.empty())
+		{
+			controller_display_window.set_large_icon(ImageFile::load(PathHelp::combine(UIThread::resource_path(), controller->impl->icon_images.front())));
+			controller_display_window.set_small_icon(ImageFile::load(PathHelp::combine(UIThread::resource_path(), controller->impl->icon_images.back())));
+		}
 
 		controller->impl->window->show(WindowShowType::show);
 		if (!owner_display_window.is_null())
@@ -149,9 +168,6 @@ namespace uicore
 
 	void WindowManager::present_popup(View *owner, const Pointf &pos, const std::shared_ptr<WindowController> &controller)
 	{
-		if (controller->impl->manager)
-			return;
-
 		Pointf screen_pos = owner->to_screen_pos(pos);
 
 		DisplayWindowDescription desc;
@@ -164,7 +180,9 @@ namespace uicore
 		desc.show_minimize_button(false);
 		desc.show_maximize_button(false);
 
-		controller->impl->manager = this;
+		if (controller->impl->initial_size != Sizef())
+			desc.set_size(controller->impl->initial_size, !controller->impl->frame_geometry);
+
 		controller->impl->window = std::make_shared<TopLevelWindow>(desc);
 		controller->impl->window->set_root_view(controller->root_view());
 
@@ -172,17 +190,20 @@ namespace uicore
 		if (!owner_display_window.is_null())
 			controller->slots.connect(owner_display_window.sig_lost_focus(), bind_member(controller.get(), &WindowController::dismiss));
 
-		impl->windows[controller.get()] = controller;
+		WindowManagerImpl::instance()->windows[controller.get()] = controller;
 
-		Canvas canvas = controller->root_view()->get_canvas();
-		float width = controller->root_view()->calculate_preferred_width(canvas);
-		float height = controller->root_view()->calculate_preferred_height(canvas, width);
-		Rectf content_box(screen_pos.x, screen_pos.y, screen_pos.x + width, screen_pos.y + height);
-		Rectf margin_box = ViewGeometry::from_content_box(controller->root_view()->style_cascade(), content_box).margin_box();
+		if (controller->impl->initial_size == Sizef())
+		{
+			Canvas canvas = controller->root_view()->get_canvas();
+			float width = controller->root_view()->calculate_preferred_width(canvas);
+			float height = controller->root_view()->calculate_preferred_height(canvas, width);
+			Rectf content_box(screen_pos.x, screen_pos.y, screen_pos.x + width, screen_pos.y + height);
+			Rectf margin_box = ViewGeometry::from_content_box(controller->root_view()->style_cascade(), content_box).margin_box();
 
-		DisplayWindow controller_display_window = controller->impl->window->get_display_window();
-		if (!controller_display_window.is_null())
-			controller_display_window.set_position(margin_box, false);
+			DisplayWindow controller_display_window = controller->impl->window->get_display_window();
+			if (!controller_display_window.is_null())
+				controller_display_window.set_position(margin_box, false);
+		}
 
 		controller->impl->window->show(WindowShowType::show_no_activate);
 	}
@@ -223,36 +244,70 @@ namespace uicore
 		}
 	}
 
+	void WindowController::set_frame_size(const Sizef &size, bool resizable)
+	{
+		impl->initial_size = size;
+		impl->frame_geometry = true;
+		impl->resizable = resizable;
+		if (impl->window)
+		{
+			DisplayWindow display_window = impl->window->get_display_window();
+			if (!display_window.is_null())
+				display_window.set_size(size.width, size.height, false);
+		}
+	}
+
+	void WindowController::set_content_size(const Sizef &size, bool resizable)
+	{
+		impl->initial_size = size;
+		impl->frame_geometry = false;
+		impl->resizable = resizable;
+		if (impl->window)
+		{
+			DisplayWindow display_window = impl->window->get_display_window();
+			if (!display_window.is_null())
+				display_window.set_size(size.width, size.height, true);
+		}
+	}
+
+	void WindowController::set_icon(const std::vector<std::string> &icon_images)
+	{
+		impl->icon_images = icon_images;
+		if (impl->window)
+		{
+			DisplayWindow display_window = impl->window->get_display_window();
+			if (!display_window.is_null() && !icon_images.empty())
+			{
+				display_window.set_large_icon(ImageFile::load(PathHelp::combine(UIThread::resource_path(), icon_images.front())));
+				display_window.set_small_icon(ImageFile::load(PathHelp::combine(UIThread::resource_path(), icon_images.back())));
+			}
+		}
+	}
+
 	void WindowController::dismiss()
 	{
-		if (impl->manager)
+		auto modal_owner = impl->modal_owner.lock();
+		if (modal_owner && modal_owner->view_tree())
 		{
-			auto modal_owner = impl->modal_owner.lock();
-			if (modal_owner && modal_owner->view_tree())
+			DisplayWindow display_window = modal_owner->view_tree()->get_display_window();
+			if (!display_window.is_null())
 			{
-				DisplayWindow display_window = modal_owner->view_tree()->get_display_window();
-				if (!display_window.is_null())
-				{
-					display_window.set_enabled(true);
-					if (impl->window->get_display_window().has_focus())
-						display_window.show(true); // activate parent to workaround bug in Windows in some situations
-				}
+				display_window.set_enabled(true);
+				if (impl->window->get_display_window().has_focus())
+					display_window.show(true); // activate parent to workaround bug in Windows in some situations
 			}
-
-			auto manager = impl->manager;
-
-			// Reset fields before erase because 'this' might be destroyed if 'windows' had the last reference
-			impl->manager = nullptr;
-			impl->window.reset();
-			impl->modal_owner.reset();
-
-			auto &windows = manager->impl->windows;
-			auto it = windows.find(this);
-			if (it != windows.end())
-				windows.erase(it);
-
-			if (manager->impl->exit_on_last_close && windows.empty())
-				RunLoop::exit();
 		}
+
+		// Reset fields before erase because 'this' might be destroyed if 'windows' had the last reference
+		impl->window.reset();
+		impl->modal_owner.reset();
+
+		auto &windows = WindowManagerImpl::instance()->windows;
+		auto it = windows.find(this);
+		if (it != windows.end())
+			windows.erase(it);
+
+		if (WindowManagerImpl::instance()->exit_on_last_close && windows.empty())
+			RunLoop::exit();
 	}
 }

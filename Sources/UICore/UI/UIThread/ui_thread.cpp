@@ -131,6 +131,11 @@ namespace uicore
 		family.add(font_desc, PathHelp::combine(UIThreadImpl::get_instance()->resource_path, src));
 	}
 
+	std::string UIThread::resource_path()
+	{
+		return UIThreadImpl::get_instance()->resource_path;
+	}
+
 	Image UIThread::get_image(Canvas &canvas, const std::string &name)
 	{
 		auto &images = UIThreadImpl::get_instance()->images;

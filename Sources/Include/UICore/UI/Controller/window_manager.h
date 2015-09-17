@@ -41,17 +41,14 @@ namespace uicore
 	class WindowManager
 	{
 	public:
-		WindowManager();
-		~WindowManager();
-
 		/// Notifices RunLoop to exit when last presented window is dismissed
-		void set_exit_on_last_close(bool enable = true);
+		static void set_exit_on_last_close(bool enable = true);
 
 		/// Shows a main window
-		void present_main(const std::shared_ptr<WindowController> &controller);
+		static void present_main(const std::shared_ptr<WindowController> &controller);
 
 		template<typename T, typename... Types>
-		std::shared_ptr<T> present_main(Types &&... args)
+		static std::shared_ptr<T> present_main(Types &&... args)
 		{
 			auto controller = std::make_shared<T>(std::forward<Types>(args)...);
 			present_main(controller);
@@ -59,10 +56,10 @@ namespace uicore
 		}
 
 		/// Shows a modal dialog
-		void present_modal(View *owner, const std::shared_ptr<WindowController> &controller);
+		static void present_modal(View *owner, const std::shared_ptr<WindowController> &controller);
 
 		template<typename T, typename... Types>
-		std::shared_ptr<T> present_modal(View *owner, Types &&... args)
+		static std::shared_ptr<T> present_modal(View *owner, Types &&... args)
 		{
 			auto controller = std::make_shared<T>(std::forward<Types>(args)...);
 			present_modal(owner, controller);
@@ -70,10 +67,10 @@ namespace uicore
 		}
 
 		/// Shows a popup window
-		void present_popup(View *owner, const Pointf &pos, const std::shared_ptr<WindowController> &controller);
+		static void present_popup(View *owner, const Pointf &pos, const std::shared_ptr<WindowController> &controller);
 
 		template<typename T, typename... Types>
-		std::shared_ptr<T> present_popup(View *owner, const Pointf &pos, Types &&... args)
+		static std::shared_ptr<T> present_popup(View *owner, const Pointf &pos, Types &&... args)
 		{
 			auto controller = std::make_shared<T>(std::forward<Types>(args)...);
 			present_popup(owner, controller);
@@ -81,6 +78,7 @@ namespace uicore
 		}
 
 	private:
+		WindowManager() = delete;
 		WindowManager(const WindowManager &) = delete;
 		WindowManager &operator=(const WindowManager &) = delete;
 
