@@ -28,6 +28,11 @@
 
 #include "UICore/precomp.h"
 #include "UICore/Display/display_target.h"
+#ifdef WIN32
+#include "UICore/D3D/d3d_target.h"
+#else
+#include "UICore/GL/opengl_target.h"
+#endif
 
 namespace uicore
 {
@@ -38,6 +43,15 @@ namespace uicore
 
 	const std::shared_ptr<DisplayTargetProvider> &DisplayTarget::get_current_target()
 	{
+		if (!current_target)
+		{
+#ifdef WIN32
+			D3DTarget::set_current();
+#else
+			OpenGLTarget::set_current();
+#endif
+		}
+
 		return current_target;
 	}
 
