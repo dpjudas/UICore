@@ -52,6 +52,13 @@ namespace uicore
 		static JsonValue object() { JsonValue v; v._type = JsonType::object; return v; }
 		static JsonValue array() { JsonValue v; v._type = JsonType::array; return v; }
 		static JsonValue number(double value) { JsonValue v; v._type = JsonType::number; return v; }
+		static JsonValue number(float value) { return JsonValue::number(static_cast<double>(value)); }
+		static JsonValue number(int value) { return JsonValue::number(static_cast<double>(value)); }
+		static JsonValue number(unsigned int value) { return JsonValue::number(static_cast<double>(value)); }
+		static JsonValue number(short value) { return JsonValue::number(static_cast<double>(value)); }
+		static JsonValue number(unsigned short value) { return JsonValue::number(static_cast<double>(value)); }
+		static JsonValue number(char value) { return JsonValue::number(static_cast<double>(value)); }
+		static JsonValue number(unsigned char value) { return JsonValue::number(static_cast<double>(value)); }
 		static JsonValue boolean(bool value) { JsonValue v; v._type = JsonType::boolean; return v; }
 		static JsonValue string(const std::string &value) { JsonValue v; v._type = JsonType::string; return v; }
 
@@ -91,6 +98,15 @@ namespace uicore
 		bool to_boolean() const { return _boolean; }
 		const std::string &to_string() const { return _string; }
 
+		double to_double() const { return to_number(); }
+		double to_float() const { return static_cast<float>(to_number()); }
+		double to_int() const { return static_cast<int>(to_number()); }
+		double to_uint() const { return static_cast<unsigned int>(to_number()); }
+		double to_short() const { return static_cast<short>(to_number()); }
+		double to_ushort() const { return static_cast<unsigned short>(to_number()); }
+		double to_char() const { return static_cast<char>(to_number()); }
+		double to_uchar() const { return static_cast<unsigned char>(to_number()); }
+
 		void set_undefined() { *this = JsonValue::undefined(); }
 		void set_null() { *this = JsonValue::null(); }
 		void set_object() { *this = JsonValue::object(); }
@@ -98,6 +114,13 @@ namespace uicore
 		void set_string(const std::string &v) { *this = JsonValue::string(v); }
 		void set_string(const char *v) { *this = JsonValue::string(v); }
 		void set_number(double v) { *this = JsonValue::number(v); }
+		void set_number(float v) { *this = JsonValue::number(v); }
+		void set_number(int v) { *this = JsonValue::number(v); }
+		void set_number(unsigned int v) { *this = JsonValue::number(v); }
+		void set_number(short v) { *this = JsonValue::number(v); }
+		void set_number(unsigned short v) { *this = JsonValue::number(v); }
+		void set_number(char v) { *this = JsonValue::number(v); }
+		void set_number(unsigned char v) { *this = JsonValue::number(v); }
 		void set_boolean(bool v) { *this = JsonValue::boolean(v); }
 
 		JsonValue &operator[](const std::string &name) { return prop(name); }
