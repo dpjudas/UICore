@@ -99,13 +99,13 @@ namespace uicore
 		const std::string &to_string() const { return _string; }
 
 		double to_double() const { return to_number(); }
-		double to_float() const { return static_cast<float>(to_number()); }
-		double to_int() const { return static_cast<int>(to_number()); }
-		double to_uint() const { return static_cast<unsigned int>(to_number()); }
-		double to_short() const { return static_cast<short>(to_number()); }
-		double to_ushort() const { return static_cast<unsigned short>(to_number()); }
-		double to_char() const { return static_cast<char>(to_number()); }
-		double to_uchar() const { return static_cast<unsigned char>(to_number()); }
+		float to_float() const { return static_cast<float>(to_number()); }
+		int to_int() const { return static_cast<int>(to_number()); }
+		unsigned int to_uint() const { return static_cast<unsigned int>(to_number()); }
+		short to_short() const { return static_cast<short>(to_number()); }
+		unsigned short to_ushort() const { return static_cast<unsigned short>(to_number()); }
+		char to_char() const { return static_cast<char>(to_number()); }
+		unsigned char to_uchar() const { return static_cast<unsigned char>(to_number()); }
 
 		void set_undefined() { *this = JsonValue::undefined(); }
 		void set_null() { *this = JsonValue::null(); }
