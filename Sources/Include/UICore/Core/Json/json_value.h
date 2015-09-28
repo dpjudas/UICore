@@ -91,7 +91,7 @@ namespace uicore
 		std::map<std::string, JsonValue> &properties() { return _properties; }
 		const std::map<std::string, JsonValue> &properties() const { return _properties; }
 
-		std::vector<JsonValue> items() { return _items; }
+		std::vector<JsonValue> &items() { return _items; }
 		const std::vector<JsonValue> &items() const { return _items; }
 
 		double to_number() const { return _number; }
