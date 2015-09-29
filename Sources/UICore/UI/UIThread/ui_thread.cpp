@@ -40,20 +40,17 @@
 
 namespace uicore
 {
-	static UIThreadImpl *ui_thread_instance = nullptr;
-
 	class UIThreadImpl
 	{
 	public:
 		UIThreadImpl()
 		{
-			if (ui_thread_instance != nullptr) throw Exception("Only one UIThread is allowed");
-			ui_thread_instance = this;
-		}
-
-		~UIThreadImpl()
-		{
-			ui_thread_instance = nullptr;
+			#ifdef __APPLE__
+			resource_path = Directory::get_resourcedata("", resource_path);
+			#else
+			resource_path = "Resources";
+			#endif
+			exception_handler = ExceptionDialog::show;
 		}
 
 		std::string resource_path;
@@ -64,29 +61,10 @@ namespace uicore
 
 		static UIThreadImpl *get_instance()
 		{
-			if (ui_thread_instance == nullptr) throw Exception("No UIThread created");
-			return ui_thread_instance;
+			static UIThreadImpl instance;
+			return &instance;
 		}
 	};
-
-	UIThread::UIThread()
-	{
-	}
-
-	UIThread::UIThread(const std::string &resource_path, const std::function<void(const std::exception_ptr &)> &exception_handler) : impl(std::make_shared<UIThreadImpl>())
-	{
-		impl->resource_path = resource_path;
-		impl->exception_handler = exception_handler;
-
-		if (!exception_handler)
-		{
-			impl->exception_handler = ExceptionDialog::show;
-		}
-	}
-
-	UIThread::~UIThread()
-	{
-	}
 
 	void UIThread::add_font_face(const std::string &properties, const std::string &src)
 	{
@@ -134,6 +112,11 @@ namespace uicore
 	std::string UIThread::resource_path()
 	{
 		return UIThreadImpl::get_instance()->resource_path;
+	}
+
+	void UIThread::set_resource_path(const std::string &path)
+	{
+		UIThreadImpl::get_instance()->resource_path = path;
 	}
 
 	Image UIThread::get_image(Canvas &canvas, const std::string &name)

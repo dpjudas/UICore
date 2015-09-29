@@ -36,27 +36,19 @@ namespace uicore
 	class Font;
 	class FontDescription;
 	class Canvas;
-	class UIThreadImpl;
 
 	class UIThread
 	{
 	public:
-		/// \brief Constructs a null instance.
-		UIThread();
-
-		UIThread(const std::string &resource_path, const std::function<void(const std::exception_ptr &)> &exception_handler = std::function<void(const std::exception_ptr &)>());
-		~UIThread();
-
 		static void add_font_face(const std::string &properties, const std::string &src);
 
 		static std::string resource_path();
+		static void set_resource_path(const std::string &path);
 
 		static Image get_image(Canvas &canvas, const std::string &name);
 		static Font get_font(const std::string &family, const FontDescription &desc);
 
+		static void set_exception_handler(const std::function<void(const std::exception_ptr &)> &exception_handler);
 		static bool try_catch(const std::function<void()> &block);
-
-	private:
-		std::shared_ptr<UIThreadImpl> impl;
 	};
 }
