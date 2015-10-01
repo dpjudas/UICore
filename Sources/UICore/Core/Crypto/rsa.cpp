@@ -34,18 +34,18 @@
 
 namespace uicore
 {
-	void RSA::create_keypair(Random &random, Secret &out_private_exponent, DataBuffer &out_public_exponent, DataBuffer &out_modulus, int key_size_in_bits, int public_exponent_value)
+	void RSA::create_keypair(Random &random, SecretPtr &out_private_exponent, DataBuffer &out_public_exponent, DataBuffer &out_modulus, int key_size_in_bits, int public_exponent_value)
 	{
 		RSA_Impl rsa_impl;
 		rsa_impl.create_keypair(random, out_private_exponent, out_public_exponent, out_modulus, key_size_in_bits, public_exponent_value);
 	}
 
-	DataBuffer RSA::encrypt(int block_type, Random &random, const DataBuffer &in_public_exponent, const DataBuffer &in_modulus, const Secret &in_data)
+	DataBuffer RSA::encrypt(int block_type, Random &random, const DataBuffer &in_public_exponent, const DataBuffer &in_modulus, const SecretPtr &in_data)
 	{
-		return RSA_Impl::encrypt(block_type, random, in_public_exponent.get_data(), in_public_exponent.get_size(), in_modulus.get_data(), in_modulus.get_size(), in_data.get_data(), in_data.get_size());
+		return RSA_Impl::encrypt(block_type, random, in_public_exponent.get_data(), in_public_exponent.get_size(), in_modulus.get_data(), in_modulus.get_size(), in_data->get_data(), in_data->get_size());
 	}
 
-	Secret RSA::decrypt(const Secret &in_private_exponent, const DataBuffer &in_modulus, const DataBuffer &in_data)
+	SecretPtr RSA::decrypt(const SecretPtr &in_private_exponent, const DataBuffer &in_modulus, const DataBuffer &in_data)
 	{
 		return RSA_Impl::decrypt(in_private_exponent, in_modulus.get_data(), in_modulus.get_size(), in_data.get_data(), in_data.get_size());
 	}
@@ -55,7 +55,7 @@ namespace uicore
 		return RSA_Impl::encrypt(block_type, random, in_public_exponent, in_public_exponent_size, in_modulus, in_modulus_size, in_data, in_data_size);
 	}
 
-	Secret RSA::decrypt(const Secret &in_private_exponent, const void *in_modulus, unsigned int in_modulus_size, const void *in_data, unsigned int in_data_size)
+	SecretPtr RSA::decrypt(const SecretPtr &in_private_exponent, const void *in_modulus, unsigned int in_modulus_size, const void *in_data, unsigned int in_data_size)
 	{
 		return RSA_Impl::decrypt(in_private_exponent, in_modulus, in_modulus_size, in_data, in_data_size);
 	}

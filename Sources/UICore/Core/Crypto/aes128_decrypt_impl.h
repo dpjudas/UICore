@@ -30,11 +30,12 @@
 
 #include <cstdint>
 #include "UICore/Core/System/databuffer.h"
+#include "UICore/Core/Crypto/aes128_decrypt.h"
 #include "aes_impl.h"
 
 namespace uicore
 {
-	class AES128_Decrypt_Impl : public AES_Impl
+	class AES128_Decrypt_Impl : public AES128_Decrypt, public AES_Impl
 	{
 	public:
 		AES128_Decrypt_Impl();
@@ -44,10 +45,10 @@ namespace uicore
 		/// This is the databuffer used internally to store the decrypted data.
 		/// You may call "set_size()" to clear the buffer, inbetween calls to "add()"
 		/// You may call "set_capacity()" to optimise storage requirements before the add() call
-		DataBuffer get_data() const;
+		DataBuffer get_data() const override;
 
 		/// \brief Resets the decryption
-		void reset();
+		void reset() override;
 
 		/// \brief Purge the databuffer
 		///
@@ -58,29 +59,29 @@ namespace uicore
 		/// \brief Sets the initialisation vector
 		///
 		/// This must be called before the initial add()
-		void set_iv(const unsigned char iv[16]);
+		void set_iv(const unsigned char iv[16]) override;
 
 		/// \brief Sets the cipher key
 		///
 		/// This must be called before the initial add()
-		void set_key(const unsigned char key[16]);
+		void set_key(const unsigned char key[16]) override;
 
-		void set_padding(bool value, bool use_pkcs7);
+		void set_padding(bool value, bool use_pkcs7) override;
 
 		/// \brief Adds data to be decrypted
-		void add(const void *data, int size);
+		void add(const void *data, int size) override;
 
 		/// \brief Add data to be decrypted
 		///
 		/// \param data = Data Buffer
-		void add(const DataBuffer &data);
+		void add(const DataBuffer &data) override;
 
 		/// \brief Finalize decryption
 		///
 		/// IMPORTANT, to avoid timing attacks, if this function fails, you should still validate the data (via a hash or otherwise), then throw an error
 		///
 		/// \return false = AES Padding value is invalid.
-		bool calculate();
+		bool calculate() override;
 
 	private:
 		void process_chunk();

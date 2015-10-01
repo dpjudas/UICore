@@ -37,26 +37,11 @@
 
 namespace uicore
 {
-	Secret_Impl::Secret_Impl() : key(nullptr), key_length(0)
+	Secret_Impl::Secret_Impl(unsigned int key_length) : key(new unsigned char[key_length]), key_length(key_length)
 	{
 	}
 
 	Secret_Impl::~Secret_Impl()
-	{
-		free();
-	}
-
-	void Secret_Impl::create(unsigned int new_key_length)
-	{
-		free();
-		if (new_key_length)
-		{
-			key = new unsigned char[new_key_length];
-			key_length = new_key_length;
-		}
-	}
-
-	void Secret_Impl::free()
 	{
 		if (key)
 		{

@@ -184,19 +184,19 @@ namespace uicore
 		{
 			if (sha_type == cl_sha_224)
 			{
-				SHA224 sha224;
-				sha224.add(key_data, key_size);
-				sha224.calculate();
+				auto sha224 = SHA224::create();
+				sha224->add(key_data, key_size);
+				sha224->calculate();
 				key_chunk_filled = SHA224::hash_size;
-				sha224.get_hash(hmac_key_chunk);
+				sha224->get_hash(hmac_key_chunk);
 			}
 			else if (sha_type == cl_sha_256)
 			{
-				SHA256 sha256;
-				sha256.add(key_data, key_size);
-				sha256.calculate();
+				auto sha256 = SHA256::create();
+				sha256->add(key_data, key_size);
+				sha256->calculate();
 				key_chunk_filled = SHA256::hash_size;
-				sha256.get_hash(hmac_key_chunk);
+				sha256->get_hash(hmac_key_chunk);
 			}
 			else
 			{

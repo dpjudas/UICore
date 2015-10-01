@@ -33,43 +33,8 @@
 
 namespace uicore
 {
-	SHA512_256::SHA512_256()
-		: impl(std::make_shared<SHA512_Impl>(cl_sha_512_256))
+	std::shared_ptr<SHA512_256> SHA512_256::create()
 	{
-	}
-
-	std::string SHA512_256::get_hash(bool uppercase) const
-	{
-		return impl->get_hash(uppercase);
-	}
-
-	void SHA512_256::get_hash(unsigned char out_hash[64]) const
-	{
-		impl->get_hash(out_hash);
-	}
-
-	void SHA512_256::reset()
-	{
-		impl->reset();
-	}
-
-	void SHA512_256::add(const void *data, int size)
-	{
-		impl->add(data, size);
-	}
-
-	void SHA512_256::add(const DataBuffer &data)
-	{
-		add(data.get_data(), data.get_size());
-	}
-
-	void SHA512_256::calculate()
-	{
-		impl->calculate();
-	}
-
-	void SHA512_256::set_hmac(const void *key_data, int key_size)
-	{
-		impl->set_hmac(key_data, key_size);
+		return std::make_shared<SHA512_Impl>(cl_sha_512_256);
 	}
 }

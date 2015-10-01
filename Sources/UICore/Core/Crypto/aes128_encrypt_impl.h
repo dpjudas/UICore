@@ -30,11 +30,12 @@
 
 #include <cstdint>
 #include "UICore/Core/System/databuffer.h"
+#include "UICore/Core/Crypto/aes128_encrypt.h"
 #include "aes_impl.h"
 
 namespace uicore
 {
-	class AES128_Encrypt_Impl : public AES_Impl
+	class AES128_Encrypt_Impl : public AES128_Encrypt, public AES_Impl
 	{
 	public:
 		AES128_Encrypt_Impl();
@@ -44,10 +45,10 @@ namespace uicore
 		/// This is the databuffer used internally to store the encrypted data.
 		/// You may call "set_size()" to clear the buffer, inbetween calls to "add()"
 		/// You may call "set_capacity()" to optimise storage requirements before the add() call
-		DataBuffer get_data() const;
+		DataBuffer get_data() const override;
 
 		/// \brief Resets the encryption
-		void reset();
+		void reset() override;
 
 		/// \brief Purge the databuffer
 		///
@@ -58,25 +59,25 @@ namespace uicore
 		/// \brief Sets the initialisation vector
 		///
 		/// This must be called before the initial add()
-		void set_iv(const unsigned char iv[16]);
+		void set_iv(const unsigned char iv[16]) override;
 
 		/// \brief Sets the cipher key
 		///
 		/// This must be called before the initial add()
-		void set_key(const unsigned char key[16]);
+		void set_key(const unsigned char key[16]) override;
 
-		void set_padding(bool value, bool use_pkcs7, unsigned int num_additional_padded_blocks);
+		void set_padding(bool value, bool use_pkcs7, unsigned int num_additional_padded_blocks) override;
 
 		/// \brief Adds data to be encrypted
-		void add(const void *data, int size);
+		void add(const void *data, int size) override;
 
 		/// \brief Add data to be encrypted
 		///
 		/// \param data = Data Buffer
-		void add(const DataBuffer &data);
+		void add(const DataBuffer &data) override;
 
 		/// \brief Finalize decryption
-		void calculate();
+		void calculate() override;
 
 	private:
 		void process_chunk();

@@ -45,4 +45,6 @@ namespace uicore
 		virtual const DataBuffer &buffer() const = 0;
 		virtual void set_buffer(const DataBuffer &buffer) = 0;
 	};
+
+	typedef std::shared_ptr<MemoryDevice> MemoryDevicePtr;
 }

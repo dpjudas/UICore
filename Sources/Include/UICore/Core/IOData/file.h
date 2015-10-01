@@ -61,4 +61,6 @@ namespace uicore
 		static void remove(const std::string &filename);
 		static bool exists(const std::string &filename);
 	};
+
+	typedef std::shared_ptr<File> FilePtr;
 }

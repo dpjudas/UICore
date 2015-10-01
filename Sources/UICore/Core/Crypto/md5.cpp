@@ -33,43 +33,8 @@
 
 namespace uicore
 {
-	MD5::MD5()
-		: impl(std::make_shared<MD5_Impl>())
+	std::shared_ptr<MD5> MD5::create()
 	{
-	}
-
-	std::string MD5::get_hash(bool uppercase) const
-	{
-		return impl->get_hash(uppercase);
-	}
-
-	void MD5::get_hash(unsigned char out_hash[16]) const
-	{
-		impl->get_hash(out_hash);
-	}
-
-	void MD5::reset()
-	{
-		impl->reset();
-	}
-
-	void MD5::add(const void *data, int size)
-	{
-		impl->add(data, size);
-	}
-
-	void MD5::add(const DataBuffer &data)
-	{
-		add(data.get_data(), data.get_size());
-	}
-
-	void MD5::calculate()
-	{
-		impl->calculate();
-	}
-
-	void MD5::set_hmac(const void *key_data, int key_size)
-	{
-		impl->set_hmac(key_data, key_size);
+		return std::make_shared<MD5_Impl>();
 	}
 }

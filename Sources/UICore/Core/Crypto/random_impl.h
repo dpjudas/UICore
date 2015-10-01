@@ -29,19 +29,20 @@
 #pragma once
 
 #include <cstdint>
+#include "UICore/Core/Crypto/random.h"
 #include "UICore/Core/System/databuffer.h"
 
 namespace uicore
 {
-	class Random_Impl
+	class Random_Impl : public Random
 	{
 	public:
 		Random_Impl(int cache_size);
 		~Random_Impl();
 
-		void get_random_bytes(unsigned char *out_dest_ptr, int num_bytes);
-		void get_random_bytes_nzero(unsigned char *out_dest_ptr, int num_bytes);
-		bool get_random_bool();
+		void get_random_bytes(unsigned char *out_dest_ptr, int num_bytes) override;
+		void get_random_bytes_nzero(unsigned char *out_dest_ptr, int num_bytes) override;
+		bool get_random_bool() override;
 
 	private:
 		void fill_random_pool();

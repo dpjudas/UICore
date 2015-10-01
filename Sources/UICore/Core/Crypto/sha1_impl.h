@@ -29,21 +29,25 @@
 #pragma once
 
 #include "sha.h"
+#include "UICore/Core/Crypto/sha1.h"
+#include "UICore/Core/System/databuffer.h"
 
 namespace uicore
 {
-	class SHA1_Impl : private SHA
+	class SHA1_Impl : public SHA1, SHA
 	{
 	public:
 		SHA1_Impl();
 
-		std::string get_hash(bool uppercase = false) const;
-		void get_hash(unsigned char out_hash[20]) const;
+		std::string get_hash(bool uppercase = false) const override;
+		void get_hash(unsigned char out_hash[20]) const override;
 
-		void reset();
-		void set_hmac(const void *key_data, int key_size);
-		void add(const void *data, int size);
-		void calculate();
+		void reset() override;
+		void set_hmac(const void *key_data, int key_size) override;
+		void add(const void *data, int size) override;
+		void add(const DataBuffer &data) override { add(data.get_data(), data.get_size()); }
+
+		void calculate() override;
 
 	private:
 		void process_chunk();

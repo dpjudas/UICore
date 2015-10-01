@@ -33,48 +33,8 @@
 
 namespace uicore
 {
-	AES256_Encrypt::AES256_Encrypt()
-		: impl(std::make_shared<AES256_Encrypt_Impl>())
+	std::shared_ptr<AES256_Encrypt> AES256_Encrypt::create()
 	{
-	}
-
-	DataBuffer AES256_Encrypt::get_data() const
-	{
-		return impl->get_data();
-	}
-
-	void AES256_Encrypt::reset()
-	{
-		impl->reset();
-	}
-
-	void AES256_Encrypt::set_iv(const unsigned char iv[16])
-	{
-		impl->set_iv(iv);
-	}
-
-	void AES256_Encrypt::set_key(const unsigned char key[32])
-	{
-		impl->set_key(key);
-	}
-
-	void AES256_Encrypt::set_padding(bool value, bool use_pkcs7, unsigned int num_additional_padded_blocks)
-	{
-		impl->set_padding(value, use_pkcs7, num_additional_padded_blocks);
-	}
-
-	void AES256_Encrypt::add(const void *data, int size)
-	{
-		impl->add(data, size);
-	}
-
-	void AES256_Encrypt::add(const DataBuffer &data)
-	{
-		add(data.get_data(), data.get_size());
-	}
-
-	void AES256_Encrypt::calculate()
-	{
-		impl->calculate();
+		return std::make_shared<AES256_Encrypt_Impl>();
 	}
 }

@@ -29,20 +29,23 @@
 #pragma once
 
 #include "sha.h"
+#include "UICore/Core/Crypto/md5.h"
+#include "UICore/Core/System/databuffer.h"
 
 namespace uicore
 {
-	class MD5_Impl : private SHA
+	class MD5_Impl : public MD5, SHA
 	{
 	public:
 		MD5_Impl();
 
-		std::string get_hash(bool uppercase = false) const;
-		void get_hash(unsigned char out_hash[16]) const;
-		void reset();
-		void add(const void *data, int size);
-		void calculate();
-		void set_hmac(const void *key_data, int key_size);
+		std::string get_hash(bool uppercase = false) const override;
+		void get_hash(unsigned char out_hash[16]) const override;
+		void reset() override;
+		void add(const void *data, int size) override;
+		void add(const DataBuffer &data) override { add(data.get_data(), data.get_size()); }
+		void calculate() override;
+		void set_hmac(const void *key_data, int key_size) override;
 
 	private:
 		void process_chunk();

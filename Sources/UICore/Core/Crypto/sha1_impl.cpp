@@ -132,11 +132,11 @@ namespace uicore
 
 		if (key_size > block_size)
 		{
-			SHA1 sha1;
-			sha1.add(key_data, key_size);
-			sha1.calculate();
+			auto sha1 = SHA1::create();
+			sha1->add(key_data, key_size);
+			sha1->calculate();
 			key_chunk_filled = SHA1::hash_size;
-			sha1.get_hash(hmac_key_chunk);
+			sha1->get_hash(hmac_key_chunk);
 		}
 		else
 		{

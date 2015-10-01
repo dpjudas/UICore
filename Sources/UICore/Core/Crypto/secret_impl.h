@@ -30,22 +30,22 @@
 
 #include <cstdint>
 #include "UICore/Core/System/databuffer.h"
+#include "UICore/Core/Crypto/secret.h"
 
 namespace uicore
 {
-	class Secret_Impl
+	class Secret_Impl : public Secret
 	{
 	public:
-		Secret_Impl();
+		Secret_Impl(unsigned int key_length);
 		~Secret_Impl();
 
-		unsigned int get_size() const { return key_length; }
-		unsigned char *get_data() const { return key; }
-
-		void create(unsigned int new_key_length);
+		unsigned int get_size() const override { return key_length; }
+		unsigned char *get_data() const override { return key; }
 
 	private:
-		void free();
+		Secret_Impl(const Secret_Impl &) = delete;
+		Secret_Impl &operator=(Secret_Impl &) = delete;
 
 		unsigned char *key;
 		unsigned int key_length;

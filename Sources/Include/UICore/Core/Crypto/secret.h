@@ -33,7 +33,6 @@
 namespace uicore
 {
 	class DataBuffer;
-	class Secret_Impl;
 
 	/// \brief Key class
 	///
@@ -41,27 +40,23 @@ namespace uicore
 	class Secret
 	{
 	public:
-		/// \brief Constructs a key (unset)
-		Secret();
-
 		/// \brief Constructs a key to a specified length
 		///
 		/// The data is not initialised
 		///
 		/// \param new_key_length = Length of the key
-		Secret(unsigned int new_key_length);
+		static std::shared_ptr<Secret> create(unsigned int new_key_length);
 
 		/// \brief Get the key size
 		///
 		/// \return The key size
-		unsigned int get_size() const;
+		virtual unsigned int get_size() const = 0;
 
 		/// \brief Get the key data
 		///
 		/// \return The key
-		unsigned char *get_data() const;
-
-	private:
-		std::shared_ptr<Secret_Impl> impl;
+		virtual unsigned char *get_data() const = 0;
 	};
+
+	typedef std::shared_ptr<Secret> SecretPtr;
 }

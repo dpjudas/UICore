@@ -33,22 +33,8 @@
 
 namespace uicore
 {
-	Random::Random(int cache_size) : impl(std::make_shared<Random_Impl>(cache_size))
+	std::shared_ptr<Random> Random::create(int cache_size)
 	{
-	}
-
-	void Random::get_random_bytes(unsigned char *out_dest_ptr, int num_bytes)
-	{
-		impl->get_random_bytes(out_dest_ptr, num_bytes);
-	}
-
-	void Random::get_random_bytes_nzero(unsigned char *out_dest_ptr, int num_bytes)
-	{
-		impl->get_random_bytes_nzero(out_dest_ptr, num_bytes);
-	}
-
-	bool Random::get_random_bool()
-	{
-		return impl->get_random_bool();
+		return std::make_shared<Random_Impl>(cache_size);
 	}
 }

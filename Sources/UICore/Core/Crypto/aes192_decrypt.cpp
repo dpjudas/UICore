@@ -33,48 +33,8 @@
 
 namespace uicore
 {
-	AES192_Decrypt::AES192_Decrypt()
-		: impl(std::make_shared<AES192_Decrypt_Impl>())
+	std::shared_ptr<AES192_Decrypt> AES192_Decrypt::create()
 	{
-	}
-
-	DataBuffer AES192_Decrypt::get_data() const
-	{
-		return impl->get_data();
-	}
-
-	void AES192_Decrypt::reset()
-	{
-		impl->reset();
-	}
-
-	void AES192_Decrypt::set_iv(const unsigned char iv[16])
-	{
-		impl->set_iv(iv);
-	}
-
-	void AES192_Decrypt::set_key(const unsigned char key[24])
-	{
-		impl->set_key(key);
-	}
-
-	void AES192_Decrypt::set_padding(bool value, bool use_pkcs7)
-	{
-		impl->set_padding(value, use_pkcs7);
-	}
-
-	void AES192_Decrypt::add(const void *data, int size)
-	{
-		impl->add(data, size);
-	}
-
-	void AES192_Decrypt::add(const DataBuffer &data)
-	{
-		add(data.get_data(), data.get_size());
-	}
-
-	bool AES192_Decrypt::calculate()
-	{
-		return impl->calculate();
+		return std::make_shared<AES192_Decrypt_Impl>();
 	}
 }

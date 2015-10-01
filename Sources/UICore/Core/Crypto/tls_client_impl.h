@@ -34,6 +34,7 @@
 #include "UICore/Core/Crypto/random.h"
 #include "UICore/Core/Crypto/rsa.h"
 #include "UICore/Core/Crypto/hash_functions.h"
+#include "UICore/Core/Crypto/tls_client.h"
 #include "x509.h"
 
 namespace uicore
@@ -75,7 +76,8 @@ namespace uicore
 		cl_tls_compression_null = 0
 	};
 
-	enum TLS_HandshakeType {
+	enum TLS_HandshakeType
+	{
 		cl_tls_handshake_hello_request = 0,
 		cl_tls_handshake_client_hello = 1,
 		cl_tls_handshake_server_hello = 2,
@@ -88,7 +90,8 @@ namespace uicore
 		cl_tls_handshake_finished = 20
 	};
 
-	enum TLS_ContentType{
+	enum TLS_ContentType
+	{
 		cl_tls_content_change_cipher_spec = 20,
 		cl_tls_content_alert = 21,
 		cl_tls_content_handshake = 22,
@@ -128,13 +131,13 @@ namespace uicore
 		cl_tls_no_renegotiation = 100
 	};
 
-
 	typedef struct	// As stated in TLS specification
 	{
 		uint8_t major, minor;
 	} TLS_ProtocolVersion;
 
-	typedef struct {	// As stated in TLS specification
+	typedef struct	// As stated in TLS specification
+	{
 		uint8_t type;		// TLS_ContentType
 		TLS_ProtocolVersion version;
 		uint8_t length[2];
@@ -159,6 +162,7 @@ namespace uicore
 		{
 			reset();
 		}
+
 		void reset()
 		{
 			entity = cl_tls_connection_client;
@@ -171,18 +175,18 @@ namespace uicore
 			mac_algorithm = cl_tls_mac_algorithm_null;
 			hash_size = 0;
 			compression_algorithm = cl_tls_compression_null;
-			master_secret = Secret(48);
-			client_random = Secret(32);
-			server_random = Secret(32);
+			master_secret = Secret::create(48);
+			client_random = Secret::create(32);
+			server_random = Secret::create(32);
 			is_send_encrypted = false;
 			is_receive_encrypted = false;
 
-			client_write_mac_secret = Secret();
-			server_write_mac_secret = Secret();
-			client_write_key = Secret();
-			server_write_key = Secret();
-			client_write_iv = Secret();
-			server_write_iv = Secret();
+			client_write_mac_secret = SecretPtr();
+			server_write_mac_secret = SecretPtr();
+			client_write_key = SecretPtr();
+			server_write_key = SecretPtr();
+			client_write_iv = SecretPtr();
+			server_write_iv = SecretPtr();
 			read_sequence_number = 0;
 			write_sequence_number = 0;
 		}
@@ -197,16 +201,16 @@ namespace uicore
 		TLS_MACAlgorithm mac_algorithm;
 		uint8_t hash_size;
 		TLS_CompressionMethod compression_algorithm;
-		Secret master_secret;
-		Secret client_random;
-		Secret server_random;
+		SecretPtr master_secret;
+		SecretPtr client_random;
+		SecretPtr server_random;
 
-		Secret client_write_mac_secret;
-		Secret server_write_mac_secret;
-		Secret client_write_key;
-		Secret server_write_key;
-		Secret client_write_iv;
-		Secret server_write_iv;
+		SecretPtr client_write_mac_secret;
+		SecretPtr server_write_mac_secret;
+		SecretPtr client_write_key;
+		SecretPtr server_write_key;
+		SecretPtr client_write_iv;
+		SecretPtr server_write_iv;
 		uint64_t read_sequence_number;
 		uint64_t write_sequence_number;
 
@@ -230,23 +234,23 @@ namespace uicore
 		cl_tls_state_error
 	};
 
-	class TLSClient_Impl
+	class TLSClient_Impl : public TLSClient
 	{
 	public:
 		TLSClient_Impl();
 		~TLSClient_Impl();
 
-		const void *get_decrypted_data() const;
-		int get_decrypted_data_available() const;
+		const void *get_decrypted_data() const override;
+		int get_decrypted_data_available() const override;
 
-		const void *get_encrypted_data() const;
-		int get_encrypted_data_available() const;
+		const void *get_encrypted_data() const override;
+		int get_encrypted_data_available() const override;
 
-		int encrypt(const void *data, int size);
-		int decrypt(const void *data, int size);
+		int encrypt(const void *data, int size) override;
+		int decrypt(const void *data, int size) override;
 
-		void decrypted_data_consumed(int size);
-		void encrypted_data_consumed(int size);
+		void decrypted_data_consumed(int size) override;
+		void encrypted_data_consumed(int size) override;
 
 	private:
 		void progress_conversation();
@@ -286,7 +290,7 @@ namespace uicore
 		void set_tls_handshake(unsigned char *dest_ptr, TLS_HandshakeType handshake_type, unsigned int length);
 		void set_tls_protocol_version(unsigned char *dest_ptr);
 		void create_security_parameters_client_random();
-		void set_tls_random(unsigned char *dest_ptr, Secret &time_and_random_struct) const;
+		void set_tls_random(unsigned char *dest_ptr, SecretPtr &time_and_random_struct) const;
 		int get_session_id_length() const;
 		void set_session_id(unsigned char *dest_ptr) const;
 		int get_compression_methods_length() const;
@@ -297,13 +301,13 @@ namespace uicore
 		void select_compression_method(uint8_t value);
 		void inspect_certificate(std::vector<unsigned char> &cert);
 		void set_server_public_key();
-		void PRF(void *output_ptr, unsigned int output_size, const Secret &secret, const char *label_ptr, const Secret &seed_part1, const Secret &seed_part2);
+		void PRF(void *output_ptr, unsigned int output_size, const SecretPtr &secret, const char *label_ptr, const SecretPtr &seed_part1, const SecretPtr &seed_part2);
 		void hash_handshake(const void *data_ptr, unsigned int data_size);
 
 		DataBuffer decrypt_record(TLS_Record &record, const DataBuffer &record_data);
 		DataBuffer decrypt_data(const void *data_ptr, unsigned int data_size);
 
-		Secret calculate_mac(const void *data_ptr, unsigned int data_size, const void *data2_ptr, unsigned int data2_size, uint64_t sequence_number, const Secret &mac_secret);
+		SecretPtr calculate_mac(const void *data_ptr, unsigned int data_size, const void *data2_ptr, unsigned int data2_size, uint64_t sequence_number, const SecretPtr &mac_secret);
 		DataBuffer encrypt_data(const void *data_ptr, unsigned int data_size, const void *mac_ptr, unsigned int mac_size);
 
 		static const unsigned int max_record_length = 2 << 14;	// RFC 2246 (6.2.1)
@@ -338,12 +342,12 @@ namespace uicore
 
 		bool is_protocol_chosen;	// Set by the server hello response
 
-		Random m_Random;
+		RandomPtr m_Random = Random::create();
 
-		MD5 client_handshake_md5_hash;
-		SHA1 client_handshake_sha1_hash;
-		MD5 server_handshake_md5_hash;
-		SHA1 server_handshake_sha1_hash;
+		MD5Ptr client_handshake_md5_hash = MD5::create();
+		SHA1Ptr client_handshake_sha1_hash = SHA1::create();
+		MD5Ptr server_handshake_md5_hash = MD5::create();
+		SHA1Ptr server_handshake_sha1_hash = SHA1::create();
 
 		std::vector<X509> certificate_chain;
 	};

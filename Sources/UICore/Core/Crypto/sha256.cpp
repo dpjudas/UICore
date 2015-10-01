@@ -33,43 +33,8 @@
 
 namespace uicore
 {
-	SHA256::SHA256()
-		: impl(std::make_shared<SHA256_Impl>(cl_sha_256))
+	std::shared_ptr<SHA256> SHA256::create()
 	{
-	}
-
-	std::string SHA256::get_hash(bool uppercase) const
-	{
-		return impl->get_hash(uppercase);
-	}
-
-	void SHA256::get_hash(unsigned char out_hash[32]) const
-	{
-		impl->get_hash(out_hash);
-	}
-
-	void SHA256::reset()
-	{
-		impl->reset();
-	}
-
-	void SHA256::add(const void *data, int size)
-	{
-		impl->add(data, size);
-	}
-
-	void SHA256::add(const DataBuffer &data)
-	{
-		add(data.get_data(), data.get_size());
-	}
-
-	void SHA256::calculate()
-	{
-		impl->calculate();
-	}
-
-	void SHA256::set_hmac(const void *key_data, int key_size)
-	{
-		impl->set_hmac(key_data, key_size);
+		return std::make_shared<SHA256_Impl>(cl_sha_256);
 	}
 }

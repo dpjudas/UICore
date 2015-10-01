@@ -126,11 +126,11 @@ namespace uicore
 
 		if (key_size > block_size)
 		{
-			MD5 md5;
-			md5.add(key_data, key_size);
-			md5.calculate();
+			auto md5 = MD5::create();
+			md5->add(key_data, key_size);
+			md5->calculate();
 			key_chunk_filled = MD5::hash_size;
-			md5.get_hash(hmac_key_chunk);
+			md5->get_hash(hmac_key_chunk);
 		}
 		else
 		{

@@ -33,24 +33,8 @@
 
 namespace uicore
 {
-	Secret::Secret()
-		: impl(std::make_shared<Secret_Impl>())
+	std::shared_ptr<Secret> Secret::create(unsigned int key_length)
 	{
-	}
-
-	Secret::Secret(unsigned int new_key_length)
-		: impl(std::make_shared<Secret_Impl>())
-	{
-		impl->create(new_key_length);
-	}
-
-	unsigned int Secret::get_size() const
-	{
-		return impl->get_size();
-	}
-
-	unsigned char *Secret::get_data() const
-	{
-		return impl->get_data();
+		return std::make_shared<Secret_Impl>(key_length);
 	}
 }

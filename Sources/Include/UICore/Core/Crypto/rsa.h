@@ -46,10 +46,11 @@
 
 #pragma once
 
+#include "UICore/Core/Crypto/secret.h"
+
 namespace uicore
 {
 	class Random;
-	class Secret;
 	class DataBuffer;
 
 	/// \brief RSA class
@@ -66,7 +67,7 @@ namespace uicore
 		/// \param out_modulus = Modulus
 		/// \param key_size_in_bits = key size in bits
 		/// \param public_exponent_value = public exponent value
-		static void create_keypair(Random &random, Secret &out_private_exponent, DataBuffer &out_public_exponent, DataBuffer &out_modulus, int key_size_in_bits = 1024, int public_exponent_value = 65537);
+		static void create_keypair(Random &random, SecretPtr &out_private_exponent, DataBuffer &out_public_exponent, DataBuffer &out_modulus, int key_size_in_bits = 1024, int public_exponent_value = 65537);
 
 		/// \brief Encrypt
 		///
@@ -76,7 +77,7 @@ namespace uicore
 		/// \param in_modulus = Modulus
 		/// \param in_data = Data to encrypt (maximum length is in_modulus.get_size() - 11)
 		/// \return Encrypted data
-		static DataBuffer encrypt(int block_type, Random &random, const DataBuffer &in_public_exponent, const DataBuffer &in_modulus, const Secret &in_data);
+		static DataBuffer encrypt(int block_type, Random &random, const DataBuffer &in_public_exponent, const DataBuffer &in_modulus, const SecretPtr &in_data);
 
 		/// \brief Encrypt
 		///
@@ -100,7 +101,7 @@ namespace uicore
 		/// \param in_modulus = Modulus
 		/// \param in_data = Data to decrypt (length equals in_modulus.get_size())
 		/// \return Decrypted data
-		static Secret decrypt(const Secret &in_private_exponent, const DataBuffer &in_modulus, const DataBuffer &in_data);
+		static SecretPtr decrypt(const SecretPtr &in_private_exponent, const DataBuffer &in_modulus, const DataBuffer &in_data);
 
 		/// \brief Decrypt
 		///
@@ -113,6 +114,6 @@ namespace uicore
 		/// \param in_data = Data to encrypt 
 		/// \param in_data_size = size in bytes of in_data (length equals in_modulus_size)
 		/// \return Decrypted data
-		static Secret decrypt(const Secret &in_private_exponent, const void *in_modulus, unsigned int in_modulus_size, const void *in_data, unsigned int in_data_size);
+		static SecretPtr decrypt(const SecretPtr &in_private_exponent, const void *in_modulus, unsigned int in_modulus_size, const void *in_data, unsigned int in_data_size);
 	};
 }

@@ -39,11 +39,10 @@ namespace uicore
 	class CrashReporter
 	{
 	public:
-		/// \brief Constructs a crash reporter that creates crash dumps in the specified directory.
+		/// \brief Sets up a crash reporter that creates crash dumps in the specified directory.
 		///
 		/// If uploader_executable is a non-empty string the executable will be launched if the application crashes.
-		CrashReporter(const std::string &reports_directory, const std::string &uploader_executable = std::string());
-		~CrashReporter();
+		static void setup(const std::string &reports_directory, const std::string &uploader_executable = std::string());
 
 		/// \brief Hooks the current thread to the crash reporter.
 		///

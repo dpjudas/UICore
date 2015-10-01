@@ -33,27 +33,26 @@
 namespace uicore
 {
 	class DataBuffer;
-	class SHA512_Impl;
 
 	/// \brief SHA-512 hash function class.
 	class SHA512
 	{
 	public:
 		/// \brief Constructs a SHA-512 hash generator.
-		SHA512();
+		static std::shared_ptr<SHA512> create();
 
 		static const int hash_size = 64;
 
 		/// \brief Returns the calculated hash.
-		std::string get_hash(bool uppercase = false) const;
+		virtual std::string get_hash(bool uppercase = false) const = 0;
 
 		/// \brief Get hash
 		///
 		/// \param out_hash = where to write to
-		void get_hash(unsigned char out_hash[hash_size]) const;
+		virtual void get_hash(unsigned char out_hash[hash_size]) const = 0;
 
 		/// \brief Resets the hash generator.
-		void reset();
+		virtual void reset() = 0;
 
 		/// \brief Enable a HMAC based calculation
 		///
@@ -61,20 +60,19 @@ namespace uicore
 		///
 		/// \param key_data = The HMAC key
 		/// \param key_size = The size of the key_data
-		void set_hmac(const void *key_data, int key_size);
+		virtual void set_hmac(const void *key_data, int key_size) = 0;
 
 		/// \brief Adds data to be hashed.
-		void add(const void *data, int size);
+		virtual void add(const void *data, int size) = 0;
 
 		/// \brief Add
 		///
 		/// \param data = Data Buffer
-		void add(const DataBuffer &data);
+		virtual void add(const DataBuffer &data) = 0;
 
 		/// \brief Finalize hash calculation.
-		void calculate();
-
-	private:
-		std::shared_ptr<SHA512_Impl> impl;
+		virtual void calculate() = 0;
 	};
+
+	typedef std::shared_ptr<SHA512> SHA512Ptr;
 }

@@ -272,35 +272,35 @@ namespace uicore
 		{
 			if (sha_type == cl_sha_384)
 			{
-				SHA384 sha384;
-				sha384.add(key_data, key_size);
-				sha384.calculate();
+				auto sha384 = SHA384::create();
+				sha384->add(key_data, key_size);
+				sha384->calculate();
 				key_chunk_filled = SHA384::hash_size;
-				sha384.get_hash(hmac_key_chunk);
+				sha384->get_hash(hmac_key_chunk);
 			}
 			else if (sha_type == cl_sha_512)
 			{
-				SHA512 sha512;
-				sha512.add(key_data, key_size);
-				sha512.calculate();
+				auto sha512 = SHA512::create();
+				sha512->add(key_data, key_size);
+				sha512->calculate();
 				key_chunk_filled = SHA512::hash_size;
-				sha512.get_hash(hmac_key_chunk);
+				sha512->get_hash(hmac_key_chunk);
 			}
 			else if (sha_type == cl_sha_512_224)
 			{
-				SHA512_224 sha512_224;
-				sha512_224.add(key_data, key_size);
-				sha512_224.calculate();
+				auto sha512_224 = SHA512_224::create();
+				sha512_224->add(key_data, key_size);
+				sha512_224->calculate();
 				key_chunk_filled = SHA512_224::hash_size;
-				sha512_224.get_hash(hmac_key_chunk);
+				sha512_224->get_hash(hmac_key_chunk);
 			}
 			else if (sha_type == cl_sha_512_256)
 			{
-				SHA512_256 sha512_256;
-				sha512_256.add(key_data, key_size);
-				sha512_256.calculate();
+				auto sha512_256 = SHA512_256::create();
+				sha512_256->add(key_data, key_size);
+				sha512_256->calculate();
 				key_chunk_filled = SHA512_256::hash_size;
-				sha512_256.get_hash(hmac_key_chunk);
+				sha512_256->get_hash(hmac_key_chunk);
 			}
 			else
 			{

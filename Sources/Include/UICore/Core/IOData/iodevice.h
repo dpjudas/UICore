@@ -30,6 +30,7 @@
 
 #include "../System/exception.h"
 #include "endian.h"
+#include <memory>
 
 namespace uicore
 {
@@ -80,4 +81,6 @@ namespace uicore
 	private:
 		bool swap_bytes = false;
 	};
+
+	typedef std::shared_ptr<IODevice> IODevicePtr;
 }

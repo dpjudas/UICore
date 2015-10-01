@@ -29,21 +29,27 @@
 #pragma once
 
 #include "sha.h"
+#include "UICore/Core/Crypto/sha384.h"
+#include "UICore/Core/Crypto/sha512.h"
+#include "UICore/Core/Crypto/sha512_224.h"
+#include "UICore/Core/Crypto/sha512_256.h"
+#include "UICore/Core/System/databuffer.h"
 
 namespace uicore
 {
-	class SHA512_Impl : private SHA
+	class SHA512_Impl : public SHA384, public SHA512, public SHA512_224, public SHA512_256, SHA
 	{
 	public:
 		SHA512_Impl(cl_sha_type new_sha_type);
 
-		std::string get_hash(bool uppercase = false) const;
-		void get_hash(unsigned char *out_hash) const;
+		std::string get_hash(bool uppercase = false) const override;
+		void get_hash(unsigned char *out_hash) const override;
 
-		void reset();
-		void set_hmac(const void *key_data, int key_size);
-		void add(const void *data, int size);
-		void calculate();
+		void reset() override;
+		void set_hmac(const void *key_data, int key_size) override;
+		void add(const void *data, int size) override;
+		void add(const DataBuffer &data) override { add(data.get_data(), data.get_size()); }
+		void calculate() override;
 
 	private:
 		inline uint64_t sigma_rr28_rr34_rr39(uint64_t value) const

@@ -34,13 +34,9 @@
 
 namespace uicore
 {
-	CrashReporter::CrashReporter(const std::string &reports_directory, const std::string &uploader_executable)
-		: impl(std::make_shared<CrashReporter_Impl>(reports_directory, uploader_executable))
+	void CrashReporter::setup(const std::string &reports_directory, const std::string &uploader_executable)
 	{
-	}
-
-	CrashReporter::~CrashReporter()
-	{
+		static CrashReporter_Impl impl(reports_directory, uploader_executable);
 	}
 
 	void CrashReporter::hook_thread()

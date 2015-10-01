@@ -33,48 +33,8 @@
 
 namespace uicore
 {
-	AES128_Decrypt::AES128_Decrypt()
-		: impl(std::make_shared<AES128_Decrypt_Impl>())
+	std::shared_ptr<AES128_Decrypt> AES128_Decrypt::create()
 	{
-	}
-
-	DataBuffer AES128_Decrypt::get_data() const
-	{
-		return impl->get_data();
-	}
-
-	void AES128_Decrypt::reset()
-	{
-		impl->reset();
-	}
-
-	void AES128_Decrypt::set_iv(const unsigned char iv[16])
-	{
-		impl->set_iv(iv);
-	}
-
-	void AES128_Decrypt::set_key(const unsigned char key[16])
-	{
-		impl->set_key(key);
-	}
-
-	void AES128_Decrypt::set_padding(bool value, bool use_pkcs7)
-	{
-		impl->set_padding(value, use_pkcs7);
-	}
-
-	void AES128_Decrypt::add(const void *data, int size)
-	{
-		impl->add(data, size);
-	}
-
-	void AES128_Decrypt::add(const DataBuffer &data)
-	{
-		add(data.get_data(), data.get_size());
-	}
-
-	bool AES128_Decrypt::calculate()
-	{
-		return impl->calculate();
+		return std::make_shared<AES128_Decrypt_Impl>();
 	}
 }

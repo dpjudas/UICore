@@ -165,8 +165,8 @@ namespace uicore
 	{
 		int piter;
 
-		Secret random_key(prime_len);
-		unsigned char *random_bytes_ptr = random_key.get_data();	// Ready to write to
+		auto random_key = Secret::create(prime_len);
+		unsigned char *random_bytes_ptr = random_key->get_data();	// Ready to write to
 
 		const int max_prime_gen_attempts = 10;
 
@@ -239,7 +239,7 @@ namespace uicore
 		memcpy(emsg, msg, mlen);
 	}
 
-	Secret RSA_Impl::pkcs1v15_decode(const char *emsg, int emlen)
+	SecretPtr RSA_Impl::pkcs1v15_decode(const char *emsg, int emlen)
 	{
 		int    ix, outlen;
 
@@ -266,10 +266,10 @@ namespace uicore
 			throw Exception("zero sperator error");
 
 		outlen = emlen - (ix + 1);
-		Secret buffer(outlen);
+		auto buffer = Secret::create(outlen);
 
 		if (outlen > 0)
-			memmove(buffer.get_data(), emsg + (ix + 1), outlen);
+			memmove(buffer->get_data(), emsg + (ix + 1), outlen);
 
 		return buffer;
 	}
@@ -278,9 +278,9 @@ namespace uicore
 	{
 		int k = modulus->unsigned_octet_size();	// length of modulus, in bytes
 
-		Secret key(k);
+		auto key = Secret::create(k);
 
-		char *buf = (char *)key.get_data();
+		char *buf = (char *)key->get_data();
 
 		// Encode according to PKCS #1 v1.5
 		pkcs1v15_encode(block_type, random, msg, mlen, buf, k);
@@ -288,7 +288,7 @@ namespace uicore
 		// Convert encoded message to a big number for encryption
 		BigInt mrep;
 
-		mrep.read_unsigned_octets(key.get_data(), key.get_size());
+		mrep.read_unsigned_octets(key->get_data(), key->get_size());
 
 		// Now, encrypt...
 		rsaep(&mrep, e, modulus, &mrep);
@@ -299,7 +299,7 @@ namespace uicore
 		return buffer;
 	}
 
-	Secret RSA_Impl::pkcs1v15_decrypt(const char *msg, int mlen, const BigInt *d, const BigInt *modulus)
+	SecretPtr RSA_Impl::pkcs1v15_decrypt(const char *msg, int mlen, const BigInt *d, const BigInt *modulus)
 	{
 		int     k;
 
@@ -315,9 +315,9 @@ namespace uicore
 		// Decrypt ...
 		rsadp(&mrep, d, modulus, &mrep);
 
-		Secret key_buffer(k);
-		mrep.to_unsigned_octets(key_buffer.get_data(), k);
-		return pkcs1v15_decode((char *)key_buffer.get_data(), k);
+		auto key_buffer = Secret::create(k);
+		mrep.to_unsigned_octets(key_buffer->get_data(), k);
+		return pkcs1v15_decode((char *)key_buffer->get_data(), k);
 	}
 
 	DataBuffer RSA_Impl::encrypt(int block_type, Random &random, const void *in_public_exponent, unsigned int in_public_exponent_size, const void *in_modulus, unsigned int in_modulus_size, const void *in_data, unsigned int in_data_size)
@@ -331,10 +331,10 @@ namespace uicore
 		return pkcs1v15_encrypt(block_type, random, (const char *)in_data, in_data_size, &exponent, &modulus);
 	}
 
-	Secret RSA_Impl::decrypt(const Secret &in_private_exponent, const void *in_modulus, unsigned int in_modulus_size, const void *in_data, unsigned int in_data_size)
+	SecretPtr RSA_Impl::decrypt(const SecretPtr &in_private_exponent, const void *in_modulus, unsigned int in_modulus_size, const void *in_data, unsigned int in_data_size)
 	{
 		BigInt exponent;
-		exponent.read_unsigned_octets((const unsigned char *)in_private_exponent.get_data(), in_private_exponent.get_size());
+		exponent.read_unsigned_octets((const unsigned char *)in_private_exponent->get_data(), in_private_exponent->get_size());
 
 		BigInt modulus;
 		modulus.read_unsigned_octets((const unsigned char *)in_modulus, in_modulus_size);
@@ -342,14 +342,14 @@ namespace uicore
 		return pkcs1v15_decrypt((const char *)in_data, in_data_size, &exponent, &modulus);
 	}
 
-	void RSA_Impl::create_keypair(Random &random, Secret &out_private_exponent, DataBuffer &out_public_exponent, DataBuffer &out_modulus, int key_size_in_bits, int public_exponent_value)
+	void RSA_Impl::create_keypair(Random &random, SecretPtr &out_private_exponent, DataBuffer &out_public_exponent, DataBuffer &out_modulus, int key_size_in_bits, int public_exponent_value)
 	{
 		create(random, key_size_in_bits, public_exponent_value);
 		out_public_exponent = DataBuffer(rsa_private_key.public_exponent.unsigned_octet_size());
 		rsa_private_key.public_exponent.to_unsigned_octets((unsigned char *)out_public_exponent.get_data(), out_public_exponent.get_size());
 
-		out_private_exponent = Secret(rsa_private_key.private_exponent.unsigned_octet_size());
-		rsa_private_key.private_exponent.to_unsigned_octets(out_private_exponent.get_data(), out_private_exponent.get_size());
+		out_private_exponent = Secret::create(rsa_private_key.private_exponent.unsigned_octet_size());
+		rsa_private_key.private_exponent.to_unsigned_octets(out_private_exponent->get_data(), out_private_exponent->get_size());
 
 		out_modulus = DataBuffer(rsa_private_key.modulus.unsigned_octet_size());
 		rsa_private_key.modulus.to_unsigned_octets((unsigned char *)out_modulus.get_data(), out_modulus.get_size());
