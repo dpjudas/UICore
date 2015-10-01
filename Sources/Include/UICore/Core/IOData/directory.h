@@ -34,6 +34,12 @@ namespace uicore
 	class Directory
 	{
 	public:
+		/// Returns all files in a directory
+		static std::vector<std::string> files(const std::string &path, bool return_full_path_names = true);
+
+		/// Returns all subdirectories in a directory
+		static std::vector<std::string> directories(const std::string &path, bool return_full_path_names = true);
+
 		/// \brief Create directory.
 		///
 		/// \param dir_name = Directory name for create.

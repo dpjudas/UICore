@@ -57,8 +57,8 @@ namespace uicore
 		static DataBuffer read_all_bytes(const std::string &filename);
 		static void write_all_bytes(const std::string &filename, const DataBuffer &data);
 
-		static void copy_file(const std::string &from, const std::string &to, bool copy_always);
-		static void delete_file(const std::string &filename);
-		static bool file_exists(const std::string &filename);
+		static void copy(const std::string &from, const std::string &to, bool copy_always);
+		static void remove(const std::string &filename);
+		static bool exists(const std::string &filename);
 	};
 }

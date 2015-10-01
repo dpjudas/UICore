@@ -405,7 +405,7 @@ namespace uicore
 		file->write(data.get_data(), data.get_size());
 	}
 
-	void File::copy_file(const std::string &from, const std::string &to, bool copy_always)
+	void File::copy(const std::string &from, const std::string &to, bool copy_always)
 	{
 #ifdef WIN32
 		BOOL result = CopyFile(StringHelp::utf8_to_ucs2(from).c_str(), StringHelp::utf8_to_ucs2(to).c_str(), copy_always ? FALSE : TRUE);
@@ -427,7 +427,7 @@ namespace uicore
 #endif
 	}
 
-	void File::delete_file(const std::string &filename)
+	void File::remove(const std::string &filename)
 	{
 #ifdef WIN32
 		BOOL result = DeleteFile(StringHelp::utf8_to_ucs2(filename).c_str());
@@ -441,7 +441,7 @@ namespace uicore
 #endif
 	}
 
-	bool File::file_exists(const std::string &filename)
+	bool File::exists(const std::string &filename)
 	{
 #ifdef WIN32
 		HANDLE file = CreateFile(StringHelp::utf8_to_ucs2(filename).c_str(), 0, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, 0, OPEN_EXISTING, 0, 0);

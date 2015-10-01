@@ -66,6 +66,39 @@
 
 namespace uicore
 {
+	std::vector<std::string> Directory::files(const std::string &path, bool return_full_path_names)
+	{
+		std::vector<std::string> items;
+
+		DirectoryScanner scanner;
+		if (scanner.scan(path))
+		{
+			while (scanner.next())
+			{
+				if (!scanner.is_directory())
+					items.push_back(return_full_path_names ? scanner.get_pathname() : scanner.get_name());
+			}
+		}
+
+		return items;
+	}
+
+	std::vector<std::string> Directory::directories(const std::string &path, bool return_full_path_names)
+	{
+		std::vector<std::string> items;
+
+		DirectoryScanner scanner;
+		if (scanner.scan(path))
+		{
+			while (scanner.next())
+			{
+				if (scanner.is_directory() && scanner.get_name() != "." && scanner.get_name() != "..")
+					items.push_back(return_full_path_names ? scanner.get_pathname() : scanner.get_name());
+			}
+		}
+
+		return items;
+	}
 
 	bool Directory::create(const std::string &dir_name, bool recursive)
 	{
