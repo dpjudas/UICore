@@ -32,8 +32,6 @@
 
 namespace uicore
 {
-	class DataBuffer;
-
 	/// \brief Key class
 	///
 	/// This class zero's the key from memory when the class is destroyed

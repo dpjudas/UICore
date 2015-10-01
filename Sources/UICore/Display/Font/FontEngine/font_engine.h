@@ -40,7 +40,6 @@ namespace uicore
 	class Colorf;
 	class Path;
 	class FontDescription;
-	class DataBuffer;
 	class FontHandle;
 
 	/// \brief Font pixel buffer format (holds a pixel buffer containing a glyph)

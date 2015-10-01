@@ -66,15 +66,15 @@ namespace uicore
 			buffer = newbuf;
 		}
 
-		DataBuffer output(buffer.get_width() * buffer.get_height() * 5);
-		int size = output.get_size();
+		auto output = DataBuffer::create(buffer.get_width() * buffer.get_height() * 5);
+		int size = output->size();
 
 		uicore_jpge::params desc;
 		desc.m_quality = quality;
-		bool result = uicore_jpge::compress_image_to_jpeg_file_in_memory(output.get_data(), size, buffer.get_width(), buffer.get_height(), 3, output.get_data<uicore_jpge::uint8>(), desc);
+		bool result = uicore_jpge::compress_image_to_jpeg_file_in_memory(output->data(), size, buffer.get_width(), buffer.get_height(), 3, output->data<uicore_jpge::uint8>(), desc);
 		if (!result)
 			throw Exception("Unable to compress JPEG image");
 
-		file.write(output.get_data(), size);
+		file.write(output->data(), size);
 	}
 }

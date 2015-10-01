@@ -41,13 +41,13 @@ namespace uicore
 	class MemoryDeviceImpl : public MemoryDevice
 	{
 	public:
-		MemoryDeviceImpl() { }
-		MemoryDeviceImpl(const DataBuffer &buffer) : _buffer(buffer) { }
+		MemoryDeviceImpl() : _buffer(DataBuffer::create(0)) { }
+		MemoryDeviceImpl(const DataBufferPtr &buffer) : _buffer(buffer) { }
 
-		const DataBuffer &buffer() const override { return _buffer; }
-		void set_buffer(const DataBuffer &buffer) override { _buffer = buffer; _pos = 0; }
+		const DataBufferPtr &buffer() const override { return _buffer; }
+		void set_buffer(const DataBufferPtr &buffer) override { _buffer = buffer; _pos = 0; }
 
-		long long size() const override { return _buffer.get_size(); }
+		long long size() const override { return _buffer->size(); }
 
 		long long seek(long long pos) { if (pos >= 0 && pos < size()) _pos = pos; return _pos; }
 		long long seek_from_current(long long offset) { return seek(_pos + offset); }
@@ -58,8 +58,8 @@ namespace uicore
 			if (size < 0)
 				throw Exception("Read failed");
 
-			size = std::min(size, (int)(_buffer.get_size() - _pos));
-			memcpy(data, _buffer.get_data() + _pos, size);
+			size = std::min(size, (int)(_buffer->size() - _pos));
+			memcpy(data, _buffer->data() + _pos, size);
 			return size;
 		}
 
@@ -71,20 +71,20 @@ namespace uicore
 			if (_pos + size > 0x7ffffff)
 				throw Exception("Memory buffer max size exceeeded");
 
-			if (_pos + size > _buffer.get_capacity())
-				_buffer.set_capacity(std::max(_pos + size, static_cast<long long>(_buffer.get_capacity()) * 2));
+			if (_pos + size > _buffer->capacity())
+				_buffer->set_capacity(std::max(_pos + size, static_cast<long long>(_buffer->capacity()) * 2));
 
-			if (_pos + size > _buffer.get_size())
-				_buffer.set_size(_pos + size);
+			if (_pos + size > _buffer->size())
+				_buffer->set_size(_pos + size);
 
-			memcpy(_buffer.get_data() + _pos, data, size);
+			memcpy(_buffer->data() + _pos, data, size);
 			_pos += size;
 		}
 
 		MemoryDeviceImpl(const MemoryDeviceImpl &) = delete;
 		MemoryDeviceImpl &operator=(const MemoryDeviceImpl &) = delete;
 
-		DataBuffer _buffer;
+		DataBufferPtr _buffer;
 		long long _pos = 0;
 	};
 
@@ -93,7 +93,7 @@ namespace uicore
 		return std::make_shared<MemoryDeviceImpl>();
 	}
 
-	std::shared_ptr<MemoryDevice> MemoryDevice::open(const DataBuffer &buffer)
+	std::shared_ptr<MemoryDevice> MemoryDevice::open(const DataBufferPtr &buffer)
 	{
 		return std::make_shared<MemoryDeviceImpl>(buffer);
 	}

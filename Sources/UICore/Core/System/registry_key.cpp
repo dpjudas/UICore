@@ -83,7 +83,7 @@ namespace uicore
 		std::vector<std::string> get_subkey_names() const override;
 		std::vector<std::string> get_value_names() const override;
 		int get_value_int(const std::string &name, int default_value) const override;
-		DataBuffer get_value_binary(const std::string &name, const DataBuffer &default_value) const override;
+		DataBufferPtr get_value_binary(const std::string &name, const DataBufferPtr &default_value) const override;
 		std::string get_value_string(const std::string &name, const std::string &default_value) const override;
 		std::vector<std::string> get_value_multi_string(const std::string &name, const std::vector<std::string> &default_value) const override;
 
@@ -91,7 +91,7 @@ namespace uicore
 		std::shared_ptr<RegistryKey> create_key(const std::string &subkey, unsigned int access_rights, CreateFlags create_flags) override;
 		void delete_key(const std::string &subkey, bool recursive) override;
 		void set_value_int(const std::string &name, int value) override;
-		void set_value_binary(const std::string &name, const DataBuffer &value) override;
+		void set_value_binary(const std::string &name, const DataBufferPtr &value) override;
 		void set_value_string(const std::string &name, const std::string &value) override;
 		void delete_value(const std::string &name) override;
 
@@ -190,16 +190,16 @@ namespace uicore
 			return data;
 	}
 
-	DataBuffer RegistryKey_Impl::get_value_binary(const std::string &name, const DataBuffer &default_value) const
+	DataBufferPtr RegistryKey_Impl::get_value_binary(const std::string &name, const DataBufferPtr &default_value) const
 	{
 		DWORD type = 0, size_data = 0;
 		LONG result = RegQueryValueEx(key, StringHelp::utf8_to_ucs2(name).c_str(), 0, &type, 0, &size_data);
 		if (result != ERROR_SUCCESS || type != REG_BINARY)
 			return default_value;
 
-		DataBuffer buffer(size_data);
-		size_data = buffer.get_size();
-		result = RegQueryValueEx(key, StringHelp::utf8_to_ucs2(name).c_str(), 0, &type, (LPBYTE)buffer.get_data(), &size_data);
+		auto buffer = DataBuffer::create(size_data);
+		size_data = buffer->size();
+		result = RegQueryValueEx(key, StringHelp::utf8_to_ucs2(name).c_str(), 0, &type, (LPBYTE)buffer->data(), &size_data);
 		if (result != ERROR_SUCCESS || type != REG_BINARY)
 			return default_value;
 		return buffer;
@@ -212,12 +212,12 @@ namespace uicore
 		if (result != ERROR_SUCCESS || type != REG_SZ)
 			return default_value;
 
-		DataBuffer buffer(size_data);
-		size_data = buffer.get_size();
-		result = RegQueryValueEx(key, StringHelp::utf8_to_ucs2(name).c_str(), 0, &type, (LPBYTE)buffer.get_data(), &size_data);
+		auto buffer = DataBuffer::create(size_data);
+		size_data = buffer->size();
+		result = RegQueryValueEx(key, StringHelp::utf8_to_ucs2(name).c_str(), 0, &type, (LPBYTE)buffer->data(), &size_data);
 		if (result != ERROR_SUCCESS || type != REG_SZ)
 			return default_value;
-		return StringHelp::ucs2_to_utf8((WCHAR *)buffer.get_data());
+		return StringHelp::ucs2_to_utf8((WCHAR *)buffer->data());
 	}
 
 	std::vector<std::string> RegistryKey_Impl::get_value_multi_string(const std::string &name, const std::vector<std::string> &default_value) const
@@ -227,14 +227,14 @@ namespace uicore
 		if (result != ERROR_SUCCESS || type != REG_MULTI_SZ)
 			return default_value;
 
-		DataBuffer buffer(size_data);
-		size_data = buffer.get_size();
-		result = RegQueryValueEx(key, StringHelp::utf8_to_ucs2(name).c_str(), 0, &type, (LPBYTE)buffer.get_data(), &size_data);
+		auto buffer = DataBuffer::create(size_data);
+		size_data = buffer->size();
+		result = RegQueryValueEx(key, StringHelp::utf8_to_ucs2(name).c_str(), 0, &type, (LPBYTE)buffer->data(), &size_data);
 		if (result != ERROR_SUCCESS || type != REG_MULTI_SZ)
 			return default_value;
 
 		std::vector<std::string> results;
-		WCHAR *pos = (TCHAR *)buffer.get_data();
+		WCHAR *pos = (TCHAR *)buffer->data();
 		while (*pos != 0)
 		{
 			std::string s = StringHelp::ucs2_to_utf8(pos);
@@ -295,9 +295,9 @@ namespace uicore
 			throw Exception(string_format("Unable to set registry key value %1", name));
 	}
 
-	void RegistryKey_Impl::set_value_binary(const std::string &name, const DataBuffer &value)
+	void RegistryKey_Impl::set_value_binary(const std::string &name, const DataBufferPtr &value)
 	{
-		LONG result = RegSetValueEx(key, name.empty() ? 0 : StringHelp::utf8_to_ucs2(name).c_str(), 0, REG_BINARY, (const BYTE *)value.get_data(), value.get_size());
+		LONG result = RegSetValueEx(key, name.empty() ? 0 : StringHelp::utf8_to_ucs2(name).c_str(), 0, REG_BINARY, (const BYTE *)value->data(), value->size());
 		if (result != ERROR_SUCCESS)
 			throw Exception(string_format("Unable to set registry key value %1", name));
 	}

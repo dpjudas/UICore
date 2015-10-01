@@ -60,7 +60,7 @@ namespace uicore
 		ID3D11ComputeShader *get_compute() { return static_cast<ID3D11ComputeShader*>(shader.get()); }
 
 		ComPtr<ID3D11Device> device;
-		DataBuffer bytecode;
+		DataBufferPtr bytecode;
 		ComPtr<ID3D11DeviceChild> shader;
 
 		std::map<std::string, int> sampler_locations;

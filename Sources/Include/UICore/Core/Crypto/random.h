@@ -33,8 +33,6 @@
 
 namespace uicore
 {
-	class DataBuffer;
-
 	/// \brief Random class
 	///
 	/// Uses the operating system cryptographically secure pseudorandom number generator

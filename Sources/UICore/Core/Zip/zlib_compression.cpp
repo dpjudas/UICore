@@ -36,11 +36,11 @@
 
 namespace uicore
 {
-	DataBuffer ZLibCompression::compress(const DataBuffer &data, bool raw, int compression_level, CompressionMode mode)
+	DataBufferPtr ZLibCompression::compress(const DataBufferPtr &data, bool raw, int compression_level, CompressionMode mode)
 	{
 		const int window_bits = 15;
 
-		DataBuffer zbuffer(1024 * 1024);
+		auto zbuffer = DataBuffer::create(1024 * 1024);
 		auto output = MemoryDevice::create();
 
 		int strategy = MZ_DEFAULT_STRATEGY;
@@ -60,12 +60,12 @@ namespace uicore
 
 		try
 		{
-			zs.next_in = (unsigned char *)data.get_data();
-			zs.avail_in = data.get_size();
+			zs.next_in = (unsigned char *)data->data();
+			zs.avail_in = data->size();
 			while (true)
 			{
-				zs.next_out = (unsigned char *)zbuffer.get_data();
-				zs.avail_out = zbuffer.get_size();
+				zs.next_out = (unsigned char *)zbuffer->data();
+				zs.avail_out = zbuffer->size();
 
 				int result = mz_deflate(&zs, MZ_FINISH);
 				if (result == MZ_NEED_DICT) throw Exception("Zlib deflate wants a dictionary!");
@@ -74,10 +74,10 @@ namespace uicore
 				if (result == MZ_MEM_ERROR) throw Exception("Zlib did not have enough memory to compress file!");
 				if (result == MZ_BUF_ERROR) throw Exception("Not enough data in buffer when Z_FINISH was used");
 				if (result != MZ_OK && result != MZ_STREAM_END) throw Exception("Zlib deflate failed while compressing zip file!");
-				int zsize = zbuffer.get_size() - zs.avail_out;
+				int zsize = zbuffer->size() - zs.avail_out;
 				if (zsize == 0)
 					break;
-				output->write(zbuffer.get_data(), zsize);
+				output->write(zbuffer->data(), zsize);
 				if (result == MZ_STREAM_END)
 					break;
 			}
@@ -92,11 +92,11 @@ namespace uicore
 		return output->buffer();
 	}
 
-	DataBuffer ZLibCompression::decompress(const DataBuffer &data, bool raw)
+	DataBufferPtr ZLibCompression::decompress(const DataBufferPtr &data, bool raw)
 	{
 		const int window_bits = 15;
 
-		DataBuffer zbuffer(1024 * 1024);
+		auto zbuffer = DataBuffer::create(1024 * 1024);
 		auto output = MemoryDevice::create();
 
 		mz_stream zs = { nullptr };
@@ -105,14 +105,14 @@ namespace uicore
 			throw Exception("Zlib inflateInit failed");
 
 
-		zs.next_in = (unsigned char *)data.get_data();
-		zs.avail_in = data.get_size();
+		zs.next_in = (unsigned char *)data->data();
+		zs.avail_in = data->size();
 
 		// Continue feeding zlib data until we get our data:
 		while (true)
 		{
-			zs.next_out = (unsigned char *)zbuffer.get_data();
-			zs.avail_out = zbuffer.get_size();
+			zs.next_out = (unsigned char *)zbuffer->data();
+			zs.avail_out = zbuffer->size();
 
 			// Decompress data:
 			int result = mz_inflate(&zs, 0);
@@ -123,7 +123,7 @@ namespace uicore
 			if (result == MZ_BUF_ERROR) throw Exception("Not enough data in buffer when Z_FINISH was used");
 			if (result != MZ_OK && result != MZ_STREAM_END) throw Exception("Zlib inflate failed while decompressing zip file!");
 
-			output->write(zbuffer.get_data(), zbuffer.get_size() - zs.avail_out);
+			output->write(zbuffer->data(), zbuffer->size() - zs.avail_out);
 
 			if (result == MZ_STREAM_END)
 				break;

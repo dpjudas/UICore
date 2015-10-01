@@ -51,7 +51,6 @@ namespace uicore
 	class DisplayMessageQueue_Win32;
 	class DisplayWindowSite;
 	class PixelBuffer;
-	class DataBuffer;
 	class CursorProvider_Win32;
 	class InputEvent;
 	class Colorf;

@@ -33,8 +33,6 @@
 
 namespace uicore
 {
-	class DataBuffer;
-
 	/// \brief Transport Layer Security (TLS) client class
 	class TLSClient
 	{

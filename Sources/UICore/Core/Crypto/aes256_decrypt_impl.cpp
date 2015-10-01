@@ -41,7 +41,7 @@ namespace uicore
 		reset();
 	}
 
-	DataBuffer AES256_Decrypt_Impl::get_data() const
+	DataBufferPtr AES256_Decrypt_Impl::get_data() const
 	{
 		return databuffer;
 	}
@@ -51,7 +51,7 @@ namespace uicore
 		calculated = false;
 		memset(chunk, 0, sizeof(chunk));
 		chunk_filled = 0;
-		databuffer.set_size(0);
+		databuffer->set_size(0);
 	}
 
 	void AES256_Decrypt_Impl::set_iv(const unsigned char iv[16])
@@ -123,10 +123,10 @@ namespace uicore
 			{
 				process_chunk();
 				chunk_filled = 0;
-				int current_size = databuffer.get_size();
+				int current_size = databuffer->size();
 				if (current_size > 0)
 				{
-					unsigned char *dest_ptr = (unsigned char *)databuffer.get_data();
+					unsigned char *dest_ptr = (unsigned char *)databuffer->data();
 					unsigned int pad_byte = dest_ptr[current_size - 1];
 					if (padding_pkcs7)
 					{
@@ -136,7 +136,7 @@ namespace uicore
 						}
 						else
 						{
-							databuffer.set_size(current_size - pad_byte);
+							databuffer->set_size(current_size - pad_byte);
 						}
 					}
 					else
@@ -148,7 +148,7 @@ namespace uicore
 						}
 						else
 						{
-							databuffer.set_size(current_size - pad_byte);
+							databuffer->set_size(current_size - pad_byte);
 						}
 					}
 				}

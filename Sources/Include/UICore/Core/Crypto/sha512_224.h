@@ -29,11 +29,10 @@
 #pragma once
 
 #include <memory>
+#include "../System/databuffer.h"
 
 namespace uicore
 {
-	class DataBuffer;
-
 	/// \brief SHA-512_224 hash function class.
 	class SHA512_224
 	{
@@ -68,7 +67,7 @@ namespace uicore
 		/// \brief Add
 		///
 		/// \param data = Data Buffer
-		virtual void add(const DataBuffer &data) = 0;
+		virtual void add(const DataBufferPtr &data) = 0;
 
 		/// \brief Finalize hash calculation.
 		virtual void calculate() = 0;

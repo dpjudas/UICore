@@ -71,12 +71,12 @@ namespace uicore
 		virtual std::vector<std::string> get_value_names() const = 0;
 
 		virtual int get_value_int(const std::string &name, int default_value = 0) const = 0;
-		virtual DataBuffer get_value_binary(const std::string &name, const DataBuffer &default_value = DataBuffer()) const = 0;
+		virtual DataBufferPtr get_value_binary(const std::string &name, const DataBufferPtr &default_value = DataBufferPtr()) const = 0;
 		virtual std::string get_value_string(const std::string &name, const std::string &default_value = std::string()) const = 0;
 		virtual std::vector<std::string> get_value_multi_string(const std::string &name, const std::vector<std::string> &default_value = std::vector<std::string>()) const = 0;
 
 		virtual void set_value_int(const std::string &name, int value) = 0;
-		virtual void set_value_binary(const std::string &name, const DataBuffer &value) = 0;
+		virtual void set_value_binary(const std::string &name, const DataBufferPtr &value) = 0;
 		virtual void set_value_string(const std::string &name, const std::string &value) = 0;
 
 		virtual void delete_key(const std::string &subkey, bool recursive) = 0;

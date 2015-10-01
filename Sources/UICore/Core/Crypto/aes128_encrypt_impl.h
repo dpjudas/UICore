@@ -45,7 +45,7 @@ namespace uicore
 		/// This is the databuffer used internally to store the encrypted data.
 		/// You may call "set_size()" to clear the buffer, inbetween calls to "add()"
 		/// You may call "set_capacity()" to optimise storage requirements before the add() call
-		DataBuffer get_data() const override;
+		DataBufferPtr get_data() const override;
 
 		/// \brief Resets the encryption
 		void reset() override;
@@ -74,7 +74,7 @@ namespace uicore
 		/// \brief Add data to be encrypted
 		///
 		/// \param data = Data Buffer
-		void add(const DataBuffer &data) override;
+		void add(const DataBufferPtr &data) override;
 
 		/// \brief Finalize decryption
 		void calculate() override;
@@ -99,6 +99,6 @@ namespace uicore
 		bool padding_pkcs7;
 		unsigned int padding_num_additional_padded_blocks;
 
-		DataBuffer databuffer;
+		DataBufferPtr databuffer;
 	};
 }

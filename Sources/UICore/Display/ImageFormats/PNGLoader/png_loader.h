@@ -95,16 +95,16 @@ namespace uicore
 
 		PixelBuffer image;
 
-		DataBuffer ihdr; // image header, which is the first chunk in a PNG datastream.
-		DataBuffer plte; // palette table associated with indexed PNG images.
-		DataBuffer idat; // image data chunks.
+		DataBufferPtr ihdr; // image header, which is the first chunk in a PNG datastream.
+		DataBufferPtr plte; // palette table associated with indexed PNG images.
+		DataBufferPtr idat; // image data chunks.
 
-		DataBuffer trns; // Transparency information
-		DataBuffer chrm; // Colour space information (5 chunks)
-		DataBuffer gama;
-		DataBuffer iccp;
-		DataBuffer sbit;
-		DataBuffer srgb;
+		DataBufferPtr trns; // Transparency information
+		DataBufferPtr chrm; // Colour space information (5 chunks)
+		DataBufferPtr gama;
+		DataBufferPtr iccp;
+		DataBufferPtr sbit;
+		DataBufferPtr srgb;
 
 		unsigned int image_width;
 		unsigned int image_height;

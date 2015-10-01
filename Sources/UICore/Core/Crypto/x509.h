@@ -30,12 +30,12 @@
 #pragma once
 
 #include <memory>
+#include "UICore/Core/System/databuffer.h"
 
 namespace uicore
 {
 	class X509_Impl;
 	class Secret;
-	class DataBuffer;
 
 	/// \brief X509 certificate class.
 	class X509
@@ -53,7 +53,7 @@ namespace uicore
 		/// \brief Throw an exception if this object is invalid.
 		void throw_if_null() const;
 
-		void get_rsa_public_key(DataBuffer &output_exponent, DataBuffer &output_modulus) const;
+		void get_rsa_public_key(DataBufferPtr &output_exponent, DataBufferPtr &output_modulus) const;
 
 	private:
 		std::shared_ptr<X509_Impl> impl;

@@ -32,54 +32,36 @@
 
 namespace uicore
 {
-	class DataBuffer_Impl;
-
 	/// \brief General purpose data buffer.
 	class DataBuffer
 	{
 	public:
-		/// \brief Constructs a data buffer of 0 size.
-		DataBuffer();
-		DataBuffer(unsigned int size);
-		DataBuffer(const void *data, unsigned int size);
-		DataBuffer(const DataBuffer &data, unsigned int pos, unsigned int size);
-		~DataBuffer();
+		/// \brief Constructs a data buffer
+		static std::shared_ptr<DataBuffer> create(size_t size);
+		static std::shared_ptr<DataBuffer> create(const void *data, size_t size);
 
 		/// \brief Returns a pointer to the data.
-		char *get_data();
+		virtual char *data() = 0;
+		virtual const char *data() const = 0;
 
-		const char *get_data() const;
-
-		template<typename Type>
-		Type *get_data() { return reinterpret_cast<Type*>(get_data()); }
-
-		template<typename Type>
-		const Type *get_data() const { return reinterpret_cast<const Type*>(get_data()); }
+		template<typename Type> Type *data() { return reinterpret_cast<Type*>(data()); }
+		template<typename Type> const Type *data() const { return reinterpret_cast<const Type*>(data()); }
 
 		/// \brief Returns the size of the data.
-		unsigned int get_size() const;
+		virtual size_t size() const = 0;
 
 		/// \brief Returns the capacity of the data buffer object.
-		unsigned int get_capacity() const;
-
-		/// \brief Returns a char in the buffer.
-		char &operator[](int i);
-		const char &operator[](int i) const;
-		char &operator[](unsigned int i);
-		const char &operator[](unsigned int i) const;
-
-		/// \brief Returns true if the buffer is 0 in size.
-		bool is_null() const;
-
-		DataBuffer &operator =(const DataBuffer &copy);
+		virtual size_t capacity() const = 0;
 
 		/// \brief Resize the buffer.
-		void set_size(unsigned int size);
+		virtual void set_size(size_t size) = 0;
 
 		/// \brief Preallocate enough memory.
-		void set_capacity(unsigned int capacity);
+		virtual void set_capacity(size_t capacity) = 0;
 
-	private:
-		std::shared_ptr<DataBuffer_Impl> impl;
+		/// \brief Copy buffer to a new buffer
+		virtual std::shared_ptr<DataBuffer> copy(size_t pos, size_t size) = 0;
 	};
+
+	typedef std::shared_ptr<DataBuffer> DataBufferPtr;
 }

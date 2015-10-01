@@ -32,132 +32,32 @@
 
 namespace uicore
 {
-	class DataBuffer_Impl
+	class DataBuffer_Impl : public DataBuffer
 	{
 	public:
-		DataBuffer_Impl() : data(nullptr), size(0), allocated_size(0)
-		{
-		}
+		DataBuffer_Impl(size_t init_size) { set_size(init_size); }
+		DataBuffer_Impl(const void *init_data, size_t init_size) { set_size(init_size); memcpy(data(), init_data, size()); }
 
-		~DataBuffer_Impl()
-		{
-			delete[] data;
-		}
+		char *data() override { return buffer.data(); }
+		const char *data() const override { return buffer.data(); }
+		size_t size() const override { return buffer.size(); }
+		size_t capacity() const override { return buffer.capacity(); }
+		void set_size(size_t size) override { buffer.resize(size); }
+		void set_capacity(size_t capacity) override { buffer.reserve(capacity); }
 
-	public:
-		char *data;
-		unsigned int size;
-		unsigned int allocated_size;
+		std::shared_ptr<DataBuffer> copy(size_t pos, size_t size) override { return DataBuffer::create(data() + pos, size); }
+
+	private:
+		std::vector<char> buffer;
 	};
 
-	DataBuffer::DataBuffer()
-		: impl(std::make_shared<DataBuffer_Impl>())
+	std::shared_ptr<DataBuffer> DataBuffer::create(size_t size)
 	{
+		return std::make_shared<DataBuffer_Impl>(size);
 	}
 
-	DataBuffer::DataBuffer(unsigned int new_size)
-		: impl(std::make_shared<DataBuffer_Impl>())
+	std::shared_ptr<DataBuffer> DataBuffer::create(const void *data, size_t size)
 	{
-		set_size(new_size);
-	}
-
-	DataBuffer::DataBuffer(const void *new_data, unsigned int new_size)
-		: impl(std::make_shared<DataBuffer_Impl>())
-	{
-		set_size(new_size);
-		memcpy(impl->data, new_data, new_size);
-	}
-
-	DataBuffer::DataBuffer(const DataBuffer &new_data, unsigned int pos, unsigned int size)
-		: impl(std::make_shared<DataBuffer_Impl>())
-	{
-		set_size(size);
-		memcpy(impl->data, new_data.get_data() + pos, size);
-	}
-
-	DataBuffer::~DataBuffer()
-	{
-	}
-
-	char *DataBuffer::get_data()
-	{
-		return impl->data;
-	}
-
-	const char *DataBuffer::get_data() const
-	{
-		return impl->data;
-	}
-
-	unsigned int DataBuffer::get_size() const
-	{
-		return impl->size;
-	}
-
-	unsigned int DataBuffer::get_capacity() const
-	{
-		return impl->allocated_size;
-	}
-
-	char &DataBuffer::operator[](int i)
-	{
-		return impl->data[i];
-	}
-
-	const char &DataBuffer::operator[](int i) const
-	{
-		return impl->data[i];
-	}
-
-	char &DataBuffer::operator[](unsigned int i)
-	{
-		return impl->data[i];
-	}
-
-	const char &DataBuffer::operator[](unsigned int i) const
-	{
-		return impl->data[i];
-	}
-
-	DataBuffer &DataBuffer::operator =(const DataBuffer &copy)
-	{
-		impl = copy.impl;
-		return *this;
-	}
-
-	void DataBuffer::set_size(unsigned int new_size)
-	{
-		if (new_size > impl->allocated_size)
-		{
-			char *old_data = impl->data;
-			impl->data = new char[new_size];
-			memcpy(impl->data, old_data, impl->size);
-			delete[] old_data;
-			memset(impl->data + impl->size, 0, new_size - impl->size);
-			impl->size = new_size;
-			impl->allocated_size = new_size;
-		}
-		else
-		{
-			impl->size = new_size;
-		}
-	}
-
-	void DataBuffer::set_capacity(unsigned int new_capacity)
-	{
-		if (new_capacity > impl->allocated_size)
-		{
-			char *old_data = impl->data;
-			impl->data = new char[new_capacity];
-			memcpy(impl->data, old_data, impl->size);
-			delete[] old_data;
-			memset(impl->data + impl->size, 0, new_capacity - impl->size);
-			impl->allocated_size = new_capacity;
-		}
-	}
-
-	bool DataBuffer::is_null() const
-	{
-		return impl->size == 0;
+		return std::make_shared<DataBuffer_Impl>(data, size);
 	}
 }

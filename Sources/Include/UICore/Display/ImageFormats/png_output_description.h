@@ -122,7 +122,7 @@ namespace uicore
 			const std::string &lang,
 			const std::string &translated_keyword);
 
-		void add_unknown_chunk(const std::string &name, const DataBuffer &chunk_data, PNGUnknownChunkLocation location);
+		void add_unknown_chunk(const std::string &name, const DataBufferPtr &chunk_data, PNGUnknownChunkLocation location);
 
 		void set_background_color(const Color &background_color);
 		void set_chromacities(const Vec2f &white, const Vec2f &red, const Vec2f &green, const Vec2f &blue);
@@ -130,7 +130,7 @@ namespace uicore
 		void set_key_color(const Color &color);
 		void set_filter_method(PNGFilterMethod filter);
 		void set_gamma(float gamma);
-		void set_icc_profile(const std::string &profile_name, const DataBuffer &profile_data);
+		void set_icc_profile(const std::string &profile_name, const DataBufferPtr &profile_data);
 		void set_interlace_type(PNGInterlaceType type);
 		void set_modification_time(const DateTime &datetime);
 		void set_offset_from_screen_topleft(const Vec2i &offset, PNGOffsetUnitType offset_unit_type);

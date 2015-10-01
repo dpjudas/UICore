@@ -238,7 +238,7 @@ namespace uicore
 		throw Exception("X509 - Invalid certificate");
 	}
 
-	void X509_Impl::get_rsa_public_key(DataBuffer &output_exponent, DataBuffer &output_modulus) const
+	void X509_Impl::get_rsa_public_key(DataBufferPtr &output_exponent, DataBufferPtr &output_modulus) const
 	{
 		if (public_key.empty())
 			throw Exception("Public key not set");
@@ -251,13 +251,13 @@ namespace uicore
 		asn1.get_next_universal_integer(output);
 		if (output.empty())
 			throw Exception("Invalid modulus");
-		output_modulus = DataBuffer(output.size());
-		memcpy(output_modulus.get_data(), &output[0], output.size());
+		output_modulus = DataBuffer::create(output.size());
+		memcpy(output_modulus->data(), &output[0], output.size());
 
 		asn1.get_next_universal_integer(output);
 		if (output.empty())
 			throw Exception("Invalid exponent");
-		output_exponent = DataBuffer(output.size());
-		memcpy(output_exponent.get_data(), &output[0], output.size());
+		output_exponent = DataBuffer::create(output.size());
+		memcpy(output_exponent->data(), &output[0], output.size());
 	}
 }

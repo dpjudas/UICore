@@ -77,10 +77,10 @@ namespace uicore
 		bool right_to_left;
 		bool top_down;
 
-		DataBuffer image_id;
-		DataBuffer colormap_data;
+		DataBufferPtr image_id;
+		DataBufferPtr colormap_data;
 		std::vector<Vec4ub> palette;
-		DataBuffer image_data;
+		DataBufferPtr image_data;
 
 		PixelBuffer image;
 	};

@@ -106,7 +106,7 @@ namespace uicore
 			return -1;
 	}
 
-	DataBuffer &D3DProgramObjectProvider::get_shader_bytecode(ShaderType shader_type)
+	DataBufferPtr &D3DProgramObjectProvider::get_shader_bytecode(ShaderType shader_type)
 	{
 		return get_shader_provider(shader_type)->bytecode;
 	}

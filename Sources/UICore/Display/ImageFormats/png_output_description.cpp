@@ -45,7 +45,7 @@ namespace uicore
 	struct PNGOutputDescriptionUnknownChunk
 	{
 		std::string name;
-		DataBuffer data;
+		DataBufferPtr data;
 		PNGUnknownChunkLocation location;
 	};
 
@@ -63,7 +63,7 @@ namespace uicore
 		PNGFilterMethod filter_method;
 		float gamma;
 		PNGInterlaceType interlace_type;
-		DataBuffer icc_profile_data;
+		DataBufferPtr icc_profile_data;
 		std::string icc_profile_name;
 		Color key_color;
 		int num_significant_bits;
@@ -105,7 +105,7 @@ namespace uicore
 		impl->comments.push_back(c);
 	}
 
-	void PNGOutputDescription::add_unknown_chunk(const std::string &name, const DataBuffer &data, PNGUnknownChunkLocation location)
+	void PNGOutputDescription::add_unknown_chunk(const std::string &name, const DataBufferPtr &data, PNGUnknownChunkLocation location)
 	{
 		std::shared_ptr<PNGOutputDescriptionUnknownChunk> chunk;
 		chunk->name = name;
@@ -145,7 +145,7 @@ namespace uicore
 		impl->gamma = gamma;
 	}
 
-	void PNGOutputDescription::set_icc_profile(const std::string &profile_name, const DataBuffer &profile_data)
+	void PNGOutputDescription::set_icc_profile(const std::string &profile_name, const DataBufferPtr &profile_data)
 	{
 		impl->icc_profile_data = profile_data;
 		impl->icc_profile_name = profile_name;

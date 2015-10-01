@@ -274,7 +274,7 @@ namespace uicore
 		return buffer;
 	}
 
-	DataBuffer RSA_Impl::pkcs1v15_encrypt(int block_type, Random &random, const char *msg, int mlen, const BigInt *e, const BigInt *modulus)
+	DataBufferPtr RSA_Impl::pkcs1v15_encrypt(int block_type, Random &random, const char *msg, int mlen, const BigInt *e, const BigInt *modulus)
 	{
 		int k = modulus->unsigned_octet_size();	// length of modulus, in bytes
 
@@ -294,8 +294,8 @@ namespace uicore
 		rsaep(&mrep, e, modulus, &mrep);
 
 		// Unpack message representative...
-		DataBuffer buffer(mrep.unsigned_octet_size());
-		mrep.to_unsigned_octets((unsigned char *)buffer.get_data(), buffer.get_size());
+		auto buffer = DataBuffer::create(mrep.unsigned_octet_size());
+		mrep.to_unsigned_octets((unsigned char *)buffer->data(), buffer->size());
 		return buffer;
 	}
 
@@ -320,7 +320,7 @@ namespace uicore
 		return pkcs1v15_decode((char *)key_buffer->get_data(), k);
 	}
 
-	DataBuffer RSA_Impl::encrypt(int block_type, Random &random, const void *in_public_exponent, unsigned int in_public_exponent_size, const void *in_modulus, unsigned int in_modulus_size, const void *in_data, unsigned int in_data_size)
+	DataBufferPtr RSA_Impl::encrypt(int block_type, Random &random, const void *in_public_exponent, unsigned int in_public_exponent_size, const void *in_modulus, unsigned int in_modulus_size, const void *in_data, unsigned int in_data_size)
 	{
 		BigInt exponent;
 		exponent.read_unsigned_octets((const unsigned char *)in_public_exponent, in_public_exponent_size);
@@ -342,16 +342,16 @@ namespace uicore
 		return pkcs1v15_decrypt((const char *)in_data, in_data_size, &exponent, &modulus);
 	}
 
-	void RSA_Impl::create_keypair(Random &random, SecretPtr &out_private_exponent, DataBuffer &out_public_exponent, DataBuffer &out_modulus, int key_size_in_bits, int public_exponent_value)
+	void RSA_Impl::create_keypair(Random &random, SecretPtr &out_private_exponent, DataBufferPtr &out_public_exponent, DataBufferPtr &out_modulus, int key_size_in_bits, int public_exponent_value)
 	{
 		create(random, key_size_in_bits, public_exponent_value);
-		out_public_exponent = DataBuffer(rsa_private_key.public_exponent.unsigned_octet_size());
-		rsa_private_key.public_exponent.to_unsigned_octets((unsigned char *)out_public_exponent.get_data(), out_public_exponent.get_size());
+		out_public_exponent = DataBuffer::create(rsa_private_key.public_exponent.unsigned_octet_size());
+		rsa_private_key.public_exponent.to_unsigned_octets((unsigned char *)out_public_exponent->data(), out_public_exponent->size());
 
 		out_private_exponent = Secret::create(rsa_private_key.private_exponent.unsigned_octet_size());
 		rsa_private_key.private_exponent.to_unsigned_octets(out_private_exponent->get_data(), out_private_exponent->get_size());
 
-		out_modulus = DataBuffer(rsa_private_key.modulus.unsigned_octet_size());
-		rsa_private_key.modulus.to_unsigned_octets((unsigned char *)out_modulus.get_data(), out_modulus.get_size());
+		out_modulus = DataBuffer::create(rsa_private_key.modulus.unsigned_octet_size());
+		rsa_private_key.modulus.to_unsigned_octets((unsigned char *)out_modulus->data(), out_modulus->size());
 	}
 }

@@ -44,15 +44,15 @@ namespace uicore
 		load_font(desc, typeface_name, pixel_ratio);
 	}
 
-	FontEngine_Win32::FontEngine_Win32(const FontDescription &desc, DataBuffer &font_databuffer, float pixel_ratio) : pixel_ratio(pixel_ratio)
+	FontEngine_Win32::FontEngine_Win32(const FontDescription &desc, DataBufferPtr &font_databuffer, float pixel_ratio) : pixel_ratio(pixel_ratio)
 	{
 		font_handle.engine = this;
 
-		if (font_databuffer.is_null())
+		if (!font_databuffer)
 			throw Exception("Attempt to load an empty font buffer");
 
 		DWORD out_number_of_fonts = 0;
-		HANDLE font_handle = AddFontMemResourceEx(font_databuffer.get_data(), font_databuffer.get_size(), 0, &out_number_of_fonts);
+		HANDLE font_handle = AddFontMemResourceEx(font_databuffer->data(), font_databuffer->size(), 0, &out_number_of_fonts);
 		if (out_number_of_fonts == 0)
 			throw Exception("Unable to register font");
 
@@ -234,7 +234,7 @@ namespace uicore
 
 	FontPixelBuffer FontEngine_Win32::get_font_glyph_gray8(int glyph)
 	{
-		DataBuffer glyph_bitmap;
+		DataBufferPtr glyph_bitmap;
 		GLYPHMETRICS glyph_metrics = { 0 };
 		MAT2 matrix = { 0 };
 		matrix.eM11.value = 1;
@@ -244,7 +244,7 @@ namespace uicore
 			PixelBuffer pixelbuffer(glyph_metrics.gmBlackBoxX, glyph_metrics.gmBlackBoxY, tf_rgba8);
 
 			DWORD s_pitch = (glyph_metrics.gmBlackBoxX + 3) / 4 * 4;
-			unsigned char *s = (unsigned char *)glyph_bitmap.get_data();
+			unsigned char *s = (unsigned char *)glyph_bitmap->data();
 
 			DWORD d_width = glyph_metrics.gmBlackBoxX;
 			Vec4ub *d = pixelbuffer.get_data<Vec4ub>();
@@ -282,7 +282,7 @@ namespace uicore
 
 	FontPixelBuffer FontEngine_Win32::get_font_glyph_mono(int glyph)
 	{
-		DataBuffer glyph_bitmap;
+		DataBufferPtr glyph_bitmap;
 		GLYPHMETRICS glyph_metrics = { 0 };
 		MAT2 matrix = { 0 };
 		matrix.eM11.value = 1;
@@ -292,7 +292,7 @@ namespace uicore
 			PixelBuffer pixelbuffer(glyph_metrics.gmBlackBoxX, glyph_metrics.gmBlackBoxY, tf_rgba8);
 
 			DWORD s_pitch = (glyph_metrics.gmBlackBoxX + 31) / 32 * 4;
-			unsigned char *s = (unsigned char *)glyph_bitmap.get_data();
+			unsigned char *s = (unsigned char *)glyph_bitmap->data();
 
 			DWORD d_width = glyph_metrics.gmBlackBoxX;
 			Vec4ub *d = pixelbuffer.get_data<Vec4ub>();
@@ -327,7 +327,7 @@ namespace uicore
 		}
 	}
 
-	bool FontEngine_Win32::try_load_glyph_bitmap(int glyph, UINT format, MAT2 &matrix, DataBuffer &glyph_bitmap, GLYPHMETRICS &glyph_metrics)
+	bool FontEngine_Win32::try_load_glyph_bitmap(int glyph, UINT format, MAT2 &matrix, DataBufferPtr &glyph_bitmap, GLYPHMETRICS &glyph_metrics)
 	{
 		HDC dc = GetDC(0);
 		HGDIOBJ old_font = SelectObject(dc, handle);
@@ -341,8 +341,8 @@ namespace uicore
 		DWORD bitmap_size = GetGlyphOutline(dc, indices[0], format, &glyph_metrics, 0, 0, &matrix);
 		if (bitmap_size != 0 && bitmap_size != GDI_ERROR)
 		{
-			DataBuffer buffer(bitmap_size);
-			bitmap_size = GetGlyphOutline(dc, indices[0], format, &glyph_metrics, buffer.get_size(), buffer.get_data(), &matrix);
+			auto buffer = DataBuffer::create(bitmap_size);
+			bitmap_size = GetGlyphOutline(dc, indices[0], format, &glyph_metrics, buffer->size(), buffer->data(), &matrix);
 			if (bitmap_size != 0 && bitmap_size != GDI_ERROR)
 			{
 				glyph_bitmap = buffer;
@@ -462,13 +462,13 @@ namespace uicore
 		glyph_index = indices[0];
 		int format = GGO_NATIVE | GGO_UNHINTED | GGO_GLYPH_INDEX;
 
-		DataBuffer glyph_buffer;
+		DataBufferPtr glyph_buffer;
 		bool result = false;
 		DWORD result_size = GetGlyphOutline(dc, glyph_index, format, &glyph_metrics, 0, 0, &matrix);
 		if (result_size != 0 && result_size != GDI_ERROR)
 		{
-			DataBuffer buffer(result_size);
-			result_size = GetGlyphOutline(dc, glyph_index, format, &glyph_metrics, buffer.get_size(), buffer.get_data(), &matrix);
+			auto buffer = DataBuffer::create(result_size);
+			result_size = GetGlyphOutline(dc, glyph_index, format, &glyph_metrics, buffer->size(), buffer->data(), &matrix);
 			if (result_size != 0 && result_size != GDI_ERROR)
 			{
 				glyph_buffer = buffer;
@@ -479,7 +479,7 @@ namespace uicore
 		SelectObject(dc, old_font);
 		ReleaseDC(0, dc);
 
-		if (glyph_buffer.is_null())
+		if (!glyph_buffer)
 		{
 			out_metrics.advance.width = glyph_metrics.gmCellIncX / pixel_ratio;
 			out_metrics.advance.height = glyph_metrics.gmCellIncY / pixel_ratio;
@@ -490,9 +490,9 @@ namespace uicore
 			return;
 		}
 
-		TTPOLYGONHEADER * polygon_header = (TTPOLYGONHEADER *)glyph_buffer.get_data();
+		TTPOLYGONHEADER * polygon_header = (TTPOLYGONHEADER *)glyph_buffer->data();
 		char *data_end = (char *)polygon_header;
-		data_end += glyph_buffer.get_size();
+		data_end += glyph_buffer->size();
 
 		while ((char *)(polygon_header + 1) <= data_end)
 		{
@@ -566,13 +566,13 @@ namespace uicore
 
 	}
 
-	std::string FontEngine_Win32::get_ttf_typeface_name(DataBuffer &font_databuffer)
+	std::string FontEngine_Win32::get_ttf_typeface_name(DataBufferPtr &font_databuffer)
 	{
-		if (!font_databuffer.get_size())
+		if (!font_databuffer || !font_databuffer->size())
 			return std::string();
 
-		const char *start_ptr = font_databuffer.get_data();
-		unsigned int full_size = font_databuffer.get_size();
+		const char *start_ptr = font_databuffer->data();
+		unsigned int full_size = font_databuffer->size();
 
 		const char *read_ptr = start_ptr;
 		unsigned int size = full_size;

@@ -158,20 +158,20 @@ namespace uicore
 
 		}
 	}
-	void AES_Impl::store_block(uint32_t s0, uint32_t s1, uint32_t s2, uint32_t s3, DataBuffer &databuffer)
+	void AES_Impl::store_block(uint32_t s0, uint32_t s1, uint32_t s2, uint32_t s3, DataBufferPtr &databuffer)
 	{
 		// (Note AES 128, 192 and 256 all have the same block size)
 
 		// Store the data
-		int current_size = databuffer.get_size();
-		int current_capacity = databuffer.get_capacity();
+		int current_size = databuffer->size();
+		int current_capacity = databuffer->capacity();
 		int available = current_capacity - current_size;
 		if (available < aes128_block_size_bytes)	// Increase capacity required
 		{
-			databuffer.set_capacity(current_capacity + 1024);	// Increase in blocks of 1K
+			databuffer->set_capacity(current_capacity + 1024);	// Increase in blocks of 1K
 		}
-		databuffer.set_size(current_size + aes128_block_size_bytes);
-		unsigned char *dest_ptr = (unsigned char *)databuffer.get_data();
+		databuffer->set_size(current_size + aes128_block_size_bytes);
+		unsigned char *dest_ptr = (unsigned char *)databuffer->data();
 		dest_ptr += current_size;
 
 		put_word(s0, dest_ptr);

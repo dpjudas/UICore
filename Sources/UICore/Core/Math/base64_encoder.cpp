@@ -51,7 +51,7 @@ namespace uicore
 
 		//! Attributes:
 	public:
-		DataBuffer result;
+		DataBufferPtr result;
 
 		unsigned char chunk[3];
 
@@ -82,14 +82,14 @@ namespace uicore
 	{
 	}
 
-	DataBuffer &Base64Encoder::get_result()
+	DataBufferPtr &Base64Encoder::get_result()
 	{
 		return impl->result;
 	}
 
 	void Base64Encoder::reset()
 	{
-		impl->result.set_size(0);
+		impl->result->set_size(0);
 		impl->chunk_filled = 0;
 	}
 
@@ -99,7 +99,7 @@ namespace uicore
 		const unsigned char *data = (const unsigned char *)_data;
 
 		if (!append_result)
-			impl->result.set_size(0);
+			impl->result->set_size(0);
 
 		// Handle any left-over data from last encode:
 
@@ -109,9 +109,9 @@ namespace uicore
 			if (size >= needed)
 			{
 				memcpy(impl->chunk + impl->chunk_filled, data, needed);
-				int out_pos = impl->result.get_size();
-				impl->result.set_size(out_pos + 4);
-				Base64Encoder_Impl::encode((unsigned char *)impl->result.get_data() + out_pos, impl->chunk, 3);
+				int out_pos = impl->result->size();
+				impl->result->set_size(out_pos + 4);
+				Base64Encoder_Impl::encode((unsigned char *)impl->result->data() + out_pos, impl->chunk, 3);
 				pos += needed;
 				impl->chunk_filled = 0;
 			}
@@ -126,9 +126,9 @@ namespace uicore
 		// Base64 encode what's available to us now:
 
 		int blocks = (size - pos) / 3;
-		int out_pos = impl->result.get_size();
-		impl->result.set_size(out_pos + blocks * 4);
-		Base64Encoder_Impl::encode((unsigned char *)impl->result.get_data() + out_pos, data + pos, blocks * 3);
+		int out_pos = impl->result->size();
+		impl->result->set_size(out_pos + blocks * 4);
+		Base64Encoder_Impl::encode((unsigned char *)impl->result->data() + out_pos, data + pos, blocks * 3);
 		pos += blocks * 3;
 
 		// Save data for last incomplete block:
@@ -143,15 +143,15 @@ namespace uicore
 	void Base64Encoder::finalize(bool append_result)
 	{
 		if (!append_result)
-			impl->result.set_size(0);
+			impl->result->set_size(0);
 		if (impl->chunk_filled == 0)
 			return;
 
 		// Allocate memory for last block:
 
-		int pos = impl->result.get_size();
-		impl->result.set_size(pos + 4);
-		unsigned char *output = (unsigned char *)impl->result.get_data() + pos;
+		int pos = impl->result->size();
+		impl->result->set_size(pos + 4);
+		unsigned char *output = (unsigned char *)impl->result->data() + pos;
 		unsigned char *input = impl->chunk;
 		int size = impl->chunk_filled;
 
@@ -185,7 +185,7 @@ namespace uicore
 		Base64Encoder encoder;
 		encoder.feed(data, size);
 		encoder.finalize(true);
-		return std::string(encoder.get_result().get_data(), encoder.get_result().get_size());
+		return std::string(encoder.get_result()->data(), encoder.get_result()->size());
 	}
 
 	std::string Base64Encoder::encode(const std::string &data)
@@ -193,8 +193,8 @@ namespace uicore
 		return encode(data.data(), data.length());
 	}
 
-	std::string Base64Encoder::encode(const DataBuffer &data)
+	std::string Base64Encoder::encode(const DataBufferPtr &data)
 	{
-		return encode(data.get_data(), data.get_size());
+		return encode(data->data(), data->size());
 	}
 }

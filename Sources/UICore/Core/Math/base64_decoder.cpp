@@ -71,7 +71,7 @@ namespace uicore
 
 		//! Attributes:
 	public:
-		DataBuffer result;
+		DataBufferPtr result;
 
 		unsigned char chunk[4];
 
@@ -102,14 +102,14 @@ namespace uicore
 	{
 	}
 
-	DataBuffer &Base64Decoder::get_result()
+	DataBufferPtr &Base64Decoder::get_result()
 	{
 		return impl->result;
 	}
 
 	void Base64Decoder::reset()
 	{
-		impl->result.set_size(0);
+		impl->result->set_size(0);
 		impl->chunk_filled = 0;
 	}
 
@@ -119,7 +119,7 @@ namespace uicore
 		const unsigned char *data = (const unsigned char *)_data;
 
 		if (!append_result)
-			impl->result.set_size(0);
+			impl->result->set_size(0);
 
 		// Handle any left-over data from last encode:
 
@@ -131,18 +131,18 @@ namespace uicore
 				// Finish left-over data block:
 
 				memcpy(impl->chunk + impl->chunk_filled, data, needed);
-				int out_pos = impl->result.get_size();
-				impl->result.set_size(out_pos + 3);
-				Base64Decoder_Impl::decode((unsigned char *)impl->result.get_data() + out_pos, impl->chunk, 4);
+				int out_pos = impl->result->size();
+				impl->result->set_size(out_pos + 3);
+				Base64Decoder_Impl::decode((unsigned char *)impl->result->data() + out_pos, impl->chunk, 4);
 				pos += needed;
 				impl->chunk_filled = 0;
 
 				// Shorten result if we got an end of base64 data marker:
 
 				if (impl->chunk[2] == '=')
-					impl->result.set_size(impl->result.get_size() - 2);
+					impl->result->set_size(impl->result->size() - 2);
 				else if (impl->chunk[3] == '=')
-					impl->result.set_size(impl->result.get_size() - 1);
+					impl->result->set_size(impl->result->size() - 1);
 			}
 			else
 			{
@@ -155,9 +155,9 @@ namespace uicore
 		// Base64 encode what's available to us now:
 
 		int blocks = (size - pos) / 4;
-		int out_pos = impl->result.get_size();
-		impl->result.set_size(out_pos + blocks * 3);
-		Base64Decoder_Impl::decode((unsigned char *)impl->result.get_data() + out_pos, data + pos, blocks * 4);
+		int out_pos = impl->result->size();
+		impl->result->set_size(out_pos + blocks * 3);
+		Base64Decoder_Impl::decode((unsigned char *)impl->result->data() + out_pos, data + pos, blocks * 4);
 		pos += blocks * 4;
 
 		// Shorten result if we got an end of base64 data marker:
@@ -165,9 +165,9 @@ namespace uicore
 		if (blocks > 0)
 		{
 			if (data[pos - 2] == '=')
-				impl->result.set_size(impl->result.get_size() - 2);
+				impl->result->set_size(impl->result->size() - 2);
 			else if (data[pos - 1] == '=')
-				impl->result.set_size(impl->result.get_size() - 1);
+				impl->result->set_size(impl->result->size() - 1);
 		}
 
 		// Save data for last incomplete block:
@@ -179,20 +179,20 @@ namespace uicore
 		memcpy(impl->chunk, data + pos, leftover);
 	}
 
-	DataBuffer Base64Decoder::decode(const void *data, int size)
+	DataBufferPtr Base64Decoder::decode(const void *data, int size)
 	{
 		Base64Decoder decoder;
 		decoder.feed(data, size);
 		return decoder.get_result();
 	}
 
-	DataBuffer Base64Decoder::decode(const std::string &data)
+	DataBufferPtr Base64Decoder::decode(const std::string &data)
 	{
 		return decode(data.data(), data.length());
 	}
 
-	DataBuffer Base64Decoder::decode(const DataBuffer &data)
+	DataBufferPtr Base64Decoder::decode(const DataBufferPtr &data)
 	{
-		return decode(data.get_data(), data.get_size());
+		return decode(data->data(), data->size());
 	}
 }

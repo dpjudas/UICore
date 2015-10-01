@@ -43,9 +43,7 @@
 
 namespace uicore
 {
-	TLSClient_Impl::TLSClient_Impl() :
-		recv_in_data_read_pos(0), recv_out_data_read_pos(0), send_in_data_read_pos(0), send_out_data_read_pos(0), handshake_in_read_pos(0),
-		conversation_state(cl_tls_state_send_client_hello), security_parameters(), protocol(), is_protocol_chosen()
+	TLSClient_Impl::TLSClient_Impl() : security_parameters(), protocol()
 	{
 		// Set TLS 3.1
 		protocol.major = 3;
@@ -61,22 +59,22 @@ namespace uicore
 
 	const void *TLSClient_Impl::get_decrypted_data() const
 	{
-		return recv_out_data.get_data() + recv_out_data_read_pos;
+		return recv_out_data->data() + recv_out_data_read_pos;
 	}
 
 	int TLSClient_Impl::get_decrypted_data_available() const
 	{
-		return recv_out_data.get_size() - recv_out_data_read_pos;
+		return recv_out_data->size() - recv_out_data_read_pos;
 	}
 
 	const void *TLSClient_Impl::get_encrypted_data() const
 	{
-		return send_out_data.get_data() + send_out_data_read_pos;
+		return send_out_data->data() + send_out_data_read_pos;
 	}
 
 	int TLSClient_Impl::get_encrypted_data_available() const
 	{
-		return send_out_data.get_size() - send_out_data_read_pos;
+		return send_out_data->size() - send_out_data_read_pos;
 	}
 
 	int TLSClient_Impl::encrypt(const void *data, int size)
@@ -84,12 +82,12 @@ namespace uicore
 		if (size == 0)
 			return 0;
 
-		int insert_pos = send_in_data.get_size();
+		int insert_pos = send_in_data->size();
 		int buffer_space_available = desired_buffer_size - insert_pos;
 		int bytes_consumed = uicore::min(size, buffer_space_available);
 
-		send_in_data.set_size(insert_pos + bytes_consumed);
-		memcpy(send_in_data.get_data() + insert_pos, data, bytes_consumed);
+		send_in_data->set_size(insert_pos + bytes_consumed);
+		memcpy(send_in_data->data() + insert_pos, data, bytes_consumed);
 
 		progress_conversation();
 
@@ -101,12 +99,12 @@ namespace uicore
 		if (size == 0)
 			return 0;
 
-		int insert_pos = recv_in_data.get_size();
+		int insert_pos = recv_in_data->size();
 		int buffer_space_available = desired_buffer_size - insert_pos;
 		int bytes_consumed = uicore::min(size, buffer_space_available);
 
-		recv_in_data.set_size(insert_pos + bytes_consumed);
-		memcpy(recv_in_data.get_data() + insert_pos, data, bytes_consumed);
+		recv_in_data->set_size(insert_pos + bytes_consumed);
+		memcpy(recv_in_data->data() + insert_pos, data, bytes_consumed);
 
 		progress_conversation();
 
@@ -117,15 +115,15 @@ namespace uicore
 	{
 		if (size == 0)
 			return;
-		if (recv_out_data_read_pos + size > recv_out_data.get_size())
+		if (recv_out_data_read_pos + size > recv_out_data->size())
 			throw Exception("TLSClient::decrypted_data_consumed misuse");
 
 		recv_out_data_read_pos += size;
 		if (recv_out_data_read_pos > desired_buffer_size / 2)
 		{
-			int available = recv_out_data.get_size() - recv_out_data_read_pos;
-			memmove(recv_out_data.get_data(), recv_out_data.get_data() + recv_out_data_read_pos, available);
-			recv_out_data.set_size(available);
+			int available = recv_out_data->size() - recv_out_data_read_pos;
+			memmove(recv_out_data->data(), recv_out_data->data() + recv_out_data_read_pos, available);
+			recv_out_data->set_size(available);
 			recv_out_data_read_pos = 0;
 		}
 
@@ -136,15 +134,15 @@ namespace uicore
 	{
 		if (size == 0)
 			return;
-		if (send_out_data_read_pos + size > send_out_data.get_size())
+		if (send_out_data_read_pos + size > send_out_data->size())
 			throw Exception("TLSClient::encrypted_data_consumed misuse");
 
 		send_out_data_read_pos += size;
 		if (send_out_data_read_pos > desired_buffer_size / 2)
 		{
-			int available = send_out_data.get_size() - send_out_data_read_pos;
-			memmove(send_out_data.get_data(), send_out_data.get_data() + send_out_data_read_pos, available);
-			send_out_data.set_size(available);
+			int available = send_out_data->size() - send_out_data_read_pos;
+			memmove(send_out_data->data(), send_out_data->data() + send_out_data_read_pos, available);
+			send_out_data->set_size(available);
 			send_out_data_read_pos = 0;
 		}
 
@@ -210,11 +208,11 @@ namespace uicore
 
 	bool TLSClient_Impl::send_application_data()
 	{
-		if (send_in_data.get_size() == send_in_data_read_pos || !can_send_record())
+		if (send_in_data->size() == send_in_data_read_pos || !can_send_record())
 			return false;
 
-		const char *data = send_in_data.get_data() + send_in_data_read_pos;
-		int size = send_in_data.get_size() - send_in_data_read_pos;
+		const char *data = send_in_data->data() + send_in_data_read_pos;
+		int size = send_in_data->size() - send_in_data_read_pos;
 
 		unsigned int max_record_length_gcc_fix = max_record_length;
 		unsigned int data_in_record = uicore::min((unsigned int)size, max_record_length_gcc_fix);
@@ -236,9 +234,9 @@ namespace uicore
 		send_in_data_read_pos += data_in_record;
 		if (send_in_data_read_pos > desired_buffer_size / 2 || send_in_data_read_pos == 0)
 		{
-			int available = send_in_data.get_size() - send_in_data_read_pos;
-			memmove(send_in_data.get_data(), send_in_data.get_data() + send_in_data_read_pos, available);
-			send_in_data.set_size(available);
+			int available = send_in_data->size() - send_in_data_read_pos;
+			memmove(send_in_data->data(), send_in_data->data() + send_in_data_read_pos, available);
+			send_in_data->set_size(available);
 			send_in_data_read_pos = 0;
 		}
 
@@ -248,15 +246,15 @@ namespace uicore
 	bool TLSClient_Impl::receive_record()
 	{
 		// Do not read more records if our application data output buffer is full
-		if (recv_out_data.get_size() - recv_out_data_read_pos >= desired_buffer_size)
+		if (recv_out_data->size() - recv_out_data_read_pos >= desired_buffer_size)
 			return false;
 
-		int data_available = recv_in_data.get_size() - recv_in_data_read_pos;
+		int data_available = recv_in_data->size() - recv_in_data_read_pos;
 		if (data_available < sizeof(TLS_Record))
 			return false;
 
 		TLS_Record record;
-		memcpy(&record, recv_in_data.get_data() + recv_in_data_read_pos, sizeof(TLS_Record));
+		memcpy(&record, recv_in_data->data() + recv_in_data_read_pos, sizeof(TLS_Record));
 
 		int record_length;
 		record_length = record.length[0] << 8 | record.length[1];
@@ -280,19 +278,19 @@ namespace uicore
 			// We set the protocol version in ServerHello
 		}
 
-		record_data_buffer.set_size(record_length);
-		memcpy(record_data_buffer.get_data(), recv_in_data.get_data() + recv_in_data_read_pos + sizeof(TLS_Record), record_length);
+		record_data_buffer->set_size(record_length);
+		memcpy(record_data_buffer->data(), recv_in_data->data() + recv_in_data_read_pos + sizeof(TLS_Record), record_length);
 
 		recv_in_data_read_pos += sizeof(TLS_Record) + record_length;
 		if (recv_in_data_read_pos > desired_buffer_size / 2)
 		{
-			int available = recv_in_data.get_size() - recv_in_data_read_pos;
-			memmove(recv_in_data.get_data(), recv_in_data.get_data() + recv_in_data_read_pos, available);
-			recv_in_data.set_size(available);
+			int available = recv_in_data->size() - recv_in_data_read_pos;
+			memmove(recv_in_data->data(), recv_in_data->data() + recv_in_data_read_pos, available);
+			recv_in_data->set_size(available);
 			recv_in_data_read_pos = 0;
 		}
 
-		DataBuffer plaintext;
+		DataBufferPtr plaintext;
 		if (security_parameters.is_receive_encrypted)
 			plaintext = decrypt_record(record, record_data_buffer);
 		else
@@ -329,17 +327,17 @@ namespace uicore
 		return true;
 	}
 
-	void TLSClient_Impl::change_cipher_spec_data(DataBuffer record_plaintext)
+	void TLSClient_Impl::change_cipher_spec_data(DataBufferPtr record_plaintext)
 	{
 		if (conversation_state != cl_tls_state_receive_change_cipher_spec)
 			throw Exception("Unexpected TLS change cipher record received");
 
-		if (record_plaintext.get_size() != 1)
+		if (record_plaintext->size() != 1)
 			throw Exception("Invalid TLS content change cipher spec size");
 
 		security_parameters.read_sequence_number = 0;
 
-		uint8_t value = record_plaintext.get_data<uint8_t>()[0];
+		uint8_t value = record_plaintext->data<uint8_t>()[0];
 		if (value != 1)
 			throw Exception("TLS server change cipher spec did not send 1");
 
@@ -348,12 +346,12 @@ namespace uicore
 		conversation_state = cl_tls_state_receive_finished;
 	}
 
-	void TLSClient_Impl::alert_data(DataBuffer record_plaintext)
+	void TLSClient_Impl::alert_data(DataBufferPtr record_plaintext)
 	{
-		if (record_plaintext.get_size() != 2) // To do: theoretically this is not safe - it could be split into two 1 byte records.
+		if (record_plaintext->size() != 2) // To do: theoretically this is not safe - it could be split into two 1 byte records.
 			throw Exception("Invalid TLS content alert message");
 
-		uint8_t *alert_data = record_plaintext.get_data<uint8_t>();
+		uint8_t *alert_data = record_plaintext->data<uint8_t>();
 
 		if (alert_data[0] == cl_tls_warning)
 			return;
@@ -459,26 +457,26 @@ namespace uicore
 		throw Exception(string);
 	}
 
-	void TLSClient_Impl::handshake_data(DataBuffer record_plaintext)
+	void TLSClient_Impl::handshake_data(DataBufferPtr record_plaintext)
 	{
 		// Copy handshake data into input buffer for easier processing:
 		// "RFC 2246 (5.2.1) multiple client messages of the same ContentType may be coalesced into a single TLSPlaintext record"
-		int pos = handshake_in_data.get_size();
-		handshake_in_data.set_size(pos + record_plaintext.get_size());
-		memcpy(handshake_in_data.get_data() + pos, record_plaintext.get_data(), record_plaintext.get_size());
+		int pos = handshake_in_data->size();
+		handshake_in_data->set_size(pos + record_plaintext->size());
+		memcpy(handshake_in_data->data() + pos, record_plaintext->data(), record_plaintext->size());
 
 		// Check if we have received enough data to peek at the handshake header:
-		int available = handshake_in_data.get_size() - handshake_in_read_pos;
+		int available = handshake_in_data->size() - handshake_in_read_pos;
 		if (available < sizeof(TLS_Handshake))
 			return;
 
 		// Check if we have received enough data to read the entire handshake message:
-		TLS_Handshake &handshake = *reinterpret_cast<TLS_Handshake*>(handshake_in_data.get_data() + handshake_in_read_pos);
+		TLS_Handshake &handshake = *reinterpret_cast<TLS_Handshake*>(handshake_in_data->data() + handshake_in_read_pos);
 		int length = handshake.length[0] << 16 | handshake.length[1] << 8 | handshake.length[2];
 		if (sizeof(TLS_Handshake) + length > available)
 			return;
 
-		const char *data = handshake_in_data.get_data() + handshake_in_read_pos + sizeof(TLS_Handshake);
+		const char *data = handshake_in_data->data() + handshake_in_read_pos + sizeof(TLS_Handshake);
 
 		// We got a full message.
 
@@ -529,20 +527,20 @@ namespace uicore
 		handshake_in_read_pos += sizeof(TLS_Handshake) + length;
 		if (handshake_in_read_pos >= desired_buffer_size / 2)
 		{
-			available = handshake_in_data.get_size() - handshake_in_read_pos;
-			memmove(handshake_in_data.get_data(), handshake_in_data.get_data() + handshake_in_read_pos, available);
-			handshake_in_data.set_size(available);
+			available = handshake_in_data->size() - handshake_in_read_pos;
+			memmove(handshake_in_data->data(), handshake_in_data->data() + handshake_in_read_pos, available);
+			handshake_in_data->set_size(available);
 		}
 	}
 
-	void TLSClient_Impl::application_data(DataBuffer record_plaintext)
+	void TLSClient_Impl::application_data(DataBufferPtr record_plaintext)
 	{
 		if (conversation_state != cl_tls_state_connected)
 			throw Exception("Unexpected application data record received");
 
-		int pos = recv_out_data.get_size();
-		recv_out_data.set_size(pos + record_plaintext.get_size());
-		memcpy(recv_out_data.get_data() + pos, record_plaintext.get_data(), record_plaintext.get_size());
+		int pos = recv_out_data->size();
+		recv_out_data->set_size(pos + record_plaintext->size());
+		memcpy(recv_out_data->data() + pos, record_plaintext->data(), record_plaintext->size());
 	}
 
 	void TLSClient_Impl::handshake_hello_request_received(const void *data, int size)
@@ -723,7 +721,7 @@ namespace uicore
 
 	bool TLSClient_Impl::can_send_record() const
 	{
-		return send_out_data.get_size() < desired_buffer_size;
+		return send_out_data->size() < desired_buffer_size;
 	}
 
 	void TLSClient_Impl::send_record(void *data_ptr, unsigned int data_size)
@@ -746,23 +744,23 @@ namespace uicore
 			const unsigned char *input_ptr = (const unsigned char *) data_ptr + sizeof(TLS_Record);
 			unsigned int input_size = data_size - sizeof(TLS_Record);
 			auto mac = calculate_mac(data_ptr, data_size, nullptr, 0, security_parameters.write_sequence_number, security_parameters.client_write_mac_secret);	// MAC includes the header and sequence number
-			DataBuffer encrypted = encrypt_data(input_ptr , input_size, mac->get_data(), mac->get_size());
+			DataBufferPtr encrypted = encrypt_data(input_ptr , input_size, mac->get_data(), mac->get_size());
 
 			// Update the length
-			int new_length = encrypted.get_size();
+			int new_length = encrypted->size();
 			record_ptr->length[0] = new_length >> 8;
 			record_ptr->length[1] = new_length;
 
-			int pos = send_out_data.get_size();
-			send_out_data.set_size(pos + sizeof(TLS_Record) + new_length);
-			memcpy(send_out_data.get_data() + pos, data_ptr, sizeof(TLS_Record));
-			memcpy(send_out_data.get_data() + pos + sizeof(TLS_Record), encrypted.get_data(), new_length);
+			int pos = send_out_data->size();
+			send_out_data->set_size(pos + sizeof(TLS_Record) + new_length);
+			memcpy(send_out_data->data() + pos, data_ptr, sizeof(TLS_Record));
+			memcpy(send_out_data->data() + pos + sizeof(TLS_Record), encrypted->data(), new_length);
 		}
 		else
 		{
-			int pos = send_out_data.get_size();
-			send_out_data.set_size(pos + data_size);
-			memcpy(send_out_data.get_data() + pos, data_ptr, data_size);
+			int pos = send_out_data->size();
+			send_out_data->set_size(pos + data_size);
+			memcpy(send_out_data->data() + pos, data_ptr, data_size);
 		}
 
 		security_parameters.write_sequence_number++;
@@ -1013,7 +1011,7 @@ namespace uicore
 		pms_ptr[0] = protocol.major;	// Version number
 		pms_ptr[1] = protocol.minor;
 
-		DataBuffer wrapped_pre_master_secret = RSA::encrypt(2, *m_Random, server_public_exponent,  server_public_modulus, pre_master_secret);
+		DataBufferPtr wrapped_pre_master_secret = RSA::encrypt(2, *m_Random, server_public_exponent,  server_public_modulus, pre_master_secret);
 
 		PRF(security_parameters.master_secret->get_data(), security_parameters.master_secret->get_size(), pre_master_secret, "master secret", security_parameters.client_random, security_parameters.server_random);
 
@@ -1047,7 +1045,7 @@ namespace uicore
 		memcpy(security_parameters.server_write_iv->get_data(), key_block_ptr, security_parameters.server_write_iv->get_size());
 		key_block_ptr+=security_parameters.server_write_iv->get_size();
 
-		const int wrapped_pre_master_secret_length = wrapped_pre_master_secret.get_size();
+		const int wrapped_pre_master_secret_length = wrapped_pre_master_secret->size();
 
 		int offset = 0;
 		int offset_tls_record = offset;					offset += sizeof(TLS_Record);
@@ -1060,7 +1058,7 @@ namespace uicore
 		set_tls_record(message_ptr + offset_tls_record, cl_tls_content_handshake, offset - offset_tls_record);
 		set_tls_handshake(message_ptr + offset_tls_handshake, cl_tls_handshake_client_key_exchange, offset - offset_tls_handshake);
 
-		memcpy(message_ptr + offset_tls_encrypted_pre_master_secret, wrapped_pre_master_secret.get_data(), wrapped_pre_master_secret_length);
+		memcpy(message_ptr + offset_tls_encrypted_pre_master_secret, wrapped_pre_master_secret->data(), wrapped_pre_master_secret_length);
 		message_ptr[offset_tls_encrypted_pre_master_secret_length] = wrapped_pre_master_secret_length >> 8;
 		message_ptr[offset_tls_encrypted_pre_master_secret_length+1] = wrapped_pre_master_secret_length;
 
@@ -1227,12 +1225,12 @@ namespace uicore
 		return true;
 	}
 
-	DataBuffer TLSClient_Impl::encrypt_data(const void *data_ptr, unsigned int data_size, const void *mac_ptr, unsigned int mac_size)
+	DataBufferPtr TLSClient_Impl::encrypt_data(const void *data_ptr, unsigned int data_size, const void *mac_ptr, unsigned int mac_size)
 	{
 		int additional_unpadded_blocks;
 		m_Random->get_random_bool() ? additional_unpadded_blocks = 1 : additional_unpadded_blocks = 0;
 
-		DataBuffer buffer;
+		DataBufferPtr buffer;
 		if (security_parameters.bulk_cipher_algorithm == cl_tls_cipher_algorithm_aes128)
 		{
 			auto encrypt = AES128_Encrypt::create();
@@ -1259,7 +1257,7 @@ namespace uicore
 		{
 			throw Exception("Unsupported cipher");
 		}
-		memcpy(security_parameters.client_write_iv->get_data(), buffer.get_data() + buffer.get_size() - security_parameters.client_write_iv->get_size(), security_parameters.client_write_iv->get_size());
+		memcpy(security_parameters.client_write_iv->get_data(), buffer->data() + buffer->size() - security_parameters.client_write_iv->get_size(), security_parameters.client_write_iv->get_size());
 		return buffer;
 
 	}
@@ -1319,9 +1317,9 @@ namespace uicore
 		server_handshake_sha1_hash->add(data_ptr, data_size);
 	}
 
-	DataBuffer TLSClient_Impl::decrypt_data(const void *data_ptr, unsigned int data_size)
+	DataBufferPtr TLSClient_Impl::decrypt_data(const void *data_ptr, unsigned int data_size)
 	{
-		DataBuffer buffer;
+		DataBufferPtr buffer;
 		if (security_parameters.bulk_cipher_algorithm == cl_tls_cipher_algorithm_aes128)
 		{
 			auto decrypt = AES128_Decrypt::create();
@@ -1353,13 +1351,13 @@ namespace uicore
 
 	}
 
-	DataBuffer TLSClient_Impl::decrypt_record(TLS_Record &record, const DataBuffer &record_data)
+	DataBufferPtr TLSClient_Impl::decrypt_record(TLS_Record &record, const DataBufferPtr &record_data)
 	{
-		DataBuffer decrypted = decrypt_data(record_data.get_data(), record_data.get_size());
+		DataBufferPtr decrypted = decrypt_data(record_data->data(), record_data->size());
 
-		unsigned char *decrypted_data = (unsigned char *) decrypted.get_data();
+		unsigned char *decrypted_data = (unsigned char *) decrypted->data();
 
-		int decoded_size = decrypted.get_size() - security_parameters.hash_size;
+		int decoded_size = decrypted->size() - security_parameters.hash_size;
 		if (decoded_size < 0)
 			throw Exception("Invalid decoded_size");
 
@@ -1372,7 +1370,7 @@ namespace uicore
 		if (memcmp(mac->get_data(), decrypted_data + decoded_size, mac->get_size()))
 			throw Exception("HMAC failed");
 
-		decrypted.set_size(decoded_size);
+		decrypted->set_size(decoded_size);
 		return decrypted;
 	}
 }

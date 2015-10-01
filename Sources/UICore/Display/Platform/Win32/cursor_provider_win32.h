@@ -37,7 +37,6 @@ namespace uicore
 	class PixelBuffer;
 	class Point;
 	class Rect;
-	class DataBuffer;
 	class CursorDescription;
 
 	class CursorProvider_Win32 : public CursorProvider
@@ -50,11 +49,11 @@ namespace uicore
 
 	private:
 		static HCURSOR create_cursor(const CursorDescription &cursor_description);
-		static DataBuffer create_ico_file(const PixelBuffer &image);
-		static DataBuffer create_cur_file(const PixelBuffer &image, const Rect &rect, const Point &hotspot);
-		static DataBuffer create_ani_file(const CursorDescription &cursor_description);
-		static DataBuffer create_ico_helper(const PixelBuffer &image, const Rect &rect, WORD type, const Point &hotspot);
-		static DataBuffer create_ico_helper(const std::vector<PixelBuffer> &images, const std::vector<Rect> &rect, WORD type, const std::vector<Point> &hotspots);
+		static DataBufferPtr create_ico_file(const PixelBuffer &image);
+		static DataBufferPtr create_cur_file(const PixelBuffer &image, const Rect &rect, const Point &hotspot);
+		static DataBufferPtr create_ani_file(const CursorDescription &cursor_description);
+		static DataBufferPtr create_ico_helper(const PixelBuffer &image, const Rect &rect, WORD type, const Point &hotspot);
+		static DataBufferPtr create_ico_helper(const std::vector<PixelBuffer> &images, const std::vector<Rect> &rect, WORD type, const std::vector<Point> &hotspots);
 		static void set_riff_header(char *data, const char *type, DWORD size);
 
 		struct ANIHeader
@@ -127,7 +126,7 @@ namespace uicore
 			{
 				int s = 4 + 8 * icons.size();
 				for (unsigned int i = 0; i < icons.size(); i++)
-					s += icons[i].get_size();
+					s += icons[i]->size();
 				return s;
 			}
 
@@ -138,13 +137,13 @@ namespace uicore
 				for (unsigned int i = 0; i < icons.size(); i++)
 				{
 					memcpy(d + p, "icon", 4);
-					*(DWORD *)(d + p + 4) = icons[i].get_size();
-					memcpy(d + p + 8, icons[i].get_data(), icons[i].get_size());
-					p += 8 + icons[i].get_size();
+					*(DWORD *)(d + p + 4) = icons[i]->size();
+					memcpy(d + p + 8, icons[i]->data(), icons[i]->size());
+					p += 8 + icons[i]->size();
 				}
 			}
 
-			std::vector<DataBuffer> icons;
+			std::vector<DataBufferPtr> icons;
 		};
 
 		enum { size_header = 6, size_direntry = 16 };

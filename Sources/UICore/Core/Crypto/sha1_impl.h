@@ -45,7 +45,7 @@ namespace uicore
 		void reset() override;
 		void set_hmac(const void *key_data, int key_size) override;
 		void add(const void *data, int size) override;
-		void add(const DataBuffer &data) override { add(data.get_data(), data.get_size()); }
+		void add(const DataBufferPtr &data) override { add(data->data(), data->size()); }
 
 		void calculate() override;
 

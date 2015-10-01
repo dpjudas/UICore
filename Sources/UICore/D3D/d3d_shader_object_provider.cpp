@@ -69,15 +69,14 @@ namespace uicore
 	void D3DShaderObjectProvider::create(ShaderType new_type, const std::string &source)
 	{
 		shader_source = source;
-		bytecode = DataBuffer();
+		bytecode = DataBufferPtr();
 		compile_status = false;
 		type = new_type;
 	}
 
-	void D3DShaderObjectProvider::create(
-		ShaderType new_type, const void *source, int source_size)
+	void D3DShaderObjectProvider::create(ShaderType new_type, const void *source, int source_size)
 	{
-		bytecode = DataBuffer(source, source_size);
+		bytecode = DataBuffer::create(source, source_size);
 		compile_status = false;
 		type = new_type;
 
@@ -121,7 +120,7 @@ namespace uicore
 		shader.clear();
 		info_log.clear();
 
-		if (!bytecode.get_size())
+		if (!bytecode->size())
 		{
 			load_compiler_dll();
 
@@ -148,7 +147,7 @@ namespace uicore
 
 			if (SUCCEEDED(result))
 			{
-				bytecode = DataBuffer(blob->GetBufferPointer(), blob->GetBufferSize());
+				bytecode = DataBuffer::create(blob->GetBufferPointer(), blob->GetBufferSize());
 			}
 			else
 				return;
@@ -211,7 +210,7 @@ namespace uicore
 		case shadertype_vertex:
 		{
 			ID3D11VertexShader *shader_obj = 0;
-			HRESULT result = device->CreateVertexShader(bytecode.get_data(), bytecode.get_size(), 0, &shader_obj);
+			HRESULT result = device->CreateVertexShader(bytecode->data(), bytecode->size(), 0, &shader_obj);
 			D3DTarget::throw_if_failed("CreateVertexShader failed", result);
 			shader = ComPtr<ID3D11DeviceChild>(shader_obj);
 		}
@@ -219,7 +218,7 @@ namespace uicore
 		case shadertype_tess_evaluation:
 		{
 			ID3D11DomainShader *shader_obj = 0;
-			HRESULT result = device->CreateDomainShader(bytecode.get_data(), bytecode.get_size(), 0, &shader_obj);
+			HRESULT result = device->CreateDomainShader(bytecode->data(), bytecode->size(), 0, &shader_obj);
 			D3DTarget::throw_if_failed("CreateDomainShader failed", result);
 			shader = ComPtr<ID3D11DeviceChild>(shader_obj);
 		}
@@ -227,7 +226,7 @@ namespace uicore
 		case shadertype_tess_control:
 		{
 			ID3D11HullShader *shader_obj = 0;
-			HRESULT result = device->CreateHullShader(bytecode.get_data(), bytecode.get_size(), 0, &shader_obj);
+			HRESULT result = device->CreateHullShader(bytecode->data(), bytecode->size(), 0, &shader_obj);
 			D3DTarget::throw_if_failed("CreateHullShader failed", result);
 			shader = ComPtr<ID3D11DeviceChild>(shader_obj);
 		}
@@ -235,7 +234,7 @@ namespace uicore
 		case shadertype_geometry:
 		{
 			ID3D11GeometryShader *shader_obj = 0;
-			HRESULT result = device->CreateGeometryShader(bytecode.get_data(), bytecode.get_size(), 0, &shader_obj);
+			HRESULT result = device->CreateGeometryShader(bytecode->data(), bytecode->size(), 0, &shader_obj);
 			D3DTarget::throw_if_failed("CreateGeometryShader failed", result);
 			shader = ComPtr<ID3D11DeviceChild>(shader_obj);
 		}
@@ -243,7 +242,7 @@ namespace uicore
 		case shadertype_fragment:
 		{
 			ID3D11PixelShader *shader_obj = 0;
-			HRESULT result = device->CreatePixelShader(bytecode.get_data(), bytecode.get_size(), 0, &shader_obj);
+			HRESULT result = device->CreatePixelShader(bytecode->data(), bytecode->size(), 0, &shader_obj);
 			D3DTarget::throw_if_failed("CreatePixelShader failed", result);
 			shader = ComPtr<ID3D11DeviceChild>(shader_obj);
 		}
@@ -251,7 +250,7 @@ namespace uicore
 		case shadertype_compute:
 		{
 			ID3D11ComputeShader *shader_obj = 0;
-			HRESULT result = device->CreateComputeShader(bytecode.get_data(), bytecode.get_size(), 0, &shader_obj);
+			HRESULT result = device->CreateComputeShader(bytecode->data(), bytecode->size(), 0, &shader_obj);
 			D3DTarget::throw_if_failed("CreateComputeShader failed", result);
 			shader = ComPtr<ID3D11DeviceChild>(shader_obj);
 		}
@@ -270,7 +269,7 @@ namespace uicore
 		if (d3dcompiler_dll)	// If the compiler is available, we must use it! This ensures compatility with the blob
 		{
 			ComPtr<ID3D11ShaderReflection> reflect;
-			HRESULT result = d3dreflect(bytecode.get_data(), bytecode.get_size(), IID_ID3D11ShaderReflection, (void**)reflect.output_variable());
+			HRESULT result = d3dreflect(bytecode->data(), bytecode->size(), IID_ID3D11ShaderReflection, (void**)reflect.output_variable());
 			D3DTarget::throw_if_failed("D3DReflect failed", result);
 
 			D3D11_SHADER_DESC desc;
@@ -288,7 +287,7 @@ namespace uicore
 		}
 		else
 		{
-			DXBC_Reflect reflect(bytecode.get_data(), bytecode.get_size());
+			DXBC_Reflect reflect(bytecode->data(), bytecode->size());
 			for (size_t cnt = 0; cnt < reflect.binding.size(); cnt++)
 			{
 				set_binding(reflect.binding[cnt]);

@@ -260,10 +260,10 @@ namespace uicore
 
 		bool receive_record();
 
-		void change_cipher_spec_data(DataBuffer record_plaintext);
-		void alert_data(DataBuffer record_plaintext);
-		void handshake_data(DataBuffer record_plaintext);
-		void application_data(DataBuffer record_plaintext);
+		void change_cipher_spec_data(DataBufferPtr record_plaintext);
+		void alert_data(DataBufferPtr record_plaintext);
+		void handshake_data(DataBufferPtr record_plaintext);
+		void application_data(DataBufferPtr record_plaintext);
 
 		void handshake_hello_request_received(const void *data, int size);
 		void handshake_client_hello_received(const void *data, int size);
@@ -304,43 +304,43 @@ namespace uicore
 		void PRF(void *output_ptr, unsigned int output_size, const SecretPtr &secret, const char *label_ptr, const SecretPtr &seed_part1, const SecretPtr &seed_part2);
 		void hash_handshake(const void *data_ptr, unsigned int data_size);
 
-		DataBuffer decrypt_record(TLS_Record &record, const DataBuffer &record_data);
-		DataBuffer decrypt_data(const void *data_ptr, unsigned int data_size);
+		DataBufferPtr decrypt_record(TLS_Record &record, const DataBufferPtr &record_data);
+		DataBufferPtr decrypt_data(const void *data_ptr, unsigned int data_size);
 
 		SecretPtr calculate_mac(const void *data_ptr, unsigned int data_size, const void *data2_ptr, unsigned int data2_size, uint64_t sequence_number, const SecretPtr &mac_secret);
-		DataBuffer encrypt_data(const void *data_ptr, unsigned int data_size, const void *mac_ptr, unsigned int mac_size);
+		DataBufferPtr encrypt_data(const void *data_ptr, unsigned int data_size, const void *mac_ptr, unsigned int mac_size);
 
 		static const unsigned int max_record_length = 2 << 14;	// RFC 2246 (6.2.1)
 		static const unsigned int max_handshake_length = 2 << 24;	// RFC 2246 (implied by length in7.4)
 
 		static const int desired_buffer_size = 64 * 1024;
 
-		DataBuffer recv_in_data;
-		int recv_in_data_read_pos;
+		DataBufferPtr recv_in_data = DataBuffer::create(0);
+		int recv_in_data_read_pos = 0;
 
-		DataBuffer recv_out_data;
-		int recv_out_data_read_pos;
+		DataBufferPtr recv_out_data = DataBuffer::create(0);
+		int recv_out_data_read_pos = 0;
 
-		DataBuffer send_in_data;
-		int send_in_data_read_pos;
+		DataBufferPtr send_in_data = DataBuffer::create(0);
+		int send_in_data_read_pos = 0;
 
-		DataBuffer send_out_data;
-		int send_out_data_read_pos;
+		DataBufferPtr send_out_data = DataBuffer::create(0);
+		int send_out_data_read_pos = 0;
 
-		DataBuffer handshake_in_data;
-		int handshake_in_read_pos;
+		DataBufferPtr handshake_in_data = DataBuffer::create(0);
+		int handshake_in_read_pos = 0;
 
-		TLS_ConversationState conversation_state;
+		TLS_ConversationState conversation_state = cl_tls_state_send_client_hello;
 
-		DataBuffer record_data_buffer; // local variable of receive_record(). Placed here to avoid allocating memory each time a record is processed
+		DataBufferPtr record_data_buffer = DataBuffer::create(0); // local variable of receive_record(). Placed here to avoid allocating memory each time a record is processed
 
 		TLS_SecurityParameters security_parameters;
 		TLS_ProtocolVersion protocol;
 
-		DataBuffer server_public_exponent;
-		DataBuffer server_public_modulus;
+		DataBufferPtr server_public_exponent = DataBuffer::create(0);
+		DataBufferPtr server_public_modulus = DataBuffer::create(0);
 
-		bool is_protocol_chosen;	// Set by the server hello response
+		bool is_protocol_chosen = false;	// Set by the server hello response
 
 		RandomPtr m_Random = Random::create();
 

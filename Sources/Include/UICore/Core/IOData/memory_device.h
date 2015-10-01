@@ -30,20 +30,20 @@
 
 #include <memory>
 #include "iodevice.h"
+#include "../System/databuffer.h"
 
 namespace uicore
 {
-	class DataBuffer;
 	class MemoryDeviceImpl;
 
 	class MemoryDevice : public IODevice
 	{
 	public:
 		static std::shared_ptr<MemoryDevice> create();
-		static std::shared_ptr<MemoryDevice> open(const DataBuffer &buffer);
+		static std::shared_ptr<MemoryDevice> open(const DataBufferPtr &buffer);
 
-		virtual const DataBuffer &buffer() const = 0;
-		virtual void set_buffer(const DataBuffer &buffer) = 0;
+		virtual const DataBufferPtr &buffer() const = 0;
+		virtual void set_buffer(const DataBufferPtr &buffer) = 0;
 	};
 
 	typedef std::shared_ptr<MemoryDevice> MemoryDevicePtr;

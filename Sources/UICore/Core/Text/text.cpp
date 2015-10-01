@@ -1112,9 +1112,9 @@ namespace uicore
 			0x00B0, 0x2219, 0x00B7, 0x221A, 0x207F, 0x00B2, 0x25A0, 0x00A0
 		};
 
-		DataBuffer buffer(cp437.length() * sizeof(std::wstring::value_type));
+		auto buffer = DataBuffer::create(cp437.length() * sizeof(std::wstring::value_type));
 		const unsigned char *input = (const unsigned char *) cp437.data();
-		std::wstring::value_type *output = (std::wstring::value_type *) buffer.get_data();
+		std::wstring::value_type *output = (std::wstring::value_type *) buffer->data();
 		std::wstring::size_type index, size;
 		size = cp437.length();
 		for (index = 0; index < size; index++)

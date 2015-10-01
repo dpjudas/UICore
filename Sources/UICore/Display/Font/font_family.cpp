@@ -73,7 +73,7 @@ namespace uicore
 	void FontFamily::add(const FontDescription &desc, const std::string &ttf_filename)
 	{
 		throw_if_null();
-		DataBuffer font_databuffer;
+		DataBufferPtr font_databuffer;
 		if (!ttf_filename.empty())
 		{
 			font_databuffer = File::read_all_bytes(ttf_filename);

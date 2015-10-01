@@ -41,7 +41,6 @@ namespace uicore
 	class Point;
 	class PixelBuffer;
 	class PixelFormat;
-	class DataBuffer;
 	class PixelBufferProvider;
 	class TransferTexture_Impl;
 	class SharedGCData_Impl;

@@ -37,7 +37,6 @@
 namespace uicore
 {
 	class IODevice;
-	class DataBuffer;
 	class ShaderObject;
 	class ProgramObject_Impl;
 	class GraphicContext;

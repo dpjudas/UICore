@@ -137,8 +137,8 @@ namespace uicore
 			else
 				ofn.hwndOwner = 0;
 
-			DataBuffer buffer(64 * 1024 * sizeof(std::wstring::value_type));
-			std::wstring::value_type *filename_buffer = (std::wstring::value_type *)buffer.get_data();
+			auto buffer = DataBuffer::create(64 * 1024 * sizeof(std::wstring::value_type));
+			std::wstring::value_type *filename_buffer = (std::wstring::value_type *)buffer->data();
 			std::wstring title16 = StringHelp::utf8_to_ucs2(title);
 			std::wstring filter16 = get_filter_string();
 			std::wstring initial_directory16 = StringHelp::utf8_to_ucs2(initial_directory);

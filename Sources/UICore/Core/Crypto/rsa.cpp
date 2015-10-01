@@ -34,23 +34,23 @@
 
 namespace uicore
 {
-	void RSA::create_keypair(Random &random, SecretPtr &out_private_exponent, DataBuffer &out_public_exponent, DataBuffer &out_modulus, int key_size_in_bits, int public_exponent_value)
+	void RSA::create_keypair(Random &random, SecretPtr &out_private_exponent, DataBufferPtr &out_public_exponent, DataBufferPtr &out_modulus, int key_size_in_bits, int public_exponent_value)
 	{
 		RSA_Impl rsa_impl;
 		rsa_impl.create_keypair(random, out_private_exponent, out_public_exponent, out_modulus, key_size_in_bits, public_exponent_value);
 	}
 
-	DataBuffer RSA::encrypt(int block_type, Random &random, const DataBuffer &in_public_exponent, const DataBuffer &in_modulus, const SecretPtr &in_data)
+	DataBufferPtr RSA::encrypt(int block_type, Random &random, const DataBufferPtr &in_public_exponent, const DataBufferPtr &in_modulus, const SecretPtr &in_data)
 	{
-		return RSA_Impl::encrypt(block_type, random, in_public_exponent.get_data(), in_public_exponent.get_size(), in_modulus.get_data(), in_modulus.get_size(), in_data->get_data(), in_data->get_size());
+		return RSA_Impl::encrypt(block_type, random, in_public_exponent->data(), in_public_exponent->size(), in_modulus->data(), in_modulus->size(), in_data->get_data(), in_data->get_size());
 	}
 
-	SecretPtr RSA::decrypt(const SecretPtr &in_private_exponent, const DataBuffer &in_modulus, const DataBuffer &in_data)
+	SecretPtr RSA::decrypt(const SecretPtr &in_private_exponent, const DataBufferPtr &in_modulus, const DataBufferPtr &in_data)
 	{
-		return RSA_Impl::decrypt(in_private_exponent, in_modulus.get_data(), in_modulus.get_size(), in_data.get_data(), in_data.get_size());
+		return RSA_Impl::decrypt(in_private_exponent, in_modulus->data(), in_modulus->size(), in_data->data(), in_data->size());
 	}
 
-	DataBuffer RSA::encrypt(int block_type, Random &random, const void *in_public_exponent, unsigned int in_public_exponent_size, const void *in_modulus, unsigned int in_modulus_size, const void *in_data, unsigned int in_data_size)
+	DataBufferPtr RSA::encrypt(int block_type, Random &random, const void *in_public_exponent, unsigned int in_public_exponent_size, const void *in_modulus, unsigned int in_modulus_size, const void *in_data, unsigned int in_data_size)
 	{
 		return RSA_Impl::encrypt(block_type, random, in_public_exponent, in_public_exponent_size, in_modulus, in_modulus_size, in_data, in_data_size);
 	}

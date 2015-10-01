@@ -383,26 +383,25 @@ namespace uicore
 		file->write(text.data(), text.length());
 	}
 
-	DataBuffer File::read_all_bytes(const std::string &filename)
+	DataBufferPtr File::read_all_bytes(const std::string &filename)
 	{
 		auto file = FileImpl::open_existing(filename);
 
 		if (file->size() > sizeof(size_t) / 2)
 			throw Exception("File too large!");
 
-		DataBuffer buffer;
-		buffer.set_size((size_t)file->size());
+		auto buffer = DataBuffer::create((size_t)file->size());
 
-		if (buffer.get_size() > 0)
-			file->read(buffer.get_data(), buffer.get_size());
+		if (buffer->size() > 0)
+			file->read(buffer->data(), buffer->size());
 
 		return buffer;
 	}
 
-	void File::write_all_bytes(const std::string &filename, const DataBuffer &data)
+	void File::write_all_bytes(const std::string &filename, const DataBufferPtr &data)
 	{
 		auto file = FileImpl::create_always(filename);
-		file->write(data.get_data(), data.get_size());
+		file->write(data->data(), data->size());
 	}
 
 	void File::copy(const std::string &from, const std::string &to, bool copy_always)
@@ -416,7 +415,7 @@ namespace uicore
 		auto output_file = copy_always ? File::create_always(to) : File::create_new(to);
 		long long pos = 0;
 		long long size = input_file->size();
-		DataBuffer buffer(1024 * 1024);
+		DataBufferPtr buffer(1024 * 1024);
 		while (pos < size)
 		{
 			long long amount = std::min(1024 * 1024, size - pos);

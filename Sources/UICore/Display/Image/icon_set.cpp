@@ -40,7 +40,7 @@ namespace uicore
 	public:
 		std::vector<PixelBuffer> images;
 
-		static DataBuffer create_ico_helper(const std::vector<PixelBuffer> &images, int type, const std::vector<Point> &hotspots);
+		static DataBufferPtr create_ico_helper(const std::vector<PixelBuffer> &images, int type, const std::vector<Point> &hotspots);
 		static PixelBuffer create_bitmap_data(const PixelBuffer &image);
 
 		struct IconHeader
@@ -114,15 +114,15 @@ namespace uicore
 		impl->images.push_back(image);
 	}
 
-	DataBuffer IconSet::create_win32_icon()
+	DataBufferPtr IconSet::create_win32_icon()
 	{
 		return impl->create_ico_helper(impl->images, 1, std::vector<Point>());
 	}
 
-	DataBuffer IconSet_Impl::create_ico_helper(const std::vector<PixelBuffer> &images, int type, const std::vector<Point> &hotspots)
+	DataBufferPtr IconSet_Impl::create_ico_helper(const std::vector<PixelBuffer> &images, int type, const std::vector<Point> &hotspots)
 	{
-		DataBuffer buf;
-		buf.set_capacity(32 * 1024);
+		auto buf = DataBuffer::create(0);
+		buf->set_capacity(32 * 1024);
 		auto device = MemoryDevice::open(buf);
 
 		IconHeader header;

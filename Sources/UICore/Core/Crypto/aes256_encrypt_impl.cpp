@@ -41,7 +41,7 @@ namespace uicore
 		reset();
 	}
 
-	DataBuffer AES256_Encrypt_Impl::get_data() const
+	DataBufferPtr AES256_Encrypt_Impl::get_data() const
 	{
 		return databuffer;
 	}
@@ -51,7 +51,7 @@ namespace uicore
 		calculated = false;
 		memset(chunk, 0, sizeof(chunk));
 		chunk_filled = 0;
-		databuffer.set_size(0);
+		databuffer->set_size(0);
 	}
 
 	void AES256_Encrypt_Impl::set_iv(const unsigned char iv[16])

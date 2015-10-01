@@ -33,16 +33,15 @@
 #include "UICore/Display/Font/font.h"
 #include "UICore/Display/Font/font_description.h"
 #include "UICore/Display/Font/font_metrics.h"
+#include "UICore/Core/System/databuffer.h"
 
 namespace uicore
 {
-	class DataBuffer;
-
 	class FontEngine_Win32 : public FontEngine
 	{
 	public:
 		FontEngine_Win32(const FontDescription &description, const std::string &typeface_name, float pixel_ratio);
-		FontEngine_Win32(const FontDescription &description, DataBuffer &font_databuffer, float pixel_ratio);
+		FontEngine_Win32(const FontDescription &description, DataBufferPtr &font_databuffer, float pixel_ratio);
 		~FontEngine_Win32();
 
 		bool is_automatic_recreation_allowed() const override { return true; }
@@ -103,7 +102,7 @@ namespace uicore
 		void swap(USHORT &value) const { value = (value << 8) | (value >> 8); }
 		void swap(ULONG &value) const { value = ((value << 8) & 0xFF00FF00) | ((value >> 8) & 0xFF00FF); value = (value << 16) | (value >> 16); }
 
-		std::string get_ttf_typeface_name(DataBuffer &font_databuffer);
+		std::string get_ttf_typeface_name(DataBufferPtr &font_databuffer);
 
 		inline Pointf to_point(POINTFX &fx)
 		{
@@ -119,7 +118,7 @@ namespace uicore
 		FontPixelBuffer get_font_glyph_lcd(int glyph);
 		FontPixelBuffer get_font_glyph_gray8(int glyph);
 		FontPixelBuffer get_font_glyph_mono(int glyph);
-		bool try_load_glyph_bitmap(int glyph, UINT format, MAT2 &matrix, DataBuffer &glyph_bitmap, GLYPHMETRICS &glyph_metrics);
+		bool try_load_glyph_bitmap(int glyph, UINT format, MAT2 &matrix, DataBufferPtr &glyph_bitmap, GLYPHMETRICS &glyph_metrics);
 		FontPixelBuffer get_empty_font_glyph(int glyph);
 		int decode_charset(FontDescription::Charset selected_charset);
 		HFONT handle = 0;

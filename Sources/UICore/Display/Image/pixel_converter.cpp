@@ -140,8 +140,8 @@ namespace uicore
 		std::unique_ptr<PixelWriter> writer = impl->create_writer(output_format, sse2, sse4);
 		std::vector<std::shared_ptr<PixelFilter> > filters = impl->create_filters(sse2);
 
-		DataBuffer work_buffer(width * sizeof(Vec4f));
-		Vec4f *temp = work_buffer.get_data<Vec4f>();
+		auto work_buffer = DataBuffer::create(width * sizeof(Vec4f));
+		Vec4f *temp = work_buffer->data<Vec4f>();
 		for (int input_y = 0; input_y < height; input_y++)
 		{
 			int output_y = impl->flip_vertical ? (height - 1 - input_y) : input_y;

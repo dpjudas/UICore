@@ -55,24 +55,24 @@ namespace uicore
 	{
 		if (cursor_description.get_frames().empty())
 			throw Exception("Cannot create cursor with no image frames");
-		DataBuffer ani_file = create_ani_file(cursor_description);
+		DataBufferPtr ani_file = create_ani_file(cursor_description);
 		int desired_width = cursor_description.get_frames().front().rect.get_width();
 		int desired_height = cursor_description.get_frames().front().rect.get_height();
-		HICON icon = CreateIconFromResourceEx((PBYTE)ani_file.get_data(), ani_file.get_size(), FALSE, 0x00030000, desired_width, desired_height, LR_DEFAULTCOLOR);
+		HICON icon = CreateIconFromResourceEx((PBYTE)ani_file->data(), ani_file->size(), FALSE, 0x00030000, desired_width, desired_height, LR_DEFAULTCOLOR);
 		return (HCURSOR)icon;
 	}
 
-	DataBuffer CursorProvider_Win32::create_ico_file(const PixelBuffer &image)
+	DataBufferPtr CursorProvider_Win32::create_ico_file(const PixelBuffer &image)
 	{
 		return create_ico_helper(image, Rectf(image.get_size()), 1, Point(0, 0));
 	}
 
-	DataBuffer CursorProvider_Win32::create_cur_file(const PixelBuffer &image, const Rect &rect, const Point &hotspot)
+	DataBufferPtr CursorProvider_Win32::create_cur_file(const PixelBuffer &image, const Rect &rect, const Point &hotspot)
 	{
 		return create_ico_helper(image, rect, 2, hotspot);
 	}
 
-	DataBuffer CursorProvider_Win32::create_ico_helper(const PixelBuffer &image, const Rect &rect, WORD type, const Point &hotspot)
+	DataBufferPtr CursorProvider_Win32::create_ico_helper(const PixelBuffer &image, const Rect &rect, WORD type, const Point &hotspot)
 	{
 		std::vector<PixelBuffer> images;
 		std::vector<Rect> rects;
@@ -83,10 +83,10 @@ namespace uicore
 		return create_ico_helper(images, rects, type, hotspots);
 	}
 
-	DataBuffer CursorProvider_Win32::create_ico_helper(const std::vector<PixelBuffer> &images, const std::vector<Rect> &rects, WORD type, const std::vector<Point> &hotspots)
+	DataBufferPtr CursorProvider_Win32::create_ico_helper(const std::vector<PixelBuffer> &images, const std::vector<Rect> &rects, WORD type, const std::vector<Point> &hotspots)
 	{
-		DataBuffer buf;
-		buf.set_capacity(32 * 1024);
+		auto buf = DataBuffer::create(0);
+		buf->set_capacity(32 * 1024);
 		auto device = MemoryDevice::open(buf);
 
 		ICONHEADER header;
@@ -136,7 +136,7 @@ namespace uicore
 		return device->buffer();
 	}
 
-	DataBuffer CursorProvider_Win32::create_ani_file(const CursorDescription &cursor_description)
+	DataBufferPtr CursorProvider_Win32::create_ani_file(const CursorDescription &cursor_description)
 	{
 		/*
 			"RIFF" {Length of File}
@@ -162,7 +162,7 @@ namespace uicore
 		const std::vector<CursorDescriptionFrame> &frames = cursor_description.get_frames();
 		for (std::vector<CursorDescriptionFrame>::size_type i = 0; i < frames.size(); i++)
 		{
-			DataBuffer ico_file = create_cur_file(frames[i].pixelbuffer, frames[i].rect, cursor_description.get_hotspot());
+			DataBufferPtr ico_file = create_cur_file(frames[i].pixelbuffer, frames[i].rect, cursor_description.get_hotspot());
 			ani_frames.icons.push_back(ico_file);
 			DWORD rate = static_cast<DWORD>(frames[i].delay * 60);
 			if (rate == 0)
@@ -196,8 +196,8 @@ namespace uicore
 		int size_list2 = 8 + ani_frames.length();
 		int size = size_file_header + size_list1 + size_anih + size_rate + size_seq + size_list2;
 
-		DataBuffer ani_file(size);
-		char *data = ani_file.get_data();
+		auto ani_file = DataBuffer::create(size);
+		char *data = ani_file->data();
 
 		set_riff_header(data, "RIFF", size);
 		memcpy(data + 8, "ACON", 4);

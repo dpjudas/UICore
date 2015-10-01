@@ -30,10 +30,10 @@
 #pragma once
 
 #include <memory>
+#include "../System/databuffer.h"
 
 namespace uicore
 {
-	class DataBuffer;
 	class Base64Encoder_Impl;
 
 	/// \brief Base64 encoder class.
@@ -44,7 +44,7 @@ namespace uicore
 		Base64Encoder();
 
 		/// \brief Returns the data in encoded form.
-		DataBuffer &get_result();
+		DataBufferPtr &get_result();
 
 		/// \brief Resets the encoder.
 		void reset();
@@ -70,7 +70,7 @@ namespace uicore
 		/// \param data = Data Buffer
 		///
 		/// \return String8
-		static std::string encode(const DataBuffer &data);
+		static std::string encode(const DataBufferPtr &data);
 
 	private:
 		std::shared_ptr<Base64Encoder_Impl> impl;

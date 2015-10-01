@@ -29,10 +29,10 @@
 #pragma once
 
 #include <memory>
+#include "../../Core/System/databuffer.h"
 
 namespace uicore
 {
-	class DataBuffer;
 	class PixelBuffer;
 	class IconSet_Impl;
 
@@ -50,7 +50,7 @@ namespace uicore
 		void add_image(const PixelBuffer &image);
 
 		/// \brief Generates a Windows .ICO format icon from the set
-		DataBuffer create_win32_icon();
+		DataBufferPtr create_win32_icon();
 
 	private:
 		std::shared_ptr<IconSet_Impl> impl;

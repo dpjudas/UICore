@@ -31,6 +31,7 @@
 #include <string>
 #include <memory>
 #include "iodevice.h"
+#include "../System/databuffer.h"
 
 namespace uicore
 {
@@ -40,8 +41,6 @@ namespace uicore
 		write,
 		read_write,
 	};
-
-	class DataBuffer;
 
 	class File : public IODevice
 	{
@@ -54,8 +53,8 @@ namespace uicore
 		static std::string read_all_text(const std::string &filename);
 		static void write_all_text(const std::string &filename, const std::string &text);
 
-		static DataBuffer read_all_bytes(const std::string &filename);
-		static void write_all_bytes(const std::string &filename, const DataBuffer &data);
+		static DataBufferPtr read_all_bytes(const std::string &filename);
+		static void write_all_bytes(const std::string &filename, const DataBufferPtr &data);
 
 		static void copy(const std::string &from, const std::string &to, bool copy_always);
 		static void remove(const std::string &filename);

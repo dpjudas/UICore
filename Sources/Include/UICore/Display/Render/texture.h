@@ -42,7 +42,6 @@ namespace uicore
 	class PixelBufferSet;
 	class PixelFormat;
 	class TextureProvider;
-	class DataBuffer;
 	class Texture1D;
 	class Texture1DArray;
 	class Texture2D;

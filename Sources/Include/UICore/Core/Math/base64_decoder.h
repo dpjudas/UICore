@@ -29,10 +29,10 @@
 #pragma once
 
 #include <memory>
+#include "../System/databuffer.h"
 
 namespace uicore
 {
-	class DataBuffer;
 	class Base64Decoder_Impl;
 
 	/// \brief Base64 decoder class.
@@ -43,7 +43,7 @@ namespace uicore
 		Base64Decoder();
 
 		/// \brief Returns the decoded data.
-		DataBuffer &get_result();
+		DataBufferPtr &get_result();
 
 		/// \brief Resets the decoder.
 		void reset();
@@ -52,21 +52,21 @@ namespace uicore
 		void feed(const void *data, int size, bool append_result = true);
 
 		/// \brief Decode base64 data and return it in a buffer.
-		static DataBuffer decode(const void *data, int size);
+		static DataBufferPtr decode(const void *data, int size);
 
 		/// \brief Decode
 		///
 		/// \param data = String Ref8
 		///
 		/// \return Data Buffer
-		static DataBuffer decode(const std::string &data);
+		static DataBufferPtr decode(const std::string &data);
 
 		/// \brief Decode
 		///
 		/// \param data = Data Buffer
 		///
 		/// \return Data Buffer
-		static DataBuffer decode(const DataBuffer &data);
+		static DataBufferPtr decode(const DataBufferPtr &data);
 
 	private:
 		std::shared_ptr<Base64Decoder_Impl> impl;

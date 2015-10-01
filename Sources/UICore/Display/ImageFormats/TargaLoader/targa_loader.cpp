@@ -85,29 +85,29 @@ namespace uicore
 
 	void TargaLoader::read_image_id()
 	{
-		image_id = DataBuffer(id_length);
-		file.read(image_id.get_data(), image_id.get_size());
+		image_id = DataBuffer::create(id_length);
+		file.read(image_id->data(), image_id->size());
 	}
 
 	void TargaLoader::read_color_map()
 	{
-		colormap_data = DataBuffer(bytes_per_colormap_entry * colormap_length);
-		file.read(colormap_data.get_data(), colormap_data.get_size());
+		colormap_data = DataBuffer::create(bytes_per_colormap_entry * colormap_length);
+		file.read(colormap_data->data(), colormap_data->size());
 	}
 
 	void TargaLoader::read_image_data()
 	{
-		image_data = DataBuffer(bytes_per_pixel_entry * image_width * image_height);
+		image_data = DataBuffer::create(bytes_per_pixel_entry * image_width * image_height);
 
 		if (image_type == 9 || image_type == 10 || image_type == 11) // RLE compressed
 		{
-			DataBuffer rle_data(file.size() - file.position());
-			file.read(rle_data.get_data(), rle_data.get_size());
+			auto rle_data = DataBuffer::create(file.size() - file.position());
+			file.read(rle_data->data(), rle_data->size());
 
-			unsigned char *input = reinterpret_cast<unsigned char*>(rle_data.get_data());
-			unsigned char *output = reinterpret_cast<unsigned char*>(image_data.get_data());
+			unsigned char *input = reinterpret_cast<unsigned char*>(rle_data->data());
+			unsigned char *output = reinterpret_cast<unsigned char*>(image_data->data());
 			int pixels_left = image_width * image_height;
-			int input_available = rle_data.get_size();
+			int input_available = rle_data->size();
 			while (pixels_left > 0 && input_available > 0)
 			{
 				int code = *input;
@@ -143,7 +143,7 @@ namespace uicore
 		}
 		else
 		{
-			file.read(image_data.get_data(), image_data.get_size());
+			file.read(image_data->data(), image_data->size());
 		}
 	}
 
@@ -154,7 +154,7 @@ namespace uicore
 		{
 			if (colormap_entry_size == 32)
 			{
-				unsigned int *colormap = reinterpret_cast<unsigned int*>(colormap_data.get_data());
+				unsigned int *colormap = reinterpret_cast<unsigned int*>(colormap_data->data());
 				for (int i = 0; i < colormap_length; i++)
 				{
 					palette[i].a = (num_alpha_bits != 0) ? ((colormap[i] >> 24) & 0xff) : 255;
@@ -165,7 +165,7 @@ namespace uicore
 			}
 			else if (colormap_entry_size == 24)
 			{
-				unsigned char *colormap = reinterpret_cast<unsigned char*>(colormap_data.get_data());
+				unsigned char *colormap = reinterpret_cast<unsigned char*>(colormap_data->data());
 				for (int i = 0; i < colormap_length; i++)
 				{
 					palette[i].b = colormap[i * 3];
@@ -176,7 +176,7 @@ namespace uicore
 			}
 			else if (colormap_entry_size == 16) // 5,5,5,1
 			{
-				unsigned short *colormap = reinterpret_cast<unsigned short*>(colormap_data.get_data());
+				unsigned short *colormap = reinterpret_cast<unsigned short*>(colormap_data->data());
 				for (int i = 0; i < colormap_length; i++)
 				{
 					int alpha_bit = (num_alpha_bits != 0) ? ((colormap[i] >> 15) & 0x1) : 1;
@@ -225,7 +225,7 @@ namespace uicore
 	void TargaLoader::decode_color_mapped()
 	{
 		PixelBufferLock4ub pixels(image);
-		unsigned char *input = reinterpret_cast<unsigned char*>(image_data.get_data());
+		unsigned char *input = reinterpret_cast<unsigned char*>(image_data->data());
 		for (int y = 0; y < image_height; y++)
 		{
 			Vec4ub *output_line = pixels.get_row(top_down ? y : image_height - y - 1);
@@ -247,7 +247,7 @@ namespace uicore
 		{
 			for (int y = 0; y < image_height; y++)
 			{
-				unsigned int *input_line = reinterpret_cast<unsigned int*>(image_data.get_data()) + y * image_width;
+				unsigned int *input_line = reinterpret_cast<unsigned int*>(image_data->data()) + y * image_width;
 				Vec4ub *output_line = pixels.get_row(top_down ? y : image_height - y - 1);
 				for (int x = 0; x < image_width; x++)
 				{
@@ -263,7 +263,7 @@ namespace uicore
 		{
 			for (int y = 0; y < image_height; y++)
 			{
-				unsigned char *input_line = reinterpret_cast<unsigned char*>(image_data.get_data()) + y * image_width * 3;
+				unsigned char *input_line = reinterpret_cast<unsigned char*>(image_data->data()) + y * image_width * 3;
 				Vec4ub *output_line = pixels.get_row(top_down ? y : image_height - y - 1);
 				for (int x = 0; x < image_width; x++)
 				{
@@ -279,7 +279,7 @@ namespace uicore
 		{
 			for (int y = 0; y < image_height; y++)
 			{
-				unsigned short *input_line = reinterpret_cast<unsigned short*>(image_data.get_data()) + y * image_width;
+				unsigned short *input_line = reinterpret_cast<unsigned short*>(image_data->data()) + y * image_width;
 				Vec4ub *output_line = pixels.get_row(top_down ? y : image_height - y - 1);
 				for (int x = 0; x < image_width; x++)
 				{
@@ -304,7 +304,7 @@ namespace uicore
 		{
 			for (int y = 0; y < image_height; y++)
 			{
-				unsigned char *input_line = reinterpret_cast<unsigned char*>(image_data.get_data()) + y * image_width;
+				unsigned char *input_line = reinterpret_cast<unsigned char*>(image_data->data()) + y * image_width;
 				Vec4ub *output_line = pixels.get_row(top_down ? y : image_height - y - 1);
 				for (int x = 0; x < image_width; x++)
 				{

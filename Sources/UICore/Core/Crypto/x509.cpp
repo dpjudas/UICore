@@ -49,7 +49,7 @@ namespace uicore
 			throw Exception("X509 is null");
 	}
 
-	void X509::get_rsa_public_key(DataBuffer &output_exponent, DataBuffer &output_modulus) const
+	void X509::get_rsa_public_key(DataBufferPtr &output_exponent, DataBufferPtr &output_modulus) const
 	{
 		throw_if_null();
 		impl->get_rsa_public_key(output_exponent, output_modulus);

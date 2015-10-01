@@ -943,11 +943,11 @@ namespace uicore
 			GetRawInputData(handle, RID_INPUT, 0, &size, sizeof(RAWINPUTHEADER));
 			if (size > 0)
 			{
-				DataBuffer buffer(size);
-				BOOL result = GetRawInputData(handle, RID_INPUT, buffer.get_data(), &size, sizeof(RAWINPUTHEADER));
+				auto buffer = DataBuffer::create(size);
+				BOOL result = GetRawInputData(handle, RID_INPUT, buffer->data(), &size, sizeof(RAWINPUTHEADER));
 				if (result)
 				{
-					RAWINPUT *rawinput = (RAWINPUT*)buffer.get_data();
+					RAWINPUT *rawinput = (RAWINPUT*)buffer->data();
 					if (rawinput->header.dwType == RIM_TYPEMOUSE)
 					{
 						// To do: generate relative mouse movement events based on HID mouse information.
@@ -1078,12 +1078,12 @@ namespace uicore
 
 	void Win32Window::add_png_to_clipboard(const PixelBuffer &image)
 	{
-		DataBuffer png_data_buf(1024*8);
+		auto png_data_buf = DataBuffer::create(1024*8);
 		auto iodev_mem = MemoryDevice::open(png_data_buf);
 		PNGFormat::save(image, *iodev_mem);
-		DataBuffer png_data = iodev_mem->buffer();
+		DataBufferPtr png_data = iodev_mem->buffer();
 
-		unsigned int length = png_data.get_size();
+		unsigned int length = png_data->size();
 		HANDLE handle = GlobalAlloc(GMEM_MOVEABLE, length);
 		if (handle == 0)
 		{
@@ -1099,7 +1099,7 @@ namespace uicore
 			throw Exception("Unable to lock clipboard memory");
 		}
 
-		memcpy(data, png_data.get_data(), png_data.get_size());
+		memcpy(data, png_data->data(), png_data->size());
 
 		GlobalUnlock(handle);
 
@@ -1359,13 +1359,13 @@ namespace uicore
 		rgbBitmapInfo.bV5AlphaMask = 0xff000000;
 		size_t pitch = rgbBitmapInfo.bV5Width*4;
 		rgbBitmapInfo.bV5SizeImage = abs(rgbBitmapInfo.bV5Height) * pitch;
-		DataBuffer bitmap_data(pitch * abs(rgbBitmapInfo.bV5Height));
-		int scanlines = GetDIBits(hdc, bitmap, 0, abs(bitmapInfo->bV5Height), bitmap_data.get_data(), (LPBITMAPINFO) &rgbBitmapInfo, DIB_RGB_COLORS);
+		auto bitmap_data = DataBuffer::create(pitch * abs(rgbBitmapInfo.bV5Height));
+		int scanlines = GetDIBits(hdc, bitmap, 0, abs(bitmapInfo->bV5Height), bitmap_data->data(), (LPBITMAPINFO) &rgbBitmapInfo, DIB_RGB_COLORS);
 		if (scanlines != abs(bitmapInfo->bV5Height))
 			throw Exception("GetDIBits failed");
 
 		// GetDIBits above sets the alpha channel to 0 - need to convert it to 255.
-		uint8_t *data = (uint8_t *)bitmap_data.get_data();
+		uint8_t *data = (uint8_t *)bitmap_data->data();
 		for (int y=0; y<abs(bitmapInfo->bV5Height); y++)
 		{
 			for (int x=0; x<abs(bitmapInfo->bV5Width); x++)
@@ -1375,7 +1375,7 @@ namespace uicore
 		}
 
 
-		PixelBuffer pixelbuffer(rgbBitmapInfo.bV5Width, abs(rgbBitmapInfo.bV5Height), tf_bgra8, bitmap_data.get_data());
+		PixelBuffer pixelbuffer(rgbBitmapInfo.bV5Width, abs(rgbBitmapInfo.bV5Height), tf_bgra8, bitmap_data->data());
 
 		ReleaseDC(0, hdc);
 
@@ -1422,13 +1422,13 @@ namespace uicore
 		rgbBitmapInfo.bV5AlphaMask = 0x000000ff;
 		size_t pitch = rgbBitmapInfo.bV5Width*4;
 		rgbBitmapInfo.bV5SizeImage = abs(rgbBitmapInfo.bV5Height) * pitch;
-		DataBuffer bitmap_data(pitch * abs(rgbBitmapInfo.bV5Height));
-		int scanlines = GetDIBits(hdc, bitmap, 0, abs(bitmapInfo->bV5Height), bitmap_data.get_data(), (LPBITMAPINFO) &rgbBitmapInfo, DIB_RGB_COLORS);
+		auto bitmap_data = DataBuffer::create(pitch * abs(rgbBitmapInfo.bV5Height));
+		int scanlines = GetDIBits(hdc, bitmap, 0, abs(bitmapInfo->bV5Height), bitmap_data->data(), (LPBITMAPINFO) &rgbBitmapInfo, DIB_RGB_COLORS);
 		if (scanlines != abs(bitmapInfo->bV5Height))
 			throw Exception("GetDIBits failed");
 
 		// GetDIBits above sets the alpha channel to 0 - need to convert it to 255.
-		uint8_t *data = (uint8_t *)bitmap_data.get_data();
+		uint8_t *data = (uint8_t *)bitmap_data->data();
 		for (int y=0; y<abs(bitmapInfo->bV5Height); y++)
 		{
 			for (int x=0; x<abs(bitmapInfo->bV5Width); x++)
@@ -1438,7 +1438,7 @@ namespace uicore
 		}
 
 
-		PixelBuffer pixelbuffer(rgbBitmapInfo.bV5Width, abs(rgbBitmapInfo.bV5Height), tf_bgra8, bitmap_data.get_data());
+		PixelBuffer pixelbuffer(rgbBitmapInfo.bV5Width, abs(rgbBitmapInfo.bV5Height), tf_bgra8, bitmap_data->data());
 
 		ReleaseDC(0, hdc);
 
@@ -1468,7 +1468,7 @@ namespace uicore
 
 	PixelBuffer Win32Window::get_argb8888_from_png(uint8_t *data, size_t size) const
 	{
-		DataBuffer data_buffer(data, size);
+		auto data_buffer = DataBuffer::create(data, size);
 		auto iodev = MemoryDevice::open(data_buffer);
 		PixelBuffer pbuf = PNGFormat::load(*iodev);
 		return pbuf;
@@ -1884,8 +1884,8 @@ namespace uicore
 			update_window_max_region_rects = rects.size() + 1024;
 
 		int size = sizeof(RGNDATAHEADER) + sizeof(RECT) * rects.size();
-		DataBuffer region_data_buffer(size);
-		RGNDATA *region_data = (RGNDATA*)region_data_buffer.get_data();
+		auto region_data_buffer = DataBuffer::create(size);
+		RGNDATA *region_data = (RGNDATA*)region_data_buffer->data();
 		region_data->rdh.dwSize = sizeof(RGNDATAHEADER);
 		region_data->rdh.iType = RDH_RECTANGLES;
 		region_data->rdh.nCount = rects.size();
@@ -1895,7 +1895,7 @@ namespace uicore
 		for (size_t i = 0; i < rects.size(); i++)
 			region_data_rects[i] = rects[i];
 
-		update_window_region = ExtCreateRegion(0, region_data_buffer.get_size(), region_data);
+		update_window_region = ExtCreateRegion(0, region_data_buffer->size(), region_data);
 		// SetWindowRgn() is called in update_layered()
 
 	}

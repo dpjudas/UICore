@@ -75,7 +75,7 @@ namespace uicore
 		void extract_encrypt_key192(const unsigned char key[aes192_key_length_bytes], uint32_t key_expanded[aes192_nb_mult_nr_plus1]);
 		void extract_encrypt_key256(const unsigned char key[aes256_key_length_bytes], uint32_t key_expanded[aes256_nb_mult_nr_plus1]);
 		void extract_decrypt_key(uint32_t *key_expanded, int num_rounds);
-		void store_block(uint32_t s0, uint32_t s1, uint32_t s2, uint32_t s3, DataBuffer &databuffer);
+		void store_block(uint32_t s0, uint32_t s1, uint32_t s2, uint32_t s3, DataBufferPtr &databuffer);
 
 		inline uint32_t get_word(const unsigned char *data) const
 		{

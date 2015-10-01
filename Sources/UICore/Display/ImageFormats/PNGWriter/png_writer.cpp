@@ -123,7 +123,7 @@ namespace uicore
 		scanline_orig.resize((image.get_width() + 1) * bytes_per_pixel);
 		scanline_filtered.resize(image.get_width() * bytes_per_pixel + 1);
 		
-		DataBuffer idat_uncompressed(height * scanline_filtered.size());
+		auto idat_uncompressed = DataBuffer::create(height * scanline_filtered.size());
 		
 		for (int y = 0; y < height; y++)
 		{
@@ -156,12 +156,12 @@ namespace uicore
 			}
 			
 			// Output scanline
-			memcpy(idat_uncompressed.get_data<unsigned char>() + y * scanline_filtered.size(), scanline_filtered.data(), scanline_filtered.size());
+			memcpy(idat_uncompressed->data<unsigned char>() + y * scanline_filtered.size(), scanline_filtered.data(), scanline_filtered.size());
 		}
 		
-		DataBuffer idat = ZLibCompression::compress(idat_uncompressed, false);
+		DataBufferPtr idat = ZLibCompression::compress(idat_uncompressed, false);
 		
-		write_chunk("IDAT", idat.get_data(), idat.get_size());
+		write_chunk("IDAT", idat->data(), idat->size());
 	}
 	
 	void PNGWriter::write_chunk(const char name[4], const void *data, int size)

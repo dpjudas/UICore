@@ -74,9 +74,9 @@ namespace uicore
 	{
 		file.set_big_endian_mode();
 
-		std::map<std::string, DataBuffer> chunks;
+		std::map<std::string, DataBufferPtr> chunks;
 
-		std::vector<DataBuffer> idat_chunks;
+		std::vector<DataBufferPtr> idat_chunks;
 		uint64_t total_idat_size = 0;
 
 		while (true)
@@ -86,12 +86,12 @@ namespace uicore
 			name[4] = 0;
 			file.read(name, 4);
 
-			DataBuffer data(length);
-			file.read(data.get_data(), data.get_size());
+			auto data = DataBuffer::create(length);
+			file.read(data->data(), data->size());
 
 			unsigned int crc32 = file.read_uint32();
 
-			unsigned int compare_crc32 = PNGCRC32::crc(name, data.get_data(), data.get_size());
+			unsigned int compare_crc32 = PNGCRC32::crc(name, data->data(), data->size());
 			if (crc32 != compare_crc32)
 				throw Exception("CRC32 error");
 
@@ -111,12 +111,12 @@ namespace uicore
 		if (total_idat_size >= (1 << 31))
 			throw Exception("PNG image file too big!");
 
-		idat = DataBuffer((int)total_idat_size);
+		idat = DataBuffer::create((int)total_idat_size);
 		int idat_pos = 0;
 		for (auto & idat_chunk : idat_chunks)
 		{
-			memcpy(idat.get_data() + idat_pos, idat_chunk.get_data(), idat_chunk.get_size());
-			idat_pos += idat_chunk.get_size();
+			memcpy(idat->data() + idat_pos, idat_chunk->data(), idat_chunk->size());
+			idat_pos += idat_chunk->size();
 		}
 
 		ihdr = chunks["IHDR"];
@@ -129,19 +129,19 @@ namespace uicore
 		sbit = chunks["sBIT"];
 		srgb = chunks["sRGB"];
 
-		if (ihdr.is_null() || idat_chunks.empty() || ihdr.get_size() != 13) // Always required chunks
+		if (!ihdr || idat_chunks.empty() || ihdr->size() != 13) // Always required chunks
 			throw Exception("Invalid PNG image file");
 	}
 
 	void PNGLoader::decode_header()
 	{
-		image_width = from_network_order(*reinterpret_cast<unsigned int*>(ihdr.get_data()));
-		image_height = from_network_order(*reinterpret_cast<unsigned int*>(ihdr.get_data() + 4));
-		bit_depth = *reinterpret_cast<unsigned char*>(ihdr.get_data() + 8);
-		color_type = *reinterpret_cast<unsigned char*>(ihdr.get_data() + 9);
-		compression_method = *reinterpret_cast<unsigned char*>(ihdr.get_data() + 10);
-		filter_method = *reinterpret_cast<unsigned char*>(ihdr.get_data() + 11);
-		interlace_method = *reinterpret_cast<unsigned char*>(ihdr.get_data() + 12);
+		image_width = from_network_order(*reinterpret_cast<unsigned int*>(ihdr->data()));
+		image_height = from_network_order(*reinterpret_cast<unsigned int*>(ihdr->data() + 4));
+		bit_depth = *reinterpret_cast<unsigned char*>(ihdr->data() + 8);
+		color_type = *reinterpret_cast<unsigned char*>(ihdr->data() + 9);
+		compression_method = *reinterpret_cast<unsigned char*>(ihdr->data() + 10);
+		filter_method = *reinterpret_cast<unsigned char*>(ihdr->data() + 11);
+		interlace_method = *reinterpret_cast<unsigned char*>(ihdr->data() + 12);
 
 		// Verify image is valid according to the PNG standard (Table 11.1 in http://www.w3.org/TR/PNG/)
 		if (color_type == 1 || color_type == 5 || color_type > 6)
@@ -166,26 +166,26 @@ namespace uicore
 	{
 		if (color_type == 3) // indexed
 		{
-			if (plte.is_null() || plte.get_size() % 3 != 0)
+			if (!plte || plte->size() % 3 != 0)
 				throw Exception("Invalid PNG image file");
 
-			int num_entries = plte.get_size() / 3;
+			int num_entries = plte->size() / 3;
 			if (num_entries > 256)
 				throw Exception("Invalid PNG image file");
 
-			unsigned char *entries = reinterpret_cast<unsigned char*>(plte.get_data());
+			unsigned char *entries = reinterpret_cast<unsigned char*>(plte->data());
 
 			palette = static_cast<Vec4ub *>(System::aligned_alloc(256 * sizeof(Vec4ub)));
 			for (int i = 0; i < num_entries; i++)
 				palette[i] = Vec4ub(entries[i * 3], entries[i * 3 + 1], entries[i * 3 + 2], 255);
 
-			if (!trns.is_null())
+			if (trns)
 			{
-				int num_alpha_entries = trns.get_size();
+				int num_alpha_entries = trns->size();
 				if (num_alpha_entries > num_entries)
 					throw Exception("Invalid PNG image file");
 
-				unsigned char *alpha_entries = reinterpret_cast<unsigned char*>(trns.get_data());
+				unsigned char *alpha_entries = reinterpret_cast<unsigned char*>(trns->data());
 				for (int i = 0; i < num_alpha_entries; i++)
 					palette[i].a = alpha_entries[i];
 			}
@@ -194,20 +194,20 @@ namespace uicore
 
 	void PNGLoader::decode_colorkey()
 	{
-		has_colorkey = !trns.is_null() && color_type != 3;
+		has_colorkey = trns && color_type != 3;
 		if (has_colorkey)
 		{
 			if (color_type == 0) // grayscale
 			{
-				if (trns.get_size() != 2)
+				if (trns->size() != 2)
 					throw Exception("Invalid PNG image file");
-				colorkey = Vec3us(from_network_order(*reinterpret_cast<unsigned short*>(trns.get_data())));
+				colorkey = Vec3us(from_network_order(*reinterpret_cast<unsigned short*>(trns->data())));
 			}
 			else if (color_type == 2) // truecolor
 			{
-				if (trns.get_size() != 6)
+				if (trns->size() != 6)
 					throw Exception("Invalid PNG image file");
-				unsigned short *values = reinterpret_cast<unsigned short*>(trns.get_data());
+				unsigned short *values = reinterpret_cast<unsigned short*>(trns->data());
 				colorkey = Vec3us(from_network_order(values[0]), from_network_order(values[1]), from_network_order(values[2]));
 			}
 			else
@@ -219,18 +219,18 @@ namespace uicore
 
 	void PNGLoader::decode_image()
 	{
-		DataBuffer image_data = ZLibCompression::decompress(idat, false);
+		DataBufferPtr image_data = ZLibCompression::decompress(idat, false);
 
 		create_image();
 		create_scanline_buffers();
 
 		if (interlace_method == 0)
 		{
-			decode_interlace_none(reinterpret_cast<const unsigned char*>(image_data.get_data()), image_data.get_size());
+			decode_interlace_none(reinterpret_cast<const unsigned char*>(image_data->data()), image_data->size());
 		}
 		else if (interlace_method == 1)
 		{
-			decode_interlace_adam7(reinterpret_cast<const unsigned char*>(image_data.get_data()), image_data.get_size());
+			decode_interlace_adam7(reinterpret_cast<const unsigned char*>(image_data->data()), image_data->size());
 		}
 		else
 		{

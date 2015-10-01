@@ -30,11 +30,10 @@
 #pragma once
 
 #include <memory>
+#include "../System/databuffer.h"
 
 namespace uicore
 {
-	class DataBuffer;
-
 	/// \brief AES-256 decryption class (running in Cipher Block Chaining mode)
 	class AES256_Decrypt
 	{
@@ -47,7 +46,7 @@ namespace uicore
 		/// This is the databuffer used internally to store the decrypted data.
 		/// You may call "set_size()" to clear the buffer, inbetween calls to "add()"
 		/// You may call "set_capacity()" to optimise storage requirements before the add() call
-		virtual DataBuffer get_data() const = 0;
+		virtual DataBufferPtr get_data() const = 0;
 
 		static const int iv_size = 16;
 		static const int key_size = 32;
@@ -81,7 +80,7 @@ namespace uicore
 		/// \brief Add data to be decrypted
 		///
 		/// \param data = Data Buffer
-		virtual void add(const DataBuffer &data) = 0;
+		virtual void add(const DataBufferPtr &data) = 0;
 
 		/// \brief Finalize decryption
 		///

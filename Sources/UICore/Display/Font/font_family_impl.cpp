@@ -82,7 +82,7 @@ namespace uicore
 	{
 	}
 
-	void FontFamily_Impl::add(const FontDescription &desc, DataBuffer &font_databuffer)
+	void FontFamily_Impl::add(const FontDescription &desc, DataBufferPtr &font_databuffer)
 	{
 		FontFamily_Definition definition;
 		definition.desc = desc.clone();
@@ -98,7 +98,7 @@ namespace uicore
 		font_definitions.push_back(definition);
 	}
 
-	void FontFamily_Impl::font_face_load(const FontDescription &desc, DataBuffer &font_databuffer, float pixel_ratio)
+	void FontFamily_Impl::font_face_load(const FontDescription &desc, DataBufferPtr &font_databuffer, float pixel_ratio)
 	{
 #if defined(WIN32)
 		std::shared_ptr<FontEngine> engine = std::make_shared<FontEngine_Win32>(desc, font_databuffer, pixel_ratio);
@@ -201,7 +201,7 @@ namespace uicore
 		}
 		else
 		{
-			if (!font_definition.font_databuffer.is_null())
+			if (font_definition.font_databuffer)
 			{
 				// Cached font is allocated via a font databuffer
 				font_face_load(desc, font_definition.font_databuffer, pixel_ratio);

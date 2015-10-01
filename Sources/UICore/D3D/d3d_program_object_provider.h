@@ -34,12 +34,12 @@
 #include "UICore/Display/Render/uniform_buffer.h"
 #include "UICore/Core/Math/vec4.h"
 #include "UICore/Core/System/comptr.h"
+#include "UICore/Core/System/databuffer.h"
 #include <memory>
 #include <map>
 
 namespace uicore
 {
-	class DataBuffer;
 	class D3DShaderObjectProvider;
 	class D3DUniformBufferProvider;
 
@@ -93,7 +93,7 @@ namespace uicore
 		int get_uniform_buffer_index(const std::string &block_name) const;
 		int get_storage_buffer_index(const std::string &name) const;
 
-		DataBuffer &get_shader_bytecode(ShaderType shader_type);
+		DataBufferPtr &get_shader_bytecode(ShaderType shader_type);
 		D3DShaderObjectProvider *get_shader_provider(ShaderType shader_type);
 
 		struct AttributeBinding

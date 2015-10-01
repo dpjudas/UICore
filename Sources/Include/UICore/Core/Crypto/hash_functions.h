@@ -68,7 +68,7 @@ namespace uicore
 		/// \param uppercase = bool
 		///
 		/// \return String8
-		static std::string sha1(const DataBuffer &data, bool uppercase = false);
+		static std::string sha1(const DataBufferPtr &data, bool uppercase = false);
 
 		/// \brief SHA1
 		///
@@ -87,7 +87,7 @@ namespace uicore
 		///
 		/// \param data = Data Buffer
 		/// \param out_hash = char
-		static void sha1(const DataBuffer &data, unsigned char out_hash[20]);
+		static void sha1(const DataBufferPtr &data, unsigned char out_hash[20]);
 
 		/// \brief Generate SHA-1 hash from data.
 		static std::string md5(const void *data, int size, bool uppercase = false);
@@ -106,7 +106,7 @@ namespace uicore
 		/// \param uppercase = bool
 		///
 		/// \return String8
-		static std::string md5(const DataBuffer &data, bool uppercase = false);
+		static std::string md5(const DataBufferPtr &data, bool uppercase = false);
 
 		/// \brief MD5
 		///
@@ -125,7 +125,7 @@ namespace uicore
 		///
 		/// \param data = Data Buffer
 		/// \param out_hash = char
-		static void md5(const DataBuffer &data, unsigned char out_hash[16]);
+		static void md5(const DataBufferPtr &data, unsigned char out_hash[16]);
 
 		/// \brief Generate SHA-224 hash from data.
 		static std::string sha224(const void *data, int size, bool uppercase = false);
@@ -144,7 +144,7 @@ namespace uicore
 		/// \param uppercase = bool
 		///
 		/// \return String8
-		static std::string sha224(const DataBuffer &data, bool uppercase = false);
+		static std::string sha224(const DataBufferPtr &data, bool uppercase = false);
 
 		/// \brief SHA224
 		///
@@ -163,7 +163,7 @@ namespace uicore
 		///
 		/// \param data = Data Buffer
 		/// \param out_hash = char
-		static void sha224(const DataBuffer &data, unsigned char out_hash[28]);
+		static void sha224(const DataBufferPtr &data, unsigned char out_hash[28]);
 
 
 		/// \brief Generate SHA-256 hash from data.
@@ -183,7 +183,7 @@ namespace uicore
 		/// \param uppercase = bool
 		///
 		/// \return String8
-		static std::string sha256(const DataBuffer &data, bool uppercase = false);
+		static std::string sha256(const DataBufferPtr &data, bool uppercase = false);
 
 		/// \brief SHA256
 		///
@@ -202,7 +202,7 @@ namespace uicore
 		///
 		/// \param data = Data Buffer
 		/// \param out_hash = char
-		static void sha256(const DataBuffer &data, unsigned char out_hash[32]);
+		static void sha256(const DataBufferPtr &data, unsigned char out_hash[32]);
 
 		/// \brief Generate SHA-384 hash from data.
 		static std::string sha384(const void *data, int size, bool uppercase = false);
@@ -221,7 +221,7 @@ namespace uicore
 		/// \param uppercase = bool
 		///
 		/// \return String8
-		static std::string sha384(const DataBuffer &data, bool uppercase = false);
+		static std::string sha384(const DataBufferPtr &data, bool uppercase = false);
 
 		/// \brief SHA384
 		///
@@ -240,7 +240,7 @@ namespace uicore
 		///
 		/// \param data = Data Buffer
 		/// \param out_hash = char
-		static void sha384(const DataBuffer &data, unsigned char out_hash[48]);
+		static void sha384(const DataBufferPtr &data, unsigned char out_hash[48]);
 
 		/// \brief Generate SHA-512 hash from data.
 		static std::string sha512(const void *data, int size, bool uppercase = false);
@@ -259,7 +259,7 @@ namespace uicore
 		/// \param uppercase = bool
 		///
 		/// \return String8
-		static std::string sha512(const DataBuffer &data, bool uppercase = false);
+		static std::string sha512(const DataBufferPtr &data, bool uppercase = false);
 
 		/// \brief SHA512
 		///
@@ -278,7 +278,7 @@ namespace uicore
 		///
 		/// \param data = Data Buffer
 		/// \param out_hash = char
-		static void sha512(const DataBuffer &data, unsigned char out_hash[64]);
+		static void sha512(const DataBufferPtr &data, unsigned char out_hash[64]);
 
 		/// \brief Generate SHA-512_224 hash from data.
 		static std::string sha512_224(const void *data, int size, bool uppercase = false);
@@ -297,7 +297,7 @@ namespace uicore
 		/// \param uppercase = bool
 		///
 		/// \return String8
-		static std::string sha512_224(const DataBuffer &data, bool uppercase = false);
+		static std::string sha512_224(const DataBufferPtr &data, bool uppercase = false);
 
 		/// \brief SHA512_224
 		///
@@ -316,7 +316,7 @@ namespace uicore
 		///
 		/// \param data = Data Buffer
 		/// \param out_hash = char
-		static void sha512_224(const DataBuffer &data, unsigned char out_hash[28]);
+		static void sha512_224(const DataBufferPtr &data, unsigned char out_hash[28]);
 
 
 		/// \brief Generate SHA-512_256 hash from data.
@@ -336,7 +336,7 @@ namespace uicore
 		/// \param uppercase = bool
 		///
 		/// \return String8
-		static std::string sha512_256(const DataBuffer &data, bool uppercase = false);
+		static std::string sha512_256(const DataBufferPtr &data, bool uppercase = false);
 
 		/// \brief SHA512_256
 		///
@@ -355,6 +355,6 @@ namespace uicore
 		///
 		/// \param data = Data Buffer
 		/// \param out_hash = char
-		static void sha512_256(const DataBuffer &data, unsigned char out_hash[32]);
+		static void sha512_256(const DataBufferPtr &data, unsigned char out_hash[32]);
 	};
 }

@@ -35,8 +35,6 @@
 
 namespace uicore
 {
-	class DataBuffer;
-
 	class InputDeviceProvider_Win32Hid : public InputDeviceProvider
 	{
 	public:
@@ -59,7 +57,7 @@ namespace uicore
 		void on_dispose();
 
 		HANDLE open_device();
-		DataBuffer get_preparse_data();
+		DataBufferPtr get_preparse_data();
 
 		void find_names(HANDLE device);
 		void find_button_names(HANDLE device, void *preparse_data);

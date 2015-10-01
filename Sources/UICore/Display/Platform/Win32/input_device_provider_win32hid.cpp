@@ -42,13 +42,13 @@ namespace uicore
 {
 	InputDeviceProvider_Win32Hid::InputDeviceProvider_Win32Hid(HANDLE rawinput_device) : rawinput_device(rawinput_device)
 	{
-		DataBuffer preparse_data = get_preparse_data();
+		DataBufferPtr preparse_data = get_preparse_data();
 		HANDLE device = open_device();
 		try
 		{
 			find_names(device);
-			find_button_names(device, preparse_data.get_data());
-			find_value_names(device, preparse_data.get_data());
+			find_button_names(device, preparse_data->data());
+			find_value_names(device, preparse_data->data());
 			CloseHandle(device);
 		}
 		catch (...)
@@ -75,7 +75,7 @@ namespace uicore
 
 		if (raw_input->header.hDevice == rawinput_device)
 		{
-			DataBuffer preparse_data = get_preparse_data();
+			DataBufferPtr preparse_data = get_preparse_data();
 
 			for (DWORD i = 0; i < raw_input->data.hid.dwCount; i++)
 			{
@@ -84,7 +84,7 @@ namespace uicore
 
 				void *report = raw_data + offset;
 				int report_size = raw_input->data.hid.dwSizeHid;
-				update(preparse_data.get_data(), report, report_size);
+				update(preparse_data->data(), report, report_size);
 			}
 		}
 
@@ -206,15 +206,15 @@ namespace uicore
 		return device_handle;
 	}
 
-	DataBuffer InputDeviceProvider_Win32Hid::get_preparse_data()
+	DataBufferPtr InputDeviceProvider_Win32Hid::get_preparse_data()
 	{
 		UINT preparse_data_size = 0;
 		UINT result = GetRawInputDeviceInfo(rawinput_device, RIDI_PREPARSEDDATA, 0, &preparse_data_size);
 		if (result == (UINT)-1)
 			throw Exception("GetRawInputDeviceInfo failed");
 
-		DataBuffer preparse_data(preparse_data_size);
-		result = GetRawInputDeviceInfo(rawinput_device, RIDI_PREPARSEDDATA, preparse_data.get_data(), &preparse_data_size);
+		auto preparse_data = DataBuffer::create(preparse_data_size);
+		result = GetRawInputDeviceInfo(rawinput_device, RIDI_PREPARSEDDATA, preparse_data->data(), &preparse_data_size);
 		if (result == (UINT)-1)
 			throw Exception("GetRawInputDeviceInfo failed");
 
