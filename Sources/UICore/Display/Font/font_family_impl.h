@@ -34,6 +34,7 @@
 #include "UICore/Display/Font/glyph_metrics.h"
 #include "UICore/Display/Font/font_family.h"
 #include "UICore/Display/Render/texture_2d.h"
+#include "UICore/Core/System/databuffer.h"
 #include <list>
 #include <map>
 #include "glyph_cache.h"
@@ -72,8 +73,6 @@ namespace uicore
 
 		void add(const FontDescription &desc, const std::string &typeface_name);
 		void add(const FontDescription &desc, DataBuffer &font_databuffer);
-
-		void font_face_load(Canvas &canvas, Sprite &sprite, const std::string &glyph_list, float spacelen, bool monospace, const FontMetrics &metrics);
 
 		// Returns null engine if font not found
 		Font_Cache get_font(const FontDescription &desc, float pixel_ratio);

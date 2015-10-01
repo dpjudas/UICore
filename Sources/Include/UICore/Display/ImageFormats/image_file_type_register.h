@@ -28,7 +28,6 @@
 
 #pragma once
 
-#include "../../Core/IOData/file_system.h"
 #include "image_file_type.h"
 
 namespace uicore
@@ -39,38 +38,26 @@ namespace uicore
 	class ImageFileType_Register : public ImageFileType
 	{
 	public:
-		/// \brief Registers provider type in the ProviderFactory.
 		ImageFileType_Register(const std::string &type) : ImageFileType(type)
 		{
 		}
 
-		/// \brief Called to load an image with this provider type.
-		virtual PixelBuffer load(
-			const std::string &filename,
-			const FileSystem &fs,
-			bool srgb) override
+		virtual PixelBuffer load(const std::string &filename, bool srgb) override
 		{
-			return ProviderClass::load(filename, fs, srgb);
+			return ProviderClass::load(filename, srgb);
 		}
 
-		virtual PixelBuffer load(
-			IODevice &file,
-			bool srgb) override
+		virtual PixelBuffer load(IODevice &file, bool srgb) override
 		{
 			return ProviderClass::load(file, srgb);
 		}
 
-		virtual void save(
-			PixelBuffer buffer,
-			const std::string &filename,
-			FileSystem &fs) override
+		virtual void save(PixelBuffer buffer, const std::string &filename) override
 		{
-			ProviderClass::save(buffer, filename, fs);
+			ProviderClass::save(buffer, filename);
 		}
 
-		virtual void save(
-			PixelBuffer buffer,
-			IODevice &file) override
+		virtual void save(PixelBuffer buffer, IODevice &file) override
 		{
 			ProviderClass::save(buffer, file);
 		}

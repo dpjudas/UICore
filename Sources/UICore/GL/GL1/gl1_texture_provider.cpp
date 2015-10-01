@@ -34,7 +34,6 @@
 #include "UICore/Display/Render/texture.h"
 #include "UICore/GL/opengl_wrap.h"
 #include "UICore/GL/opengl.h"
-#include "UICore/Core/IOData/cl_endian.h"
 #include "UICore/Core/System/databuffer.h"
 #include "UICore/Core/Text/string_format.h"
 #include "UICore/Display/Render/shared_gc_data.h"
@@ -337,8 +336,6 @@ namespace uicore
 		// conversion needed
 		else
 		{
-			bool big_endian = Endian::is_system_big();
-
 			PixelBuffer buffer(
 				src_rect.get_width(), src_rect.get_height(),
 				needs_alpha ? tf_rgba8 : tf_rgb8);
@@ -709,8 +706,6 @@ namespace uicore
 		// conversion needed
 		else
 		{
-			bool big_endian = Endian::is_system_big();
-
 			PixelBuffer buffer(
 				image.get_width(), image.get_height(),
 				needs_alpha ? tf_rgba8 : tf_rgb8);
@@ -811,8 +806,6 @@ namespace uicore
 		// conversion needed
 		else
 		{
-			bool big_endian = Endian::is_system_big();
-
 			PixelBuffer buffer(
 				image.get_width(), image.get_height(),
 				needs_alpha ? tf_rgba8 : tf_rgb8);

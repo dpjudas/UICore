@@ -29,11 +29,10 @@
 #pragma once
 
 #include "../Image/pixel_buffer.h"
-#include "../../Core/IOData/file_system.h"
+#include "../../Core/System/databuffer.h"
 
 namespace uicore
 {
-	class FileSystem;
 	class PNGOutputDescription_Impl;
 	class DateTime;
 

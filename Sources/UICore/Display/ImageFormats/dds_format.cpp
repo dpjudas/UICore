@@ -28,7 +28,7 @@
 
 #include "UICore/precomp.h"
 #include <iostream>
-#include "UICore/Core/IOData/file_system.h"
+#include "UICore/Core/IOData/file.h"
 #include "UICore/Core/IOData/path_help.h"
 #include "UICore/Display/ImageFormats/dds_format.h"
 #include "UICore/Display/Image/pixel_buffer.h"
@@ -37,18 +37,10 @@
 
 namespace uicore
 {
-	PixelBufferSet DDSFormat::load(const std::string &filename, const FileSystem &fs)
+	PixelBufferSet DDSFormat::load(const std::string &filename)
 	{
-		IODevice file = fs.open_file(filename);
-		return load(file);
-	}
-
-	PixelBufferSet DDSFormat::load(const std::string &fullname)
-	{
-		std::string path = PathHelp::get_fullpath(fullname, PathHelp::path_type_file);
-		std::string filename = PathHelp::get_filename(fullname, PathHelp::path_type_file);
-		FileSystem vfs(path);
-		return load(filename, vfs);
+		auto file = File::open_existing(filename);
+		return load(*file);
 	}
 
 	PixelBufferSet DDSFormat::load(IODevice &file)

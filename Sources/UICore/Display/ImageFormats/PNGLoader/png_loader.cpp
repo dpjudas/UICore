@@ -35,13 +35,13 @@
 
 namespace uicore
 {
-	PixelBuffer PNGLoader::load(IODevice iodevice, bool srgb)
+	PixelBuffer PNGLoader::load(IODevice &iodevice, bool srgb)
 	{
 		PNGLoader loader(iodevice, srgb);
 		return loader.image;
 	}
 
-	PNGLoader::PNGLoader(IODevice iodevice, bool force_srgb)
+	PNGLoader::PNGLoader(IODevice &iodevice, bool force_srgb)
 		: file(iodevice), force_srgb(force_srgb), scanline(nullptr), prev_scanline(nullptr), scanline_4ub(nullptr), scanline_4us(nullptr), palette(nullptr)
 	{
 		read_magic();

@@ -32,7 +32,6 @@
 #include <memory>
 #include "UICore/Display/Render/graphic_context.h"
 #include "../Image/pixel_buffer.h"
-#include "../2D/sprite.h"
 #include "font_description.h"
 #include "glyph_metrics.h"
 
@@ -72,18 +71,6 @@ namespace uicore
 
 		// \brief Add standard font
 		void add(const FontDescription &desc, const std::string &ttf_filename);
-
-		// \brief Add standard font
-		void add(const FontDescription &desc, const std::string &ttf_filename, FileSystem fs);
-
-		/// \brief Add a Font based on a sprite
-		///
-		/// \param sprite = Sprite with glyphs
-		/// \param glyph_list = Letter to glyph mapping
-		/// \param spacelen = Width of space character
-		/// \param monospace = Force monospaced font (using widest sprite character)
-		/// \param metrics = Font metrics for the sprite font
-		void add(Canvas &canvas, Sprite &sprite, const std::string &glyph_list, float spacelen, bool monospace, const FontMetrics &metrics);
 
 	private:
 		std::shared_ptr<FontFamily_Impl> impl;

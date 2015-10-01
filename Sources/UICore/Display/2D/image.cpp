@@ -27,7 +27,6 @@
 */
 
 #include "UICore/precomp.h"
-#include "UICore/Core/IOData/file_system.h"
 #include "UICore/Core/IOData/path_help.h"
 #include "UICore/Display/2D/image.h"
 #include "UICore/Display/2D/canvas.h"
@@ -136,28 +135,16 @@ namespace uicore
 		impl->texture_rect = sub_texture.get_geometry();
 	}
 
-	Image::Image(Canvas &canvas, const std::string &filename, const FileSystem &fs, const ImageImportDescription &import_desc)
+	Image::Image(Canvas &canvas, const std::string &filename, const ImageImportDescription &import_desc)
 		: impl(std::make_shared<Image_Impl>())
 	{
-		impl->texture = Texture2D(canvas, filename, fs, import_desc);
-		impl->texture_rect = impl->texture.get_size();
-	}
-
-	Image::Image(Canvas &canvas, const std::string &fullname, const ImageImportDescription &import_desc)
-		: impl(std::make_shared<Image_Impl>())
-	{
-		std::string path = PathHelp::get_fullpath(fullname, PathHelp::path_type_file);
-		std::string filename = PathHelp::get_filename(fullname, PathHelp::path_type_file);
-		FileSystem vfs(path);
-
-		impl->texture = Texture2D(canvas, filename, vfs, import_desc);
+		impl->texture = Texture2D(canvas, filename, import_desc);
 		impl->texture_rect = impl->texture.get_size();
 	}
 
 	Image::~Image()
 	{
 	}
-
 
 	Image Image::clone() const
 	{

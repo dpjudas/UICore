@@ -30,10 +30,10 @@
 #pragma once
 
 #include <map>
-#include "../../Core/IOData/file_system.h"
 
 namespace uicore
 {
+	class IODevice;
 	class PixelBuffer;
 	class ImageFileType;
 
@@ -41,57 +41,12 @@ namespace uicore
 	class ImageFile
 	{
 	public:
-		/// \brief  Attempts to load an image file from 'filename', using the provider identified by 'type'.
-		/// \return If the function fails to load the image, a null pixel buffer object is returned.
-		///
-		/// <p>If the type is an empty string, it uses the extension of
-		/// the filename to determine what type it is.</p>
-		/// <p>The virtual directory will be used as a the source.</p>
-		static PixelBuffer try_load(
-			const std::string &filename,
-			const std::string &type = std::string(),
-			const FileSystem &fs = FileSystem(),
-			std::string *out_failure_reason = nullptr,
-			bool srgb = false);
+		static PixelBuffer try_load(const std::string &filename, const std::string &type = std::string(), std::string *out_failure_reason = nullptr, bool srgb = false);
 
-		/// \brief Loads an image file from 'filename', using the provider
-		/// \brief identified by 'type'.
-		/** <p>If the type is an empty string, it uses the extension of
-			the filename to determine what type it is.</p>
-			<p>The virtual directory will be used as a the source.</p>*/
-		static PixelBuffer load(
-			const std::string &filename,
-			const FileSystem &fs,
-			const std::string &type = std::string(),
-			bool srgb = false);
+		static PixelBuffer load(const std::string &filename, const std::string &type = std::string(), bool srgb = false);
+		static PixelBuffer load(IODevice &file, const std::string &type, bool srgb = false);
 
-		static PixelBuffer load(
-			const std::string &fullname,
-			const std::string &type = std::string(),
-			bool srgb = false);
-
-		static PixelBuffer load(
-			IODevice &file,
-			const std::string &type,
-			bool srgb = false);
-
-		/// \brief Saves the given PixelBuffer to the file given by 'filename'.
-		/** <p>If the type is an empty string, it uses the extension of the
-			filename to determine what type it is </p>*/
-		static void save(
-			PixelBuffer buffer,
-			const std::string &filename,
-			FileSystem &fs,
-			const std::string &type = std::string());
-
-		static void save(
-			PixelBuffer buffer,
-			const std::string &fullname,
-			const std::string &type = std::string());
-
-		static void save(
-			PixelBuffer buffer,
-			IODevice &file,
-			const std::string &type);
+		static void save(PixelBuffer buffer, const std::string &filename, const std::string &type = std::string());
+		static void save( PixelBuffer buffer, IODevice &file, const std::string &type);
 	};
 }

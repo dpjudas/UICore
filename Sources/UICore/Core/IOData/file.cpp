@@ -28,103 +28,429 @@
 
 #include "UICore/precomp.h"
 #include "UICore/Core/IOData/file.h"
-#include "UICore/Core/IOData/path_help.h"
-#include "UICore/Core/System/exception.h"
 #include "UICore/Core/Text/text.h"
-#include "iodevice_impl.h"
-#include "iodevice_provider_file.h"
+#include "UICore/Core/System/exception.h"
+#include "UICore/Core/System/databuffer.h"
+#if !defined(WIN32)
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
+#endif
 
 namespace uicore
 {
-	std::string File::read_text(const std::string &filename)
+
+#if defined(WIN32)
+
+	class FileImpl : public File
 	{
-		File file(filename);
-		unsigned int file_size = file.get_size();
-		std::vector<char> text;
-		text.resize(file_size + 1);
-		text[file_size] = 0;
-		if (file_size)
-			file.read(&text[0], file_size);
-		file.close();
-		if (file_size)
-			return std::string(&text[0]);
-		else
-			return std::string();
+	public:
+		FileImpl() : handle(INVALID_HANDLE_VALUE) { }
+		~FileImpl() { close(); }
+
+		void close() override
+		{
+			if (handle != INVALID_HANDLE_VALUE)
+			{
+				CloseHandle(handle);
+				handle = INVALID_HANDLE_VALUE;
+			}
+		}
+
+		long long size() const override;
+
+		long long seek(long long position) override;
+		long long seek_from_current(long long offset) override;
+		long long seek_from_end(long long offset) override;
+
+		int try_read(void *data, int size) override;
+		void write(const void *data, int size) override;
+
+		FileImpl(const FileImpl &) = delete;
+		FileImpl &operator=(const FileImpl &) = delete;
+
+		HANDLE handle;
+	};
+
+	std::shared_ptr<File> File::open_existing(const std::string &filename, FileAccess access)
+	{
+		DWORD access_flags = 0;
+		switch (access)
+		{
+		case FileAccess::read: access_flags = FILE_READ_ACCESS; break;
+		case FileAccess::write: access_flags = FILE_WRITE_ACCESS; break;
+		case FileAccess::read_write: access_flags = FILE_READ_ACCESS | FILE_WRITE_ACCESS; break;
+		}
+
+		auto file = std::make_shared<FileImpl>();
+		file->handle = CreateFile(StringHelp::utf8_to_ucs2(filename).c_str(), access_flags, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+		if (file->handle == INVALID_HANDLE_VALUE)
+			throw Exception("CreateFile failed");
+		return file;
 	}
 
-	DataBuffer File::read_bytes(const std::string &filename)
+	std::shared_ptr<File> File::open_always(const std::string &filename, FileAccess access)
 	{
-		File file(filename);
-		DataBuffer buffer(file.get_size());
-		file.read(buffer.get_data(), buffer.get_size());
-		file.close();
+		DWORD access_flags = 0;
+		switch (access)
+		{
+		case FileAccess::read: access_flags = FILE_READ_ACCESS; break;
+		case FileAccess::write: access_flags = FILE_WRITE_ACCESS; break;
+		case FileAccess::read_write: access_flags = FILE_READ_ACCESS | FILE_WRITE_ACCESS; break;
+		}
+
+		auto file = std::make_shared<FileImpl>();
+		file->handle = CreateFile(StringHelp::utf8_to_ucs2(filename).c_str(), access_flags, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, 0, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
+		if (file->handle == INVALID_HANDLE_VALUE)
+			throw Exception("CreateFile failed");
+		return file;
+	}
+
+	std::shared_ptr<File> File::create_always(const std::string &filename, FileAccess access)
+	{
+		DWORD access_flags = 0;
+		switch (access)
+		{
+		case FileAccess::read: access_flags = FILE_READ_ACCESS; break;
+		case FileAccess::write: access_flags = FILE_WRITE_ACCESS; break;
+		case FileAccess::read_write: access_flags = FILE_READ_ACCESS | FILE_WRITE_ACCESS; break;
+		}
+
+		auto file = std::make_shared<FileImpl>();
+		file->handle = CreateFile(StringHelp::utf8_to_ucs2(filename).c_str(), access_flags, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
+		if (file->handle == INVALID_HANDLE_VALUE)
+			throw Exception("CreateFile failed");
+		return file;
+	}
+
+	std::shared_ptr<File> File::create_new(const std::string &filename, FileAccess access)
+	{
+		DWORD access_flags = 0;
+		switch (access)
+		{
+		case FileAccess::read: access_flags = FILE_READ_ACCESS; break;
+		case FileAccess::write: access_flags = FILE_WRITE_ACCESS; break;
+		case FileAccess::read_write: access_flags = FILE_READ_ACCESS | FILE_WRITE_ACCESS; break;
+		}
+
+		auto file = std::make_shared<FileImpl>();
+		file->handle = CreateFile(StringHelp::utf8_to_ucs2(filename).c_str(), access_flags, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, 0, CREATE_NEW, FILE_ATTRIBUTE_NORMAL, 0);
+		if (file->handle == INVALID_HANDLE_VALUE)
+			throw Exception("CreateFile failed");
+		return file;
+	}
+
+	long long FileImpl::size() const
+	{
+		LARGE_INTEGER size;
+		size.QuadPart = 0;
+		BOOL result = GetFileSizeEx(handle, &size);
+		if (result == FALSE)
+			throw Exception("GetFileSizeEx failed");
+		return size.QuadPart;
+	}
+
+	long long FileImpl::seek(long long position)
+	{
+		LARGE_INTEGER offset2, new_pos;
+		offset2.QuadPart = position;
+		new_pos.QuadPart = 0;
+		BOOL result = SetFilePointerEx(handle, offset2, &new_pos, FILE_BEGIN);
+		if (result == FALSE)
+			throw Exception("SetFilePointerEx failed");
+		return new_pos.QuadPart;
+	}
+
+	long long FileImpl::seek_from_current(long long offset)
+	{
+		LARGE_INTEGER offset2, new_pos;
+		offset2.QuadPart = offset;
+		new_pos.QuadPart = 0;
+		BOOL result = SetFilePointerEx(handle, offset2, &new_pos, FILE_CURRENT);
+		if (result == FALSE)
+			throw Exception("SetFilePointerEx failed");
+		return new_pos.QuadPart;
+	}
+
+	long long FileImpl::seek_from_end(long long offset)
+	{
+		LARGE_INTEGER offset2, new_pos;
+		offset2.QuadPart = offset;
+		new_pos.QuadPart = 0;
+		BOOL result = SetFilePointerEx(handle, offset2, &new_pos, FILE_END);
+		if (result == FALSE)
+			throw Exception("SetFilePointerEx failed");
+		return new_pos.QuadPart;
+	}
+
+	int FileImpl::try_read(void *data, int size)
+	{
+		DWORD bytes_read = 0;
+		BOOL result = ReadFile(handle, data, size, &bytes_read, 0);
+		if (result == FALSE)
+			throw Exception("ReadFile failed");
+		return (int)bytes_read;
+	}
+
+	void FileImpl::write(const void *data, int size)
+	{
+		DWORD written = 0;
+		BOOL result = WriteFile(handle, data, size, &written, 0);
+		if (result == FALSE)
+			throw Exception("WriteFile failed");
+		if (written != size)
+			throw Exception("Could not write all bytes to file");
+	}
+
+#else
+
+	class FileImpl : public File
+	{
+	public:
+		FileImpl() : handle(-1) { }
+		~FileImpl() { close(); }
+
+		void close() override
+		{
+			if (handle != -1)
+			{
+				::close(handle);
+				handle = -1;
+			}
+		}
+
+		long long size() const override;
+
+		long long seek(long long position) override;
+		long long seek_from_current(long long offset) override;
+		long long seek_from_end(long long offset) override;
+
+		int try_read(void *data, int size) override;
+		void write(const void *data, int size) override;
+
+		FileImpl(const FileImpl &) = delete;
+		FileImpl &operator=(const FileImpl &) = delete;
+
+		int handle;
+	};
+
+	std::shared_ptr<File> File::open_existing(const std::string &filename, FileAccess access)
+	{
+		int access_flags = 0;
+		switch (access)
+		{
+		case FileAccess::read: access_flags = O_RDONLY; break;
+		case FileAccess::write: access_flags = O_WRONLY; break;
+		case FileAccess::read_write: access_flags = O_RDWR; break;
+		}
+
+		auto file = std::make_shared<FileImpl>();
+		file->handle = open(filename.c_str(), access_flags, 0);
+		if (file->handle == -1)
+			throw Exception("open failed");
+		return file;
+	}
+
+	std::shared_ptr<File> File::open_always(const std::string &filename, FileAccess access)
+	{
+		int access_flags = 0;
+		switch (access)
+		{
+		case FileAccess::read: access_flags = O_RDONLY; break;
+		case FileAccess::write: access_flags = O_WRONLY; break;
+		case FileAccess::read_write: access_flags = O_RDWR; break;
+		}
+
+		auto file = std::make_shared<FileImpl>();
+		file.handle = open(filename.c_str(), access_flags|O_CREAT, S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH);
+		if (file->handle == -1)
+			throw Exception("open failed");
+		return file;
+	}
+
+	std::shared_ptr<File> File::create_always(const std::string &filename, FileAccess access)
+	{
+		int access_flags = 0;
+		switch (access)
+		{
+		case FileAccess::read: access_flags = O_RDONLY; break;
+		case FileAccess::write: access_flags = O_WRONLY; break;
+		case FileAccess::read_write: access_flags = O_RDWR; break;
+		}
+
+		auto file = std::make_shared<FileImpl>();
+		file->handle = open(filename.c_str(), access_flags|O_CREAT|O_TRUNC, S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH);
+		if (file->handle == -1)
+			throw Exception("open failed");
+		return file;
+	}
+
+	std::shared_ptr<File> File::create_new(const std::string &filename, FileAccess access)
+	{
+		int access_flags = 0;
+		switch (access)
+		{
+		case FileAccess::read: access_flags = O_RDONLY; break;
+		case FileAccess::write: access_flags = O_WRONLY; break;
+		case FileAccess::read_write: access_flags = O_RDWR; break;
+		}
+
+		auto file = std::make_shared<FileImpl>();
+		file->handle = open(filename.c_str(), access_flags|O_CREAT|O_EXCL, S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH);
+		if (file->handle == -1)
+			throw Exception("open failed");
+		return file;
+	}
+
+	long long FileImpl::size() const
+	{
+		off_t old_pos = lseek(handle, 0, SEEK_CUR);
+		if (old_pos == (off_t)-1)
+			throw Exception("lseek failed");
+
+		off_t size = lseek(handle, 0, SEEK_END);
+		if (size == (off_t)-1)
+			throw Exception("lseek failed");
+
+		lseek(handle, old_pos, SEEK_SET);
+
+		return size;
+	}
+
+	long long FileImpl::seek(long long position)
+	{
+		off_t result = lseek(handle, position, SEEK_SET);
+		if (result == (off_t)-1)
+			throw Exception("lseek failed");
+		return result;
+	}
+
+	long long FileImpl::seek_from_current(long long offset)
+	{
+		off_t result = lseek(handle, offset, SEEK_CUR);
+		if (result == (off_t)-1)
+			throw Exception("lseek failed");
+		return result;
+	}
+
+	long long FileImpl::seek_from_end(long long offset)
+	{
+		off_t result = lseek(handle, offset, SEEK_END);
+		if (result == (off_t)-1)
+			throw Exception("lseek failed");
+		return result;
+	}
+
+	int FileImpl::read(void *data, int size)
+	{
+		int result = ::read(handle, data, size);
+		if (result == -1)
+			throw Exception("read failed");
+		return result;
+	}
+
+	void FileImpl::write(const void *data, int size)
+	{
+		int result = ::write(handle, data, size);
+		if (result == -1)
+			throw Exception("write failed");
+		if (result != size)
+			throw Exception("Could not write all bytes to file");
+	}
+
+#endif
+
+	std::string File::read_all_text(const std::string &filename)
+	{
+		auto file = FileImpl::open_existing(filename);
+
+		if (file->size() > sizeof(size_t) / 2)
+			throw Exception("File too large!");
+
+		std::string buffer;
+		buffer.resize((size_t)file->size());
+
+		if (buffer.length() > 0)
+			file->read(&buffer[0], buffer.length());
+
 		return buffer;
 	}
 
-	void File::write_text(const std::string &filename, const std::string &text, bool write_bom)
+	void File::write_all_text(const std::string &filename, const std::string &text)
 	{
-		File file(filename, create_always, access_write);
-		if (write_bom)
+		auto file = FileImpl::create_always(filename);
+		file->write(text.data(), text.length());
+	}
+
+	DataBuffer File::read_all_bytes(const std::string &filename)
+	{
+		auto file = FileImpl::open_existing(filename);
+
+		if (file->size() > sizeof(size_t) / 2)
+			throw Exception("File too large!");
+
+		DataBuffer buffer;
+		buffer.set_size((size_t)file->size());
+
+		if (buffer.get_size() > 0)
+			file->read(buffer.get_data(), buffer.get_size());
+
+		return buffer;
+	}
+
+	void File::write_all_bytes(const std::string &filename, const DataBuffer &data)
+	{
+		auto file = FileImpl::create_always(filename);
+		file->write(data.get_data(), data.get_size());
+	}
+
+	void File::copy_file(const std::string &from, const std::string &to, bool copy_always)
+	{
+#ifdef WIN32
+		BOOL result = CopyFile(StringHelp::utf8_to_ucs2(from).c_str(), StringHelp::utf8_to_ucs2(to).c_str(), copy_always ? FALSE : TRUE);
+		if (result == FALSE)
+			throw Exception("Unable to copy file");
+#else
+		auto input_file = File::open_existing(from);
+		auto output_file = copy_always ? File::create_always(to) : File::create_new(to);
+		long long pos = 0;
+		long long size = input_file->size();
+		DataBuffer buffer(1024 * 1024);
+		while (pos < size)
 		{
-			unsigned char bom[3] = { 0xef, 0xbb, 0xbf };
-			file.write(bom, 3);
+			long long amount = std::min(1024 * 1024, size - pos);
+			input_file->read(buffer.get_data(), amount);
+			output_file->write(buffer.get_data(), amount);
+			pos += amount;
 		}
-		file.write(text.data(), text.length());
-		file.close();
+#endif
 	}
 
-	void File::write_bytes(const std::string &filename, const DataBuffer &bytes)
+	void File::delete_file(const std::string &filename)
 	{
-		File file(filename, create_always, access_write);
-		file.write(bytes.get_data(), bytes.get_size());
-		file.close();
+#ifdef WIN32
+		BOOL result = DeleteFile(StringHelp::utf8_to_ucs2(filename).c_str());
+		if (result == FALSE)
+			throw Exception("Unable to delete file");
+#else
+		std::string filename_local8 = StringHelp::text_to_local8(filename);
+		int result = unlink(filename_local8.c_str());
+		if (result == -1)
+			throw Exception("Unable to delete file");
+#endif
 	}
 
-	File::File()
-		: IODevice(new IODeviceProvider_File())
+	bool File::file_exists(const std::string &filename)
 	{
-	}
-
-	File::File(
-		const std::string &filename)
-		: IODevice(new IODeviceProvider_File(PathHelp::normalize(filename, PathHelp::path_type_file), open_existing, access_read, share_all, 0))
-	{
-	}
-
-	File::File(
-		const std::string &filename,
-		OpenMode open_mode,
-		unsigned int access,
-		unsigned int share,
-		unsigned int flags)
-		: IODevice(new IODeviceProvider_File(PathHelp::normalize(filename, PathHelp::path_type_file), open_mode, access, share, flags))
-	{
-	}
-	File::~File()
-	{
-	}
-
-	bool File::open(
-		const std::string &filename)
-	{
-		IODeviceProvider_File *provider = dynamic_cast<IODeviceProvider_File*>(impl->provider);
-		return provider->open(PathHelp::normalize(filename, PathHelp::path_type_file), open_existing, access_read, share_all, 0);
-	}
-
-	bool File::open(
-		const std::string &filename,
-		OpenMode open_mode,
-		unsigned int access,
-		unsigned int share,
-		unsigned int flags)
-	{
-		IODeviceProvider_File *provider = dynamic_cast<IODeviceProvider_File*>(impl->provider);
-		return provider->open(PathHelp::normalize(filename, PathHelp::path_type_file), open_mode, access, share, flags);
-	}
-
-	void File::close()
-	{
-		IODeviceProvider_File *provider = dynamic_cast<IODeviceProvider_File*>(impl->provider);
-		provider->close();
+#ifdef WIN32
+		HANDLE file = CreateFile(StringHelp::utf8_to_ucs2(filename).c_str(), 0, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, 0, OPEN_EXISTING, 0, 0);
+		if (file != INVALID_HANDLE_VALUE)
+			CloseHandle(file);
+		return file != INVALID_HANDLE_VALUE;
+#else
+		struct stat stFileInfo;
+		return (stat(filename.c_str(), &stFileInfo) == 0);
+#endif
 	}
 }

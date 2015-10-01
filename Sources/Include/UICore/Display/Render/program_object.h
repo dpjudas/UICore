@@ -31,12 +31,13 @@
 #pragma once
 
 #include <memory>
-#include "../../Core/IOData/file_system.h"
 #include "graphic_context.h"
 #include "uniform_vector.h"
 
 namespace uicore
 {
+	class IODevice;
+	class DataBuffer;
 	class ShaderObject;
 	class ProgramObject_Impl;
 	class GraphicContext;
@@ -114,27 +115,6 @@ namespace uicore
 		/// \brief Load
 		///
 		/// \param gc = Graphic Context
-		/// \param vertex_filename = String Ref
-		/// \param fragment_filename = String Ref
-		/// \param directory = Virtual Directory
-		///
-		/// \return Program Object
-		static ProgramObject load(GraphicContext &gc, const std::string &vertex_filename, const std::string &fragment_filename, const FileSystem &fs);
-
-		/// \brief Load
-		///
-		/// \param gc = Graphic Context
-		/// \param vertex_filename = String Ref
-		/// \param geometry_filename = String Ref
-		/// \param fragment_filename = String Ref
-		/// \param directory = Virtual Directory
-		///
-		/// \return Program Object
-		static ProgramObject load(GraphicContext &gc, const std::string &vertex_filename, const std::string &geometry_filename, const std::string &fragment_filename, const FileSystem &fs);
-
-		/// \brief Load
-		///
-		/// \param gc = Graphic Context
 		/// \param vertex_file = IODevice
 		/// \param fragment_file = IODevice
 		///
@@ -169,27 +149,6 @@ namespace uicore
 		///
 		/// \return Program Object
 		static ProgramObject load_and_link(GraphicContext &gc, const std::string &vertex_fullname, const std::string &geometry_fullname, const std::string &fragment_fullname);
-
-		/// \brief Load and link
-		///
-		/// \param gc = Graphic Context
-		/// \param vertex_filename = String Ref
-		/// \param fragment_filename = String Ref
-		/// \param directory = Virtual Directory
-		///
-		/// \return Program Object
-		static ProgramObject load_and_link(GraphicContext &gc, const std::string &vertex_filename, const std::string &fragment_filename, const FileSystem &fs);
-
-		/// \brief Load and link
-		///
-		/// \param gc = Graphic Context
-		/// \param vertex_filename = String Ref
-		/// \param geometry_filename = String Ref
-		/// \param fragment_filename = String Ref
-		/// \param directory = Virtual Directory
-		///
-		/// \return Program Object
-		static ProgramObject load_and_link(GraphicContext &gc, const std::string &vertex_filename, const std::string &geometry_filename, const std::string &fragment_filename, const FileSystem &fs);
 
 		/// \brief Load and link
 		///

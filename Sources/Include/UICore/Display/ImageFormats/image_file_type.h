@@ -29,7 +29,6 @@
 #pragma once
 
 #include "../Image/pixel_buffer.h"
-#include "../../Core/IOData/file_system.h"
 
 namespace uicore
 {
@@ -46,23 +45,11 @@ namespace uicore
 		virtual ~ImageFileType();
 
 		/// \brief Called to load an image with this provider type.
-		virtual PixelBuffer load(
-			const std::string &filename,
-			const FileSystem &fs,
-			bool srgb) = 0;
-
-		virtual PixelBuffer load(
-			IODevice &file,
-			bool srgb) = 0;
+		virtual PixelBuffer load(const std::string &filename, bool srgb) = 0;
+		virtual PixelBuffer load(IODevice &file, bool srgb) = 0;
 
 		/// \brief Called to save a given PixelBuffer to a file
-		virtual void save(
-			PixelBuffer buffer,
-			const std::string &filename,
-			FileSystem &fs) = 0;
-
-		virtual void save(
-			PixelBuffer buffer,
-			IODevice &file) = 0;
+		virtual void save(PixelBuffer buffer, const std::string &filename) = 0;
+		virtual void save(PixelBuffer buffer, IODevice &file) = 0;
 	};
 }

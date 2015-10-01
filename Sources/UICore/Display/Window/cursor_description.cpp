@@ -28,7 +28,6 @@
 */
 
 #include "UICore/precomp.h"
-#include "UICore/Core/IOData/file_system.h"
 #include "UICore/Core/IOData/path_help.h"
 #include "UICore/Core/Text/string_format.h"
 #include "UICore/Core/Text/text.h"
@@ -73,19 +72,11 @@ namespace uicore
 		impl->frames.push_back(CursorDescriptionFrame(pixelbuffer, Rect(0, 0, pixelbuffer.get_width(), pixelbuffer.get_height())));
 	}
 
-	void CursorDescription::add_frame(const std::string &filename, FileSystem &fs, const ImageImportDescription &import_desc)
+	void CursorDescription::add_frame(const std::string &filename, const ImageImportDescription &import_desc)
 	{
-		PixelBuffer image = ImageFile::load(filename, fs, "");
+		PixelBuffer image = ImageFile::load(filename);
 		image = import_desc.process(image);
 		add_frame(image);
-	}
-
-	void CursorDescription::add_frame(const std::string &fullname, const ImageImportDescription &import_desc)
-	{
-		std::string path = PathHelp::get_fullpath(fullname, PathHelp::path_type_file);
-		std::string filename = PathHelp::get_filename(fullname, PathHelp::path_type_file);
-		FileSystem vfs(path);
-		add_frame(filename, vfs, import_desc);
 	}
 
 	void CursorDescription::add_frame(IODevice &file, const std::string &image_type, const ImageImportDescription &import_desc)

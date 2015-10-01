@@ -103,21 +103,13 @@ namespace uicore
 		void add_frame(const PixelBuffer &pixelbuffer);
 
 		/// \brief Add frame
-		///
-		/// \param fullname = String Ref
-		void add_frame(const std::string &fullname, const ImageImportDescription &import_desc = ImageImportDescription());
+		void add_frame(const std::string &filename, const ImageImportDescription &import_desc = ImageImportDescription());
 
 		/// \brief Add frame
 		///
 		/// \param file = IODevice
 		/// \param image_type = String
 		void add_frame(IODevice &file, const std::string &image_type, const ImageImportDescription &import_desc = ImageImportDescription());
-
-		/// \brief Add frame
-		///
-		/// \param filename = String Ref
-		/// \param dir = Virtual Directory
-		void add_frame(const std::string &filename, FileSystem &fs, const ImageImportDescription &import_desc = ImageImportDescription());
 
 		/// \brief Adds images formed in a grid.
 		/** <p>This function will cut out a grid of frames from one image.</p>

@@ -1079,9 +1079,9 @@ namespace uicore
 	void Win32Window::add_png_to_clipboard(const PixelBuffer &image)
 	{
 		DataBuffer png_data_buf(1024*8);
-		MemoryDevice iodev_mem(png_data_buf);
-		PNGFormat::save(image, iodev_mem);
-		DataBuffer png_data = iodev_mem.get_data();
+		auto iodev_mem = MemoryDevice::open(png_data_buf);
+		PNGFormat::save(image, *iodev_mem);
+		DataBuffer png_data = iodev_mem->buffer();
 
 		unsigned int length = png_data.get_size();
 		HANDLE handle = GlobalAlloc(GMEM_MOVEABLE, length);
@@ -1469,8 +1469,8 @@ namespace uicore
 	PixelBuffer Win32Window::get_argb8888_from_png(uint8_t *data, size_t size) const
 	{
 		DataBuffer data_buffer(data, size);
-		MemoryDevice iodev(data_buffer);
-		PixelBuffer pbuf = PNGFormat::load(iodev);
+		auto iodev = MemoryDevice::open(data_buffer);
+		PixelBuffer pbuf = PNGFormat::load(*iodev);
 		return pbuf;
 	}
 

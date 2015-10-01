@@ -30,7 +30,6 @@
 #pragma once
 
 #include <memory>
-#include "../../Core/IOData/file_system.h"
 #include "graphic_context.h"
 #include "../Image/image_import_description.h"
 #include "../Image/texture_format.h"

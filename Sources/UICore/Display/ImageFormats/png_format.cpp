@@ -29,7 +29,7 @@
 
 #include "UICore/precomp.h"
 #include "UICore/Core/System/exception.h"
-#include "UICore/Core/IOData/file_system.h"
+#include "UICore/Core/IOData/file.h"
 #include "UICore/Core/IOData/path_help.h"
 #include "UICore/Core/Text/text.h"
 #include "UICore/Display/Image/pixel_buffer.h"
@@ -41,20 +41,10 @@
 
 namespace uicore
 {
-	PixelBuffer PNGFormat::load(
-		const std::string &filename,
-		const FileSystem &fs,
-		bool srgb)
+	PixelBuffer PNGFormat::load(const std::string &filename, bool srgb)
 	{
-		return PNGLoader::load(fs.open_file(filename), srgb);
-	}
-
-	PixelBuffer PNGFormat::load(
-		const std::string &fullname,
-		bool srgb)
-	{
-		File file(fullname);
-		return PNGLoader::load(file, srgb);
+		auto file = File::open_existing(filename);
+		return PNGLoader::load(*file, srgb);
 	}
 
 	PixelBuffer PNGFormat::load(IODevice &file, bool srgb)
@@ -62,23 +52,10 @@ namespace uicore
 		return PNGLoader::load(file, srgb);
 	}
 
-	void PNGFormat::save(
-		PixelBuffer buffer,
-		const std::string &filename,
-		FileSystem &fs)
+	void PNGFormat::save(PixelBuffer buffer, const std::string &filename)
 	{
-		IODevice file = fs.open_file(filename, File::create_always, File::access_read_write);
-		save(buffer, file);
-	}
-
-	void PNGFormat::save(
-		PixelBuffer buffer,
-		const std::string &fullname)
-	{
-		std::string path = PathHelp::get_fullpath(fullname, PathHelp::path_type_file);
-		std::string filename = PathHelp::get_filename(fullname, PathHelp::path_type_file);
-		FileSystem vfs(path);
-		PNGFormat::save(buffer, filename, vfs);
+		auto file = File::create_always(filename);
+		save(buffer, *file);
 	}
 
 	void PNGFormat::save(PixelBuffer buffer, IODevice &iodev)

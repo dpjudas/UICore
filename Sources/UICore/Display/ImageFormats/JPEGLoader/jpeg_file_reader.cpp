@@ -36,7 +36,7 @@
 
 namespace uicore
 {
-	JPEGFileReader::JPEGFileReader(IODevice iodevice)
+	JPEGFileReader::JPEGFileReader(IODevice &iodevice)
 		: iodevice(iodevice)
 	{
 		iodevice.set_big_endian_mode();
@@ -53,8 +53,7 @@ namespace uicore
 	void JPEGFileReader::skip_unknown()
 	{
 		uint16_t size = iodevice.read_uint16();
-		if (!iodevice.seek(size - 2, IODevice::seek_cur))
-			throw Exception("Invalid JPEG file");
+		iodevice.seek_from_current(size - 2);
 	}
 
 	bool JPEGFileReader::try_read_app0_jfif()
@@ -62,8 +61,7 @@ namespace uicore
 		uint16_t size = iodevice.read_uint16();
 		if (size < 7)
 		{
-			if (!iodevice.seek(size - 2, IODevice::seek_cur))
-				throw Exception("Invalid JPEG file");
+			iodevice.seek_from_current(size - 2);
 			return false;
 		}
 
@@ -71,8 +69,7 @@ namespace uicore
 		iodevice.read(magic, 5);
 		bool is_jfif = (memcmp(magic, "JFIF", 5) == 0);
 
-		if (!iodevice.seek(size - 7, IODevice::seek_cur))
-			throw Exception("Invalid JPEG file");
+		iodevice.seek_from_current(size - 7);
 
 		return is_jfif;
 	}
@@ -94,8 +91,7 @@ namespace uicore
 		uint16_t size = iodevice.read_uint16();
 		if (size != 2 + 5 + 2 + 2 + 2 + 1)
 		{
-			if (!iodevice.seek(size - 2, IODevice::seek_cur))
-				throw Exception("Invalid JPEG file");
+			iodevice.seek_from_current(size - 2);
 			return false;
 		}
 
@@ -104,8 +100,7 @@ namespace uicore
 		bool is_app14_adobe = (memcmp(magic, "Adobe", 5) == 0);
 		if (!is_app14_adobe)
 		{
-			if (!iodevice.seek(size - 7, IODevice::seek_cur))
-				throw Exception("Invalid JPEG file");
+			iodevice.seek_from_current(size - 7);
 			return false;
 		}
 
@@ -339,8 +334,8 @@ namespace uicore
 
 		uint8_t *data = reinterpret_cast<uint8_t*>(d);
 
-		int start = iodevice.get_position();
-		int len = iodevice.read(data, size, false);
+		int start = iodevice.position();
+		int len = iodevice.try_read(data, size);
 		if (len == 0)
 			return 0;
 

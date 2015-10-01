@@ -28,7 +28,7 @@
 
 #include "UICore/precomp.h"
 #include "UICore/Core/System/exception.h"
-#include "UICore/Core/IOData/file_system.h"
+#include "UICore/Core/IOData/file.h"
 #include "UICore/Core/IOData/path_help.h"
 #include "UICore/Display/ImageFormats/targa_format.h"
 #include "UICore/Display/Image/pixel_buffer.h"
@@ -36,52 +36,24 @@
 
 namespace uicore
 {
-	PixelBuffer TargaFormat::load(
-		const std::string &filename,
-		const FileSystem &fs,
-		bool srgb)
+	PixelBuffer TargaFormat::load(const std::string &filename, bool srgb)
 	{
-		IODevice datafile = fs.open_file(filename);
-		return TargaLoader::load(datafile, srgb);
+		auto file = File::open_existing(filename);
+		return TargaLoader::load(*file, srgb);
 	}
 
-	PixelBuffer TargaFormat::load(
-		const std::string &fullname,
-		bool srgb)
-	{
-		File file(fullname);
-		return TargaLoader::load(file, srgb);
-	}
-
-	PixelBuffer TargaFormat::load(
-		IODevice &file,
-		bool srgb)
+	PixelBuffer TargaFormat::load(IODevice &file, bool srgb)
 	{
 		return TargaLoader::load(file, srgb);
 	}
 
-	void TargaFormat::save(
-		PixelBuffer buffer,
-		const std::string &filename,
-		FileSystem &fs)
+	void TargaFormat::save(PixelBuffer buffer, const std::string &filename)
 	{
 		throw Exception("TargaFormat doesn't support saving");
 	}
 
-	void TargaFormat::save(
-		PixelBuffer buffer,
-		IODevice &file)
+	void TargaFormat::save(PixelBuffer buffer, IODevice &file)
 	{
 		throw Exception("TargaFormat doesn't support saving");
-	}
-
-	void TargaFormat::save(
-		PixelBuffer buffer,
-		const std::string &fullname)
-	{
-		std::string path = PathHelp::get_fullpath(fullname, PathHelp::path_type_file);
-		std::string filename = PathHelp::get_filename(fullname, PathHelp::path_type_file);
-		FileSystem vfs(path);
-		TargaFormat::save(buffer, filename, vfs);
 	}
 }

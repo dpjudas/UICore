@@ -35,7 +35,6 @@
 #include "UICore/Display/Render/shared_gc_data.h"
 #include "UICore/GL/opengl_wrap.h"
 #include "UICore/GL/opengl.h"
-#include "UICore/Core/IOData/cl_endian.h"
 #include "UICore/Core/System/databuffer.h"
 #include "gl3_pixel_buffer_provider.h"
 

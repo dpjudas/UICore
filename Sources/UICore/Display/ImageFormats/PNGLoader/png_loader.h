@@ -38,10 +38,10 @@ namespace uicore
 	class PNGLoader
 	{
 	public:
-		static PixelBuffer load(IODevice iodevice, bool srgb);
+		static PixelBuffer load(IODevice &iodevice, bool srgb);
 
 	private:
-		PNGLoader(IODevice iodevice, bool force_srgb);
+		PNGLoader(IODevice &iodevice, bool force_srgb);
 		~PNGLoader();
 		void read_magic();
 		void read_chunks();
@@ -90,7 +90,7 @@ namespace uicore
 			return (static_cast<unsigned int>(p[0]) << 8) | p[1];
 		}
 
-		IODevice file;
+		IODevice &file;
 		bool force_srgb;
 
 		PixelBuffer image;

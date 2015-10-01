@@ -72,30 +72,10 @@ namespace uicore
 
 	Font::Font(const FontDescription &desc, const std::string &ttf_filename)
 	{
-		std::string path = PathHelp::get_fullpath(ttf_filename, PathHelp::path_type_file);
 		std::string new_filename = PathHelp::get_filename(ttf_filename, PathHelp::path_type_file);
-		FileSystem vfs(path);
 
 		FontFamily font_family(new_filename);
-		font_family.add(desc, new_filename, vfs);
-		impl = std::make_shared<Font_Impl>(font_family, desc);
-	}
-
-	Font::Font(const FontDescription &desc, const std::string &ttf_filename, FileSystem fs)
-	{
-		std::string new_filename = PathHelp::get_filename(ttf_filename, PathHelp::path_type_file);
-		FontFamily font_family(new_filename);
-		font_family.add(desc, ttf_filename, fs);
-		impl = std::make_shared<Font_Impl>(font_family, desc);
-	}
-
-	Font::Font(Canvas &canvas, const std::string &typeface_name, Sprite &sprite, const std::string &glyph_list, float spacelen, bool monospace, const FontMetrics &metrics)
-	{
-		FontDescription desc;
-		desc.set_height(metrics.get_height());
-
-		FontFamily font_family(typeface_name);
-		font_family.add(canvas, sprite, glyph_list, spacelen, monospace, metrics);
+		font_family.add(desc, ttf_filename);
 		impl = std::make_shared<Font_Impl>(font_family, desc);
 	}
 

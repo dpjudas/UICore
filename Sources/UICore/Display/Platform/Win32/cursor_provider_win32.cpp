@@ -87,13 +87,13 @@ namespace uicore
 	{
 		DataBuffer buf;
 		buf.set_capacity(32 * 1024);
-		MemoryDevice device(buf);
+		auto device = MemoryDevice::open(buf);
 
 		ICONHEADER header;
 		memset(&header, 0, sizeof(ICONHEADER));
 		header.idType = type;
 		header.idCount = images.size();
-		device.write(&header, sizeof(ICONHEADER));
+		device->write(&header, sizeof(ICONHEADER));
 
 		std::vector<PixelBuffer> bmp_images;
 		for (size_t i = 0; i < images.size(); i++)
@@ -115,7 +115,7 @@ namespace uicore
 				entry.XHotspot = hotspots[i].x;
 				entry.YHotspot = hotspots[i].y;
 			}
-			device.write(&entry, sizeof(IconDirectoryEntry));
+			device->write(&entry, sizeof(IconDirectoryEntry));
 		}
 
 		for (size_t i = 0; i < bmp_images.size(); i++)
@@ -129,11 +129,11 @@ namespace uicore
 			bmp_header.biBitCount = 32;
 			bmp_header.biCompression = BI_RGB;
 			bmp_header.biSizeImage = bmp_images[i].get_pitch() * bmp_images[i].get_height();
-			device.write(&bmp_header, sizeof(BITMAPINFOHEADER));
-			device.write(bmp_images[i].get_data(), bmp_images[i].get_pitch() * bmp_images[i].get_height());
+			device->write(&bmp_header, sizeof(BITMAPINFOHEADER));
+			device->write(bmp_images[i].get_data(), bmp_images[i].get_pitch() * bmp_images[i].get_height());
 		}
 
-		return device.get_data();
+		return device->buffer();
 	}
 
 	DataBuffer CursorProvider_Win32::create_ani_file(const CursorDescription &cursor_description)

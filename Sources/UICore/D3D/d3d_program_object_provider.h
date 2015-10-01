@@ -39,6 +39,7 @@
 
 namespace uicore
 {
+	class DataBuffer;
 	class D3DShaderObjectProvider;
 	class D3DUniformBufferProvider;
 

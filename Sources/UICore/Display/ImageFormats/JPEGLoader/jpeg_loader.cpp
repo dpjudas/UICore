@@ -35,7 +35,7 @@
 
 namespace uicore
 {
-	PixelBuffer JPEGLoader::load(IODevice iodevice, bool srgb)
+	PixelBuffer JPEGLoader::load(IODevice &iodevice, bool srgb)
 	{
 		JPEGLoader loader(iodevice);
 		JPEGMCUDecoder mcu_decoder(&loader);
@@ -77,7 +77,7 @@ namespace uicore
 		return image;
 	}
 
-	JPEGLoader::JPEGLoader(IODevice iodevice)
+	JPEGLoader::JPEGLoader(IODevice &iodevice)
 		: progressive(false), scan_count(0), mcu_x(0), mcu_y(0), mcu_width(0), mcu_height(0), restart_interval(0), eobrun(0), is_jfif_jpeg(false), is_adobe_jpeg(false), adobe_app14_transform(1)
 	{
 		JPEGFileReader reader(iodevice);

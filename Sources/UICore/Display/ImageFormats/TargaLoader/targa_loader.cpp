@@ -32,13 +32,13 @@
 
 namespace uicore
 {
-	PixelBuffer TargaLoader::load(IODevice iodevice, bool srgb)
+	PixelBuffer TargaLoader::load(IODevice &iodevice, bool srgb)
 	{
 		TargaLoader loader(iodevice, srgb);
 		return loader.image;
 	}
 
-	TargaLoader::TargaLoader(IODevice iodevice, bool srgb)
+	TargaLoader::TargaLoader(IODevice &iodevice, bool srgb)
 		: file(iodevice), srgb(srgb)
 	{
 		read_header();
@@ -101,7 +101,7 @@ namespace uicore
 
 		if (image_type == 9 || image_type == 10 || image_type == 11) // RLE compressed
 		{
-			DataBuffer rle_data(file.get_size() - file.get_position());
+			DataBuffer rle_data(file.size() - file.position());
 			file.read(rle_data.get_data(), rle_data.get_size());
 
 			unsigned char *input = reinterpret_cast<unsigned char*>(rle_data.get_data());

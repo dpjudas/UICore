@@ -28,7 +28,6 @@
 
 #include "UICore/precomp.h"
 #include "render_batch_line_texture.h"
-#include "sprite_impl.h"
 #include "UICore/Display/Render/blend_state_description.h"
 #include "UICore/Display/2D/canvas.h"
 

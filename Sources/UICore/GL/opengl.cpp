@@ -33,7 +33,6 @@
 #include "UICore/GL/opengl_wrap.h"
 #include "UICore/GL/opengl_target.h"
 #include "UICore/Core/System/exception.h"
-#include "UICore/Core/IOData/cl_endian.h"
 #include "UICore/Core/Text/string_format.h"
 #include "UICore/Display/Render/graphic_context.h"
 #include "UICore/Display/Render/texture.h"

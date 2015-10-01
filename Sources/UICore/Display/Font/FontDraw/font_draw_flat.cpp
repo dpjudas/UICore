@@ -39,7 +39,6 @@
 #include "UICore/Core/IOData/path_help.h"
 #include "UICore/Display/2D/canvas_impl.h"
 #include "UICore/Display/Font/FontEngine/font_engine.h"
-#include "UICore/Display/2D/sprite_impl.h"
 #include "font_draw_flat.h"
 #include "UICore/Display/Font/glyph_cache.h"
 #include "UICore/Display/Font/path_cache.h"

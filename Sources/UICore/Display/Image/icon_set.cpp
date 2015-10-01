@@ -123,13 +123,13 @@ namespace uicore
 	{
 		DataBuffer buf;
 		buf.set_capacity(32 * 1024);
-		MemoryDevice device(buf);
+		auto device = MemoryDevice::open(buf);
 
 		IconHeader header;
 		memset(&header, 0, sizeof(IconHeader));
 		header.idType = type;
 		header.idCount = images.size();
-		device.write(&header, sizeof(IconHeader));
+		device->write(&header, sizeof(IconHeader));
 
 		std::vector<PixelBuffer> bmp_images;
 		for (auto & image : images)
@@ -152,7 +152,7 @@ namespace uicore
 				entry.XHotspot = hotspots[i].x;
 				entry.YHotspot = hotspots[i].y;
 			}
-			device.write(&entry, size_direntry);
+			device->write(&entry, size_direntry);
 			image_offset += entry.dwBytesInRes;
 		}
 
@@ -166,11 +166,11 @@ namespace uicore
 			bmp_header.biPlanes = 1;
 			bmp_header.biBitCount = 32;
 			bmp_header.biCompression = bi_rgb;
-			device.write(&bmp_header, size_bitmap_info);
-			device.write(bmp_image.get_data(), bmp_image.get_pitch() * bmp_image.get_height());
+			device->write(&bmp_header, size_bitmap_info);
+			device->write(bmp_image.get_data(), bmp_image.get_pitch() * bmp_image.get_height());
 		}
 
-		return device.get_data();
+		return device->buffer();
 	}
 
 	PixelBuffer IconSet_Impl::create_bitmap_data(const PixelBuffer &image)

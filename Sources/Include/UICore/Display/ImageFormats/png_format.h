@@ -29,47 +29,17 @@
 #pragma once
 
 #include "../Image/pixel_buffer.h"
-#include "../../Core/IOData/file_system.h"
 
 namespace uicore
 {
-	class FileSystem;
-
 	/// \brief Surface provider that can load PNG (.png) files.
 	class PNGFormat
 	{
 	public:
-		/// \brief Called to load an image with this provider type.
-		///
-		/// \param name Name of the file to load.
-		/// \param directory Directory that file name is relative to.
-		static PixelBuffer load(
-			const std::string &filename,
-			const FileSystem &fs,
-			bool srgb = false);
+		static PixelBuffer load(const std::string &filename, bool srgb = false);
+		static PixelBuffer load(IODevice &device, bool srgb = false);
 
-		static PixelBuffer load(
-			const std::string &fullname,
-			bool srgb = false);
-
-		/// \brief Load
-		///
-		/// \param dev = IODevice
-		///
-		/// \return Pixel Buffer
-		static PixelBuffer load(IODevice &dev, bool srgb = false);
-
-		/// \brief Called to save a given PixelBuffer to a file
-		static void save(
-			PixelBuffer buffer,
-			const std::string &filename,
-			FileSystem &fs);
-
-		static void save(
-			PixelBuffer buffer,
-			const std::string &fullname);
-
-		/// \brief Save the given PixelBuffer to an output device.
+		static void save(PixelBuffer buffer, const std::string &filename);
 		static void save(PixelBuffer buffer, IODevice &iodev);
 	};
 }

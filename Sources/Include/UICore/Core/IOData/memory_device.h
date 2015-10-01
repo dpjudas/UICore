@@ -28,30 +28,21 @@
 
 #pragma once
 
+#include <memory>
 #include "iodevice.h"
 
 namespace uicore
 {
 	class DataBuffer;
+	class MemoryDeviceImpl;
 
-	/// \brief Memory I/O device.
 	class MemoryDevice : public IODevice
 	{
 	public:
-		/// \brief Constructs a memory I/O device.
-		MemoryDevice();
+		static std::shared_ptr<MemoryDevice> create();
+		static std::shared_ptr<MemoryDevice> open(const DataBuffer &buffer);
 
-		/// \brief Constructs a IODevice Memory
-		///
-		/// \param data = Data Buffer
-		MemoryDevice(DataBuffer &data);
-
-		/// \brief Retrieves the data buffer for the memory device.
-		const DataBuffer &get_data() const;
-
-		/// \brief Get Data
-		///
-		/// \return data
-		DataBuffer &get_data();
+		virtual const DataBuffer &buffer() const = 0;
+		virtual void set_buffer(const DataBuffer &buffer) = 0;
 	};
 }

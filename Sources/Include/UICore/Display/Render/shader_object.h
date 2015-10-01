@@ -31,12 +31,12 @@
 #pragma once
 
 #include <memory>
-#include "../../Core/IOData/file_system.h"
 #include "graphic_context.h"
 #include <vector>
 
 namespace uicore
 {
+	class IODevice;
 	class GraphicContextProvider;
 	class XMLResourceDocument;
 	class ShaderObject_Impl;
@@ -111,16 +111,6 @@ namespace uicore
 		///
 		/// \param gc = Graphic Context
 		/// \param type = Shader Type
-		/// \param filename = String Ref
-		/// \param directory = Virtual Directory
-		///
-		/// \return Shader Object
-		static ShaderObject load(GraphicContext &gc, ShaderType type, const std::string &filename, const FileSystem &fs);
-
-		/// \brief Load
-		///
-		/// \param gc = Graphic Context
-		/// \param type = Shader Type
 		/// \param fullname = String Ref
 		///
 		/// \return Shader Object
@@ -134,16 +124,6 @@ namespace uicore
 		///
 		/// \return Shader Object
 		static ShaderObject load(GraphicContext &gc, ShaderType type, IODevice &file);
-
-		/// \brief Load and compile
-		///
-		/// \param gc = Graphic Context
-		/// \param type = Shader Type
-		/// \param filename = String Ref
-		/// \param directory = Virtual Directory
-		///
-		/// \return Shader Object
-		static ShaderObject load_and_compile(GraphicContext &gc, ShaderType type, const std::string &filename, const FileSystem &fs);
 
 		/// \brief Load and compile
 		///

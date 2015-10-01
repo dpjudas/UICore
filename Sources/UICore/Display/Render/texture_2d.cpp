@@ -34,7 +34,6 @@
 #include "UICore/Display/Image/pixel_buffer.h"
 #include "UICore/Display/2D/color.h"
 #include "UICore/Display/ImageFormats/image_file.h"
-#include "UICore/Core/IOData/file_system.h"
 #include "UICore/Core/IOData/path_help.h"
 #include "UICore/Core/Text/string_format.h"
 #include "graphic_context_impl.h"
@@ -82,17 +81,9 @@ namespace uicore
 		impl->provider->set_wrap_mode(impl->wrap_mode_s, impl->wrap_mode_t);
 	}
 
-	Texture2D::Texture2D(GraphicContext &context, const std::string &fullname, const ImageImportDescription &import_desc)
+	Texture2D::Texture2D(GraphicContext &context, const std::string &filename, const ImageImportDescription &import_desc)
 	{
-		std::string path = PathHelp::get_fullpath(fullname, PathHelp::path_type_file);
-		std::string filename = PathHelp::get_filename(fullname, PathHelp::path_type_file);
-		FileSystem vfs(path);
-		*this = Texture2D(context, filename, vfs, import_desc);
-	}
-
-	Texture2D::Texture2D(GraphicContext &context, const std::string &filename, const FileSystem &fs, const ImageImportDescription &import_desc)
-	{
-		PixelBuffer pb = ImageFile::load(filename, fs, std::string());
+		PixelBuffer pb = ImageFile::load(filename, std::string());
 		pb = import_desc.process(pb);
 
 		*this = Texture2D(context, pb.get_width(), pb.get_height(), import_desc.is_srgb() ? tf_srgb8_alpha8 : tf_rgba8);

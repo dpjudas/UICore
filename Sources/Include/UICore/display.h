@@ -38,7 +38,6 @@
 #include "Display/2D/color_hsl.h"
 #include "Display/2D/gradient.h"
 #include "Display/2D/image.h"
-#include "Display/2D/sprite.h"
 #include "Display/2D/path.h"
 #include "Display/2D/pen.h"
 #include "Display/2D/brush.h"

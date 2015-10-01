@@ -32,6 +32,8 @@
 #include "UICore/Display/Font/font_description.h"
 #include "UICore/Display/TargetProviders/graphic_context_provider.h"
 #include "UICore/Core/IOData/path_help.h"
+#include "UICore/Core/IOData/file.h"
+#include "UICore/Core/System/databuffer.h"
 #include "UICore/Core/Text/text.h"
 #include "UICore/Core/Text/string_format.h"
 #include "UICore/Core/Text/utf8_reader.h"
@@ -74,36 +76,10 @@ namespace uicore
 		DataBuffer font_databuffer;
 		if (!ttf_filename.empty())
 		{
-			std::string path = PathHelp::get_fullpath(ttf_filename, PathHelp::path_type_file);
-			std::string new_filename = PathHelp::get_filename(ttf_filename, PathHelp::path_type_file);
-			FileSystem fs(path);
-
-			IODevice file = fs.open_file(new_filename);
-			font_databuffer.set_size(file.get_size());
-			file.read(font_databuffer.get_data(), font_databuffer.get_size());
+			font_databuffer = File::read_all_bytes(ttf_filename);
 		}
 
 		impl->add(desc, font_databuffer);
-	}
-
-	void FontFamily::add(const FontDescription &desc, const std::string &ttf_filename, FileSystem fs)
-	{
-		throw_if_null();
-		DataBuffer font_databuffer;
-		if (!ttf_filename.empty())
-		{
-			IODevice file = fs.open_file(ttf_filename);
-			font_databuffer.set_size(file.get_size());
-			file.read(font_databuffer.get_data(), font_databuffer.get_size());
-		}
-
-		impl->add(desc, font_databuffer);
-	}
-
-	void FontFamily::add(Canvas &canvas, Sprite &sprite, const std::string &glyph_list, float spacelen, bool monospace, const FontMetrics &metrics)
-	{
-		throw_if_null();
-		impl->font_face_load(canvas, sprite, glyph_list, spacelen, monospace, metrics);
 	}
 
 	void FontFamily::throw_if_null() const

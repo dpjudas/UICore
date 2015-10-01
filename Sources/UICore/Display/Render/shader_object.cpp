@@ -28,8 +28,8 @@
 */
 
 #include "UICore/precomp.h"
-#include "UICore/Core/IOData/file_system.h"
 #include "UICore/Core/IOData/path_help.h"
+#include "UICore/Core/IOData/file.h"
 #include "UICore/Core/Text/string_format.h"
 #include "UICore/Core/Text/text.h"
 #include "UICore/Core/IOData/iodevice.h"
@@ -98,32 +98,23 @@ namespace uicore
 		impl->provider->create(type, sources);
 	}
 
-	ShaderObject ShaderObject::load(GraphicContext &gc, ShaderType shader_type, const std::string &filename, const FileSystem &fs)
+	ShaderObject ShaderObject::load(GraphicContext &gc, ShaderType shader_type, const std::string &filename)
 	{
-		IODevice file = fs.open_file(filename);
-		return ShaderObject::load(gc, shader_type, file);
+		return ShaderObject(gc, shader_type, StringHelp::local8_to_text(File::read_all_text(filename)));
 	}
 
 	ShaderObject ShaderObject::load(GraphicContext &gc, ShaderType shader_type, IODevice &file)
 	{
-		int size = file.get_size();
+		int size = file.size();
 		std::string source(size, 0);
 		file.read(&source[0], size);
 
 		return ShaderObject(gc, shader_type, StringHelp::local8_to_text(source));
 	}
 
-	ShaderObject ShaderObject::load(GraphicContext &gc, ShaderType shader_type, const std::string &fullname)
+	ShaderObject ShaderObject::load_and_compile(GraphicContext &gc, ShaderType shader_type, const std::string &filename)
 	{
-		std::string path = PathHelp::get_fullpath(fullname, PathHelp::path_type_file);
-		std::string filename = PathHelp::get_filename(fullname, PathHelp::path_type_file);
-		FileSystem vfs(path);
-		return ShaderObject::load(gc, shader_type, filename, vfs);
-	}
-
-	ShaderObject ShaderObject::load_and_compile(GraphicContext &gc, ShaderType shader_type, const std::string &filename, const FileSystem &fs)
-	{
-		ShaderObject shader_object = ShaderObject::load(gc, shader_type, filename, fs);
+		ShaderObject shader_object = ShaderObject::load(gc, shader_type, filename);
 
 		if (!shader_object.compile())
 			throw Exception(string_format("Unable to compile shader program %1: %2", filename, shader_object.get_info_log()));
@@ -139,14 +130,6 @@ namespace uicore
 			throw Exception(string_format("Unable to compile shader program : %1", shader_object.get_info_log()));
 
 		return shader_object;
-	}
-
-	ShaderObject ShaderObject::load_and_compile(GraphicContext &gc, ShaderType shader_type, const std::string &fullname)
-	{
-		std::string path = PathHelp::get_fullpath(fullname, PathHelp::path_type_file);
-		std::string filename = PathHelp::get_filename(fullname, PathHelp::path_type_file);
-		FileSystem vfs(path);
-		return ShaderObject::load_and_compile(gc, shader_type, filename, vfs);
 	}
 
 	ShaderObject::~ShaderObject()

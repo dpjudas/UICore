@@ -29,18 +29,14 @@
 #pragma once
 
 #include "../Image/pixel_buffer_set.h"
-#include "../../Core/IOData/file_system.h"
 
 namespace uicore
 {
-	class FileSystem;
-
 	/// \brief Image format that can load Direct3D texture (.dds) files.
 	class DDSFormat
 	{
 	public:
-		static PixelBufferSet load(const std::string &filename, const FileSystem &file_system);
-		static PixelBufferSet load(const std::string &fullname);
+		static PixelBufferSet load(const std::string &filename);
 		static PixelBufferSet load(IODevice &file);
 	};
 }

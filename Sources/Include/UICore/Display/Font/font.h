@@ -32,7 +32,6 @@
 #include <memory>
 #include "UICore/Display/Render/graphic_context.h"
 #include "../Image/pixel_buffer.h"
-#include "../2D/sprite.h"
 #include "font_description.h"
 #include "glyph_metrics.h"
 
@@ -73,18 +72,6 @@ namespace uicore
 
 		// \brief Constructs standard font
 		Font(const FontDescription &desc, const std::string &ttf_filename);
-
-		// \brief Constructs standard font
-		Font(const FontDescription &desc, const std::string &ttf_filename, FileSystem fs);
-
-		/// \brief Constructs a Font based on a sprite
-		///
-		/// \param sprite = Sprite with glyphs
-		/// \param glyph_list = Letter to glyph mapping
-		/// \param spacelen = Width of space character
-		/// \param monospace = Force monospaced font (using widest sprite character)
-		/// \param metrics = Font metrics for the sprite font
-		Font(Canvas &canvas, const std::string &typeface_name, Sprite &sprite, const std::string &glyph_list, float spacelen, bool monospace, const FontMetrics &metrics);
 
 		/// \brief Returns true if this object is invalid.
 		bool is_null() const { return !impl; }

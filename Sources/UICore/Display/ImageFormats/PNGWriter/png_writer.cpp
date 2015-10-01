@@ -32,13 +32,13 @@
 
 namespace uicore
 {
-	void PNGWriter::save(IODevice iodevice, PixelBuffer image)
+	void PNGWriter::save(IODevice &iodevice, PixelBuffer image)
 	{
 		PNGWriter writer(iodevice, image);
 		writer.save();
 	}
 	
-	PNGWriter::PNGWriter(IODevice iodevice, PixelBuffer src_image) : device(iodevice)
+	PNGWriter::PNGWriter(IODevice &iodevice, PixelBuffer src_image) : device(iodevice)
 	{
 		// This writer only supports RGBA format
 		if (src_image.get_bytes_per_pixel() < 8)

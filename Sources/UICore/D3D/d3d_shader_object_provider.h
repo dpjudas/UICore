@@ -30,6 +30,7 @@
 
 #include "UICore/Display/TargetProviders/shader_object_provider.h"
 #include "UICore/Core/System/comptr.h"
+#include "UICore/Core/System/databuffer.h"
 #include <map>
 #include <D3Dcompiler.h>
 #include <mutex>

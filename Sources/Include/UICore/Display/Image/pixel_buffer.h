@@ -44,7 +44,6 @@ namespace uicore
 	class Colorf;
 	class PixelBuffer;
 	class PixelBuffer_Impl;
-	class FileSystem;
 	class IODevice;
 	class GraphicContext;
 	class PixelBufferProvider;
@@ -79,13 +78,7 @@ namespace uicore
 		/// \brief Constructs a PixelBuffer
 		///
 		/// \param fullname = String Ref
-		PixelBuffer(const std::string &fullname, bool srgb = false);
-
-		/// \brief Constructs a PixelBuffer
-		///
-		/// \param filename = String Ref
-		/// \param dir = Virtual Directory
-		PixelBuffer(const std::string &filename, const FileSystem &file_system, bool srgb = false);
+		PixelBuffer(const std::string &filename, bool srgb = false);
 
 		/// \brief Constructs a PixelBuffer
 		///

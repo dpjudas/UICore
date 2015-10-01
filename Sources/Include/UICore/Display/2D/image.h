@@ -37,7 +37,6 @@
 namespace uicore
 {
 	class GraphicContext;
-	class FileSystem;
 	class Rect;
 	class Size;
 	class Rectf;
@@ -81,14 +80,6 @@ namespace uicore
 		/// \param filename Filename of image to load
 		/// \param import_desc = Image Import Description
 		Image(Canvas &canvas, const std::string &filename, const ImageImportDescription &import_desc = ImageImportDescription());
-
-		/// \brief Constructs a Image
-		///
-		/// \param canvas = Canvas
-		/// \param filename Filename of image to load
-		/// \param dir = Virtual directory to load filename from
-		/// \param import_desc = Image Import Description
-		Image(Canvas &canvas, const std::string &filename, const FileSystem &fs, const ImageImportDescription &import_desc = ImageImportDescription());
 
 		virtual ~Image();
 

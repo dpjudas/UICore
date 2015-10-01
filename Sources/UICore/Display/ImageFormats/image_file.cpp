@@ -27,8 +27,8 @@
 */
 
 #include "UICore/precomp.h"
-#include "UICore/Core/IOData/file_system.h"
 #include "UICore/Core/IOData/path_help.h"
+#include "UICore/Core/IOData/file.h"
 #include "UICore/Display/ImageFormats/image_file.h"
 #include "UICore/Display/ImageFormats/image_file_type.h"
 #include "UICore/Display/Image/pixel_buffer.h"
@@ -42,14 +42,13 @@ namespace uicore
 	PixelBuffer ImageFile::try_load(
 		const std::string &filename,
 		const std::string &type,
-		const FileSystem &fs,
 		std::string *out_failure_reason,
 		bool srgb)
 	{
 		SetupDisplay::start();
 		try
 		{
-			return load(filename, fs, type, srgb);
+			return load(filename, type, srgb);
 		}
 		catch (const Exception& e)
 		{
@@ -61,7 +60,6 @@ namespace uicore
 
 	PixelBuffer ImageFile::load(
 		const std::string &filename,
-		const FileSystem &fs,
 		const std::string &type,
 		bool srgb)
 	{
@@ -72,7 +70,7 @@ namespace uicore
 			if (types.find(type) == types.end()) throw Exception("Unknown image provider type " + type);
 
 			ImageFileType *factory = types[type];
-			return factory->load(filename, fs, srgb);
+			return factory->load(filename, srgb);
 		}
 
 		// Determine file extension and use it to lookup type.
@@ -81,7 +79,7 @@ namespace uicore
 		if (types.find(ext) == types.end()) throw Exception(std::string("Unknown image provider type ") + ext);
 
 		ImageFileType *factory = types[ext];
-		return factory->load(filename, fs, srgb);
+		return factory->load(filename, srgb);
 	}
 
 	PixelBuffer ImageFile::load(
@@ -97,47 +95,14 @@ namespace uicore
 		return factory->load(file, srgb);
 	}
 
-	PixelBuffer ImageFile::load(
-		const std::string &fullname,
-		const std::string &type,
-		bool srgb)
-	{
-		SetupDisplay::start();
-		std::string path = PathHelp::get_fullpath(fullname, PathHelp::path_type_file);
-		std::string filename = PathHelp::get_filename(fullname, PathHelp::path_type_file);
-		FileSystem vfs(path);
-		return ImageFile::load(filename, vfs, type, srgb);
-	}
-
 	void ImageFile::save(
 		PixelBuffer buffer,
 		const std::string &filename,
-		FileSystem &fs,
-		const std::string &type_)
-	{
-		SetupDisplay::start();
-		std::string type = type_;
-
-		if (type.empty())
-			type = PathHelp::get_extension(filename, PathHelp::path_type_virtual);
-
-		auto &types = *SetupDisplay::get_image_provider_factory_types();
-		if (types.find(type) == types.end()) throw Exception("Unknown image provider type " + type);
-
-		ImageFileType *factory = types[type];
-		factory->save(buffer, filename, fs);
-	}
-
-	void ImageFile::save(
-		PixelBuffer buffer,
-		const std::string &fullname,
 		const std::string &type)
 	{
 		SetupDisplay::start();
-		std::string path = PathHelp::get_fullpath(fullname, PathHelp::path_type_file);
-		std::string filename = PathHelp::get_filename(fullname, PathHelp::path_type_file);
-		FileSystem vfs(path);
-		return ImageFile::save(buffer, filename, vfs, type);
+		auto file = File::open_existing(filename);
+		return ImageFile::save(buffer, *file, type);
 	}
 
 	void ImageFile::save(

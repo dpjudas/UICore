@@ -41,7 +41,7 @@ namespace uicore
 		const int window_bits = 15;
 
 		DataBuffer zbuffer(1024 * 1024);
-		MemoryDevice output;
+		auto output = MemoryDevice::create();
 
 		int strategy = MZ_DEFAULT_STRATEGY;
 		switch (mode)
@@ -77,7 +77,7 @@ namespace uicore
 				int zsize = zbuffer.get_size() - zs.avail_out;
 				if (zsize == 0)
 					break;
-				output.write(zbuffer.get_data(), zsize);
+				output->write(zbuffer.get_data(), zsize);
 				if (result == MZ_STREAM_END)
 					break;
 			}
@@ -89,7 +89,7 @@ namespace uicore
 			throw;
 		}
 
-		return output.get_data();
+		return output->buffer();
 	}
 
 	DataBuffer ZLibCompression::decompress(const DataBuffer &data, bool raw)
@@ -97,7 +97,7 @@ namespace uicore
 		const int window_bits = 15;
 
 		DataBuffer zbuffer(1024 * 1024);
-		MemoryDevice output;
+		auto output = MemoryDevice::create();
 
 		mz_stream zs = { nullptr };
 		int result = mz_inflateInit2(&zs, raw ? -window_bits : window_bits);
@@ -123,13 +123,13 @@ namespace uicore
 			if (result == MZ_BUF_ERROR) throw Exception("Not enough data in buffer when Z_FINISH was used");
 			if (result != MZ_OK && result != MZ_STREAM_END) throw Exception("Zlib inflate failed while decompressing zip file!");
 
-			output.write(zbuffer.get_data(), zbuffer.get_size() - zs.avail_out);
+			output->write(zbuffer.get_data(), zbuffer.get_size() - zs.avail_out);
 
 			if (result == MZ_STREAM_END)
 				break;
 		}
 		mz_inflateEnd(&zs);
 
-		return output.get_data();
+		return output->buffer();
 	}
 }

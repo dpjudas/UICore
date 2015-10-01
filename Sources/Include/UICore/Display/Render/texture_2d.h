@@ -33,6 +33,8 @@
 
 namespace uicore
 {
+	class IODevice;
+
 	/// 2D texture object class.
 	class Texture2D : public Texture
 	{
@@ -64,8 +66,7 @@ namespace uicore
 		 */
 		Texture2D(GraphicContext &context, const Size &size, TextureFormat texture_format = tf_rgba8, int levels = 1);
 
-		Texture2D(GraphicContext &context, const std::string &fullname, const ImageImportDescription &import_desc = {});
-		Texture2D(GraphicContext &context, const std::string &filename, const FileSystem &fs, const ImageImportDescription &import_desc = {});
+		Texture2D(GraphicContext &context, const std::string &filename, const ImageImportDescription &import_desc = {});
 		Texture2D(GraphicContext &context, IODevice &file, const std::string &image_type, const ImageImportDescription &import_desc = {});
 
 		Texture2D(GraphicContext &context, const PixelBuffer &image, bool is_srgb = false);

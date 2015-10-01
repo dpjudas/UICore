@@ -46,7 +46,6 @@
 #include "gl3_transfer_buffer_provider.h"
 #include "gl3_pixel_buffer_provider.h"
 #include "gl3_primitives_array_provider.h"
-#include "UICore/Core/IOData/cl_endian.h"
 #include "UICore/Core/System/databuffer.h"
 #include "UICore/Core/Math/cl_math.h"
 #include "UICore/Core/Math/vec3.h"

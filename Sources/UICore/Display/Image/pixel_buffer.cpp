@@ -35,7 +35,6 @@
 #include "UICore/Display/2D/color.h"
 #include "pixel_buffer_impl.h"
 #include "UICore/Core/System/exception.h"
-#include "UICore/Core/IOData/file_system.h"
 #include "UICore/Core/IOData/path_help.h"
 #include "UICore/Display/ImageFormats/image_file.h"
 #include "UICore/Display/TargetProviders/pixel_buffer_provider.h"
@@ -62,17 +61,9 @@ namespace uicore
 	{
 	}
 
-	PixelBuffer::PixelBuffer(const std::string &fullname, bool srgb)
+	PixelBuffer::PixelBuffer(const std::string &filename, bool srgb)
 	{
-		std::string path = PathHelp::get_fullpath(fullname, PathHelp::path_type_file);
-		std::string filename = PathHelp::get_filename(fullname, PathHelp::path_type_file);
-		FileSystem vfs(path);
-		*this = PixelBuffer(filename, vfs, srgb);
-	}
-
-	PixelBuffer::PixelBuffer(const std::string &filename, const FileSystem &fs, bool srgb)
-	{
-		*this = ImageFile::load(filename, fs, "", srgb);
+		*this = ImageFile::load(filename, "", srgb);
 	}
 
 	PixelBuffer::PixelBuffer(IODevice &file, const std::string &image_type, bool srgb)

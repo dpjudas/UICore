@@ -42,7 +42,6 @@
 #include "UICore/Core/IOData/path_help.h"
 #include "UICore/Display/2D/canvas_impl.h"
 #include "UICore/Display/Font/FontEngine/font_engine.h"
-#include "UICore/Display/2D/sprite_impl.h"
 
 namespace uicore
 {

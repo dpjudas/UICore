@@ -30,6 +30,7 @@
 #include "d3d_shader_object_provider.h"
 #include "UICore/D3D/d3d_target.h"
 #include "UICore/Core/Text/string_format.h"
+#include "UICore/Core/System/databuffer.h"
 
 namespace uicore
 {

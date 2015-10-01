@@ -28,7 +28,6 @@
 */
 
 #include "UICore/precomp.h"
-#include "UICore/Core/IOData/file_system.h"
 #include "UICore/Core/IOData/path_help.h"
 #include "UICore/Display/Render/shader_object.h"
 #include "UICore/Display/Render/program_object.h"
@@ -81,76 +80,30 @@ namespace uicore
 		impl->provider = provider;
 	}
 
-	ProgramObject ProgramObject::load(GraphicContext &gc, const std::string &vertex_filename, const std::string &fragment_filename, const FileSystem &fs)
+	ProgramObject ProgramObject::load(GraphicContext &gc, const std::string &vertex_filename, const std::string &fragment_filename)
 	{
 		ProgramObject program_object(gc);
 
-		ShaderObject vertex_shader = ShaderObject::load_and_compile(gc, shadertype_vertex, vertex_filename, fs);
+		ShaderObject vertex_shader = ShaderObject::load_and_compile(gc, shadertype_vertex, vertex_filename);
 		program_object.attach(vertex_shader);
 
-		ShaderObject fragment_shader = ShaderObject::load_and_compile(gc, shadertype_fragment, fragment_filename, fs);
+		ShaderObject fragment_shader = ShaderObject::load_and_compile(gc, shadertype_fragment, fragment_filename);
 		program_object.attach(fragment_shader);
 
 		return program_object;
 	}
 
-	ProgramObject ProgramObject::load(GraphicContext &gc, const std::string &vertex_filename, const std::string &geometry_filename, const std::string &fragment_filename, const FileSystem &fs)
+	ProgramObject ProgramObject::load(GraphicContext &gc, const std::string &vertex_filename, const std::string &geometry_filename, const std::string &fragment_filename)
 	{
 		ProgramObject program_object(gc);
 
-		ShaderObject vertex_shader = ShaderObject::load_and_compile(gc, shadertype_vertex, vertex_filename, fs);
+		ShaderObject vertex_shader = ShaderObject::load_and_compile(gc, shadertype_vertex, vertex_filename);
 		program_object.attach(vertex_shader);
 
-		ShaderObject geometry_shader = ShaderObject::load_and_compile(gc, shadertype_geometry, geometry_filename, fs);
+		ShaderObject geometry_shader = ShaderObject::load_and_compile(gc, shadertype_geometry, geometry_filename);
 		program_object.attach(geometry_shader);
 
-		ShaderObject fragment_shader = ShaderObject::load_and_compile(gc, shadertype_fragment, fragment_filename, fs);
-		program_object.attach(fragment_shader);
-
-		return program_object;
-	}
-
-	ProgramObject ProgramObject::load(GraphicContext &gc, const std::string &vertex_fullname, const std::string &fragment_fullname)
-	{
-		std::string path_vertex = PathHelp::get_fullpath(vertex_fullname, PathHelp::path_type_file);
-		std::string filename_vertex = PathHelp::get_filename(vertex_fullname, PathHelp::path_type_file);
-		FileSystem vfs_vertex(path_vertex);
-		std::string path_fragment = PathHelp::get_fullpath(fragment_fullname, PathHelp::path_type_file);
-		std::string filename_fragment = PathHelp::get_filename(fragment_fullname, PathHelp::path_type_file);
-		FileSystem vfs_fragment(path_fragment);
-
-		ProgramObject program_object(gc);
-
-		ShaderObject vertex_shader = ShaderObject::load_and_compile(gc, shadertype_vertex, filename_vertex, vfs_vertex);
-		program_object.attach(vertex_shader);
-
-		ShaderObject fragment_shader = ShaderObject::load_and_compile(gc, shadertype_fragment, filename_fragment, vfs_fragment);
-		program_object.attach(fragment_shader);
-
-		return program_object;
-	}
-
-	ProgramObject ProgramObject::load(GraphicContext &gc, const std::string &vertex_fullname, const std::string &geometry_fullname, const std::string &fragment_fullname)
-	{
-		std::string path_vertex = PathHelp::get_fullpath(vertex_fullname, PathHelp::path_type_file);
-		std::string filename_vertex = PathHelp::get_filename(vertex_fullname, PathHelp::path_type_file);
-		FileSystem vfs_vertex(path_vertex);
-		std::string path_geometry = PathHelp::get_fullpath(geometry_fullname, PathHelp::path_type_file);
-		std::string filename_geometry = PathHelp::get_filename(geometry_fullname, PathHelp::path_type_file);
-		FileSystem vfs_geometry(path_geometry);
-		std::string path_fragment = PathHelp::get_fullpath(fragment_fullname, PathHelp::path_type_file);
-		std::string filename_fragment = PathHelp::get_filename(fragment_fullname, PathHelp::path_type_file);
-		FileSystem vfs_fragment(path_fragment);
-
-		ProgramObject program_object(gc);
-
-		ShaderObject vertex_shader = ShaderObject::load_and_compile(gc, shadertype_vertex, filename_vertex, vfs_vertex);
-		program_object.attach(vertex_shader);
-
-		ShaderObject geometry_shader = ShaderObject::load_and_compile(gc, shadertype_geometry, filename_geometry, vfs_geometry);
-		program_object.attach(geometry_shader);
-
-		ShaderObject fragment_shader = ShaderObject::load_and_compile(gc, shadertype_fragment, filename_fragment, vfs_fragment);
+		ShaderObject fragment_shader = ShaderObject::load_and_compile(gc, shadertype_fragment, fragment_filename);
 		program_object.attach(fragment_shader);
 
 		return program_object;
@@ -185,9 +138,9 @@ namespace uicore
 		return program_object;
 	}
 
-	ProgramObject ProgramObject::load_and_link(GraphicContext &gc, const std::string &vertex_filename, const std::string &fragment_filename, const FileSystem &fs)
+	ProgramObject ProgramObject::load_and_link(GraphicContext &gc, const std::string &vertex_filename, const std::string &fragment_filename)
 	{
-		ProgramObject program_object = ProgramObject::load(gc, vertex_filename, fragment_filename, fs);
+		ProgramObject program_object = ProgramObject::load(gc, vertex_filename, fragment_filename);
 
 		if (!program_object.link())
 			throw Exception(string_format("Unable to link program object: %1", program_object.get_info_log()));
@@ -195,29 +148,9 @@ namespace uicore
 		return program_object;
 	}
 
-	ProgramObject ProgramObject::load_and_link(GraphicContext &gc, const std::string &vertex_filename, const std::string &geometry_filename, const std::string &fragment_filename, const FileSystem &fs)
+	ProgramObject ProgramObject::load_and_link(GraphicContext &gc, const std::string &vertex_filename, const std::string &geometry_filename, const std::string &fragment_filename)
 	{
-		ProgramObject program_object = ProgramObject::load(gc, vertex_filename, geometry_filename, fragment_filename, fs);
-
-		if (!program_object.link())
-			throw Exception(string_format("Unable to link program object: %1", program_object.get_info_log()));
-
-		return program_object;
-	}
-
-	ProgramObject ProgramObject::load_and_link(GraphicContext &gc, const std::string &vertex_fullname, const std::string &fragment_fullname)
-	{
-		ProgramObject program_object = ProgramObject::load(gc, vertex_fullname, fragment_fullname);
-
-		if (!program_object.link())
-			throw Exception(string_format("Unable to link program object: %1", program_object.get_info_log()));
-
-		return program_object;
-	}
-
-	ProgramObject ProgramObject::load_and_link(GraphicContext &gc, const std::string &vertex_fullname, const std::string &geometry_fullname, const std::string &fragment_fullname)
-	{
-		ProgramObject program_object = ProgramObject::load(gc, vertex_fullname, geometry_fullname, fragment_fullname);
+		ProgramObject program_object = ProgramObject::load(gc, vertex_filename, geometry_filename, fragment_filename);
 
 		if (!program_object.link())
 			throw Exception(string_format("Unable to link program object: %1", program_object.get_info_log()));

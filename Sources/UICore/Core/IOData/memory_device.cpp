@@ -28,30 +28,73 @@
 
 #include "UICore/precomp.h"
 #include "UICore/Core/IOData/memory_device.h"
-#include "iodevice_impl.h"
-#include "iodevice_provider_memory.h"
+#include "UICore/Core/Text/text.h"
+#include "UICore/Core/System/exception.h"
+#include "UICore/Core/System/databuffer.h"
+#include <algorithm>
+
+#undef min
+#undef max
 
 namespace uicore
 {
-	MemoryDevice::MemoryDevice()
-		: IODevice(new IODeviceProvider_Memory())
+	class MemoryDeviceImpl : public MemoryDevice
 	{
+	public:
+		MemoryDeviceImpl() { }
+		MemoryDeviceImpl(const DataBuffer &buffer) : _buffer(buffer) { }
+
+		const DataBuffer &buffer() const override { return _buffer; }
+		void set_buffer(const DataBuffer &buffer) override { _buffer = buffer; _pos = 0; }
+
+		long long size() const override { return _buffer.get_size(); }
+
+		long long seek(long long pos) { if (pos >= 0 && pos < size()) _pos = pos; return _pos; }
+		long long seek_from_current(long long offset) { return seek(_pos + offset); }
+		long long seek_from_end(long long offset) { return seek(size() + offset); }
+
+		int try_read(void *data, int size)
+		{
+			if (size < 0)
+				throw Exception("Read failed");
+
+			size = std::min(size, (int)(_buffer.get_size() - _pos));
+			memcpy(data, _buffer.get_data() + _pos, size);
+			return size;
+		}
+
+		void write(const void *data, int size)
+		{
+			if (size < 0)
+				throw Exception("Write failed");
+
+			if (_pos + size > 0x7ffffff)
+				throw Exception("Memory buffer max size exceeeded");
+
+			if (_pos + size > _buffer.get_capacity())
+				_buffer.set_capacity(std::max(_pos + size, static_cast<long long>(_buffer.get_capacity()) * 2));
+
+			if (_pos + size > _buffer.get_size())
+				_buffer.set_size(_pos + size);
+
+			memcpy(_buffer.get_data() + _pos, data, size);
+			_pos += size;
+		}
+
+		MemoryDeviceImpl(const MemoryDeviceImpl &) = delete;
+		MemoryDeviceImpl &operator=(const MemoryDeviceImpl &) = delete;
+
+		DataBuffer _buffer;
+		long long _pos = 0;
+	};
+
+	std::shared_ptr<MemoryDevice> MemoryDevice::create()
+	{
+		return std::make_shared<MemoryDeviceImpl>();
 	}
 
-	MemoryDevice::MemoryDevice(DataBuffer &data)
-		: IODevice(new IODeviceProvider_Memory(data))
+	std::shared_ptr<MemoryDevice> MemoryDevice::open(const DataBuffer &buffer)
 	{
-	}
-
-	const DataBuffer &MemoryDevice::get_data() const
-	{
-		const IODeviceProvider_Memory *provider = dynamic_cast<const IODeviceProvider_Memory*>(impl->provider);
-		return provider->get_data();
-	}
-
-	DataBuffer &MemoryDevice::get_data()
-	{
-		IODeviceProvider_Memory *provider = dynamic_cast<IODeviceProvider_Memory*>(impl->provider);
-		return provider->get_data();
+		return std::make_shared<MemoryDeviceImpl>(buffer);
 	}
 }
