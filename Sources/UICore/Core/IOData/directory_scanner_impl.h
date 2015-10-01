@@ -30,7 +30,7 @@
 
 namespace uicore
 {
-	class DirectoryScanner_Impl
+	class DirectoryScanner_Impl : public DirectoryScanner
 	{
 	public:
 		virtual ~DirectoryScanner_Impl() { }

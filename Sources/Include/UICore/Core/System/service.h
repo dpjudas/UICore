@@ -60,10 +60,10 @@ namespace uicore
 		virtual void service_reload() = 0;
 
 	private:
-		inline Service(const Service &/*copy*/) { }
-		inline Service &operator =(const Service &) { return *this; }
+		Service(const Service &) = delete;
+		Service &operator =(const Service &) = delete;
 
-		std::shared_ptr<Service_Impl> impl;
+		std::unique_ptr<Service_Impl> impl;
 
 		friend class Service_Impl;
 	};

@@ -28,50 +28,27 @@
 
 #pragma once
 
-#include "../directory_scanner_impl.h"
+#include "UICore/Core/IOData/directory_scanner.h"
 
 namespace uicore
 {
-	class DirectoryScanner_Win32 : public DirectoryScanner_Impl
+	class DirectoryScanner_Win32 : public DirectoryScanner
 	{
 	public:
-		/// \brief Construct initial directory scanner.
 		DirectoryScanner_Win32();
+		~DirectoryScanner_Win32();
 
-		virtual ~DirectoryScanner_Win32();
-
-		/// \brief Scan for files in a directory.
-		virtual bool scan(const std::string &pathname);
-
-		/// \brief Scan for files matching a pattern.
-		virtual bool scan(const std::string &pathname, const std::string &pattern);
-
-		/// \brief Returns the path of the directory being scanned.
-		virtual std::string get_directory_path();
-
-		/// \brief Returns the size of the current found file.
-		virtual int get_size();
-
-		/// \brief Returns the name of the current found file.
-		virtual std::string get_name();
-
-		/// \brief Returns the name of the current found file, including the directory path.
-		virtual std::string get_pathname();
-
-		/// \brief Returns true if filename is a directory.
-		virtual bool is_directory();
-
-		/// \brief Returns true if filename is hidden.
-		virtual bool is_hidden();
-
-		/// \brief Returns true if filename is readable.
-		virtual bool is_readable();
-
-		/// \brief Returns true if filename is writable.
-		virtual bool is_writable();
-
-		/// \brief Find next file in directory scan. Returns false if no more files was found.
-		virtual bool next();
+		bool scan(const std::string &pathname) override;
+		bool scan(const std::string &pathname, const std::string &pattern) override;
+		std::string get_directory_path() override;
+		int get_size() override;
+		std::string get_name() override;
+		std::string get_pathname() override;
+		bool is_directory() override;
+		bool is_hidden() override;
+		bool is_readable() override;
+		bool is_writable() override;
+		bool next() override;
 
 	private:
 		std::string path_with_ending_slash(const std::string &path);

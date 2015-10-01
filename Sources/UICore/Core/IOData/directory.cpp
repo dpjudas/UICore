@@ -70,13 +70,13 @@ namespace uicore
 	{
 		std::vector<std::string> items;
 
-		DirectoryScanner scanner;
-		if (scanner.scan(path))
+		auto scanner = DirectoryScanner::create();
+		if (scanner->scan(path))
 		{
-			while (scanner.next())
+			while (scanner->next())
 			{
-				if (!scanner.is_directory())
-					items.push_back(return_full_path_names ? scanner.get_pathname() : scanner.get_name());
+				if (!scanner->is_directory())
+					items.push_back(return_full_path_names ? scanner->get_pathname() : scanner->get_name());
 			}
 		}
 
@@ -87,13 +87,13 @@ namespace uicore
 	{
 		std::vector<std::string> items;
 
-		DirectoryScanner scanner;
-		if (scanner.scan(path))
+		auto scanner = DirectoryScanner::create();
+		if (scanner->scan(path))
 		{
-			while (scanner.next())
+			while (scanner->next())
 			{
-				if (scanner.is_directory() && scanner.get_name() != "." && scanner.get_name() != "..")
-					items.push_back(return_full_path_names ? scanner.get_pathname() : scanner.get_name());
+				if (scanner->is_directory() && scanner->get_name() != "." && scanner->get_name() != "..")
+					items.push_back(return_full_path_names ? scanner->get_pathname() : scanner->get_name());
 			}
 		}
 
@@ -141,39 +141,39 @@ namespace uicore
 
 		if (delete_files || delete_sub_directories)
 		{
-			DirectoryScanner scanner;
+			auto scanner = DirectoryScanner::create();
 
-			if (!scanner.scan(full_path))
+			if (!scanner->scan(full_path))
 				return false;
 
-			bool scan_successful = scanner.next();
+			bool scan_successful = scanner->next();
 			while (scan_successful)
 			{
 				// if found subdirectory, try remove it, also checking for "." and "..", because they are unremovable
-				if (scanner.is_directory() && delete_sub_directories && scanner.get_name() != "." && scanner.get_name() != "..")
+				if (scanner->is_directory() && delete_sub_directories && scanner->get_name() != "." && scanner->get_name() != "..")
 				{
 					// FIXME: directory scanner locks directory, so it can't be removed, this is workaround
-					std::string sub_dir_path = scanner.get_pathname();
-					scan_successful = scanner.next();
+					std::string sub_dir_path = scanner->get_pathname();
+					scan_successful = scanner->next();
 
 					// delete files in subdirectory
 					if (!Directory::remove(sub_dir_path, delete_files, delete_sub_directories))
 						return false;
 				}
-				else if (!scanner.is_directory() && delete_files)
+				else if (!scanner->is_directory() && delete_files)
 				{
 #ifdef WIN32
-					if (DeleteFile(StringHelp::utf8_to_ucs2(scanner.get_pathname()).c_str()) == 0)
+					if (DeleteFile(StringHelp::utf8_to_ucs2(scanner->get_pathname()).c_str()) == 0)
 						return false;
 #else
-					if (::remove(scanner.get_pathname().c_str()) != 0)
+					if (::remove(scanner->get_pathname().c_str()) != 0)
 						return false;
 #endif
-					scan_successful = scanner.next();
+					scan_successful = scanner->next();
 				}
 				else
 				{
-					scan_successful = scanner.next();
+					scan_successful = scanner->next();
 				}
 			}
 		}

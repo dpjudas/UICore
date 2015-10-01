@@ -35,11 +35,9 @@
 
 namespace uicore
 {
-	class RegistryKey_Impl;
-
 	/// \brief Registry key class.
-	/** <p>This class is only available on Windows.<p>
-		!group=Core/System! !header=core.h!*/
+	///
+	/// This class is only available on Windows.
 	class RegistryKey
 	{
 	public:
@@ -59,38 +57,33 @@ namespace uicore
 			create_volatile = 2
 		};
 
-		RegistryKey();
-		RegistryKey(PredefinedKey key, const std::string &subkey, unsigned int access_rights = KEY_ALL_ACCESS, unsigned int create_flags = create_always);
-		RegistryKey(HKEY key);
-		~RegistryKey();
+		static std::shared_ptr<RegistryKey> create(PredefinedKey key, const std::string &subkey, unsigned int access_rights = KEY_ALL_ACCESS, unsigned int create_flags = create_always);
+		static std::shared_ptr<RegistryKey> create(HKEY key);
 
-		/// \brief Returns true if this object is invalid.
-		bool is_null() const { return !impl; }
-
-		/// \brief Throw an exception if this object is invalid.
-		void throw_if_null() const;
-
-		HKEY get_key() const;
-		std::vector<std::string> get_subkey_names() const;
-		std::vector<std::string> get_value_names() const;
-		int get_value_int(const std::string &name, int default_value = 0) const;
-		DataBuffer get_value_binary(const std::string &name, const DataBuffer &default_value = DataBuffer()) const;
-		std::string get_value_string(const std::string &name, const std::string &default_value = std::string()) const;
-		std::vector<std::string> get_value_multi_string(const std::string &name, const std::vector<std::string> &default_value = std::vector<std::string>()) const;
-
-		RegistryKey open_key(const std::string &subkey, unsigned int access_rights = KEY_ALL_ACCESS);
-		RegistryKey create_key(const std::string &subkey, unsigned int access_rights = KEY_ALL_ACCESS, CreateFlags create_flags = create_always);
-		void delete_key(const std::string &subkey, bool recursive);
 		static void delete_key(PredefinedKey key, const std::string &subkey, bool recursive);
-		void set_value_int(const std::string &name, int value);
-		void set_value_binary(const std::string &name, const DataBuffer &value);
-		void set_value_string(const std::string &name, const std::string &value);
-		//	void set_value_multi_string(const std::string &name, const std::vector<std::string> &value);
-		void delete_value(const std::string &name);
 
-	private:
-		std::shared_ptr<RegistryKey_Impl> impl;
+		virtual HKEY get_key() const = 0;
+
+		virtual std::shared_ptr<RegistryKey> open_key(const std::string &subkey, unsigned int access_rights = KEY_ALL_ACCESS) = 0;
+		virtual std::shared_ptr<RegistryKey> create_key(const std::string &subkey, unsigned int access_rights = KEY_ALL_ACCESS, CreateFlags create_flags = create_always) = 0;
+
+		virtual std::vector<std::string> get_subkey_names() const = 0;
+		virtual std::vector<std::string> get_value_names() const = 0;
+
+		virtual int get_value_int(const std::string &name, int default_value = 0) const = 0;
+		virtual DataBuffer get_value_binary(const std::string &name, const DataBuffer &default_value = DataBuffer()) const = 0;
+		virtual std::string get_value_string(const std::string &name, const std::string &default_value = std::string()) const = 0;
+		virtual std::vector<std::string> get_value_multi_string(const std::string &name, const std::vector<std::string> &default_value = std::vector<std::string>()) const = 0;
+
+		virtual void set_value_int(const std::string &name, int value) = 0;
+		virtual void set_value_binary(const std::string &name, const DataBuffer &value) = 0;
+		virtual void set_value_string(const std::string &name, const std::string &value) = 0;
+
+		virtual void delete_key(const std::string &subkey, bool recursive) = 0;
+		virtual void delete_value(const std::string &name) = 0;
 	};
+
+	typedef std::shared_ptr<RegistryKey> RegistryKeyPtr;
 }
 
 #endif

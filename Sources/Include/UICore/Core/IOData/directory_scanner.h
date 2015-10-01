@@ -32,84 +32,76 @@
 
 namespace uicore
 {
-	class DirectoryScanner_Impl;
-
 	/// \brief Directory scanning class.
 	///
-	///    <p>DirectoryScanner is used to parse through directory trees and return information about files.</p>
-	///    -
-	///    <p>Example that prints all files and directories found in the root directory:</p>
-	///    <pre>
-	///    DirectoryScanner scanner;
-	///    if (scanner.scan("/", "*"))
-	///    {
-	///    		while (scanner.next())
-	///    		{
-	///    				cl_console_write_line(scanner.get_name());
-	///    		}
-	///    }
-	///    </pre> 
+	///  DirectoryScanner is used to parse through directory trees and return information about files.
+	///  
+	///  Example that prints all files and directories found in the root directory:
+	///
+	///  DirectoryScanner scanner;
+	///  if (scanner.scan("/", "*"))
+	///  {
+	///      while (scanner.next())
+	///      {
+	///          auto name = scanner.get_name();
+	///      }
+	///  }
+	///
 	class DirectoryScanner
 	{
 	public:
 		/// \brief Constructs directory scanner for iterating over a directory.
-		DirectoryScanner();
-
-		/// \brief Destructor.
-		~DirectoryScanner();
+		static std::shared_ptr<DirectoryScanner> create();
 
 		/// \brief Gets the directory being scanned.
 		/** \return Directory being scanned. (including the trailing slash)*/
-		std::string get_directory_path();
+		virtual std::string get_directory_path() = 0;
 
 		/// \brief Gets the name of the current file.
 		/** \return The name of the current found file.*/
-		std::string get_name();
+		virtual std::string get_name() = 0;
 
 		/// \brief Gets the size of the current file.
 		/** \return The size of the current found file.*/
-		int get_size();
+		virtual int get_size() = 0;
 
 		/// \brief Gets the pathname of the current file.
 		/** \return The name of the current found file, including the directory path.*/
-		std::string get_pathname();
+		virtual std::string get_pathname() = 0;
 
 		/// \brief Returns true if the current file is a directory.
 		/** \return True if filename is a directory.*/
-		bool is_directory();
+		virtual bool is_directory() = 0;
 
 		/// \brief Returns true if the file is hidden.
 		/** \return True if filename is hidden.*/
-		bool is_hidden();
+		virtual bool is_hidden() = 0;
 
 		/// \brief Returns true if the file is readable by the current user.
 		/** \return True if the file is readable.*/
-		bool is_readable();
+		virtual bool is_readable() = 0;
 
 		/// \brief Returns true if the file is writable by the current user.
 		/** \return True if the file is writable.*/
-		bool is_writable();
+		virtual bool is_writable() = 0;
 
 		/// \brief Selects the directory to scan through.
-		/** <p>Selects the directory to scan through</p>
+		/** Selects the directory to scan through
 			\param pathname Path to the directory to scan (without trailing slash)
 			\return true if the directory can be accessed.*/
-		bool scan(const std::string& pathname);
+		virtual bool scan(const std::string& pathname) = 0;
 
 		/// \brief Selects the directory to scan through.
-		/** <p>Selects the directory to scan through and use a matching pattern on the files.</p>
+		/** Selects the directory to scan through and use a matching pattern on the files.
 			WIN32: The pattern is normal DOS pattern matching ("*.*", ?)
 			Unix: The pattern is normal pattern matching (*, ?)
 			\param pathname Path to the directory to scan (without trailing slash)
 			\param pattern Pattern to match files against.
 			\return true if the directory can be accessed.*/
-		bool scan(const std::string& pathname, const std::string& pattern);
+		virtual bool scan(const std::string& pathname, const std::string& pattern) = 0;
 
 		/// \brief Find next file in directory scan.
 		/** \return false if no more files was found.*/
-		bool next();
-
-	private:
-		std::shared_ptr<DirectoryScanner_Impl> impl;
+		virtual bool next() = 0;
 	};
 }
