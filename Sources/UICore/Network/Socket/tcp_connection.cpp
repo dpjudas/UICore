@@ -7,64 +7,53 @@
 
 namespace uicore
 {
-
 #if defined(WIN32)
 
 #pragma comment(lib, "ws2_32.lib")
 #pragma comment(lib, "iphlpapi.lib")
 
-	TCPConnection::TCPConnection()
-	{
-	}
-
-	TCPConnection::TCPConnection(const SocketName &endpoint)
-		: impl(new TCPSocket())
+	TCPConnectionImpl::TCPConnectionImpl(const SocketName &endpoint)
 	{
 		int receive_buffer_size = 600 * 1024;
 		int send_buffer_size = 600 * 1024;
-		//int result = setsockopt(impl->handle, SOL_SOCKET, SO_RCVBUF, (const char *) &receive_buffer_size, sizeof(int));
-		int result = setsockopt(impl->handle, SOL_SOCKET, SO_SNDBUF, (const char *)&send_buffer_size, sizeof(int));
+		//int result = setsockopt(handle, SOL_SOCKET, SO_RCVBUF, (const char *) &receive_buffer_size, sizeof(int));
+		int result = setsockopt(handle, SOL_SOCKET, SO_SNDBUF, (const char *)&send_buffer_size, sizeof(int));
 
 		sockaddr_in addr;
 		endpoint.to_sockaddr(AF_INET, (sockaddr *)&addr, sizeof(sockaddr_in));
-		result = ::connect(impl->handle, (const sockaddr *)&addr, sizeof(sockaddr_in));
+		result = ::connect(handle, (const sockaddr *)&addr, sizeof(sockaddr_in));
 		if (result == SOCKET_ERROR)
 			throw Exception("Connect to server failed");
 
 		int value = 1;
-		result = setsockopt(impl->handle, IPPROTO_TCP, TCP_NODELAY, (const char *)&value, sizeof(int));
+		result = setsockopt(handle, IPPROTO_TCP, TCP_NODELAY, (const char *)&value, sizeof(int));
 
-		result = WSAEventSelect(impl->handle, impl->wait_handle, FD_READ | FD_WRITE | FD_CLOSE);
+		result = WSAEventSelect(handle, wait_handle, FD_READ | FD_WRITE | FD_CLOSE);
 		if (result == SOCKET_ERROR)
 			throw Exception("WSAEventSelect failed");
 
 		//int receive_buffer_size = 0;
 		//int send_buffer_size = 0;
 		//int len = sizeof(int);
-		//getsockopt(impl->handle, SOL_SOCKET, SO_RCVBUF, (char *) &receive_buffer_size, &len);
-		//getsockopt(impl->handle, SOL_SOCKET, SO_SNDBUF, (char *) &send_buffer_size, &len);
+		//getsockopt(handle, SOL_SOCKET, SO_RCVBUF, (char *) &receive_buffer_size, &len);
+		//getsockopt(handle, SOL_SOCKET, SO_SNDBUF, (char *) &send_buffer_size, &len);
 	}
 
-	TCPConnection::TCPConnection(const std::shared_ptr<TCPSocket> &impl)
-		: impl(impl)
+	TCPConnectionImpl::TCPConnectionImpl(SOCKET init_handle) : TCPSocket(init_handle)
 	{
 		int receive_buffer_size = 600 * 1024;
 		int send_buffer_size = 600 * 1024;
-		//int result = setsockopt(impl->handle, SOL_SOCKET, SO_RCVBUF, (const char *) &receive_buffer_size, sizeof(int));
-		int result = setsockopt(impl->handle, SOL_SOCKET, SO_SNDBUF, (const char *)&send_buffer_size, sizeof(int));
+		//int result = setsockopt(handle, SOL_SOCKET, SO_RCVBUF, (const char *) &receive_buffer_size, sizeof(int));
+		int result = setsockopt(handle, SOL_SOCKET, SO_SNDBUF, (const char *)&send_buffer_size, sizeof(int));
 
-		result = WSAEventSelect(impl->handle, impl->wait_handle, FD_READ | FD_WRITE | FD_CLOSE);
+		result = WSAEventSelect(handle, wait_handle, FD_READ | FD_WRITE | FD_CLOSE);
 		if (result == SOCKET_ERROR)
 			throw Exception("WSAEventSelect failed");
 	}
 
-	TCPConnection::~TCPConnection()
+	int TCPConnectionImpl::write(const void *data, int size)
 	{
-	}
-
-	int TCPConnection::write(const void *data, int size)
-	{
-		int result = ::send(impl->handle, static_cast<const char *>(data), size, 0);
+		int result = ::send(handle, static_cast<const char *>(data), size, 0);
 		if (result == SOCKET_ERROR)
 		{
 			if (WSAGetLastError() == WSAEWOULDBLOCK)
@@ -75,9 +64,9 @@ namespace uicore
 		return result;
 	}
 
-	int TCPConnection::read(void *data, int size)
+	int TCPConnectionImpl::read(void *data, int size)
 	{
-		int result = ::recv(impl->handle, static_cast<char *>(data), size, 0);
+		int result = ::recv(handle, static_cast<char *>(data), size, 0);
 		if (result == SOCKET_ERROR)
 		{
 			if (WSAGetLastError() == WSAEWOULDBLOCK)
@@ -88,18 +77,12 @@ namespace uicore
 		return result;
 	}
 
-	void TCPConnection::close()
-	{
-		if (impl)
-			impl->close();
-	}
-
-	SocketName TCPConnection::get_local_name()
+	SocketName TCPConnectionImpl::local_name()
 	{
 		sockaddr_in addr;
 		memset(&addr, 0, sizeof(sockaddr_in));
 		int size = sizeof(sockaddr_in);
-		int result = getsockname(impl->handle, (sockaddr *)&addr, &size);
+		int result = getsockname(handle, (sockaddr *)&addr, &size);
 		if (result == SOCKET_ERROR)
 			throw Exception("Error retrieving local socket name");
 
@@ -108,86 +91,67 @@ namespace uicore
 		return name;
 	}
 
-	SocketName TCPConnection::get_remote_name()
+	SocketName TCPConnectionImpl::remote_name()
 	{
 		sockaddr_in addr;
 		memset(&addr, 0, sizeof(sockaddr_in));
 		int size = sizeof(sockaddr_in);
-		int result = getpeername(impl->handle, (sockaddr *)&addr, &size);
+		int result = getpeername(handle, (sockaddr *)&addr, &size);
 		if (result == SOCKET_ERROR)
 			throw Exception("Error retrieving remote socket name");
 
 		SocketName name;
 		name.from_sockaddr(AF_INET, (sockaddr *)&addr, sizeof(sockaddr_in));
 		return name;
-	}
-
-	SocketHandle *TCPConnection::get_socket_handle()
-	{
-		return impl.get();
 	}
 
 #else
 
-	void TCPConnection::init_sockets()
-	{
-	}
-
-	TCPConnection::TCPConnection()
-	{
-	}
-
-	TCPConnection::TCPConnection(const SocketName &endpoint)
-		: impl(new TCPSocket())
+	TCPConnectionImpl::TCPConnectionImpl(const SocketName &endpoint)
 	{
 		//int receive_buffer_size = 600*1024;
 		int send_buffer_size = 600*1024;
-		//int result = setsockopt(impl->handle, SOL_SOCKET, SO_RCVBUF, (const char *) &receive_buffer_size, sizeof(int));
-		int result = setsockopt(impl->handle, SOL_SOCKET, SO_SNDBUF, (const char *) &send_buffer_size, sizeof(int));
+		//int result = setsockopt(handle, SOL_SOCKET, SO_RCVBUF, (const char *) &receive_buffer_size, sizeof(int));
+		int result = setsockopt(handle, SOL_SOCKET, SO_SNDBUF, (const char *) &send_buffer_size, sizeof(int));
 
 		sockaddr_in addr;
 		endpoint.to_sockaddr(AF_INET, (sockaddr *) &addr, sizeof(sockaddr_in));
-		result = ::connect(impl->handle, (const sockaddr *) &addr, sizeof(sockaddr_in));
+		result = ::connect(handle, (const sockaddr *) &addr, sizeof(sockaddr_in));
 		if (result == -1)
 			throw Exception("Connect to server failed");
 
 		int value = 1;
-		result = setsockopt(impl->handle, IPPROTO_TCP, TCP_NODELAY, (const char *) &value, sizeof(int));
+		result = setsockopt(handle, IPPROTO_TCP, TCP_NODELAY, (const char *) &value, sizeof(int));
 
 		//int receive_buffer_size = 0;
 		//int send_buffer_size = 0;
 		//int len = sizeof(int);
-		//getsockopt(impl->handle, SOL_SOCKET, SO_RCVBUF, (char *) &receive_buffer_size, &len);
-		//getsockopt(impl->handle, SOL_SOCKET, SO_SNDBUF, (char *) &send_buffer_size, &len);
+		//getsockopt(handle, SOL_SOCKET, SO_RCVBUF, (char *) &receive_buffer_size, &len);
+		//getsockopt(handle, SOL_SOCKET, SO_SNDBUF, (char *) &send_buffer_size, &len);
 
 		int nonblocking = 1;
-		ioctl(impl->handle, FIONBIO, &nonblocking);
+		ioctl(handle, FIONBIO, &nonblocking);
 	}
 
-	TCPConnection::TCPConnection(const std::shared_ptr<TCPSocket> &impl)
-		: impl(impl)
+	TCPConnectionImpl::TCPConnectionImpl(SOCKET init_handle) : TCPSocket(init_handle)
 	{
 		//int receive_buffer_size = 600*1024;
 		int send_buffer_size = 600*1024;
-		//int result = setsockopt(impl->handle, SOL_SOCKET, SO_RCVBUF, (const char *) &receive_buffer_size, sizeof(int));
-		setsockopt(impl->handle, SOL_SOCKET, SO_SNDBUF, (const char *) &send_buffer_size, sizeof(int));
+		//int result = setsockopt(handle, SOL_SOCKET, SO_RCVBUF, (const char *) &receive_buffer_size, sizeof(int));
+		setsockopt(handle, SOL_SOCKET, SO_SNDBUF, (const char *) &send_buffer_size, sizeof(int));
 
 		int nonblocking = 1;
-		ioctl(impl->handle, FIONBIO, &nonblocking);
+		ioctl(handle, FIONBIO, &nonblocking);
 	}
 
-	TCPConnection::~TCPConnection()
+	int TCPConnectionImpl::write(const void *data, int size)
 	{
-	}
-
-	int TCPConnection::write(const void *data, int size)
-	{
-		int result = ::send(impl->handle, static_cast<const char *>(data), size, 0);
+		int result = ::send(handle, static_cast<const char *>(data), size, 0);
 		if (result == -1)
 		{
 			if (errno == EWOULDBLOCK)
 			{
-				impl->can_write = false;
+				can_write = false;
 				return -1;
 			}
 			else
@@ -198,9 +162,9 @@ namespace uicore
 		return result;
 	}
 
-	int TCPConnection::read(void *data, int size)
+	int TCPConnectionImpl::read(void *data, int size)
 	{
-		int result = ::recv(impl->handle, static_cast<char *>(data), size, 0);
+		int result = ::recv(handle, static_cast<char *>(data), size, 0);
 		if (result == -1)
 		{
 			if (errno == EWOULDBLOCK)
@@ -211,18 +175,12 @@ namespace uicore
 		return result;
 	}
 
-	void TCPConnection::close()
-	{
-		if (impl)
-			impl->close();
-	}
-
-	SocketName TCPConnection::get_local_name()
+	SocketName TCPConnectionImpl::local_name()
 	{
 		sockaddr_in addr;
 		memset(&addr, 0, sizeof(sockaddr_in));
 		socklen_t size = sizeof(sockaddr_in);
-		int result = getsockname(impl->handle, (sockaddr *)&addr, &size);
+		int result = getsockname(handle, (sockaddr *)&addr, &size);
 		if (result == -1)
 			throw Exception("Error retrieving local socket name");
 
@@ -231,12 +189,12 @@ namespace uicore
 		return name;
 	}
 
-	SocketName TCPConnection::get_remote_name()
+	SocketName TCPConnectionImpl::remote_name()
 	{
 		sockaddr_in addr;
 		memset(&addr, 0, sizeof(sockaddr_in));
 		socklen_t size = sizeof(sockaddr_in);
-		int result = getpeername(impl->handle, (sockaddr *)&addr, &size);
+		int result = getpeername(handle, (sockaddr *)&addr, &size);
 		if (result == -1)
 			throw Exception("Error retrieving remote socket name");
 
@@ -245,11 +203,10 @@ namespace uicore
 		return name;
 	}
 
-	SocketHandle *TCPConnection::get_socket_handle()
-	{
-		return impl.get();
-	}
-
 #endif
 
+	std::shared_ptr<TCPConnection> TCPConnection::connect(const SocketName &endpoint)
+	{
+		return std::make_shared<TCPConnectionImpl>(endpoint);
+	}
 }

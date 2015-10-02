@@ -35,60 +35,36 @@ struct sockaddr;
 
 namespace uicore
 {
-	class SocketName_Impl;
-
 	/// \brief Socket name; container class for an IP address and port.
 	class SocketName
 	{
 	public:
 		/// \brief Constructs a new socket name.
-		/** <p>If no address is specified, the socket address will default to INADDR_ANY.
-			If no port is specified, it will default to port 0.</p>*/
-		SocketName();
-
-		/// \brief Constructs a SocketName
 		///
-		/// \param port = String
-		SocketName(const std::string &port);
-
-		/// \brief Constructs a SocketName
-		///
-		/// \param address = String
-		/// \param port = String
-		SocketName(const std::string &address, const std::string &port);
+		/// If no address is specified, the socket address will default to INADDR_ANY. 
+		/// If no port is specified, it will default to port 0.
+		SocketName() : _port("0") { }
+		SocketName(const std::string &port) : _port(port) { }
+		SocketName(const std::string &address, const std::string &port) : _address(address), _port(port) { }
 
 		/// \brief Returns the address part of the socket name.
-		std::string get_address() const;
+		const std::string &address() const { return _address; }
 
 		/// \brief Returns the port part of the socket name.
-		std::string get_port() const;
-
-		/// \brief Returns true if objects are the same.
-		bool operator == (const SocketName &other_instance) const;
-
-		/// \brief Returns true if the other address is less.
-		/** <p>This is used for sorting
-			purposes (eg. if you use a std::map<SocketName, Socket>), and sorts
-			the address based on lowest IP number address.</p>*/
-		bool operator < (const SocketName &other_instance) const;
-
-		/// \brief Returns true if the other address is greater.
-		/** <p>This is used for sorting
-			purposes (eg. if you use a std::map<SocketName, Socket>), and sorts
-			the address based on lowest IP number address.</p>*/
-		bool operator > (const SocketName &other_instance) const;
+		const std::string &port() const { return _port; }
 
 		/// \brief Set the socket name using a hostname and port.
 		///
 		/// \param hostname Can be an IPv4 dotted-quad, hostname or a valid IPv6 address.
 		/// \param port Port number.
-		void set_name(const std::string &hostname, const std::string &port);
+		void set_name(const std::string &hostname, const std::string &port) { _address = hostname; _port = port; }
 
 		/// \brief Set the IP address.
-		void set_address(const std::string &address);
+		/// \param address Can be an IPv4 dotted-quad, hostname or a valid IPv6 address.
+		void set_address(const std::string &address) { _address = address; }
 
 		/// \brief Set the IP port.
-		void set_port(const std::string &port);
+		void set_port(const std::string &port) { _port = port; }
 
 		/// \brief Perform a DNS lookup, if needed, for the IP v4 address.
 		std::string lookup_ipv4() const;
@@ -108,7 +84,12 @@ namespace uicore
 		/// \brief Get the socket name from a C sockets sockaddr structure.
 		void from_sockaddr(int domain, sockaddr *addr, int len);
 
+		bool operator == (const SocketName &other_instance) const;
+		bool operator < (const SocketName &other_instance) const;
+		bool operator > (const SocketName &other_instance) const;
+
 	private:
-		std::shared_ptr<SocketName_Impl> impl;
+		std::string _address;
+		std::string _port;
 	};
 }

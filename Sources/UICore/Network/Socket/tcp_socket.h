@@ -2,6 +2,8 @@
 #pragma once
 
 #include "UICore/Core/System/exception.h"
+#include "UICore/Network/Socket/tcp_connection.h"
+#include "UICore/Network/Socket/tcp_listen.h"
 #include "../setupnetwork.h"
 
 #if !defined(WIN32)
@@ -85,6 +87,20 @@ namespace uicore
 		}
 	};
 
+	class TCPConnectionImpl : public TCPConnection, TCPSocket
+	{
+	public:
+		TCPConnectionImpl(const SocketName &endpoint);
+		TCPConnectionImpl(SOCKET init_handle);
+
+		SocketName local_name() override;
+		SocketName remote_name() override;
+		void close() override { TCPSocket::close(); }
+		int write(const void *data, int size) override;
+		int read(void *data, int size) override;
+		SocketHandle *get_socket_handle() override { return this; }
+	};
+
 #else
 
 	class SocketHandle
@@ -149,6 +165,30 @@ namespace uicore
 		bool can_write;
 	};
 
+	class TCPConnectionImpl : public TCPConnection, TCPSocket
+	{
+	public:
+		TCPConnectionImpl(const SocketName &endpoint);
+		TCPConnectionImpl(int init_handle);
+
+		SocketName local_name() override;
+		SocketName remote_name() override;
+		void close() override { TCPSocket::close(); }
+		int write(const void *data, int size) override;
+		int read(void *data, int size) override;
+		SocketHandle *get_socket_handle() override { return this; }
+	};
+
 #endif
+
+	class TCPListenImpl : public TCPListen, TCPSocket
+	{
+	public:
+		TCPListenImpl(const SocketName &endpoint, int backlog, bool reuse_address);
+
+		void close() override { TCPSocket::close(); }
+		std::shared_ptr<TCPConnection> accept(SocketName &end_point) override;
+		SocketHandle *get_socket_handle() override { return this; }
+	};
 
 }

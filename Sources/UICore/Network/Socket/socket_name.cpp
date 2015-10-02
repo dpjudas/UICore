@@ -30,7 +30,6 @@
 #include "UICore/Network/Socket/socket_name.h"
 #include "UICore/Core/Text/text.h"
 #include "UICore/Core/Text/string_format.h"
-#include "socket_name_impl.h"
 #ifdef WIN32
 typedef unsigned long in_addr_t;
 #else
@@ -47,81 +46,37 @@ typedef unsigned long in_addr_t;
 
 namespace uicore
 {
-	SocketName::SocketName()
-		: impl(std::make_shared<SocketName_Impl>())
-	{
-	}
-
-	SocketName::SocketName(const std::string &port)
-		: impl(std::make_shared<SocketName_Impl>())
-	{
-		impl->port = port;
-	}
-
-	SocketName::SocketName(const std::string &address, const std::string &port)
-		: impl(std::make_shared<SocketName_Impl>())
-	{
-		impl->address = address;
-		impl->port = port;
-	}
-
-	std::string SocketName::get_address() const
-	{
-		return impl->address;
-	}
-
-	std::string SocketName::get_port() const
-	{
-		return impl->port;
-	}
-
 	bool SocketName::operator == (const SocketName &other_instance) const
 	{
-		if (StringHelp::compare(other_instance.impl->address, impl->address, true) != 0)
+		if (StringHelp::compare(other_instance._address, _address, true) != 0)
 			return false;
-		if (StringHelp::compare(other_instance.impl->port, impl->port, true) != 0)
+		if (StringHelp::compare(other_instance._port, _port, true) != 0)
 			return false;
 		return true;
 	}
 
 	bool SocketName::operator < (const SocketName &other_instance) const
 	{
-		int difference = StringHelp::compare(other_instance.impl->address, impl->address, true);
+		int difference = StringHelp::compare(other_instance._address, _address, true);
 		if (difference == 0)
-			difference = StringHelp::compare(other_instance.impl->port, impl->port, true);
+			difference = StringHelp::compare(other_instance._port, _port, true);
 		return difference < 0;
 	}
 
 	bool SocketName::operator >(const SocketName &other_instance) const
 	{
-		int difference = StringHelp::compare(other_instance.impl->address, impl->address, true);
+		int difference = StringHelp::compare(other_instance._address, _address, true);
 		if (difference == 0)
-			difference = StringHelp::compare(other_instance.impl->port, impl->port, true);
+			difference = StringHelp::compare(other_instance._port, _port, true);
 		return difference > 0;
-	}
-
-	void SocketName::set_name(const std::string &hostname, const std::string &port)
-	{
-		impl->address = hostname;
-		impl->port = port;
-	}
-
-	void SocketName::set_address(const std::string &address)
-	{
-		impl->address = address;
-	}
-
-	void SocketName::set_port(const std::string &port)
-	{
-		impl->port = port;
 	}
 
 	std::string SocketName::lookup_ipv4() const
 	{
-		in_addr_t ipv4_address = inet_addr(StringHelp::text_to_local8(impl->address).c_str());
+		in_addr_t ipv4_address = inet_addr(StringHelp::text_to_local8(_address).c_str());
 		if (ipv4_address == INADDR_NONE)
 		{
-			hostent *host = gethostbyname(StringHelp::text_to_local8(impl->address).c_str());
+			hostent *host = gethostbyname(StringHelp::text_to_local8(_address).c_str());
 			if (host == nullptr)
 				throw Exception("Could not lookup DNS name");
 
@@ -139,7 +94,7 @@ namespace uicore
 
 	std::string SocketName::lookup_hostname() const
 	{
-		in_addr_t ipv4_address = inet_addr(StringHelp::text_to_local8(impl->address).c_str());
+		in_addr_t ipv4_address = inet_addr(StringHelp::text_to_local8(_address).c_str());
 		if (ipv4_address != INADDR_NONE)
 		{
 			in_addr addr;
@@ -152,17 +107,17 @@ namespace uicore
 			return StringHelp::local8_to_text(host->h_name);
 		}
 
-		return impl->address;
+		return _address;
 	}
 
 	SocketName SocketName::to_ipv4()
 	{
-		return SocketName(lookup_ipv4(), impl->port);
+		return SocketName(lookup_ipv4(), _port);
 	}
 
 	SocketName SocketName::to_hostname()
 	{
-		return SocketName(lookup_hostname(), impl->port);
+		return SocketName(lookup_hostname(), _port);
 	}
 
 	void SocketName::to_sockaddr(int domain, struct sockaddr *out_addr, int len) const
@@ -176,17 +131,17 @@ namespace uicore
 		sockaddr_in addr;
 		memset(&addr, 0, sizeof(sockaddr_in));
 		addr.sin_family = AF_INET;
-		addr.sin_port = htons(StringHelp::text_to_int(impl->port));
-		if (impl->address.empty())
+		addr.sin_port = htons(StringHelp::text_to_int(_port));
+		if (_address.empty())
 		{
 			addr.sin_addr.s_addr = INADDR_ANY;
 		}
 		else
 		{
-			addr.sin_addr.s_addr = inet_addr(StringHelp::text_to_local8(impl->address).c_str());
+			addr.sin_addr.s_addr = inet_addr(StringHelp::text_to_local8(_address).c_str());
 			if (addr.sin_addr.s_addr == INADDR_NONE)
 			{
-				hostent *host = gethostbyname(StringHelp::text_to_local8(impl->address).c_str());
+				hostent *host = gethostbyname(StringHelp::text_to_local8(_address).c_str());
 				if (host == nullptr)
 					throw Exception("Could not lookup DNS name");
 
@@ -214,7 +169,7 @@ namespace uicore
 
 		if (addr_in->sin_addr.s_addr == INADDR_ANY)
 		{
-			impl->address = std::string();
+			_address = std::string();
 		}
 		else
 		{
@@ -225,9 +180,9 @@ namespace uicore
 				int((addr_long & 0x0000ff00) >> 8),
 				int((addr_long & 0x000000ff)));
 
-			impl->address = str_addr;
+			_address = str_addr;
 		}
 
-		impl->port = port;
+		_port = port;
 	}
 }
