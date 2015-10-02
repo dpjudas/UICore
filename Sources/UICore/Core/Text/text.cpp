@@ -135,9 +135,9 @@ namespace uicore
 	bool Text::equal_caseless(const std::string &a, const std::string &b)
 	{
 #ifdef WIN32
-		return stricmp(a.c_str(), b.c_str()) != 0;
+		return stricmp(a.c_str(), b.c_str()) == 0;
 #else
-		return strcasecmp(a.c_str(), b.c_str()) != 0;
+		return strcasecmp(a.c_str(), b.c_str()) == 0;
 #endif
 	}
 

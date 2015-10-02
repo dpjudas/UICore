@@ -38,6 +38,8 @@
 #include <unistd.h>
 #endif
 
+#undef max
+
 namespace uicore
 {
 
@@ -365,7 +367,7 @@ namespace uicore
 	{
 		auto file = FileImpl::open_existing(filename);
 
-		if (file->size() > sizeof(size_t) / 2)
+		if (file->size() >= std::numeric_limits<size_t>::max() / 2)
 			throw Exception("File too large!");
 
 		std::string buffer;
@@ -387,7 +389,7 @@ namespace uicore
 	{
 		auto file = FileImpl::open_existing(filename);
 
-		if (file->size() > sizeof(size_t) / 2)
+		if (file->size() >= std::numeric_limits<size_t>::max() / 2)
 			throw Exception("File too large!");
 
 		auto buffer = DataBuffer::create((size_t)file->size());

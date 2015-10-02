@@ -120,7 +120,7 @@ namespace uicore
 		shader.clear();
 		info_log.clear();
 
-		if (!bytecode->size())
+		if (!bytecode)
 		{
 			load_compiler_dll();
 
