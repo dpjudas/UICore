@@ -100,7 +100,7 @@ namespace uicore
 
 	ShaderObject ShaderObject::load(GraphicContext &gc, ShaderType shader_type, const std::string &filename)
 	{
-		return ShaderObject(gc, shader_type, StringHelp::local8_to_text(File::read_all_text(filename)));
+		return ShaderObject(gc, shader_type, File::read_all_text(filename));
 	}
 
 	ShaderObject ShaderObject::load(GraphicContext &gc, ShaderType shader_type, IODevice &file)
@@ -109,7 +109,7 @@ namespace uicore
 		std::string source(size, 0);
 		file.read(&source[0], size);
 
-		return ShaderObject(gc, shader_type, StringHelp::local8_to_text(source));
+		return ShaderObject(gc, shader_type, source);
 	}
 
 	ShaderObject ShaderObject::load_and_compile(GraphicContext &gc, ShaderType shader_type, const std::string &filename)

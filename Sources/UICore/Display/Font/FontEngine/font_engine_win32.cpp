@@ -82,7 +82,7 @@ namespace uicore
 			CLIP_DEFAULT_PRECIS,
 			DEFAULT_QUALITY,
 			DEFAULT_PITCH | FF_DONTCARE,
-			StringHelp::utf8_to_ucs2(typeface_name).c_str());
+			Text::to_utf16(typeface_name).c_str());
 		if (handle == 0)
 			throw Exception("CreateFont failed");
 

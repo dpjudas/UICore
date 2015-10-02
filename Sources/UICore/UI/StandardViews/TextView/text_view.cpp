@@ -113,7 +113,7 @@ namespace uicore
 
 	void TextView::set_text(const std::string &text)
 	{
-		impl->text_lines = StringHelp::split_text(text, "\n", false);
+		impl->text_lines = Text::split(text, "\n", false);
 		if (impl->text_lines.empty())
 			impl->text_lines.resize(1);
 

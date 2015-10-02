@@ -71,7 +71,6 @@ namespace uicore
 		///
 		/// \param format_string = Format string (see detailed description)
 		StringFormat(const std::string &format_string);
-		~StringFormat();
 
 		/// \brief Retrieves the formatted string with all argument replacements
 		const std::string &get_result() const;
@@ -95,13 +94,6 @@ namespace uicore
 		/// \param value = Argument value as an unsigned integer
 		/// \param min_length = Minimum amount of digits to display
 		void set_arg(int index, unsigned int value, int min_length = 0);
-
-		/// \brief Sets an argument (long unsigned int version)
-		///
-		/// \param index = Argument index
-		/// \param value = Argument value as a long unsigned integer
-		/// \param min_length = Minimum amount of digits to display
-		void set_arg(int index, long unsigned int value, int min_length = 0);
 
 		/// \brief Sets an argument (long long version)
 		///

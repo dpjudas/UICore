@@ -82,7 +82,7 @@ namespace uicore
 			}
 			else if (token.type == StyleTokenType::percentage)
 			{
-				margin_widths[count] = StyleSetValue::from_percentage(StringHelp::text_to_float(token.value));
+				margin_widths[count] = StyleSetValue::from_percentage(Text::parse_float(token.value));
 			}
 			else if (token.type == StyleTokenType::delim && token.value == "-")
 			{
@@ -103,7 +103,7 @@ namespace uicore
 				}
 				else if (token.type == StyleTokenType::percentage)
 				{
-					margin_widths[count] = StyleSetValue::from_percentage(-StringHelp::text_to_float(token.value));
+					margin_widths[count] = StyleSetValue::from_percentage(-Text::parse_float(token.value));
 				}
 				else
 				{
@@ -187,7 +187,7 @@ namespace uicore
 		}
 		else if (token.type == StyleTokenType::percentage && pos == tokens.size())
 		{
-			width = StyleSetValue::from_percentage(StringHelp::text_to_float(token.value));
+			width = StyleSetValue::from_percentage(Text::parse_float(token.value));
 		}
 		else if (token.type == StyleTokenType::delim && token.value == "-")
 		{
@@ -207,7 +207,7 @@ namespace uicore
 			}
 			else if (token.type == StyleTokenType::percentage && pos == tokens.size())
 			{
-				width = StyleSetValue::from_percentage(-StringHelp::text_to_float(token.value));
+				width = StyleSetValue::from_percentage(-Text::parse_float(token.value));
 			}
 			else
 			{

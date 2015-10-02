@@ -191,7 +191,7 @@ namespace uicore
 			FontMetrics fm = get_font_metrics(canvas);
 			float descent = fm.get_descent();
 			float line_spacing = fm.get_line_height();
-			std::vector<std::string> lines = StringHelp::split_text(text, "\n", false);
+			std::vector<std::string> lines = Text::split(text, "\n", false);
 			for (std::vector<std::string>::size_type i = 0; i < lines.size(); i++)
 			{
 				if (i == 0 || pos.y + descent < box_size.height)

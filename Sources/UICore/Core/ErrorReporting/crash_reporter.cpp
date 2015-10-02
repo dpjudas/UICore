@@ -67,10 +67,10 @@ namespace uicore
 
 	CrashReporter_Impl::CrashReporter_Impl(const std::string &new_reports_directory, const std::string &new_uploader_executable)
 	{
-		reports_directory = StringHelp::utf8_to_ucs2(new_reports_directory);
+		reports_directory = Text::to_utf16(new_reports_directory);
 		if (!reports_directory.empty() && (reports_directory.back() != L'/' && reports_directory.back() != L'\\'))
 			reports_directory.push_back(L'\\');
-		uploader_exe = StringHelp::utf8_to_ucs2(new_uploader_executable);
+		uploader_exe = Text::to_utf16(new_uploader_executable);
 		load_dbg_help();
 		hook_thread();
 		enforce_filter(true);

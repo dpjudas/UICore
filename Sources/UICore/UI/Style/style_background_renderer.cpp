@@ -65,7 +65,7 @@ namespace uicore
 
 		for (int index = num_layers - 1; index >= 0; index--)
 		{
-			StyleGetValue layer_image = style.computed_value("background-image[" + StringHelp::int_to_text(index) + "]");
+			StyleGetValue layer_image = style.computed_value("background-image[" + Text::to_string(index) + "]");
 			if (layer_image.is_keyword("none"))
 				continue;
 
@@ -166,7 +166,7 @@ namespace uicore
 
 	void StyleBackgroundRenderer::render_background_linear_gradient(int index)
 	{
-		std::string prop_name = "background-image[" + StringHelp::int_to_text(index) + "]";
+		std::string prop_name = "background-image[" + Text::to_string(index) + "]";
 
 		auto prop_angle = style.computed_value(prop_name + ".angle");
 		int num_stops = style.array_size(prop_name + ".stop");
@@ -250,7 +250,7 @@ namespace uicore
 		float last_position = 0.0f;
 		for (int stop_index = 0; stop_index < num_stops; stop_index++)
 		{
-			std::string stop_prop_name = prop_name + ".stop[" + StringHelp::int_to_text(stop_index) + "]";
+			std::string stop_prop_name = prop_name + ".stop[" + Text::to_string(stop_index) + "]";
 
 			auto prop_color = style.computed_value(stop_prop_name);
 			auto prop_position = style.computed_value(stop_prop_name + ".position");
@@ -497,55 +497,55 @@ namespace uicore
 	StyleGetValue StyleBackgroundRenderer::get_layer_clip(int index)
 	{
 		int count = style.array_size("background-clip");
-		return style.computed_value("background-clip[" + StringHelp::int_to_text(index % count) + "]");
+		return style.computed_value("background-clip[" + Text::to_string(index % count) + "]");
 	}
 
 	StyleGetValue StyleBackgroundRenderer::get_layer_origin(int index)
 	{
 		int count = style.array_size("background-origin");
-		return style.computed_value("background-origin[" + StringHelp::int_to_text(index % count) + "]");
+		return style.computed_value("background-origin[" + Text::to_string(index % count) + "]");
 	}
 
 	StyleGetValue StyleBackgroundRenderer::get_layer_size_x(int index)
 	{
 		int count = style.array_size("background-size-x");
-		return style.computed_value("background-size-x[" + StringHelp::int_to_text(index % count) + "]");
+		return style.computed_value("background-size-x[" + Text::to_string(index % count) + "]");
 	}
 
 	StyleGetValue StyleBackgroundRenderer::get_layer_size_y(int index)
 	{
 		int count = style.array_size("background-size-y");
-		return style.computed_value("background-size-y[" + StringHelp::int_to_text(index % count) + "]");
+		return style.computed_value("background-size-y[" + Text::to_string(index % count) + "]");
 	}
 
 	StyleGetValue StyleBackgroundRenderer::get_layer_position_x(int index)
 	{
 		int count = style.array_size("background-position-x");
-		return style.computed_value("background-position-x[" + StringHelp::int_to_text(index % count) + "]");
+		return style.computed_value("background-position-x[" + Text::to_string(index % count) + "]");
 	}
 
 	StyleGetValue StyleBackgroundRenderer::get_layer_position_y(int index)
 	{
 		int count = style.array_size("background-position-y");
-		return style.computed_value("background-position-y[" + StringHelp::int_to_text(index % count) + "]");
+		return style.computed_value("background-position-y[" + Text::to_string(index % count) + "]");
 	}
 
 	StyleGetValue StyleBackgroundRenderer::get_layer_attachment(int index)
 	{
 		int count = style.array_size("background-attachment");
-		return style.computed_value("background-attachment[" + StringHelp::int_to_text(index % count) + "]");
+		return style.computed_value("background-attachment[" + Text::to_string(index % count) + "]");
 	}
 
 	StyleGetValue StyleBackgroundRenderer::get_layer_repeat_x(int index)
 	{
 		int count = style.array_size("background-repeat-x");
-		return style.computed_value("background-repeat-x[" + StringHelp::int_to_text(index % count) + "]");
+		return style.computed_value("background-repeat-x[" + Text::to_string(index % count) + "]");
 	}
 
 	StyleGetValue StyleBackgroundRenderer::get_layer_repeat_y(int index)
 	{
 		int count = style.array_size("background-repeat-y");
-		return style.computed_value("background-repeat-y[" + StringHelp::int_to_text(index % count) + "]");
+		return style.computed_value("background-repeat-y[" + Text::to_string(index % count) + "]");
 	}
 
 	std::array<Pointf, 2 * 4> StyleBackgroundRenderer::get_border_points()
@@ -757,21 +757,21 @@ namespace uicore
 
 		for (int index = num_shadows - 1; index >= 0; index--)
 		{
-			auto layer_style = style.computed_value("box-shadow-style[" + StringHelp::int_to_text(index) + "]");
+			auto layer_style = style.computed_value("box-shadow-style[" + Text::to_string(index) + "]");
 
 			// To do: support inset
 
 			if (!layer_style.is_keyword("outset"))
 				continue;
 
-			auto layer_color = style.computed_value("box-shadow-color[" + StringHelp::int_to_text(index) + "]");
+			auto layer_color = style.computed_value("box-shadow-color[" + Text::to_string(index) + "]");
 			if (layer_color.color().a <= 0.0f)
 				continue;
 
-			auto layer_offset_x = style.computed_value("box-shadow-horizontal-offset[" + StringHelp::int_to_text(index) + "]");
-			auto layer_offset_y = style.computed_value("box-shadow-vertical-offset[" + StringHelp::int_to_text(index) + "]");
-			auto layer_blur_radius = style.computed_value("box-shadow-blur-radius[" + StringHelp::int_to_text(index) + "]");
-			//auto layer_spread_distance = style.computed_value("box-shadow-spread-distance[" + StringHelp::int_to_text(index) + "]");
+			auto layer_offset_x = style.computed_value("box-shadow-horizontal-offset[" + Text::to_string(index) + "]");
+			auto layer_offset_y = style.computed_value("box-shadow-vertical-offset[" + Text::to_string(index) + "]");
+			auto layer_blur_radius = style.computed_value("box-shadow-blur-radius[" + Text::to_string(index) + "]");
+			//auto layer_spread_distance = style.computed_value("box-shadow-spread-distance[" + Text::to_string(index) + "]");
 
 			// To do: support shadow_spread_distance
 

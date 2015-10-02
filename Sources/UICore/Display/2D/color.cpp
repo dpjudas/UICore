@@ -48,7 +48,7 @@ namespace uicore
 		if (hexstr[0] == '#')
 			pos++;
 
-		unsigned int color = strtoul(StringHelp::text_to_local8(hexstr.substr(pos)).c_str(), nullptr, 16);
+		unsigned int color = Text::parse_uint32(hexstr.substr(pos), 16);
 
 		bool have_alpha = (hexstr.length() - pos) > 6;
 
@@ -434,7 +434,7 @@ namespace uicore
 			color_map["gray90"] = &Color::gray90;
 		}
 
-		auto it = color_map.find(StringHelp::text_to_local8(name));
+		auto it = color_map.find(name);
 		if (it != color_map.end()) return *it->second;
 
 		static Color null(0, 0, 0, 0);

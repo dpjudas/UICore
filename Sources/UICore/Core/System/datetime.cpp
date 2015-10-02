@@ -787,7 +787,7 @@ namespace uicore
 				if (pos == std::string::npos)
 					pos = datePart.length() - 1;
 
-				int int_value = StringHelp::text_to_int(datePart.substr(prevPos, pos));
+				int int_value = Text::parse_int32(datePart.substr(prevPos, pos));
 
 				if (year == -1)
 					year = int_value;
@@ -820,7 +820,7 @@ namespace uicore
 				if (pos == std::string::npos)
 					pos = timePart.length() - 1;
 
-				int int_value = StringHelp::text_to_int(timePart.substr(prevPos, pos));
+				int int_value = Text::parse_int32(timePart.substr(prevPos, pos));
 
 				if (hour == -1)
 					hour = int_value;

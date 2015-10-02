@@ -166,7 +166,7 @@ namespace uicore
 		out_args.reserve(pos.size());
 		for (std::vector<TCHAR *>::size_type cnt=0; cnt<pos.size(); cnt++)
 		{
-			out_args.push_back(StringHelp::ucs2_to_text(pos[cnt]));
+			out_args.push_back(Text::from_utf16(pos[cnt]));
 		}
 	}
 }

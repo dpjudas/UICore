@@ -176,13 +176,13 @@ namespace uicore
 		version_minor = 0;
 		version_release = 0;
 
-		std::vector<std::string> split_version = StringHelp::split_text(version, ".");
+		std::vector<std::string> split_version = Text::split(version, ".");
 		if (split_version.size() > 0)
-			version_major = StringHelp::text_to_int(split_version[0]);
+			version_major = Text::parse_int32(split_version[0]);
 		if (split_version.size() > 1)
-			version_minor = StringHelp::text_to_int(split_version[1]);
+			version_minor = Text::parse_int32(split_version[1]);
 		if (split_version.size() > 2)
-			version_release = StringHelp::text_to_int(split_version[2]);
+			version_release = Text::parse_int32(split_version[2]);
 	}
 
 	ProcAddress *GL1GraphicContextProvider::get_proc_address(const std::string& function_name) const

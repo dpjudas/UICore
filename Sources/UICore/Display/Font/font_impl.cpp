@@ -149,7 +149,7 @@ namespace uicore
 
 		//TODO: Fix me, so we do not need to line split
 
-		std::vector<std::string> lines = StringHelp::split_text(text, "\n", false);
+		std::vector<std::string> lines = Text::split(text, "\n", false);
 		for (std::vector<std::string>::size_type i = 0; i < lines.size(); i++)
 		{
 			float xpos = dest_x;
@@ -200,7 +200,7 @@ namespace uicore
 
 		//TODO: Fix me, so we do not need to line split
 
-		std::vector<std::string> lines = StringHelp::split_text(text, "\n", false);
+		std::vector<std::string> lines = Text::split(text, "\n", false);
 		for (std::vector<std::string>::size_type i = 0; i < lines.size(); i++)
 		{
 			float xpos = dest_x;

@@ -64,7 +64,7 @@ namespace uicore
 		WCHAR name[1024];
 		UINT scancode = MapVirtualKey(virtual_key, 0);
 		int length = GetKeyNameText(scancode << 16, name, 1024);
-		return std::string(StringHelp::ucs2_to_utf8(name), length);
+		return std::string(Text::from_utf16(name), length);
 	}
 
 	std::string InputDeviceProvider_Win32Keyboard::get_name() const

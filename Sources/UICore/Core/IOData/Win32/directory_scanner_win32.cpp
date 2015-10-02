@@ -67,7 +67,7 @@ namespace uicore
 
 		// Start our search:
 		std::string filename = directory_path + pattern;
-		handle = FindFirstFile(StringHelp::utf8_to_ucs2(filename).c_str(), &fileinfo);
+		handle = FindFirstFile(Text::to_utf16(filename).c_str(), &fileinfo);
 		first_next = true;
 		return (handle != INVALID_HANDLE_VALUE);
 	}
@@ -85,13 +85,13 @@ namespace uicore
 	std::string DirectoryScanner_Win32::get_name()
 	{
 		if (first_next) return std::string();
-		return StringHelp::ucs2_to_utf8(fileinfo.cFileName);
+		return Text::from_utf16(fileinfo.cFileName);
 	}
 
 	std::string DirectoryScanner_Win32::get_pathname()
 	{
 		if (first_next) return std::string();
-		return directory_path + StringHelp::ucs2_to_utf8(fileinfo.cFileName);
+		return directory_path + Text::from_utf16(fileinfo.cFileName);
 	}
 
 	bool DirectoryScanner_Win32::is_directory()
@@ -111,7 +111,7 @@ namespace uicore
 		if (first_next) return false;
 
 		HANDLE file = CreateFile(
-			StringHelp::utf8_to_ucs2(get_pathname()).c_str(),
+			Text::to_utf16(get_pathname()).c_str(),
 			GENERIC_READ,
 			FILE_SHARE_READ,
 			0,
@@ -128,7 +128,7 @@ namespace uicore
 		if (first_next) return false;
 
 		HANDLE file = CreateFile(
-			StringHelp::utf8_to_ucs2(get_pathname()).c_str(),
+			Text::to_utf16(get_pathname()).c_str(),
 			GENERIC_READ,
 			FILE_SHARE_READ,
 			0,

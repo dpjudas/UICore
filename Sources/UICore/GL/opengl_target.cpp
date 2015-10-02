@@ -114,7 +114,7 @@ namespace uicore
 	{
 		set_active_context(gc);
 		std::string extension_string = (char*)glGetString(GL_EXTENSIONS);
-		std::vector<std::string> tmp = StringHelp::split_text(extension_string, " ");
+		std::vector<std::string> tmp = Text::split(extension_string, " ");
 		std::vector<std::string> extensions;
 		for (auto & elem : tmp)
 			extensions.push_back(elem);

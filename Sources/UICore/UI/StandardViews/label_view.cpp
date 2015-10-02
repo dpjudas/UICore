@@ -111,7 +111,7 @@ namespace uicore
 
 		if (advance.advance.width > geometry().content_width)
 		{
-			std::string ellipsis = StringHelp::unicode_to_utf8(0x2026);
+			std::string ellipsis = Text::from_utf32(0x2026);
 			GlyphMetrics ellipsis_advance = font.measure_text(canvas, ellipsis);
 
 			switch (impl->_line_break_mode)

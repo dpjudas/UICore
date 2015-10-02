@@ -239,7 +239,7 @@ namespace uicore
 			StyleString prop_name;
 			prop_name.append(property_name);
 			prop_name.append("[");
-			prop_name.append(StringHelp::int_to_text(size));
+			prop_name.append(Text::to_string(size));
 			prop_name.append("]");
 			if (specified_value(prop_name).is_undefined())
 				break;

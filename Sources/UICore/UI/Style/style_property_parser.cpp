@@ -85,7 +85,7 @@ namespace uicore
 
 	struct StyleDimensionLess
 	{
-		bool operator()(const std::string &a, const std::string &b) const { return StringHelp::compare(a, b, true) < 0; }
+		bool operator()(const std::string &a, const std::string &b) const { return Text::less_caseless(a, b); }
 	};
 
 	static std::map<std::string, StyleDimension, StyleDimensionLess> length_dimensions =
@@ -191,7 +191,7 @@ namespace uicore
 			if (it == length_dimensions.end())
 				return false;
 
-			out_length = StyleSetValue::from_length(StringHelp::text_to_float(token.value), it->second);
+			out_length = StyleSetValue::from_length(Text::parse_float(token.value), it->second);
 			return true;
 		}
 		else if (token.type == StyleTokenType::number && token.value == "0")
@@ -213,7 +213,7 @@ namespace uicore
 			if (it == angle_dimensions.end())
 				return false;
 
-			out_angle = StyleSetValue::from_angle(StringHelp::text_to_float(token.value), it->second);
+			out_angle = StyleSetValue::from_angle(Text::parse_float(token.value), it->second);
 			return true;
 		}
 		else if (token.type == StyleTokenType::number && token.value == "0")
@@ -235,7 +235,7 @@ namespace uicore
 			if (it == time_dimensions.end())
 				return false;
 
-			out_time = StyleSetValue::from_time(StringHelp::text_to_float(token.value), it->second);
+			out_time = StyleSetValue::from_time(Text::parse_float(token.value), it->second);
 			return true;
 		}
 		else if (token.type == StyleTokenType::number && token.value == "0")
@@ -257,7 +257,7 @@ namespace uicore
 			if (it == frequency_dimensions.end())
 				return false;
 
-			out_frequency = StyleSetValue::from_frequency(StringHelp::text_to_float(token.value), it->second);
+			out_frequency = StyleSetValue::from_frequency(Text::parse_float(token.value), it->second);
 			return true;
 		}
 		else if (token.type == StyleTokenType::number && token.value == "0")
@@ -279,7 +279,7 @@ namespace uicore
 			if (it == resolution_dimensions.end())
 				return false;
 
-			out_resolution = StyleSetValue::from_resolution(StringHelp::text_to_float(token.value), it->second);
+			out_resolution = StyleSetValue::from_resolution(Text::parse_float(token.value), it->second);
 			return true;
 		}
 		else if (token.type == StyleTokenType::number && token.value == "0")
@@ -302,7 +302,7 @@ namespace uicore
 			if (value[i] < '0' || value[i] > '9')
 				return false;
 		}
-		out_int = StringHelp::text_to_int(value);
+		out_int = Text::parse_int32(value);
 		return true;
 	}
 
@@ -432,7 +432,7 @@ namespace uicore
 			else if ((!is_shape_known || shape_ellipse) && token.type == StyleTokenType::percentage)
 			{
 				comma_required = true;
-				size_x = StyleSetValue::from_percentage(StringHelp::text_to_float(token.value));
+				size_x = StyleSetValue::from_percentage(Text::parse_float(token.value));
 				token = next_token(pos, tokens);
 			}
 			else
@@ -484,7 +484,7 @@ namespace uicore
 				}
 				else if (token.type == StyleTokenType::percentage)
 				{
-					size_y = StyleSetValue::from_percentage(StringHelp::text_to_float(token.value));
+					size_y = StyleSetValue::from_percentage(Text::parse_float(token.value));
 					shape_ellipse = true;
 					is_shape_known = true;
 				}
@@ -540,7 +540,7 @@ namespace uicore
 			}
 			else if (token.type == StyleTokenType::percentage)
 			{
-				stop_pos = StyleSetValue::from_percentage(StringHelp::text_to_float(token.value));
+				stop_pos = StyleSetValue::from_percentage(Text::parse_float(token.value));
 				token = next_token(pos, tokens);
 			}
 
@@ -696,12 +696,12 @@ namespace uicore
 
 				if (!x_specified && !y_specified)
 				{
-					bg_pos_x = StyleSetValue::from_percentage(StringHelp::text_to_float(token.value));
+					bg_pos_x = StyleSetValue::from_percentage(Text::parse_float(token.value));
 					x_specified = true;
 				}
 				else if (x_specified && !y_specified)
 				{
-					bg_pos_y = StyleSetValue::from_percentage(StringHelp::text_to_float(token.value));
+					bg_pos_y = StyleSetValue::from_percentage(Text::parse_float(token.value));
 					y_specified = true;
 				}
 				else
@@ -756,13 +756,13 @@ namespace uicore
 
 					if (!x_specified && !y_specified)
 					{
-						bg_pos_x = StyleSetValue::from_percentage(-StringHelp::text_to_float(token.value));
+						bg_pos_x = StyleSetValue::from_percentage(-Text::parse_float(token.value));
 						x_specified = true;
 						parse_pos = pos;
 					}
 					else if (x_specified && !y_specified)
 					{
-						bg_pos_y = StyleSetValue::from_percentage(-StringHelp::text_to_float(token.value));
+						bg_pos_y = StyleSetValue::from_percentage(-Text::parse_float(token.value));
 						y_specified = true;
 						parse_pos = pos;
 					}
@@ -832,14 +832,14 @@ namespace uicore
 				token = next_token(pos, tokens);
 				if (token.type == StyleTokenType::number)
 				{
-					int value = StringHelp::text_to_int(token.value);
+					int value = Text::parse_int32(token.value);
 					value = min(255, value);
 					value = max(0, value);
 					color[channel] = value;
 				}
 				else if (token.type == StyleTokenType::percentage)
 				{
-					float value = StringHelp::text_to_float(token.value) / 100.0f;
+					float value = Text::parse_float(token.value) / 100.0f;
 					value = min(1.0f, value);
 					value = max(0.0f, value);
 					color[channel] = (int)(value*255.0f);
@@ -874,19 +874,19 @@ namespace uicore
 				{
 					if (channel < 3)
 					{
-						int value = StringHelp::text_to_int(token.value);
+						int value = Text::parse_int32(token.value);
 						value = min(255, value);
 						value = max(0, value);
 						color[channel] = value / 255.0f;
 					}
 					else
 					{
-						color[channel] = StringHelp::text_to_float(token.value);
+						color[channel] = Text::parse_float(token.value);
 					}
 				}
 				else if (token.type == StyleTokenType::percentage)
 				{
-					float value = StringHelp::text_to_float(token.value) / 100.0f;
+					float value = Text::parse_float(token.value) / 100.0f;
 					value = min(1.0f, value);
 					value = max(0.0f, value);
 					color[channel] = value;
@@ -1048,7 +1048,7 @@ namespace uicore
 
 	bool StylePropertyParser::equals(const std::string &s1, const std::string &s2)
 	{
-		return StringHelp::compare(s1, s2, true) == 0;
+		return Text::equal_caseless(s1, s2);
 	}
 
 	void StylePropertyParser::debug_parse_error(const std::string &name, const std::vector<StyleToken> &tokens)

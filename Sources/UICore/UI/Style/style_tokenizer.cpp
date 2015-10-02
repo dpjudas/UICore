@@ -116,7 +116,7 @@ namespace uicore
 		size_t tokens_size = value_tokens.size();
 		if (tokens_size >= 2 &&
 			value_tokens[tokens_size - 2].type == StyleTokenType::delim && value_tokens[tokens_size - 2].value == "!" &&
-			value_tokens[tokens_size - 1].type == StyleTokenType::ident && StringHelp::compare(value_tokens[tokens_size - 1].value, "important", true) == 0)
+			value_tokens[tokens_size - 1].type == StyleTokenType::ident && Text::equal_caseless(value_tokens[tokens_size - 1].value, "important"))
 		{
 			important_flag = true;
 			value_tokens.pop_back();
@@ -125,7 +125,7 @@ namespace uicore
 		else if (tokens_size >= 3 &&
 			value_tokens[tokens_size - 3].type == StyleTokenType::delim && value_tokens[tokens_size - 3].value == "!" &&
 			value_tokens[tokens_size - 2].type == StyleTokenType::whitespace &&
-			value_tokens[tokens_size - 1].type == StyleTokenType::ident && StringHelp::compare(value_tokens[tokens_size - 1].value, "important", true) == 0)
+			value_tokens[tokens_size - 1].type == StyleTokenType::ident && Text::equal_caseless(value_tokens[tokens_size - 1].value, "important"))
 		{
 			important_flag = true;
 			value_tokens.pop_back();

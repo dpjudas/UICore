@@ -245,7 +245,7 @@ namespace uicore
 		}
 		else if (token.type == StyleTokenType::percentage && pos == tokens.size())
 		{
-			text_indent = StyleSetValue::from_percentage(StringHelp::text_to_float(token.value));
+			text_indent = StyleSetValue::from_percentage(Text::parse_float(token.value));
 		}
 		else if (token.type == StyleTokenType::delim && token.value == "-")
 		{
@@ -265,7 +265,7 @@ namespace uicore
 			}
 			else if (token.type == StyleTokenType::percentage && pos == tokens.size())
 			{
-				text_indent = StyleSetValue::from_percentage(-StringHelp::text_to_float(token.value));
+				text_indent = StyleSetValue::from_percentage(-Text::parse_float(token.value));
 			}
 			else
 			{
@@ -638,7 +638,7 @@ namespace uicore
 		}
 		else if (token.type == StyleTokenType::percentage)
 		{
-			size = StyleSetValue::from_percentage(StringHelp::text_to_float(token.value));
+			size = StyleSetValue::from_percentage(Text::parse_float(token.value));
 		}
 		else
 		{
@@ -665,7 +665,7 @@ namespace uicore
 			}
 			else if (token.type == StyleTokenType::number)
 			{
-				line_height = StyleSetValue::from_number(StringHelp::text_to_float(token.value));
+				line_height = StyleSetValue::from_number(Text::parse_float(token.value));
 			}
 			else if (is_length(token))
 			{
@@ -682,7 +682,7 @@ namespace uicore
 			}
 			else if (token.type == StyleTokenType::percentage)
 			{
-				line_height = StyleSetValue::from_percentage(StringHelp::text_to_float(token.value));
+				line_height = StyleSetValue::from_percentage(Text::parse_float(token.value));
 			}
 			else
 			{
@@ -960,7 +960,7 @@ namespace uicore
 		}
 		else if (token.type == StyleTokenType::percentage && pos == tokens.size())
 		{
-			font_size = StyleSetValue::from_percentage(StringHelp::text_to_float(token.value));
+			font_size = StyleSetValue::from_percentage(Text::parse_float(token.value));
 		}
 		else
 		{
@@ -989,7 +989,7 @@ namespace uicore
 		}
 		else if (token.type == StyleTokenType::number && pos == tokens.size())
 		{
-			line_height = StyleSetValue::from_number(StringHelp::text_to_float(token.value));
+			line_height = StyleSetValue::from_number(Text::parse_float(token.value));
 		}
 		else if (is_length(token) && pos == tokens.size())
 		{
@@ -1005,7 +1005,7 @@ namespace uicore
 		}
 		else if (token.type == StyleTokenType::percentage && pos == tokens.size())
 		{
-			line_height = StyleSetValue::from_percentage(StringHelp::text_to_float(token.value));
+			line_height = StyleSetValue::from_percentage(Text::parse_float(token.value));
 		}
 		else
 		{

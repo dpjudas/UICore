@@ -50,7 +50,7 @@ namespace uicore
 			static void write(const std::string &text)
 			{
 				DWORD written = 0;
-				std::wstring str = StringHelp::utf8_to_ucs2(text);
+				std::wstring str = Text::to_utf16(text);
 				WriteConsole(GetStdHandle(STD_OUTPUT_HANDLE), str.c_str(), str.length(), &written, 0);
 			}
 		};
@@ -69,7 +69,7 @@ namespace uicore
 	{
 		std::vector<std::string> args;
 		for (int i = 0; i < argc; i++)
-			args.push_back(StringHelp::local8_to_text(argv[i]));
+			args.push_back(argv[i]);
 
 		if (argc == 2 && args[1] == "-debug")
 		{
@@ -137,13 +137,13 @@ namespace uicore
 		instance_win32->service_status.dwServiceType = SERVICE_WIN32_OWN_PROCESS;
 		instance_win32->service_status.dwServiceSpecificExitCode = 0;
 		if (!instance_win32->debug_mode)
-			instance_win32->handle_service_status = RegisterServiceCtrlHandler(StringHelp::utf8_to_ucs2(instance_win32->service_name).c_str(), service_ctrl);
+			instance_win32->handle_service_status = RegisterServiceCtrlHandler(Text::to_utf16(instance_win32->service_name).c_str(), service_ctrl);
 
 		instance_win32->report_status(SERVICE_START_PENDING, NO_ERROR, 2000);
 
 		std::vector<std::string> args;
 		for (DWORD i = 0; i < argc; i++)
-			args.push_back(StringHelp::ucs2_to_utf8(argv[i]));
+			args.push_back(Text::from_utf16(argv[i]));
 
 		instance_win32->report_status(SERVICE_RUNNING, NO_ERROR, 0);
 
@@ -254,7 +254,7 @@ namespace uicore
 		}
 
 		SC_HANDLE handle_service = CreateService(
-			handle_manager, StringHelp::utf8_to_ucs2(service_name).c_str(), StringHelp::utf8_to_ucs2(service_name).c_str(),
+			handle_manager, Text::to_utf16(service_name).c_str(), Text::to_utf16(service_name).c_str(),
 			SERVICE_ALL_ACCESS, SERVICE_WIN32_OWN_PROCESS, SERVICE_DEMAND_START,
 			SERVICE_ERROR_NORMAL, exe_filename, 0, 0, 0, 0, 0);
 		if (handle_service == 0)
@@ -281,7 +281,7 @@ namespace uicore
 		}
 
 		SC_HANDLE handle_service = OpenService(
-			handle_manager, StringHelp::utf8_to_ucs2(service_name).c_str(), SERVICE_ALL_ACCESS);
+			handle_manager, Text::to_utf16(service_name).c_str(), SERVICE_ALL_ACCESS);
 		if (handle_service == 0)
 		{
 			CloseServiceHandle(handle_manager);

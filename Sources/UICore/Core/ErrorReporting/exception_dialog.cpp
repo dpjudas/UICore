@@ -94,7 +94,7 @@ namespace uicore
 			DispatchMessage(&msg);
 		}
 
-		//MessageBox(0, StringHelp::utf8_to_ucs2(e.get_message_and_stack_trace()).c_str(), L"Unhandled Exception", MB_OK|MB_ICONERROR);
+		//MessageBox(0, Text::to_utf16(e.get_message_and_stack_trace()).c_str(), L"Unhandled Exception", MB_OK|MB_ICONERROR);
 	}
 
 	ExceptionDialog_Impl::ExceptionDialog_Impl(const std::string &message_and_stack_trace, HWND owner)
@@ -123,7 +123,7 @@ namespace uicore
 		if (window_handle == 0)
 			throw Exception("CreateWindowEx failed");
 
-		std::wstring text = StringHelp::utf8_to_ucs2(message_and_stack_trace);
+		std::wstring text = Text::to_utf16(message_and_stack_trace);
 
 		frame = CreateWindowEx(0, L"STATIC", L"", WS_VISIBLE | WS_CHILD | SS_LEFT | SS_EDITCONTROL | SS_NOPREFIX, 0, 0, 100 * ppi / 96, 50 * ppi / 96, window_handle, 0, instance, 0);
 		text_label = CreateWindowEx(0, L"STATIC", text.c_str(), WS_VISIBLE | WS_CHILD | SS_LEFT | SS_EDITCONTROL | SS_NOPREFIX | SS_NOTIFY, 0, 0, 100 * ppi / 96, 50 * ppi / 96, window_handle, 0, instance, 0);

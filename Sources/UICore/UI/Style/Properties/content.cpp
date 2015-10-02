@@ -81,7 +81,7 @@ namespace uicore
 		}
 		else if (token.type == StyleTokenType::percentage && pos == tokens.size())
 		{
-			float v = StringHelp::text_to_float(token.value);
+			float v = Text::parse_float(token.value);
 			if (v >= 0.0f)
 			{
 				width = StyleSetValue::from_percentage(v);
@@ -130,7 +130,7 @@ namespace uicore
 		}
 		else if (token.type == StyleTokenType::percentage && pos == tokens.size())
 		{
-			float v = StringHelp::text_to_float(token.value);
+			float v = Text::parse_float(token.value);
 			if (v >= 0.0f)
 			{
 				height = StyleSetValue::from_percentage(v);
@@ -179,7 +179,7 @@ namespace uicore
 		}
 		else if (token.type == StyleTokenType::percentage && pos == tokens.size())
 		{
-			min_width = StyleSetValue::from_percentage(StringHelp::text_to_float(token.value));
+			min_width = StyleSetValue::from_percentage(Text::parse_float(token.value));
 		}
 		else
 		{
@@ -220,7 +220,7 @@ namespace uicore
 		}
 		else if (token.type == StyleTokenType::percentage && pos == tokens.size())
 		{
-			min_height = StyleSetValue::from_percentage(StringHelp::text_to_float(token.value));
+			min_height = StyleSetValue::from_percentage(Text::parse_float(token.value));
 		}
 		else
 		{
@@ -261,7 +261,7 @@ namespace uicore
 		}
 		else if (token.type == StyleTokenType::percentage && pos == tokens.size())
 		{
-			max_width = StyleSetValue::from_percentage(StringHelp::text_to_float(token.value));
+			max_width = StyleSetValue::from_percentage(Text::parse_float(token.value));
 		}
 		else
 		{
@@ -302,7 +302,7 @@ namespace uicore
 		}
 		else if (token.type == StyleTokenType::percentage && pos == tokens.size())
 		{
-			max_height = StyleSetValue::from_percentage(StringHelp::text_to_float(token.value));
+			max_height = StyleSetValue::from_percentage(Text::parse_float(token.value));
 		}
 		else
 		{

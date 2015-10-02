@@ -141,7 +141,7 @@ namespace uicore
 		}
 		else if (token.type == StyleTokenType::percentage && pos == tokens.size())
 		{
-			left = StyleSetValue::from_percentage(StringHelp::text_to_float(token.value));
+			left = StyleSetValue::from_percentage(Text::parse_float(token.value));
 		}
 		else if (token.type == StyleTokenType::delim && token.value == "-")
 		{
@@ -161,7 +161,7 @@ namespace uicore
 			}
 			else if (token.type == StyleTokenType::percentage && pos == tokens.size())
 			{
-				left = StyleSetValue::from_percentage(-StringHelp::text_to_float(token.value));
+				left = StyleSetValue::from_percentage(-Text::parse_float(token.value));
 			}
 			else
 			{
@@ -203,7 +203,7 @@ namespace uicore
 		}
 		else if (token.type == StyleTokenType::percentage && pos == tokens.size())
 		{
-			top = StyleSetValue::from_percentage(StringHelp::text_to_float(token.value));
+			top = StyleSetValue::from_percentage(Text::parse_float(token.value));
 		}
 		else if (token.type == StyleTokenType::delim && token.value == "-")
 		{
@@ -223,7 +223,7 @@ namespace uicore
 			}
 			else if (token.type == StyleTokenType::percentage && pos == tokens.size())
 			{
-				top = StyleSetValue::from_percentage(-StringHelp::text_to_float(token.value));
+				top = StyleSetValue::from_percentage(-Text::parse_float(token.value));
 			}
 			else
 			{
@@ -265,7 +265,7 @@ namespace uicore
 		}
 		else if (token.type == StyleTokenType::percentage && pos == tokens.size())
 		{
-			right = StyleSetValue::from_percentage(StringHelp::text_to_float(token.value));
+			right = StyleSetValue::from_percentage(Text::parse_float(token.value));
 		}
 		else if (token.type == StyleTokenType::delim && token.value == "-")
 		{
@@ -285,7 +285,7 @@ namespace uicore
 			}
 			else if (token.type == StyleTokenType::percentage && pos == tokens.size())
 			{
-				right = StyleSetValue::from_percentage(-StringHelp::text_to_float(token.value));
+				right = StyleSetValue::from_percentage(-Text::parse_float(token.value));
 			}
 			else
 			{
@@ -331,7 +331,7 @@ namespace uicore
 		}
 		else if (token.type == StyleTokenType::percentage && pos == tokens.size())
 		{
-			bottom = StyleSetValue::from_percentage(StringHelp::text_to_float(token.value));
+			bottom = StyleSetValue::from_percentage(Text::parse_float(token.value));
 		}
 		else if (token.type == StyleTokenType::delim && token.value == "-")
 		{
@@ -351,7 +351,7 @@ namespace uicore
 			}
 			else if (token.type == StyleTokenType::percentage && pos == tokens.size())
 			{
-				bottom = StyleSetValue::from_percentage(-StringHelp::text_to_float(token.value));
+				bottom = StyleSetValue::from_percentage(-Text::parse_float(token.value));
 			}
 			else
 			{

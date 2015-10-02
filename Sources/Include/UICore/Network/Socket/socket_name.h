@@ -86,7 +86,6 @@ namespace uicore
 
 		bool operator == (const SocketName &other_instance) const;
 		bool operator < (const SocketName &other_instance) const;
-		bool operator > (const SocketName &other_instance) const;
 
 	private:
 		std::string _address;

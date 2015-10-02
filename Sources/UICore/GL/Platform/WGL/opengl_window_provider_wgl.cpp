@@ -358,11 +358,11 @@ namespace uicore
 		version_major = 0;
 		version_minor = 0;
 
-		std::vector<std::string> split_version = StringHelp::split_text(version, ".");
+		std::vector<std::string> split_version = Text::split(version, ".");
 		if (split_version.size() > 0)
-			version_major = StringHelp::text_to_int(split_version[0]);
+			version_major = Text::parse_int32(split_version[0]);
 		if (split_version.size() > 1)
-			version_minor = StringHelp::text_to_int(split_version[1]);
+			version_minor = Text::parse_int32(split_version[1]);
 
 	}
 

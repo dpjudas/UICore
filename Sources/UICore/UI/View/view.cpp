@@ -803,7 +803,7 @@ namespace uicore
 			auto &style_list = it.first;
 			auto &style = it.second;
 
-			auto style_classes = StringHelp::split_text(style_list, " ");
+			auto style_classes = Text::split(style_list, " ");
 
 			bool match = true;
 			for (const auto &state : style_classes)

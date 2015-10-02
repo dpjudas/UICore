@@ -109,9 +109,9 @@ namespace uicore
 
 			for (auto & elem : filters)
 			{
-				filter += StringHelp::utf8_to_ucs2(elem.description);
+				filter += Text::to_utf16(elem.description);
 				filter += (wchar_t) '\0';
-				filter += StringHelp::utf8_to_ucs2(elem.extension);
+				filter += Text::to_utf16(elem.extension);
 				filter += (wchar_t) '\0';
 			}
 			filter += (wchar_t) '\0';
@@ -139,9 +139,9 @@ namespace uicore
 
 			auto buffer = DataBuffer::create(64 * 1024 * sizeof(std::wstring::value_type));
 			std::wstring::value_type *filename_buffer = (std::wstring::value_type *)buffer->data();
-			std::wstring title16 = StringHelp::utf8_to_ucs2(title);
+			std::wstring title16 = Text::to_utf16(title);
 			std::wstring filter16 = get_filter_string();
-			std::wstring initial_directory16 = StringHelp::utf8_to_ucs2(initial_directory);
+			std::wstring initial_directory16 = Text::to_utf16(initial_directory);
 			ofn.lpstrFile = filename_buffer;
 			ofn.nMaxFile = 64 * 1024;
 
@@ -178,11 +178,11 @@ namespace uicore
 
 				if (multi_select)
 				{
-					std::string path = StringHelp::ucs2_to_utf8(std::wstring(filename_buffer, ofn.nFileOffset - 1));
+					std::string path = Text::from_utf16(std::wstring(filename_buffer, ofn.nFileOffset - 1));
 					int offset = ofn.nFileOffset;
 					while (true)
 					{
-						std::string filename = StringHelp::ucs2_to_utf8(filename_buffer + offset);
+						std::string filename = Text::from_utf16(filename_buffer + offset);
 						offset += filename.length() + 1;
 						if (filename.empty())
 							break;
@@ -191,7 +191,7 @@ namespace uicore
 				}
 				else
 				{
-					filenames.push_back(StringHelp::ucs2_to_utf8(filename_buffer));
+					filenames.push_back(Text::from_utf16(filename_buffer));
 				}
 			}
 

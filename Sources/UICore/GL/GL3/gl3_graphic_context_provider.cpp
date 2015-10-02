@@ -190,11 +190,11 @@ namespace uicore
 			opengl_version_major = 0;
 			opengl_version_minor = 0;
 
-			std::vector<std::string> split_version = StringHelp::split_text(version, ".");
+			std::vector<std::string> split_version = Text::split(version, ".");
 			if (split_version.size() > 0)
-				opengl_version_major = StringHelp::text_to_int(split_version[0]);
+				opengl_version_major = Text::parse_int32(split_version[0]);
 			if (split_version.size() > 1)
-				opengl_version_minor = StringHelp::text_to_int(split_version[1]);
+				opengl_version_minor = Text::parse_int32(split_version[1]);
 #endif
 		}
 
@@ -214,11 +214,11 @@ namespace uicore
 
 			std::string version = (char*)glGetString(GL_SHADING_LANGUAGE_VERSION);
 
-			std::vector<std::string> split_version = StringHelp::split_text(version, ".");
+			std::vector<std::string> split_version = Text::split(version, ".");
 			if (split_version.size() > 0)
-				shader_version_major = StringHelp::text_to_int(split_version[0]);
+				shader_version_major = Text::parse_int32(split_version[0]);
 			if (split_version.size() > 1)
-				shader_version_minor = StringHelp::text_to_int(split_version[1]);
+				shader_version_minor = Text::parse_int32(split_version[1]);
 		}
 		else
 		{

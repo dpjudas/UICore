@@ -114,7 +114,7 @@ namespace uicore
 			{
 				std::string path = full_path.substr(0, pos);
 #ifdef WIN32
-				result = CreateDirectory(StringHelp::utf8_to_ucs2(path).c_str(), NULL) != 0;
+				result = CreateDirectory(Text::to_utf16(path).c_str(), NULL) != 0;
 #else
 				result = mkdir(path.c_str(), S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH) == 0;
 #endif
@@ -123,7 +123,7 @@ namespace uicore
 		else
 		{
 #ifdef WIN32
-			result = CreateDirectory(StringHelp::utf8_to_ucs2(full_path).c_str(), NULL) != 0;
+			result = CreateDirectory(Text::to_utf16(full_path).c_str(), NULL) != 0;
 #else
 			result = mkdir(full_path.c_str(), S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH) == 0;
 #endif
@@ -163,7 +163,7 @@ namespace uicore
 				else if (!scanner->is_directory() && delete_files)
 				{
 #ifdef WIN32
-					if (DeleteFile(StringHelp::utf8_to_ucs2(scanner->get_pathname()).c_str()) == 0)
+					if (DeleteFile(Text::to_utf16(scanner->get_pathname()).c_str()) == 0)
 						return false;
 #else
 					if (::remove(scanner->get_pathname().c_str()) != 0)
@@ -180,7 +180,7 @@ namespace uicore
 
 		// finally remove the directory (or subdirectory if in recursion)
 #ifdef WIN32
-		return RemoveDirectory(StringHelp::utf8_to_ucs2(full_path).c_str()) != 0;
+		return RemoveDirectory(Text::to_utf16(full_path).c_str()) != 0;
 #else
 		return rmdir(full_path.c_str()) == 0;
 #endif
@@ -189,7 +189,7 @@ namespace uicore
 	bool Directory::rename(const std::string &old_name, const std::string &new_name)
 	{
 #ifdef WIN32
-		return MoveFile(StringHelp::utf8_to_ucs2(old_name).c_str(), StringHelp::utf8_to_ucs2(new_name).c_str()) != 0;
+		return MoveFile(Text::to_utf16(old_name).c_str(), Text::to_utf16(new_name).c_str()) != 0;
 #else
 		return ::rename(old_name.c_str(), new_name.c_str()) == 0;
 #endif
@@ -198,7 +198,7 @@ namespace uicore
 	bool Directory::set_current(const std::string &dir_name)
 	{
 #ifdef WIN32
-		return SetCurrentDirectory(StringHelp::utf8_to_ucs2(dir_name).c_str()) != 0;
+		return SetCurrentDirectory(Text::to_utf16(dir_name).c_str()) != 0;
 #else
 		return chdir(dir_name.c_str()) == 0;
 #endif
@@ -214,7 +214,7 @@ namespace uicore
 		std::vector<TCHAR> path(len);
 		if (GetCurrentDirectory(len, &path[0]) == 0)
 			throw Exception("GetCurrentDirectory failed!");
-		return StringHelp::ucs2_to_utf8(&path[0]);
+		return Text::from_utf16(&path[0]);
 #else
 		char cwd_buffer[MAX_PATH];
 		if (getcwd(cwd_buffer, MAX_PATH) == nullptr)
@@ -232,7 +232,7 @@ namespace uicore
 		TCHAR app_data[MAX_PATH];
 		if (FAILED(SHGetFolderPath(NULL, CSIDL_APPDATA, NULL, SHGFP_TYPE_DEFAULT, app_data)))
 			throw Exception("SHGetFolderPath failed!");
-		configuration_path = PathHelp::add_trailing_slash(StringHelp::ucs2_to_utf8(app_data));
+		configuration_path = PathHelp::add_trailing_slash(Text::from_utf16(app_data));
 #else
 		struct passwd *pwd = getpwuid(getuid());
 		if (pwd == nullptr || pwd->pw_dir == nullptr)
@@ -261,7 +261,7 @@ namespace uicore
 		TCHAR app_data[MAX_PATH];
 		if (FAILED(SHGetFolderPath(NULL, CSIDL_LOCAL_APPDATA, NULL, SHGFP_TYPE_DEFAULT, app_data)))
 			throw Exception("SHGetFolderPath failed!");
-		configuration_path = PathHelp::add_trailing_slash(StringHelp::ucs2_to_utf8(app_data));
+		configuration_path = PathHelp::add_trailing_slash(Text::from_utf16(app_data));
 #elif defined(__APPLE__)
 		NSArray *paths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES);
 		NSString *libraryDirectory = [paths objectAtIndex:0];

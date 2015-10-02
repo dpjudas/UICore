@@ -103,7 +103,7 @@ namespace uicore
 		HKEY hkey = RegistryKey_Impl::get_predefined_hkey(key);
 		DWORD disposition = 0;
 		HKEY new_key = 0;
-		LONG result = RegCreateKeyEx(hkey, StringHelp::utf8_to_ucs2(subkey).c_str(), 0, 0, (create_flags & create_volatile) ? REG_OPTION_VOLATILE : REG_OPTION_NON_VOLATILE, access_rights, 0, &new_key, &disposition);
+		LONG result = RegCreateKeyEx(hkey, Text::to_utf16(subkey).c_str(), 0, 0, (create_flags & create_volatile) ? REG_OPTION_VOLATILE : REG_OPTION_NON_VOLATILE, access_rights, 0, &new_key, &disposition);
 		if (result != ERROR_SUCCESS)
 			throw Exception(string_format("Unable to create registry key %1", subkey));
 
@@ -126,13 +126,13 @@ namespace uicore
 		HKEY hkey = RegistryKey_Impl::get_predefined_hkey(key);
 		if (recursive)
 		{
-			DWORD result = SHDeleteKey(hkey, StringHelp::utf8_to_ucs2(subkey).c_str());
+			DWORD result = SHDeleteKey(hkey, Text::to_utf16(subkey).c_str());
 			if (result != ERROR_SUCCESS)
 				throw Exception(string_format("Unable to delete registry key %1", subkey));
 		}
 		else
 		{
-			LONG result = RegDeleteKey(hkey, StringHelp::utf8_to_ucs2(subkey).c_str());
+			LONG result = RegDeleteKey(hkey, Text::to_utf16(subkey).c_str());
 			if (result != ERROR_SUCCESS)
 				throw Exception(string_format("Unable to delete registry key %1", subkey));
 		}
@@ -157,7 +157,7 @@ namespace uicore
 				break;
 			if (result != ERROR_SUCCESS)
 				continue;
-			results.push_back(StringHelp::ucs2_to_utf8(name));
+			results.push_back(Text::from_utf16(name));
 		}
 		return results;
 	}
@@ -175,7 +175,7 @@ namespace uicore
 				break;
 			if (result != ERROR_SUCCESS)
 				continue;
-			results.push_back(StringHelp::ucs2_to_utf8(name));
+			results.push_back(Text::from_utf16(name));
 		}
 		return results;
 	}
@@ -183,7 +183,7 @@ namespace uicore
 	int RegistryKey_Impl::get_value_int(const std::string &name, int default_value) const
 	{
 		DWORD type = 0, data = 0, size_data = sizeof(DWORD);
-		LONG result = RegQueryValueEx(key, StringHelp::utf8_to_ucs2(name).c_str(), 0, &type, (LPBYTE)&data, &size_data);
+		LONG result = RegQueryValueEx(key, Text::to_utf16(name).c_str(), 0, &type, (LPBYTE)&data, &size_data);
 		if (result != ERROR_SUCCESS || type != REG_DWORD)
 			return default_value;
 		else
@@ -193,13 +193,13 @@ namespace uicore
 	DataBufferPtr RegistryKey_Impl::get_value_binary(const std::string &name, const DataBufferPtr &default_value) const
 	{
 		DWORD type = 0, size_data = 0;
-		LONG result = RegQueryValueEx(key, StringHelp::utf8_to_ucs2(name).c_str(), 0, &type, 0, &size_data);
+		LONG result = RegQueryValueEx(key, Text::to_utf16(name).c_str(), 0, &type, 0, &size_data);
 		if (result != ERROR_SUCCESS || type != REG_BINARY)
 			return default_value;
 
 		auto buffer = DataBuffer::create(size_data);
 		size_data = buffer->size();
-		result = RegQueryValueEx(key, StringHelp::utf8_to_ucs2(name).c_str(), 0, &type, (LPBYTE)buffer->data(), &size_data);
+		result = RegQueryValueEx(key, Text::to_utf16(name).c_str(), 0, &type, (LPBYTE)buffer->data(), &size_data);
 		if (result != ERROR_SUCCESS || type != REG_BINARY)
 			return default_value;
 		return buffer;
@@ -208,28 +208,28 @@ namespace uicore
 	std::string RegistryKey_Impl::get_value_string(const std::string &name, const std::string &default_value) const
 	{
 		DWORD type = 0, size_data = 0;
-		LONG result = RegQueryValueEx(key, StringHelp::utf8_to_ucs2(name).c_str(), 0, &type, 0, &size_data);
+		LONG result = RegQueryValueEx(key, Text::to_utf16(name).c_str(), 0, &type, 0, &size_data);
 		if (result != ERROR_SUCCESS || type != REG_SZ)
 			return default_value;
 
 		auto buffer = DataBuffer::create(size_data);
 		size_data = buffer->size();
-		result = RegQueryValueEx(key, StringHelp::utf8_to_ucs2(name).c_str(), 0, &type, (LPBYTE)buffer->data(), &size_data);
+		result = RegQueryValueEx(key, Text::to_utf16(name).c_str(), 0, &type, (LPBYTE)buffer->data(), &size_data);
 		if (result != ERROR_SUCCESS || type != REG_SZ)
 			return default_value;
-		return StringHelp::ucs2_to_utf8((WCHAR *)buffer->data());
+		return Text::from_utf16((WCHAR *)buffer->data());
 	}
 
 	std::vector<std::string> RegistryKey_Impl::get_value_multi_string(const std::string &name, const std::vector<std::string> &default_value) const
 	{
 		DWORD type = 0, size_data = 0;
-		LONG result = RegQueryValueEx(key, StringHelp::utf8_to_ucs2(name).c_str(), 0, &type, 0, &size_data);
+		LONG result = RegQueryValueEx(key, Text::to_utf16(name).c_str(), 0, &type, 0, &size_data);
 		if (result != ERROR_SUCCESS || type != REG_MULTI_SZ)
 			return default_value;
 
 		auto buffer = DataBuffer::create(size_data);
 		size_data = buffer->size();
-		result = RegQueryValueEx(key, StringHelp::utf8_to_ucs2(name).c_str(), 0, &type, (LPBYTE)buffer->data(), &size_data);
+		result = RegQueryValueEx(key, Text::to_utf16(name).c_str(), 0, &type, (LPBYTE)buffer->data(), &size_data);
 		if (result != ERROR_SUCCESS || type != REG_MULTI_SZ)
 			return default_value;
 
@@ -237,7 +237,7 @@ namespace uicore
 		WCHAR *pos = (TCHAR *)buffer->data();
 		while (*pos != 0)
 		{
-			std::string s = StringHelp::ucs2_to_utf8(pos);
+			std::string s = Text::from_utf16(pos);
 			results.push_back(s);
 			pos += s.length() + 1;
 		}
@@ -248,7 +248,7 @@ namespace uicore
 	std::shared_ptr<RegistryKey> RegistryKey_Impl::open_key(const std::string &subkey, unsigned int access_rights)
 	{
 		HKEY new_key = 0;
-		LONG result = RegOpenKeyEx(key, StringHelp::utf8_to_ucs2(subkey).c_str(), 0, access_rights, &new_key);
+		LONG result = RegOpenKeyEx(key, Text::to_utf16(subkey).c_str(), 0, access_rights, &new_key);
 		if (result != ERROR_SUCCESS)
 			throw Exception(string_format("Unable to open registry key %1", subkey));
 		return RegistryKey::create(new_key);
@@ -258,7 +258,7 @@ namespace uicore
 	{
 		DWORD disposition = 0;
 		HKEY new_key = 0;
-		LONG result = RegCreateKeyEx(key, StringHelp::utf8_to_ucs2(subkey).c_str(), 0, 0, (create_flags & create_volatile) ? REG_OPTION_VOLATILE : REG_OPTION_NON_VOLATILE, access_rights, 0, &new_key, &disposition);
+		LONG result = RegCreateKeyEx(key, Text::to_utf16(subkey).c_str(), 0, 0, (create_flags & create_volatile) ? REG_OPTION_VOLATILE : REG_OPTION_NON_VOLATILE, access_rights, 0, &new_key, &disposition);
 		if (result != ERROR_SUCCESS)
 			throw Exception(string_format("Unable to create registry key %1", subkey));
 
@@ -275,13 +275,13 @@ namespace uicore
 	{
 		if (recursive)
 		{
-			DWORD result = SHDeleteKey(key, StringHelp::utf8_to_ucs2(subkey).c_str());
+			DWORD result = SHDeleteKey(key, Text::to_utf16(subkey).c_str());
 			if (result != ERROR_SUCCESS)
 				throw Exception(string_format("Unable to delete registry key %1", subkey));
 		}
 		else
 		{
-			LONG result = RegDeleteKey(key, StringHelp::utf8_to_ucs2(subkey).c_str());
+			LONG result = RegDeleteKey(key, Text::to_utf16(subkey).c_str());
 			if (result != ERROR_SUCCESS)
 				throw Exception(string_format("Unable to delete registry key %1", subkey));
 		}
@@ -290,29 +290,29 @@ namespace uicore
 	void RegistryKey_Impl::set_value_int(const std::string &name, int value)
 	{
 		DWORD v = value;
-		LONG result = RegSetValueEx(key, name.empty() ? 0 : StringHelp::utf8_to_ucs2(name).c_str(), 0, REG_DWORD, (const BYTE *)&v, sizeof(DWORD));
+		LONG result = RegSetValueEx(key, name.empty() ? 0 : Text::to_utf16(name).c_str(), 0, REG_DWORD, (const BYTE *)&v, sizeof(DWORD));
 		if (result != ERROR_SUCCESS)
 			throw Exception(string_format("Unable to set registry key value %1", name));
 	}
 
 	void RegistryKey_Impl::set_value_binary(const std::string &name, const DataBufferPtr &value)
 	{
-		LONG result = RegSetValueEx(key, name.empty() ? 0 : StringHelp::utf8_to_ucs2(name).c_str(), 0, REG_BINARY, (const BYTE *)value->data(), value->size());
+		LONG result = RegSetValueEx(key, name.empty() ? 0 : Text::to_utf16(name).c_str(), 0, REG_BINARY, (const BYTE *)value->data(), value->size());
 		if (result != ERROR_SUCCESS)
 			throw Exception(string_format("Unable to set registry key value %1", name));
 	}
 
 	void RegistryKey_Impl::set_value_string(const std::string &name, const std::string &value)
 	{
-		std::wstring value_str = StringHelp::utf8_to_ucs2(value);
-		LONG result = RegSetValueEx(key, name.empty() ? 0 : StringHelp::utf8_to_ucs2(name).c_str(), 0, REG_SZ, (const BYTE *)value_str.c_str(), (value_str.length() + 1) * sizeof(WCHAR));
+		std::wstring value_str = Text::to_utf16(value);
+		LONG result = RegSetValueEx(key, name.empty() ? 0 : Text::to_utf16(name).c_str(), 0, REG_SZ, (const BYTE *)value_str.c_str(), (value_str.length() + 1) * sizeof(WCHAR));
 		if (result != ERROR_SUCCESS)
 			throw Exception(string_format("Unable to set registry key value %1", name));
 	}
 
 	void RegistryKey_Impl::delete_value(const std::string &name)
 	{
-		RegDeleteValue(key, StringHelp::utf8_to_ucs2(name).c_str());
+		RegDeleteValue(key, Text::to_utf16(name).c_str());
 	}
 }
 

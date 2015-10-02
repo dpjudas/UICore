@@ -147,7 +147,7 @@ namespace uicore
 
 		if (token.type == StyleTokenType::number)
 		{
-			grow = StyleSetValue::from_number(StringHelp::text_to_float(token.value));
+			grow = StyleSetValue::from_number(Text::parse_float(token.value));
 		}
 		else
 		{
@@ -162,7 +162,7 @@ namespace uicore
 
 			if (token.type == StyleTokenType::number)
 			{
-				shrink = StyleSetValue::from_number(StringHelp::text_to_float(token.value));
+				shrink = StyleSetValue::from_number(Text::parse_float(token.value));
 
 				parse_pos = pos;
 			}
@@ -193,7 +193,7 @@ namespace uicore
 		}
 		else if (token.type == StyleTokenType::percentage)
 		{
-			float v = StringHelp::text_to_float(token.value);
+			float v = Text::parse_float(token.value);
 			if (v >= 0.0f)
 			{
 				basis = StyleSetValue::from_percentage(v);
@@ -239,7 +239,7 @@ namespace uicore
 		}
 		else if (token.type == StyleTokenType::percentage && pos == tokens.size())
 		{
-			float v = StringHelp::text_to_float(token.value);
+			float v = Text::parse_float(token.value);
 			if (v >= 0.0f)
 			{
 				flex_basis = StyleSetValue::from_percentage(v);
@@ -390,7 +390,7 @@ namespace uicore
 		}
 		else if (token.type == StyleTokenType::number && pos == tokens.size())
 		{
-			flex_grow = StyleSetValue::from_number(StringHelp::text_to_float(token.value));
+			flex_grow = StyleSetValue::from_number(Text::parse_float(token.value));
 		}
 		else
 		{
@@ -417,7 +417,7 @@ namespace uicore
 		}
 		else if (token.type == StyleTokenType::number && pos == tokens.size())
 		{
-			flex_shrink = StyleSetValue::from_number(StringHelp::text_to_float(token.value));
+			flex_shrink = StyleSetValue::from_number(Text::parse_float(token.value));
 		}
 		else
 		{

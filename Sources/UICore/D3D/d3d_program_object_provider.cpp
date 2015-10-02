@@ -141,7 +141,7 @@ namespace uicore
 				number_start--;
 
 			attribute_bindings[index].semantic_name = name.substr(0, number_start);
-			attribute_bindings[index].semantic_index = StringHelp::text_to_int(name.substr(number_start));
+			attribute_bindings[index].semantic_index = Text::parse_int32(name.substr(number_start));
 		}
 		else
 		{

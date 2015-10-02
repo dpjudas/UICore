@@ -213,7 +213,7 @@ namespace uicore
 		for (size_t i = 0; i < bgimages.size(); i++)
 		{
 			auto &img = bgimages[i];
-			std::string prop_name = "background-image[" + StringHelp::int_to_text(i) + "]";
+			std::string prop_name = "background-image[" + Text::to_string(i) + "]";
 			if (!img.image.is_undefined())
 			{
 				setter->set_value(prop_name, img.image);
@@ -229,7 +229,7 @@ namespace uicore
 				setter->set_value(prop_name + ".position-y", img.gradient.radial_position_y);
 				for (size_t j = 0; j < img.gradient.stops.size(); j++)
 				{
-					std::string stop_prop_name = prop_name + ".stop[" + StringHelp::int_to_text(j) + "]";
+					std::string stop_prop_name = prop_name + ".stop[" + Text::to_string(j) + "]";
 					setter->set_value(stop_prop_name, img.gradient.stops[j].color);
 					setter->set_value(stop_prop_name + ".position", img.gradient.stops[j].position);
 				}
@@ -453,7 +453,7 @@ namespace uicore
 		}
 		else if (token.type == StyleTokenType::percentage)
 		{
-			size_x = StyleSetValue::from_percentage(StringHelp::text_to_float(token.value));
+			size_x = StyleSetValue::from_percentage(Text::parse_float(token.value));
 		}
 		else
 		{
@@ -485,7 +485,7 @@ namespace uicore
 		}
 		else if (token.type == StyleTokenType::percentage)
 		{
-			size_y = StyleSetValue::from_percentage(StringHelp::text_to_float(token.value));
+			size_y = StyleSetValue::from_percentage(Text::parse_float(token.value));
 			parse_pos = pos;
 		}
 
@@ -729,7 +729,7 @@ namespace uicore
 		for (size_t i = 0; i < background_images.size(); i++)
 		{
 			auto &img = background_images[i];
-			std::string prop_name = "background-image[" + StringHelp::int_to_text(i) + "]";
+			std::string prop_name = "background-image[" + Text::to_string(i) + "]";
 			if (!img.image.is_undefined())
 			{
 				setter->set_value(prop_name, img.image);
@@ -745,7 +745,7 @@ namespace uicore
 				setter->set_value(prop_name + ".position-y", img.gradient.radial_position_y);
 				for (size_t j = 0; j < img.gradient.stops.size(); j++)
 				{
-					std::string stop_prop_name = prop_name + ".stop[" + StringHelp::int_to_text(j) + "]";
+					std::string stop_prop_name = prop_name + ".stop[" + Text::to_string(j) + "]";
 					setter->set_value(stop_prop_name, img.gradient.stops[j].color);
 					setter->set_value(stop_prop_name + ".position", img.gradient.stops[j].position);
 				}
@@ -971,12 +971,12 @@ namespace uicore
 
 					if (!x_specified && !y_specified)
 					{
-						bg_pos_x = StyleSetValue::from_percentage(StringHelp::text_to_float(token.value));
+						bg_pos_x = StyleSetValue::from_percentage(Text::parse_float(token.value));
 						x_specified = true;
 					}
 					else if (x_specified && !y_specified)
 					{
-						bg_pos_y = StyleSetValue::from_percentage(StringHelp::text_to_float(token.value));
+						bg_pos_y = StyleSetValue::from_percentage(Text::parse_float(token.value));
 						y_specified = true;
 					}
 					else
@@ -1034,12 +1034,12 @@ namespace uicore
 
 						if (!x_specified && !y_specified)
 						{
-							bg_pos_x = StyleSetValue::from_percentage(-StringHelp::text_to_float(token.value));
+							bg_pos_x = StyleSetValue::from_percentage(-Text::parse_float(token.value));
 							x_specified = true;
 						}
 						else if (x_specified && !y_specified)
 						{
-							bg_pos_y = StyleSetValue::from_percentage(-StringHelp::text_to_float(token.value));
+							bg_pos_y = StyleSetValue::from_percentage(-Text::parse_float(token.value));
 							y_specified = true;
 						}
 						else
@@ -1277,7 +1277,7 @@ namespace uicore
 				}
 				else if (token.type == StyleTokenType::percentage)
 				{
-					size_x = StyleSetValue::from_percentage(StringHelp::text_to_float(token.value));
+					size_x = StyleSetValue::from_percentage(Text::parse_float(token.value));
 				}
 				else
 				{
@@ -1316,7 +1316,7 @@ namespace uicore
 					}
 					else if (token.type == StyleTokenType::percentage)
 					{
-						size_y = StyleSetValue::from_percentage(StringHelp::text_to_float(token.value));
+						size_y = StyleSetValue::from_percentage(Text::parse_float(token.value));
 					}
 					else
 					{

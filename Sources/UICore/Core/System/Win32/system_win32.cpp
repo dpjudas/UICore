@@ -97,6 +97,6 @@ namespace uicore
 		_wsplitpath(exe_filename, drive, dir, NULL, NULL);
 #endif
 
-		return StringHelp::ucs2_to_utf8(drive) + StringHelp::ucs2_to_utf8(dir);
+		return Text::from_utf16(drive) + Text::from_utf16(dir);
 	}
 }

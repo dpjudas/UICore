@@ -419,7 +419,7 @@ namespace uicore
 							throw Exception("Invalid unicode escape");
 						}
 					}
-					result += StringHelp::unicode_to_utf8(codepoint);
+					result += Text::from_utf32(codepoint);
 					pos += 4;
 					break;
 				}

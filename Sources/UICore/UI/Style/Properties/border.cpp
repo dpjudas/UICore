@@ -796,7 +796,7 @@ namespace uicore
 			}
 			else if (token.type == StyleTokenType::percentage)
 			{
-				radius_x[i] = StyleSetValue::from_percentage(StringHelp::text_to_float(token.value));
+				radius_x[i] = StyleSetValue::from_percentage(Text::parse_float(token.value));
 				radius_y[i] = radius_x[i];
 			}
 			else
@@ -824,7 +824,7 @@ namespace uicore
 				}
 				else if (token.type == StyleTokenType::percentage)
 				{
-					radius_y[i] = StyleSetValue::from_percentage(StringHelp::text_to_float(token.value));
+					radius_y[i] = StyleSetValue::from_percentage(Text::parse_float(token.value));
 				}
 				else
 				{
@@ -909,7 +909,7 @@ namespace uicore
 		}
 		else if (token.type == StyleTokenType::percentage)
 		{
-			radius_x = StyleSetValue::from_percentage(StringHelp::text_to_float(token.value));
+			radius_x = StyleSetValue::from_percentage(Text::parse_float(token.value));
 			radius_y = radius_x;
 		}
 		else
@@ -928,7 +928,7 @@ namespace uicore
 			}
 			else if (token.type == StyleTokenType::percentage)
 			{
-				radius_y = StyleSetValue::from_percentage(StringHelp::text_to_float(token.value));
+				radius_y = StyleSetValue::from_percentage(Text::parse_float(token.value));
 
 				setter->set_value(name + "-x", radius_x);
 				setter->set_value(name + "-y", radius_y);

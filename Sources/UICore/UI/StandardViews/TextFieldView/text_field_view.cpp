@@ -101,9 +101,9 @@ namespace uicore
 	void TextFieldView::set_text(const std::string &text)
 	{
 		if (impl->lowercase)
-			impl->text = StringHelp::text_to_lower(text);
+			impl->text = Text::to_lower(text);
 		else if (impl->uppercase)
-			impl->text = StringHelp::text_to_upper(text);
+			impl->text = Text::to_upper(text);
 		else
 			impl->text = text;
 
@@ -278,22 +278,22 @@ namespace uicore
 
 	int TextFieldView::text_int() const
 	{
-		return StringHelp::text_to_int(impl->text);
+		return Text::parse_int32(impl->text);
 	}
 
 	void TextFieldView::set_text(int number)
 	{
-		set_text(StringHelp::int_to_text(number));
+		set_text(Text::to_string(number));
 	}
 
 	float TextFieldView::text_float() const
 	{
-		return StringHelp::text_to_float(impl->text);
+		return Text::parse_float(impl->text);
 	}
 
 	void TextFieldView::set_text(float number, int num_decimal_places)
 	{
-		set_text(StringHelp::float_to_text(number, num_decimal_places));
+		set_text(Text::to_string(number, num_decimal_places));
 	}
 
 	void TextFieldView::set_numeric_mode(bool enable, bool decimals)
@@ -340,9 +340,9 @@ namespace uicore
 
 		if (impl->password_mode)
 		{
-			txt_before = impl->create_password(StringHelp::utf8_length(txt_before));
-			txt_selected = impl->create_password(StringHelp::utf8_length(txt_selected));
-			txt_after = impl->create_password(StringHelp::utf8_length(txt_after));
+			txt_before = impl->create_password(Text::char_length(txt_before));
+			txt_selected = impl->create_password(Text::char_length(txt_selected));
+			txt_after = impl->create_password(Text::char_length(txt_after));
 		}
 
 		Font font = impl->get_font();
@@ -931,15 +931,15 @@ namespace uicore
 		if (!accepts_input)
 			return;
 
-		if (max_length >= 0 && StringHelp::utf8_length(text) + StringHelp::utf8_length(new_text) > (size_t)max_length) // To do: clip rather than fully reject
+		if (max_length >= 0 && Text::char_length(text) + Text::char_length(new_text) > (size_t)max_length) // To do: clip rather than fully reject
 			return;
 
 		save_undo();
 
 		if (lowercase)
-			new_text = StringHelp::text_to_lower(new_text);
+			new_text = Text::to_lower(new_text);
 		else if (uppercase)
-			new_text = StringHelp::text_to_upper(new_text);
+			new_text = Text::to_upper(new_text);
 
 		text = text.substr(0, cursor_pos) + new_text + text.substr(cursor_pos);
 		cursor_pos += new_text.size();
@@ -1021,7 +1021,7 @@ namespace uicore
 		Font font = get_font();
 
 		return password_mode ? 
-			Size(font.measure_text(canvas, create_password(StringHelp::utf8_length(text.substr(pos, npos)))).bbox_size) :
+			Size(font.measure_text(canvas, create_password(Text::char_length(text.substr(pos, npos)))).bbox_size) :
 			Size(font.measure_text(canvas, text.substr(pos, npos)).bbox_size);
 	}
 	const std::string TextFieldViewImpl::numeric_mode_characters = "0123456789";

@@ -161,7 +161,7 @@ namespace uicore
 	{
 		WCHAR str[1024];
 		int len = GetWindowText(hwnd, str, 1024);
-		return StringHelp::ucs2_to_utf8(std::wstring(str, len));
+		return Text::from_utf16(std::wstring(str, len));
 	}
 
 	void Win32Window::create(DisplayWindowSite *new_site, const DisplayWindowDescription &description)
@@ -238,7 +238,7 @@ namespace uicore
 
 	void Win32Window::set_title(const std::string &new_title)
 	{
-		SetWindowText(hwnd, StringHelp::utf8_to_ucs2(new_title).c_str());
+		SetWindowText(hwnd, Text::to_utf16(new_title).c_str());
 	}
 
 	void Win32Window::set_position(const Rect &pos, bool client_area)
@@ -677,7 +677,7 @@ namespace uicore
 			hwnd = CreateWindowEx(
 				ex_style,
 				window_desc.has_drop_shadow() ? TEXT("ClanApplicationDS") : TEXT("ClanApplication"),
-				StringHelp::utf8_to_ucs2(window_desc.get_title()).c_str(),
+				Text::to_utf16(window_desc.get_title()).c_str(),
 				style,
 				window_rect.left,
 				window_rect.top,
@@ -821,7 +821,7 @@ namespace uicore
 				16,
 				0);
 			if (result > 0)
-				key.str = StringHelp::ucs2_to_text(std::wstring(buf, result));
+				key.str = Text::from_utf16(std::wstring(buf, result));
 		}
 
 		set_modifier_keys(key);
@@ -968,7 +968,7 @@ namespace uicore
 
 	void Win32Window::set_clipboard_text(const std::string &text)
 	{
-		std::wstring text16 = StringHelp::utf8_to_ucs2(text);
+		std::wstring text16 = Text::to_utf16(text);
 
 		BOOL result = OpenClipboard(hwnd);
 		if (result == FALSE)
@@ -1030,7 +1030,7 @@ namespace uicore
 			CloseClipboard();
 			return std::string();
 		}
-		std::string str = StringHelp::ucs2_to_utf8(data);
+		std::string str = Text::from_utf16(data);
 		GlobalUnlock(handle);
 
 		CloseClipboard();

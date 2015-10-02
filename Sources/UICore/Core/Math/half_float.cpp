@@ -3341,7 +3341,7 @@ namespace uicore
 		file.write_string_text("{");
 		for (int i = 0; i < 2048; i++)
 		{
-			file.write_string_text("\t" + StringHelp::uint_to_text(mantissa_table[i]) + ",");
+			file.write_string_text("\t" + Text::to_string(mantissa_table[i]) + ",");
 		}
 		file.write_string_text("};");
 		file.write_string_text("");
@@ -3350,7 +3350,7 @@ namespace uicore
 		file.write_string_text("{");
 		for (int i = 0; i < 64; i++)
 		{
-			file.write_string_text("\t" + StringHelp::uint_to_text(exponent_table[i]) + ",");
+			file.write_string_text("\t" + Text::to_string(exponent_table[i]) + ",");
 		}
 		file.write_string_text("};");
 		file.write_string_text("");
@@ -3359,7 +3359,7 @@ namespace uicore
 		file.write_string_text("{");
 		for (int i = 0; i < 64; i++)
 		{
-			file.write_string_text("\t" + StringHelp::uint_to_text(offset_table[i]) + ",");
+			file.write_string_text("\t" + Text::to_string(offset_table[i]) + ",");
 		}
 		file.write_string_text("};");
 		file.write_string_text("");
@@ -3368,7 +3368,7 @@ namespace uicore
 		file.write_string_text("{");
 		for (int i = 0; i < 512; i++)
 		{
-			file.write_string_text("\t" + StringHelp::uint_to_text(base_table[i]) + ",");
+			file.write_string_text("\t" + Text::to_string(base_table[i]) + ",");
 		}
 		file.write_string_text("};");
 		file.write_string_text("");
@@ -3377,7 +3377,7 @@ namespace uicore
 		file.write_string_text("{");
 		for (int i = 0; i < 512; i++)
 		{
-			file.write_string_text("\t" + StringHelp::uint_to_text(shift_table[i]) + ",");
+			file.write_string_text("\t" + Text::to_string(shift_table[i]) + ",");
 		}
 		file.write_string_text("};");
 		file.write_string_text("");

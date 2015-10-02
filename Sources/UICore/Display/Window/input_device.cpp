@@ -251,7 +251,7 @@ namespace uicore
 
 			if (str.substr(0, 4) == "key_")
 			{
-				return StringHelp::text_to_int(str.substr(4));
+				return Text::parse_int32(str.substr(4));
 			}
 
 			static std::map<std::string, int> string_to_id;
@@ -379,7 +379,7 @@ namespace uicore
 				string_to_id["rmenu"] = keycode_rmenu;
 			}
 
-			return string_to_id[StringHelp::text_to_local8(str)];
+			return string_to_id[str];
 		}
 		else
 			return 0;

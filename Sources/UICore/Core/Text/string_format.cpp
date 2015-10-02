@@ -97,10 +97,6 @@ namespace uicore
 			create_arg(arg_value, arg_start, size - arg_start);
 	}
 
-	StringFormat::~StringFormat()
-	{
-	}
-
 	const std::string &StringFormat::get_result() const
 	{
 		return string;
@@ -130,7 +126,7 @@ namespace uicore
 
 	void StringFormat::set_arg(int index, int value, int min_length)
 	{
-		std::string t = StringHelp::int_to_text(value);
+		std::string t = Text::to_string(value);
 		if ((int)t.length() < min_length)
 			t = std::string(min_length - t.length(), '0') + t;
 		set_arg(index, t);
@@ -138,7 +134,7 @@ namespace uicore
 
 	void StringFormat::set_arg(int index, unsigned int value, int min_length)
 	{
-		std::string t = StringHelp::uint_to_text(value);
+		std::string t = Text::to_string(value);
 		if ((int)t.length() < min_length)
 			t = std::string(min_length - t.length(), '0') + t;
 		set_arg(index, t);
@@ -146,7 +142,7 @@ namespace uicore
 
 	void StringFormat::set_arg(int index, long long value, int min_length)
 	{
-		std::string t = StringHelp::ll_to_text(value);
+		std::string t = Text::to_string(value);
 		if ((int)t.length() < min_length)
 			t = std::string(min_length - t.length(), '0') + t;
 		set_arg(index, t);
@@ -154,15 +150,7 @@ namespace uicore
 
 	void StringFormat::set_arg(int index, unsigned long long value, int min_length)
 	{
-		std::string t = StringHelp::ull_to_text(value);
-		if ((int)t.length() < min_length)
-			t = std::string(min_length - t.length(), '0') + t;
-		set_arg(index, t);
-	}
-
-	void StringFormat::set_arg(int index, long unsigned int value, int min_length)
-	{
-		std::string t = StringHelp::ull_to_text(value);
+		std::string t = Text::to_string(value);
 		if ((int)t.length() < min_length)
 			t = std::string(min_length - t.length(), '0') + t;
 		set_arg(index, t);
@@ -170,12 +158,12 @@ namespace uicore
 
 	void StringFormat::set_arg(int index, float value)
 	{
-		set_arg(index, StringHelp::float_to_text(value));
+		set_arg(index, Text::to_string(value));
 	}
 
 	void StringFormat::set_arg(int index, double value)
 	{
-		set_arg(index, StringHelp::double_to_text(value));
+		set_arg(index, Text::to_string(value));
 	}
 
 	void StringFormat::create_arg(int index, int start, int length)

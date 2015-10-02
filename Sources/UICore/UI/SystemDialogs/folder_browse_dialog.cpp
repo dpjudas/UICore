@@ -60,8 +60,8 @@ namespace uicore
 		{
 #if defined(WIN32)
 
-			std::wstring title16 = StringHelp::utf8_to_ucs2(title);
-			std::wstring initial_directory16 = StringHelp::utf8_to_ucs2(initial_directory);
+			std::wstring title16 = Text::to_utf16(title);
+			std::wstring initial_directory16 = Text::to_utf16(initial_directory);
 
 			if (is_vista_or_later())
 			{
@@ -130,7 +130,7 @@ namespace uicore
 					}
 
 					CoTaskMemFree(buffer);
-					selected_path = StringHelp::ucs2_to_utf8(output_directory16);
+					selected_path = Text::from_utf16(output_directory16);
 					return true;
 				}
 				else
@@ -165,7 +165,7 @@ namespace uicore
 				if (!SHGetPathFromIDList(pFolder, path_buffer))
 					throw Exception("Bad path for Browse Folder Dialog");
 
-				selected_path = StringHelp::ucs2_to_utf8(path_buffer);
+				selected_path = Text::from_utf16(path_buffer);
 
 				return true;
 			}

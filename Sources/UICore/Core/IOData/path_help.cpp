@@ -62,9 +62,9 @@ namespace uicore
 #ifdef WIN32
 				WCHAR absolute_base[MAX_PATH];
 				memset(absolute_base, 0, sizeof(WCHAR) * MAX_PATH);
-				if (_wfullpath(absolute_base, StringHelp::utf8_to_ucs2(base).c_str(), MAX_PATH) == 0)
+				if (_wfullpath(absolute_base, Text::to_utf16(base).c_str(), MAX_PATH) == 0)
 					throw Exception(string_format("Unable to make base path absolute: %1", base_path));
-				base = StringHelp::ucs2_to_utf8(absolute_base);
+				base = Text::from_utf16(absolute_base);
 #else
 				char working_dir[1024];
 				memset(working_dir, 0, 1024);
@@ -76,7 +76,7 @@ namespace uicore
 
 			std::string base_location = get_location(base_path, path_type_file);
 			std::string relative_location = get_location(relative_path, path_type_file);
-			if (relative_location.empty() || StringHelp::compare(relative_location, base_location, true) == 0)
+			if (relative_location.empty() || Text::equal_caseless(relative_location, base_location))
 			{
 				if (is_absolute(relative, path_type))
 				{
@@ -108,7 +108,7 @@ namespace uicore
 					if (_wgetdcwd(drive, working_dir, MAX_PATH) == 0)
 						throw Exception(string_format("Unable to get current working directory for %1!", relative_location));
 
-					return add_trailing_slash(StringHelp::ucs2_to_utf8(working_dir), path_type) + relative.substr(relative_location.length());
+					return add_trailing_slash(Text::from_utf16(working_dir), path_type) + relative.substr(relative_location.length());
 				}
 				else
 				{
@@ -158,7 +158,7 @@ namespace uicore
 					if (_wgetdcwd(drive, working_dir, MAX_PATH) == 0)
 						throw Exception(string_format("Unable to get current working directory for %1!", base_location));
 
-					base = add_trailing_slash(StringHelp::ucs2_to_utf8(working_dir), path_type) + base;
+					base = add_trailing_slash(Text::from_utf16(working_dir), path_type) + base;
 				}
 				else if (base_location.empty())
 				{
@@ -167,7 +167,7 @@ namespace uicore
 					if (GetCurrentDirectory(MAX_PATH, working_dir) == FALSE)
 						throw Exception(string_format("Unable to get current working directory for %1!", base_location));
 
-					base = add_trailing_slash(StringHelp::ucs2_to_utf8(working_dir), path_type) + base;
+					base = add_trailing_slash(Text::from_utf16(working_dir), path_type) + base;
 				}
 				else
 				{
@@ -198,7 +198,7 @@ namespace uicore
 					if (_wgetdcwd(drive, working_dir, MAX_PATH) == 0)
 						throw Exception(string_format("Unable to get current working directory for %1!", absolute_location));
 
-					absolute = add_trailing_slash(StringHelp::ucs2_to_utf8(working_dir), path_type) + absolute;
+					absolute = add_trailing_slash(Text::from_utf16(working_dir), path_type) + absolute;
 				}
 				else if (absolute_location.empty())
 				{
@@ -207,7 +207,7 @@ namespace uicore
 					if (GetCurrentDirectory(MAX_PATH, working_dir) == FALSE)
 						throw Exception(string_format("Unable to get current working directory for %1!", absolute_location));
 
-					absolute = add_trailing_slash(StringHelp::ucs2_to_utf8(working_dir), path_type) + absolute;
+					absolute = add_trailing_slash(Text::from_utf16(working_dir), path_type) + absolute;
 				}
 				else
 				{
@@ -224,7 +224,7 @@ namespace uicore
 
 			base_location = get_location(base, path_type_file);
 			absolute_location = get_location(absolute, path_type_file);
-			if (StringHelp::compare(absolute_location, base_location, true) != 0)
+			if (Text::equal_caseless(absolute_location, base_location) != 0)
 				return absolute_path;
 		}
 
@@ -260,7 +260,7 @@ namespace uicore
 				if (path_type == path_type_file)
 				{
 #ifdef WIN32
-					same_element = (StringHelp::compare(base_element, absolute_element, true) == 0);
+					same_element = Text::equal_caseless(base_element, absolute_element);
 #else
 					same_element = (base_element == absolute_element);
 #endif

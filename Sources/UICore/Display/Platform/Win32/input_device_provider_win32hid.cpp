@@ -128,7 +128,7 @@ namespace uicore
 		if (result == (UINT)-1)
 			throw Exception("GetRawInputDeviceInfo failed");
 
-		return StringHelp::ucs2_to_utf8(name_buffer.get());
+		return Text::from_utf16(name_buffer.get());
 	}
 
 	InputDevice::Type InputDeviceProvider_Win32Hid::get_type() const
@@ -227,13 +227,13 @@ namespace uicore
 		WCHAR name[max_name_length];
 
 		if (hid.GetProductString(device, name, max_name_length * sizeof(WCHAR)))
-			product_name = StringHelp::ucs2_to_utf8(name);
+			product_name = Text::from_utf16(name);
 
 		if (hid.GetManufacturerString(device, name, max_name_length * sizeof(WCHAR)))
-			manufacturer_name = StringHelp::ucs2_to_utf8(name);
+			manufacturer_name = Text::from_utf16(name);
 
 		if (hid.GetSerialNumberString(device, name, max_name_length * sizeof(WCHAR)))
-			serial_number = StringHelp::ucs2_to_utf8(name);
+			serial_number = Text::from_utf16(name);
 	}
 
 	void InputDeviceProvider_Win32Hid::find_button_names(HANDLE device, void *preparse_data)
@@ -260,7 +260,7 @@ namespace uicore
 						int offset = usage - button_caps[collection].Range.UsageMin;
 						int string_index = button_caps[collection].Range.StringMin + offset;
 						if (hid.GetIndexedString(device, string_index, buffer, max_name_length * sizeof(WCHAR)))
-							name = StringHelp::ucs2_to_utf8(buffer);
+							name = Text::from_utf16(buffer);
 					}
 
 					if (name.empty())

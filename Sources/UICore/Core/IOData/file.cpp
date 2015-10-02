@@ -84,7 +84,7 @@ namespace uicore
 		}
 
 		auto file = std::make_shared<FileImpl>();
-		file->handle = CreateFile(StringHelp::utf8_to_ucs2(filename).c_str(), access_flags, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+		file->handle = CreateFile(Text::to_utf16(filename).c_str(), access_flags, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 		if (file->handle == INVALID_HANDLE_VALUE)
 			throw Exception("CreateFile failed");
 		return file;
@@ -101,7 +101,7 @@ namespace uicore
 		}
 
 		auto file = std::make_shared<FileImpl>();
-		file->handle = CreateFile(StringHelp::utf8_to_ucs2(filename).c_str(), access_flags, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, 0, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
+		file->handle = CreateFile(Text::to_utf16(filename).c_str(), access_flags, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, 0, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
 		if (file->handle == INVALID_HANDLE_VALUE)
 			throw Exception("CreateFile failed");
 		return file;
@@ -118,7 +118,7 @@ namespace uicore
 		}
 
 		auto file = std::make_shared<FileImpl>();
-		file->handle = CreateFile(StringHelp::utf8_to_ucs2(filename).c_str(), access_flags, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
+		file->handle = CreateFile(Text::to_utf16(filename).c_str(), access_flags, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
 		if (file->handle == INVALID_HANDLE_VALUE)
 			throw Exception("CreateFile failed");
 		return file;
@@ -135,7 +135,7 @@ namespace uicore
 		}
 
 		auto file = std::make_shared<FileImpl>();
-		file->handle = CreateFile(StringHelp::utf8_to_ucs2(filename).c_str(), access_flags, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, 0, CREATE_NEW, FILE_ATTRIBUTE_NORMAL, 0);
+		file->handle = CreateFile(Text::to_utf16(filename).c_str(), access_flags, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, 0, CREATE_NEW, FILE_ATTRIBUTE_NORMAL, 0);
 		if (file->handle == INVALID_HANDLE_VALUE)
 			throw Exception("CreateFile failed");
 		return file;
@@ -407,7 +407,7 @@ namespace uicore
 	void File::copy(const std::string &from, const std::string &to, bool copy_always)
 	{
 #ifdef WIN32
-		BOOL result = CopyFile(StringHelp::utf8_to_ucs2(from).c_str(), StringHelp::utf8_to_ucs2(to).c_str(), copy_always ? FALSE : TRUE);
+		BOOL result = CopyFile(Text::to_utf16(from).c_str(), Text::to_utf16(to).c_str(), copy_always ? FALSE : TRUE);
 		if (result == FALSE)
 			throw Exception("Unable to copy file");
 #else
@@ -429,12 +429,11 @@ namespace uicore
 	void File::remove(const std::string &filename)
 	{
 #ifdef WIN32
-		BOOL result = DeleteFile(StringHelp::utf8_to_ucs2(filename).c_str());
+		BOOL result = DeleteFile(Text::to_utf16(filename).c_str());
 		if (result == FALSE)
 			throw Exception("Unable to delete file");
 #else
-		std::string filename_local8 = StringHelp::text_to_local8(filename);
-		int result = unlink(filename_local8.c_str());
+		int result = unlink(filename.c_str());
 		if (result == -1)
 			throw Exception("Unable to delete file");
 #endif
@@ -443,7 +442,7 @@ namespace uicore
 	bool File::exists(const std::string &filename)
 	{
 #ifdef WIN32
-		HANDLE file = CreateFile(StringHelp::utf8_to_ucs2(filename).c_str(), 0, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, 0, OPEN_EXISTING, 0, 0);
+		HANDLE file = CreateFile(Text::to_utf16(filename).c_str(), 0, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, 0, OPEN_EXISTING, 0, 0);
 		if (file != INVALID_HANDLE_VALUE)
 			CloseHandle(file);
 		return file != INVALID_HANDLE_VALUE;

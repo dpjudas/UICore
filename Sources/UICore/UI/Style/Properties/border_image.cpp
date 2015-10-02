@@ -206,11 +206,11 @@ namespace uicore
 		{
 			if (token.type == StyleTokenType::percentage)
 			{
-				values[num_lengths] = StyleSetValue::from_percentage(StringHelp::text_to_float(token.value));
+				values[num_lengths] = StyleSetValue::from_percentage(Text::parse_float(token.value));
 			}
 			else if (token.type == StyleTokenType::number)
 			{
-				values[num_lengths] = StyleSetValue::from_number(StringHelp::text_to_float(token.value));
+				values[num_lengths] = StyleSetValue::from_number(Text::parse_float(token.value));
 			}
 			else
 			{
@@ -276,11 +276,11 @@ namespace uicore
 			}
 			else if (token.type == StyleTokenType::number)
 			{
-				values[num_lengths] = StyleSetValue::from_number(StringHelp::text_to_float(token.value));
+				values[num_lengths] = StyleSetValue::from_number(Text::parse_float(token.value));
 			}
 			else if (token.type == StyleTokenType::percentage)
 			{
-				values[num_lengths] = StyleSetValue::from_percentage(StringHelp::text_to_float(token.value));
+				values[num_lengths] = StyleSetValue::from_percentage(Text::parse_float(token.value));
 			}
 			else if (token.type == StyleTokenType::ident && equals(token.value, "auto"))
 			{
@@ -340,7 +340,7 @@ namespace uicore
 			}
 			else if (token.type == StyleTokenType::number)
 			{
-				values[num_lengths] = StyleSetValue::from_number(StringHelp::text_to_float(token.value));
+				values[num_lengths] = StyleSetValue::from_number(Text::parse_float(token.value));
 			}
 			else
 			{
@@ -458,7 +458,7 @@ namespace uicore
 				}
 				else if (token.type == StyleTokenType::number)
 				{
-					values[num_lengths] = StyleSetValue::from_number(StringHelp::text_to_float(token.value));
+					values[num_lengths] = StyleSetValue::from_number(Text::parse_float(token.value));
 				}
 				else
 				{
@@ -597,11 +597,11 @@ namespace uicore
 			{
 				if (token.type == StyleTokenType::percentage)
 				{
-					values[num_lengths] = StyleSetValue::from_percentage(StringHelp::text_to_float(token.value));
+					values[num_lengths] = StyleSetValue::from_percentage(Text::parse_float(token.value));
 				}
 				else if (token.type == StyleTokenType::number)
 				{
-					values[num_lengths] = StyleSetValue::from_number(StringHelp::text_to_float(token.value));
+					values[num_lengths] = StyleSetValue::from_number(Text::parse_float(token.value));
 				}
 				else
 				{
@@ -716,11 +716,11 @@ namespace uicore
 				}
 				else if (token.type == StyleTokenType::number)
 				{
-					values[num_lengths] = StyleSetValue::from_number(StringHelp::text_to_float(token.value));
+					values[num_lengths] = StyleSetValue::from_number(Text::parse_float(token.value));
 				}
 				else if (token.type == StyleTokenType::percentage)
 				{
-					values[num_lengths] = StyleSetValue::from_percentage(StringHelp::text_to_float(token.value));
+					values[num_lengths] = StyleSetValue::from_percentage(Text::parse_float(token.value));
 				}
 				else if (token.type == StyleTokenType::ident && equals(token.value, "auto"))
 				{

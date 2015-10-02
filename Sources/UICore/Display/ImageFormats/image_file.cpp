@@ -75,7 +75,7 @@ namespace uicore
 
 		// Determine file extension and use it to lookup type.
 		std::string ext = PathHelp::get_extension(filename, PathHelp::path_type_virtual);
-		ext = StringHelp::text_to_lower(ext);
+		ext = Text::to_lower(ext);
 		if (types.find(ext) == types.end()) throw Exception(std::string("Unknown image provider type ") + ext);
 
 		ImageFileType *factory = types[ext];
