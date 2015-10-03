@@ -31,7 +31,6 @@
 
 #include "UICore/Display/Render/texture.h"
 #include "UICore/Display/Render/graphic_context.h"
-#include "UICore/Display/Render/blend_state.h"
 #include "UICore/Display/Render/render_batcher.h"
 #include "UICore/Display/Render/texture_2d.h"
 #include "render_batch_buffer.h"
@@ -93,6 +92,6 @@ namespace uicore
 		Sizef tex_sizes[max_number_of_texture_coords];
 		bool use_glyph_program = false;
 		Colorf constant_color;
-		BlendState glyph_blend;
+		BlendStatePtr glyph_blend;
 	};
 }

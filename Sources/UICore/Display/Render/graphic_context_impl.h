@@ -29,9 +29,6 @@
 #pragma once
 
 #include "UICore/Display/TargetProviders/graphic_context_provider.h"
-#include "UICore/Display/Render/rasterizer_state.h"
-#include "UICore/Display/Render/blend_state.h"
-#include "UICore/Display/Render/depth_stencil_state.h"
 #include "UICore/Display/Render/program_object.h"
 #include "UICore/Display/Render/storage_buffer.h"
 #include "UICore/Display/Font/font.h"
@@ -69,9 +66,9 @@ namespace uicore
 
 		ProgramObject get_program_object() const;
 
-		void set_rasterizer_state(const RasterizerState &state);
-		void set_blend_state(const BlendState &state, const Colorf &blend_color, unsigned int sample_mask);
-		void set_depth_stencil_state(const DepthStencilState &state, int stencil_ref);
+		void set_rasterizer_state(const RasterizerStatePtr &state);
+		void set_blend_state(const BlendStatePtr &state, const Colorf &blend_color, unsigned int sample_mask);
+		void set_depth_stencil_state(const DepthStencilStatePtr &state, int stencil_ref);
 
 		void set_draw_buffer(DrawBuffer buffer);
 
@@ -85,9 +82,9 @@ namespace uicore
 		Size display_window_size;
 		Slot resize_slot;
 
-		RasterizerState default_rasterizer_state;
-		BlendState default_blend_state;
-		DepthStencilState default_depth_stencil_state;
+		RasterizerStatePtr default_rasterizer_state;
+		BlendStatePtr default_blend_state;
+		DepthStencilStatePtr default_depth_stencil_state;
 
 		FrameBuffer read_frame_buffer;
 		FrameBuffer write_frame_buffer;
@@ -107,11 +104,8 @@ namespace uicore
 		bool program_standard_set = false;
 		ProgramObject program;	//<-- Note this is valid when program_standard_set is true
 
-		RasterizerState rasterizer_state;
-		BlendState blend_state;
-		Colorf blend_color = Colorf::white;
-		unsigned int sample_mask = 0xffffffff;
-		DepthStencilState depth_stencil_state;
+		RasterizerStatePtr rasterizer_state;
+		DepthStencilStatePtr depth_stencil_state;
 		int stencil_ref = 0;
 		DrawBuffer draw_buffer = buffer_back;
 

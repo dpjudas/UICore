@@ -57,9 +57,9 @@ namespace uicore
 	class FontProvider_Freetype;
 	class UniformBuffer;
 	class StorageBuffer;
-	class RasterizerState;
-	class BlendState;
-	class DepthStencilState;
+	class RasterizerStateDescription;
+	class BlendStateDescription;
+	class DepthStencilStateDescription;
 
 	/// Polygon culling modes.
 	enum CullMode
@@ -249,6 +249,15 @@ namespace uicore
 		num_shader_languages
 	};
 
+	class RasterizerState { };
+	typedef std::shared_ptr<RasterizerState> RasterizerStatePtr;
+
+	class BlendState { };
+	typedef std::shared_ptr<BlendState> BlendStatePtr;
+
+	class DepthStencilState { };
+	typedef std::shared_ptr<DepthStencilState> DepthStencilStatePtr;
+
 	/// Interface to drawing graphics.
 	class GraphicContext
 	{
@@ -374,6 +383,15 @@ namespace uicore
 		 */
 		bool is_frame_buffer_owner(const FrameBuffer &fb);
 
+		/// \brief Create rasterizer state object.
+		std::shared_ptr<RasterizerState> create_rasterizer_state(const RasterizerStateDescription &desc);
+
+		/// \brief Create blend state object.
+		std::shared_ptr<BlendState> create_blend_state(const BlendStateDescription &desc);
+
+		/// \brief Create depth-stencil state object.
+		std::shared_ptr<DepthStencilState> create_depth_stencil_state(const DepthStencilStateDescription &desc);
+
 		/// Sets the current frame buffer.
 		void set_frame_buffer(const FrameBuffer &write_buffer);
 		void set_frame_buffer(const FrameBuffer &write_buffer, const FrameBuffer &read_buffer);
@@ -436,13 +454,13 @@ namespace uicore
 		void reset_image_textures();
 
 		/// Set active rasterizer state
-		void set_rasterizer_state(const RasterizerState &state);
+		void set_rasterizer_state(const RasterizerStatePtr &state);
 
 		/// Set active blend state
-		void set_blend_state(const BlendState &state, const Colorf &blend_color = Colorf::white, unsigned int sample_mask = 0xffffffff);
+		void set_blend_state(const BlendStatePtr &state, const Colorf &blend_color = Colorf::white, unsigned int sample_mask = 0xffffffff);
 
 		/// Set active depth stencil state
-		void set_depth_stencil_state(const DepthStencilState &state, int stencil_ref = 0);
+		void set_depth_stencil_state(const DepthStencilStatePtr &state, int stencil_ref = 0);
 
 		/// Set active rasterizer state
 		void reset_rasterizer_state();

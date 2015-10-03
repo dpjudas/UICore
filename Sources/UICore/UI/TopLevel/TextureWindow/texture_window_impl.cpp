@@ -45,7 +45,7 @@ namespace uicore
 		canvas_rect = canvas.get_size();
 		BlendStateDescription blend_desc;
 		blend_desc.enable_blending(false);
-		opaque_blend = BlendState(canvas, blend_desc);
+		opaque_blend = canvas.get_gc().create_blend_state(blend_desc);
 	}
 
 	void TextureWindow_Impl::set_window(const DisplayWindow &window, bool enable_automatic_events, const Mat4f &new_transform_mouse_matrix)

@@ -120,19 +120,19 @@ namespace uicore
 		return get_gc().get_pixeldata(texture_format, clamp);
 	}
 
-	void Canvas::set_rasterizer_state(const RasterizerState &state)
+	void Canvas::set_rasterizer_state(const RasterizerStatePtr &state)
 	{
 		flush();
 		get_gc().set_rasterizer_state(state);
 	}
 
-	void Canvas::set_blend_state(const BlendState &state, const Colorf &blend_color, unsigned int sample_mask)
+	void Canvas::set_blend_state(const BlendStatePtr &state, const Colorf &blend_color, unsigned int sample_mask)
 	{
 		flush();
 		get_gc().set_blend_state(state, blend_color, sample_mask);
 	}
 
-	void Canvas::set_depth_stencil_state(const DepthStencilState &state, int stencil_ref)
+	void Canvas::set_depth_stencil_state(const DepthStencilStatePtr &state, int stencil_ref)
 	{
 		flush();
 		get_gc().set_depth_stencil_state(state, stencil_ref);

@@ -35,7 +35,6 @@
 #include "UICore/Display/2D/path.h"
 #include "UICore/Display/2D/brush.h"
 #include "UICore/Display/Render/blend_state_description.h"
-#include "UICore/Display/Render/blend_state.h"
 #include "UICore/Display/Render/shader_object.h"
 #include "UICore/Display/Render/texture_2d.h"
 #include "UICore/Display/Render/transfer_texture.h"
@@ -258,6 +257,6 @@ namespace uicore
 		TransferTexture instance_buffer;
 		Texture2D instance_texture;
 		PrimitivesArray prim_array[RenderBatchBuffer::num_vertex_buffers];
-		BlendState blend_state;
+		BlendStatePtr blend_state;
 	};
 }

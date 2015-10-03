@@ -55,9 +55,9 @@ namespace uicore
 	GraphicContext::GraphicContext(GraphicContextProvider *provider)
 		: impl(std::make_shared<GraphicContext_Impl>(provider))
 	{
-		impl->default_rasterizer_state = RasterizerState(*this, RasterizerStateDescription());
-		impl->default_blend_state = BlendState(*this, BlendStateDescription());
-		impl->default_depth_stencil_state = DepthStencilState(*this, DepthStencilStateDescription());
+		impl->default_rasterizer_state = impl->provider->create_rasterizer_state(RasterizerStateDescription());
+		impl->default_blend_state = impl->provider->create_blend_state(BlendStateDescription());
+		impl->default_depth_stencil_state = impl->provider->create_depth_stencil_state(DepthStencilStateDescription());
 
 		reset_rasterizer_state();
 		reset_blend_state();
@@ -72,6 +72,21 @@ namespace uicore
 	{
 		if (!impl)
 			throw Exception("GraphicContext is null");
+	}
+
+	std::shared_ptr<RasterizerState> GraphicContext::create_rasterizer_state(const RasterizerStateDescription &desc)
+	{
+		return impl->provider->create_rasterizer_state(desc);
+	}
+
+	std::shared_ptr<BlendState> GraphicContext::create_blend_state(const BlendStateDescription &desc)
+	{
+		return impl->provider->create_blend_state(desc);
+	}
+
+	std::shared_ptr<DepthStencilState> GraphicContext::create_depth_stencil_state(const DepthStencilStateDescription &desc)
+	{
+		return impl->provider->create_depth_stencil_state(desc);
 	}
 
 	ClipZRange GraphicContext::get_clip_z_range() const
@@ -265,17 +280,17 @@ namespace uicore
 		impl->set_image_textures(null_textures);
 	}
 
-	void GraphicContext::set_rasterizer_state(const RasterizerState &state)
+	void GraphicContext::set_rasterizer_state(const RasterizerStatePtr &state)
 	{
 		impl->set_rasterizer_state(state);
 	}
 
-	void GraphicContext::set_blend_state(const BlendState &state, const Colorf &blend_color, unsigned int sample_mask)
+	void GraphicContext::set_blend_state(const BlendStatePtr &state, const Colorf &blend_color, unsigned int sample_mask)
 	{
 		impl->set_blend_state(state, blend_color, sample_mask);
 	}
 
-	void GraphicContext::set_depth_stencil_state(const DepthStencilState &state, int stencil_ref)
+	void GraphicContext::set_depth_stencil_state(const DepthStencilStatePtr &state, int stencil_ref)
 	{
 		impl->set_depth_stencil_state(state, stencil_ref);
 	}

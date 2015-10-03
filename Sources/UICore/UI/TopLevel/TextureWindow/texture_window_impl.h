@@ -29,7 +29,6 @@
 #pragma once
 
 #include "UICore/Display/Window/display_window.h"
-#include "UICore/Display/Render/blend_state.h"
 
 namespace uicore
 {
@@ -57,7 +56,7 @@ namespace uicore
 		bool clear_background_enable = true;
 		bool always_render = false;
 
-		BlendState opaque_blend;
+		BlendStatePtr opaque_blend;
 
 		void on_window_close();
 		void on_lost_focus();

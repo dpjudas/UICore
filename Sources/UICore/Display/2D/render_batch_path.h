@@ -31,7 +31,6 @@
 
 #include "UICore/Display/Render/texture.h"
 #include "UICore/Display/Render/graphic_context.h"
-#include "UICore/Display/Render/blend_state.h"
 #include "UICore/Display/Render/render_batcher.h"
 #include "UICore/Display/Render/texture_2d.h"
 #include "render_batch_buffer.h"

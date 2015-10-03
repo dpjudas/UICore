@@ -129,13 +129,13 @@ namespace uicore
 		float get_pixel_ratio() const { return get_gc().get_pixel_ratio(); }
 
 		/// \brief Set active rasterizer state
-		void set_rasterizer_state(const RasterizerState &state);
+		void set_rasterizer_state(const RasterizerStatePtr &state);
 
 		/// \brief Set active blend state
-		void set_blend_state(const BlendState &state, const Colorf &blend_color = Colorf::white, unsigned int sample_mask = 0xffffffff);
+		void set_blend_state(const BlendStatePtr &state, const Colorf &blend_color = Colorf::white, unsigned int sample_mask = 0xffffffff);
 
 		/// \brief Set active depth stencil state
-		void set_depth_stencil_state(const DepthStencilState &state, int stencil_ref = 0);
+		void set_depth_stencil_state(const DepthStencilStatePtr &state, int stencil_ref = 0);
 
 		/// \brief Set active rasterizer state
 		void reset_rasterizer_state();

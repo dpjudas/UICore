@@ -46,7 +46,7 @@ namespace uicore
 	{
 		BlendStateDescription blend_desc;
 		blend_desc.set_blend_function(blend_one, blend_one_minus_src_alpha, blend_one, blend_one_minus_src_alpha);
-		blend_state = BlendState(gc, blend_desc);
+		blend_state = gc.create_blend_state(blend_desc);
 	}
 
 	void PathFillRenderer::set_size(Canvas &canvas, int new_width, int new_height)

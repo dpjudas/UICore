@@ -267,25 +267,22 @@ namespace uicore
 		provider->reset_program_object();
 	}
 
-	void GraphicContext_Impl::set_rasterizer_state(const RasterizerState &state)
+	void GraphicContext_Impl::set_rasterizer_state(const RasterizerStatePtr &state)
 	{
 		rasterizer_state = state;
-		provider->set_rasterizer_state(state.get_provider());
+		provider->set_rasterizer_state(static_cast<RasterizerStateProvider*>(state.get()));
 	}
 
-	void GraphicContext_Impl::set_blend_state(const BlendState &state, const Colorf &new_blend_color, unsigned int new_sample_mask)
+	void GraphicContext_Impl::set_blend_state(const BlendStatePtr &state, const Colorf &blend_color, unsigned int sample_mask)
 	{
-		blend_state = state;
-		blend_color = new_blend_color;
-		sample_mask = new_sample_mask;
-		provider->set_blend_state(state.get_provider(), blend_color, sample_mask);
+		provider->set_blend_state(static_cast<BlendStateProvider*>(state.get()), blend_color, sample_mask);
 	}
 
-	void GraphicContext_Impl::set_depth_stencil_state(const DepthStencilState &state, int new_stencil_ref)
+	void GraphicContext_Impl::set_depth_stencil_state(const DepthStencilStatePtr &state, int new_stencil_ref)
 	{
 		depth_stencil_state = state;
 		stencil_ref = new_stencil_ref;
-		provider->set_depth_stencil_state(state.get_provider(), stencil_ref);
+		provider->set_depth_stencil_state(static_cast<DepthStencilStateProvider*>(state.get()), stencil_ref);
 	}
 
 	void GraphicContext_Impl::set_draw_buffer(DrawBuffer buffer)

@@ -60,19 +60,19 @@ namespace uicore
 	class BlendStateDescription;
 	class DepthStencilStateDescription;
 
-	class RasterizerStateProvider
+	class RasterizerStateProvider : public RasterizerState
 	{
 	public:
 		virtual ~RasterizerStateProvider() { }
 	};
 
-	class BlendStateProvider
+	class BlendStateProvider : public BlendState
 	{
 	public:
 		virtual ~BlendStateProvider() { }
 	};
 
-	class DepthStencilStateProvider
+	class DepthStencilStateProvider : public DepthStencilState
 	{
 	public:
 		virtual ~DepthStencilStateProvider() { }
@@ -173,13 +173,13 @@ namespace uicore
 		/// \brief Allocate primitives array provider for this gc.
 		virtual PrimitivesArrayProvider *alloc_primitives_array() = 0;
 
-		/// \brief Retrieve rasterizer state object.
+		/// \brief Create rasterizer state object.
 		virtual std::shared_ptr<RasterizerStateProvider> create_rasterizer_state(const RasterizerStateDescription &desc) = 0;
 
-		/// \brief Retrieve blend state object.
+		/// \brief Create blend state object.
 		virtual std::shared_ptr<BlendStateProvider> create_blend_state(const BlendStateDescription &desc) = 0;
 
-		/// \brief Retrieve depth-stencil state object.
+		/// \brief Create depth-stencil state object.
 		virtual std::shared_ptr<DepthStencilStateProvider> create_depth_stencil_state(const DepthStencilStateDescription &desc) = 0;
 
 		/// \brief Set active rasterizer state
