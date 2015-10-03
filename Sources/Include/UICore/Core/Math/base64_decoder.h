@@ -33,42 +33,25 @@
 
 namespace uicore
 {
-	class Base64Decoder_Impl;
-
 	/// \brief Base64 decoder class.
 	class Base64Decoder
 	{
 	public:
 		/// \brief Constructs a base64 decoder.
-		Base64Decoder();
+		static std::shared_ptr<Base64Decoder> create();
 
 		/// \brief Returns the decoded data.
-		DataBufferPtr &get_result();
+		virtual const DataBufferPtr &result() const = 0;
 
 		/// \brief Resets the decoder.
-		void reset();
+		virtual void reset() = 0;
 
 		/// \brief Feeds the decoder with base64 encoded data.
-		void feed(const void *data, int size, bool append_result = true);
+		virtual void feed(const void *data, int size, bool append_result = true) = 0;
 
 		/// \brief Decode base64 data and return it in a buffer.
 		static DataBufferPtr decode(const void *data, int size);
-
-		/// \brief Decode
-		///
-		/// \param data = String Ref8
-		///
-		/// \return Data Buffer
 		static DataBufferPtr decode(const std::string &data);
-
-		/// \brief Decode
-		///
-		/// \param data = Data Buffer
-		///
-		/// \return Data Buffer
 		static DataBufferPtr decode(const DataBufferPtr &data);
-
-	private:
-		std::shared_ptr<Base64Decoder_Impl> impl;
 	};
 }

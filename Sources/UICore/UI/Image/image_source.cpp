@@ -52,7 +52,7 @@ namespace uicore
 	{
 		return ImageSource::from_callback([=](Canvas &canvas)
 		{
-			return UIThread::get_image(canvas, resource_name);
+			return UIThread::image(canvas, resource_name);
 		});
 	}
 

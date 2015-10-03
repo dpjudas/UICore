@@ -59,10 +59,10 @@ namespace uicore
 		std::map<std::string, FontFamily> font_families;
 		std::map<std::string, Image> images;
 
-		static UIThreadImpl *get_instance()
+		static UIThreadImpl *instance()
 		{
-			static UIThreadImpl instance;
-			return &instance;
+			static UIThreadImpl impl;
+			return &impl;
 		}
 	};
 
@@ -102,35 +102,35 @@ namespace uicore
 		else
 			family_name = "sans-serif";
 
-		auto &family = UIThreadImpl::get_instance()->font_families[family_name];
+		auto &family = UIThreadImpl::instance()->font_families[family_name];
 		if (family.is_null())
 			family = FontFamily(family_name);
 
-		family.add(font_desc, PathHelp::combine(UIThreadImpl::get_instance()->resource_path, src));
+		family.add(font_desc, PathHelp::combine(UIThreadImpl::instance()->resource_path, src));
 	}
 
 	std::string UIThread::resource_path()
 	{
-		return UIThreadImpl::get_instance()->resource_path;
+		return UIThreadImpl::instance()->resource_path;
 	}
 
 	void UIThread::set_resource_path(const std::string &path)
 	{
-		UIThreadImpl::get_instance()->resource_path = path;
+		UIThreadImpl::instance()->resource_path = path;
 	}
 
-	Image UIThread::get_image(Canvas &canvas, const std::string &name)
+	Image UIThread::image(Canvas &canvas, const std::string &name)
 	{
-		auto &images = UIThreadImpl::get_instance()->images;
+		auto &images = UIThreadImpl::instance()->images;
 		if (images.find(name) == images.end())
-			images[name] = Image(canvas, PathHelp::combine(UIThreadImpl::get_instance()->resource_path, name));
+			images[name] = Image(canvas, PathHelp::combine(UIThreadImpl::instance()->resource_path, name));
 		return images[name];
 	}
 
-	Font UIThread::get_font(const std::string &family, const FontDescription &desc)
+	Font UIThread::font(const std::string &family, const FontDescription &desc)
 	{
-		auto it = UIThreadImpl::get_instance()->font_families.find(family);
-		if (it != UIThreadImpl::get_instance()->font_families.end())
+		auto it = UIThreadImpl::instance()->font_families.find(family);
+		if (it != UIThreadImpl::instance()->font_families.end())
 			return Font(it->second, desc);
 		else
 			return Font(family, desc);
@@ -148,7 +148,7 @@ namespace uicore
 			std::exception_ptr exception = std::current_exception();
 			RunLoop::main_thread_async([=]()
 			{
-				UIThreadImpl::get_instance()->exception_handler(exception);
+				UIThreadImpl::instance()->exception_handler(exception);
 			});
 			return false;
 		}

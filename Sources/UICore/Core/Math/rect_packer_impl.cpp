@@ -32,12 +32,12 @@
 
 namespace uicore
 {
-	RectPacker_Impl::RectPacker_Impl(const Size &max_group_size)
-		: active_root_node(nullptr), next_node_id(0), max_group_size(max_group_size)
+	RectPackerImpl::RectPackerImpl(const Size &max_group_size, AllocationPolicy policy)
+		: active_root_node(nullptr), next_node_id(0), _max_group_size(max_group_size), _allocation_policy(policy)
 	{
 	}
 
-	RectPacker_Impl::~RectPacker_Impl()
+	RectPackerImpl::~RectPackerImpl()
 	{
 		std::vector<RootNode *>::size_type index, size;
 		size = root_nodes.size();
@@ -48,7 +48,7 @@ namespace uicore
 		}
 	}
 
-	int RectPacker_Impl::get_total_rect_count() const
+	int RectPackerImpl::total_rect_count() const
 	{
 		int count = 0;
 
@@ -60,7 +60,7 @@ namespace uicore
 		return count;
 	}
 
-	int RectPacker_Impl::get_rect_count(unsigned int group_index) const
+	int RectPackerImpl::rect_count(unsigned int group_index) const
 	{
 		int count = 0;
 
@@ -70,7 +70,7 @@ namespace uicore
 		return count;
 	}
 
-	RectPacker::AllocatedRect RectPacker_Impl::add_new_node(const Size &rect_size)
+	RectPacker::AllocatedRect RectPackerImpl::add_new_node(const Size &rect_size)
 	{
 		// Try inserting in current active group
 		Node *node;
@@ -87,12 +87,12 @@ namespace uicore
 
 		if (node == nullptr) // Couldn't find a fit in current active group
 		{
-			if (allocation_policy == RectPacker::fail_if_full && root_nodes.size() > 0)
+			if (_allocation_policy == RectPacker::fail_if_full && root_nodes.size() > 0)
 			{
 				throw Exception("Unable to pack rect into group: full");
 			}
 
-			if (allocation_policy == RectPacker::search_previous_groups)
+			if (_allocation_policy == RectPacker::search_previous_groups)
 			{
 				std::vector<RootNode *>::size_type index, size;
 				size = root_nodes.size();
@@ -106,13 +106,13 @@ namespace uicore
 
 			if (node == nullptr) // Couldn't find a fit, so create a new group
 			{
-				if (rect_size.width <= max_group_size.width && rect_size.height <= max_group_size.height)
+				if (rect_size.width <= _max_group_size.width && rect_size.height <= _max_group_size.height)
 				{
 					node = add_new_root()->node.insert(rect_size, next_node_id);
 				}
 				else
 				{
-					throw Exception("Unable to pack rect into group: Larger than max_group_size");
+					throw Exception("Unable to pack rect into group: Larger than _max_group_size");
 				}
 			}
 
@@ -125,9 +125,9 @@ namespace uicore
 		return RectPacker::AllocatedRect(active_root_node->group_id, node->node_rect);
 	}
 
-	RectPacker_Impl::RootNode *RectPacker_Impl::add_new_root()
+	RectPackerImpl::RootNode *RectPackerImpl::add_new_root()
 	{
-		Node node(Rect(Point(0, 0), max_group_size));
+		Node node(Rect(Point(0, 0), _max_group_size));
 
 		active_root_node = new RootNode();
 		active_root_node->group_id = (int)root_nodes.size();
@@ -139,9 +139,9 @@ namespace uicore
 	}
 
 	/////////////////////////////////////////////////////////////////////////////
-	// RectPacker_Impl::Node:
+	// RectPackerImpl::Node:
 
-	RectPacker_Impl::Node::Node()
+	RectPackerImpl::Node::Node()
 	{
 		child[0] = nullptr;
 		child[1] = nullptr;
@@ -149,7 +149,7 @@ namespace uicore
 		id = 0;
 	}
 
-	RectPacker_Impl::Node::Node(const Rect &new_rect)
+	RectPackerImpl::Node::Node(const Rect &new_rect)
 	{
 		node_rect = new_rect;
 
@@ -159,12 +159,12 @@ namespace uicore
 		id = 0;
 	}
 
-	RectPacker_Impl::Node::~Node()
+	RectPackerImpl::Node::~Node()
 	{
 		clear();
 	}
 
-	int RectPacker_Impl::Node::get_rect_count() const
+	int RectPackerImpl::Node::get_rect_count() const
 	{
 		int count = 0;
 
@@ -179,7 +179,7 @@ namespace uicore
 		return count;
 	}
 
-	void RectPacker_Impl::Node::clear()
+	void RectPackerImpl::Node::clear()
 	{
 		if (child[0])
 		{
@@ -194,7 +194,7 @@ namespace uicore
 		id = 0;
 	}
 
-	RectPacker_Impl::Node *RectPacker_Impl::Node::insert(const Size &rect_size, int rect_id)
+	RectPackerImpl::Node *RectPackerImpl::Node::insert(const Size &rect_size, int rect_id)
 	{
 		// If we're not a leaf
 		if (child[0] && child[1])

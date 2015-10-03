@@ -48,7 +48,7 @@ namespace uicore
 		if (!style.computed_value("border-image-source").is_url())
 			return;
 
-		Image &image = UIThread::get_image(canvas, style.computed_value("border-image-source").text());
+		Image &image = UIThread::image(canvas, style.computed_value("border-image-source").text());
 		if (!image.is_null())
 		{
 			int slice_left = get_left_slice_value(image.get_width());

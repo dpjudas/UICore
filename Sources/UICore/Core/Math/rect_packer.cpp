@@ -32,58 +32,8 @@
 
 namespace uicore
 {
-	RectPacker::RectPacker()
+	std::shared_ptr<RectPacker> RectPacker::create(const Size &max_group_size, AllocationPolicy policy)
 	{
-	}
-
-	RectPacker::RectPacker(const Size &max_group_size, AllocationPolicy policy)
-		: impl(std::make_shared<RectPacker_Impl>(max_group_size))
-	{
-		set_allocation_policy(policy);
-	}
-
-	RectPacker::~RectPacker()
-	{
-	}
-
-	void RectPacker::throw_if_null() const
-	{
-		if (!impl)
-			throw Exception("RectPacker is null");
-	}
-
-	RectPacker::AllocationPolicy RectPacker::get_allocation_policy() const
-	{
-		return impl->allocation_policy;
-	}
-
-	Size RectPacker::get_max_group_size() const
-	{
-		return impl->max_group_size;
-	}
-
-	int RectPacker::get_total_rect_count() const
-	{
-		return impl->get_total_rect_count();
-	}
-
-	int RectPacker::get_rect_count(unsigned int group_index) const
-	{
-		return impl->get_rect_count(group_index);
-	}
-
-	int RectPacker::get_group_count() const
-	{
-		return impl->root_nodes.size();
-	}
-
-	void RectPacker::set_allocation_policy(AllocationPolicy policy)
-	{
-		impl->allocation_policy = policy;
-	}
-
-	RectPacker::AllocatedRect RectPacker::add(const Size &size)
-	{
-		return impl->add_new_node(size);
+		return std::make_shared<RectPackerImpl>(max_group_size, policy);
 	}
 }

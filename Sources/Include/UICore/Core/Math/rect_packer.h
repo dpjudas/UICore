@@ -34,7 +34,6 @@
 namespace uicore
 {
 	class Size;
-	class RectPacker_Impl;
 
 	/// \brief Generic rect packer class. Implements an algorithm to pack rects into groups efficiently.
 	class RectPacker
@@ -56,42 +55,25 @@ namespace uicore
 			Rect rect;
 		};
 
-		/// \brief Constructs a null instance.
-		RectPacker();
-
 		/// \brief Constructs a rect group.
-		RectPacker(const Size &max_group_size, AllocationPolicy policy = create_new_group);
-
-		~RectPacker();
-
-		/// \brief Returns true if this object is invalid.
-		bool is_null() const { return !impl; }
-
-		/// \brief Throw an exception if this object is invalid.
-		void throw_if_null() const;
+		static std::shared_ptr<RectPacker> create(const Size &max_group_size, AllocationPolicy policy = create_new_group);
 
 		/// \brief Returns the allocation policy.
-		AllocationPolicy get_allocation_policy() const;
+		virtual AllocationPolicy allocation_policy() const = 0;
 
 		/// \brief Returns the max group size.
-		Size get_max_group_size() const;
+		virtual Size max_group_size() const = 0;
 
 		/// \brief Returns the total amount of rects.
-		int get_total_rect_count() const;
+		virtual int total_rect_count() const = 0;
 
 		/// \brief Returns the amount of rects in a group.
-		int get_rect_count(unsigned int group_index = 0) const;
+		virtual int rect_count(unsigned int group_index = 0) const = 0;
 
 		/// \brief Returns the amount of rects used by group.
-		int get_group_count() const;
-
-		/// \brief Set the allocation policy.
-		void set_allocation_policy(AllocationPolicy policy);
+		virtual int group_count() const = 0;
 
 		/// \brief Allocate space for another rect.
-		AllocatedRect add(const Size &size);
-
-	private:
-		std::shared_ptr<RectPacker_Impl> impl;
+		virtual AllocatedRect add(const Size &size) = 0;
 	};
 }

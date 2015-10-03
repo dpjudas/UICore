@@ -34,15 +34,14 @@
 
 namespace uicore
 {
-	/// \brief EarClipTriangulator_Triangle
-	class EarClipTriangulator_Triangle
+	/// \brief Triangle returned by triangulator
+	class EarClipTriangle
 	{
 	public:
 		float x1, y1, x2, y2, x3, y3;
 	};
 
 	class EarClipTriangulator_Impl;
-	class EarClipResult;
 
 	/// \brief Polygon orientations.
 	enum PolygonOrientation
@@ -84,7 +83,7 @@ namespace uicore
 		void set_orientation(PolygonOrientation orientation);
 
 		/// \brief Perform triangulation.
-		EarClipResult triangulate();
+		std::vector<EarClipTriangle> triangulate();
 
 		/// \brief Mark beginning of a polygon hole.
 		void begin_hole();

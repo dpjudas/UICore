@@ -69,7 +69,7 @@ namespace uicore
 
 		void clear();
 
-		EarClipResult triangulate();
+		std::vector<EarClipTriangle> triangulate();
 
 		void begin_hole();
 		void end_hole();

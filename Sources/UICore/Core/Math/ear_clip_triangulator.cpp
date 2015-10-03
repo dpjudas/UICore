@@ -29,7 +29,6 @@
 #include "UICore/precomp.h"
 #include "UICore/Core/Math/triangle_math.h"
 #include "UICore/Core/Math/ear_clip_triangulator.h"
-#include "UICore/Core/Math/ear_clip_result.h"
 #include "ear_clip_triangulator_impl.h"
 #include <algorithm>
 
@@ -79,7 +78,7 @@ namespace uicore
 		impl->set_orientation(orientation);
 	}
 
-	EarClipResult EarClipTriangulator::triangulate()
+	std::vector<EarClipTriangle> EarClipTriangulator::triangulate()
 	{
 		return impl->triangulate();
 	}

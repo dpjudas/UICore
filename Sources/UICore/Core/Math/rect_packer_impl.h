@@ -32,7 +32,7 @@
 
 namespace uicore
 {
-	class RectPacker_Impl
+	class RectPackerImpl : public RectPacker
 	{
 	public:
 		class Node
@@ -61,14 +61,17 @@ namespace uicore
 			Node node;
 		};
 
-	public:
-		RectPacker_Impl(const Size &max_group_size);
-		~RectPacker_Impl();
+		RectPackerImpl(const Size &max_group_size, AllocationPolicy policy);
+		~RectPackerImpl();
 
-		int get_total_rect_count() const;
-		int get_rect_count(unsigned int group_index) const;
+		AllocationPolicy allocation_policy() const override { return _allocation_policy; }
+		Size max_group_size() const override { return _max_group_size; }
+		int total_rect_count() const override;
+		int rect_count(unsigned int group_index) const override;
+		int group_count() const override;
+		AllocatedRect add(const Size &size) override { return add_new_node(size); }
 
-		RectPacker::AllocatedRect add_new_node(const Size &rect_size);
+		AllocatedRect add_new_node(const Size &rect_size);
 		RootNode *add_new_root();
 
 		std::vector<RootNode *> root_nodes;
@@ -76,8 +79,7 @@ namespace uicore
 
 		int next_node_id;
 
-		RectPacker::AllocationPolicy allocation_policy;
-
-		Size max_group_size;
+		AllocationPolicy _allocation_policy;
+		Size _max_group_size;
 	};
 }

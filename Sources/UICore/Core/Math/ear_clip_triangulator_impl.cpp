@@ -28,7 +28,6 @@
 
 #include "UICore/precomp.h"
 #include "UICore/Core/Math/ear_clip_triangulator.h"
-#include "UICore/Core/Math/ear_clip_result.h"
 #include "UICore/Core/Math/point.h"
 #include "UICore/Core/Math/triangle_math.h"
 #include "UICore/Core/Math/line_math.h"
@@ -102,14 +101,15 @@ namespace uicore
 		vertex_count = 0;
 	}
 
-	EarClipResult EarClipTriangulator_Impl::triangulate()
+	std::vector<EarClipTriangle> EarClipTriangulator_Impl::triangulate()
 	{
 		create_lists(true);
 
 		int num_triangles = vertices.size() - 2;
 		int tri_count = 0;
 
-		EarClipResult result(num_triangles);
+		std::vector<EarClipTriangle> result;
+		result.reserve(num_triangles);
 
 		while (tri_count < num_triangles)
 		{
@@ -119,7 +119,7 @@ namespace uicore
 			LinkedVertice *v = ear_list.back();
 			ear_list.pop_back();
 
-			EarClipTriangulator_Triangle tri;
+			EarClipTriangle tri;
 
 			tri.x1 = v->x;
 			tri.y1 = v->y;
@@ -130,7 +130,7 @@ namespace uicore
 			tri.x3 = v->next->x;
 			tri.y3 = v->next->y;
 
-			result.get_triangles().push_back(tri);
+			result.push_back(tri);
 
 			v->next->previous = v->previous;
 			v->previous->next = v->next;
@@ -187,19 +187,9 @@ namespace uicore
 				}
 			}
 
-			/*		cl_write_console_line("Ear list:");
-					for( std::vector<LinkedVertice*>::iterator it = ear_list.begin(); it != ear_list.end(); ++it )
-					{
-					cl_write_console_line("    (%1,%2)", (*it)->x, (*it)->y );
-					}
-					cl_write_console_line("");
-					*/
-
 			tri_count++;
 
 		}
-
-		// cl_write_console_line("num triangles - final: %1", tri_count ); 
 
 		return result;
 	}

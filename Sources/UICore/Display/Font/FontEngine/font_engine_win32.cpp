@@ -34,7 +34,6 @@
 #include "UICore/Core/System/databuffer.h"
 #include "UICore/Core/Text/text.h"
 #include "UICore/Display/2D/path.h"
-#include "UICore/Core/Math/bezier_curve.h"
 
 namespace uicore
 {

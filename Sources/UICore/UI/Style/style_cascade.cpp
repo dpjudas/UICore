@@ -228,7 +228,7 @@ namespace uicore
 		else
 			family = "sans-serif";
 
-		return UIThread::get_font(family, font_desc);
+		return UIThread::font(family, font_desc);
 	}
 
 	int StyleCascade::array_size(const char *property_name) const
