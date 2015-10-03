@@ -359,15 +359,6 @@ namespace uicore
 
 		const GraphicContextProvider * get_provider() const;
 
-		/// Create a new default graphic context compatible with this one
-		GraphicContext create() const;
-
-		/// Create a new default graphic context with a frame buffer selected
-		GraphicContext create(FrameBuffer &buffer) const;
-
-		/// Create a new default graphic context cloned with this one
-		GraphicContext clone() const;
-
 		/// Return the content of the read buffer into a pixel buffer.
 		PixelBuffer get_pixeldata(const Rect& rect, TextureFormat texture_format = tf_rgba8, bool clamp = true);
 

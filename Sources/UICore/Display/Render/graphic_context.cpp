@@ -62,35 +62,6 @@ namespace uicore
 		reset_rasterizer_state();
 		reset_blend_state();
 		reset_depth_stencil_state();
-
-	}
-
-	GraphicContext GraphicContext::create() const
-	{
-		GraphicContext gc;
-		gc.impl = std::shared_ptr<GraphicContext_Impl>(new GraphicContext_Impl(impl.get(), false));
-
-		return gc;
-	}
-
-	GraphicContext GraphicContext::create(FrameBuffer &buffer) const
-	{
-		GraphicContext gc;
-		gc.impl = std::shared_ptr<GraphicContext_Impl>(new GraphicContext_Impl(impl.get(), false));
-
-		gc.set_frame_buffer(buffer);
-		gc.set_viewport(gc.get_size());
-
-		return gc;
-	}
-
-
-	GraphicContext GraphicContext::clone() const
-	{
-		GraphicContext gc;
-		gc.impl = std::shared_ptr<GraphicContext_Impl>(new GraphicContext_Impl(impl.get(), true));
-
-		return gc;
 	}
 
 	GraphicContext::~GraphicContext()
@@ -180,18 +151,18 @@ namespace uicore
 				return ratio;
 			return 1.0f;
 		}
-		return impl->graphic_screen->get_provider()->get_pixel_ratio();
+		return impl->provider->get_pixel_ratio();
 	}
 
 	Size GraphicContext::get_max_texture_size() const
 	{
-		return impl->graphic_screen->get_provider()->get_max_texture_size();
+		return impl->provider->get_max_texture_size();
 	}
 
 	GraphicContextProvider *GraphicContext::get_provider()
 	{
 		if (impl)
-			return impl->graphic_screen->get_provider();
+			return impl->provider.get();
 		else
 			return nullptr;
 	}
@@ -199,7 +170,7 @@ namespace uicore
 	const GraphicContextProvider * GraphicContext::get_provider() const
 	{
 		if (impl)
-			return impl->graphic_screen->get_provider();
+			return impl->provider.get();
 		else
 			return nullptr;
 	}
@@ -351,7 +322,6 @@ namespace uicore
 
 	void GraphicContext::draw_primitives(PrimitivesType type, int num_vertices, const PrimitivesArray &prim_array)
 	{
-		impl->graphic_screen->set_active(impl.get());
 		get_provider()->draw_primitives(type, num_vertices, prim_array);
 	}
 
@@ -362,55 +332,46 @@ namespace uicore
 
 	void GraphicContext::draw_primitives_array(PrimitivesType type, int num_vertices)
 	{
-		impl->graphic_screen->set_active(impl.get());
 		get_provider()->draw_primitives_array(type, 0, num_vertices);
 	}
 
 	void GraphicContext::draw_primitives_array(PrimitivesType type, int offset, int num_vertices)
 	{
-		impl->graphic_screen->set_active(impl.get());
 		get_provider()->draw_primitives_array(type, offset, num_vertices);
 	}
 
 	void GraphicContext::draw_primitives_array_instanced(PrimitivesType type, int offset, int num_vertices, int instance_count)
 	{
-		impl->graphic_screen->set_active(impl.get());
 		get_provider()->draw_primitives_array_instanced(type, offset, num_vertices, instance_count);
 	}
 
 	void GraphicContext::set_primitives_elements(ElementArrayBuffer &element_array)
 	{
-		impl->graphic_screen->set_active(impl.get());
 		get_provider()->set_primitives_elements(element_array.get_provider());
 	}
 
 	void GraphicContext::draw_primitives_elements(PrimitivesType type, int count, VertexAttributeDataType indices_type, size_t offset)
 	{
-		impl->graphic_screen->set_active(impl.get());
 		get_provider()->draw_primitives_elements(type, count, indices_type, offset);
 	}
 
 	void GraphicContext::draw_primitives_elements_instanced(PrimitivesType type, int count, VertexAttributeDataType indices_type, size_t offset, int instance_count)
 	{
-		impl->graphic_screen->set_active(impl.get());
 		get_provider()->draw_primitives_elements_instanced(type, count, indices_type, offset, instance_count);
 	}
 
 	void GraphicContext::reset_primitives_elements()
 	{
-		impl->graphic_screen->set_active(impl.get());
 		get_provider()->reset_primitives_elements();
 	}
 
 	void GraphicContext::draw_primitives_elements(PrimitivesType type, int count, ElementArrayBuffer &elements_array, VertexAttributeDataType indices_type, size_t offset)
 	{
-		impl->graphic_screen->set_active(impl.get());
 		get_provider()->draw_primitives_elements(type, count, elements_array.get_provider(), indices_type, (void*)offset);
 	}
 
 	void GraphicContext::draw_primitives_elements_instanced(PrimitivesType type, int count, ElementArrayBuffer &elements_array, VertexAttributeDataType indices_type, size_t offset, int instance_count)
 	{
-		impl->graphic_screen->set_active(impl.get());
 		get_provider()->draw_primitives_elements_instanced(type, count, elements_array.get_provider(), indices_type, (void*)offset, instance_count);
 	}
 
@@ -421,25 +382,21 @@ namespace uicore
 
 	void GraphicContext::dispatch(int x, int y, int z)
 	{
-		impl->graphic_screen->set_active(impl.get());
 		get_provider()->dispatch(x, y, z);
 	}
 
 	void GraphicContext::clear(const Colorf &color)
 	{
-		impl->graphic_screen->set_active(impl.get());
 		get_provider()->clear(color);
 	}
 
 	void GraphicContext::clear_stencil(int value)
 	{
-		impl->graphic_screen->set_active(impl.get());
 		get_provider()->clear_stencil(value);
 	}
 
 	void GraphicContext::clear_depth(float value)
 	{
-		impl->graphic_screen->set_active(impl.get());
 		get_provider()->clear_depth(value);
 	}
 

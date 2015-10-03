@@ -29,20 +29,21 @@
 #pragma once
 
 #include "UICore/Display/TargetProviders/graphic_context_provider.h"
+#include "UICore/Display/Render/rasterizer_state.h"
+#include "UICore/Display/Render/blend_state.h"
+#include "UICore/Display/Render/depth_stencil_state.h"
+#include "UICore/Display/Render/program_object.h"
+#include "UICore/Display/Render/storage_buffer.h"
 #include "UICore/Display/Font/font.h"
 #include "UICore/Core/Math/mat4.h"
-#include "graphic_screen.h"
 
 namespace uicore
 {
-	class GraphicContext_Impl : GraphicContext_State
+	class GraphicContext_Impl
 	{
 	public:
 		GraphicContext_Impl(GraphicContextProvider *provider);
-		GraphicContext_Impl(const GraphicContext_Impl *from_gc, bool clone);
 		~GraphicContext_Impl();
-
-		void set_active();
 
 		void set_scissor(const Rect &rect);
 		void reset_scissor();
@@ -79,7 +80,7 @@ namespace uicore
 	private:
 		void on_window_resized(const Size &size);
 
-		std::shared_ptr<GraphicScreen> graphic_screen;
+		std::shared_ptr<GraphicContextProvider> provider;
 
 		Size display_window_size;
 		Slot resize_slot;
@@ -88,7 +89,32 @@ namespace uicore
 		BlendState default_blend_state;
 		DepthStencilState default_depth_stencil_state;
 
-		friend class GraphicScreen;
+		FrameBuffer read_frame_buffer;
+		FrameBuffer write_frame_buffer;
+
+		std::vector<Texture> textures;
+		std::vector<Texture> image_textures;
+		std::vector<UniformBuffer> uniform_buffers;
+		std::vector<StorageBuffer> storage_buffers;
+
+		Rect scissor;
+		bool scissor_set = false;
+
+		std::vector<Rectf> viewport = std::vector<Rectf>({ {} });
+		std::vector<Sizef> depth_range = std::vector<Sizef>({ { 0.0f, 1.0f } });
+
+		StandardProgram program_standard = program_color_only;
+		bool program_standard_set = false;
+		ProgramObject program;	//<-- Note this is valid when program_standard_set is true
+
+		RasterizerState rasterizer_state;
+		BlendState blend_state;
+		Colorf blend_color = Colorf::white;
+		unsigned int sample_mask = 0xffffffff;
+		DepthStencilState depth_stencil_state;
+		int stencil_ref = 0;
+		DrawBuffer draw_buffer = buffer_back;
+
 		friend class GraphicContext;
 	};
 }

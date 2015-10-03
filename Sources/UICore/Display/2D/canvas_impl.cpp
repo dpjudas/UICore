@@ -42,24 +42,24 @@ namespace uicore
 
 	void Canvas_Impl::init(Canvas_Impl *canvas)
 	{
-		GraphicContext new_gc = canvas->get_gc().create();
 		current_window = canvas->current_window;
 		batcher = canvas->batcher;		// Share the batcher resources
-		setup(new_gc);
+		setup(canvas->get_gc());
 	}
 
 	void Canvas_Impl::init(Canvas_Impl *canvas, FrameBuffer &framebuffer)
 	{
-		GraphicContext new_gc = canvas->get_gc().create(framebuffer);
+		GraphicContext gc = canvas->get_gc();
+		gc.set_frame_buffer(framebuffer);
+		gc.set_viewport(gc.get_size());
 		batcher = canvas->batcher;		// Share the batcher resources
-		setup(new_gc);
+		setup(gc);
 	}
 
 	void Canvas_Impl::init(DisplayWindow &window)
 	{
-		GraphicContext new_gc = window.get_gc().create();
 		current_window = window;
-		setup(new_gc);
+		setup(window.get_gc());
 	}
 
 	void Canvas_Impl::setup(GraphicContext &new_gc)

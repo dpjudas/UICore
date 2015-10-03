@@ -34,37 +34,17 @@
 namespace uicore
 {
 	GraphicContext_Impl::GraphicContext_Impl(GraphicContextProvider *provider)
-		: graphic_screen(new GraphicScreen(provider))
+		: provider(provider)
 	{
-		resize_slot = graphic_screen->get_provider()->sig_window_resized().connect(bind_member(this, &GraphicContext_Impl::on_window_resized));
-		set_viewport(-1, graphic_screen->get_provider()->get_display_window_size());
-	}
+		SharedGCData::add_ref();
 
-	GraphicContext_Impl::GraphicContext_Impl(const GraphicContext_Impl *from_gc, bool clone)
-		: graphic_screen(from_gc->graphic_screen)
-	{
-		default_rasterizer_state = from_gc->default_rasterizer_state;
-		default_blend_state = from_gc->default_blend_state;
-		default_depth_stencil_state = from_gc->default_depth_stencil_state;
-
-		resize_slot = graphic_screen->get_provider()->sig_window_resized().connect(bind_member(this, &GraphicContext_Impl::on_window_resized));
-		set_viewport(-1, from_gc->viewport[0]);
-
-		if (clone)
-		{
-			copy_state(from_gc);
-		}
-		else
-		{
-			set_rasterizer_state(default_rasterizer_state);
-			set_blend_state(default_blend_state, Colorf::white, 0xffffffff);
-			set_depth_stencil_state(default_depth_stencil_state, 0);
-		}
+		resize_slot = provider->sig_window_resized().connect(bind_member(this, &GraphicContext_Impl::on_window_resized));
+		set_viewport(-1, provider->get_display_window_size());
 	}
 
 	GraphicContext_Impl::~GraphicContext_Impl()
 	{
-		graphic_screen->state_destroyed(this);
+		SharedGCData::release_ref();
 	}
 
 	void GraphicContext_Impl::on_window_resized(const Size &size)
@@ -79,18 +59,13 @@ namespace uicore
 		if (write_frame_buffer.is_null())
 		{
 			if ((display_window_size.width == 0) || (display_window_size.height == 0))
-				display_window_size = graphic_screen->get_provider()->get_display_window_size();
+				display_window_size = provider->get_display_window_size();
 			return display_window_size;
 		}
 		else
 		{
 			return write_frame_buffer.get_size();
 		}
-	}
-
-	void GraphicContext_Impl::set_active()
-	{
-		graphic_screen->set_active(this);
 	}
 
 	void GraphicContext_Impl::set_texture(int unit_index, const Texture &texture)
@@ -104,13 +79,28 @@ namespace uicore
 			textures.resize(unit_index + 1);
 
 		textures[unit_index] = texture;
-		graphic_screen->on_texture_changed(this, unit_index);
+		if (!texture.is_null())
+			provider->set_texture(unit_index, texture);
+		else
+			provider->reset_texture(unit_index);
 	}
 
 	void GraphicContext_Impl::set_textures(std::vector<Texture> &new_textures)
 	{
+		for (auto i = textures.size(); i < new_textures.size(); i++)
+			provider->reset_texture(i);
+
 		textures = new_textures;
-		graphic_screen->on_textures_changed(this);
+
+		int i = 0;
+		for (const auto &texture : textures)
+		{
+			if (!texture.is_null())
+				provider->set_texture(i, texture);
+			else
+				provider->reset_texture(i);
+			i++;
+		}
 	}
 
 	void GraphicContext_Impl::set_image_texture(int unit_index, const Texture &texture)
@@ -124,13 +114,31 @@ namespace uicore
 			image_textures.resize(unit_index + 1);
 
 		image_textures[unit_index] = texture;
-		graphic_screen->on_image_texture_changed(this, unit_index);
+
+		if (!texture.is_null())
+			provider->set_image_texture(unit_index, texture);
+		else
+			provider->reset_image_texture(unit_index);
 	}
 
 	void GraphicContext_Impl::set_image_textures(std::vector<Texture> &new_textures)
 	{
+		for (auto i = textures.size(); i < new_textures.size(); i++)
+			provider->reset_texture(i);
+
 		image_textures = new_textures;
-		graphic_screen->on_image_textures_changed(this);
+
+		int i = 0;
+		for (const auto &texture : image_textures)
+		{
+			if (!texture.is_null())
+				provider->set_image_texture(i, texture);
+			else
+				provider->reset_image_texture(i);
+			i++;
+		}
+
+		image_textures = new_textures;
 	}
 
 	void GraphicContext_Impl::set_uniform_buffer(int index, const UniformBuffer &buffer)
@@ -144,7 +152,11 @@ namespace uicore
 			uniform_buffers.resize(index + 1);
 
 		uniform_buffers[index] = buffer;
-		graphic_screen->on_uniform_buffer_changed(this, index);
+
+		if (!buffer.is_null())
+			provider->set_uniform_buffer(index, buffer);
+		else
+			provider->reset_uniform_buffer(index);
 	}
 
 	void GraphicContext_Impl::set_storage_buffer(int index, const StorageBuffer &buffer)
@@ -158,20 +170,24 @@ namespace uicore
 			storage_buffers.resize(index + 1);
 
 		storage_buffers[index] = buffer;
-		graphic_screen->on_storage_buffer_changed(this, index);
+
+		if (!buffer.is_null())
+			provider->set_storage_buffer(index, buffer);
+		else
+			provider->reset_storage_buffer(index);
 	}
 
 	void GraphicContext_Impl::set_scissor(const Rect &rect)
 	{
 		scissor_set = true;
 		scissor = rect;
-		graphic_screen->on_scissor_changed(this);
+		provider->set_scissor(rect);
 	}
 
 	void GraphicContext_Impl::reset_scissor()
 	{
 		scissor_set = false;
-		graphic_screen->on_scissor_changed(this);
+		provider->reset_scissor();
 	}
 
 	void GraphicContext_Impl::set_viewport(int index, const Rectf &viewport_box)
@@ -188,7 +204,7 @@ namespace uicore
 
 		viewport[index] = viewport_box;
 
-		graphic_screen->on_viewport_changed(this);
+		provider->set_viewport(index, viewport_box);
 	}
 
 	void GraphicContext_Impl::set_depth_range(int viewport, float n, float f)
@@ -204,22 +220,29 @@ namespace uicore
 			depth_range.resize(viewport + 1);
 
 		depth_range[viewport] = Sizef(n, f);
-		graphic_screen->on_depth_range_changed(this, viewport);
+
+		if (depth_range.size() == 1)
+			provider->set_depth_range(n, f);
+		else
+			provider->set_depth_range(viewport, n, f);
 	}
 
 	void GraphicContext_Impl::set_frame_buffer(const FrameBuffer &write_buffer, const FrameBuffer &read_buffer)
 	{
 		write_frame_buffer = write_buffer;
 		read_frame_buffer = read_buffer;
-		graphic_screen->on_framebuffer_changed(this);
+		if (write_frame_buffer.is_null())
+			provider->reset_frame_buffer();
+		else
+			provider->set_frame_buffer(write_buffer, read_buffer);
 	}
 
 	void GraphicContext_Impl::set_program_object(StandardProgram standard_program)
 	{
-		program = graphic_screen->get_provider()->get_program_object(standard_program);
+		program = provider->get_program_object(standard_program);
 		program_standard_set = true;
 		program_standard = standard_program;
-		graphic_screen->on_program_changed(this);
+		provider->set_program_object(standard_program);
 	}
 
 	ProgramObject GraphicContext_Impl::get_program_object() const
@@ -231,20 +254,23 @@ namespace uicore
 	{
 		program = new_program;
 		program_standard_set = false;
-		graphic_screen->on_program_changed(this);
+		if (!program.is_null())
+			provider->set_program_object(program);
+		else
+			provider->reset_program_object();
 	}
 
 	void GraphicContext_Impl::reset_program_object()
 	{
 		program = ProgramObject();
 		program_standard_set = false;
-		graphic_screen->on_program_changed(this);
+		provider->reset_program_object();
 	}
 
 	void GraphicContext_Impl::set_rasterizer_state(const RasterizerState &state)
 	{
 		rasterizer_state = state;
-		graphic_screen->on_rasterizer_state_changed(this);
+		provider->set_rasterizer_state(state.get_provider());
 	}
 
 	void GraphicContext_Impl::set_blend_state(const BlendState &state, const Colorf &new_blend_color, unsigned int new_sample_mask)
@@ -252,24 +278,24 @@ namespace uicore
 		blend_state = state;
 		blend_color = new_blend_color;
 		sample_mask = new_sample_mask;
-		graphic_screen->on_blend_state_changed(this);
+		provider->set_blend_state(state.get_provider(), blend_color, sample_mask);
 	}
 
 	void GraphicContext_Impl::set_depth_stencil_state(const DepthStencilState &state, int new_stencil_ref)
 	{
 		depth_stencil_state = state;
 		stencil_ref = new_stencil_ref;
-		graphic_screen->on_depth_stencil_state_changed(this);
+		provider->set_depth_stencil_state(state.get_provider(), stencil_ref);
 	}
 
 	void GraphicContext_Impl::set_draw_buffer(DrawBuffer buffer)
 	{
 		draw_buffer = buffer;
-		graphic_screen->on_draw_buffer_changed(this);
+		provider->set_draw_buffer(buffer);
 	}
 
 	void GraphicContext_Impl::flush()
 	{
-		graphic_screen->get_provider()->flush();
+		provider->flush();
 	}
 }

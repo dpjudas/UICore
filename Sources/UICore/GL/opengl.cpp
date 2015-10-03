@@ -288,7 +288,6 @@ namespace uicore
 
 	void OpenGL::set_active(GraphicContext &gc)
 	{
-		gc.impl->set_active();
 		OpenGLTarget::set_active_context(gc);
 	}
 
