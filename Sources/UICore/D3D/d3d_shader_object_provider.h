@@ -40,17 +40,13 @@ namespace uicore
 	class D3DShaderObjectProvider : public ShaderObjectProvider
 	{
 	public:
-		D3DShaderObjectProvider(const ComPtr<ID3D11Device> &device, D3D_FEATURE_LEVEL feature_level);
+		D3DShaderObjectProvider(const ComPtr<ID3D11Device> &device, D3D_FEATURE_LEVEL feature_level, ShaderType type, const std::string &source);
 		~D3DShaderObjectProvider();
-		void create(ShaderType type, const std::string &source);
-		void create(ShaderType type, const void *source, int source_size);
-		void create(ShaderType type, const std::vector<std::string> &sources);
 
-		unsigned int get_handle() const;
-		bool get_compile_status() const;
-		ShaderType get_shader_type() const;
-		std::string get_info_log() const;
-		std::string get_shader_source() const;
+		ShaderType shader_type() const override { return type; }
+		std::string info_log() const override { return info_log_text; }
+		std::string shader_source() const override { return source; }
+		bool try_compile() override;
 
 		ID3D11VertexShader *get_vertex() { return static_cast<ID3D11VertexShader*>(shader.get()); }
 		ID3D11PixelShader *get_pixel() { return static_cast<ID3D11PixelShader*>(shader.get()); }
@@ -70,8 +66,6 @@ namespace uicore
 		std::map<std::string, int> storage_buffer_srv_locations;
 		std::map<std::string, int> storage_buffer_uav_locations;
 
-		void compile();
-
 	private:
 		void set_binding(D3D11_SHADER_INPUT_BIND_DESC &binding);
 		void create_shader();
@@ -79,9 +73,9 @@ namespace uicore
 		std::string get_shader_model() const;
 		void load_compiler_dll();
 
-		std::string info_log;
+		std::string info_log_text;
 		bool compile_status;
-		std::string shader_source;
+		std::string source;
 		ShaderType type;
 		D3D_FEATURE_LEVEL feature_level;
 

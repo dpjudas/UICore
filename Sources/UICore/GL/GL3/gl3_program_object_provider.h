@@ -58,7 +58,7 @@ namespace uicore
 		std::string get_info_log() const override;
 
 		/// \brief Returns the shaders used in this program.
-		std::vector<ShaderObject> get_shaders() const override;
+		std::vector<ShaderObjectPtr> get_shaders() const override;
 
 		/// \brief Returns the location of a named active attribute.
 		int get_attribute_location(const std::string &name) const override;
@@ -71,10 +71,10 @@ namespace uicore
 		int get_storage_buffer_index(const std::string &name) const override;
 
 		/// \brief Add shader to program object.
-		void attach(const ShaderObject &obj) override;
+		void attach(const ShaderObjectPtr &obj) override;
 
 		/// \brief Remove shader from program object.
-		void detach(const ShaderObject &obj) override;
+		void detach(const ShaderObjectPtr &obj) override;
 
 		/// \brief Bind attribute to specific location.
 		/** <p>This function must be called before linking.</p>*/
@@ -114,7 +114,7 @@ namespace uicore
 		void on_dispose() override;
 
 		GLuint handle;
-		std::vector<ShaderObject> shaders;
+		std::vector<ShaderObjectPtr> shaders;
 	};
 
 	class ProgramObjectStateTracker

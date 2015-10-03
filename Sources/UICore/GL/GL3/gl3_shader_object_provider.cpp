@@ -38,25 +38,11 @@
 
 namespace uicore
 {
-	GL3ShaderObjectProvider::GL3ShaderObjectProvider()
-		: handle(0)
+	GL3ShaderObjectProvider::GL3ShaderObjectProvider(ShaderType shader_type, const std::string &source)
 	{
 		SharedGCData::add_disposable(this);
-	}
-	void GL3ShaderObjectProvider::create(
-		ShaderType shader_type,
-		const void *source, int source_size)
-	{
-		throw Exception("Fixme");
-	}
 
-	void GL3ShaderObjectProvider::create(
-		ShaderType shader_type,
-		const std::string &source)
-	{
 		OpenGL::set_active();
-		if (handle)
-			glDeleteShader(handle);
 
 		type = shader_type;
 		handle = glCreateShader(shadertype_to_opengl(type));
@@ -66,39 +52,6 @@ namespace uicore
 		source_lengths[0] = source.length();
 		sources[0] = source.c_str();
 		glShaderSource(handle, 1, sources, source_lengths);
-	}
-
-	void GL3ShaderObjectProvider::create(
-		ShaderType shader_type,
-		const std::vector<std::string> &sources)
-	{
-		OpenGL::set_active();
-		if (handle)
-			glDeleteShader(handle);
-
-		type = shader_type;
-		handle = glCreateShader(shadertype_to_opengl(type));
-
-		GLchar ** array_sources = nullptr;
-		GLint *array_source_lengths = nullptr;
-		try
-		{
-			array_sources = new GLchar*[sources.size()];
-			array_source_lengths = new GLint[sources.size()];
-
-			for (std::vector<std::string>::size_type i = 0; i < sources.size(); i++)
-			{
-				array_source_lengths[i] = sources[i].length();
-				array_sources[i] = (GLchar*)sources[i].c_str();
-			}
-			glShaderSource(handle, sources.size(), (const GLchar**)array_sources, array_source_lengths);
-		}
-		catch (...)
-		{
-			delete[] array_source_lengths;
-			delete[] array_sources;
-			throw;
-		}
 	}
 
 	GL3ShaderObjectProvider::~GL3ShaderObjectProvider()
@@ -131,12 +84,12 @@ namespace uicore
 		return (status != GL_FALSE);
 	}
 
-	ShaderType GL3ShaderObjectProvider::get_shader_type() const
+	ShaderType GL3ShaderObjectProvider::shader_type() const
 	{
 		return type;
 	}
 
-	std::string GL3ShaderObjectProvider::get_info_log() const
+	std::string GL3ShaderObjectProvider::info_log() const
 	{
 		OpenGL::set_active();
 		std::string result;
@@ -156,7 +109,7 @@ namespace uicore
 		return result;
 	}
 
-	std::string GL3ShaderObjectProvider::get_shader_source() const
+	std::string GL3ShaderObjectProvider::shader_source() const
 	{
 		OpenGL::set_active();
 		std::string result;
@@ -176,27 +129,28 @@ namespace uicore
 		return result;
 	}
 
-	void GL3ShaderObjectProvider::compile()
+	bool GL3ShaderObjectProvider::try_compile()
 	{
 		OpenGL::set_active();
 		glCompileShader(handle);
+		return get_compile_status();
 	}
 
 	GLenum GL3ShaderObjectProvider::shadertype_to_opengl(ShaderType type)
 	{
 		switch (type)
 		{
-		case shadertype_vertex:
+		case ShaderType::vertex:
 			return GL_VERTEX_SHADER;
-		case shadertype_geometry:
+		case ShaderType::geometry:
 			return GL_GEOMETRY_SHADER;
-		case shadertype_fragment:
+		case ShaderType::fragment:
 			return GL_FRAGMENT_SHADER;
-		case shadertype_tess_evaluation:
+		case ShaderType::tess_evaluation:
 			return GL_TESS_EVALUATION_SHADER;
-		case shadertype_tess_control:
+		case ShaderType::tess_control:
 			return GL_TESS_CONTROL_SHADER;
-		case shadertype_compute:
+		case ShaderType::compute:
 			return GL_COMPUTE_SHADER;
 		default:
 			throw Exception(string_format("GL3ShaderObjectProvider: Unknown shader type: %1", (int)type));

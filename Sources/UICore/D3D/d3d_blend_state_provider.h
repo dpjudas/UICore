@@ -34,10 +34,10 @@
 
 namespace uicore
 {
-	class D3DBlendStateProvider : public BlendStateProvider
+	class D3DBlendState : public BlendState
 	{
 	public:
-		D3DBlendStateProvider(const ComPtr<ID3D11Device> &device, const BlendStateDescription &desc);
+		D3DBlendState(const ComPtr<ID3D11Device> &device, const BlendStateDescription &desc);
 
 		ComPtr<ID3D11BlendState> state;
 

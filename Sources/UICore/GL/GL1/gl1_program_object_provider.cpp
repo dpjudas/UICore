@@ -69,7 +69,7 @@ namespace uicore
 
 	}
 
-	std::vector<ShaderObject> GL1ProgramObjectProvider::get_shaders() const
+	std::vector<ShaderObjectPtr> GL1ProgramObjectProvider::get_shaders() const
 	{
 		return shaders;
 	}
@@ -104,13 +104,13 @@ namespace uicore
 		return -1;
 	}
 
-	void GL1ProgramObjectProvider::attach(const ShaderObject &obj)
+	void GL1ProgramObjectProvider::attach(const ShaderObjectPtr &obj)
 	{
 		throw_if_disposed();
 		shaders.push_back(obj);
 	}
 
-	void GL1ProgramObjectProvider::detach(const ShaderObject &obj)
+	void GL1ProgramObjectProvider::detach(const ShaderObjectPtr &obj)
 	{
 		throw_if_disposed();
 		for (std::vector<ShaderObject>::size_type i = 0; i < shaders.size(); i++)

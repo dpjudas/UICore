@@ -29,10 +29,10 @@
 #pragma once
 
 #include <vector>
+#include "UICore/Display/Render/shader_object.h"
 
 namespace uicore
 {
-	class ShaderObject;
 	class UniformBuffer;
 
 	/// \brief Program Object provider.
@@ -54,7 +54,7 @@ namespace uicore
 		virtual std::string get_info_log() const = 0;
 
 		/// \brief Returns the shaders used in this program.
-		virtual std::vector<ShaderObject> get_shaders() const = 0;
+		virtual std::vector<ShaderObjectPtr> get_shaders() const = 0;
 
 		/// \brief Returns the location of a named active attribute.
 		virtual int get_attribute_location(const std::string &name) const = 0;
@@ -76,10 +76,10 @@ namespace uicore
 		virtual int get_storage_buffer_index(const std::string &name) const = 0;
 
 		/// \brief Add shader to program object.
-		virtual void attach(const ShaderObject &obj) = 0;
+		virtual void attach(const ShaderObjectPtr &obj) = 0;
 
 		/// \brief Remove shader from program object.
-		virtual void detach(const ShaderObject &obj) = 0;
+		virtual void detach(const ShaderObjectPtr &obj) = 0;
 
 		/// \brief Bind attribute to specific location.
 		/** <p>This function must be called before linking.</p>*/

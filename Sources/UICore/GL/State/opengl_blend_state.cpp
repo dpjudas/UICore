@@ -34,11 +34,6 @@
 
 namespace uicore
 {
-	OpenGLBlendState::OpenGLBlendState()
-		: blend_color(Colorf::white), changed_desc(true), changed_blend_color(true)
-	{
-	}
-
 	void OpenGLBlendState::set(const BlendStateDescription &new_state, const Vec4f &new_blend_color)
 	{
 		if (!(new_state == desc))
@@ -58,7 +53,6 @@ namespace uicore
 	{
 		set(new_state.desc, new_state.blend_color);
 	}
-
 
 	void OpenGLBlendState::apply()
 	{

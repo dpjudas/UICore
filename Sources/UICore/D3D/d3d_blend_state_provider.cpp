@@ -32,7 +32,7 @@
 
 namespace uicore
 {
-	D3DBlendStateProvider::D3DBlendStateProvider(const ComPtr<ID3D11Device> &device, const BlendStateDescription &desc)
+	D3DBlendState::D3DBlendState(const ComPtr<ID3D11Device> &device, const BlendStateDescription &desc)
 	{
 		BlendEquation blend_op_color, blend_op_alpha;
 		desc.get_blend_equation(blend_op_color, blend_op_alpha);
@@ -79,7 +79,7 @@ namespace uicore
 		D3DTarget::throw_if_failed("D3D11Device.CreateBlendState failed", result);
 	}
 
-	D3D11_BLEND_OP D3DBlendStateProvider::to_d3d_blend_op(BlendEquation op)
+	D3D11_BLEND_OP D3DBlendState::to_d3d_blend_op(BlendEquation op)
 	{
 		switch (op)
 		{
@@ -92,7 +92,7 @@ namespace uicore
 		throw Exception("Unsupported blend op");
 	}
 
-	D3D11_BLEND D3DBlendStateProvider::to_d3d_blend_func(BlendFunc func)
+	D3D11_BLEND D3DBlendState::to_d3d_blend_func(BlendFunc func)
 	{
 		switch (func)
 		{

@@ -51,8 +51,6 @@ namespace uicore
 	class TextureCubeArray;
 	class Texture_Impl;
 	class SharedGCData_Impl;
-	class ResourceManager;
-	class XMLResourceDocument;
 
 	/// \brief Texture coordinate wrapping modes.
 	enum TextureWrapMode

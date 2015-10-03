@@ -59,24 +59,7 @@ namespace uicore
 	class RasterizerStateDescription;
 	class BlendStateDescription;
 	class DepthStencilStateDescription;
-
-	class RasterizerStateProvider : public RasterizerState
-	{
-	public:
-		virtual ~RasterizerStateProvider() { }
-	};
-
-	class BlendStateProvider : public BlendState
-	{
-	public:
-		virtual ~BlendStateProvider() { }
-	};
-
-	class DepthStencilStateProvider : public DepthStencilState
-	{
-	public:
-		virtual ~DepthStencilStateProvider() { }
-	};
+	enum class ShaderType;
 
 	/// \brief Interface for implementing a GraphicContext target.
 	class GraphicContextProvider
@@ -143,9 +126,6 @@ namespace uicore
 		/// \brief Allocate program object provider of this gc.
 		virtual ProgramObjectProvider *alloc_program_object() = 0;
 
-		/// \brief Allocate shader object provider of this gc.
-		virtual ShaderObjectProvider *alloc_shader_object() = 0;
-
 		/// \brief Allocate frame buffer provider for this gc.
 		virtual FrameBufferProvider *alloc_frame_buffer() = 0;
 
@@ -173,23 +153,19 @@ namespace uicore
 		/// \brief Allocate primitives array provider for this gc.
 		virtual PrimitivesArrayProvider *alloc_primitives_array() = 0;
 
-		/// \brief Create rasterizer state object.
-		virtual std::shared_ptr<RasterizerStateProvider> create_rasterizer_state(const RasterizerStateDescription &desc) = 0;
-
-		/// \brief Create blend state object.
-		virtual std::shared_ptr<BlendStateProvider> create_blend_state(const BlendStateDescription &desc) = 0;
-
-		/// \brief Create depth-stencil state object.
-		virtual std::shared_ptr<DepthStencilStateProvider> create_depth_stencil_state(const DepthStencilStateDescription &desc) = 0;
+		virtual std::shared_ptr<RasterizerState> create_rasterizer_state(const RasterizerStateDescription &desc) = 0;
+		virtual std::shared_ptr<BlendState> create_blend_state(const BlendStateDescription &desc) = 0;
+		virtual std::shared_ptr<DepthStencilState> create_depth_stencil_state(const DepthStencilStateDescription &desc) = 0;
+		virtual std::shared_ptr<ShaderObjectProvider> create_shader(ShaderType type, const std::string &source) = 0;
 
 		/// \brief Set active rasterizer state
-		virtual void set_rasterizer_state(RasterizerStateProvider *state) = 0;
+		virtual void set_rasterizer_state(RasterizerState *state) = 0;
 
 		/// \brief Set active blend state
-		virtual void set_blend_state(BlendStateProvider *state, const Colorf &blend_color, unsigned int sample_mask) = 0;
+		virtual void set_blend_state(BlendState *state, const Colorf &blend_color, unsigned int sample_mask) = 0;
 
 		/// \brief Set active depth stencil state
-		virtual void set_depth_stencil_state(DepthStencilStateProvider *state, int stencil_ref) = 0;
+		virtual void set_depth_stencil_state(DepthStencilState *state, int stencil_ref) = 0;
 
 		/// \brief Set active program object to the standard program specified.
 		virtual void set_program_object(StandardProgram standard_program) = 0;

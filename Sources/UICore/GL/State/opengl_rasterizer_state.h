@@ -37,26 +37,19 @@
 
 namespace uicore
 {
-	class OpenGLRasterizerStateProvider : public RasterizerStateProvider
+	class OpenGLRasterizerState : public RasterizerState
 	{
 	public:
-		OpenGLRasterizerStateProvider(const RasterizerStateDescription &desc) : desc(desc.clone()) { }
-		virtual ~OpenGLRasterizerStateProvider() { }
-
-		RasterizerStateDescription desc;
-	};
-
-	class OpenGLRasterizerState
-	{
-	public:
-		OpenGLRasterizerState();
+		OpenGLRasterizerState() { }
+		OpenGLRasterizerState(const RasterizerStateDescription &desc) : desc(desc.clone()) { }
 
 		void set(const RasterizerStateDescription &new_state);
 		void set(const OpenGLRasterizerState &new_state);
 		void apply();
 
-	private:
 		RasterizerStateDescription desc;
-		bool changed_desc;
+
+	private:
+		bool changed_desc = true;
 	};
 }

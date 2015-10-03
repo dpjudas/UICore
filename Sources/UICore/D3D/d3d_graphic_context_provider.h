@@ -82,7 +82,6 @@ namespace uicore
 		TextureProvider *alloc_texture(TextureDimensions texture_dimensions);
 		OcclusionQueryProvider *alloc_occlusion_query();
 		ProgramObjectProvider *alloc_program_object();
-		ShaderObjectProvider *alloc_shader_object();
 		FrameBufferProvider *alloc_frame_buffer();
 		RenderBufferProvider *alloc_render_buffer();
 		VertexArrayBufferProvider *alloc_vertex_array_buffer();
@@ -92,12 +91,13 @@ namespace uicore
 		TransferBufferProvider *alloc_transfer_buffer();
 		PixelBufferProvider *alloc_pixel_buffer();
 		PrimitivesArrayProvider *alloc_primitives_array();
-		std::shared_ptr<RasterizerStateProvider> create_rasterizer_state(const RasterizerStateDescription &desc);
-		std::shared_ptr<BlendStateProvider> create_blend_state(const BlendStateDescription &desc);
-		std::shared_ptr<DepthStencilStateProvider> create_depth_stencil_state(const DepthStencilStateDescription &desc);
-		void set_rasterizer_state(RasterizerStateProvider *state);
-		void set_blend_state(BlendStateProvider *state, const Colorf &blend_color, unsigned int sample_mask);
-		void set_depth_stencil_state(DepthStencilStateProvider *state, int stencil_ref);
+		std::shared_ptr<RasterizerState> create_rasterizer_state(const RasterizerStateDescription &desc) override;
+		std::shared_ptr<BlendState> create_blend_state(const BlendStateDescription &desc) override;
+		std::shared_ptr<DepthStencilState> create_depth_stencil_state(const DepthStencilStateDescription &desc) override;
+		std::shared_ptr<ShaderObjectProvider> create_shader(ShaderType type, const std::string &source) override;
+		void set_rasterizer_state(RasterizerState *state);
+		void set_blend_state(BlendState *state, const Colorf &blend_color, unsigned int sample_mask);
+		void set_depth_stencil_state(DepthStencilState *state, int stencil_ref);
 		void set_program_object(StandardProgram standard_program);
 		void set_program_object(const ProgramObject &program);
 		void reset_program_object();
@@ -160,13 +160,13 @@ namespace uicore
 		D3D11_RECT scissor_rects[D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT];
 		bool input_layout_set;
 		D3DUnitMap unit_map;
-		bool shader_bound[shadertype_num_types];
+		bool shader_bound[(int)ShaderType::num_types];
 
 		Signal<void(const Size &)> window_resized_signal;
 
-		std::map<RasterizerStateDescription, std::shared_ptr<RasterizerStateProvider> > rasterizer_states;
-		std::map<BlendStateDescription, std::shared_ptr<BlendStateProvider> > blend_states;
-		std::map<DepthStencilStateDescription, std::shared_ptr<DepthStencilStateProvider> > depth_stencil_states;
+		std::map<RasterizerStateDescription, std::shared_ptr<RasterizerState> > rasterizer_states;
+		std::map<BlendStateDescription, std::shared_ptr<BlendState> > blend_states;
+		std::map<DepthStencilStateDescription, std::shared_ptr<DepthStencilState> > depth_stencil_states;
 
 		std::shared_ptr<D3DRenderBufferProvider> default_depth_render_buffer;
 		ComPtr<ID3D11DepthStencilView> default_dsv;

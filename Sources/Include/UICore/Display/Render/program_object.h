@@ -33,6 +33,7 @@
 #include <memory>
 #include "graphic_context.h"
 #include "uniform_vector.h"
+#include "shader_object.h"
 
 namespace uicore
 {
@@ -41,7 +42,6 @@ namespace uicore
 	class ProgramObject_Impl;
 	class GraphicContext;
 	class GraphicContextProvider;
-	class XMLResourceDocument;
 	class ProgramObjectProvider;
 
 	/// \brief Program Object
@@ -82,15 +82,6 @@ namespace uicore
 		///
 		/// \param provider = Font Provider
 		ProgramObject(ProgramObjectProvider *provider);
-
-		/// \brief Load
-		///
-		/// \param gc = Graphic Context
-		/// \param resource_id = String Ref
-		/// \param resman = Resource Manager
-		///
-		/// \return Program Object
-		static ProgramObject load(GraphicContext &gc, const std::string &resource_id, const XMLResourceDocument &resman);
 
 		/// \brief Load
 		///
@@ -183,7 +174,7 @@ namespace uicore
 		unsigned int get_handle() const;
 
 		/// \brief Returns the shaders attached to the program object.
-		std::vector<ShaderObject> get_shaders() const;
+		std::vector<ShaderObjectPtr> get_shaders() const;
 
 		/// \brief Returns the current info log for the program object.
 		std::string get_info_log() const;
@@ -222,10 +213,10 @@ namespace uicore
 		bool operator==(const ProgramObject &other) const;
 
 		/// \brief Add shader to program object.
-		void attach(const ShaderObject &obj);
+		void attach(const ShaderObjectPtr &obj);
 
 		/// \brief Remove shader from program object.
-		void detach(const ShaderObject &obj);
+		void detach(const ShaderObjectPtr &obj);
 
 		/// \brief Bind attribute to specific location.
 		/** <p>This function must be called before linking.</p>*/

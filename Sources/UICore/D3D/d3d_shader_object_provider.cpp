@@ -57,68 +57,22 @@ namespace uicore
 		std::vector<D3D11_SHADER_INPUT_BIND_DESC> binding;
 	};
 
-	D3DShaderObjectProvider::D3DShaderObjectProvider(const ComPtr<ID3D11Device> &device, D3D_FEATURE_LEVEL feature_level)
-		: device(device), compile_status(false), feature_level(feature_level)
+	D3DShaderObjectProvider::D3DShaderObjectProvider(const ComPtr<ID3D11Device> &device, D3D_FEATURE_LEVEL feature_level, ShaderType new_type, const std::string &init_source)
+		: device(device), feature_level(feature_level)
 	{
+		source = init_source;
+		bytecode = DataBufferPtr();
+		type = new_type;
 	}
 
 	D3DShaderObjectProvider::~D3DShaderObjectProvider()
 	{
 	}
 
-	void D3DShaderObjectProvider::create(ShaderType new_type, const std::string &source)
-	{
-		shader_source = source;
-		bytecode = DataBufferPtr();
-		compile_status = false;
-		type = new_type;
-	}
-
-	void D3DShaderObjectProvider::create(ShaderType new_type, const void *source, int source_size)
-	{
-		bytecode = DataBuffer::create(source, source_size);
-		compile_status = false;
-		type = new_type;
-
-	}
-
-	void D3DShaderObjectProvider::create(ShaderType type, const std::vector<std::string> &sources)
-	{
-		std::string source;
-		for (size_t i = 0; i < sources.size(); i++)
-			source += sources[i] + "\r\n";
-		create(type, source);
-	}
-
-	unsigned int D3DShaderObjectProvider::get_handle() const
-	{
-		return 0;
-	}
-
-	bool D3DShaderObjectProvider::get_compile_status() const
-	{
-		return compile_status;
-	}
-
-	ShaderType D3DShaderObjectProvider::get_shader_type() const
-	{
-		return type;
-	}
-
-	std::string D3DShaderObjectProvider::get_info_log() const
-	{
-		return info_log;
-	}
-
-	std::string D3DShaderObjectProvider::get_shader_source() const
-	{
-		return shader_source;
-	}
-
-	void D3DShaderObjectProvider::compile()
+	bool D3DShaderObjectProvider::try_compile()
 	{
 		shader.clear();
-		info_log.clear();
+		info_log_text.clear();
 
 		if (!bytecode)
 		{
@@ -130,8 +84,8 @@ namespace uicore
 			ComPtr<ID3DBlob> blob;
 			ComPtr<ID3DBlob> log;
 			HRESULT result = d3dcompile(
-				shader_source.data(),
-				shader_source.length(),
+				source.data(),
+				source.length(),
 				0,
 				0,
 				0,
@@ -143,29 +97,31 @@ namespace uicore
 				log.output_variable());
 
 			if (log)
-				info_log = std::string(reinterpret_cast<char*>(log->GetBufferPointer()), log->GetBufferSize());
+				info_log_text = std::string(reinterpret_cast<char*>(log->GetBufferPointer()), log->GetBufferSize());
 
 			if (SUCCEEDED(result))
 			{
 				bytecode = DataBuffer::create(blob->GetBufferPointer(), blob->GetBufferSize());
 			}
 			else
-				return;
+			{
+				return false;
+			}
 		}
 
 		try
 		{
 			create_shader();
 			find_locations();
-			compile_status = true;
+			return true;
 		}
 		catch (Exception &e)
 		{
-			if (!info_log.empty())
-				info_log += "\r\n";
-			info_log += e.message;
+			if (!info_log_text.empty())
+				info_log_text += "\r\n";
+			info_log_text += e.message;
+			return false;
 		}
-
 	}
 
 	std::recursive_mutex D3DShaderObjectProvider::d3dcompiler_mutex;
@@ -207,7 +163,7 @@ namespace uicore
 	{
 		switch (type)
 		{
-		case shadertype_vertex:
+		case ShaderType::vertex:
 		{
 			ID3D11VertexShader *shader_obj = 0;
 			HRESULT result = device->CreateVertexShader(bytecode->data(), bytecode->size(), 0, &shader_obj);
@@ -215,7 +171,7 @@ namespace uicore
 			shader = ComPtr<ID3D11DeviceChild>(shader_obj);
 		}
 		break;
-		case shadertype_tess_evaluation:
+		case ShaderType::tess_evaluation:
 		{
 			ID3D11DomainShader *shader_obj = 0;
 			HRESULT result = device->CreateDomainShader(bytecode->data(), bytecode->size(), 0, &shader_obj);
@@ -223,7 +179,7 @@ namespace uicore
 			shader = ComPtr<ID3D11DeviceChild>(shader_obj);
 		}
 		break;
-		case shadertype_tess_control:
+		case ShaderType::tess_control:
 		{
 			ID3D11HullShader *shader_obj = 0;
 			HRESULT result = device->CreateHullShader(bytecode->data(), bytecode->size(), 0, &shader_obj);
@@ -231,7 +187,7 @@ namespace uicore
 			shader = ComPtr<ID3D11DeviceChild>(shader_obj);
 		}
 		break;
-		case shadertype_geometry:
+		case ShaderType::geometry:
 		{
 			ID3D11GeometryShader *shader_obj = 0;
 			HRESULT result = device->CreateGeometryShader(bytecode->data(), bytecode->size(), 0, &shader_obj);
@@ -239,7 +195,7 @@ namespace uicore
 			shader = ComPtr<ID3D11DeviceChild>(shader_obj);
 		}
 		break;
-		case shadertype_fragment:
+		case ShaderType::fragment:
 		{
 			ID3D11PixelShader *shader_obj = 0;
 			HRESULT result = device->CreatePixelShader(bytecode->data(), bytecode->size(), 0, &shader_obj);
@@ -247,7 +203,7 @@ namespace uicore
 			shader = ComPtr<ID3D11DeviceChild>(shader_obj);
 		}
 		break;
-		case shadertype_compute:
+		case ShaderType::compute:
 		{
 			ID3D11ComputeShader *shader_obj = 0;
 			HRESULT result = device->CreateComputeShader(bytecode->data(), bytecode->size(), 0, &shader_obj);
@@ -351,17 +307,17 @@ namespace uicore
 
 		switch (type)
 		{
-		case shadertype_vertex:
+		case ShaderType::vertex:
 			return string_format("vs_%1_%2", major, minor);
-		case shadertype_tess_control:
+		case ShaderType::tess_control:
 			return string_format("hs_%1_%2", major, minor);
-		case shadertype_tess_evaluation:
+		case ShaderType::tess_evaluation:
 			return string_format("ds_%1_%2", major, minor);
-		case shadertype_geometry:
+		case ShaderType::geometry:
 			return string_format("gs_%1_%2", major, minor);
-		case shadertype_fragment:
+		case ShaderType::fragment:
 			return string_format("ps_%1_%2", major, minor);
-		case shadertype_compute:
+		case ShaderType::compute:
 			return string_format("cs_%1_%2", major, minor);
 		default:
 			throw Exception("Unknown shader type");

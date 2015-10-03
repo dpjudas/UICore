@@ -37,26 +37,19 @@
 
 namespace uicore
 {
-	class OpenGLDepthStencilStateProvider : public DepthStencilStateProvider
+	class OpenGLDepthStencilState : public DepthStencilState
 	{
 	public:
-		OpenGLDepthStencilStateProvider(const DepthStencilStateDescription &desc) : desc(desc.clone()) { }
-		virtual ~OpenGLDepthStencilStateProvider() { }
-
-		DepthStencilStateDescription desc;
-	};
-
-	class OpenGLDepthStencilState
-	{
-	public:
-		OpenGLDepthStencilState();
+		OpenGLDepthStencilState() { }
+		OpenGLDepthStencilState(const DepthStencilStateDescription &desc) : desc(desc.clone()) { }
 
 		void set(const DepthStencilStateDescription &new_state);
 		void set(const OpenGLDepthStencilState &new_state);
 		void apply();
 
-	private:
 		DepthStencilStateDescription desc;
-		bool changed_desc;
+
+	private:
+		bool changed_desc = true;
 	};
 }

@@ -34,10 +34,10 @@
 
 namespace uicore
 {
-	class D3DDepthStencilStateProvider : public DepthStencilStateProvider
+	class D3DDepthStencilState : public DepthStencilState
 	{
 	public:
-		D3DDepthStencilStateProvider(const ComPtr<ID3D11Device> &device, const DepthStencilStateDescription &desc);
+		D3DDepthStencilState(const ComPtr<ID3D11Device> &device, const DepthStencilStateDescription &desc);
 
 		ComPtr<ID3D11DepthStencilState> state;
 

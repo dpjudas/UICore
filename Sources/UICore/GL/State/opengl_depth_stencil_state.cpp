@@ -34,11 +34,6 @@
 
 namespace uicore
 {
-	OpenGLDepthStencilState::OpenGLDepthStencilState()
-		: changed_desc(true)
-	{
-	}
-
 	void OpenGLDepthStencilState::set(const DepthStencilStateDescription &new_state)
 	{
 		if (!(new_state == desc))

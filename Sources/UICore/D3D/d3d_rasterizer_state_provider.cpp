@@ -32,7 +32,7 @@
 
 namespace uicore
 {
-	D3DRasterizerStateProvider::D3DRasterizerStateProvider(const ComPtr<ID3D11Device> &device, const RasterizerStateDescription &desc)
+	D3DRasterizerState::D3DRasterizerState(const ComPtr<ID3D11Device> &device, const RasterizerStateDescription &desc)
 	{
 		D3D11_RASTERIZER_DESC d3d_desc;
 		d3d_desc.FrontCounterClockwise = (desc.get_front_face() == face_counter_clockwise) ? TRUE : FALSE;

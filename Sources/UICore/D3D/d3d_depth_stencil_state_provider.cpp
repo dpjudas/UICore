@@ -32,7 +32,7 @@
 
 namespace uicore
 {
-	D3DDepthStencilStateProvider::D3DDepthStencilStateProvider(const ComPtr<ID3D11Device> &device, const DepthStencilStateDescription &desc)
+	D3DDepthStencilState::D3DDepthStencilState(const ComPtr<ID3D11Device> &device, const DepthStencilStateDescription &desc)
 	{
 		CompareFunction front, back;
 		int front_ref, front_mask, back_ref, back_mask;
@@ -69,7 +69,7 @@ namespace uicore
 		// "The formats that support stenciling are DXGI_FORMAT_D24_UNORM_S8_UINT and DXGI_FORMAT_D32_FLOAT_S8X24_UINT."
 	}
 
-	D3D11_STENCIL_OP D3DDepthStencilStateProvider::to_d3d_stencil_op(StencilOp stencil_op)
+	D3D11_STENCIL_OP D3DDepthStencilState::to_d3d_stencil_op(StencilOp stencil_op)
 	{
 		switch (stencil_op)
 		{
@@ -85,7 +85,7 @@ namespace uicore
 		throw Exception("Unsupported stencil operation");
 	}
 
-	D3D11_COMPARISON_FUNC D3DDepthStencilStateProvider::to_d3d_compare_func(CompareFunction func)
+	D3D11_COMPARISON_FUNC D3DDepthStencilState::to_d3d_compare_func(CompareFunction func)
 	{
 		switch (func)
 		{

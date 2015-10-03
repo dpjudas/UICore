@@ -34,10 +34,10 @@
 
 namespace uicore
 {
-	class D3DRasterizerStateProvider : public RasterizerStateProvider
+	class D3DRasterizerState : public RasterizerState
 	{
 	public:
-		D3DRasterizerStateProvider(const ComPtr<ID3D11Device> &device, const RasterizerStateDescription &desc);
+		D3DRasterizerState(const ComPtr<ID3D11Device> &device, const RasterizerStateDescription &desc);
 
 		ComPtr<ID3D11RasterizerState> state;
 	};

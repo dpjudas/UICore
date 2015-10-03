@@ -57,6 +57,7 @@ namespace uicore
 	class DisposableObject;
 	class OpenGLContextDescription;
 	class OpenGLWindowProvider;
+	enum class ShaderType;
 
 	class GL3GraphicContextProvider : public OpenGLGraphicContextProvider, public GraphicContextProvider, public DisposableObject
 	{
@@ -100,7 +101,6 @@ namespace uicore
 		TextureProvider *alloc_texture(TextureDimensions texture_dimensions) override;
 		OcclusionQueryProvider *alloc_occlusion_query() override;
 		ProgramObjectProvider *alloc_program_object() override;
-		ShaderObjectProvider *alloc_shader_object() override;
 		FrameBufferProvider *alloc_frame_buffer() override;
 		RenderBufferProvider *alloc_render_buffer() override;
 		PixelBufferProvider *alloc_pixel_buffer() override;
@@ -110,12 +110,13 @@ namespace uicore
 		ElementArrayBufferProvider *alloc_element_array_buffer() override;
 		TransferBufferProvider *alloc_transfer_buffer() override;
 		PrimitivesArrayProvider *alloc_primitives_array() override;
-		std::shared_ptr<RasterizerStateProvider> create_rasterizer_state(const RasterizerStateDescription &desc) override;
-		std::shared_ptr<BlendStateProvider> create_blend_state(const BlendStateDescription &desc) override;
-		std::shared_ptr<DepthStencilStateProvider> create_depth_stencil_state(const DepthStencilStateDescription &desc) override;
-		void set_rasterizer_state(RasterizerStateProvider *state) override;
-		void set_blend_state(BlendStateProvider *state, const Colorf &blend_color, unsigned int sample_mask) override;
-		void set_depth_stencil_state(DepthStencilStateProvider *state, int stencil_ref) override;
+		std::shared_ptr<RasterizerState> create_rasterizer_state(const RasterizerStateDescription &desc) override;
+		std::shared_ptr<BlendState> create_blend_state(const BlendStateDescription &desc) override;
+		std::shared_ptr<DepthStencilState> create_depth_stencil_state(const DepthStencilStateDescription &desc) override;
+		std::shared_ptr<ShaderObjectProvider> create_shader(ShaderType type, const std::string &source) override;
+		void set_rasterizer_state(RasterizerState *state) override;
+		void set_blend_state(BlendState *state, const Colorf &blend_color, unsigned int sample_mask) override;
+		void set_depth_stencil_state(DepthStencilState *state, int stencil_ref) override;
 		PixelBuffer get_pixeldata(const Rect& rect, TextureFormat texture_format, bool clamp) const override;
 		void set_uniform_buffer(int index, const UniformBuffer &buffer) override;
 		void reset_uniform_buffer(int index) override;
@@ -192,9 +193,9 @@ namespace uicore
 
 		Signal<void(const Size &)> window_resized_signal;
 
-		std::map<RasterizerStateDescription, std::shared_ptr<RasterizerStateProvider> > rasterizer_states;
-		std::map<BlendStateDescription, std::shared_ptr<BlendStateProvider> > blend_states;
-		std::map<DepthStencilStateDescription, std::shared_ptr<DepthStencilStateProvider> > depth_stencil_states;
+		std::map<RasterizerStateDescription, std::shared_ptr<RasterizerState> > rasterizer_states;
+		std::map<BlendStateDescription, std::shared_ptr<BlendState> > blend_states;
+		std::map<DepthStencilStateDescription, std::shared_ptr<DepthStencilState> > depth_stencil_states;
 
 		OpenGLBlendState selected_blend_state;
 		OpenGLRasterizerState selected_rasterizer_state;

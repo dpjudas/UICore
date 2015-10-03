@@ -34,11 +34,6 @@
 
 namespace uicore
 {
-	OpenGLRasterizerState::OpenGLRasterizerState()
-		: changed_desc(true)
-	{
-	}
-
 	void OpenGLRasterizerState::set(const RasterizerStateDescription &new_state)
 	{
 		if (!(new_state == desc))

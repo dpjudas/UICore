@@ -253,11 +253,6 @@ namespace uicore
 		throw Exception("Program Objects are not supported for OpenGL 1.3");
 	}
 
-	ShaderObjectProvider *GL1GraphicContextProvider::alloc_shader_object()
-	{
-		throw Exception("Shader Objects are not supported for OpenGL 1.3");
-	}
-
 	TextureProvider *GL1GraphicContextProvider::alloc_texture(TextureDimensions texture_dimensions)
 	{
 		return new GL1TextureProvider(texture_dimensions);
@@ -308,7 +303,7 @@ namespace uicore
 		return new GL1PrimitivesArrayProvider();
 	}
 
-	std::shared_ptr<RasterizerStateProvider> GL1GraphicContextProvider::create_rasterizer_state(const RasterizerStateDescription &desc)
+	std::shared_ptr<RasterizerState> GL1GraphicContextProvider::create_rasterizer_state(const RasterizerStateDescription &desc)
 	{
 		auto it = rasterizer_states.find(desc);
 		if (it != rasterizer_states.end())
@@ -317,13 +312,13 @@ namespace uicore
 		}
 		else
 		{
-			std::shared_ptr<RasterizerStateProvider> state(new OpenGLRasterizerStateProvider(desc));
+			auto state = std::make_shared<OpenGLRasterizerState>(desc);
 			rasterizer_states[desc.clone()] = state;
 			return state;
 		}
 	}
 
-	std::shared_ptr<BlendStateProvider> GL1GraphicContextProvider::create_blend_state(const BlendStateDescription &desc)
+	std::shared_ptr<BlendState> GL1GraphicContextProvider::create_blend_state(const BlendStateDescription &desc)
 	{
 		auto it = blend_states.find(desc);
 		if (it != blend_states.end())
@@ -332,13 +327,13 @@ namespace uicore
 		}
 		else
 		{
-			std::shared_ptr<BlendStateProvider> state(new OpenGLBlendStateProvider(desc));
+			auto state = std::make_shared<OpenGLBlendState>(desc);
 			blend_states[desc.clone()] = state;
 			return state;
 		}
 	}
 
-	std::shared_ptr<DepthStencilStateProvider> GL1GraphicContextProvider::create_depth_stencil_state(const DepthStencilStateDescription &desc)
+	std::shared_ptr<DepthStencilState> GL1GraphicContextProvider::create_depth_stencil_state(const DepthStencilStateDescription &desc)
 	{
 		auto it = depth_stencil_states.find(desc);
 		if (it != depth_stencil_states.end())
@@ -347,20 +342,25 @@ namespace uicore
 		}
 		else
 		{
-			std::shared_ptr<DepthStencilStateProvider> state(new OpenGLDepthStencilStateProvider(desc));
+			auto state = std::make_shared<OpenGLDepthStencilState>(desc);
 			depth_stencil_states[desc.clone()] = state;
 			return state;
 		}
 	}
 
-	void GL1GraphicContextProvider::set_rasterizer_state(RasterizerStateProvider *state)
+	std::shared_ptr<ShaderObjectProvider> GL1GraphicContextProvider::create_shader(ShaderType type, const std::string &source)
+	{
+		throw Exception("Shader Objects are not supported for OpenGL 1.3");
+	}
+
+	void GL1GraphicContextProvider::set_rasterizer_state(RasterizerState *state)
 	{
 		if (state)
 		{
-			OpenGLRasterizerStateProvider *gl1_state = static_cast<OpenGLRasterizerStateProvider*>(state);
+			OpenGLRasterizerState *gl1_state = static_cast<OpenGLRasterizerState*>(state);
 			if (gl1_state)
 			{
-				selected_state.rasterizer.set(gl1_state->desc);
+				selected_state.rasterizer.set(*gl1_state);
 				set_active();
 				framebuffer_bound ? framebuffer_provider->set_state(selected_state.rasterizer) : selected_state.rasterizer.apply();
 
@@ -370,11 +370,11 @@ namespace uicore
 		}
 	}
 
-	void GL1GraphicContextProvider::set_blend_state(BlendStateProvider *state, const Colorf &blend_color, unsigned int sample_mask)
+	void GL1GraphicContextProvider::set_blend_state(BlendState *state, const Colorf &blend_color, unsigned int sample_mask)
 	{
 		if (state)
 		{
-			OpenGLBlendStateProvider *gl1_state = static_cast<OpenGLBlendStateProvider*>(state);
+			OpenGLBlendState *gl1_state = static_cast<OpenGLBlendState*>(state);
 			if (gl1_state)
 			{
 				selected_state.blend.set(gl1_state->desc, blend_color);
@@ -384,11 +384,11 @@ namespace uicore
 		}
 	}
 
-	void GL1GraphicContextProvider::set_depth_stencil_state(DepthStencilStateProvider *state, int stencil_ref)
+	void GL1GraphicContextProvider::set_depth_stencil_state(DepthStencilState *state, int stencil_ref)
 	{
 		if (state)
 		{
-			OpenGLDepthStencilStateProvider *gl1_state = static_cast<OpenGLDepthStencilStateProvider*>(state);
+			OpenGLDepthStencilState *gl1_state = static_cast<OpenGLDepthStencilState*>(state);
 			if (gl1_state)
 			{
 				selected_state.depth_stencil.set(gl1_state->desc);

@@ -37,28 +37,21 @@
 
 namespace uicore
 {
-	class OpenGLBlendStateProvider : public BlendStateProvider
+	class OpenGLBlendState : public BlendState
 	{
 	public:
-		OpenGLBlendStateProvider(const BlendStateDescription &desc) : desc(desc.clone()) {}
-		virtual ~OpenGLBlendStateProvider() {};
-
-		BlendStateDescription desc;
-	};
-
-	class OpenGLBlendState
-	{
-	public:
-		OpenGLBlendState();
+		OpenGLBlendState() { }
+		OpenGLBlendState(const BlendStateDescription &desc) : desc(desc.clone()) {}
 
 		void set(const BlendStateDescription &new_state, const Vec4f &new_blend_color);
 		void set(const OpenGLBlendState &new_state);
 		void apply();
 
-	private:
 		BlendStateDescription desc;
-		Vec4f blend_color;
-		bool changed_desc;
-		bool changed_blend_color;
+
+	private:
+		Vec4f blend_color = Colorf::white;
+		bool changed_desc = true;
+		bool changed_blend_color = true;
 	};
 }

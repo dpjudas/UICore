@@ -29,6 +29,7 @@
 
 #include "UICore/precomp.h"
 #include "gl3_program_object_provider.h"
+#include "gl3_shader_object_provider.h"
 #include "UICore/Display/Render/shader_object.h"
 #include "UICore/GL/opengl_wrap.h"
 #include "UICore/Core/System/exception.h"
@@ -89,7 +90,7 @@ namespace uicore
 		return (status != GL_FALSE);
 	}
 
-	std::vector<ShaderObject> GL3ProgramObjectProvider::get_shaders() const
+	std::vector<ShaderObjectPtr> GL3ProgramObjectProvider::get_shaders() const
 	{
 		throw_if_disposed();
 		return shaders;
@@ -166,15 +167,15 @@ namespace uicore
 		return glGetProgramResourceIndex(handle, GL_SHADER_STORAGE_BLOCK, name.c_str());
 	}
 
-	void GL3ProgramObjectProvider::attach(const ShaderObject &obj)
+	void GL3ProgramObjectProvider::attach(const ShaderObjectPtr &obj)
 	{
 		throw_if_disposed();
 		shaders.push_back(obj);
 		OpenGL::set_active();
-		glAttachShader(handle, (GLuint)obj.get_handle());
+		glAttachShader(handle, (GLuint)static_cast<GL3ShaderObjectProvider*>(obj.get())->get_handle());
 	}
 
-	void GL3ProgramObjectProvider::detach(const ShaderObject &obj)
+	void GL3ProgramObjectProvider::detach(const ShaderObjectPtr &obj)
 	{
 		throw_if_disposed();
 		for (std::vector<ShaderObject>::size_type i = 0; i < shaders.size(); i++)
@@ -186,7 +187,7 @@ namespace uicore
 			}
 		}
 		OpenGL::set_active();
-		glDetachShader(handle, (GLuint)obj.get_handle());
+		glDetachShader(handle, (GLuint)static_cast<GL3ShaderObjectProvider*>(obj.get())->get_handle());
 	}
 
 	void GL3ProgramObjectProvider::bind_attribute_location(int index, const std::string &name)

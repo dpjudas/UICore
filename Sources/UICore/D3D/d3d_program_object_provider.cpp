@@ -64,9 +64,9 @@ namespace uicore
 		return std::string();
 	}
 
-	std::vector<ShaderObject> D3DProgramObjectProvider::get_shaders() const
+	std::vector<ShaderObjectPtr> D3DProgramObjectProvider::get_shaders() const
 	{
-		return std::vector<ShaderObject>();
+		return std::vector<ShaderObjectPtr>();
 	}
 
 	int D3DProgramObjectProvider::get_attribute_location(const std::string &name) const
@@ -113,22 +113,20 @@ namespace uicore
 
 	D3DShaderObjectProvider *D3DProgramObjectProvider::get_shader_provider(ShaderType shader_type)
 	{
-		if (!shaders[shader_type].is_null())
-			return static_cast<D3DShaderObjectProvider*>(shaders[shader_type].get_provider());
+		if (shaders[(int)shader_type])
+			return static_cast<D3DShaderObjectProvider*>(shaders[(int)shader_type].get());
 		else
 			return 0;
 	}
 
-	void D3DProgramObjectProvider::attach(const ShaderObject &obj)
+	void D3DProgramObjectProvider::attach(const ShaderObjectPtr &obj)
 	{
-		D3DShaderObjectProvider *shader_provider = static_cast<D3DShaderObjectProvider*>(obj.get_provider());
-		shaders[shader_provider->get_shader_type()] = obj;
+		shaders[(int)obj->shader_type()] = obj;
 	}
 
-	void D3DProgramObjectProvider::detach(const ShaderObject &obj)
+	void D3DProgramObjectProvider::detach(const ShaderObjectPtr &obj)
 	{
-		D3DShaderObjectProvider *shader_provider = static_cast<D3DShaderObjectProvider*>(obj.get_provider());
-		shaders[shader_provider->get_shader_type()] = ShaderObject();
+		shaders[(int)obj->shader_type()].reset();
 	}
 
 	void D3DProgramObjectProvider::bind_attribute_location(int index, const std::string &name)
@@ -157,11 +155,11 @@ namespace uicore
 
 	void D3DProgramObjectProvider::link()
 	{
-		for (int j = 0; j < shadertype_num_types; j++)
+		for (int j = 0; j < (int)ShaderType::num_types; j++)
 		{
-			if (!shaders[j].is_null())
+			if (shaders[j])
 			{
-				D3DShaderObjectProvider *shader_provider = static_cast<D3DShaderObjectProvider*>(shaders[j].get_provider());
+				D3DShaderObjectProvider *shader_provider = static_cast<D3DShaderObjectProvider*>(shaders[j].get());
 
 				std::map<std::string, int>::iterator it, it2;
 				for (it = shader_provider->sampler_locations.begin(); it != shader_provider->sampler_locations.end(); ++it)
@@ -245,7 +243,6 @@ namespace uicore
 			// To do: update D3DUnitMap if the program object is currently bound
 		}
 	}
-
 
 	void D3DProgramObjectProvider::set_uniform2i(int location, int v1, int v2)
 	{

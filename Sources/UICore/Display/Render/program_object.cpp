@@ -84,10 +84,10 @@ namespace uicore
 	{
 		ProgramObject program_object(gc);
 
-		ShaderObject vertex_shader = ShaderObject::load_and_compile(gc, shadertype_vertex, vertex_filename);
+		auto vertex_shader = ShaderObject::load_and_compile(gc, ShaderType::vertex, vertex_filename);
 		program_object.attach(vertex_shader);
 
-		ShaderObject fragment_shader = ShaderObject::load_and_compile(gc, shadertype_fragment, fragment_filename);
+		auto fragment_shader = ShaderObject::load_and_compile(gc, ShaderType::fragment, fragment_filename);
 		program_object.attach(fragment_shader);
 
 		return program_object;
@@ -97,13 +97,13 @@ namespace uicore
 	{
 		ProgramObject program_object(gc);
 
-		ShaderObject vertex_shader = ShaderObject::load_and_compile(gc, shadertype_vertex, vertex_filename);
+		auto vertex_shader = ShaderObject::load_and_compile(gc, ShaderType::vertex, vertex_filename);
 		program_object.attach(vertex_shader);
 
-		ShaderObject geometry_shader = ShaderObject::load_and_compile(gc, shadertype_geometry, geometry_filename);
+		auto geometry_shader = ShaderObject::load_and_compile(gc, ShaderType::geometry, geometry_filename);
 		program_object.attach(geometry_shader);
 
-		ShaderObject fragment_shader = ShaderObject::load_and_compile(gc, shadertype_fragment, fragment_filename);
+		auto fragment_shader = ShaderObject::load_and_compile(gc, ShaderType::fragment, fragment_filename);
 		program_object.attach(fragment_shader);
 
 		return program_object;
@@ -113,10 +113,10 @@ namespace uicore
 	{
 		ProgramObject program_object(gc);
 
-		ShaderObject vertex_shader = ShaderObject::load_and_compile(gc, shadertype_vertex, vertex_file);
+		auto vertex_shader = ShaderObject::load_and_compile(gc, ShaderType::vertex, vertex_file);
 		program_object.attach(vertex_shader);
 
-		ShaderObject fragment_shader = ShaderObject::load_and_compile(gc, shadertype_fragment, fragment_file);
+		auto fragment_shader = ShaderObject::load_and_compile(gc, ShaderType::fragment, fragment_file);
 		program_object.attach(fragment_shader);
 
 		return program_object;
@@ -126,13 +126,13 @@ namespace uicore
 	{
 		ProgramObject program_object(gc);
 
-		ShaderObject vertex_shader = ShaderObject::load_and_compile(gc, shadertype_vertex, vertex_file);
+		auto vertex_shader = ShaderObject::load_and_compile(gc, ShaderType::vertex, vertex_file);
 		program_object.attach(vertex_shader);
 
-		ShaderObject geometry_shader = ShaderObject::load_and_compile(gc, shadertype_geometry, geometry_file);
+		auto geometry_shader = ShaderObject::load_and_compile(gc, ShaderType::geometry, geometry_file);
 		program_object.attach(geometry_shader);
 
-		ShaderObject fragment_shader = ShaderObject::load_and_compile(gc, shadertype_fragment, fragment_file);
+		auto fragment_shader = ShaderObject::load_and_compile(gc, ShaderType::fragment, fragment_file);
 		program_object.attach(fragment_shader);
 
 		return program_object;
@@ -200,7 +200,7 @@ namespace uicore
 		return impl->provider;
 	}
 
-	std::vector<ShaderObject> ProgramObject::get_shaders() const
+	std::vector<ShaderObjectPtr> ProgramObject::get_shaders() const
 	{
 		return impl->provider->get_shaders();
 	}
@@ -254,17 +254,12 @@ namespace uicore
 		return impl == other.impl;
 	}
 
-	void ProgramObject::attach(const ShaderObject &obj)
+	void ProgramObject::attach(const ShaderObjectPtr &obj)
 	{
-		if (obj.is_null())
-		{
-			throw Exception("cannot attach null shader object");
-		}
-
 		impl->provider->attach(obj);
 	}
 
-	void ProgramObject::detach(const ShaderObject &obj)
+	void ProgramObject::detach(const ShaderObjectPtr &obj)
 	{
 		impl->provider->detach(obj);
 	}

@@ -42,8 +42,8 @@ namespace uicore
 	class D3DUnit
 	{
 	public:
-		D3DUnit() { for (int i = 0; i < shadertype_num_types; i++) shader_index[i] = -1; }
-		int shader_index[shadertype_num_types];
+		D3DUnit() { for (int i = 0; i < (int)ShaderType::num_types; i++) shader_index[i] = -1; }
+		int shader_index[(int)ShaderType::num_types];
 		Type object;
 	};
 
@@ -55,9 +55,9 @@ namespace uicore
 	class D3DStorageUnit
 	{
 	public:
-		D3DStorageUnit() { for (int i = 0; i < shadertype_num_types; i++) { shader_srv_index[i] = -1; shader_uav_index[i] = -1; } }
-		int shader_srv_index[shadertype_num_types];
-		int shader_uav_index[shadertype_num_types];
+		D3DStorageUnit() { for (int i = 0; i < (int)ShaderType::num_types; i++) { shader_srv_index[i] = -1; shader_uav_index[i] = -1; } }
+		int shader_srv_index[(int)ShaderType::num_types];
+		int shader_uav_index[(int)ShaderType::num_types];
 		StorageBuffer object;
 	};
 

@@ -42,38 +42,22 @@ namespace uicore
 	class GL3ShaderObjectProvider : public ShaderObjectProvider, DisposableObject
 	{
 	public:
-		GL3ShaderObjectProvider();
+		GL3ShaderObjectProvider(ShaderType type, const std::string &source);
 		virtual ~GL3ShaderObjectProvider();
 
-		void create(ShaderType type, const std::string &source) override;
-		void create(ShaderType type, const void *source, int source_size) override;
-		void create(ShaderType type, const std::vector<std::string> &sources) override;
+		unsigned int get_handle() const;
+		bool get_compile_status() const;
 
-		/// \brief Returns the OpenGL shader handle.
-		unsigned int get_handle() const override;
-
-		/// \brief Returns true if compile succeeded.
-		bool get_compile_status() const override;
-
-		/// \brief Gets the shader type.
-		ShaderType get_shader_type() const override;
-
-		/// \brief Get shader object's info log.
-		std::string get_info_log() const override;
-
-		/// \brief Get shader source code.
-		std::string get_shader_source() const override;
-
-		/// \brief Compile program.
-		/** <p>If the compilation fails, get_compile_status() will return false and
-			get_info_log() will return the compile log.</p>*/
-		void compile() override;
+		ShaderType shader_type() const override;
+		std::string info_log() const override;
+		std::string shader_source() const override;
+		bool try_compile() override;
 
 	private:
 		void on_dispose() override;
 		GLenum shadertype_to_opengl(ShaderType type);
 
-		GLuint handle;
+		GLuint handle = 0;
 		ShaderType type;
 	};
 }

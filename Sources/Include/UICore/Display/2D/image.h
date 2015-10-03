@@ -44,8 +44,6 @@ namespace uicore
 	class Texture2D;
 	class Subtexture;
 	class PixelBuffer;
-	class ResourceManager;
-	class XMLResourceDocument;
 	class Canvas;
 	class Quadf;
 

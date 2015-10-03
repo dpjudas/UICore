@@ -84,8 +84,7 @@ namespace uicore
 			scissor_rects[i].bottom = 0;
 		}
 
-		for (int i = 0; i < shadertype_num_types; i++)
-			shader_bound[i] = false;
+		for (auto &v : shader_bound) v = false;
 
 		set_default_dsv();
 
@@ -194,11 +193,6 @@ namespace uicore
 		return new D3DProgramObjectProvider(window->get_device(), window->get_device_context());
 	}
 
-	ShaderObjectProvider *D3DGraphicContextProvider::alloc_shader_object()
-	{
-		return new D3DShaderObjectProvider(window->get_device(), window->get_feature_level());
-	}
-
 	FrameBufferProvider *D3DGraphicContextProvider::alloc_frame_buffer()
 	{
 		return new D3DFrameBufferProvider(window->get_device());
@@ -244,75 +238,80 @@ namespace uicore
 		return new D3DPrimitivesArrayProvider(window->get_device());
 	}
 
-	std::shared_ptr<RasterizerStateProvider> D3DGraphicContextProvider::create_rasterizer_state(const RasterizerStateDescription &desc)
+	std::shared_ptr<RasterizerState> D3DGraphicContextProvider::create_rasterizer_state(const RasterizerStateDescription &desc)
 	{
-		std::map<RasterizerStateDescription, std::shared_ptr<RasterizerStateProvider> >::iterator it = rasterizer_states.find(desc);
+		auto it = rasterizer_states.find(desc);
 		if (it != rasterizer_states.end())
 		{
 			return it->second;
 		}
 		else
 		{
-			std::shared_ptr<RasterizerStateProvider> state(new D3DRasterizerStateProvider(window->get_device(), desc));
+			auto state = std::make_shared<D3DRasterizerState>(window->get_device(), desc);
 			rasterizer_states[desc.clone()] = state;
 			return state;
 		}
 	}
 
-	std::shared_ptr<BlendStateProvider> D3DGraphicContextProvider::create_blend_state(const BlendStateDescription &desc)
+	std::shared_ptr<BlendState> D3DGraphicContextProvider::create_blend_state(const BlendStateDescription &desc)
 	{
-		std::map<BlendStateDescription, std::shared_ptr<BlendStateProvider> >::iterator it = blend_states.find(desc);
+		auto it = blend_states.find(desc);
 		if (it != blend_states.end())
 		{
 			return it->second;
 		}
 		else
 		{
-			std::shared_ptr<BlendStateProvider> state(new D3DBlendStateProvider(window->get_device(), desc));
+			auto state = std::make_shared<D3DBlendState>(window->get_device(), desc);
 			blend_states[desc.clone()] = state;
 			return state;
 		}
 	}
 
-	std::shared_ptr<DepthStencilStateProvider> D3DGraphicContextProvider::create_depth_stencil_state(const DepthStencilStateDescription &desc)
+	std::shared_ptr<DepthStencilState> D3DGraphicContextProvider::create_depth_stencil_state(const DepthStencilStateDescription &desc)
 	{
-		std::map<DepthStencilStateDescription, std::shared_ptr<DepthStencilStateProvider> >::iterator it = depth_stencil_states.find(desc);
+		auto it = depth_stencil_states.find(desc);
 		if (it != depth_stencil_states.end())
 		{
 			return it->second;
 		}
 		else
 		{
-			std::shared_ptr<DepthStencilStateProvider> state(new D3DDepthStencilStateProvider(window->get_device(), desc));
+			auto state = std::make_shared<D3DDepthStencilState>(window->get_device(), desc);
 			depth_stencil_states[desc.clone()] = state;
 			return state;
 		}
 	}
 
-	void D3DGraphicContextProvider::set_rasterizer_state(RasterizerStateProvider *state)
+	std::shared_ptr<ShaderObjectProvider> D3DGraphicContextProvider::create_shader(ShaderType type, const std::string &source)
+	{
+		return std::make_shared<D3DShaderObjectProvider>(window->get_device(), window->get_feature_level(), type, source);
+	}
+
+	void D3DGraphicContextProvider::set_rasterizer_state(RasterizerState *state)
 	{
 		if (state)
 		{
-			D3DRasterizerStateProvider *d3d_state = static_cast<D3DRasterizerStateProvider*>(state);
+			D3DRasterizerState *d3d_state = static_cast<D3DRasterizerState*>(state);
 			window->get_device_context()->RSSetState(d3d_state->state);
 		}
 	}
 
-	void D3DGraphicContextProvider::set_blend_state(BlendStateProvider *state, const Colorf &blend_color, unsigned int sample_mask)
+	void D3DGraphicContextProvider::set_blend_state(BlendState *state, const Colorf &blend_color, unsigned int sample_mask)
 	{
 		if (state)
 		{
-			D3DBlendStateProvider *d3d_state = static_cast<D3DBlendStateProvider*>(state);
+			D3DBlendState *d3d_state = static_cast<D3DBlendState*>(state);
 			FLOAT blend_factor[4] = { blend_color.r, blend_color.g, blend_color.b, blend_color.a };
 			window->get_device_context()->OMSetBlendState(d3d_state->state, blend_factor, sample_mask);
 		}
 	}
 
-	void D3DGraphicContextProvider::set_depth_stencil_state(DepthStencilStateProvider *state, int stencil_ref)
+	void D3DGraphicContextProvider::set_depth_stencil_state(DepthStencilState *state, int stencil_ref)
 	{
 		if (state)
 		{
-			D3DDepthStencilStateProvider *d3d_state = static_cast<D3DDepthStencilStateProvider*>(state);
+			D3DDepthStencilState *d3d_state = static_cast<D3DDepthStencilState*>(state);
 			window->get_device_context()->OMSetDepthStencilState(d3d_state->state, stencil_ref);
 		}
 	}
@@ -336,32 +335,32 @@ namespace uicore
 
 		clear_input_layout();
 
-		for (int j = 0; j < shadertype_num_types; j++)
+		for (int j = 0; j < (int)ShaderType::num_types; j++)
 		{
 			D3DShaderObjectProvider *shader_provider = current_program_provider->get_shader_provider((ShaderType)j);
 			if (shader_provider)
 			{
-				switch (j)
+				switch ((ShaderType)j)
 				{
-				case shadertype_vertex: window->get_device_context()->VSSetShader(shader_provider->get_vertex(), 0, 0); break;
-				case shadertype_tess_control: window->get_device_context()->HSSetShader(shader_provider->get_hull(), 0, 0); break;
-				case shadertype_tess_evaluation: window->get_device_context()->DSSetShader(shader_provider->get_domain(), 0, 0); break;
-				case shadertype_geometry: window->get_device_context()->GSSetShader(shader_provider->get_geometry(), 0, 0); break;
-				case shadertype_fragment: window->get_device_context()->PSSetShader(shader_provider->get_pixel(), 0, 0); break;
-				case shadertype_compute: window->get_device_context()->CSSetShader(shader_provider->get_compute(), 0, 0); break;
+				case ShaderType::vertex: window->get_device_context()->VSSetShader(shader_provider->get_vertex(), 0, 0); break;
+				case ShaderType::tess_control: window->get_device_context()->HSSetShader(shader_provider->get_hull(), 0, 0); break;
+				case ShaderType::tess_evaluation: window->get_device_context()->DSSetShader(shader_provider->get_domain(), 0, 0); break;
+				case ShaderType::geometry: window->get_device_context()->GSSetShader(shader_provider->get_geometry(), 0, 0); break;
+				case ShaderType::fragment: window->get_device_context()->PSSetShader(shader_provider->get_pixel(), 0, 0); break;
+				case ShaderType::compute: window->get_device_context()->CSSetShader(shader_provider->get_compute(), 0, 0); break;
 				}
 				shader_bound[j] = true;
 			}
 			else if (shader_bound[j])
 			{
-				switch (j)
+				switch ((ShaderType)j)
 				{
-				case shadertype_vertex: window->get_device_context()->VSSetShader(0, 0, 0); break;
-				case shadertype_tess_control: window->get_device_context()->HSSetShader(0, 0, 0); break;
-				case shadertype_tess_evaluation: window->get_device_context()->DSSetShader(0, 0, 0); break;
-				case shadertype_geometry: window->get_device_context()->GSSetShader(0, 0, 0); break;
-				case shadertype_fragment: window->get_device_context()->PSSetShader(0, 0, 0); break;
-				case shadertype_compute: window->get_device_context()->CSSetShader(0, 0, 0); break;
+				case ShaderType::vertex: window->get_device_context()->VSSetShader(0, 0, 0); break;
+				case ShaderType::tess_control: window->get_device_context()->HSSetShader(0, 0, 0); break;
+				case ShaderType::tess_evaluation: window->get_device_context()->DSSetShader(0, 0, 0); break;
+				case ShaderType::geometry: window->get_device_context()->GSSetShader(0, 0, 0); break;
+				case ShaderType::fragment: window->get_device_context()->PSSetShader(0, 0, 0); break;
+				case ShaderType::compute: window->get_device_context()->CSSetShader(0, 0, 0); break;
 				}
 				shader_bound[j] = false;
 			}
@@ -376,18 +375,18 @@ namespace uicore
 		{
 			unit_map.unbind_program(this, current_program_provider);
 			current_program_provider = 0;
-			for (int j = 0; j < shadertype_num_types; j++)
+			for (int j = 0; j < (int)ShaderType::num_types; j++)
 			{
 				if (shader_bound[j])
 				{
-					switch (j)
+					switch ((ShaderType)j)
 					{
-					case shadertype_vertex: window->get_device_context()->VSSetShader(0, 0, 0); break;
-					case shadertype_tess_control: window->get_device_context()->HSSetShader(0, 0, 0); break;
-					case shadertype_tess_evaluation: window->get_device_context()->DSSetShader(0, 0, 0); break;
-					case shadertype_geometry: window->get_device_context()->GSSetShader(0, 0, 0); break;
-					case shadertype_fragment: window->get_device_context()->PSSetShader(0, 0, 0); break;
-					case shadertype_compute: window->get_device_context()->CSSetShader(0, 0, 0); break;
+					case ShaderType::vertex: window->get_device_context()->VSSetShader(0, 0, 0); break;
+					case ShaderType::tess_control: window->get_device_context()->HSSetShader(0, 0, 0); break;
+					case ShaderType::tess_evaluation: window->get_device_context()->DSSetShader(0, 0, 0); break;
+					case ShaderType::geometry: window->get_device_context()->GSSetShader(0, 0, 0); break;
+					case ShaderType::fragment: window->get_device_context()->PSSetShader(0, 0, 0); break;
+					case ShaderType::compute: window->get_device_context()->CSSetShader(0, 0, 0); break;
 					}
 					shader_bound[j] = false;
 				}

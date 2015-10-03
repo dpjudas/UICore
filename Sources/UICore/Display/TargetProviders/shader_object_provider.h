@@ -34,40 +34,14 @@
 
 namespace uicore
 {
-	/// \brief Shader Object provider.
-	class ShaderObjectProvider
+	class ShaderObjectProvider : public ShaderObject
 	{
 	public:
-		virtual ~ShaderObjectProvider() { }
-
-		/// \brief Creates a shader object.
-		virtual void create(ShaderType type, const std::string &source) = 0;
-
-		/// \brief Creates a shader object.
-		virtual void create(ShaderType type, const void *source, int source_size) = 0;
-
-		/// \brief Create
-		///
-		/// \param type = Shader Type
-		/// \param vector = std
-		virtual void create(ShaderType type, const std::vector<std::string> &sources) = 0;
-
-		/// \brief Returns the OpenGL shader handle.
-		virtual unsigned int get_handle() const = 0;
-
-		/// \brief Returns true if compile succeeded.
-		virtual bool get_compile_status() const = 0;
-
-		/// \brief Gets the shader type.
-		virtual ShaderType get_shader_type() const = 0;
-
-		/// \brief Get shader object's info log.
-		virtual std::string get_info_log() const = 0;
-
-		/// \brief Get shader source code.
-		virtual std::string get_shader_source() const = 0;
-
-		/// \brief Compile program.
-		virtual void compile() = 0;
+		void compile() override
+		{
+			bool result = try_compile();
+			if (!result)
+				throw Exception("Shader compilation failed: " + info_log());
+		}
 	};
 }

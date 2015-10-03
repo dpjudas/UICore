@@ -36,7 +36,6 @@
 namespace uicore
 {
 	class CursorDescription_Impl;
-	class XMLResourceDocument;
 
 	/// \brief This class describes a single frame in a cursor description.
 	class CursorDescriptionFrame
@@ -75,9 +74,6 @@ namespace uicore
 		CursorDescription(const CursorDescription &copy);
 
 		~CursorDescription();
-
-		/// \brief Loads a CursorDescription from a XML resource definition
-		static CursorDescription load(GraphicContext &gc, const std::string &resource_id, const XMLResourceDocument &doc, const ImageImportDescription &import_desc = ImageImportDescription());
 
 		/// \brief Returns a list over all available frames.
 		const std::vector<CursorDescriptionFrame> &get_frames() const;

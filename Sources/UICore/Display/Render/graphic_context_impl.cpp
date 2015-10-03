@@ -270,19 +270,19 @@ namespace uicore
 	void GraphicContext_Impl::set_rasterizer_state(const RasterizerStatePtr &state)
 	{
 		rasterizer_state = state;
-		provider->set_rasterizer_state(static_cast<RasterizerStateProvider*>(state.get()));
+		provider->set_rasterizer_state(static_cast<RasterizerState*>(state.get()));
 	}
 
 	void GraphicContext_Impl::set_blend_state(const BlendStatePtr &state, const Colorf &blend_color, unsigned int sample_mask)
 	{
-		provider->set_blend_state(static_cast<BlendStateProvider*>(state.get()), blend_color, sample_mask);
+		provider->set_blend_state(static_cast<BlendState*>(state.get()), blend_color, sample_mask);
 	}
 
 	void GraphicContext_Impl::set_depth_stencil_state(const DepthStencilStatePtr &state, int new_stencil_ref)
 	{
 		depth_stencil_state = state;
 		stencil_ref = new_stencil_ref;
-		provider->set_depth_stencil_state(static_cast<DepthStencilStateProvider*>(state.get()), stencil_ref);
+		provider->set_depth_stencil_state(static_cast<DepthStencilState*>(state.get()), stencil_ref);
 	}
 
 	void GraphicContext_Impl::set_draw_buffer(DrawBuffer buffer)
