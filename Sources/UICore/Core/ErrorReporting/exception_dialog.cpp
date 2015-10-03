@@ -129,11 +129,12 @@ namespace uicore
 		text_label = CreateWindowEx(0, L"STATIC", text.c_str(), WS_VISIBLE | WS_CHILD | SS_LEFT | SS_EDITCONTROL | SS_NOPREFIX | SS_NOTIFY, 0, 0, 100 * ppi / 96, 50 * ppi / 96, window_handle, 0, instance, 0);
 		ok_button = CreateWindowEx(0, L"BUTTON", L"OK", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON, 0, 0, 50 * ppi / 96, 10 * ppi / 96, window_handle, 0, instance, 0);
 
-		int point_size = 9;
-		font = CreateFont(-(point_size * 96 + 36) / 72 * ppi / 96, 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH, L"Segoe UI");
+		int body_px_size = 12;
+
+		font = CreateFont(-body_px_size * ppi / 96, 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH, L"Segoe UI");
 		SendMessage(frame, WM_SETFONT, (WPARAM)font, 0);
 		SendMessage(text_label, WM_SETFONT, (WPARAM)font, 0);
-		//SendMessage(ok_button, WM_SETFONT, (WPARAM)font, 0);
+		SendMessage(ok_button, WM_SETFONT, (WPARAM)font, 0);
 
 		RECT rect = { 0,0,0,0 };
 		HDC dc = GetDC(text_label);
@@ -155,8 +156,8 @@ namespace uicore
 		GetClientRect(window_handle, &client_box);
 
 		int button_width = 88 * ppi / 96;
-		int button_height = 26 * ppi / 96;
-		SetWindowPos(ok_button, 0, client_box.right - button_width - 11 * ppi / 96, client_box.bottom - 48 * ppi / 96 + button_height / 2, button_width, button_height, SWP_NOZORDER);
+		int button_height = 28 * ppi / 96;
+		SetWindowPos(ok_button, 0, client_box.right - button_width - 11 * ppi / 96, client_box.bottom - 48 / 2 * ppi / 96 - button_height / 2, button_width, button_height, SWP_NOZORDER);
 
 		int text_bottom = client_box.bottom - 48 * ppi / 96;
 		SetWindowPos(frame, 0, 0, 0, client_box.right, text_bottom, SWP_NOZORDER);
