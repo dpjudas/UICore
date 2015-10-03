@@ -310,7 +310,7 @@ namespace uicore
 		set_depth_stencil_state(impl->default_depth_stencil_state);
 	}
 
-	ProgramObject GraphicContext::get_program_object() const
+	ProgramObjectPtr GraphicContext::get_program_object() const
 	{
 		return impl->get_program_object();
 	}
@@ -320,7 +320,7 @@ namespace uicore
 		impl->set_program_object(standard_program);
 	}
 
-	void GraphicContext::set_program_object(const ProgramObject &program)
+	void GraphicContext::set_program_object(const ProgramObjectPtr &program)
 	{
 		impl->set_program_object(program);
 	}

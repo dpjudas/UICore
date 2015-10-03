@@ -47,13 +47,13 @@ namespace uicore
 		virtual ~GL1ProgramObjectProvider();
 
 		/// \brief Returns the OpenGL program object handle.
-		unsigned int get_handle() const override;
+		unsigned int get_handle() const;
 
 		/// \brief Returns true if the link succeeded.
-		bool get_link_status() const override;
+		bool get_link_status() const;
 
 		/// \brief Returns true if validation succeeded.
-		bool get_validate_status() const override;
+		bool get_validate_status() const;
 
 		/// \brief Returns the current info log for the program object.
 		std::string get_info_log() const override;
@@ -88,12 +88,12 @@ namespace uicore
 		/// \brief Link program.
 		/** <p>If the linking fails, get_link_status() will return false and
 			get_info_log() will return the link log.</p>*/
-		void link() override;
+		bool try_link() override;
 
 		/// \brief Validate program.
 		/** <p>If the validation fails, get_validate_status() will return
 			false and get_info_log() will return the validation log.</p>*/
-		void validate() override;
+		bool validate() override;
 
 		/// \brief Set uniform variable(s).
 		void set_uniform1i(int location, int) override;

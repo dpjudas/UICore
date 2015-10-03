@@ -44,21 +44,6 @@ namespace uicore
 	{
 	}
 
-	unsigned int D3DProgramObjectProvider::get_handle() const
-	{
-		return 0;
-	}
-
-	bool D3DProgramObjectProvider::get_link_status() const
-	{
-		return true;
-	}
-
-	bool D3DProgramObjectProvider::get_validate_status() const
-	{
-		return true;
-	}
-
 	std::string D3DProgramObjectProvider::get_info_log() const
 	{
 		return std::string();
@@ -153,7 +138,7 @@ namespace uicore
 		// This isn't relevant for Direct3D.  The output semantic names (SV_TargetN) have hardcoded locations in HLSL.
 	}
 
-	void D3DProgramObjectProvider::link()
+	bool D3DProgramObjectProvider::try_link()
 	{
 		for (int j = 0; j < (int)ShaderType::num_types; j++)
 		{
@@ -229,10 +214,12 @@ namespace uicore
 				}
 			}
 		}
+		return true;
 	}
 
-	void D3DProgramObjectProvider::validate()
+	bool D3DProgramObjectProvider::validate()
 	{
+		return true;
 	}
 
 	void D3DProgramObjectProvider::set_uniform1i(int location, int v1)

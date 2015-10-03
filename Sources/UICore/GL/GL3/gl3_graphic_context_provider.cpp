@@ -273,7 +273,7 @@ namespace uicore
 		return render_window->get_viewport().get_size();
 	}
 
-	ProgramObject GL3GraphicContextProvider::get_program_object(StandardProgram standard_program) const
+	ProgramObjectPtr GL3GraphicContextProvider::get_program_object(StandardProgram standard_program) const
 	{
 		return standard_programs.get_program_object(standard_program);
 	}
@@ -286,11 +286,6 @@ namespace uicore
 	OcclusionQueryProvider *GL3GraphicContextProvider::alloc_occlusion_query()
 	{
 		return new GL3OcclusionQueryProvider(this);
-	}
-
-	ProgramObjectProvider *GL3GraphicContextProvider::alloc_program_object()
-	{
-		return new GL3ProgramObjectProvider();
 	}
 
 	TextureProvider *GL3GraphicContextProvider::alloc_texture(TextureDimensions texture_dimensions)
@@ -391,6 +386,11 @@ namespace uicore
 	std::shared_ptr<ShaderObjectProvider> GL3GraphicContextProvider::create_shader(ShaderType type, const std::string &source)
 	{
 		return std::make_shared<GL3ShaderObjectProvider>(type, source);
+	}
+
+	std::shared_ptr<ProgramObjectProvider> GL3GraphicContextProvider::create_program()
+	{
+		return std::make_shared<GL3ProgramObjectProvider>();
 	}
 
 	void GL3GraphicContextProvider::set_rasterizer_state(RasterizerState *state)
@@ -599,17 +599,19 @@ namespace uicore
 		set_program_object(standard_programs.get_program_object(standard_program));
 	}
 
-	void GL3GraphicContextProvider::set_program_object(const ProgramObject &program)
+	void GL3GraphicContextProvider::set_program_object(const ProgramObjectPtr &program)
 	{
 		OpenGL::set_active(this);
 		if (glUseProgram == nullptr)
 			return;
 
-		if (program.is_null())
-			glUseProgram(0);
+		if (program)
+		{
+			glUseProgram(static_cast<GL3ProgramObjectProvider*>(program.get())->get_handle());
+		}
 		else
 		{
-			glUseProgram(program.get_handle());
+			glUseProgram(0);
 		}
 	}
 

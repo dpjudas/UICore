@@ -90,7 +90,7 @@ namespace uicore
 
 		Signal<void(const Size &)> &sig_window_resized() override { return window_resized_signal; }
 
-		ProgramObject get_program_object(StandardProgram standard_program) const override;
+		ProgramObjectPtr get_program_object(StandardProgram standard_program) const override;
 
 		ClipZRange get_clip_z_range() const override { return clip_negative_positive_w; }
 		TextureImageYAxis get_texture_image_y_axis() const override { return y_axis_bottom_up; }
@@ -100,7 +100,6 @@ namespace uicore
 		bool has_compute_shader_support() const override { return false; }
 		TextureProvider *alloc_texture(TextureDimensions texture_dimensions) override;
 		OcclusionQueryProvider *alloc_occlusion_query() override;
-		ProgramObjectProvider *alloc_program_object() override;
 		FrameBufferProvider *alloc_frame_buffer() override;
 		RenderBufferProvider *alloc_render_buffer() override;
 		PixelBufferProvider *alloc_pixel_buffer() override;
@@ -113,6 +112,7 @@ namespace uicore
 		std::shared_ptr<RasterizerState> create_rasterizer_state(const RasterizerStateDescription &desc) override;
 		std::shared_ptr<BlendState> create_blend_state(const BlendStateDescription &desc) override;
 		std::shared_ptr<DepthStencilState> create_depth_stencil_state(const DepthStencilStateDescription &desc) override;
+		std::shared_ptr<ProgramObjectProvider> create_program() override;
 		std::shared_ptr<ShaderObjectProvider> create_shader(ShaderType type, const std::string &source) override;
 		void set_rasterizer_state(RasterizerState *state) override;
 		void set_blend_state(BlendState *state, const Colorf &blend_color, unsigned int sample_mask) override;
@@ -130,7 +130,7 @@ namespace uicore
 		void set_frame_buffer(const FrameBuffer &write_buffer, const FrameBuffer &read_buffer) override;
 		void reset_frame_buffer() override;
 		void set_program_object(StandardProgram standard_program) override;
-		void set_program_object(const ProgramObject &program) override;
+		void set_program_object(const ProgramObjectPtr &program) override;
 		void reset_program_object() override;
 
 		void set_draw_buffer(DrawBuffer buffer) override;

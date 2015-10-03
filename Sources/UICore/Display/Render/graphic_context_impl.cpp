@@ -245,16 +245,16 @@ namespace uicore
 		provider->set_program_object(standard_program);
 	}
 
-	ProgramObject GraphicContext_Impl::get_program_object() const
+	ProgramObjectPtr GraphicContext_Impl::get_program_object() const
 	{
 		return program;
 	}
 
-	void GraphicContext_Impl::set_program_object(const ProgramObject &new_program)
+	void GraphicContext_Impl::set_program_object(const ProgramObjectPtr &new_program)
 	{
 		program = new_program;
 		program_standard_set = false;
-		if (!program.is_null())
+		if (program)
 			provider->set_program_object(program);
 		else
 			provider->reset_program_object();
@@ -262,7 +262,7 @@ namespace uicore
 
 	void GraphicContext_Impl::reset_program_object()
 	{
-		program = ProgramObject();
+		program.reset();
 		program_standard_set = false;
 		provider->reset_program_object();
 	}

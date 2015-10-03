@@ -204,18 +204,20 @@ namespace uicore
 		glBindFragDataLocation(handle, color_number, name.c_str());
 	}
 
-	void GL3ProgramObjectProvider::link()
+	bool GL3ProgramObjectProvider::try_link()
 	{
 		throw_if_disposed();
 		OpenGL::set_active();
 		glLinkProgram(handle);
+		return get_link_status();
 	}
 
-	void GL3ProgramObjectProvider::validate()
+	bool GL3ProgramObjectProvider::validate()
 	{
 		throw_if_disposed();
 		OpenGL::set_active();
 		glValidateProgram(handle);
+		return get_validate_status();
 	}
 
 	void GL3ProgramObjectProvider::set_uniform1i(int location, int p1)

@@ -31,6 +31,7 @@
 #include "UICore/Display/TargetProviders/graphic_context_provider.h"
 #include "UICore/Display/Render/program_object.h"
 #include "UICore/Display/Render/storage_buffer.h"
+#include "UICore/Display/Render/uniform_buffer.h"
 #include "UICore/Display/Font/font.h"
 #include "UICore/Core/Math/mat4.h"
 
@@ -61,10 +62,10 @@ namespace uicore
 		void set_storage_buffer(int index, const StorageBuffer &buffer);
 
 		void set_program_object(StandardProgram standard_program);
-		void set_program_object(const ProgramObject &program);
+		void set_program_object(const ProgramObjectPtr &program);
 		void reset_program_object();
 
-		ProgramObject get_program_object() const;
+		ProgramObjectPtr get_program_object() const;
 
 		void set_rasterizer_state(const RasterizerStatePtr &state);
 		void set_blend_state(const BlendStatePtr &state, const Colorf &blend_color, unsigned int sample_mask);
@@ -102,7 +103,7 @@ namespace uicore
 
 		StandardProgram program_standard = program_color_only;
 		bool program_standard_set = false;
-		ProgramObject program;	//<-- Note this is valid when program_standard_set is true
+		ProgramObjectPtr program;	//<-- Note this is valid when program_standard_set is true
 
 		RasterizerStatePtr rasterizer_state;
 		DepthStencilStatePtr depth_stencil_state;

@@ -100,8 +100,7 @@ namespace uicore
 
 		selected_textures.resize(max_texture_coords);
 
-		internal_program_provider = new GL1ProgramObjectProvider(this);	// <-- To be owned by "standard_program"
-		internal_program = ProgramObject(internal_program_provider);
+		internal_program = std::make_shared<GL1ProgramObjectProvider>(this);
 
 		// Enable point sprites for legacy opengl
 		glEnable(GL_POINT_SPRITE);
@@ -248,11 +247,6 @@ namespace uicore
 		throw Exception("Occlusion Queries are not supported for OpenGL 1.3");
 	}
 
-	ProgramObjectProvider *GL1GraphicContextProvider::alloc_program_object()
-	{
-		throw Exception("Program Objects are not supported for OpenGL 1.3");
-	}
-
 	TextureProvider *GL1GraphicContextProvider::alloc_texture(TextureDimensions texture_dimensions)
 	{
 		return new GL1TextureProvider(texture_dimensions);
@@ -346,6 +340,11 @@ namespace uicore
 			depth_stencil_states[desc.clone()] = state;
 			return state;
 		}
+	}
+
+	std::shared_ptr<ProgramObjectProvider> GL1GraphicContextProvider::create_program()
+	{
+		throw Exception("Program Objects are not supported for OpenGL 1.3");
 	}
 
 	std::shared_ptr<ShaderObjectProvider> GL1GraphicContextProvider::create_shader(ShaderType type, const std::string &source)
@@ -551,12 +550,12 @@ namespace uicore
 	{
 	}
 
-	ProgramObject GL1GraphicContextProvider::get_program_object(StandardProgram standard_program) const
+	ProgramObjectPtr GL1GraphicContextProvider::get_program_object(StandardProgram standard_program) const
 	{
 		return internal_program;
 	}
 
-	void GL1GraphicContextProvider::set_program_object(const ProgramObject &program)
+	void GL1GraphicContextProvider::set_program_object(const ProgramObjectPtr &program)
 	{
 		throw Exception("GLSL program objects are not supported on OpenGL 1.3");
 	}

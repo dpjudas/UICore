@@ -51,7 +51,7 @@ namespace uicore
 		GL3StandardPrograms(GL3GraphicContextProvider *provider);
 		~GL3StandardPrograms();
 
-		ProgramObject get_program_object(StandardProgram standard_program) const;
+		ProgramObjectPtr get_program_object(StandardProgram standard_program) const;
 
 	private:
 		std::shared_ptr<GL3StandardPrograms_Impl> impl;

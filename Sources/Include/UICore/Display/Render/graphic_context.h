@@ -39,6 +39,8 @@
 #include "primitives_array.h"
 #include "frame_buffer.h"
 #include "element_array_vector.h"
+#include "shader_object.h"
+#include "program_object.h"
 
 namespace uicore
 {
@@ -60,6 +62,7 @@ namespace uicore
 	class RasterizerStateDescription;
 	class BlendStateDescription;
 	class DepthStencilStateDescription;
+	typedef std::shared_ptr<ProgramObject> ProgramObjectPtr;
 
 	/// Polygon culling modes.
 	enum CullMode
@@ -330,7 +333,7 @@ namespace uicore
 		FrameBuffer get_read_frame_buffer() const;
 
 		/// Returns the currently selected program object
-		ProgramObject get_program_object() const;
+		ProgramObjectPtr get_program_object() const;
 
 		/// Returns the current actual width of the context.
 		int get_width() const;
@@ -475,9 +478,7 @@ namespace uicore
 		void set_program_object(StandardProgram standard_program);
 
 		/// Set active program object.
-		///
-		/// \param program = Program to set
-		void set_program_object(const ProgramObject &program);
+		void set_program_object(const ProgramObjectPtr &program);
 
 		/// Remove active program object.
 		void reset_program_object();

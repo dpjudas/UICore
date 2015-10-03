@@ -156,7 +156,7 @@ namespace uicore
 		return 0; //window->get_device_context();
 	}
 
-	ProgramObject D3DGraphicContextProvider::get_program_object(StandardProgram standard_program) const
+	ProgramObjectPtr D3DGraphicContextProvider::get_program_object(StandardProgram standard_program) const
 	{
 		return standard_programs.get_program_object(standard_program);
 	}
@@ -186,11 +186,6 @@ namespace uicore
 	OcclusionQueryProvider *D3DGraphicContextProvider::alloc_occlusion_query()
 	{
 		return new D3DOcclusionQueryProvider;
-	}
-
-	ProgramObjectProvider *D3DGraphicContextProvider::alloc_program_object()
-	{
-		return new D3DProgramObjectProvider(window->get_device(), window->get_device_context());
 	}
 
 	FrameBufferProvider *D3DGraphicContextProvider::alloc_frame_buffer()
@@ -288,6 +283,11 @@ namespace uicore
 		return std::make_shared<D3DShaderObjectProvider>(window->get_device(), window->get_feature_level(), type, source);
 	}
 
+	std::shared_ptr<ProgramObjectProvider> D3DGraphicContextProvider::create_program()
+	{
+		return std::make_shared<D3DProgramObjectProvider>(window->get_device(), window->get_device_context());
+	}
+
 	void D3DGraphicContextProvider::set_rasterizer_state(RasterizerState *state)
 	{
 		if (state)
@@ -318,13 +318,13 @@ namespace uicore
 
 	void D3DGraphicContextProvider::set_program_object(StandardProgram standard_program)
 	{
-		ProgramObject program = get_program_object(standard_program);
+		ProgramObjectPtr program = get_program_object(standard_program);
 		set_program_object(program);
 	}
 
-	void D3DGraphicContextProvider::set_program_object(const ProgramObject &program)
+	void D3DGraphicContextProvider::set_program_object(const ProgramObjectPtr &program)
 	{
-		D3DProgramObjectProvider *new_program_provider = static_cast<D3DProgramObjectProvider *>(program.get_provider());
+		D3DProgramObjectProvider *new_program_provider = static_cast<D3DProgramObjectProvider *>(program.get());
 		if (new_program_provider == current_program_provider)
 			return;
 

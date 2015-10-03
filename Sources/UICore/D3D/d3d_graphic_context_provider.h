@@ -68,7 +68,7 @@ namespace uicore
 #endif
 
 		Signal<void(const Size &)> &sig_window_resized() { return window_resized_signal; }
-		ProgramObject get_program_object(StandardProgram standard_program) const;
+		ProgramObjectPtr get_program_object(StandardProgram standard_program) const;
 
 		StandardPrograms standard_programs;
 
@@ -81,7 +81,6 @@ namespace uicore
 		PixelBuffer get_pixeldata(const Rect& rect, TextureFormat texture_format, bool clamp) const;
 		TextureProvider *alloc_texture(TextureDimensions texture_dimensions);
 		OcclusionQueryProvider *alloc_occlusion_query();
-		ProgramObjectProvider *alloc_program_object();
 		FrameBufferProvider *alloc_frame_buffer();
 		RenderBufferProvider *alloc_render_buffer();
 		VertexArrayBufferProvider *alloc_vertex_array_buffer();
@@ -94,12 +93,13 @@ namespace uicore
 		std::shared_ptr<RasterizerState> create_rasterizer_state(const RasterizerStateDescription &desc) override;
 		std::shared_ptr<BlendState> create_blend_state(const BlendStateDescription &desc) override;
 		std::shared_ptr<DepthStencilState> create_depth_stencil_state(const DepthStencilStateDescription &desc) override;
+		std::shared_ptr<ProgramObjectProvider> create_program() override;
 		std::shared_ptr<ShaderObjectProvider> create_shader(ShaderType type, const std::string &source) override;
 		void set_rasterizer_state(RasterizerState *state);
 		void set_blend_state(BlendState *state, const Colorf &blend_color, unsigned int sample_mask);
 		void set_depth_stencil_state(DepthStencilState *state, int stencil_ref);
 		void set_program_object(StandardProgram standard_program);
-		void set_program_object(const ProgramObject &program);
+		void set_program_object(const ProgramObjectPtr &program);
 		void reset_program_object();
 		void set_uniform_buffer(int index, const UniformBuffer &buffer);
 		void reset_uniform_buffer(int index);

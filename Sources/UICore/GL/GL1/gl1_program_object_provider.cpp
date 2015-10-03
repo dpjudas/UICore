@@ -131,12 +131,14 @@ namespace uicore
 	{
 	}
 
-	void GL1ProgramObjectProvider::link()
+	bool GL1ProgramObjectProvider::try_link()
 	{
+		return true;
 	}
 
-	void GL1ProgramObjectProvider::validate()
+	bool GL1ProgramObjectProvider::validate()
 	{
+		return true;
 	}
 
 	void GL1ProgramObjectProvider::set_uniform1i(int location, int p1)

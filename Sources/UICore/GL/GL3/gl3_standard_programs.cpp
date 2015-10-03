@@ -481,14 +481,10 @@ namespace uicore
 	class GL3StandardPrograms_Impl
 	{
 	public:
-		GL3StandardPrograms_Impl() {}
-		~GL3StandardPrograms_Impl() {}
-
-		ProgramObject color_only_program;
-		ProgramObject single_texture_program;
-		ProgramObject sprite_program;
-		ProgramObject path_program;
-
+		ProgramObjectPtr color_only_program;
+		ProgramObjectPtr single_texture_program;
+		ProgramObjectPtr sprite_program;
+		ProgramObjectPtr path_program;
 	};
 
 	GL3StandardPrograms::GL3StandardPrograms()
@@ -541,76 +537,76 @@ namespace uicore
 		if (!fragment_path_shader->try_compile())
 			throw Exception("Unable to compile the standard shader program: 'fragment path' Error:" + fragment_path_shader->info_log());
 
-		ProgramObject color_only_program(provider);
-		color_only_program.attach(vertex_color_only_shader);
-		color_only_program.attach(fragment_color_only_shader);
-		color_only_program.bind_attribute_location(0, "Position");
-		color_only_program.bind_attribute_location(1, "Color0");
+		auto color_only_program = provider->create_program();
+		color_only_program->attach(vertex_color_only_shader);
+		color_only_program->attach(fragment_color_only_shader);
+		color_only_program->bind_attribute_location(0, "Position");
+		color_only_program->bind_attribute_location(1, "Color0");
 
 		if (use_glsl_150)
-			color_only_program.bind_frag_data_location(0, "cl_FragColor");
+			color_only_program->bind_frag_data_location(0, "cl_FragColor");
 
-		if (!color_only_program.link())
-			throw Exception("Unable to link the standard shader program: 'color only' Error:" + color_only_program.get_info_log());
+		if (!color_only_program->try_link())
+			throw Exception("Unable to link the standard shader program: 'color only' Error:" + color_only_program->get_info_log());
 
-		ProgramObject single_texture_program(provider);
-		single_texture_program.attach(vertex_single_texture_shader);
-		single_texture_program.attach(fragment_single_texture_shader);
-		single_texture_program.bind_attribute_location(0, "Position");
-		single_texture_program.bind_attribute_location(1, "Color0");
-		single_texture_program.bind_attribute_location(2, "TexCoord0");
-
-		if (use_glsl_150)
-			single_texture_program.bind_frag_data_location(0, "cl_FragColor");
-
-		if (!single_texture_program.link())
-			throw Exception("Unable to link the standard shader program: 'single texture' Error:" + single_texture_program.get_info_log());
-		single_texture_program.set_uniform1i("Texture0", 0);
-
-		ProgramObject sprite_program(provider);
-		sprite_program.attach(vertex_sprite_shader);
-		sprite_program.attach(fragment_sprite_shader);
-		sprite_program.bind_attribute_location(0, "Position");
-		sprite_program.bind_attribute_location(1, "Color0");
-		sprite_program.bind_attribute_location(2, "TexCoord0");
-		sprite_program.bind_attribute_location(3, "TexIndex0");
+		auto single_texture_program = provider->create_program();
+		single_texture_program->attach(vertex_single_texture_shader);
+		single_texture_program->attach(fragment_single_texture_shader);
+		single_texture_program->bind_attribute_location(0, "Position");
+		single_texture_program->bind_attribute_location(1, "Color0");
+		single_texture_program->bind_attribute_location(2, "TexCoord0");
 
 		if (use_glsl_150)
-			sprite_program.bind_frag_data_location(0, "cl_FragColor");
+			single_texture_program->bind_frag_data_location(0, "cl_FragColor");
 
-		if (!sprite_program.link())
-			throw Exception("Unable to link the standard shader program: 'sprite' Error:" + sprite_program.get_info_log());
+		if (!single_texture_program->try_link())
+			throw Exception("Unable to link the standard shader program: 'single texture' Error:" + single_texture_program->get_info_log());
+		single_texture_program->set_uniform1i("Texture0", 0);
 
-		sprite_program.set_uniform1i("Texture0", 0);
-		sprite_program.set_uniform1i("Texture1", 1);
-		sprite_program.set_uniform1i("Texture2", 2);
-		sprite_program.set_uniform1i("Texture3", 3);
-		sprite_program.set_uniform1i("Texture4", 4);
-		sprite_program.set_uniform1i("Texture5", 5);
-		sprite_program.set_uniform1i("Texture6", 6);
-		sprite_program.set_uniform1i("Texture7", 7);
-		sprite_program.set_uniform1i("Texture8", 8);
-		sprite_program.set_uniform1i("Texture9", 9);
-		sprite_program.set_uniform1i("Texture10", 10);
-		sprite_program.set_uniform1i("Texture11", 11);
-		sprite_program.set_uniform1i("Texture12", 12);
-		sprite_program.set_uniform1i("Texture13", 13);
-		sprite_program.set_uniform1i("Texture14", 14);
-		sprite_program.set_uniform1i("Texture15", 15);
-
-		ProgramObject path_program(provider);
-		path_program.attach(vertex_path_shader);
-		path_program.attach(fragment_path_shader);
-		path_program.bind_attribute_location(0, "Vertex");
+		auto sprite_program = provider->create_program();
+		sprite_program->attach(vertex_sprite_shader);
+		sprite_program->attach(fragment_sprite_shader);
+		sprite_program->bind_attribute_location(0, "Position");
+		sprite_program->bind_attribute_location(1, "Color0");
+		sprite_program->bind_attribute_location(2, "TexCoord0");
+		sprite_program->bind_attribute_location(3, "TexIndex0");
 
 		if (use_glsl_150)
-			path_program.bind_frag_data_location(0, "cl_FragColor");
+			sprite_program->bind_frag_data_location(0, "cl_FragColor");
 
-		if (!path_program.link())
-			throw Exception("Unable to link the standard shader program: 'path' Error:" + path_program.get_info_log());
-		path_program.set_uniform1i("mask_texture", 0);
-		path_program.set_uniform1i("instance_data", 1);
-		path_program.set_uniform1i("image_texture", 2);
+		if (!sprite_program->try_link())
+			throw Exception("Unable to link the standard shader program: 'sprite' Error:" + sprite_program->get_info_log());
+
+		sprite_program->set_uniform1i("Texture0", 0);
+		sprite_program->set_uniform1i("Texture1", 1);
+		sprite_program->set_uniform1i("Texture2", 2);
+		sprite_program->set_uniform1i("Texture3", 3);
+		sprite_program->set_uniform1i("Texture4", 4);
+		sprite_program->set_uniform1i("Texture5", 5);
+		sprite_program->set_uniform1i("Texture6", 6);
+		sprite_program->set_uniform1i("Texture7", 7);
+		sprite_program->set_uniform1i("Texture8", 8);
+		sprite_program->set_uniform1i("Texture9", 9);
+		sprite_program->set_uniform1i("Texture10", 10);
+		sprite_program->set_uniform1i("Texture11", 11);
+		sprite_program->set_uniform1i("Texture12", 12);
+		sprite_program->set_uniform1i("Texture13", 13);
+		sprite_program->set_uniform1i("Texture14", 14);
+		sprite_program->set_uniform1i("Texture15", 15);
+
+		auto path_program = provider->create_program();
+		path_program->attach(vertex_path_shader);
+		path_program->attach(fragment_path_shader);
+		path_program->bind_attribute_location(0, "Vertex");
+
+		if (use_glsl_150)
+			path_program->bind_frag_data_location(0, "cl_FragColor");
+
+		if (!path_program->try_link())
+			throw Exception("Unable to link the standard shader program: 'path' Error:" + path_program->get_info_log());
+		path_program->set_uniform1i("mask_texture", 0);
+		path_program->set_uniform1i("instance_data", 1);
+		path_program->set_uniform1i("image_texture", 2);
 
 		impl->color_only_program = color_only_program;
 		impl->single_texture_program = single_texture_program;
@@ -624,7 +620,7 @@ namespace uicore
 	{
 	}
 
-	ProgramObject GL3StandardPrograms::get_program_object(StandardProgram standard_program) const
+	ProgramObjectPtr GL3StandardPrograms::get_program_object(StandardProgram standard_program) const
 	{
 		switch (standard_program)
 		{

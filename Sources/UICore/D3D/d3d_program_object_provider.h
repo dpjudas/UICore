@@ -81,9 +81,6 @@ namespace uicore
 		D3DProgramObjectProvider(const ComPtr<ID3D11Device> &device, const ComPtr<ID3D11DeviceContext> &device_context);
 		~D3DProgramObjectProvider();
 
-		unsigned int get_handle() const override;
-		bool get_link_status() const override;
-		bool get_validate_status() const override;
 		std::string get_info_log() const override;
 		std::vector<ShaderObjectPtr> get_shaders() const override;
 		int get_attribute_location(const std::string &name) const override;
@@ -117,8 +114,8 @@ namespace uicore
 		void detach(const ShaderObjectPtr &obj) override;
 		void bind_attribute_location(int index, const std::string &name) override;
 		void bind_frag_data_location(int color_number, const std::string &name) override;
-		void link() override;
-		void validate() override;
+		bool try_link() override;
+		bool validate() override;
 
 		void set_uniform1i(int location, int) override;
 		void set_uniform2i(int location, int, int) override;

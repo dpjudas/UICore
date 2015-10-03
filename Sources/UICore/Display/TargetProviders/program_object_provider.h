@@ -29,91 +29,39 @@
 #pragma once
 
 #include <vector>
+#include "UICore/Display/Render/program_object.h"
 #include "UICore/Display/Render/shader_object.h"
 
 namespace uicore
 {
 	class UniformBuffer;
 
-	/// \brief Program Object provider.
-	class ProgramObjectProvider
+	class ProgramObjectProvider : public ProgramObject
 	{
 	public:
 		virtual ~ProgramObjectProvider() { }
 
-		/// \brief Returns the OpenGL program object handle.
-		virtual unsigned int get_handle() const = 0;
+		void link() override
+		{
+			bool result = try_link();
+			if (!result)
+				throw Exception("Shader linking failed: " + get_info_log());
+		}
 
-		/// \brief Returns true if the link succeeded.
-		virtual bool get_link_status() const = 0;
+		void set_uniform_buffer_index(const std::string &block_name, int bind_index) override
+		{
+			ProgramObject::set_uniform_buffer_index(get_uniform_buffer_index(block_name), bind_index);
+		}
 
-		/// \brief Returns true if validation succeeded.
-		virtual bool get_validate_status() const = 0;
+		void set_storage_buffer_index(const std::string &block_name, int bind_index) override
+		{
+			ProgramObject::set_storage_buffer_index(get_storage_buffer_index(block_name), bind_index);
+		}
 
-		/// \brief Returns the current info log for the program object.
-		virtual std::string get_info_log() const = 0;
-
-		/// \brief Returns the shaders used in this program.
-		virtual std::vector<ShaderObjectPtr> get_shaders() const = 0;
-
-		/// \brief Returns the location of a named active attribute.
-		virtual int get_attribute_location(const std::string &name) const = 0;
-
-		/// \brief Returns the location of a named uniform variable.
-		virtual int get_uniform_location(const std::string &name) const = 0;
-
-		/// \brief Get the uniform block size
-		virtual int get_uniform_buffer_size(int block_index) const = 0;
-
-		/// \brief Get the uniform block index
-		///
-		/// Returns -1 when the block index was not found
-		virtual int get_uniform_buffer_index(const std::string &block_name) const = 0;
-
-		/// \brief Get the storage block index
-		///
-		/// Returns -1 when the block index was not found
-		virtual int get_storage_buffer_index(const std::string &name) const = 0;
-
-		/// \brief Add shader to program object.
-		virtual void attach(const ShaderObjectPtr &obj) = 0;
-
-		/// \brief Remove shader from program object.
-		virtual void detach(const ShaderObjectPtr &obj) = 0;
-
-		/// \brief Bind attribute to specific location.
-		/** <p>This function must be called before linking.</p>*/
-		virtual void bind_attribute_location(int index, const std::string &name) = 0;
-
-		/// \brief Bind shader out variable a specific color buffer location.
-		/** <p>This function must be called before linking.</p>*/
-		virtual void bind_frag_data_location(int color_number, const std::string &name) = 0;
-
-		/// \brief Link program.
-		/** <p>If the linking fails, get_link_status() will return false and
-			get_info_log() will return the link log.</p>*/
-		virtual void link() = 0;
-
-		/// \brief Validate program.
-		/** <p>If the validation fails, get_validate_status() will return
-			false and get_info_log() will return the validation log.</p>*/
-		virtual void validate() = 0;
-
-		/// \brief Set uniform variable(s).
-		virtual void set_uniform1i(int location, int value_a) = 0;
-		virtual void set_uniform2i(int location, int value_a, int value_b) = 0;
-		virtual void set_uniform3i(int location, int value_a, int value_b, int value_c) = 0;
-		virtual void set_uniform4i(int location, int value_a, int value_b, int value_c, int value_d) = 0;
-		virtual void set_uniformiv(int location, int size, int count, const int *data) = 0;
-		virtual void set_uniform1f(int location, float value_a) = 0;
-		virtual void set_uniform2f(int location, float value_a, float value_b) = 0;
-		virtual void set_uniform3f(int location, float value_a, float value_b, float value_c) = 0;
-		virtual void set_uniform4f(int location, float value_a, float value_b, float value_c, float value_d) = 0;
-		virtual void set_uniformfv(int location, int size, int count, const float *data) = 0;
-		virtual void set_uniform_matrix(int location, int size, int count, bool transpose, const float *data) = 0;
-
-		virtual void set_uniform_buffer_index(int block_index, int bind_index) = 0;
-
-		virtual void set_storage_buffer_index(int buffer_index, int bind_unit_index) = 0;
+		int get_uniform_buffer_size(const std::string &block_name) const override
+		{
+			int block_index = get_uniform_buffer_index(block_name);
+			return ProgramObject::get_uniform_buffer_size(block_index);
+		}
 	};
 }

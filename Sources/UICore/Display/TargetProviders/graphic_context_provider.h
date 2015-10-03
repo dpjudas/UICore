@@ -85,7 +85,7 @@ namespace uicore
 		virtual Signal<void(const Size &)> &sig_window_resized() = 0;
 
 		/// \brief Get a program object from the standard program specified
-		virtual ProgramObject get_program_object(StandardProgram standard_program) const = 0;
+		virtual std::shared_ptr<ProgramObject> get_program_object(StandardProgram standard_program) const = 0;
 
 		/// \brief Returns in what range clip space z values are clipped.
 		virtual ClipZRange get_clip_z_range() const = 0;
@@ -123,9 +123,6 @@ namespace uicore
 		/// \brief Allocate occlusion query provider of this gc.
 		virtual OcclusionQueryProvider *alloc_occlusion_query() = 0;
 
-		/// \brief Allocate program object provider of this gc.
-		virtual ProgramObjectProvider *alloc_program_object() = 0;
-
 		/// \brief Allocate frame buffer provider for this gc.
 		virtual FrameBufferProvider *alloc_frame_buffer() = 0;
 
@@ -156,6 +153,7 @@ namespace uicore
 		virtual std::shared_ptr<RasterizerState> create_rasterizer_state(const RasterizerStateDescription &desc) = 0;
 		virtual std::shared_ptr<BlendState> create_blend_state(const BlendStateDescription &desc) = 0;
 		virtual std::shared_ptr<DepthStencilState> create_depth_stencil_state(const DepthStencilStateDescription &desc) = 0;
+		virtual std::shared_ptr<ProgramObjectProvider> create_program() = 0;
 		virtual std::shared_ptr<ShaderObjectProvider> create_shader(ShaderType type, const std::string &source) = 0;
 
 		/// \brief Set active rasterizer state
@@ -173,7 +171,7 @@ namespace uicore
 		/// \brief Set active program object.
 		///
 		/// \param program = Program to set
-		virtual void set_program_object(const ProgramObject &program) = 0;
+		virtual void set_program_object(const ProgramObjectPtr &program) = 0;
 
 		/// \brief Remove active program object.
 		virtual void reset_program_object() = 0;

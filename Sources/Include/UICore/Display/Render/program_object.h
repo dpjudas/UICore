@@ -31,214 +31,106 @@
 #pragma once
 
 #include <memory>
-#include "graphic_context.h"
-#include "uniform_vector.h"
 #include "shader_object.h"
 
 namespace uicore
 {
 	class IODevice;
-	class ShaderObject;
-	class ProgramObject_Impl;
 	class GraphicContext;
-	class GraphicContextProvider;
-	class ProgramObjectProvider;
+	class ShaderObject;
+	typedef std::shared_ptr<ShaderObject> ShaderObjectPtr;
 
 	/// \brief Program Object
-	///
-	///    <p>The shader objects that are to be used by programmable stages of
-	///    OpenGL are collected together to form a program object. ProgramObject
-	///    is ClanLib's C++ interface to OpenGL program objects.</p>
-	///    <p>To construct a program object programatically, the procedure is
-	///    as follows:</p>
-	///    <pre>
-	///    ShaderObject vertex_shader(shadertype_vertex, vertex_glsl_sourcecode);
-	///    ShaderObject fragment_shader(shadertype_fragment, fragment_glsl_sourcecode);
-	///    ProgramObject program;
-	///    program.attach(vertex_shader);
-	///    program.attach(fragment_shader);
-	///    program.link();
-	///    </pre>
-	///    <p>For more information about program objects, see the OpenGL 2.0
-	///    specification at <a href="http://www.opengl.org">www.opengl.org</a>. Documentation
-	///    about the OpenGL Shader Language (GLSL) is also available from www.opengl.org.</p>
 	class ProgramObject
 	{
 	public:
-		/// \brief Construct a null instance
-		ProgramObject();
-
 		/// \brief Constructs a ProgramObject
-		///
-		/// \param gc = Graphic Context
-		ProgramObject(GraphicContext &gc);
-
-		/// \brief Constructs a ProgramObject
-		///
-		/// \param gc_provider = Graphic Context Provider
-		ProgramObject(GraphicContextProvider *gc_provider);
-
-		/// \brief Constructs a ProgramObject
-		///
-		/// \param provider = Font Provider
-		ProgramObject(ProgramObjectProvider *provider);
+		static std::shared_ptr<ProgramObject> create(GraphicContext &gc);
 
 		/// \brief Load
-		///
-		/// \param gc = Graphic Context
-		/// \param vertex_fullname = String Ref
-		/// \param fragment_fullname = String Ref
-		///
-		/// \return Program Object
-		static ProgramObject load(GraphicContext &gc, const std::string &vertex_fullname, const std::string &fragment_fullname);
-
-		/// \brief Load
-		///
-		/// \param gc = Graphic Context
-		/// \param vertex_fullname = String Ref
-		/// \param geometry_fullname = String Ref
-		/// \param fragment_fullname = String Ref
-		///
-		/// \return Program Object
-		static ProgramObject load(GraphicContext &gc, const std::string &vertex_fullname, const std::string &geometry_fullname, const std::string &fragment_fullname);
-
-		/// \brief Load
-		///
-		/// \param gc = Graphic Context
-		/// \param vertex_file = IODevice
-		/// \param fragment_file = IODevice
-		///
-		/// \return Program Object
-		static ProgramObject load(GraphicContext &gc, IODevice &vertex_file, IODevice &fragment_file);
-
-		/// \brief Load
-		///
-		/// \param gc = Graphic Context
-		/// \param vertex_file = IODevice
-		/// \param geometry_file = IODevice
-		/// \param fragment_file = IODevice
-		///
-		/// \return Program Object
-		static ProgramObject load(GraphicContext &gc, IODevice &vertex_file, IODevice &geometry_file, IODevice &fragment_file);
+		static std::shared_ptr<ProgramObject> load(GraphicContext &gc, const std::string &vertex_fullname, const std::string &fragment_fullname);
+		static std::shared_ptr<ProgramObject> load(GraphicContext &gc, const std::string &vertex_fullname, const std::string &geometry_fullname, const std::string &fragment_fullname);
+		static std::shared_ptr<ProgramObject> load(GraphicContext &gc, IODevice &vertex_file, IODevice &fragment_file);
+		static std::shared_ptr<ProgramObject> load(GraphicContext &gc, IODevice &vertex_file, IODevice &geometry_file, IODevice &fragment_file);
 
 		/// \brief Load and link
-		///
-		/// \param gc = Graphic Context
-		/// \param vertex_fullname = String Ref
-		/// \param fragment_fullname = String Ref
-		///
-		/// \return Program Object
-		static ProgramObject load_and_link(GraphicContext &gc, const std::string &vertex_fullname, const std::string &fragment_fullname);
-
-		/// \brief Load and link
-		///
-		/// \param gc = Graphic Context
-		/// \param vertex_fullname = String Ref
-		/// \param geometry_fullname = String Ref
-		/// \param fragment_fullname = String Ref
-		///
-		/// \return Program Object
-		static ProgramObject load_and_link(GraphicContext &gc, const std::string &vertex_fullname, const std::string &geometry_fullname, const std::string &fragment_fullname);
-
-		/// \brief Load and link
-		///
-		/// \param gc = Graphic Context
-		/// \param vertex_file = IODevice
-		/// \param fragment_file = IODevice
-		///
-		/// \return Program Object
-		static ProgramObject load_and_link(GraphicContext &gc, IODevice &vertex_file, IODevice &fragment_file);
-
-		/// \brief Load and link
-		///
-		/// \param gc = Graphic Context
-		/// \param vertex_file = IODevice
-		/// \param geometry_file = IODevice
-		/// \param fragment_file = IODevice
-		///
-		/// \return Program Object
-		static ProgramObject load_and_link(GraphicContext &gc, IODevice &vertex_file, IODevice &geometry_file, IODevice &fragment_file);
-
-		virtual ~ProgramObject();
-
-		/// \brief Returns true if this object is invalid.
-		bool is_null() const { return !impl; }
-
-		/// \brief Throw an exception if this object is invalid.
-		void throw_if_null() const;
-
-		/// \brief Retrieves the provider.
-		ProgramObjectProvider *get_provider() const;
-
-		/// \brief Returns the OpenGL program object handle.
-		unsigned int get_handle() const;
+		static std::shared_ptr<ProgramObject> load_and_link(GraphicContext &gc, const std::string &vertex_fullname, const std::string &fragment_fullname);
+		static std::shared_ptr<ProgramObject> load_and_link(GraphicContext &gc, const std::string &vertex_fullname, const std::string &geometry_fullname, const std::string &fragment_fullname);
+		static std::shared_ptr<ProgramObject> load_and_link(GraphicContext &gc, IODevice &vertex_file, IODevice &fragment_file);
+		static std::shared_ptr<ProgramObject> load_and_link(GraphicContext &gc, IODevice &vertex_file, IODevice &geometry_file, IODevice &fragment_file);
 
 		/// \brief Returns the shaders attached to the program object.
-		std::vector<ShaderObjectPtr> get_shaders() const;
+		virtual std::vector<ShaderObjectPtr> get_shaders() const = 0;
 
 		/// \brief Returns the current info log for the program object.
-		std::string get_info_log() const;
+		virtual std::string get_info_log() const = 0;
 
 		/// \brief Returns the location of a named active attribute.
 		///
 		/// Returns -1 when unknown
-		int get_attribute_location(const std::string &name) const;
+		virtual int get_attribute_location(const std::string &name) const = 0;
 
 		/// \brief Returns the location of a named uniform variable.
 		///
 		/// Returns -1 when unknown
-		int get_uniform_location(const std::string &name) const;
+		virtual int get_uniform_location(const std::string &name) const = 0;
 
 		/// \brief Get the uniform block size
 		///
 		/// An exception is thrown of block_name was not found
 		///
 		/// Returns -1 when unknown
-		int get_uniform_buffer_size(const std::string &block_name) const;
+		virtual int get_uniform_buffer_size(const std::string &block_name) const = 0;
 
 		/// \brief Get the uniform block size
-		int get_uniform_buffer_size(int block_index) const;
+		virtual int get_uniform_buffer_size(int block_index) const = 0;
 
 		/// \brief Get the uniform block index
 		///
 		/// Returns -1 when the block index was not found
-		int get_uniform_buffer_index(const std::string &block_name) const;
+		virtual int get_uniform_buffer_index(const std::string &block_name) const = 0;
 
 		/// \brief Get the storage buffer index
 		///
 		/// Returns -1 when the block index was not found
-		int get_storage_buffer_index(const std::string &name) const;
-
-		/// \brief Equality operator
-		bool operator==(const ProgramObject &other) const;
+		virtual int get_storage_buffer_index(const std::string &name) const = 0;
 
 		/// \brief Add shader to program object.
-		void attach(const ShaderObjectPtr &obj);
+		virtual void attach(const ShaderObjectPtr &obj) = 0;
 
 		/// \brief Remove shader from program object.
-		void detach(const ShaderObjectPtr &obj);
+		virtual void detach(const ShaderObjectPtr &obj) = 0;
 
 		/// \brief Bind attribute to specific location.
-		/** <p>This function must be called before linking.</p>*/
-		void bind_attribute_location(int index, const std::string &name);
+		///
+		/// This function must be called before linking.
+		virtual void bind_attribute_location(int index, const std::string &name) = 0;
 
 		/// \brief Bind shader out variable a specific color buffer location.
-		/** <p>This function must be called before linking.</p>*/
-		void bind_frag_data_location(int color_number, const std::string &name);
+		///
+		/// This function must be called before linking.
+		virtual void bind_frag_data_location(int color_number, const std::string &name) = 0;
 
 		/// \brief Link program.
-		/** <p>If the linking fails, get_info_log() will return the link log.</p>*/
-		bool link();
+		///
+		/// If the linking fails, get_info_log() will return the link log
+		virtual bool try_link() = 0;
+
+		/// \brief Link program.
+		///
+		/// If the linking fails an exception will be thrown
+		virtual void link() = 0;
 
 		/// \brief Validate program.
-		/** <p>If the validation fails, get_info_log() will return the validation log.</p>*/
-		bool validate();
+		///
+		/// If the validation fails, get_info_log() will return the validation log
+		virtual bool validate() = 0;
 
-		void set_uniform1i(int location, int value_a);
-		void set_uniform2i(int location, int value_a, int value_b);
-		void set_uniform3i(int location, int value_a, int value_b, int value_c);
-		void set_uniform4i(int location, int value_a, int value_b, int value_c, int value_d);
-		void set_uniformiv(int location, int size, int count, const int *data);
+		virtual void set_uniform1i(int location, int value_a) = 0;
+		virtual void set_uniform2i(int location, int value_a, int value_b) = 0;
+		virtual void set_uniform3i(int location, int value_a, int value_b, int value_c) = 0;
+		virtual void set_uniform4i(int location, int value_a, int value_b, int value_c, int value_d) = 0;
+		virtual void set_uniformiv(int location, int size, int count, const int *data) = 0;
 		void set_uniform2i(int location, const Vec2i &vec) { set_uniform2i(location, vec.x, vec.y); }
 		void set_uniform3i(int location, const Vec3i &vec) { set_uniform3i(location, vec.x, vec.y, vec.z); }
 		void set_uniform4i(int location, const Vec4i &vec) { set_uniform4i(location, vec.x, vec.y, vec.z, vec.w); }
@@ -251,18 +143,18 @@ namespace uicore
 		void set_uniformiv(int location, int count, const Vec2i *data) { set_uniformiv(location, 2, count, &data->x); }
 		void set_uniformiv(int location, int count, const Vec3i *data) { set_uniformiv(location, 3, count, &data->x); }
 		void set_uniformiv(int location, int count, const Vec4i *data) { set_uniformiv(location, 4, count, &data->x); }
-		void set_uniform1f(int location, float value_a);
-		void set_uniform2f(int location, float value_a, float value_b);
-		void set_uniform3f(int location, float value_a, float value_b, float value_c);
-		void set_uniform4f(int location, float value_a, float value_b, float value_c, float value_d);
-		void set_uniformfv(int location, int size, int count, const float *data);
+		virtual void set_uniform1f(int location, float value_a) = 0;
+		virtual void set_uniform2f(int location, float value_a, float value_b) = 0;
+		virtual void set_uniform3f(int location, float value_a, float value_b, float value_c) = 0;
+		virtual void set_uniform4f(int location, float value_a, float value_b, float value_c, float value_d) = 0;
+		virtual void set_uniformfv(int location, int size, int count, const float *data) = 0;
 		void set_uniform2f(int location, const Vec2f &vec) { set_uniform2f(location, vec.x, vec.y); }
 		void set_uniform3f(int location, const Vec3f &vec) { set_uniform3f(location, vec.x, vec.y, vec.z); }
 		void set_uniform4f(int location, const Vec4f &vec) { set_uniform4f(location, vec.x, vec.y, vec.z, vec.w); }
 		void set_uniformfv(int location, int count, const Vec2f *data) { set_uniformfv(location, 2, count, &data->x); }
 		void set_uniformfv(int location, int count, const Vec3f *data) { set_uniformfv(location, 3, count, &data->x); }
 		void set_uniformfv(int location, int count, const Vec4f *data) { set_uniformfv(location, 4, count, &data->x); }
-		void set_uniform_matrix(int location, int size, int count, bool transpose, const float *data);
+		virtual void set_uniform_matrix(int location, int size, int count, bool transpose, const float *data) = 0;
 		void set_uniform_matrix(int location, const Mat2f &matrix) { set_uniform_matrix(location, 2, 1, false, matrix.matrix); }
 		void set_uniform_matrix(int location, const Mat3f &matrix) { set_uniform_matrix(location, 3, 1, false, matrix.matrix); }
 		void set_uniform_matrix(int location, const Mat4f &matrix) { set_uniform_matrix(location, 4, 1, false, matrix.matrix); }
@@ -306,19 +198,12 @@ namespace uicore
 		void set_uniform_matrix(const std::string &name, int count, const Mat3f *matrix) { int loc = get_uniform_location(name); if (loc >= 0) set_uniform_matrix(loc, count, matrix); }
 		void set_uniform_matrix(const std::string &name, int count, const Mat4f *matrix) { int loc = get_uniform_location(name); if (loc >= 0) set_uniform_matrix(loc, count, matrix); }
 
-		/// \brief Sets the UniformBuffer
-		void set_uniform_buffer_index(const std::string &block_name, int bind_index);
+		virtual void set_uniform_buffer_index(const std::string &block_name, int bind_index) = 0;
+		virtual void set_uniform_buffer_index(int block_index, int bind_index) = 0;
 
-		/// \brief Sets the UniformBuffer
-		void set_uniform_buffer_index(int block_index, int bind_index);
-
-		/// \brief Sets the UniformBuffer
-		void set_storage_buffer_index(const std::string &block_name, int bind_index);
-
-		/// \brief Sets the UniformBuffer
-		void set_storage_buffer_index(int block_index, int bind_index);
-
-	private:
-		std::shared_ptr<ProgramObject_Impl> impl;
+		virtual void set_storage_buffer_index(const std::string &block_name, int bind_index) = 0;
+		virtual void set_storage_buffer_index(int block_index, int bind_index) = 0;
 	};
+
+	typedef std::shared_ptr<ProgramObject> ProgramObjectPtr;
 }
