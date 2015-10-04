@@ -50,13 +50,13 @@ namespace uicore
 	void GraphicContext_Impl::on_window_resized(const Size &size)
 	{
 		display_window_size = size;
-		if (write_frame_buffer.is_null())
+		if (!write_frame_buffer)
 			set_viewport(-1, get_size());
 	}
 
 	Size GraphicContext_Impl::get_size()
 	{
-		if (write_frame_buffer.is_null())
+		if (!write_frame_buffer)
 		{
 			if ((display_window_size.width == 0) || (display_window_size.height == 0))
 				display_window_size = provider->get_display_window_size();
@@ -64,7 +64,7 @@ namespace uicore
 		}
 		else
 		{
-			return write_frame_buffer.get_size();
+			return write_frame_buffer->get_size();
 		}
 	}
 
@@ -227,11 +227,11 @@ namespace uicore
 			provider->set_depth_range(viewport, n, f);
 	}
 
-	void GraphicContext_Impl::set_frame_buffer(const FrameBuffer &write_buffer, const FrameBuffer &read_buffer)
+	void GraphicContext_Impl::set_frame_buffer(const FrameBufferPtr &write_buffer, const FrameBufferPtr &read_buffer)
 	{
 		write_frame_buffer = write_buffer;
 		read_frame_buffer = read_buffer;
-		if (write_frame_buffer.is_null())
+		if (!write_frame_buffer)
 			provider->reset_frame_buffer();
 		else
 			provider->set_frame_buffer(write_buffer, read_buffer);

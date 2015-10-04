@@ -183,11 +183,6 @@ namespace uicore
 		return new D3DTextureProvider(window->get_device(), window->get_feature_level(), texture_dimensions);
 	}
 
-	FrameBufferProvider *D3DGraphicContextProvider::alloc_frame_buffer()
-	{
-		return new D3DFrameBufferProvider(window->get_device());
-	}
-
 	RenderBufferProvider *D3DGraphicContextProvider::alloc_render_buffer()
 	{
 		return new D3DRenderBufferProvider(window->get_device());
@@ -273,17 +268,17 @@ namespace uicore
 		}
 	}
 
-	std::shared_ptr<ShaderObjectProvider> D3DGraphicContextProvider::create_shader(ShaderType type, const std::string &source)
+	std::shared_ptr<ShaderObject> D3DGraphicContextProvider::create_shader(ShaderType type, const std::string &source)
 	{
 		return std::make_shared<D3DShaderObjectProvider>(window->get_device(), window->get_feature_level(), type, source);
 	}
 
-	std::shared_ptr<ShaderObjectProvider> D3DGraphicContextProvider::create_shader(ShaderType type, const void *bytecode, int bytecode_size)
+	std::shared_ptr<ShaderObject> D3DGraphicContextProvider::create_shader(ShaderType type, const void *bytecode, int bytecode_size)
 	{
 		return std::make_shared<D3DShaderObjectProvider>(window->get_device(), window->get_feature_level(), type, bytecode, bytecode_size);
 	}
 
-	std::shared_ptr<ProgramObjectProvider> D3DGraphicContextProvider::create_program()
+	std::shared_ptr<ProgramObject> D3DGraphicContextProvider::create_program()
 	{
 		return std::make_shared<D3DProgramObjectProvider>(window->get_device(), window->get_device_context());
 	}
@@ -291,6 +286,11 @@ namespace uicore
 	std::shared_ptr<OcclusionQuery> D3DGraphicContextProvider::create_occlusion_query()
 	{
 		return std::make_shared<D3DOcclusionQueryProvider>();
+	}
+
+	std::shared_ptr<FrameBuffer> D3DGraphicContextProvider::create_frame_buffer()
+	{
+		return std::make_shared<D3DFrameBufferProvider>(window->get_device());
 	}
 
 	void D3DGraphicContextProvider::set_rasterizer_state(RasterizerState *state)
@@ -440,18 +440,18 @@ namespace uicore
 		unit_map.set_image(this, unit_index, Texture());
 	}
 
-	bool D3DGraphicContextProvider::is_frame_buffer_owner(const FrameBuffer &fb)
+	bool D3DGraphicContextProvider::is_frame_buffer_owner(const FrameBufferPtr &fb)
 	{
-		D3DFrameBufferProvider *fb_provider = static_cast<D3DFrameBufferProvider *>(fb.get_provider());
+		D3DFrameBufferProvider *fb_provider = static_cast<D3DFrameBufferProvider *>(fb.get());
 		if (fb_provider)
 			return fb_provider->get_device() == window->get_device();
 		else
 			return false;
 	}
 
-	void D3DGraphicContextProvider::set_frame_buffer(const FrameBuffer &write_buffer, const FrameBuffer &read_buffer)
+	void D3DGraphicContextProvider::set_frame_buffer(const FrameBufferPtr &write_buffer, const FrameBufferPtr &read_buffer)
 	{
-		D3DFrameBufferProvider *fb_provider = static_cast<D3DFrameBufferProvider *>(write_buffer.get_provider());
+		D3DFrameBufferProvider *fb_provider = static_cast<D3DFrameBufferProvider *>(write_buffer.get());
 		ID3D11DepthStencilView *dsv = 0;
 		std::vector<ID3D11RenderTargetView *> rtvs = fb_provider->get_views(dsv);
 		window->get_device_context()->OMSetRenderTargets(rtvs.size(), (!rtvs.empty()) ? &rtvs[0] : 0, dsv);

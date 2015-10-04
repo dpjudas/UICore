@@ -72,7 +72,7 @@ namespace uicore
 		Canvas();
 
 		/// \brief Constructs a Canvas based on a framebuffer.  (based on the copy of the canvas)
-		Canvas(Canvas &canvas, FrameBuffer &framebuffer);
+		Canvas(Canvas &canvas, const FrameBufferPtr &framebuffer);
 
 		/// \brief Constructs a Canvas
 		explicit Canvas(DisplayWindow &window);

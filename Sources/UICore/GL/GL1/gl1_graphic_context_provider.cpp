@@ -247,11 +247,6 @@ namespace uicore
 		return new GL1TextureProvider(texture_dimensions);
 	}
 
-	FrameBufferProvider *GL1GraphicContextProvider::alloc_frame_buffer()
-	{
-		return new GL1FrameBufferProvider(this);
-	}
-
 	RenderBufferProvider *GL1GraphicContextProvider::alloc_render_buffer()
 	{
 		return new GL1RenderBufferProvider(this);
@@ -337,17 +332,17 @@ namespace uicore
 		}
 	}
 
-	std::shared_ptr<ProgramObjectProvider> GL1GraphicContextProvider::create_program()
+	std::shared_ptr<ProgramObject> GL1GraphicContextProvider::create_program()
 	{
 		throw Exception("Program Objects are not supported for OpenGL 1.3");
 	}
 
-	std::shared_ptr<ShaderObjectProvider> GL1GraphicContextProvider::create_shader(ShaderType type, const std::string &source)
+	std::shared_ptr<ShaderObject> GL1GraphicContextProvider::create_shader(ShaderType type, const std::string &source)
 	{
 		throw Exception("Shader Objects are not supported for OpenGL 1.3");
 	}
 
-	std::shared_ptr<ShaderObjectProvider> GL1GraphicContextProvider::create_shader(ShaderType type, const void *bytecode, int bytecode_size)
+	std::shared_ptr<ShaderObject> GL1GraphicContextProvider::create_shader(ShaderType type, const void *bytecode, int bytecode_size)
 	{
 		throw Exception("Shader Objects are not supported for OpenGL 1.3");
 	}
@@ -355,6 +350,11 @@ namespace uicore
 	std::shared_ptr<OcclusionQuery> GL1GraphicContextProvider::create_occlusion_query()
 	{
 		throw Exception("Occlusion Queries are not supported for OpenGL 1.3");
+	}
+
+	std::shared_ptr<FrameBuffer> GL1GraphicContextProvider::create_frame_buffer()
+	{
+		return std::make_shared<GL1FrameBufferProvider>(this);
 	}
 
 	void GL1GraphicContextProvider::set_rasterizer_state(RasterizerState *state)
@@ -523,14 +523,14 @@ namespace uicore
 	{
 	}
 
-	bool GL1GraphicContextProvider::is_frame_buffer_owner(const FrameBuffer &fb)
+	bool GL1GraphicContextProvider::is_frame_buffer_owner(const FrameBufferPtr &fb)
 	{
 		return true;
 	}
 
-	void GL1GraphicContextProvider::set_frame_buffer(const FrameBuffer &w_buffer, const FrameBuffer &r_buffer)
+	void GL1GraphicContextProvider::set_frame_buffer(const FrameBufferPtr &w_buffer, const FrameBufferPtr &r_buffer)
 	{
-		framebuffer_provider = dynamic_cast<GL1FrameBufferProvider *>(w_buffer.get_provider());
+		framebuffer_provider = dynamic_cast<GL1FrameBufferProvider *>(w_buffer.get());
 		framebuffer_provider->set_active();
 		framebuffer_provider->set_state(selected_state);
 		framebuffer_provider->start();

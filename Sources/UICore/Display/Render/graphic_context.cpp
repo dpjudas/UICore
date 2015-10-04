@@ -132,12 +132,12 @@ namespace uicore
 		return impl->textures;
 	}
 
-	FrameBuffer GraphicContext::get_write_frame_buffer() const
+	FrameBufferPtr GraphicContext::get_write_frame_buffer() const
 	{
 		return impl->write_frame_buffer;
 	}
 
-	FrameBuffer GraphicContext::get_read_frame_buffer() const
+	FrameBufferPtr GraphicContext::get_read_frame_buffer() const
 	{
 		return impl->read_frame_buffer;
 	}
@@ -159,13 +159,6 @@ namespace uicore
 
 	float GraphicContext::get_pixel_ratio() const
 	{
-		if (!impl->write_frame_buffer.is_null())
-		{
-			float ratio = impl->write_frame_buffer.get_pixel_ratio();
-			if (ratio != 0.0f)
-				return ratio;
-			return 1.0f;
-		}
 		return impl->provider->get_pixel_ratio();
 	}
 
@@ -431,24 +424,24 @@ namespace uicore
 		impl->reset_scissor();
 	}
 
-	bool GraphicContext::is_frame_buffer_owner(const FrameBuffer &fb)
+	bool GraphicContext::is_frame_buffer_owner(const FrameBufferPtr &fb)
 	{
 		return get_provider()->is_frame_buffer_owner(fb);
 	}
 
-	void GraphicContext::set_frame_buffer(const FrameBuffer &write_buffer)
+	void GraphicContext::set_frame_buffer(const FrameBufferPtr &write_buffer)
 	{
 		set_frame_buffer(write_buffer, write_buffer);
 	}
 
-	void GraphicContext::set_frame_buffer(const FrameBuffer &write_buffer, const FrameBuffer &read_buffer)
+	void GraphicContext::set_frame_buffer(const FrameBufferPtr &write_buffer, const FrameBufferPtr &read_buffer)
 	{
 		impl->set_frame_buffer(write_buffer, read_buffer);
 	}
 
 	void GraphicContext::reset_frame_buffer()
 	{
-		FrameBuffer null_fb = FrameBuffer();
+		FrameBufferPtr null_fb;
 		impl->set_frame_buffer(null_fb, null_fb);
 	}
 

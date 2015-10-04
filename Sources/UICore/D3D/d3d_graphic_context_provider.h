@@ -80,7 +80,6 @@ namespace uicore
 		bool has_compute_shader_support() const;
 		PixelBuffer get_pixeldata(const Rect& rect, TextureFormat texture_format, bool clamp) const;
 		TextureProvider *alloc_texture(TextureDimensions texture_dimensions);
-		FrameBufferProvider *alloc_frame_buffer();
 		RenderBufferProvider *alloc_render_buffer();
 		VertexArrayBufferProvider *alloc_vertex_array_buffer();
 		UniformBufferProvider *alloc_uniform_buffer();
@@ -92,10 +91,11 @@ namespace uicore
 		std::shared_ptr<RasterizerState> create_rasterizer_state(const RasterizerStateDescription &desc) override;
 		std::shared_ptr<BlendState> create_blend_state(const BlendStateDescription &desc) override;
 		std::shared_ptr<DepthStencilState> create_depth_stencil_state(const DepthStencilStateDescription &desc) override;
-		std::shared_ptr<ProgramObjectProvider> create_program() override;
-		std::shared_ptr<ShaderObjectProvider> create_shader(ShaderType type, const std::string &source) override;
-		std::shared_ptr<ShaderObjectProvider> create_shader(ShaderType type, const void *bytecode, int bytecode_size) override;
+		std::shared_ptr<ProgramObject> create_program() override;
+		std::shared_ptr<ShaderObject> create_shader(ShaderType type, const std::string &source) override;
+		std::shared_ptr<ShaderObject> create_shader(ShaderType type, const void *bytecode, int bytecode_size) override;
 		std::shared_ptr<OcclusionQuery> create_occlusion_query() override;
+		std::shared_ptr<FrameBuffer> create_frame_buffer() override;
 		void set_rasterizer_state(RasterizerState *state);
 		void set_blend_state(BlendState *state, const Colorf &blend_color, unsigned int sample_mask);
 		void set_depth_stencil_state(DepthStencilState *state, int stencil_ref);
@@ -110,8 +110,8 @@ namespace uicore
 		void reset_texture(int unit_index);
 		void set_image_texture(int unit_index, const Texture &texture);
 		void reset_image_texture(int unit_index);
-		bool is_frame_buffer_owner(const FrameBuffer &fb);
-		void set_frame_buffer(const FrameBuffer &write_buffer, const FrameBuffer &read_buffer);
+		bool is_frame_buffer_owner(const FrameBufferPtr &fb);
+		void set_frame_buffer(const FrameBufferPtr &write_buffer, const FrameBufferPtr &read_buffer);
 		void reset_frame_buffer();
 		void set_draw_buffer(DrawBuffer buffer);
 

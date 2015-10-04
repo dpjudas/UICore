@@ -288,11 +288,6 @@ namespace uicore
 		return new GL3TextureProvider(texture_dimensions);
 	}
 
-	FrameBufferProvider *GL3GraphicContextProvider::alloc_frame_buffer()
-	{
-		return new GL3FrameBufferProvider(this);
-	}
-
 	RenderBufferProvider *GL3GraphicContextProvider::alloc_render_buffer()
 	{
 		return new GL3RenderBufferProvider();
@@ -378,17 +373,17 @@ namespace uicore
 		}
 	}
 
-	std::shared_ptr<ShaderObjectProvider> GL3GraphicContextProvider::create_shader(ShaderType type, const std::string &source)
+	std::shared_ptr<ShaderObject> GL3GraphicContextProvider::create_shader(ShaderType type, const std::string &source)
 	{
 		return std::make_shared<GL3ShaderObjectProvider>(type, source);
 	}
 
-	std::shared_ptr<ShaderObjectProvider> GL3GraphicContextProvider::create_shader(ShaderType type, const void *bytecode, int bytecode_size)
+	std::shared_ptr<ShaderObject> GL3GraphicContextProvider::create_shader(ShaderType type, const void *bytecode, int bytecode_size)
 	{
 		throw Exception("Shader Objects with bytecode are not supported for OpenGL");
 	}
 
-	std::shared_ptr<ProgramObjectProvider> GL3GraphicContextProvider::create_program()
+	std::shared_ptr<ProgramObject> GL3GraphicContextProvider::create_program()
 	{
 		return std::make_shared<GL3ProgramObjectProvider>();
 	}
@@ -396,6 +391,11 @@ namespace uicore
 	std::shared_ptr<OcclusionQuery> GL3GraphicContextProvider::create_occlusion_query()
 	{
 		return std::make_shared<GL3OcclusionQueryProvider>(this);
+	}
+
+	std::shared_ptr<FrameBuffer> GL3GraphicContextProvider::create_frame_buffer()
+	{
+		return std::make_shared<GL3FrameBufferProvider>(this);
 	}
 
 	void GL3GraphicContextProvider::set_rasterizer_state(RasterizerState *state)
@@ -545,19 +545,19 @@ namespace uicore
 		glBindImageTexture(unit_index, 0, 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGBA8);
 	}
 
-	bool GL3GraphicContextProvider::is_frame_buffer_owner(const FrameBuffer &fb)
+	bool GL3GraphicContextProvider::is_frame_buffer_owner(const FrameBufferPtr &fb)
 	{
-		GL3FrameBufferProvider *fb_provider = dynamic_cast<GL3FrameBufferProvider *>(fb.get_provider());
+		GL3FrameBufferProvider *fb_provider = dynamic_cast<GL3FrameBufferProvider *>(fb.get());
 		if (fb_provider)
 			return fb_provider->get_gc_provider() == this;
 		else
 			return false;
 	}
 
-	void GL3GraphicContextProvider::set_frame_buffer(const FrameBuffer &draw_buffer, const FrameBuffer &read_buffer)
+	void GL3GraphicContextProvider::set_frame_buffer(const FrameBufferPtr &draw_buffer, const FrameBufferPtr &read_buffer)
 	{
-		GL3FrameBufferProvider *draw_buffer_provider = dynamic_cast<GL3FrameBufferProvider *>(draw_buffer.get_provider());
-		GL3FrameBufferProvider *read_buffer_provider = dynamic_cast<GL3FrameBufferProvider *>(read_buffer.get_provider());
+		GL3FrameBufferProvider *draw_buffer_provider = dynamic_cast<GL3FrameBufferProvider *>(draw_buffer.get());
+		GL3FrameBufferProvider *read_buffer_provider = dynamic_cast<GL3FrameBufferProvider *>(read_buffer.get());
 
 		if (draw_buffer_provider->get_gc_provider() != this || read_buffer_provider->get_gc_provider() != this)
 			throw Exception("FrameBuffer objects cannot be shared between multiple GraphicContext objects");

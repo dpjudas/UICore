@@ -63,6 +63,7 @@ namespace uicore
 	class BlendStateDescription;
 	class DepthStencilStateDescription;
 	typedef std::shared_ptr<ProgramObject> ProgramObjectPtr;
+	typedef std::shared_ptr<FrameBuffer> FrameBufferPtr;
 
 	/// Polygon culling modes.
 	enum CullMode
@@ -305,7 +306,7 @@ namespace uicore
 		/** Returns `true` if the hardware supports compute shaders.
 		 *  This function will always returns true for OpenGL 4.3 or newer, or
 		 *  Direct3D 11.0 or newer. For Direct3D 10.0 and 10.1, the support for
-		 *  compute shaders is optional.
+		 *  compute shaders are optional.
 		 */
 		bool has_compute_shader_support() const;
 
@@ -323,14 +324,14 @@ namespace uicore
 		std::vector<Texture> get_textures() const;
 
 		/** Returns the currently selected write frame buffer.
-		 *  \return The frame buffer. Use frame_buffer.is_null() to determine if the frame buffer was not selected
+		 *  \return The frame buffer.
 		 */
-		FrameBuffer get_write_frame_buffer() const;
+		FrameBufferPtr get_write_frame_buffer() const;
 
 		/// Returns the currently selected read frame buffer.
 		///
-		/// \return The frame buffer. Use frame_buffer.is_null() to determine if the frame buffer was not selected
-		FrameBuffer get_read_frame_buffer() const;
+		/// \return The frame buffer.
+		FrameBufferPtr get_read_frame_buffer() const;
 
 		/// Returns the currently selected program object
 		ProgramObjectPtr get_program_object() const;
@@ -384,7 +385,7 @@ namespace uicore
 		 *  function will verify if the frame buffer object belongs to this graphic
 		 *  context.
 		 */
-		bool is_frame_buffer_owner(const FrameBuffer &fb);
+		bool is_frame_buffer_owner(const FrameBufferPtr &fb);
 
 		/// \brief Create rasterizer state object.
 		std::shared_ptr<RasterizerState> create_rasterizer_state(const RasterizerStateDescription &desc);
@@ -396,8 +397,8 @@ namespace uicore
 		std::shared_ptr<DepthStencilState> create_depth_stencil_state(const DepthStencilStateDescription &desc);
 
 		/// Sets the current frame buffer.
-		void set_frame_buffer(const FrameBuffer &write_buffer);
-		void set_frame_buffer(const FrameBuffer &write_buffer, const FrameBuffer &read_buffer);
+		void set_frame_buffer(const FrameBufferPtr &write_buffer);
+		void set_frame_buffer(const FrameBufferPtr &write_buffer, const FrameBufferPtr &read_buffer);
 
 		/// Resets the current frame buffer to be the initial frame buffer.
 		void reset_frame_buffer();

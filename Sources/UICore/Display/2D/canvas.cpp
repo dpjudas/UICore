@@ -55,7 +55,7 @@ namespace uicore
 		set_map_mode(map_2d_upper_left);
 	}
 
-	Canvas::Canvas(Canvas &canvas, FrameBuffer &framebuffer) : impl(std::make_shared<Canvas_Impl>())
+	Canvas::Canvas(Canvas &canvas, const FrameBufferPtr &framebuffer) : impl(std::make_shared<Canvas_Impl>())
 	{
 		impl->init(canvas.impl.get(), framebuffer);
 		set_map_mode(map_2d_upper_left);

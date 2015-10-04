@@ -120,9 +120,6 @@ namespace uicore
 		/// \brief Allocate texture provider for this gc.
 		virtual TextureProvider *alloc_texture(TextureDimensions texture_dimensions) = 0;
 
-		/// \brief Allocate frame buffer provider for this gc.
-		virtual FrameBufferProvider *alloc_frame_buffer() = 0;
-
 		/// \brief Allocate render buffer provider for this gc.
 		virtual RenderBufferProvider *alloc_render_buffer() = 0;
 
@@ -150,10 +147,11 @@ namespace uicore
 		virtual std::shared_ptr<RasterizerState> create_rasterizer_state(const RasterizerStateDescription &desc) = 0;
 		virtual std::shared_ptr<BlendState> create_blend_state(const BlendStateDescription &desc) = 0;
 		virtual std::shared_ptr<DepthStencilState> create_depth_stencil_state(const DepthStencilStateDescription &desc) = 0;
-		virtual std::shared_ptr<ProgramObjectProvider> create_program() = 0;
-		virtual std::shared_ptr<ShaderObjectProvider> create_shader(ShaderType type, const std::string &source) = 0;
-		virtual std::shared_ptr<ShaderObjectProvider> create_shader(ShaderType type, const void *bytecode, int bytecode_size) = 0;
+		virtual std::shared_ptr<ProgramObject> create_program() = 0;
+		virtual std::shared_ptr<ShaderObject> create_shader(ShaderType type, const std::string &source) = 0;
+		virtual std::shared_ptr<ShaderObject> create_shader(ShaderType type, const void *bytecode, int bytecode_size) = 0;
 		virtual std::shared_ptr<OcclusionQuery> create_occlusion_query() = 0;
+		virtual std::shared_ptr<FrameBuffer> create_frame_buffer() = 0;
 
 		/// \brief Set active rasterizer state
 		virtual void set_rasterizer_state(RasterizerState *state) = 0;
@@ -200,10 +198,10 @@ namespace uicore
 		virtual void reset_image_texture(int unit_index) = 0;
 
 		/// \brief Returns true if this frame buffer object is owned by this graphic context.
-		virtual bool is_frame_buffer_owner(const FrameBuffer &fb) = 0;
+		virtual bool is_frame_buffer_owner(const FrameBufferPtr &fb) = 0;
 
 		/// \brief Set a frame buffer for off-screen rendering.
-		virtual void set_frame_buffer(const FrameBuffer &write_buffer, const FrameBuffer &read_buffer) = 0;
+		virtual void set_frame_buffer(const FrameBufferPtr &write_buffer, const FrameBufferPtr &read_buffer) = 0;
 
 		/// \brief Set the rendering buffer back to the screen.
 		virtual void reset_frame_buffer() = 0;

@@ -68,130 +68,58 @@ namespace uicore
 	class FrameBuffer
 	{
 	public:
-		/// \brief Constructs a null instance.
-		FrameBuffer();
-
 		/// \brief Constructs a FrameBuffer
 		///
 		/// By default, the bind target is set to framebuffer_draw. See set_bind_target()
-		///
-		/// \param context = Graphic Context
-		FrameBuffer(GraphicContext &context);
-
-		/// \brief Returns true if this object is invalid.
-		bool is_null() const { return !impl; }
-
-		/// \brief Throw an exception if this object is invalid.
-		void throw_if_null() const;
-
-		/// \brief Get Provider
-		///
-		/// \return provider
-		FrameBufferProvider *get_provider() const;
+		static std::shared_ptr<FrameBuffer> create(GraphicContext &context);
 
 		/// \brief Get the minumum size of all the frame buffer attachments
-		///
-		/// \return size
-		Size get_size() const;
+		virtual Size get_size() const = 0;
 
 		/// \brief Get the bind target of the framebuffer
 		///
 		/// \return The bind target
-		FrameBufferBindTarget get_bind_target() const;
-
-		/// \brief Equality operator
-		bool operator==(const FrameBuffer &other) const;
+		virtual FrameBufferBindTarget get_bind_target() const = 0;
 
 		/// \brief Attach color buffer
-		///
-		/// \param attachment_index = value
-		/// \param render_buffer = Render Buffer
-		void attach_color(int attachment_index, const RenderBuffer &render_buffer);
+		virtual void attach_color(int attachment_index, const RenderBuffer &render_buffer) = 0;
+		virtual void attach_color(int attachment_index, const Texture1D &texture, int level = 0) = 0;
+		virtual void attach_color(int attachment_index, const Texture1DArray &texture, int array_index = -1, int level = 0) = 0;
+		virtual void attach_color(int attachment_index, const Texture2D &texture, int level = 0) = 0;
+		virtual void attach_color(int attachment_index, const Texture2DArray &texture, int array_index = -1, int level = 0) = 0;
+		virtual void attach_color(int attachment_index, const Texture3D &texture, int depth, int level = 0) = 0;
+		virtual void attach_color(int attachment_index, const TextureCube &texture, TextureSubtype subtype, int level = 0) = 0;
 
-		/// \brief Attach color buffer
-		///
-		/// \param attachment_index = value
-		/// \param texture = Texture
-		/// \param level = value
-		void attach_color(int attachment_index, const Texture1D &texture, int level = 0);
+		/// Detach color buffer
+		virtual void detach_color(int attachment_index) = 0;
 
-		/// \brief Attach color buffer
-		///
-		/// \param attachment_index = value
-		/// \param texture = Texture
-		/// \param array_index = value
-		/// \param level = value
-		void attach_color(int attachment_index, const Texture1DArray &texture, int array_index = -1, int level = 0);
+		/// Attach stencil buffer
+		virtual void attach_stencil(const RenderBuffer &render_buffer) = 0;
+		virtual void attach_stencil(const Texture2D &texture, int level = 0) = 0;
+		virtual void attach_stencil(const TextureCube &texture, TextureSubtype subtype, int level = 0) = 0;
+		virtual void detach_stencil() = 0;
 
-		/// \brief Attach color buffer
-		///
-		/// \param attachment_index = value
-		/// \param texture = Texture
-		/// \param level = value
-		void attach_color(int attachment_index, const Texture2D &texture, int level = 0);
+		/// Attach depth buffer
+		virtual void attach_depth(const RenderBuffer &render_buffer) = 0;
+		virtual void attach_depth(const Texture2D &texture, int level = 0) = 0;
+		virtual void attach_depth(const TextureCube &texture, TextureSubtype subtype, int level = 0) = 0;
 
-		/// \brief Attach color buffer
-		///
-		/// \param attachment_index = value
-		/// \param texture = Texture
-		/// \param array_index = value
-		/// \param level = value
-		void attach_color(int attachment_index, const Texture2DArray &texture, int array_index = -1, int level = 0);
+		/// Detach depth buffer
+		virtual void detach_depth() = 0;
 
-		/// \brief Attach color buffer
-		///
-		/// \param attachment_index = value
-		/// \param texture = Texture
-		/// \param depth = value
-		/// \param level = value
-		void attach_color(int attachment_index, const Texture3D &texture, int depth, int level = 0);
+		// Attach combined depth and stencil buffer
+		virtual void attach_depth_stencil(const RenderBuffer &render_buffer) = 0;
+		virtual void attach_depth_stencil(const Texture2D &texture, int level = 0) = 0;
+		virtual void attach_depth_stencil(const TextureCube &texture, TextureSubtype subtype, int level = 0) = 0;
 
-		/// \brief Attach color buffer
-		///
-		/// \param attachment_index = value
-		/// \param texture = Texture
-		/// \param subtype = Texture Subtype
-		/// \param level = value
-		/// \param zoffset = value
-		void attach_color(int attachment_index, const TextureCube &texture, TextureSubtype subtype, int level = 0);
-
-		/// \brief Detach color buffer
-		///
-		/// \param attachment_index = value
-		/// \param texture = Texture
-		/// \param level = value
-		/// \param zoffset = value
-		void detach_color(int attachment_index);
-
-		void attach_stencil(const RenderBuffer &render_buffer);
-		void attach_stencil(const Texture2D &texture, int level = 0);
-		void attach_stencil(const TextureCube &texture, TextureSubtype subtype, int level = 0);
-		void detach_stencil();
-
-		void attach_depth(const RenderBuffer &render_buffer);
-		void attach_depth(const Texture2D &texture, int level = 0);
-		void attach_depth(const TextureCube &texture, TextureSubtype subtype, int level = 0);
-		void detach_depth();
-
-		void attach_depth_stencil(const RenderBuffer &render_buffer);
-		void attach_depth_stencil(const Texture2D &texture, int level = 0);
-		void attach_depth_stencil(const TextureCube &texture, TextureSubtype subtype, int level = 0);
-		void detach_depth_stencil();
+		// Detach combined depth and stencil buffer
+		virtual void detach_depth_stencil() = 0;
 
 		/// \brief Set the bind target of the framebuffer to either drawn to or read from.
 		///
 		/// Detach existing textures and renderbuffers before setting a new bind target
-		///
-		/// \param target = Target
-		void set_bind_target(FrameBufferBindTarget target);
-
-		/** Retrieves the pixel ratio of this texture.
-		*  \return The display pixel ratio set for this texture.
-		*          A zero value implies that no pixel ratio has been set
-		*/
-		float get_pixel_ratio() const;
-
-	private:
-		std::shared_ptr<FrameBuffer_Impl> impl;
+		virtual void set_bind_target(FrameBufferBindTarget target) = 0;
 	};
+
+	typedef std::shared_ptr<FrameBuffer> FrameBufferPtr;
 }

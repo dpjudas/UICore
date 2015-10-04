@@ -34,14 +34,13 @@
 
 #include "gl1_graphic_context_provider.h"
 #include "UICore/Display/Render/texture_2d.h"
-#include "UICore/Display/TargetProviders/frame_buffer_provider.h"
+#include "UICore/Display/Render/frame_buffer.h"
 #include "UICore/Core/System/disposable_object.h"
-
 #include "pbuffer.h"
 
 namespace uicore
 {
-	class GL1FrameBufferProvider : public FrameBufferProvider, DisposableObject
+	class GL1FrameBufferProvider : public FrameBuffer, DisposableObject
 	{
 	public:
 		GL1FrameBufferProvider(GL1GraphicContextProvider *gc_provider);

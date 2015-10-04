@@ -28,7 +28,7 @@
 
 #pragma once
 
-#include "UICore/Display/TargetProviders/frame_buffer_provider.h"
+#include "UICore/Display/Render/frame_buffer.h"
 #include "UICore/Display/Render/render_buffer.h"
 #include "UICore/Display/Render/texture_2d.h"
 #include "d3d_render_buffer_provider.h"
@@ -36,43 +36,43 @@
 
 namespace uicore
 {
-	class D3DFrameBufferProvider : public FrameBufferProvider
+	class D3DFrameBufferProvider : public FrameBuffer
 	{
 	public:
 		D3DFrameBufferProvider(const ComPtr<ID3D11Device> &device);
 		~D3DFrameBufferProvider();
 
-		Size get_size() const;
-		FrameBufferBindTarget get_bind_target() const;
+		Size get_size() const override;
+		FrameBufferBindTarget get_bind_target() const override;
 
 		ComPtr<ID3D11Device> &get_device() { return device; }
 		std::vector<ID3D11RenderTargetView*> get_views(ID3D11DepthStencilView *&out_dsv);
 
-		void attach_color(int attachment_index, const RenderBuffer &render_buffer);
-		void attach_color(int attachment_index, const Texture1D &texture, int level);
-		void attach_color(int attachment_index, const Texture1DArray &texture, int array_index, int level);
-		void attach_color(int attachment_index, const Texture2D &texture, int level);
-		void attach_color(int attachment_index, const Texture2DArray &texture, int array_index, int level);
-		void attach_color(int attachment_index, const Texture3D &texture, int depth, int level);
-		void attach_color(int attachment_index, const TextureCube &texture, TextureSubtype subtype, int level);
-		void detach_color(int attachment_index);
+		void attach_color(int attachment_index, const RenderBuffer &render_buffer) override;
+		void attach_color(int attachment_index, const Texture1D &texture, int level) override;
+		void attach_color(int attachment_index, const Texture1DArray &texture, int array_index, int level) override;
+		void attach_color(int attachment_index, const Texture2D &texture, int level) override;
+		void attach_color(int attachment_index, const Texture2DArray &texture, int array_index, int level) override;
+		void attach_color(int attachment_index, const Texture3D &texture, int depth, int level) override;
+		void attach_color(int attachment_index, const TextureCube &texture, TextureSubtype subtype, int level) override;
+		void detach_color(int attachment_index) override;
 
-		void attach_stencil(const RenderBuffer &render_buffer);
-		void attach_stencil(const Texture2D &texture, int level);
-		void attach_stencil(const TextureCube &texture, TextureSubtype subtype, int level);
-		void detach_stencil();
+		void attach_stencil(const RenderBuffer &render_buffer) override;
+		void attach_stencil(const Texture2D &texture, int level) override;
+		void attach_stencil(const TextureCube &texture, TextureSubtype subtype, int level) override;
+		void detach_stencil() override;
 
-		void attach_depth(const RenderBuffer &render_buffer);
-		void attach_depth(const Texture2D &texture, int level);
-		void attach_depth(const TextureCube &texture, TextureSubtype subtype, int level);
-		void detach_depth();
+		void attach_depth(const RenderBuffer &render_buffer) override;
+		void attach_depth(const Texture2D &texture, int level) override;
+		void attach_depth(const TextureCube &texture, TextureSubtype subtype, int level) override;
+		void detach_depth() override;
 
-		void attach_depth_stencil(const RenderBuffer &render_buffer);
-		void attach_depth_stencil(const Texture2D &texture, int level);
-		void attach_depth_stencil(const TextureCube &texture, TextureSubtype subtype, int level);
-		void detach_depth_stencil();
+		void attach_depth_stencil(const RenderBuffer &render_buffer) override;
+		void attach_depth_stencil(const Texture2D &texture, int level) override;
+		void attach_depth_stencil(const TextureCube &texture, TextureSubtype subtype, int level) override;
+		void detach_depth_stencil() override;
 
-		void set_bind_target(FrameBufferBindTarget target);
+		void set_bind_target(FrameBufferBindTarget target) override;
 
 	private:
 		struct AttachedBuffer

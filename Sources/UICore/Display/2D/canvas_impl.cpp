@@ -47,7 +47,7 @@ namespace uicore
 		setup(canvas->get_gc());
 	}
 
-	void Canvas_Impl::init(Canvas_Impl *canvas, FrameBuffer &framebuffer)
+	void Canvas_Impl::init(Canvas_Impl *canvas, const FrameBufferPtr &framebuffer)
 	{
 		GraphicContext gc = canvas->get_gc();
 		gc.set_frame_buffer(framebuffer);
@@ -75,7 +75,7 @@ namespace uicore
 		canvas_inverse_transform = canvas_transform = Mat4f::identity();
 		canvas_inverse_transform_set = true;
 
-		if (gc.get_write_frame_buffer().is_null())	// No framebuffer attached to canvas
+		if (!gc.get_write_frame_buffer())	// No framebuffer attached to canvas
 		{
 			canvas_y_axis = y_axis_top_down;
 			sc.connect(gc.get_provider()->sig_window_resized(), bind_member(this, &Canvas_Impl::on_window_resized));

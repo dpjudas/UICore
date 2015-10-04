@@ -54,4 +54,6 @@ namespace uicore
 		/// \brief Finish occlusion query.
 		virtual void end() = 0;
 	};
+
+	typedef std::shared_ptr<OcclusionQuery> OcclusionQueryPtr;
 }

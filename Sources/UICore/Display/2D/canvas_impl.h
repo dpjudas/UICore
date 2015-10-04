@@ -51,7 +51,7 @@ namespace uicore
 		~Canvas_Impl();
 
 		void init(Canvas_Impl *canvas);
-		void init(Canvas_Impl *canvas, FrameBuffer &framebuffer);
+		void init(Canvas_Impl *canvas, const FrameBufferPtr &framebuffer);
 		void init(DisplayWindow &window);
 
 		void clear(const Colorf &color);

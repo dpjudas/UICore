@@ -48,7 +48,7 @@ namespace uicore
 
 		Size get_size();
 
-		void set_frame_buffer(const FrameBuffer &write_buffer, const FrameBuffer &read_buffer);
+		void set_frame_buffer(const FrameBufferPtr &write_buffer, const FrameBufferPtr &read_buffer);
 		void set_viewport(int index, const Rectf &viewport);
 		void set_depth_range(int viewport, float n, float f);
 
@@ -87,8 +87,8 @@ namespace uicore
 		BlendStatePtr default_blend_state;
 		DepthStencilStatePtr default_depth_stencil_state;
 
-		FrameBuffer read_frame_buffer;
-		FrameBuffer write_frame_buffer;
+		FrameBufferPtr read_frame_buffer;
+		FrameBufferPtr write_frame_buffer;
 
 		std::vector<Texture> textures;
 		std::vector<Texture> image_textures;
