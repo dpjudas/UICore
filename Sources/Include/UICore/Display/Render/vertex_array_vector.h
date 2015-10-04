@@ -33,59 +33,51 @@
 
 namespace uicore
 {
-	/// \brief Vertex Array Vector
-	///
+	/// \brief Typed access to a vertex array buffer
 	template<typename Type>
-	class VertexArrayVector : public VertexArrayBuffer
+	class VertexArrayVector
 	{
 	public:
-		/// \brief Constructs a null instance.
+		/// \brief Constructs a vertex array vector
 		VertexArrayVector()
 		{
 		}
 
-		/// \brief Constructs a VertexArrayBuffer using an existing VertexArrayBuffer
-		explicit VertexArrayVector(const VertexArrayBuffer &buffer) : VertexArrayBuffer(buffer)
+		VertexArrayVector(const VertexArrayBufferPtr &buffer)
+			: _buffer(buffer)
 		{
 		}
 
-		/// \brief Constructs a VertexArrayBuffer
-		///
-		/// \param gc = Graphic Context
-		/// \param size = value
-		/// \param usage = Buffer Usage
 		VertexArrayVector(GraphicContext &gc, int size, BufferUsage usage = usage_static_draw)
-			: VertexArrayBuffer(gc, size * sizeof(Type), usage)
+			: _buffer(VertexArrayBuffer::create(gc, size * sizeof(Type), usage))
 		{
 		}
 
-		/// \brief Constructs a VertexArrayBuffer
-		///
-		/// \param gc = Graphic Context
-		/// \param data = void
-		/// \param size = value
-		/// \param usage = Buffer Usage
 		VertexArrayVector(GraphicContext &gc, Type *data, int size, BufferUsage usage = usage_static_draw)
-			: VertexArrayBuffer(gc, data, size * sizeof(Type), usage)
+			: _buffer(VertexArrayBuffer::create(gc, data, size * sizeof(Type), usage))
 		{
 		}
 
 		VertexArrayVector(GraphicContext &gc, const std::vector<Type> &data, BufferUsage usage = usage_static_draw)
-			: VertexArrayBuffer(gc, data.empty() ? (Type*)0 : &data[0], data.size() * sizeof(Type), usage)
+			: _buffer(VertexArrayBuffer::create(gc, data.empty() ? (Type*)0 : &data[0], data.size() * sizeof(Type), usage))
 		{
 		}
+
+		/// Returns the element array buffer used by the vector
+		const VertexArrayBufferPtr &buffer() const { return _buffer; }
+
+		operator const VertexArrayBufferPtr &() const { return buffer(); }
 
 		/// \brief Uploads data to vertex array buffer.
 		void upload_data(GraphicContext &gc, int offset, const Type *data, int size)
 		{
-			VertexArrayBuffer::upload_data(gc, offset * sizeof(Type), data, size * sizeof(Type));
+			_buffer->upload_data(gc, offset * sizeof(Type), data, size * sizeof(Type));
 		}
 
 		/// \brief Uploads data to vertex array buffer.
 		void upload_data(GraphicContext &gc, int offset, const std::vector<Type> &data)
 		{
-			if (!data.empty())
-				VertexArrayBuffer::upload_data(gc, offset, &data[0], data.size() * sizeof(Type));
+			_buffer->upload_data(gc, offset, data.data(), data.size() * sizeof(Type));
 		}
 
 		/// \brief Copies data from transfer buffer
@@ -93,7 +85,7 @@ namespace uicore
 		{
 			if (size != -1)
 				size = size * sizeof(Type);
-			VertexArrayBuffer::copy_from(gc, buffer, dest_pos * sizeof(Type), src_pos * sizeof(Type), size);
+			_buffer->copy_from(gc, buffer, dest_pos * sizeof(Type), src_pos * sizeof(Type), size);
 		}
 
 		/// \brief Copies data to transfer buffer
@@ -101,7 +93,10 @@ namespace uicore
 		{
 			if (size != -1)
 				size = size * sizeof(Type);
-			VertexArrayBuffer::copy_to(gc, buffer, dest_pos * sizeof(Type), src_pos * sizeof(Type), size);
+			_buffer->copy_to(gc, buffer, dest_pos * sizeof(Type), src_pos * sizeof(Type), size);
 		}
+
+	private:
+		VertexArrayBufferPtr _buffer;
 	};
 }

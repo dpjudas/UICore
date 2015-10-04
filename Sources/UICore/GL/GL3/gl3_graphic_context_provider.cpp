@@ -293,11 +293,6 @@ namespace uicore
 		return std::make_shared<GL3RenderBufferProvider>(width, height, texture_format, multisample_samples);
 	}
 
-	VertexArrayBufferProvider *GL3GraphicContextProvider::alloc_vertex_array_buffer()
-	{
-		return new GL3VertexArrayBufferProvider();
-	}
-
 	UniformBufferProvider *GL3GraphicContextProvider::alloc_uniform_buffer()
 	{
 		return new GL3UniformBufferProvider();
@@ -406,6 +401,16 @@ namespace uicore
 	std::shared_ptr<ElementArrayBuffer> GL3GraphicContextProvider::create_element_array_buffer(const void *data, int size, BufferUsage usage)
 	{
 		return std::make_shared<GL3ElementArrayBufferProvider>(data, size, usage);
+	}
+
+	std::shared_ptr<VertexArrayBuffer> GL3GraphicContextProvider::create_vertex_array_buffer(int size, BufferUsage usage)
+	{
+		return std::make_shared<GL3VertexArrayBufferProvider>(size, usage);
+	}
+
+	std::shared_ptr<VertexArrayBuffer> GL3GraphicContextProvider::create_vertex_array_buffer(const void *data, int size, BufferUsage usage)
+	{
+		return std::make_shared<GL3VertexArrayBufferProvider>(data, size, usage);
 	}
 
 	void GL3GraphicContextProvider::set_rasterizer_state(RasterizerState *state)

@@ -58,9 +58,8 @@ namespace uicore
 		}
 
 		/// Returns the element array buffer used by the vector
-		const ElementArrayBufferPtr &buffer() const { _buffer; }
+		const ElementArrayBufferPtr &buffer() const { return _buffer; }
 
-		operator ElementArrayBufferPtr() const { return buffer(); }
 		operator const ElementArrayBufferPtr &() const { return buffer(); }
 
 		/// \brief Uploads data to element array buffer.

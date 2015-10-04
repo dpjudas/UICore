@@ -38,11 +38,11 @@ namespace uicore
 	{
 		for (auto & elem : vertex_buffers)
 		{
-			elem = VertexArrayBuffer(gc, vertex_buffer_size, usage_stream_draw);
+			elem = VertexArrayBuffer::create(gc, vertex_buffer_size, usage_stream_draw);
 		}
 	}
 
-	VertexArrayBuffer RenderBatchBuffer::get_vertex_buffer(GraphicContext &gc, int &out_index)
+	VertexArrayBufferPtr RenderBatchBuffer::get_vertex_buffer(GraphicContext &gc, int &out_index)
 	{
 		out_index = current_vertex_buffer;
 

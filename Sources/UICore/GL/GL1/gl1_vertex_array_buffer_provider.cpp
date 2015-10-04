@@ -32,17 +32,7 @@
 
 namespace uicore
 {
-	GL1VertexArrayBufferProvider::GL1VertexArrayBufferProvider()
-		: data(nullptr), size(0)
-	{
-	}
-
-	GL1VertexArrayBufferProvider::~GL1VertexArrayBufferProvider()
-	{
-		delete[] data;
-	}
-
-	void GL1VertexArrayBufferProvider::create(int new_size, BufferUsage usage)
+	GL1VertexArrayBufferProvider::GL1VertexArrayBufferProvider(int new_size, BufferUsage usage)
 	{
 		delete[] data;
 		data = nullptr;
@@ -51,7 +41,7 @@ namespace uicore
 		size = new_size;
 	}
 
-	void GL1VertexArrayBufferProvider::create(void *init_data, int new_size, BufferUsage usage)
+	GL1VertexArrayBufferProvider::GL1VertexArrayBufferProvider(const void *init_data, int new_size, BufferUsage usage)
 	{
 		delete[] data;
 		data = nullptr;
@@ -59,6 +49,11 @@ namespace uicore
 		data = new char[new_size];
 		size = new_size;
 		memcpy(data, init_data, size);
+	}
+
+	GL1VertexArrayBufferProvider::~GL1VertexArrayBufferProvider()
+	{
+		delete[] data;
 	}
 
 	void GL1VertexArrayBufferProvider::upload_data(GraphicContext &gc, int offset, const void *new_data, int new_size)

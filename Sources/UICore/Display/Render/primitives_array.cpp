@@ -62,9 +62,9 @@ namespace uicore
 		return impl->provider;
 	}
 
-	void PrimitivesArray::set_attributes(int index, VertexArrayBuffer &buffer, int size, VertexAttributeDataType type, size_t offset, int stride, bool normalize)
+	void PrimitivesArray::set_attributes(int index, const VertexArrayBufferPtr &buffer, int size, VertexAttributeDataType type, size_t offset, int stride, bool normalize)
 	{
-		PrimitivesArrayProvider::VertexData data(buffer.get_provider(), type, offset, size, stride);
+		PrimitivesArrayProvider::VertexData data(buffer.get(), type, offset, size, stride);
 		impl->provider->set_attribute(index, data, normalize);
 	}
 }

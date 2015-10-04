@@ -80,7 +80,6 @@ namespace uicore
 		bool has_compute_shader_support() const;
 		PixelBuffer get_pixeldata(const Rect& rect, TextureFormat texture_format, bool clamp) const;
 		TextureProvider *alloc_texture(TextureDimensions texture_dimensions);
-		VertexArrayBufferProvider *alloc_vertex_array_buffer();
 		UniformBufferProvider *alloc_uniform_buffer();
 		TransferBufferProvider *alloc_transfer_buffer();
 		PixelBufferProvider *alloc_pixel_buffer();
@@ -98,6 +97,8 @@ namespace uicore
 		std::shared_ptr<StorageBuffer> create_storage_buffer(const void *data, int size, int stride, BufferUsage usage) override;
 		std::shared_ptr<ElementArrayBuffer> create_element_array_buffer(int size, BufferUsage usage) override;
 		std::shared_ptr<ElementArrayBuffer> create_element_array_buffer(const void *data, int size, BufferUsage usage) override;
+		std::shared_ptr<VertexArrayBuffer> create_vertex_array_buffer(int size, BufferUsage usage) override;
+		std::shared_ptr<VertexArrayBuffer> create_vertex_array_buffer(const void *data, int size, BufferUsage usage) override;
 		void set_rasterizer_state(RasterizerState *state);
 		void set_blend_state(BlendState *state, const Colorf &blend_color, unsigned int sample_mask);
 		void set_depth_stencil_state(DepthStencilState *state, int stencil_ref);

@@ -35,57 +35,24 @@ namespace uicore
 {
 	class GraphicContext;
 	class TransferBuffer;
-	class VertexArrayBufferProvider;
-	class VertexArrayBuffer_Impl;
 
 	/// \brief Vertex Array Buffer
 	class VertexArrayBuffer
 	{
 	public:
-		/// \brief Constructs a null instance.
-		VertexArrayBuffer();
-
-		/// \brief Constructs a VertexArrayBuffer
-		///
-		/// \param gc = Graphic Context
-		/// \param size = value
-		/// \param usage = Buffer Usage
-		VertexArrayBuffer(GraphicContext &gc, int size, BufferUsage usage = usage_static_draw);
-
-		/// \brief Constructs a VertexArrayBuffer
-		///
-		/// \param gc = Graphic Context
-		/// \param data = void
-		/// \param size = value
-		/// \param usage = Buffer Usage
-		VertexArrayBuffer(GraphicContext &gc, const void *data, int size, BufferUsage usage = usage_static_draw);
-
-		virtual ~VertexArrayBuffer();
-
-		/// \brief Returns true if this object is invalid.
-		bool is_null() const { return !impl; }
-
-		/// \brief Throw an exception if this object is invalid.
-		void throw_if_null() const;
-
-		/// \brief Get Provider
-		///
-		/// \return provider
-		VertexArrayBufferProvider *get_provider() const;
-
-		/// \brief Handle comparison operator.
-		bool operator==(const VertexArrayBuffer &other) const;
+		/// \brief Constructs a vertex array buffer
+		static std::shared_ptr<VertexArrayBuffer> create(GraphicContext &gc, int size, BufferUsage usage = usage_static_draw);
+		static std::shared_ptr<VertexArrayBuffer> create(GraphicContext &gc, const void *data, int size, BufferUsage usage = usage_static_draw);
 
 		/// \brief Uploads data to vertex array buffer.
-		void upload_data(GraphicContext &gc, int offset, const void *data, int size);
+		virtual void upload_data(GraphicContext &gc, int offset, const void *data, int size) = 0;
 
 		/// \brief Copies data from transfer buffer
-		void copy_from(GraphicContext &gc, TransferBuffer &buffer, int dest_pos = 0, int src_pos = 0, int size = -1);
+		virtual void copy_from(GraphicContext &gc, TransferBuffer &buffer, int dest_pos = 0, int src_pos = 0, int size = -1) = 0;
 
 		/// \brief Copies data to transfer buffer
-		void copy_to(GraphicContext &gc, TransferBuffer &buffer, int dest_pos = 0, int src_pos = 0, int size = -1);
-
-	private:
-		std::shared_ptr<VertexArrayBuffer_Impl> impl;
+		virtual void copy_to(GraphicContext &gc, TransferBuffer &buffer, int dest_pos = 0, int src_pos = 0, int size = -1) = 0;
 	};
+
+	typedef std::shared_ptr<VertexArrayBuffer> VertexArrayBufferPtr;
 }

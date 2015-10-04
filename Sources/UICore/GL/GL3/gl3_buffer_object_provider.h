@@ -29,7 +29,7 @@
 
 #pragma once
 
-#include "UICore/Display/TargetProviders/vertex_array_buffer_provider.h"
+#include "UICore/Display/Render/vertex_array_buffer.h"
 #include "UICore/Display/Render/graphic_context.h"
 #include "UICore/GL/opengl.h"
 #include "UICore/Core/System/disposable_object.h"

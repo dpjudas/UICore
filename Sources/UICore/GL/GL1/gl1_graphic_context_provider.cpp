@@ -247,11 +247,6 @@ namespace uicore
 		return new GL1TextureProvider(texture_dimensions);
 	}
 
-	VertexArrayBufferProvider *GL1GraphicContextProvider::alloc_vertex_array_buffer()
-	{
-		return new GL1VertexArrayBufferProvider;
-	}
-
 	UniformBufferProvider *GL1GraphicContextProvider::alloc_uniform_buffer()
 	{
 		return new GL1UniformBufferProvider;
@@ -365,6 +360,16 @@ namespace uicore
 	std::shared_ptr<ElementArrayBuffer> GL1GraphicContextProvider::create_element_array_buffer(const void *data, int size, BufferUsage usage)
 	{
 		throw Exception("Element Array Buffers are not supported for OpenGL 1.3");
+	}
+
+	std::shared_ptr<VertexArrayBuffer> GL1GraphicContextProvider::create_vertex_array_buffer(int size, BufferUsage usage)
+	{
+		return std::make_shared<GL1VertexArrayBufferProvider>(size, usage);
+	}
+
+	std::shared_ptr<VertexArrayBuffer> GL1GraphicContextProvider::create_vertex_array_buffer(const void *data, int size, BufferUsage usage)
+	{
+		return std::make_shared<GL1VertexArrayBufferProvider>(data, size, usage);
 	}
 
 	void GL1GraphicContextProvider::set_rasterizer_state(RasterizerState *state)

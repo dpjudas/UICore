@@ -81,9 +81,9 @@ namespace uicore
 		return provider->get_texture(static_cast<const D3DGraphicContextProvider *>(gc.get_provider())->get_window()->get_device());
 	}
 
-	ID3D11Buffer *D3DTarget::get_buffer_handle(const GraphicContext &gc, const VertexArrayBuffer &buffer)
+	ID3D11Buffer *D3DTarget::get_buffer_handle(const GraphicContext &gc, const VertexArrayBufferPtr &buffer)
 	{
-		D3DVertexArrayBufferProvider *provider = static_cast<D3DVertexArrayBufferProvider *>(buffer.get_provider());
+		D3DVertexArrayBufferProvider *provider = static_cast<D3DVertexArrayBufferProvider *>(buffer.get());
 		return provider->get_buffer(static_cast<const D3DGraphicContextProvider *>(gc.get_provider())->get_window()->get_device());
 	}
 

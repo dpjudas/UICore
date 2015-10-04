@@ -28,26 +28,25 @@
 
 #pragma once
 
-#include "UICore/Display/TargetProviders/vertex_array_buffer_provider.h"
+#include "UICore/Display/Render/vertex_array_buffer.h"
 #include "UICore/Core/System/databuffer.h"
 #include "d3d_share_list.h"
 #include "UICore/Core/System/comptr.h"
 
 namespace uicore
 {
-	class D3DVertexArrayBufferProvider : public VertexArrayBufferProvider, D3DSharedResource
+	class D3DVertexArrayBufferProvider : public VertexArrayBuffer, D3DSharedResource
 	{
 	public:
-		D3DVertexArrayBufferProvider(const ComPtr<ID3D11Device> &device);
+		D3DVertexArrayBufferProvider(const ComPtr<ID3D11Device> &device, int size, BufferUsage usage);
+		D3DVertexArrayBufferProvider(const ComPtr<ID3D11Device> &device, const void *data, int size, BufferUsage usage);
 		~D3DVertexArrayBufferProvider();
-		void create(int size, BufferUsage usage);
-		void create(void *data, int size, BufferUsage usage);
 
 		ComPtr<ID3D11Buffer> &get_buffer(const ComPtr<ID3D11Device> &device);
 
-		void upload_data(GraphicContext &gc, int offset, const void *data, int size);
-		void copy_from(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size);
-		void copy_to(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size);
+		void upload_data(GraphicContext &gc, int offset, const void *data, int size) override;
+		void copy_from(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size) override;
+		void copy_to(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size) override;
 
 	private:
 		struct DeviceHandles
@@ -63,6 +62,6 @@ namespace uicore
 		static D3D11_MAP to_d3d_map_type(BufferAccess access);
 
 		std::vector<std::shared_ptr<DeviceHandles> > handles;
-		int size;
+		int size = 0;
 	};
 }

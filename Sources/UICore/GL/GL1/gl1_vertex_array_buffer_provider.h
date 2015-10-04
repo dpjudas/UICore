@@ -28,17 +28,16 @@
 
 #pragma once
 
-#include "UICore/Display/TargetProviders/vertex_array_buffer_provider.h"
+#include "UICore/Display/Render/vertex_array_buffer.h"
 
 namespace uicore
 {
-	class GL1VertexArrayBufferProvider : public VertexArrayBufferProvider
+	class GL1VertexArrayBufferProvider : public VertexArrayBuffer
 	{
 	public:
-		GL1VertexArrayBufferProvider();
+		GL1VertexArrayBufferProvider(int size, BufferUsage usage);
+		GL1VertexArrayBufferProvider(const void *data, int size, BufferUsage usage);
 		~GL1VertexArrayBufferProvider();
-		void create(int size, BufferUsage usage) override;
-		void create(void *data, int size, BufferUsage usage) override;
 
 		void *get_data() const { return data; }
 
@@ -47,7 +46,7 @@ namespace uicore
 		void copy_to(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size) override;
 
 	private:
-		char *data;
-		int size;
+		char *data = nullptr;
+		int size = 0;
 	};
 }

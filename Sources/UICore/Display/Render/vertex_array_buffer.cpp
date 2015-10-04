@@ -28,75 +28,19 @@
 
 #include "UICore/precomp.h"
 #include "UICore/Display/Render/vertex_array_buffer.h"
-#include "UICore/Display/TargetProviders/vertex_array_buffer_provider.h"
 #include "UICore/Display/Render/graphic_context.h"
 #include "UICore/Display/TargetProviders/graphic_context_provider.h"
 #include "UICore/Core/System/exception.h"
 
 namespace uicore
 {
-	class VertexArrayBuffer_Impl
+	std::shared_ptr<VertexArrayBuffer> VertexArrayBuffer::create(GraphicContext &gc, int size, BufferUsage usage)
 	{
-	public:
-		VertexArrayBuffer_Impl() : lock_count(0), provider(nullptr) { }
-		~VertexArrayBuffer_Impl() { if (provider) delete provider; }
-
-		int lock_count;
-		VertexArrayBufferProvider *provider;
-	};
-
-	VertexArrayBuffer::VertexArrayBuffer()
-	{
+		return gc.get_provider()->create_vertex_array_buffer(size, usage);
 	}
 
-	VertexArrayBuffer::VertexArrayBuffer(GraphicContext &gc, int size, BufferUsage usage)
-		: impl(std::make_shared<VertexArrayBuffer_Impl>())
+	std::shared_ptr<VertexArrayBuffer> VertexArrayBuffer::create(GraphicContext &gc, const void *data, int size, BufferUsage usage)
 	{
-		GraphicContextProvider *gc_provider = gc.get_provider();
-		impl->provider = gc_provider->alloc_vertex_array_buffer();
-		impl->provider->create(size, usage);
-	}
-
-	VertexArrayBuffer::VertexArrayBuffer(GraphicContext &gc, const void *data, int size, BufferUsage usage)
-		: impl(std::make_shared<VertexArrayBuffer_Impl>())
-	{
-		GraphicContextProvider *gc_provider = gc.get_provider();
-		impl->provider = gc_provider->alloc_vertex_array_buffer();
-		impl->provider->create((void*)data, size, usage);
-	}
-
-	VertexArrayBuffer::~VertexArrayBuffer()
-	{
-	}
-
-	void VertexArrayBuffer::throw_if_null() const
-	{
-		if (!impl)
-			throw Exception("VertexArrayBuffer is null");
-	}
-
-	VertexArrayBufferProvider *VertexArrayBuffer::get_provider() const
-	{
-		return impl->provider;
-	}
-
-	bool VertexArrayBuffer::operator==(const VertexArrayBuffer &other) const
-	{
-		return impl == other.impl;
-	}
-
-	void VertexArrayBuffer::upload_data(GraphicContext &gc, int offset, const void *data, int size)
-	{
-		impl->provider->upload_data(gc, offset, data, size);
-	}
-
-	void VertexArrayBuffer::copy_from(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size)
-	{
-		impl->provider->copy_from(gc, buffer, dest_pos, src_pos, size);
-	}
-
-	void VertexArrayBuffer::copy_to(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size)
-	{
-		impl->provider->copy_to(gc, buffer, dest_pos, src_pos, size);
+		return gc.get_provider()->create_vertex_array_buffer(data, size, usage);
 	}
 }

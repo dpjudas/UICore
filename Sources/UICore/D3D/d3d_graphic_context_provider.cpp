@@ -183,11 +183,6 @@ namespace uicore
 		return new D3DTextureProvider(window->get_device(), window->get_feature_level(), texture_dimensions);
 	}
 
-	VertexArrayBufferProvider *D3DGraphicContextProvider::alloc_vertex_array_buffer()
-	{
-		return new D3DVertexArrayBufferProvider(window->get_device());
-	}
-
 	UniformBufferProvider *D3DGraphicContextProvider::alloc_uniform_buffer()
 	{
 		return new D3DUniformBufferProvider(window->get_device());
@@ -301,6 +296,16 @@ namespace uicore
 	std::shared_ptr<ElementArrayBuffer> D3DGraphicContextProvider::create_element_array_buffer(const void *data, int size, BufferUsage usage)
 	{
 		return std::make_shared<D3DElementArrayBufferProvider>(window->get_device(), data, size, usage);
+	}
+
+	std::shared_ptr<VertexArrayBuffer> D3DGraphicContextProvider::create_vertex_array_buffer(int size, BufferUsage usage)
+	{
+		return std::make_shared<D3DVertexArrayBufferProvider>(window->get_device(), size, usage);
+	}
+
+	std::shared_ptr<VertexArrayBuffer> D3DGraphicContextProvider::create_vertex_array_buffer(const void *data, int size, BufferUsage usage)
+	{
+		return std::make_shared<D3DVertexArrayBufferProvider>(window->get_device(), data, size, usage);
 	}
 
 	void D3DGraphicContextProvider::set_rasterizer_state(RasterizerState *state)

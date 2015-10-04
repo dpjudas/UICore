@@ -35,18 +35,10 @@
 
 namespace uicore
 {
-	D3DVertexArrayBufferProvider::D3DVertexArrayBufferProvider(const ComPtr<ID3D11Device> &device)
-		: size(0)
+	D3DVertexArrayBufferProvider::D3DVertexArrayBufferProvider(const ComPtr<ID3D11Device> &device, int new_size, BufferUsage usage)
 	{
 		handles.push_back(std::shared_ptr<DeviceHandles>(new DeviceHandles(device)));
-	}
 
-	D3DVertexArrayBufferProvider::~D3DVertexArrayBufferProvider()
-	{
-	}
-
-	void D3DVertexArrayBufferProvider::create(int new_size, BufferUsage usage)
-	{
 		size = new_size;
 
 		D3D11_BUFFER_DESC desc;
@@ -60,8 +52,10 @@ namespace uicore
 		D3DTarget::throw_if_failed("Unable to create vertex array buffer", result);
 	}
 
-	void D3DVertexArrayBufferProvider::create(void *init_data, int new_size, BufferUsage usage)
+	D3DVertexArrayBufferProvider::D3DVertexArrayBufferProvider(const ComPtr<ID3D11Device> &device, const void *init_data, int new_size, BufferUsage usage)
 	{
+		handles.push_back(std::shared_ptr<DeviceHandles>(new DeviceHandles(device)));
+
 		size = new_size;
 
 		D3D11_SUBRESOURCE_DATA resource_data;
@@ -78,6 +72,10 @@ namespace uicore
 		desc.StructureByteStride = 0;
 		HRESULT result = handles.front()->device->CreateBuffer(&desc, &resource_data, handles.front()->buffer.output_variable());
 		D3DTarget::throw_if_failed("Unable to create vertex array buffer", result);
+	}
+
+	D3DVertexArrayBufferProvider::~D3DVertexArrayBufferProvider()
+	{
 	}
 
 	ComPtr<ID3D11Buffer> &D3DVertexArrayBufferProvider::get_buffer(const ComPtr<ID3D11Device> &device)

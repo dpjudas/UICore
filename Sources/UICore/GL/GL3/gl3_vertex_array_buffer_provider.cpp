@@ -35,20 +35,12 @@
 
 namespace uicore
 {
-	GL3VertexArrayBufferProvider::GL3VertexArrayBufferProvider()
+	GL3VertexArrayBufferProvider::GL3VertexArrayBufferProvider(int size, BufferUsage usage)
 	{
+		buffer.create(nullptr, size, usage, GL_ARRAY_BUFFER_BINDING, GL_ARRAY_BUFFER);
 	}
 
-	GL3VertexArrayBufferProvider::~GL3VertexArrayBufferProvider()
-	{
-	}
-
-	void GL3VertexArrayBufferProvider::create(int size, BufferUsage usage)
-	{
-		create(nullptr, size, usage);
-	}
-
-	void GL3VertexArrayBufferProvider::create(void *data, int size, BufferUsage usage)
+	GL3VertexArrayBufferProvider::GL3VertexArrayBufferProvider(const void *data, int size, BufferUsage usage)
 	{
 		buffer.create(data, size, usage, GL_ARRAY_BUFFER_BINDING, GL_ARRAY_BUFFER);
 	}

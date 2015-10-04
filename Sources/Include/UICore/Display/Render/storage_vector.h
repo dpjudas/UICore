@@ -58,9 +58,8 @@ namespace uicore
 		}
 
 		/// Returns the storage buffer used by the vector
-		const StorageBufferPtr &buffer() const { _buffer; }
+		const StorageBufferPtr &buffer() const { return _buffer; }
 
-		operator StorageBufferPtr() const { return buffer(); }
 		operator const StorageBufferPtr &() const { return buffer(); }
 
 		/// \brief Uploads data to storage buffer.
