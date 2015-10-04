@@ -33,33 +33,21 @@
 
 namespace uicore
 {
-	/// \brief Storage Buffer Vector
-	///
+	/// \brief Typed access to a storage buffer
 	template<typename Type>
-	class StorageVector : public StorageBuffer
+	class StorageVector
 	{
 	public:
-		/// \brief Constructs a null instance.
+		// Constructs a storage vector
 		StorageVector()
 		{
 		}
 
-		/// \brief Constructs a ElementArrayBuffer
-		///
-		/// \param gc = Graphic Context
-		/// \param size = value
-		/// \param usage = Buffer Usage
 		StorageVector(GraphicContext &gc, int size, BufferUsage usage = usage_static_draw)
-			: StorageBuffer(gc, size * sizeof(Type), sizeof(Type), usage)
+			: _buffer(StorageBuffer::create(gc, size * sizeof(Type), sizeof(Type), usage))
 		{
 		}
 
-		/// \brief Constructs a ElementArrayBuffer
-		///
-		/// \param gc = Graphic Context
-		/// \param data = void
-		/// \param size = value
-		/// \param usage = Buffer Usage
 		StorageVector(GraphicContext &gc, Type *data, int size, BufferUsage usage = usage_static_draw)
 			: StorageBuffer(gc, data, size * sizeof(Type), sizeof(Type), usage)
 		{
@@ -70,19 +58,24 @@ namespace uicore
 		{
 		}
 
+		/// Returns the storage buffer used by the vector
+		const StorageBufferPtr &buffer() const { _buffer; }
+
+		operator StorageBufferPtr() const { return buffer(); }
+		operator const StorageBufferPtr &() const { return buffer(); }
+
 		/// \brief Uploads data to storage buffer.
 		///
 		/// The size specified must match the size of the buffer and is only included to help guard against buffer overruns.
 		void upload_data(GraphicContext &gc, const Type *data, int size)
 		{
-			StorageBuffer::upload_data(gc, data, size * sizeof(Type));
+			_buffer->upload_data(gc, data, size * sizeof(Type));
 		}
 
 		/// \brief Uploads data to storage buffer.
 		void upload_data(GraphicContext &gc, const std::vector<Type> &data)
 		{
-			if (!data.empty())
-				StorageBuffer::upload_data(gc, &data[0], data.size() * sizeof(Type));
+			_buffer->upload_data(gc, data.data(), data.size() * sizeof(Type));
 		}
 
 		/// \brief Copies data from transfer buffer
@@ -90,7 +83,7 @@ namespace uicore
 		{
 			if (size != -1)
 				size = size * sizeof(Type);
-			StorageBuffer::copy_from(gc, buffer, dest_pos * sizeof(Type), src_pos * sizeof(Type), size);
+			_buffer->copy_from(gc, buffer, dest_pos * sizeof(Type), src_pos * sizeof(Type), size);
 		}
 
 		/// \brief Copies data to transfer buffer
@@ -98,7 +91,10 @@ namespace uicore
 		{
 			if (size != -1)
 				size = size * sizeof(Type);
-			StorageBuffer::copy_to(gc, buffer, dest_pos * sizeof(Type), src_pos * sizeof(Type), size);
+			_buffer->copy_to(gc, buffer, dest_pos * sizeof(Type), src_pos * sizeof(Type), size);
 		}
+
+	private:
+		StorageBufferPtr _buffer;
 	};
 }

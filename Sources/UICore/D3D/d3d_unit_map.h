@@ -58,7 +58,7 @@ namespace uicore
 		D3DStorageUnit() { for (int i = 0; i < (int)ShaderType::num_types; i++) { shader_srv_index[i] = -1; shader_uav_index[i] = -1; } }
 		int shader_srv_index[(int)ShaderType::num_types];
 		int shader_uav_index[(int)ShaderType::num_types];
-		StorageBuffer object;
+		StorageBufferPtr object;
 	};
 
 	class D3DUnitMap
@@ -70,7 +70,7 @@ namespace uicore
 		void set_texture(D3DGraphicContextProvider *gc, int index, const Texture &texture);
 		void set_image(D3DGraphicContextProvider *gc, int index, const Texture &texture);
 		void set_uniform_buffer(D3DGraphicContextProvider *gc, int index, const UniformBuffer &buffer);
-		void set_storage_buffer(D3DGraphicContextProvider *gc, int index, const StorageBuffer &buffer);
+		void set_storage_buffer(D3DGraphicContextProvider *gc, int index, const StorageBufferPtr &buffer);
 
 	private:
 		void bind_sampler(D3DGraphicContextProvider *gc, int index);

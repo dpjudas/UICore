@@ -216,14 +216,14 @@ namespace uicore
 		impl->set_uniform_buffer(index, null_buffer);
 	}
 
-	void GraphicContext::set_storage_buffer(int index, const StorageBuffer &buffer)
+	void GraphicContext::set_storage_buffer(int index, const StorageBufferPtr &buffer)
 	{
 		impl->set_storage_buffer(index, buffer);
 	}
 
 	void GraphicContext::reset_storage_buffer(int index)
 	{
-		StorageBuffer null_buffer;
+		StorageBufferPtr null_buffer;
 		impl->set_storage_buffer(index, null_buffer);
 	}
 

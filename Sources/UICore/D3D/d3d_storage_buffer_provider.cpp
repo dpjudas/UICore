@@ -35,18 +35,10 @@
 
 namespace uicore
 {
-	D3DStorageBufferProvider::D3DStorageBufferProvider(const ComPtr<ID3D11Device> &device)
-		: size(0)
+	D3DStorageBufferProvider::D3DStorageBufferProvider(const ComPtr<ID3D11Device> &device, int new_size, int new_stride, BufferUsage usage) : size(0)
 	{
 		handles.push_back(std::shared_ptr<DeviceHandles>(new DeviceHandles(device)));
-	}
 
-	D3DStorageBufferProvider::~D3DStorageBufferProvider()
-	{
-	}
-
-	void D3DStorageBufferProvider::create(int new_size, int new_stride, BufferUsage usage)
-	{
 		size = new_size;
 
 		D3D11_BUFFER_DESC desc;
@@ -56,12 +48,15 @@ namespace uicore
 		desc.CPUAccessFlags = 0;
 		desc.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED | D3D11_RESOURCE_MISC_SHARED;
 		desc.StructureByteStride = new_stride;
+
 		HRESULT result = handles.front()->device->CreateBuffer(&desc, 0, handles.front()->buffer.output_variable());
 		D3DTarget::throw_if_failed("Unable to create program storage block", result);
 	}
 
-	void D3DStorageBufferProvider::create(const void *data, int new_size, int new_stride, BufferUsage usage)
+	D3DStorageBufferProvider::D3DStorageBufferProvider(const ComPtr<ID3D11Device> &device, const void *data, int new_size, int new_stride, BufferUsage usage) : size(0)
 	{
+		handles.push_back(std::shared_ptr<DeviceHandles>(new DeviceHandles(device)));
+
 		size = new_size;
 
 		D3D11_SUBRESOURCE_DATA resource_data;
@@ -76,8 +71,13 @@ namespace uicore
 		desc.CPUAccessFlags = 0;
 		desc.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED | D3D11_RESOURCE_MISC_SHARED;
 		desc.StructureByteStride = new_stride;
+
 		HRESULT result = handles.front()->device->CreateBuffer(&desc, &resource_data, handles.front()->buffer.output_variable());
 		D3DTarget::throw_if_failed("Unable to create program storage block", result);
+	}
+
+	D3DStorageBufferProvider::~D3DStorageBufferProvider()
+	{
 	}
 
 	ComPtr<ID3D11Buffer> &D3DStorageBufferProvider::get_buffer(const ComPtr<ID3D11Device> &device)

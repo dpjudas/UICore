@@ -257,11 +257,6 @@ namespace uicore
 		return new GL1UniformBufferProvider;
 	}
 
-	StorageBufferProvider *GL1GraphicContextProvider::alloc_storage_buffer()
-	{
-		throw Exception("Storage Buffers are not supported for OpenGL 1.3");
-	}
-
 	ElementArrayBufferProvider *GL1GraphicContextProvider::alloc_element_array_buffer()
 	{
 		throw Exception("Element Array Buffers are not supported for OpenGL 1.3");
@@ -357,6 +352,15 @@ namespace uicore
 		return std::make_shared<GL1RenderBufferProvider>(this, width, height, texture_format, multisample_samples);
 	}
 
+	std::shared_ptr<StorageBuffer> GL1GraphicContextProvider::create_storage_buffer(int size, int stride, BufferUsage usage)
+	{
+		throw Exception("Storage Buffers are not supported for OpenGL 1.3");
+	}
+
+	std::shared_ptr<StorageBuffer> GL1GraphicContextProvider::create_storage_buffer(const void *data, int size, int stride, BufferUsage usage)
+	{
+		throw Exception("Storage Buffers are not supported for OpenGL 1.3");
+	}
 
 	void GL1GraphicContextProvider::set_rasterizer_state(RasterizerState *state)
 	{
@@ -438,7 +442,7 @@ namespace uicore
 	{
 	}
 
-	void GL1GraphicContextProvider::set_storage_buffer(int index, const StorageBuffer &buffer)
+	void GL1GraphicContextProvider::set_storage_buffer(int index, const StorageBufferPtr &buffer)
 	{
 	}
 

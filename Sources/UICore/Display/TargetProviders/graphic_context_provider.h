@@ -126,9 +126,6 @@ namespace uicore
 		/// \brief Allocate uniform buffer provider for this gc.
 		virtual UniformBufferProvider *alloc_uniform_buffer() = 0;
 
-		/// \brief Allocate storage buffer provider for this gc.
-		virtual StorageBufferProvider *alloc_storage_buffer() = 0;
-
 		/// \brief Allocate element array buffer provider for this gc.
 		virtual ElementArrayBufferProvider *alloc_element_array_buffer() = 0;
 
@@ -150,6 +147,8 @@ namespace uicore
 		virtual std::shared_ptr<OcclusionQuery> create_occlusion_query() = 0;
 		virtual std::shared_ptr<FrameBuffer> create_frame_buffer() = 0;
 		virtual std::shared_ptr<RenderBuffer> create_render_buffer(int width, int height, TextureFormat texture_format, int multisample_samples) = 0;
+		virtual std::shared_ptr<StorageBuffer> create_storage_buffer(int size, int stride, BufferUsage usage) = 0;
+		virtual std::shared_ptr<StorageBuffer> create_storage_buffer(const void *data, int size, int stride, BufferUsage usage) = 0;
 
 		/// \brief Set active rasterizer state
 		virtual void set_rasterizer_state(RasterizerState *state) = 0;
@@ -178,7 +177,7 @@ namespace uicore
 		virtual void reset_uniform_buffer(int index) = 0;
 
 		/// \brief Select storage buffer into index
-		virtual void set_storage_buffer(int index, const StorageBuffer &buffer) = 0;
+		virtual void set_storage_buffer(int index, const StorageBufferPtr &buffer) = 0;
 
 		/// \brief Remove storage buffer from index
 		virtual void reset_storage_buffer(int index) = 0;

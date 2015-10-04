@@ -165,7 +165,7 @@ namespace uicore
 		bind_uniform_buffer(gc, index);
 	}
 
-	void D3DUnitMap::set_storage_buffer(D3DGraphicContextProvider *gc, int index, const StorageBuffer &buffer)
+	void D3DUnitMap::set_storage_buffer(D3DGraphicContextProvider *gc, int index, const StorageBufferPtr &buffer)
 	{
 		if (storage_units.size() < index + 1)
 			storage_units.resize(index + 1);
@@ -309,8 +309,8 @@ namespace uicore
 				if (storage_units[index].shader_srv_index[j] != -1)
 				{
 					ID3D11ShaderResourceView *srv = 0;
-					if (!storage_units[index].object.is_null())
-						srv = static_cast<D3DStorageBufferProvider*>(storage_units[index].object.get_provider())->get_srv(gc->get_window()->get_device());
+					if (storage_units[index].object)
+						srv = static_cast<D3DStorageBufferProvider*>(storage_units[index].object.get())->get_srv(gc->get_window()->get_device());
 					switch (j)
 					{
 					case ShaderType::vertex:
@@ -339,8 +339,8 @@ namespace uicore
 			{
 				ID3D11UnorderedAccessView *uav = 0;
 				UINT uav_initial_count = 0;
-				if (!storage_units[index].object.is_null())
-					uav = static_cast<D3DStorageBufferProvider*>(storage_units[index].object.get_provider())->get_uav(gc->get_window()->get_device());
+				if (storage_units[index].object)
+					uav = static_cast<D3DStorageBufferProvider*>(storage_units[index].object.get())->get_uav(gc->get_window()->get_device());
 				gc->get_window()->get_device_context()->CSSetUnorderedAccessViews(storage_units[index].shader_uav_index[(int)ShaderType::compute], 1, &uav, &uav_initial_count);
 			}
 		}

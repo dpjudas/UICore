@@ -64,6 +64,7 @@ namespace uicore
 	class DepthStencilStateDescription;
 	typedef std::shared_ptr<ProgramObject> ProgramObjectPtr;
 	typedef std::shared_ptr<FrameBuffer> FrameBufferPtr;
+	typedef std::shared_ptr<StorageBuffer> StorageBufferPtr;
 
 	/// Polygon culling modes.
 	enum CullMode
@@ -410,7 +411,7 @@ namespace uicore
 		void reset_uniform_buffer(int index);
 
 		/// Select storage buffer into index
-		void set_storage_buffer(int index, const StorageBuffer &buffer);
+		void set_storage_buffer(int index, const StorageBufferPtr &buffer);
 
 		/// Remove storage buffer from index
 		void reset_storage_buffer(int index);

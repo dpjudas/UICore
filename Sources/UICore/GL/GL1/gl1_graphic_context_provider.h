@@ -113,7 +113,6 @@ namespace uicore
 		TextureProvider *alloc_texture(TextureDimensions texture_dimensions) override;
 		VertexArrayBufferProvider *alloc_vertex_array_buffer() override;
 		UniformBufferProvider *alloc_uniform_buffer() override;
-		StorageBufferProvider *alloc_storage_buffer() override;
 		ElementArrayBufferProvider *alloc_element_array_buffer() override;
 		TransferBufferProvider *alloc_transfer_buffer() override;
 		PixelBufferProvider *alloc_pixel_buffer() override;
@@ -127,13 +126,15 @@ namespace uicore
 		std::shared_ptr<OcclusionQuery> create_occlusion_query() override;
 		std::shared_ptr<FrameBuffer> create_frame_buffer() override;
 		std::shared_ptr<RenderBuffer> create_render_buffer(int width, int height, TextureFormat texture_format, int multisample_samples) override;
+		std::shared_ptr<StorageBuffer> create_storage_buffer(int size, int stride, BufferUsage usage) override;
+		std::shared_ptr<StorageBuffer> create_storage_buffer(const void *data, int size, int stride, BufferUsage usage) override;
 		void set_rasterizer_state(RasterizerState *state) override;
 		void set_blend_state(BlendState *state, const Colorf &blend_color, unsigned int sample_mask) override;
 		void set_depth_stencil_state(DepthStencilState *state, int stencil_ref) override;
 		PixelBuffer get_pixeldata(const Rect& rect, TextureFormat texture_format, bool clamp) const override;
 		void set_uniform_buffer(int index, const UniformBuffer &buffer) override;
 		void reset_uniform_buffer(int index) override;
-		void set_storage_buffer(int index, const StorageBuffer &buffer) override;
+		void set_storage_buffer(int index, const StorageBufferPtr &buffer) override;
 		void reset_storage_buffer(int index) override;
 		void set_texture(int unit_index, const Texture &texture) override;
 		void reset_texture(int unit_index) override;

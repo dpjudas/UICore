@@ -193,11 +193,6 @@ namespace uicore
 		return new D3DUniformBufferProvider(window->get_device());
 	}
 
-	StorageBufferProvider *D3DGraphicContextProvider::alloc_storage_buffer()
-	{
-		return new D3DStorageBufferProvider(window->get_device());
-	}
-
 	ElementArrayBufferProvider *D3DGraphicContextProvider::alloc_element_array_buffer()
 	{
 		return new D3DElementArrayBufferProvider(window->get_device());
@@ -291,6 +286,16 @@ namespace uicore
 	std::shared_ptr<RenderBuffer> D3DGraphicContextProvider::create_render_buffer(int width, int height, TextureFormat texture_format, int multisample_samples)
 	{
 		return std::make_shared<D3DRenderBufferProvider>(window->get_device(), width, height, texture_format, multisample_samples);
+	}
+
+	std::shared_ptr<StorageBuffer> D3DGraphicContextProvider::create_storage_buffer(int size, int stride, BufferUsage usage)
+	{
+		return std::make_shared<D3DStorageBufferProvider>(window->get_device(), size, stride, usage);
+	}
+
+	std::shared_ptr<StorageBuffer> D3DGraphicContextProvider::create_storage_buffer(const void *data, int size, int stride, BufferUsage usage)
+	{
+		return std::make_shared<D3DStorageBufferProvider>(window->get_device(), data, size, stride, usage);
 	}
 
 	void D3DGraphicContextProvider::set_rasterizer_state(RasterizerState *state)
@@ -410,14 +415,14 @@ namespace uicore
 		unit_map.set_uniform_buffer(this, index, UniformBuffer());
 	}
 
-	void D3DGraphicContextProvider::set_storage_buffer(int index, const StorageBuffer &buffer)
+	void D3DGraphicContextProvider::set_storage_buffer(int index, const StorageBufferPtr &buffer)
 	{
 		unit_map.set_storage_buffer(this, index, buffer);
 	}
 
 	void D3DGraphicContextProvider::reset_storage_buffer(int index)
 	{
-		unit_map.set_storage_buffer(this, index, StorageBuffer());
+		unit_map.set_storage_buffer(this, index, StorageBufferPtr());
 	}
 
 	void D3DGraphicContextProvider::set_texture(int unit_index, const Texture &texture)

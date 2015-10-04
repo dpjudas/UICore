@@ -303,11 +303,6 @@ namespace uicore
 		return new GL3UniformBufferProvider();
 	}
 
-	StorageBufferProvider *GL3GraphicContextProvider::alloc_storage_buffer()
-	{
-		return new GL3StorageBufferProvider();
-	}
-
 	ElementArrayBufferProvider *GL3GraphicContextProvider::alloc_element_array_buffer()
 	{
 		return new GL3ElementArrayBufferProvider();
@@ -398,6 +393,16 @@ namespace uicore
 		return std::make_shared<GL3FrameBufferProvider>(this);
 	}
 
+	std::shared_ptr<StorageBuffer> GL3GraphicContextProvider::create_storage_buffer(int size, int stride, BufferUsage usage)
+	{
+		return std::make_shared<GL3StorageBufferProvider>(size, stride, usage);
+	}
+
+	std::shared_ptr<StorageBuffer> GL3GraphicContextProvider::create_storage_buffer(const void *data, int size, int stride, BufferUsage usage)
+	{
+		return std::make_shared<GL3StorageBufferProvider>(data, size, stride, usage);
+	}
+
 	void GL3GraphicContextProvider::set_rasterizer_state(RasterizerState *state)
 	{
 		if (state)
@@ -479,10 +484,10 @@ namespace uicore
 		glBindBufferBase(GL_UNIFORM_BUFFER, index, 0);
 	}
 
-	void GL3GraphicContextProvider::set_storage_buffer(int index, const StorageBuffer &buffer)
+	void GL3GraphicContextProvider::set_storage_buffer(int index, const StorageBufferPtr &buffer)
 	{
 		OpenGL::set_active(this);
-		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, index, static_cast<GL3StorageBufferProvider*>(buffer.get_provider())->get_handle());
+		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, index, static_cast<GL3StorageBufferProvider*>(buffer.get())->get_handle());
 	}
 
 	void GL3GraphicContextProvider::reset_storage_buffer(int index)

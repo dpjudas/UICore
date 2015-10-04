@@ -28,71 +28,18 @@
 
 #include "UICore/precomp.h"
 #include "UICore/Display/Render/storage_buffer.h"
-#include "UICore/Display/Render/program_object.h"
-#include "UICore/Display/TargetProviders/storage_buffer_provider.h"
 #include "UICore/Display/Render/graphic_context.h"
 #include "UICore/Display/TargetProviders/graphic_context_provider.h"
-#include "UICore/Core/System/exception.h"
 
 namespace uicore
 {
-	class StorageBuffer_Impl
+	std::shared_ptr<StorageBuffer> StorageBuffer::create(GraphicContext &gc, int size, int stride, BufferUsage usage)
 	{
-	public:
-		StorageBuffer_Impl() : provider(nullptr) { }
-		~StorageBuffer_Impl() { if (provider) delete provider; }
-
-		StorageBufferProvider *provider;
-	};
-
-	StorageBuffer::StorageBuffer()
-	{
+		return gc.get_provider()->create_storage_buffer(size, stride, usage);
 	}
 
-	StorageBuffer::StorageBuffer(GraphicContext &gc, int size, int stride, BufferUsage usage)
-		: impl(std::make_shared<StorageBuffer_Impl>())
+	std::shared_ptr<StorageBuffer> StorageBuffer::create(GraphicContext &gc, const void *data, int size, int stride, BufferUsage usage)
 	{
-		GraphicContextProvider *gc_provider = gc.get_provider();
-		impl->provider = gc_provider->alloc_storage_buffer();
-		impl->provider->create(size, stride, usage);
-	}
-
-	StorageBuffer::StorageBuffer(GraphicContext &gc, const void *data, int size, int stride, BufferUsage usage)
-		: impl(std::make_shared<StorageBuffer_Impl>())
-	{
-		GraphicContextProvider *gc_provider = gc.get_provider();
-		impl->provider = gc_provider->alloc_storage_buffer();
-		impl->provider->create(data, size, stride, usage);
-	}
-
-	void StorageBuffer::throw_if_null() const
-	{
-		if (!impl)
-			throw Exception("StorageBuffer is null");
-	}
-
-	StorageBufferProvider *StorageBuffer::get_provider() const
-	{
-		return impl->provider;
-	}
-
-	bool StorageBuffer::operator==(const StorageBuffer &other) const
-	{
-		return impl == other.impl;
-	}
-
-	void StorageBuffer::upload_data(GraphicContext &gc, const void *data, int size)
-	{
-		impl->provider->upload_data(gc, data, size);
-	}
-
-	void StorageBuffer::copy_from(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size)
-	{
-		impl->provider->copy_from(gc, buffer, dest_pos, src_pos, size);
-	}
-
-	void StorageBuffer::copy_to(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size)
-	{
-		impl->provider->copy_to(gc, buffer, dest_pos, src_pos, size);
+		return gc.get_provider()->create_storage_buffer(data, size, stride, usage);
 	}
 }

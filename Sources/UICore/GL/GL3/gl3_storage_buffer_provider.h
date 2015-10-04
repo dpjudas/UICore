@@ -29,7 +29,7 @@
 
 #pragma once
 
-#include "UICore/Display/TargetProviders/storage_buffer_provider.h"
+#include "UICore/Display/Render/storage_buffer.h"
 #include "UICore/GL/opengl.h"
 #include "UICore/Core/System/disposable_object.h"
 #include "gl3_buffer_object_provider.h"
@@ -38,13 +38,11 @@ namespace uicore
 {
 	class GL3GraphicContextProvider;
 
-	class GL3StorageBufferProvider : public StorageBufferProvider
+	class GL3StorageBufferProvider : public StorageBuffer
 	{
 	public:
-		GL3StorageBufferProvider();
-		~GL3StorageBufferProvider();
-		void create(int size, int stride, BufferUsage usage) override;
-		void create(const void *data, int size, int stride, BufferUsage usage) override;
+		GL3StorageBufferProvider(int size, int stride, BufferUsage usage);
+		GL3StorageBufferProvider(const void *data, int size, int stride, BufferUsage usage);
 
 		GLuint get_handle() const { return buffer.get_handle(); }
 

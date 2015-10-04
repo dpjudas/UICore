@@ -159,7 +159,7 @@ namespace uicore
 			provider->reset_uniform_buffer(index);
 	}
 
-	void GraphicContext_Impl::set_storage_buffer(int index, const StorageBuffer &buffer)
+	void GraphicContext_Impl::set_storage_buffer(int index, const StorageBufferPtr &buffer)
 	{
 		// Limit the number of unit index to 255, this should always be enough. This simplifies the saving of the texture
 		if ((index < 0) || (index > 255))
@@ -171,7 +171,7 @@ namespace uicore
 
 		storage_buffers[index] = buffer;
 
-		if (!buffer.is_null())
+		if (buffer)
 			provider->set_storage_buffer(index, buffer);
 		else
 			provider->reset_storage_buffer(index);
