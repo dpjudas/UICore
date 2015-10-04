@@ -29,7 +29,7 @@
 
 #pragma once
 
-#include "UICore/Display/TargetProviders/element_array_buffer_provider.h"
+#include "UICore/Display/Render/element_array_buffer.h"
 #include "UICore/GL/opengl.h"
 #include "UICore/Core/System/disposable_object.h"
 #include "gl3_buffer_object_provider.h"
@@ -38,13 +38,11 @@ namespace uicore
 {
 	class GL3GraphicContextProvider;
 
-	class GL3ElementArrayBufferProvider : public ElementArrayBufferProvider
+	class GL3ElementArrayBufferProvider : public ElementArrayBuffer
 	{
 	public:
-		GL3ElementArrayBufferProvider();
-		~GL3ElementArrayBufferProvider();
-		void create(int size, BufferUsage usage) override;
-		void create(void *data, int size, BufferUsage usage) override;
+		GL3ElementArrayBufferProvider(int size, BufferUsage usage);
+		GL3ElementArrayBufferProvider(const void *data, int size, BufferUsage usage);
 
 		GLuint get_handle() const { return buffer.get_handle(); }
 

@@ -29,60 +29,52 @@
 #pragma once
 
 #include "element_array_buffer.h"
-#include "transfer_vector.h"
 
 namespace uicore
 {
-	/// \brief Element Array Vector
-	///
+	/// \brief Typed access to a element array buffer
 	template<typename Type>
-	class ElementArrayVector : public ElementArrayBuffer
+	class ElementArrayVector
 	{
 	public:
-		/// \brief Constructs a null instance.
+		/// \brief Constructs a element array vector
 		ElementArrayVector()
 		{
 		}
 
-		/// \brief Constructs a ElementArrayBuffer
-		///
-		/// \param gc = Graphic Context
-		/// \param size = value
-		/// \param usage = Buffer Usage
 		ElementArrayVector(GraphicContext &gc, int size, BufferUsage usage = usage_static_draw)
-			: ElementArrayBuffer(gc, size * sizeof(Type), usage)
+			: _buffer(ElementArrayBuffer::create(gc, size * sizeof(Type), usage))
 		{
 		}
 
-		/// \brief Constructs a ElementArrayBuffer
-		///
-		/// \param gc = Graphic Context
-		/// \param data = void
-		/// \param size = value
-		/// \param usage = Buffer Usage
 		ElementArrayVector(GraphicContext &gc, Type *data, int size, BufferUsage usage = usage_static_draw)
-			: ElementArrayBuffer(gc, data, size * sizeof(Type), usage)
+			: _buffer(ElementArrayBuffer::create(gc, data, size * sizeof(Type), usage))
 		{
 		}
 
 		ElementArrayVector(GraphicContext &gc, const std::vector<Type> &data, BufferUsage usage = usage_static_draw)
-			: ElementArrayBuffer(gc, data.empty() ? (Type*)0 : &data[0], data.size() * sizeof(Type), usage)
+			: _buffer(ElementArrayBuffer::create(gc, data.empty() ? (Type*)0 : &data[0], data.size() * sizeof(Type), usage))
 		{
 		}
+
+		/// Returns the element array buffer used by the vector
+		const ElementArrayBufferPtr &buffer() const { _buffer; }
+
+		operator ElementArrayBufferPtr() const { return buffer(); }
+		operator const ElementArrayBufferPtr &() const { return buffer(); }
 
 		/// \brief Uploads data to element array buffer.
 		///
 		/// The size specified must match the size of the buffer and is only included to help guard against buffer overruns.
 		void upload_data(GraphicContext &gc, const Type *data, int size)
 		{
-			ElementArrayBuffer::upload_data(gc, data, size * sizeof(Type));
+			_buffer->upload_data(gc, data, size * sizeof(Type));
 		}
 
 		/// \brief Uploads data to element array buffer.
 		void upload_data(GraphicContext &gc, const std::vector<Type> &data)
 		{
-			if (!data.empty())
-				ElementArrayBuffer::upload_data(gc, &data[0], data.size() * sizeof(Type));
+			_buffer->upload_data(gc, data.data(), data.size() * sizeof(Type));
 		}
 
 		/// \brief Copies data from transfer buffer
@@ -90,7 +82,7 @@ namespace uicore
 		{
 			if (size != -1)
 				size = size * sizeof(Type);
-			ElementArrayBuffer::copy_from(gc, buffer, dest_pos * sizeof(Type), src_pos * sizeof(Type), size);
+			_buffer->copy_from(gc, buffer, dest_pos * sizeof(Type), src_pos * sizeof(Type), size);
 		}
 
 		/// \brief Copies data to transfer buffer
@@ -98,7 +90,10 @@ namespace uicore
 		{
 			if (size != -1)
 				size = size * sizeof(Type);
-			ElementArrayBuffer::copy_to(gc, buffer, dest_pos * sizeof(Type), src_pos * sizeof(Type), size);
+			_buffer->copy_to(gc, buffer, dest_pos * sizeof(Type), src_pos * sizeof(Type), size);
 		}
+
+	private:
+		ElementArrayBufferPtr _buffer;
 	};
 }

@@ -28,7 +28,6 @@
 
 #pragma once
 
-#include <memory>
 #include "storage_buffer.h"
 
 namespace uicore

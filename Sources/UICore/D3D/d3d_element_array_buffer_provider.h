@@ -28,18 +28,17 @@
 
 #pragma once
 
-#include "UICore/Display/TargetProviders/element_array_buffer_provider.h"
+#include "UICore/Display/Render/element_array_buffer.h"
 #include "UICore/Core/System/comptr.h"
 
 namespace uicore
 {
-	class D3DElementArrayBufferProvider : public ElementArrayBufferProvider
+	class D3DElementArrayBufferProvider : public ElementArrayBuffer
 	{
 	public:
-		D3DElementArrayBufferProvider(const ComPtr<ID3D11Device> &device);
+		D3DElementArrayBufferProvider(const ComPtr<ID3D11Device> &device, int size, BufferUsage usage);
+		D3DElementArrayBufferProvider(const ComPtr<ID3D11Device> &device, const void *data, int size, BufferUsage usage);
 		~D3DElementArrayBufferProvider();
-		void create(int size, BufferUsage usage);
-		void create(void *data, int size, BufferUsage usage);
 
 		ComPtr<ID3D11Buffer> &get_buffer(const ComPtr<ID3D11Device> &device);
 

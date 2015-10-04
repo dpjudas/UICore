@@ -303,11 +303,6 @@ namespace uicore
 		return new GL3UniformBufferProvider();
 	}
 
-	ElementArrayBufferProvider *GL3GraphicContextProvider::alloc_element_array_buffer()
-	{
-		return new GL3ElementArrayBufferProvider();
-	}
-
 	TransferBufferProvider *GL3GraphicContextProvider::alloc_transfer_buffer()
 	{
 		return new GL3TransferBufferProvider();
@@ -401,6 +396,16 @@ namespace uicore
 	std::shared_ptr<StorageBuffer> GL3GraphicContextProvider::create_storage_buffer(const void *data, int size, int stride, BufferUsage usage)
 	{
 		return std::make_shared<GL3StorageBufferProvider>(data, size, stride, usage);
+	}
+
+	std::shared_ptr<ElementArrayBuffer> GL3GraphicContextProvider::create_element_array_buffer(int size, BufferUsage usage)
+	{
+		return std::make_shared<GL3ElementArrayBufferProvider>(size, usage);
+	}
+
+	std::shared_ptr<ElementArrayBuffer> GL3GraphicContextProvider::create_element_array_buffer(const void *data, int size, BufferUsage usage)
+	{
+		return std::make_shared<GL3ElementArrayBufferProvider>(data, size, usage);
 	}
 
 	void GL3GraphicContextProvider::set_rasterizer_state(RasterizerState *state)
@@ -667,7 +672,7 @@ namespace uicore
 		glDrawArraysInstanced(OpenGL::to_enum(type), offset, num_vertices, instance_count);
 	}
 
-	void GL3GraphicContextProvider::set_primitives_elements(ElementArrayBufferProvider *array_provider)
+	void GL3GraphicContextProvider::set_primitives_elements(ElementArrayBuffer *array_provider)
 	{
 		OpenGL::set_active(this);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, static_cast<GL3ElementArrayBufferProvider *>(array_provider)->get_handle());
@@ -694,7 +699,7 @@ namespace uicore
 	void GL3GraphicContextProvider::draw_primitives_elements(
 		PrimitivesType type,
 		int count,
-		ElementArrayBufferProvider *array_provider,
+		ElementArrayBuffer *array_provider,
 		VertexAttributeDataType indices_type,
 		void *offset)
 	{
@@ -707,7 +712,7 @@ namespace uicore
 	void GL3GraphicContextProvider::draw_primitives_elements_instanced(
 		PrimitivesType type,
 		int count,
-		ElementArrayBufferProvider *array_provider,
+		ElementArrayBuffer *array_provider,
 		VertexAttributeDataType indices_type,
 		void *offset,
 		int instance_count)

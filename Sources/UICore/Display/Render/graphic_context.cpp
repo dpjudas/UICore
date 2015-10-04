@@ -353,9 +353,9 @@ namespace uicore
 		get_provider()->draw_primitives_array_instanced(type, offset, num_vertices, instance_count);
 	}
 
-	void GraphicContext::set_primitives_elements(ElementArrayBuffer &element_array)
+	void GraphicContext::set_primitives_elements(const ElementArrayBufferPtr &element_array)
 	{
-		get_provider()->set_primitives_elements(element_array.get_provider());
+		get_provider()->set_primitives_elements(element_array.get());
 	}
 
 	void GraphicContext::draw_primitives_elements(PrimitivesType type, int count, VertexAttributeDataType indices_type, size_t offset)
@@ -373,14 +373,14 @@ namespace uicore
 		get_provider()->reset_primitives_elements();
 	}
 
-	void GraphicContext::draw_primitives_elements(PrimitivesType type, int count, ElementArrayBuffer &elements_array, VertexAttributeDataType indices_type, size_t offset)
+	void GraphicContext::draw_primitives_elements(PrimitivesType type, int count, const ElementArrayBufferPtr &elements_array, VertexAttributeDataType indices_type, size_t offset)
 	{
-		get_provider()->draw_primitives_elements(type, count, elements_array.get_provider(), indices_type, (void*)offset);
+		get_provider()->draw_primitives_elements(type, count, elements_array.get(), indices_type, (void*)offset);
 	}
 
-	void GraphicContext::draw_primitives_elements_instanced(PrimitivesType type, int count, ElementArrayBuffer &elements_array, VertexAttributeDataType indices_type, size_t offset, int instance_count)
+	void GraphicContext::draw_primitives_elements_instanced(PrimitivesType type, int count, const ElementArrayBufferPtr &elements_array, VertexAttributeDataType indices_type, size_t offset, int instance_count)
 	{
-		get_provider()->draw_primitives_elements_instanced(type, count, elements_array.get_provider(), indices_type, (void*)offset, instance_count);
+		get_provider()->draw_primitives_elements_instanced(type, count, elements_array.get(), indices_type, (void*)offset, instance_count);
 	}
 
 	void GraphicContext::reset_primitives_array()

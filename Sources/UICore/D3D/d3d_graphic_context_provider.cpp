@@ -193,11 +193,6 @@ namespace uicore
 		return new D3DUniformBufferProvider(window->get_device());
 	}
 
-	ElementArrayBufferProvider *D3DGraphicContextProvider::alloc_element_array_buffer()
-	{
-		return new D3DElementArrayBufferProvider(window->get_device());
-	}
-
 	TransferBufferProvider *D3DGraphicContextProvider::alloc_transfer_buffer()
 	{
 		return new D3DTransferBufferProvider(window->get_device());
@@ -296,6 +291,16 @@ namespace uicore
 	std::shared_ptr<StorageBuffer> D3DGraphicContextProvider::create_storage_buffer(const void *data, int size, int stride, BufferUsage usage)
 	{
 		return std::make_shared<D3DStorageBufferProvider>(window->get_device(), data, size, stride, usage);
+	}
+
+	std::shared_ptr<ElementArrayBuffer> D3DGraphicContextProvider::create_element_array_buffer(int size, BufferUsage usage)
+	{
+		return std::make_shared<D3DElementArrayBufferProvider>(window->get_device(), size, usage);
+	}
+
+	std::shared_ptr<ElementArrayBuffer> D3DGraphicContextProvider::create_element_array_buffer(const void *data, int size, BufferUsage usage)
+	{
+		return std::make_shared<D3DElementArrayBufferProvider>(window->get_device(), data, size, usage);
 	}
 
 	void D3DGraphicContextProvider::set_rasterizer_state(RasterizerState *state)
@@ -551,7 +556,7 @@ namespace uicore
 		window->get_device_context()->DrawInstanced(num_vertices, instance_count, offset, 0);
 	}
 
-	void D3DGraphicContextProvider::set_primitives_elements(ElementArrayBufferProvider *array_provider)
+	void D3DGraphicContextProvider::set_primitives_elements(ElementArrayBuffer *array_provider)
 	{
 		current_element_array_provider = static_cast<D3DElementArrayBufferProvider*>(array_provider);
 	}
@@ -580,7 +585,7 @@ namespace uicore
 		window->get_device_context()->DrawIndexedInstanced(count, instance_count, to_d3d_index_location(indices_type, offset), 0, 0);
 	}
 
-	void D3DGraphicContextProvider::draw_primitives_elements(PrimitivesType type, int count, ElementArrayBufferProvider *array_provider, VertexAttributeDataType indices_type, void *offset)
+	void D3DGraphicContextProvider::draw_primitives_elements(PrimitivesType type, int count, ElementArrayBuffer *array_provider, VertexAttributeDataType indices_type, void *offset)
 	{
 		set_primitives_elements(array_provider);
 		apply_input_layout();
@@ -591,7 +596,7 @@ namespace uicore
 		reset_primitives_elements();
 	}
 
-	void D3DGraphicContextProvider::draw_primitives_elements_instanced(PrimitivesType type, int count, ElementArrayBufferProvider *array_provider, VertexAttributeDataType indices_type, void *offset, int instance_count)
+	void D3DGraphicContextProvider::draw_primitives_elements_instanced(PrimitivesType type, int count, ElementArrayBuffer *array_provider, VertexAttributeDataType indices_type, void *offset, int instance_count)
 	{
 		set_primitives_elements(array_provider);
 		apply_input_layout();

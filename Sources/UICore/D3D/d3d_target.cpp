@@ -87,9 +87,9 @@ namespace uicore
 		return provider->get_buffer(static_cast<const D3DGraphicContextProvider *>(gc.get_provider())->get_window()->get_device());
 	}
 
-	ID3D11Buffer *D3DTarget::get_buffer_handle(const GraphicContext &gc, const ElementArrayBuffer &buffer)
+	ID3D11Buffer *D3DTarget::get_buffer_handle(const GraphicContext &gc, const ElementArrayBufferPtr &buffer)
 	{
-		D3DElementArrayBufferProvider *provider = static_cast<D3DElementArrayBufferProvider *>(buffer.get_provider());
+		D3DElementArrayBufferProvider *provider = static_cast<D3DElementArrayBufferProvider *>(buffer.get());
 		return provider->get_buffer(static_cast<const D3DGraphicContextProvider *>(gc.get_provider())->get_window()->get_device());
 	}
 

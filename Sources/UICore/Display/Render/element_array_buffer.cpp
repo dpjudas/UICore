@@ -28,75 +28,19 @@
 
 #include "UICore/precomp.h"
 #include "UICore/Display/Render/element_array_buffer.h"
-#include "UICore/Display/TargetProviders/element_array_buffer_provider.h"
 #include "UICore/Display/Render/graphic_context.h"
 #include "UICore/Display/TargetProviders/graphic_context_provider.h"
 #include "UICore/Core/System/exception.h"
 
 namespace uicore
 {
-	class ElementArrayBuffer_Impl
+	std::shared_ptr<ElementArrayBuffer> ElementArrayBuffer::create(GraphicContext &gc, int size, BufferUsage usage)
 	{
-	public:
-		ElementArrayBuffer_Impl() : lock_count(0), provider(nullptr) { }
-		~ElementArrayBuffer_Impl() { if (provider) delete provider; }
-
-		int lock_count;
-		ElementArrayBufferProvider *provider;
-	};
-
-	ElementArrayBuffer::ElementArrayBuffer()
-	{
+		return gc.get_provider()->create_element_array_buffer(size, usage);
 	}
 
-	ElementArrayBuffer::ElementArrayBuffer(GraphicContext &gc, int size, BufferUsage usage)
-		: impl(std::make_shared<ElementArrayBuffer_Impl>())
+	std::shared_ptr<ElementArrayBuffer> ElementArrayBuffer::create(GraphicContext &gc, const void *data, int size, BufferUsage usage)
 	{
-		GraphicContextProvider *gc_provider = gc.get_provider();
-		impl->provider = gc_provider->alloc_element_array_buffer();
-		impl->provider->create(size, usage);
-	}
-
-	ElementArrayBuffer::ElementArrayBuffer(GraphicContext &gc, const void *data, int size, BufferUsage usage)
-		: impl(std::make_shared<ElementArrayBuffer_Impl>())
-	{
-		GraphicContextProvider *gc_provider = gc.get_provider();
-		impl->provider = gc_provider->alloc_element_array_buffer();
-		impl->provider->create((void*)data, size, usage);
-	}
-
-	ElementArrayBuffer::~ElementArrayBuffer()
-	{
-	}
-
-	void ElementArrayBuffer::throw_if_null() const
-	{
-		if (!impl)
-			throw Exception("ElementArrayBuffer is null");
-	}
-
-	ElementArrayBufferProvider *ElementArrayBuffer::get_provider() const
-	{
-		return impl->provider;
-	}
-
-	bool ElementArrayBuffer::operator==(const ElementArrayBuffer &other) const
-	{
-		return impl == other.impl;
-	}
-
-	void ElementArrayBuffer::upload_data(GraphicContext &gc, const void *data, int size)
-	{
-		impl->provider->upload_data(gc, data, size);
-	}
-
-	void ElementArrayBuffer::copy_from(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size)
-	{
-		impl->provider->copy_from(gc, buffer, dest_pos, src_pos, size);
-	}
-
-	void ElementArrayBuffer::copy_to(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size)
-	{
-		impl->provider->copy_to(gc, buffer, dest_pos, src_pos, size);
+		return gc.get_provider()->create_element_array_buffer(data, size, usage);
 	}
 }

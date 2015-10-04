@@ -82,7 +82,6 @@ namespace uicore
 		TextureProvider *alloc_texture(TextureDimensions texture_dimensions);
 		VertexArrayBufferProvider *alloc_vertex_array_buffer();
 		UniformBufferProvider *alloc_uniform_buffer();
-		ElementArrayBufferProvider *alloc_element_array_buffer();
 		TransferBufferProvider *alloc_transfer_buffer();
 		PixelBufferProvider *alloc_pixel_buffer();
 		PrimitivesArrayProvider *alloc_primitives_array();
@@ -97,6 +96,8 @@ namespace uicore
 		std::shared_ptr<RenderBuffer> create_render_buffer(int width, int height, TextureFormat texture_format, int multisample_samples) override;
 		std::shared_ptr<StorageBuffer> create_storage_buffer(int size, int stride, BufferUsage usage) override;
 		std::shared_ptr<StorageBuffer> create_storage_buffer(const void *data, int size, int stride, BufferUsage usage) override;
+		std::shared_ptr<ElementArrayBuffer> create_element_array_buffer(int size, BufferUsage usage) override;
+		std::shared_ptr<ElementArrayBuffer> create_element_array_buffer(const void *data, int size, BufferUsage usage) override;
 		void set_rasterizer_state(RasterizerState *state);
 		void set_blend_state(BlendState *state, const Colorf &blend_color, unsigned int sample_mask);
 		void set_depth_stencil_state(DepthStencilState *state, int stencil_ref);
@@ -121,12 +122,12 @@ namespace uicore
 		void set_primitives_array(const PrimitivesArray &primitives_array);
 		void draw_primitives_array(PrimitivesType type, int offset, int num_vertices);
 		void draw_primitives_array_instanced(PrimitivesType type, int offset, int num_vertices, int instance_count);
-		void set_primitives_elements(ElementArrayBufferProvider *array_provider);
+		void set_primitives_elements(ElementArrayBuffer *array_provider);
 		void draw_primitives_elements(PrimitivesType type, int count, VertexAttributeDataType indices_type, size_t offset = 0);
 		void draw_primitives_elements_instanced(PrimitivesType type, int count, VertexAttributeDataType indices_type, size_t offset, int instance_count);
 		void reset_primitives_elements();
-		void draw_primitives_elements(PrimitivesType type, int count, ElementArrayBufferProvider *array_provider, VertexAttributeDataType indices_type, void *offset);
-		void draw_primitives_elements_instanced(PrimitivesType type, int count, ElementArrayBufferProvider *array_provider, VertexAttributeDataType indices_type, void *offset, int instance_count);
+		void draw_primitives_elements(PrimitivesType type, int count, ElementArrayBuffer *array_provider, VertexAttributeDataType indices_type, void *offset);
+		void draw_primitives_elements_instanced(PrimitivesType type, int count, ElementArrayBuffer *array_provider, VertexAttributeDataType indices_type, void *offset, int instance_count);
 		void reset_primitives_array();
 		void set_scissor(const Rect &rect);
 		void reset_scissor();

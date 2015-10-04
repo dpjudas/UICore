@@ -35,34 +35,27 @@
 
 namespace uicore
 {
-	D3DElementArrayBufferProvider::D3DElementArrayBufferProvider(const ComPtr<ID3D11Device> &device)
-		: size(0)
+	D3DElementArrayBufferProvider::D3DElementArrayBufferProvider(const ComPtr<ID3D11Device> &device, int size, BufferUsage usage)
+		: size(size)
 	{
 		handles.push_back(std::shared_ptr<DeviceHandles>(new DeviceHandles(device)));
-	}
-
-	D3DElementArrayBufferProvider::~D3DElementArrayBufferProvider()
-	{
-	}
-
-	void D3DElementArrayBufferProvider::create(int new_size, BufferUsage usage)
-	{
-		size = new_size;
 
 		D3D11_BUFFER_DESC desc;
-		desc.ByteWidth = new_size;
+		desc.ByteWidth = size;
 		desc.Usage = D3D11_USAGE_DEFAULT;
 		desc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 		desc.CPUAccessFlags = 0;
 		desc.MiscFlags = D3D11_RESOURCE_MISC_SHARED;
 		desc.StructureByteStride = 0;
+
 		HRESULT result = handles.front()->device->CreateBuffer(&desc, 0, handles.front()->buffer.output_variable());
 		D3DTarget::throw_if_failed("Unable to create element array buffer", result);
 	}
 
-	void D3DElementArrayBufferProvider::create(void *data, int new_size, BufferUsage usage)
+	D3DElementArrayBufferProvider::D3DElementArrayBufferProvider(const ComPtr<ID3D11Device> &device, const void *data, int size, BufferUsage usage)
+		: size(size)
 	{
-		size = new_size;
+		handles.push_back(std::shared_ptr<DeviceHandles>(new DeviceHandles(device)));
 
 		D3D11_SUBRESOURCE_DATA resource_data;
 		resource_data.pSysMem = data;
@@ -70,14 +63,19 @@ namespace uicore
 		resource_data.SysMemSlicePitch = 0;
 
 		D3D11_BUFFER_DESC desc;
-		desc.ByteWidth = new_size;
+		desc.ByteWidth = size;
 		desc.Usage = D3D11_USAGE_DEFAULT;
 		desc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 		desc.CPUAccessFlags = 0;
 		desc.MiscFlags = D3D11_RESOURCE_MISC_SHARED;
 		desc.StructureByteStride = 0;
+
 		HRESULT result = handles.front()->device->CreateBuffer(&desc, &resource_data, handles.front()->buffer.output_variable());
 		D3DTarget::throw_if_failed("Unable to create element array buffer", result);
+	}
+
+	D3DElementArrayBufferProvider::~D3DElementArrayBufferProvider()
+	{
 	}
 
 	ComPtr<ID3D11Buffer> &D3DElementArrayBufferProvider::get_buffer(const ComPtr<ID3D11Device> &device)

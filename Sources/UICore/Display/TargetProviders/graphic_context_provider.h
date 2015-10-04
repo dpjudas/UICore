@@ -49,12 +49,12 @@ namespace uicore
 	class FrameBuffer;
 	class RenderBuffer;
 	class VertexArrayBufferProvider;
-	class ElementArrayBufferProvider;
+	class ElementArray;
 	class TransferBufferProvider;
 	class FontDescription;
 	class PixelBufferProvider;
 	class UniformBufferProvider;
-	class StorageBufferProvider;
+	class StorageBuffer;
 	class PrimitivesArrayProvider;
 	class RasterizerStateDescription;
 	class BlendStateDescription;
@@ -126,9 +126,6 @@ namespace uicore
 		/// \brief Allocate uniform buffer provider for this gc.
 		virtual UniformBufferProvider *alloc_uniform_buffer() = 0;
 
-		/// \brief Allocate element array buffer provider for this gc.
-		virtual ElementArrayBufferProvider *alloc_element_array_buffer() = 0;
-
 		/// \brief Allocate transfer buffer provider for this gc.
 		virtual TransferBufferProvider *alloc_transfer_buffer() = 0;
 
@@ -149,6 +146,8 @@ namespace uicore
 		virtual std::shared_ptr<RenderBuffer> create_render_buffer(int width, int height, TextureFormat texture_format, int multisample_samples) = 0;
 		virtual std::shared_ptr<StorageBuffer> create_storage_buffer(int size, int stride, BufferUsage usage) = 0;
 		virtual std::shared_ptr<StorageBuffer> create_storage_buffer(const void *data, int size, int stride, BufferUsage usage) = 0;
+		virtual std::shared_ptr<ElementArrayBuffer> create_element_array_buffer(int size, BufferUsage usage) = 0;
+		virtual std::shared_ptr<ElementArrayBuffer> create_element_array_buffer(const void *data, int size, BufferUsage usage) = 0;
 
 		/// \brief Set active rasterizer state
 		virtual void set_rasterizer_state(RasterizerState *state) = 0;
@@ -221,7 +220,7 @@ namespace uicore
 		virtual void draw_primitives_array_instanced(PrimitivesType type, int offset, int num_vertices, int instance_count) = 0;
 
 		/// \brief Sets current elements array buffer
-		virtual void set_primitives_elements(ElementArrayBufferProvider *array_provider) = 0;
+		virtual void set_primitives_elements(ElementArrayBuffer *array_provider) = 0;
 
 		/// \brief Draw primitives elements
 		///
@@ -250,7 +249,7 @@ namespace uicore
 		/// \param array_provider = Element Array Buffer Provider
 		/// \param indices_type = Vertex Attribute Data Type
 		/// \param offset = void
-		virtual void draw_primitives_elements(PrimitivesType type, int count, ElementArrayBufferProvider *array_provider, VertexAttributeDataType indices_type, void *offset) = 0;
+		virtual void draw_primitives_elements(PrimitivesType type, int count, ElementArrayBuffer *array_provider, VertexAttributeDataType indices_type, void *offset) = 0;
 
 		/// \brief Draw primitives elements instanced
 		///
@@ -259,7 +258,7 @@ namespace uicore
 		/// \param array_provider = Element Array Buffer Provider
 		/// \param indices_type = Vertex Attribute Data Type
 		/// \param offset = void
-		virtual void draw_primitives_elements_instanced(PrimitivesType type, int count, ElementArrayBufferProvider *array_provider, VertexAttributeDataType indices_type, void *offset, int instance_count) = 0;
+		virtual void draw_primitives_elements_instanced(PrimitivesType type, int count, ElementArrayBuffer *array_provider, VertexAttributeDataType indices_type, void *offset, int instance_count) = 0;
 
 		/// \brief Reset the primitives arrays.
 		virtual void reset_primitives_array() = 0;

@@ -257,11 +257,6 @@ namespace uicore
 		return new GL1UniformBufferProvider;
 	}
 
-	ElementArrayBufferProvider *GL1GraphicContextProvider::alloc_element_array_buffer()
-	{
-		throw Exception("Element Array Buffers are not supported for OpenGL 1.3");
-	}
-
 	TransferBufferProvider *GL1GraphicContextProvider::alloc_transfer_buffer()
 	{
 		return new GL1TransferBufferProvider;
@@ -360,6 +355,16 @@ namespace uicore
 	std::shared_ptr<StorageBuffer> GL1GraphicContextProvider::create_storage_buffer(const void *data, int size, int stride, BufferUsage usage)
 	{
 		throw Exception("Storage Buffers are not supported for OpenGL 1.3");
+	}
+
+	std::shared_ptr<ElementArrayBuffer> GL1GraphicContextProvider::create_element_array_buffer(int size, BufferUsage usage)
+	{
+		throw Exception("Element Array Buffers are not supported for OpenGL 1.3");
+	}
+
+	std::shared_ptr<ElementArrayBuffer> GL1GraphicContextProvider::create_element_array_buffer(const void *data, int size, BufferUsage usage)
+	{
+		throw Exception("Element Array Buffers are not supported for OpenGL 1.3");
 	}
 
 	void GL1GraphicContextProvider::set_rasterizer_state(RasterizerState *state)
@@ -731,7 +736,7 @@ namespace uicore
 		throw Exception("Cannot draw instanced for the OpenGL 1.3 target");
 	}
 
-	void GL1GraphicContextProvider::set_primitives_elements(ElementArrayBufferProvider *array_provider)
+	void GL1GraphicContextProvider::set_primitives_elements(ElementArrayBuffer *array_provider)
 	{
 		throw Exception("Cannot draw Element Array Buffers for the OpenGL 1.3 target");
 	}
@@ -754,7 +759,7 @@ namespace uicore
 	void GL1GraphicContextProvider::draw_primitives_elements(
 		PrimitivesType type,
 		int count,
-		ElementArrayBufferProvider *array_provider,
+		ElementArrayBuffer *array_provider,
 		VertexAttributeDataType indices_type,
 		void *offset)
 	{
@@ -764,7 +769,7 @@ namespace uicore
 	void GL1GraphicContextProvider::draw_primitives_elements_instanced(
 		PrimitivesType type,
 		int count,
-		ElementArrayBufferProvider *array_provider,
+		ElementArrayBuffer *array_provider,
 		VertexAttributeDataType indices_type,
 		void *offset,
 		int instance_count)

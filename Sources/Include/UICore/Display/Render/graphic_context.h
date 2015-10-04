@@ -516,14 +516,7 @@ namespace uicore
 		void draw_primitives_array_instanced(PrimitivesType type, int offset, int num_vertices, int instance_count);
 
 		/// Sets current elements array buffer
-		void set_primitives_elements(ElementArrayBuffer &element_array);
-
-		/// Sets current elements array buffer
-		template<typename Type>
-		void set_primitives_elements(ElementArrayVector<Type> &element_array)
-		{
-			set_primitives_elements((ElementArrayBuffer&)element_array);
-		}
+		void set_primitives_elements(const ElementArrayBufferPtr &element_array);
 
 		/// Draw primitives elements
 		///
@@ -552,43 +545,7 @@ namespace uicore
 		/// \param element_array = Element Array Buffer
 		/// \param indices_type = Vertex Attribute Data Type
 		/// \param offset = void
-		void draw_primitives_elements(PrimitivesType type, int count, ElementArrayBuffer &element_array, VertexAttributeDataType indices_type, size_t offset = 0);
-
-		/// Draw primitives elements
-		///
-		/// \param type = Primitives Type
-		/// \param count = value
-		/// \param element_array = Element Array Buffer
-		/// \param indices_type = Vertex Attribute Data Type
-		/// \param offset = void
-		void draw_primitives_elements(PrimitivesType type, int count, ElementArrayVector<unsigned int> &element_array, size_t offset = 0)
-		{
-			draw_primitives_elements(type, count, (ElementArrayBuffer&)element_array, type_unsigned_int, offset * sizeof(unsigned int));
-		}
-
-		/// Draw primitives elements
-		///
-		/// \param type = Primitives Type
-		/// \param count = value
-		/// \param element_array = Element Array Buffer
-		/// \param indices_type = Vertex Attribute Data Type
-		/// \param offset = void
-		void draw_primitives_elements(PrimitivesType type, int count, ElementArrayVector<unsigned short> &element_array, size_t offset = 0)
-		{
-			draw_primitives_elements(type, count, (ElementArrayBuffer&)element_array, type_unsigned_short, offset * sizeof(unsigned short));
-		}
-
-		/// Draw primitives elements
-		///
-		/// \param type = Primitives Type
-		/// \param count = value
-		/// \param element_array = Element Array Buffer
-		/// \param indices_type = Vertex Attribute Data Type
-		/// \param offset = void
-		void draw_primitives_elements(PrimitivesType type, int count, ElementArrayVector<unsigned char> &element_array, size_t offset = 0)
-		{
-			draw_primitives_elements(type, count, (ElementArrayBuffer&)element_array, type_unsigned_byte, offset * sizeof(unsigned char));
-		}
+		void draw_primitives_elements(PrimitivesType type, int count, const ElementArrayBufferPtr &element_array, VertexAttributeDataType indices_type, size_t offset = 0);
 
 		/// Draw primitives elements instanced
 		///
@@ -598,46 +555,7 @@ namespace uicore
 		/// \param indices_type = Vertex Attribute Data Type
 		/// \param offset = void
 		/// \param instance_count = number of instances drawn
-		void draw_primitives_elements_instanced(PrimitivesType type, int count, ElementArrayBuffer &element_array, VertexAttributeDataType indices_type, size_t offset, int instance_count);
-
-		/// Draw primitives elements instanced
-		///
-		/// \param type = Primitives Type
-		/// \param count = value
-		/// \param element_array = Element Array Buffer
-		/// \param indices_type = Vertex Attribute Data Type
-		/// \param offset = void
-		/// \param instance_count = number of instances drawn
-		void draw_primitives_elements_instanced(PrimitivesType type, int count, ElementArrayVector<unsigned int> &element_array, size_t offset, int instance_count)
-		{
-			draw_primitives_elements_instanced(type, count, (ElementArrayBuffer&)element_array, type_unsigned_int, offset * sizeof(unsigned int), instance_count);
-		}
-
-		/// Draw primitives elements instanced
-		///
-		/// \param type = Primitives Type
-		/// \param count = value
-		/// \param element_array = Element Array Buffer
-		/// \param indices_type = Vertex Attribute Data Type
-		/// \param offset = void
-		/// \param instance_count = number of instances drawn
-		void draw_primitives_elements_instanced(PrimitivesType type, int count, ElementArrayVector<unsigned short> &element_array, size_t offset, int instance_count)
-		{
-			draw_primitives_elements_instanced(type, count, (ElementArrayBuffer&)element_array, type_unsigned_short, offset * sizeof(unsigned short), instance_count);
-		}
-
-		/// Draw primitives elements instanced
-		///
-		/// \param type = Primitives Type
-		/// \param count = value
-		/// \param element_array = Element Array Buffer
-		/// \param indices_type = Vertex Attribute Data Type
-		/// \param offset = void
-		/// \param instance_count = number of instances drawn
-		void draw_primitives_elements_instanced(PrimitivesType type, int count, ElementArrayVector<unsigned char> &element_array, size_t offset, int instance_count)
-		{
-			draw_primitives_elements_instanced(type, count, (ElementArrayBuffer&)element_array, type_unsigned_byte, offset * sizeof(unsigned char), instance_count);
-		}
+		void draw_primitives_elements_instanced(PrimitivesType type, int count, const ElementArrayBufferPtr &element_array, VertexAttributeDataType indices_type, size_t offset, int instance_count);
 
 		/// Reset the primitives arrays.
 		void reset_primitives_array();
