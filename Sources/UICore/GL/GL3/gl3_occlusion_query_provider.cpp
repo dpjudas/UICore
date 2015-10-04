@@ -38,7 +38,16 @@ namespace uicore
 		: handle(0), gc_provider(gc_provider)
 	{
 		SharedGCData::add_disposable(this);
-		create();
+
+		OpenGL::set_active(gc_provider);
+
+		if (handle)
+		{
+			glDeleteQueries(1, &handle);
+			handle = 0;
+		}
+
+		glGenQueries(1, &handle);
 	}
 
 	GL3OcclusionQueryProvider::~GL3OcclusionQueryProvider()
@@ -66,25 +75,12 @@ namespace uicore
 		return (available != 0);
 	}
 
-	GLint GL3OcclusionQueryProvider::get_result() const
+	int GL3OcclusionQueryProvider::result() const
 	{
 		OpenGL::set_active(gc_provider);
 		GLint result;
 		glGetQueryObjectiv(handle, GL_QUERY_RESULT, &result);
 		return result;
-	}
-
-	void GL3OcclusionQueryProvider::create()
-	{
-		OpenGL::set_active(gc_provider);
-
-		if (handle)
-		{
-			glDeleteQueries(1, &handle);
-			handle = 0;
-		}
-
-		glGenQueries(1, &handle);
 	}
 
 	void GL3OcclusionQueryProvider::begin()

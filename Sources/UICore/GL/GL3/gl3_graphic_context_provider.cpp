@@ -283,11 +283,6 @@ namespace uicore
 		return render_window->get_pixel_ratio();
 	}
 
-	OcclusionQueryProvider *GL3GraphicContextProvider::alloc_occlusion_query()
-	{
-		return new GL3OcclusionQueryProvider(this);
-	}
-
 	TextureProvider *GL3GraphicContextProvider::alloc_texture(TextureDimensions texture_dimensions)
 	{
 		return new GL3TextureProvider(texture_dimensions);
@@ -396,6 +391,11 @@ namespace uicore
 	std::shared_ptr<ProgramObjectProvider> GL3GraphicContextProvider::create_program()
 	{
 		return std::make_shared<GL3ProgramObjectProvider>();
+	}
+
+	std::shared_ptr<OcclusionQuery> GL3GraphicContextProvider::create_occlusion_query()
+	{
+		return std::make_shared<GL3OcclusionQueryProvider>(this);
 	}
 
 	void GL3GraphicContextProvider::set_rasterizer_state(RasterizerState *state)

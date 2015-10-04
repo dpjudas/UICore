@@ -28,21 +28,20 @@
 
 #pragma once
 
-#include "UICore/Display/TargetProviders/occlusion_query_provider.h"
+#include "UICore/Display/Render/occlusion_query.h"
 
 namespace uicore
 {
-	class D3DOcclusionQueryProvider : public OcclusionQueryProvider
+	class D3DOcclusionQueryProvider : public OcclusionQuery
 	{
 	public:
 		D3DOcclusionQueryProvider();
 		~D3DOcclusionQueryProvider();
 
-		bool is_result_ready() const;
-		int get_result() const;
+		bool is_result_ready() const override;
+		int result() const override;
 
-		void begin();
-		void end();
-		void create();
+		void begin() override;
+		void end() override;
 	};
 }

@@ -28,71 +28,13 @@
 
 #include "UICore/precomp.h"
 #include "UICore/Display/Render/occlusion_query.h"
-#include "UICore/Display/TargetProviders/occlusion_query_provider.h"
 #include "UICore/Display/Render/graphic_context.h"
 #include "UICore/Display/TargetProviders/graphic_context_provider.h"
 
 namespace uicore
 {
-	class OcclusionQuery_Impl
+	std::shared_ptr<OcclusionQuery> OcclusionQuery::create(GraphicContext &gc)
 	{
-	public:
-		OcclusionQuery_Impl() : provider(nullptr)
-		{
-		}
-
-		~OcclusionQuery_Impl()
-		{
-			if (provider)
-				delete provider;
-		}
-
-		OcclusionQueryProvider *provider;
-	};
-
-	OcclusionQuery::OcclusionQuery(GraphicContext &context)
-		: impl(std::make_shared<OcclusionQuery_Impl>())
-	{
-		GraphicContextProvider *gc_provider = context.get_provider();
-		impl->provider = gc_provider->alloc_occlusion_query();
-	}
-
-	OcclusionQuery::~OcclusionQuery()
-	{
-	}
-
-	OcclusionQuery::OcclusionQuery()
-	{
-	}
-
-	void OcclusionQuery::throw_if_null() const
-	{
-		if (!impl)
-			throw Exception("OcclusionQuery is null");
-	}
-
-	int OcclusionQuery::get_result()
-	{
-		return impl->provider->get_result();
-	}
-
-	bool OcclusionQuery::is_result_ready()
-	{
-		return impl->provider->is_result_ready();
-	}
-
-	OcclusionQueryProvider *OcclusionQuery::get_provider() const
-	{
-		return impl->provider;
-	}
-
-	void OcclusionQuery::begin()
-	{
-		impl->provider->begin();
-	}
-
-	void OcclusionQuery::end()
-	{
-		impl->provider->end();
+		return gc.get_provider()->create_occlusion_query();
 	}
 }

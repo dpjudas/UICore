@@ -29,7 +29,7 @@
 #pragma once
 
 
-#include "UICore/Display/TargetProviders/occlusion_query_provider.h"
+#include "UICore/Display/Render/occlusion_query.h"
 #include "UICore/GL/opengl.h"
 #include "UICore/Core/System/disposable_object.h"
 
@@ -37,18 +37,17 @@ namespace uicore
 {
 	class GL3GraphicContextProvider;
 
-	class GL3OcclusionQueryProvider : public OcclusionQueryProvider, DisposableObject
+	class GL3OcclusionQueryProvider : public OcclusionQuery, DisposableObject
 	{
 	public:
 		GL3OcclusionQueryProvider(GL3GraphicContextProvider *gc_provider);
 		~GL3OcclusionQueryProvider();
 
-		GLint get_result() const override;
+		int result() const override;
 		bool is_result_ready() const override;
 
 		void begin() override;
 		void end() override;
-		void create() override;
 
 	private:
 		void on_dispose() override;

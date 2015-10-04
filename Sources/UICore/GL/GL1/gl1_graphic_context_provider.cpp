@@ -242,11 +242,6 @@ namespace uicore
 		}
 	}
 
-	OcclusionQueryProvider *GL1GraphicContextProvider::alloc_occlusion_query()
-	{
-		throw Exception("Occlusion Queries are not supported for OpenGL 1.3");
-	}
-
 	TextureProvider *GL1GraphicContextProvider::alloc_texture(TextureDimensions texture_dimensions)
 	{
 		return new GL1TextureProvider(texture_dimensions);
@@ -355,6 +350,11 @@ namespace uicore
 	std::shared_ptr<ShaderObjectProvider> GL1GraphicContextProvider::create_shader(ShaderType type, const void *bytecode, int bytecode_size)
 	{
 		throw Exception("Shader Objects are not supported for OpenGL 1.3");
+	}
+
+	std::shared_ptr<OcclusionQuery> GL1GraphicContextProvider::create_occlusion_query()
+	{
+		throw Exception("Occlusion Queries are not supported for OpenGL 1.3");
 	}
 
 	void GL1GraphicContextProvider::set_rasterizer_state(RasterizerState *state)

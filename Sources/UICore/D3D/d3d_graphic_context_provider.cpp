@@ -183,11 +183,6 @@ namespace uicore
 		return new D3DTextureProvider(window->get_device(), window->get_feature_level(), texture_dimensions);
 	}
 
-	OcclusionQueryProvider *D3DGraphicContextProvider::alloc_occlusion_query()
-	{
-		return new D3DOcclusionQueryProvider;
-	}
-
 	FrameBufferProvider *D3DGraphicContextProvider::alloc_frame_buffer()
 	{
 		return new D3DFrameBufferProvider(window->get_device());
@@ -291,6 +286,11 @@ namespace uicore
 	std::shared_ptr<ProgramObjectProvider> D3DGraphicContextProvider::create_program()
 	{
 		return std::make_shared<D3DProgramObjectProvider>(window->get_device(), window->get_device_context());
+	}
+
+	std::shared_ptr<OcclusionQuery> D3DGraphicContextProvider::create_occlusion_query()
+	{
+		return std::make_shared<D3DOcclusionQueryProvider>();
 	}
 
 	void D3DGraphicContextProvider::set_rasterizer_state(RasterizerState *state)

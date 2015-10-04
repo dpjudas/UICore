@@ -43,7 +43,7 @@ namespace uicore
 	class TextureProvider;
 	class FontProvider;
 	class Font;
-	class OcclusionQueryProvider;
+	class OcclusionQuery;
 	class ProgramObjectProvider;
 	class ShaderObjectProvider;
 	class FrameBufferProvider;
@@ -120,9 +120,6 @@ namespace uicore
 		/// \brief Allocate texture provider for this gc.
 		virtual TextureProvider *alloc_texture(TextureDimensions texture_dimensions) = 0;
 
-		/// \brief Allocate occlusion query provider of this gc.
-		virtual OcclusionQueryProvider *alloc_occlusion_query() = 0;
-
 		/// \brief Allocate frame buffer provider for this gc.
 		virtual FrameBufferProvider *alloc_frame_buffer() = 0;
 
@@ -156,6 +153,7 @@ namespace uicore
 		virtual std::shared_ptr<ProgramObjectProvider> create_program() = 0;
 		virtual std::shared_ptr<ShaderObjectProvider> create_shader(ShaderType type, const std::string &source) = 0;
 		virtual std::shared_ptr<ShaderObjectProvider> create_shader(ShaderType type, const void *bytecode, int bytecode_size) = 0;
+		virtual std::shared_ptr<OcclusionQuery> create_occlusion_query() = 0;
 
 		/// \brief Set active rasterizer state
 		virtual void set_rasterizer_state(RasterizerState *state) = 0;

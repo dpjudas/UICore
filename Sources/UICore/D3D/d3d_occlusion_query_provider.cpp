@@ -44,7 +44,7 @@ namespace uicore
 		return false;
 	}
 
-	int D3DOcclusionQueryProvider::get_result() const
+	int D3DOcclusionQueryProvider::result() const
 	{
 		return 0;
 	}
@@ -54,10 +54,6 @@ namespace uicore
 	}
 
 	void D3DOcclusionQueryProvider::end()
-	{
-	}
-
-	void D3DOcclusionQueryProvider::create()
 	{
 	}
 }

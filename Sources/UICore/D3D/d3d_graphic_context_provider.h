@@ -80,7 +80,6 @@ namespace uicore
 		bool has_compute_shader_support() const;
 		PixelBuffer get_pixeldata(const Rect& rect, TextureFormat texture_format, bool clamp) const;
 		TextureProvider *alloc_texture(TextureDimensions texture_dimensions);
-		OcclusionQueryProvider *alloc_occlusion_query();
 		FrameBufferProvider *alloc_frame_buffer();
 		RenderBufferProvider *alloc_render_buffer();
 		VertexArrayBufferProvider *alloc_vertex_array_buffer();
@@ -96,6 +95,7 @@ namespace uicore
 		std::shared_ptr<ProgramObjectProvider> create_program() override;
 		std::shared_ptr<ShaderObjectProvider> create_shader(ShaderType type, const std::string &source) override;
 		std::shared_ptr<ShaderObjectProvider> create_shader(ShaderType type, const void *bytecode, int bytecode_size) override;
+		std::shared_ptr<OcclusionQuery> create_occlusion_query() override;
 		void set_rasterizer_state(RasterizerState *state);
 		void set_blend_state(BlendState *state, const Colorf &blend_color, unsigned int sample_mask);
 		void set_depth_stencil_state(DepthStencilState *state, int stencil_ref);
