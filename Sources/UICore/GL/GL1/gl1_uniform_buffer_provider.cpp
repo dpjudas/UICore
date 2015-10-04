@@ -33,33 +33,22 @@
 
 namespace uicore
 {
-	GL1UniformBufferProvider::GL1UniformBufferProvider()
-		: data(nullptr), size(0)
+	GL1UniformBufferProvider::GL1UniformBufferProvider(int new_size, BufferUsage usage)
 	{
+		data = new char[new_size];
+		size = new_size;
+	}
+
+	GL1UniformBufferProvider::GL1UniformBufferProvider(const void *init_data, int new_size, BufferUsage usage)
+	{
+		data = new char[new_size];
+		size = new_size;
+		memcpy(data, init_data, size);
 	}
 
 	GL1UniformBufferProvider::~GL1UniformBufferProvider()
 	{
 		delete[] data;
-	}
-
-	void GL1UniformBufferProvider::create(int new_size, BufferUsage usage)
-	{
-		delete[] data;
-		data = nullptr;
-		size = 0;
-		data = new char[new_size];
-		size = new_size;
-	}
-
-	void GL1UniformBufferProvider::create(const void *init_data, int new_size, BufferUsage usage)
-	{
-		delete[] data;
-		data = nullptr;
-		size = 0;
-		data = new char[new_size];
-		size = new_size;
-		memcpy(data, init_data, size);
 	}
 
 	void GL1UniformBufferProvider::upload_data(GraphicContext &gc, const void *data, int size)

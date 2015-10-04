@@ -205,14 +205,14 @@ namespace uicore
 		return get_provider()->get_pixeldata(Rect(0, 0, get_size()), texture_format, clamp);
 	}
 
-	void GraphicContext::set_uniform_buffer(int index, const UniformBuffer &buffer)
+	void GraphicContext::set_uniform_buffer(int index, const UniformBufferPtr &buffer)
 	{
 		impl->set_uniform_buffer(index, buffer);
 	}
 
 	void GraphicContext::reset_uniform_buffer(int index)
 	{
-		UniformBuffer null_buffer;
+		UniformBufferPtr null_buffer;
 		impl->set_uniform_buffer(index, null_buffer);
 	}
 

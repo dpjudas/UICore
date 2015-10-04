@@ -65,6 +65,7 @@ namespace uicore
 	typedef std::shared_ptr<ProgramObject> ProgramObjectPtr;
 	typedef std::shared_ptr<FrameBuffer> FrameBufferPtr;
 	typedef std::shared_ptr<StorageBuffer> StorageBufferPtr;
+	typedef std::shared_ptr<UniformBuffer> UniformBufferPtr;
 
 	/// Polygon culling modes.
 	enum CullMode
@@ -405,7 +406,7 @@ namespace uicore
 		void reset_frame_buffer();
 
 		/// Select uniform buffer into index
-		void set_uniform_buffer(int index, const UniformBuffer &buffer);
+		void set_uniform_buffer(int index, const UniformBufferPtr &buffer);
 
 		/// Remove uniform buffer from index
 		void reset_uniform_buffer(int index);

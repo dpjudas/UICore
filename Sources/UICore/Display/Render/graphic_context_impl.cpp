@@ -141,7 +141,7 @@ namespace uicore
 		image_textures = new_textures;
 	}
 
-	void GraphicContext_Impl::set_uniform_buffer(int index, const UniformBuffer &buffer)
+	void GraphicContext_Impl::set_uniform_buffer(int index, const UniformBufferPtr &buffer)
 	{
 		// Limit the number of unit index to 255, this should always be enough. This simplifies the saving of the texture
 		if ((index < 0) || (index > 255))
@@ -153,7 +153,7 @@ namespace uicore
 
 		uniform_buffers[index] = buffer;
 
-		if (!buffer.is_null())
+		if (buffer)
 			provider->set_uniform_buffer(index, buffer);
 		else
 			provider->reset_uniform_buffer(index);

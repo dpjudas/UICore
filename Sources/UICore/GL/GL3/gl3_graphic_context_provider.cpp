@@ -293,11 +293,6 @@ namespace uicore
 		return std::make_shared<GL3RenderBufferProvider>(width, height, texture_format, multisample_samples);
 	}
 
-	UniformBufferProvider *GL3GraphicContextProvider::alloc_uniform_buffer()
-	{
-		return new GL3UniformBufferProvider();
-	}
-
 	TransferBufferProvider *GL3GraphicContextProvider::alloc_transfer_buffer()
 	{
 		return new GL3TransferBufferProvider();
@@ -413,6 +408,16 @@ namespace uicore
 		return std::make_shared<GL3VertexArrayBufferProvider>(data, size, usage);
 	}
 
+	std::shared_ptr<UniformBuffer> GL3GraphicContextProvider::create_uniform_buffer(int size, BufferUsage usage)
+	{
+		return std::make_shared<GL3UniformBufferProvider>(size, usage);
+	}
+
+	std::shared_ptr<UniformBuffer> GL3GraphicContextProvider::create_uniform_buffer(const void *data, int size, BufferUsage usage)
+	{
+		return std::make_shared<GL3UniformBufferProvider>(data, size, usage);
+	}
+
 	void GL3GraphicContextProvider::set_rasterizer_state(RasterizerState *state)
 	{
 		if (state)
@@ -482,10 +487,10 @@ namespace uicore
 		return pbuf;
 	}
 
-	void GL3GraphicContextProvider::set_uniform_buffer(int index, const UniformBuffer &buffer)
+	void GL3GraphicContextProvider::set_uniform_buffer(int index, const UniformBufferPtr &buffer)
 	{
 		OpenGL::set_active(this);
-		glBindBufferBase(GL_UNIFORM_BUFFER, index, static_cast<GL3UniformBufferProvider*>(buffer.get_provider())->get_handle());
+		glBindBufferBase(GL_UNIFORM_BUFFER, index, static_cast<GL3UniformBufferProvider*>(buffer.get())->get_handle());
 	}
 
 	void GL3GraphicContextProvider::reset_uniform_buffer(int index)

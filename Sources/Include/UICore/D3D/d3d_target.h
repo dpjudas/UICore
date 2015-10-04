@@ -43,6 +43,7 @@ namespace uicore
 	class RenderBuffer;
 	typedef std::shared_ptr<RenderBuffer> RenderBufferPtr;
 	class UniformBuffer;
+	typedef std::shared_ptr<UniformBuffer> UniformBufferPtr;
 	class GraphicContext;
 
 	/// \brief Display target for uicoreDisplay.
@@ -82,7 +83,7 @@ namespace uicore
 		/// \brief Returns the Direct3D handle used by the buffer object
 		///
 		/// The reference count on the COM object is not increased (AddRef is not called).
-		static ID3D11Buffer *get_buffer_handle(const GraphicContext &gc, const UniformBuffer &buffer);
+		static ID3D11Buffer *get_buffer_handle(const GraphicContext &gc, const UniformBufferPtr &buffer);
 
 		/// \brief Returns the Direct3D shader resource view handle used by the texture object
 		///

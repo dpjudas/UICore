@@ -28,24 +28,23 @@
 
 #pragma once
 
-#include "UICore/Display/TargetProviders/uniform_buffer_provider.h"
+#include "UICore/Display/Render/uniform_buffer.h"
 #include "UICore/Core/System/comptr.h"
 
 namespace uicore
 {
-	class D3DUniformBufferProvider : public UniformBufferProvider
+	class D3DUniformBufferProvider : public UniformBuffer
 	{
 	public:
-		D3DUniformBufferProvider(const ComPtr<ID3D11Device> &device);
+		D3DUniformBufferProvider(const ComPtr<ID3D11Device> &device, int size, BufferUsage usage);
+		D3DUniformBufferProvider(const ComPtr<ID3D11Device> &device, const void *data, int size, BufferUsage usage);
 		~D3DUniformBufferProvider();
-		void create(int size, BufferUsage usage);
-		void create(const void *data, int size, BufferUsage usage);
 
 		ComPtr<ID3D11Buffer> &get_buffer(const ComPtr<ID3D11Device> &device);
 
-		void upload_data(GraphicContext &gc, const void *data, int size);
-		void copy_from(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size);
-		void copy_to(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size);
+		void upload_data(GraphicContext &gc, const void *data, int size) override;
+		void copy_from(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size) override;
+		void copy_to(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size) override;
 
 	private:
 		struct DeviceHandles
@@ -61,6 +60,6 @@ namespace uicore
 		static D3D11_MAP to_d3d_map_type(BufferAccess access);
 
 		std::vector<std::shared_ptr<DeviceHandles> > handles;
-		int size;
+		int size = 0;
 	};
 }

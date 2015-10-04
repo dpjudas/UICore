@@ -247,11 +247,6 @@ namespace uicore
 		return new GL1TextureProvider(texture_dimensions);
 	}
 
-	UniformBufferProvider *GL1GraphicContextProvider::alloc_uniform_buffer()
-	{
-		return new GL1UniformBufferProvider;
-	}
-
 	TransferBufferProvider *GL1GraphicContextProvider::alloc_transfer_buffer()
 	{
 		return new GL1TransferBufferProvider;
@@ -372,6 +367,16 @@ namespace uicore
 		return std::make_shared<GL1VertexArrayBufferProvider>(data, size, usage);
 	}
 
+	std::shared_ptr<UniformBuffer> GL1GraphicContextProvider::create_uniform_buffer(int size, BufferUsage usage)
+	{
+		return std::make_shared<GL1UniformBufferProvider>(size, usage);
+	}
+
+	std::shared_ptr<UniformBuffer> GL1GraphicContextProvider::create_uniform_buffer(const void *data, int size, BufferUsage usage)
+	{
+		return std::make_shared<GL1UniformBufferProvider>(data, size, usage);
+	}
+
 	void GL1GraphicContextProvider::set_rasterizer_state(RasterizerState *state)
 	{
 		if (state)
@@ -443,7 +448,7 @@ namespace uicore
 		return pbuf;
 	}
 
-	void GL1GraphicContextProvider::set_uniform_buffer(int index, const UniformBuffer &buffer)
+	void GL1GraphicContextProvider::set_uniform_buffer(int index, const UniformBufferPtr &buffer)
 	{
 		//GL1UniformBufferProvider *provider = static_cast<GL1UniformBufferProvider*>(buffer.get_provider());
 	}

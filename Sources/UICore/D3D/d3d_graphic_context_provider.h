@@ -99,13 +99,15 @@ namespace uicore
 		std::shared_ptr<ElementArrayBuffer> create_element_array_buffer(const void *data, int size, BufferUsage usage) override;
 		std::shared_ptr<VertexArrayBuffer> create_vertex_array_buffer(int size, BufferUsage usage) override;
 		std::shared_ptr<VertexArrayBuffer> create_vertex_array_buffer(const void *data, int size, BufferUsage usage) override;
+		std::shared_ptr<UniformBuffer> create_uniform_buffer(int size, BufferUsage usage) override;
+		std::shared_ptr<UniformBuffer> create_uniform_buffer(const void *data, int size, BufferUsage usage) override;
 		void set_rasterizer_state(RasterizerState *state);
 		void set_blend_state(BlendState *state, const Colorf &blend_color, unsigned int sample_mask);
 		void set_depth_stencil_state(DepthStencilState *state, int stencil_ref);
 		void set_program_object(StandardProgram standard_program);
 		void set_program_object(const ProgramObjectPtr &program);
 		void reset_program_object();
-		void set_uniform_buffer(int index, const UniformBuffer &buffer);
+		void set_uniform_buffer(int index, const UniformBufferPtr &buffer);
 		void reset_uniform_buffer(int index);
 		void set_storage_buffer(int index, const StorageBufferPtr &buffer);
 		void reset_storage_buffer(int index);

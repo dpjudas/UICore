@@ -29,79 +29,24 @@
 #include "UICore/precomp.h"
 #include "UICore/Display/Render/uniform_buffer.h"
 #include "UICore/Display/Render/program_object.h"
-#include "UICore/Display/TargetProviders/uniform_buffer_provider.h"
 #include "UICore/Display/Render/graphic_context.h"
 #include "UICore/Display/TargetProviders/graphic_context_provider.h"
 #include "UICore/Core/System/exception.h"
 
 namespace uicore
 {
-	class UniformBuffer_Impl
+	std::shared_ptr<UniformBuffer> UniformBuffer::create(GraphicContext &gc, int size, BufferUsage usage)
 	{
-	public:
-		UniformBuffer_Impl() : lock_count(0), provider(nullptr) { }
-		~UniformBuffer_Impl() { if (provider) delete provider; }
-
-		int lock_count;
-		UniformBufferProvider *provider;
-	};
-
-	UniformBuffer::UniformBuffer()
-	{
+		return gc.get_provider()->create_uniform_buffer(size, usage);
 	}
 
-	UniformBuffer::UniformBuffer(GraphicContext &gc, int size, BufferUsage usage)
-		: impl(std::make_shared<UniformBuffer_Impl>())
+	std::shared_ptr<UniformBuffer> UniformBuffer::create(GraphicContext &gc, const void *data, int size, BufferUsage usage)
 	{
-		GraphicContextProvider *gc_provider = gc.get_provider();
-		impl->provider = gc_provider->alloc_uniform_buffer();
-		impl->provider->create(size, usage);
+		return gc.get_provider()->create_uniform_buffer(data, size, usage);
 	}
 
-	UniformBuffer::UniformBuffer(GraphicContext &gc, const void *data, int size, BufferUsage usage)
-		: impl(std::make_shared<UniformBuffer_Impl>())
+	std::shared_ptr<UniformBuffer> UniformBuffer::create(GraphicContext &gc, const ProgramObjectPtr &program, const std::string &name, int num_blocks, BufferUsage usage)
 	{
-		GraphicContextProvider *gc_provider = gc.get_provider();
-		impl->provider = gc_provider->alloc_uniform_buffer();
-		impl->provider->create(data, size, usage);
-	}
-
-	UniformBuffer::UniformBuffer(GraphicContext &gc, ProgramObject &program, const std::string &name, int num_blocks, BufferUsage usage)
-		: impl(std::make_shared<UniformBuffer_Impl>())
-	{
-		GraphicContextProvider *gc_provider = gc.get_provider();
-		impl->provider = gc_provider->alloc_uniform_buffer();
-		impl->provider->create(program.get_uniform_buffer_size(name) * num_blocks, usage);
-	}
-
-	void UniformBuffer::throw_if_null() const
-	{
-		if (!impl)
-			throw Exception("UniformBuffer is null");
-	}
-
-	UniformBufferProvider *UniformBuffer::get_provider() const
-	{
-		return impl->provider;
-	}
-
-	bool UniformBuffer::operator==(const UniformBuffer &other) const
-	{
-		return impl == other.impl;
-	}
-
-	void UniformBuffer::upload_data(GraphicContext &gc, const void *data, int size)
-	{
-		impl->provider->upload_data(gc, data, size);
-	}
-
-	void UniformBuffer::copy_from(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size)
-	{
-		impl->provider->copy_from(gc, buffer, dest_pos, src_pos, size);
-	}
-
-	void UniformBuffer::copy_to(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size)
-	{
-		impl->provider->copy_to(gc, buffer, dest_pos, src_pos, size);
+		return create(gc, program->get_uniform_buffer_size(name) * num_blocks, usage);
 	}
 }

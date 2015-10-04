@@ -29,18 +29,17 @@
 
 #pragma once
 
-#include "UICore/Display/TargetProviders/uniform_buffer_provider.h"
+#include "UICore/Display/Render/uniform_buffer.h"
 #include "UICore/Core/System/disposable_object.h"
 
 namespace uicore
 {
-	class GL1UniformBufferProvider : public UniformBufferProvider
+	class GL1UniformBufferProvider : public UniformBuffer
 	{
 	public:
-		GL1UniformBufferProvider();
+		GL1UniformBufferProvider(int size, BufferUsage usage);
+		GL1UniformBufferProvider(const void *data, int size, BufferUsage usage);
 		~GL1UniformBufferProvider();
-		void create(int size, BufferUsage usage) override;
-		void create(const void *data, int size, BufferUsage usage) override;
 
 		void *get_data() const { return data; }
 
@@ -49,7 +48,7 @@ namespace uicore
 		void copy_to(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size) override;
 
 	private:
-		char *data;
-		int size;
+		char *data = nullptr;
+		int size = 0;
 	};
 }

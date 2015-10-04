@@ -63,7 +63,7 @@ namespace uicore
 		{
 		}
 
-		/// Returns the element array buffer used by the vector
+		/// Returns the buffer used by the vector
 		const VertexArrayBufferPtr &buffer() const { return _buffer; }
 
 		operator const VertexArrayBufferPtr &() const { return buffer(); }

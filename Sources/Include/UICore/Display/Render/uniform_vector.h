@@ -33,56 +33,44 @@
 
 namespace uicore
 {
-	/// \brief Uniform Buffer Vector
-	///
+	/// \brief Typed access to an uniform buffer
 	template<typename Type>
 	class UniformVector : public UniformBuffer
 	{
 	public:
-		/// \brief Constructs a null instance.
-		UniformVector()
-		{
-		}
-
-		/// \brief Constructs a ElementArrayBuffer
-		///
-		/// \param gc = Graphic Context
-		/// \param size = value
-		/// \param usage = Buffer Usage
+		/// \brief Constructs a uniform vector
 		UniformVector(GraphicContext &gc, int size, BufferUsage usage = usage_static_draw)
-			: UniformBuffer(gc, size * sizeof(Type), usage)
+			: _buffer(UniformBuffer::create(gc, size * sizeof(Type), usage))
 		{
 		}
 
-		/// \brief Constructs a ElementArrayBuffer
-		///
-		/// \param gc = Graphic Context
-		/// \param data = void
-		/// \param size = value
-		/// \param usage = Buffer Usage
 		UniformVector(GraphicContext &gc, Type *data, int size, BufferUsage usage = usage_static_draw)
-			: UniformBuffer(gc, data, size * sizeof(Type), usage)
+			: _buffer(UniformBuffer::create(gc, data, size * sizeof(Type), usage))
 		{
 		}
 
 		UniformVector(GraphicContext &gc, const std::vector<Type> &data, BufferUsage usage = usage_static_draw)
-			: UniformBuffer(gc, data.empty() ? (Type*)0 : &data[0], data.size() * sizeof(Type), usage)
+			: _buffer(UniformBuffer::create(gc, data.empty() ? (Type*)0 : &data[0], data.size() * sizeof(Type), usage))
 		{
 		}
+
+		/// Returns the buffer used by the vector
+		const UniformBufferPtr &buffer() const { return _buffer; }
+
+		operator const UniformBufferPtr &() const { return buffer(); }
 
 		/// \brief Uploads data to uniforms buffer.
 		///
 		/// The size specified must match the size of the buffer and is only included to help guard against buffer overruns.
 		void upload_data(GraphicContext &gc, const Type *data, int size)
 		{
-			UniformBuffer::upload_data(gc, data, size * sizeof(Type));
+			_buffer->upload_data(gc, data, size * sizeof(Type));
 		}
 
 		/// \brief Uploads data to uniforms buffer.
 		void upload_data(GraphicContext &gc, const std::vector<Type> &data)
 		{
-			if (!data.empty())
-				UniformBuffer::upload_data(gc, &data[0], data.size() * sizeof(Type));
+			_buffer->upload_data(gc, data.data(), data.size() * sizeof(Type));
 		}
 
 		/// \brief Copies data from transfer buffer
@@ -90,7 +78,7 @@ namespace uicore
 		{
 			if (size != -1)
 				size = size * sizeof(Type);
-			UniformBuffer::copy_from(gc, buffer, dest_pos * sizeof(Type), src_pos * sizeof(Type), size);
+			_buffer->copy_from(gc, buffer, dest_pos * sizeof(Type), src_pos * sizeof(Type), size);
 		}
 
 		/// \brief Copies data to transfer buffer
@@ -98,7 +86,10 @@ namespace uicore
 		{
 			if (size != -1)
 				size = size * sizeof(Type);
-			UniformBuffer::copy_to(gc, buffer, dest_pos * sizeof(Type), src_pos * sizeof(Type), size);
+			_buffer->copy_to(gc, buffer, dest_pos * sizeof(Type), src_pos * sizeof(Type), size);
 		}
+
+	private:
+		UniformBufferPtr _buffer;
 	};
 }

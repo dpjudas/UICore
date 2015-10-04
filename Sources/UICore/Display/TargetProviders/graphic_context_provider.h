@@ -120,9 +120,6 @@ namespace uicore
 		/// \brief Allocate texture provider for this gc.
 		virtual TextureProvider *alloc_texture(TextureDimensions texture_dimensions) = 0;
 
-		/// \brief Allocate uniform buffer provider for this gc.
-		virtual UniformBufferProvider *alloc_uniform_buffer() = 0;
-
 		/// \brief Allocate transfer buffer provider for this gc.
 		virtual TransferBufferProvider *alloc_transfer_buffer() = 0;
 
@@ -147,6 +144,8 @@ namespace uicore
 		virtual std::shared_ptr<ElementArrayBuffer> create_element_array_buffer(const void *data, int size, BufferUsage usage) = 0;
 		virtual std::shared_ptr<VertexArrayBuffer> create_vertex_array_buffer(int size, BufferUsage usage) = 0;
 		virtual std::shared_ptr<VertexArrayBuffer> create_vertex_array_buffer(const void *data, int size, BufferUsage usage) = 0;
+		virtual std::shared_ptr<UniformBuffer> create_uniform_buffer(int size, BufferUsage usage) = 0;
+		virtual std::shared_ptr<UniformBuffer> create_uniform_buffer(const void *data, int size, BufferUsage usage) = 0;
 
 		/// \brief Set active rasterizer state
 		virtual void set_rasterizer_state(RasterizerState *state) = 0;
@@ -169,7 +168,7 @@ namespace uicore
 		virtual void reset_program_object() = 0;
 
 		/// \brief Select uniform buffer into index
-		virtual void set_uniform_buffer(int index, const UniformBuffer &buffer) = 0;
+		virtual void set_uniform_buffer(int index, const UniformBufferPtr &buffer) = 0;
 
 		/// \brief Remove uniform buffer from index
 		virtual void reset_uniform_buffer(int index) = 0;

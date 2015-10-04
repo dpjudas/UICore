@@ -35,20 +35,12 @@
 
 namespace uicore
 {
-	GL3UniformBufferProvider::GL3UniformBufferProvider()
-	{
-	}
-
-	GL3UniformBufferProvider::~GL3UniformBufferProvider()
-	{
-	}
-
-	void GL3UniformBufferProvider::create(int size, BufferUsage usage)
+	GL3UniformBufferProvider::GL3UniformBufferProvider(int size, BufferUsage usage)
 	{
 		buffer.create(nullptr, size, usage, GL_UNIFORM_BUFFER_BINDING, GL_UNIFORM_BUFFER);
 	}
 
-	void GL3UniformBufferProvider::create(const void *data, int size, BufferUsage usage)
+	GL3UniformBufferProvider::GL3UniformBufferProvider(const void *data, int size, BufferUsage usage)
 	{
 		buffer.create(data, size, usage, GL_UNIFORM_BUFFER_BINDING, GL_UNIFORM_BUFFER);
 	}

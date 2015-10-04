@@ -111,7 +111,6 @@ namespace uicore
 		int get_minor_version() const override { int major = 0, minor = 0; get_opengl_version(major, minor); return minor; }
 		bool has_compute_shader_support() const override { return false; }
 		TextureProvider *alloc_texture(TextureDimensions texture_dimensions) override;
-		UniformBufferProvider *alloc_uniform_buffer() override;
 		TransferBufferProvider *alloc_transfer_buffer() override;
 		PixelBufferProvider *alloc_pixel_buffer() override;
 		PrimitivesArrayProvider *alloc_primitives_array() override;
@@ -130,11 +129,13 @@ namespace uicore
 		std::shared_ptr<ElementArrayBuffer> create_element_array_buffer(const void *data, int size, BufferUsage usage) override;
 		std::shared_ptr<VertexArrayBuffer> create_vertex_array_buffer(int size, BufferUsage usage) override;
 		std::shared_ptr<VertexArrayBuffer> create_vertex_array_buffer(const void *data, int size, BufferUsage usage) override;
+		std::shared_ptr<UniformBuffer> create_uniform_buffer(int size, BufferUsage usage) override;
+		std::shared_ptr<UniformBuffer> create_uniform_buffer(const void *data, int size, BufferUsage usage) override;
 		void set_rasterizer_state(RasterizerState *state) override;
 		void set_blend_state(BlendState *state, const Colorf &blend_color, unsigned int sample_mask) override;
 		void set_depth_stencil_state(DepthStencilState *state, int stencil_ref) override;
 		PixelBuffer get_pixeldata(const Rect& rect, TextureFormat texture_format, bool clamp) const override;
-		void set_uniform_buffer(int index, const UniformBuffer &buffer) override;
+		void set_uniform_buffer(int index, const UniformBufferPtr &buffer) override;
 		void reset_uniform_buffer(int index) override;
 		void set_storage_buffer(int index, const StorageBufferPtr &buffer) override;
 		void reset_storage_buffer(int index) override;

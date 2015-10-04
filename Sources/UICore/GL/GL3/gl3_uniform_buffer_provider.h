@@ -29,7 +29,7 @@
 
 #pragma once
 
-#include "UICore/Display/TargetProviders/uniform_buffer_provider.h"
+#include "UICore/Display/Render/uniform_buffer.h"
 #include "UICore/GL/opengl.h"
 #include "UICore/Core/System/disposable_object.h"
 #include "gl3_buffer_object_provider.h"
@@ -38,13 +38,11 @@ namespace uicore
 {
 	class GL3GraphicContextProvider;
 
-	class GL3UniformBufferProvider : public UniformBufferProvider
+	class GL3UniformBufferProvider : public UniformBuffer
 	{
 	public:
-		GL3UniformBufferProvider();
-		~GL3UniformBufferProvider();
-		void create(int size, BufferUsage usage) override;
-		void create(const void *data, int size, BufferUsage usage) override;
+		GL3UniformBufferProvider(int size, BufferUsage usage);
+		GL3UniformBufferProvider(const void *data, int size, BufferUsage usage);
 
 		GLuint get_handle() const { return buffer.get_handle(); }
 

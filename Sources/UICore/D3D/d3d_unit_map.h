@@ -50,7 +50,7 @@ namespace uicore
 	typedef D3DUnit<Texture> D3DSamplerUnit;
 	typedef D3DUnit<Texture> D3DTextureUnit;
 	typedef D3DUnit<Texture> D3DImageUnit;
-	typedef D3DUnit<UniformBuffer> D3DUniformUnit;
+	typedef D3DUnit<UniformBufferPtr> D3DUniformUnit;
 
 	class D3DStorageUnit
 	{
@@ -69,7 +69,7 @@ namespace uicore
 		void set_sampler(D3DGraphicContextProvider *gc, int index, const Texture &texture);
 		void set_texture(D3DGraphicContextProvider *gc, int index, const Texture &texture);
 		void set_image(D3DGraphicContextProvider *gc, int index, const Texture &texture);
-		void set_uniform_buffer(D3DGraphicContextProvider *gc, int index, const UniformBuffer &buffer);
+		void set_uniform_buffer(D3DGraphicContextProvider *gc, int index, const UniformBufferPtr &buffer);
 		void set_storage_buffer(D3DGraphicContextProvider *gc, int index, const StorageBufferPtr &buffer);
 
 	private:

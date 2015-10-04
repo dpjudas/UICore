@@ -157,7 +157,7 @@ namespace uicore
 		bind_image(gc, index);
 	}
 
-	void D3DUnitMap::set_uniform_buffer(D3DGraphicContextProvider *gc, int index, const UniformBuffer &buffer)
+	void D3DUnitMap::set_uniform_buffer(D3DGraphicContextProvider *gc, int index, const UniformBufferPtr &buffer)
 	{
 		if (uniform_units.size() < index + 1)
 			uniform_units.resize(index + 1);
@@ -272,8 +272,8 @@ namespace uicore
 				if (uniform_units[index].shader_index[j] != -1)
 				{
 					ID3D11Buffer *d3d_buffer = 0;
-					if (!uniform_units[index].object.is_null())
-						d3d_buffer = static_cast<D3DUniformBufferProvider*>(uniform_units[index].object.get_provider())->get_buffer(gc->get_window()->get_device());
+					if (uniform_units[index].object)
+						d3d_buffer = static_cast<D3DUniformBufferProvider*>(uniform_units[index].object.get())->get_buffer(gc->get_window()->get_device());
 					switch (j)
 					{
 					case ShaderType::vertex:

@@ -58,7 +58,7 @@ namespace uicore
 		void set_image_texture(int unit_index, const Texture &texture);
 		void set_image_textures(std::vector<Texture> &textures);
 
-		void set_uniform_buffer(int index, const UniformBuffer &buffer);
+		void set_uniform_buffer(int index, const UniformBufferPtr &buffer);
 		void set_storage_buffer(int index, const StorageBufferPtr &buffer);
 
 		void set_program_object(StandardProgram standard_program);
@@ -92,7 +92,7 @@ namespace uicore
 
 		std::vector<Texture> textures;
 		std::vector<Texture> image_textures;
-		std::vector<UniformBuffer> uniform_buffers;
+		std::vector<UniformBufferPtr> uniform_buffers;
 		std::vector<StorageBufferPtr> storage_buffers;
 
 		Rect scissor;
