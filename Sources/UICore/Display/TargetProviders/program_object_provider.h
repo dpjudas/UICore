@@ -39,7 +39,10 @@ namespace uicore
 	class ProgramObjectProvider : public ProgramObject
 	{
 	public:
-		virtual ~ProgramObjectProvider() { }
+		using ProgramObject::set_uniform_buffer_index;
+		using ProgramObject::set_storage_buffer_index;
+		using ProgramObject::get_storage_buffer_index;
+		using ProgramObject::get_uniform_buffer_size;
 
 		void link() override
 		{
@@ -50,18 +53,18 @@ namespace uicore
 
 		void set_uniform_buffer_index(const std::string &block_name, int bind_index) override
 		{
-			ProgramObject::set_uniform_buffer_index(get_uniform_buffer_index(block_name), bind_index);
+			set_uniform_buffer_index(get_uniform_buffer_index(block_name), bind_index);
 		}
 
 		void set_storage_buffer_index(const std::string &block_name, int bind_index) override
 		{
-			ProgramObject::set_storage_buffer_index(get_storage_buffer_index(block_name), bind_index);
+			set_storage_buffer_index(get_storage_buffer_index(block_name), bind_index);
 		}
 
 		int get_uniform_buffer_size(const std::string &block_name) const override
 		{
 			int block_index = get_uniform_buffer_index(block_name);
-			return ProgramObject::get_uniform_buffer_size(block_index);
+			return get_uniform_buffer_size(block_index);
 		}
 	};
 }

@@ -121,11 +121,11 @@ namespace uicore
 
 	ProgramObjectPtr StandardPrograms::compile(GraphicContext &gc, const void *vertex_code, int vertex_code_size, const void *fragment_code, int fragment_code_size)
 	{
-		auto vertex_shader = ShaderObject::create(gc, ShaderType::vertex, std::string((const char*)vertex_code, vertex_code_size));
+		auto vertex_shader = ShaderObject::create(gc, ShaderType::vertex, vertex_code, vertex_code_size);
 		if (!vertex_shader->try_compile())
 			throw Exception(string_format("Unable to compile standard vertex shader: %1", vertex_shader->info_log()));
 
-		auto fragment_shader = ShaderObject::create(gc, ShaderType::fragment, std::string((const char *)fragment_code, fragment_code_size));
+		auto fragment_shader = ShaderObject::create(gc, ShaderType::fragment, fragment_code, fragment_code_size);
 		if (!fragment_shader->try_compile())
 			throw Exception(string_format("Unable to compile standard fragment shader: %1", fragment_shader->info_log()));
 

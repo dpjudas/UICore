@@ -56,6 +56,7 @@ namespace uicore
 	public:
 		/// \brief Constructs a shader
 		static std::shared_ptr<ShaderObject> create(GraphicContext &gc, ShaderType type, const std::string &source);
+		static std::shared_ptr<ShaderObject> create(GraphicContext &gc, ShaderType type, const void *bytecode, int bytecode_size);
 
 		/// \brief Load
 		static std::shared_ptr<ShaderObject> load(GraphicContext &gc, ShaderType type, const std::string &fullname);

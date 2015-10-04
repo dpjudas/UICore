@@ -60,6 +60,11 @@ namespace uicore
 		return gc.get_provider()->create_shader(type, source);
 	}
 
+	std::shared_ptr<ShaderObject> ShaderObject::create(GraphicContext &gc, ShaderType type, const void *bytecode, int bytecode_size)
+	{
+		return gc.get_provider()->create_shader(type, bytecode, bytecode_size);
+	}
+
 	std::shared_ptr<ShaderObject> ShaderObject::load(GraphicContext &gc, ShaderType shader_type, const std::string &filename)
 	{
 		return create(gc, shader_type, File::read_all_text(filename));

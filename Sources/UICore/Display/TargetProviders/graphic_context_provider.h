@@ -155,6 +155,7 @@ namespace uicore
 		virtual std::shared_ptr<DepthStencilState> create_depth_stencil_state(const DepthStencilStateDescription &desc) = 0;
 		virtual std::shared_ptr<ProgramObjectProvider> create_program() = 0;
 		virtual std::shared_ptr<ShaderObjectProvider> create_shader(ShaderType type, const std::string &source) = 0;
+		virtual std::shared_ptr<ShaderObjectProvider> create_shader(ShaderType type, const void *bytecode, int bytecode_size) = 0;
 
 		/// \brief Set active rasterizer state
 		virtual void set_rasterizer_state(RasterizerState *state) = 0;

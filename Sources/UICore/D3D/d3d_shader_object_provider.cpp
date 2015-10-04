@@ -65,6 +65,13 @@ namespace uicore
 		type = new_type;
 	}
 
+	D3DShaderObjectProvider::D3DShaderObjectProvider(const ComPtr<ID3D11Device> &device, D3D_FEATURE_LEVEL feature_level, ShaderType new_type, const void *init_bytecode, int bytecode_size)
+		: device(device), feature_level(feature_level)
+	{
+		bytecode = DataBuffer::create(init_bytecode, bytecode_size);
+		type = new_type;
+	}
+
 	D3DShaderObjectProvider::~D3DShaderObjectProvider()
 	{
 	}

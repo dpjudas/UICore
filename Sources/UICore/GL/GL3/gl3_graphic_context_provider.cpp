@@ -388,6 +388,11 @@ namespace uicore
 		return std::make_shared<GL3ShaderObjectProvider>(type, source);
 	}
 
+	std::shared_ptr<ShaderObjectProvider> GL3GraphicContextProvider::create_shader(ShaderType type, const void *bytecode, int bytecode_size)
+	{
+		throw Exception("Shader Objects with bytecode are not supported for OpenGL");
+	}
+
 	std::shared_ptr<ProgramObjectProvider> GL3GraphicContextProvider::create_program()
 	{
 		return std::make_shared<GL3ProgramObjectProvider>();

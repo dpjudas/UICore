@@ -95,6 +95,7 @@ namespace uicore
 		std::shared_ptr<DepthStencilState> create_depth_stencil_state(const DepthStencilStateDescription &desc) override;
 		std::shared_ptr<ProgramObjectProvider> create_program() override;
 		std::shared_ptr<ShaderObjectProvider> create_shader(ShaderType type, const std::string &source) override;
+		std::shared_ptr<ShaderObjectProvider> create_shader(ShaderType type, const void *bytecode, int bytecode_size) override;
 		void set_rasterizer_state(RasterizerState *state);
 		void set_blend_state(BlendState *state, const Colorf &blend_color, unsigned int sample_mask);
 		void set_depth_stencil_state(DepthStencilState *state, int stencil_ref);

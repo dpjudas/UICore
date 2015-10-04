@@ -283,6 +283,11 @@ namespace uicore
 		return std::make_shared<D3DShaderObjectProvider>(window->get_device(), window->get_feature_level(), type, source);
 	}
 
+	std::shared_ptr<ShaderObjectProvider> D3DGraphicContextProvider::create_shader(ShaderType type, const void *bytecode, int bytecode_size)
+	{
+		return std::make_shared<D3DShaderObjectProvider>(window->get_device(), window->get_feature_level(), type, bytecode, bytecode_size);
+	}
+
 	std::shared_ptr<ProgramObjectProvider> D3DGraphicContextProvider::create_program()
 	{
 		return std::make_shared<D3DProgramObjectProvider>(window->get_device(), window->get_device_context());

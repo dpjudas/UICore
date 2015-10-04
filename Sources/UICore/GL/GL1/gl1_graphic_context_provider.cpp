@@ -352,6 +352,11 @@ namespace uicore
 		throw Exception("Shader Objects are not supported for OpenGL 1.3");
 	}
 
+	std::shared_ptr<ShaderObjectProvider> GL1GraphicContextProvider::create_shader(ShaderType type, const void *bytecode, int bytecode_size)
+	{
+		throw Exception("Shader Objects are not supported for OpenGL 1.3");
+	}
+
 	void GL1GraphicContextProvider::set_rasterizer_state(RasterizerState *state)
 	{
 		if (state)
