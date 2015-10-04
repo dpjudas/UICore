@@ -34,21 +34,13 @@
 
 namespace uicore
 {
-	D3DTransferBufferProvider::D3DTransferBufferProvider(const ComPtr<ID3D11Device> &device)
-		: size(0)
+	D3DTransferBufferProvider::D3DTransferBufferProvider(const ComPtr<ID3D11Device> &device, int new_size, BufferUsage usage)
 	{
 		handles.push_back(std::shared_ptr<DeviceHandles>(new DeviceHandles(device)));
 		map_data.pData = 0;
 		map_data.RowPitch = 0;
 		map_data.DepthPitch = 0;
-	}
 
-	D3DTransferBufferProvider::~D3DTransferBufferProvider()
-	{
-	}
-
-	void D3DTransferBufferProvider::create(int new_size, BufferUsage usage)
-	{
 		size = new_size;
 
 		D3D11_BUFFER_DESC desc;
@@ -71,8 +63,13 @@ namespace uicore
 		D3DTarget::throw_if_failed("Unable to create transfer buffer", result);
 	}
 
-	void D3DTransferBufferProvider::create(void *data, int new_size, BufferUsage usage)
+	D3DTransferBufferProvider::D3DTransferBufferProvider(const ComPtr<ID3D11Device> &device, const void *data, int new_size, BufferUsage usage)
 	{
+		handles.push_back(std::shared_ptr<DeviceHandles>(new DeviceHandles(device)));
+		map_data.pData = 0;
+		map_data.RowPitch = 0;
+		map_data.DepthPitch = 0;
+
 		size = new_size;
 
 		D3D11_SUBRESOURCE_DATA resource_data;
@@ -100,7 +97,11 @@ namespace uicore
 		D3DTarget::throw_if_failed("Unable to create transfer buffer", result);
 	}
 
-	void *D3DTransferBufferProvider::get_data()
+	D3DTransferBufferProvider::~D3DTransferBufferProvider()
+	{
+	}
+
+	void *D3DTransferBufferProvider::data()
 	{
 		return map_data.pData;
 	}
@@ -144,7 +145,7 @@ namespace uicore
 			throw Exception("Out of bounds!");
 
 		lock(gc, access_write_only);	// Should this be access_write_discard - And force offset ==0 and input_size = desc.ByteWidth
-		memcpy(static_cast<char*>(get_data()) + offset, input, input_size);
+		memcpy(static_cast<char*>(data()) + offset, input, input_size);
 		unlock();
 
 	}

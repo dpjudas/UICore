@@ -111,7 +111,6 @@ namespace uicore
 		int get_minor_version() const override { int major = 0, minor = 0; get_opengl_version(major, minor); return minor; }
 		bool has_compute_shader_support() const override { return false; }
 		TextureProvider *alloc_texture(TextureDimensions texture_dimensions) override;
-		TransferBufferProvider *alloc_transfer_buffer() override;
 		PixelBufferProvider *alloc_pixel_buffer() override;
 		PrimitivesArrayProvider *alloc_primitives_array() override;
 		std::shared_ptr<RasterizerState> create_rasterizer_state(const RasterizerStateDescription &desc) override;
@@ -131,6 +130,8 @@ namespace uicore
 		std::shared_ptr<VertexArrayBuffer> create_vertex_array_buffer(const void *data, int size, BufferUsage usage) override;
 		std::shared_ptr<UniformBuffer> create_uniform_buffer(int size, BufferUsage usage) override;
 		std::shared_ptr<UniformBuffer> create_uniform_buffer(const void *data, int size, BufferUsage usage) override;
+		std::shared_ptr<TransferBuffer> create_transfer_buffer(int size, BufferUsage usage) override;
+		std::shared_ptr<TransferBuffer> create_transfer_buffer(const void *data, int size, BufferUsage usage) override;
 		void set_rasterizer_state(RasterizerState *state) override;
 		void set_blend_state(BlendState *state, const Colorf &blend_color, unsigned int sample_mask) override;
 		void set_depth_stencil_state(DepthStencilState *state, int stencil_ref) override;

@@ -29,7 +29,7 @@
 
 #pragma once
 
-#include "UICore/Display/TargetProviders/transfer_buffer_provider.h"
+#include "UICore/Display/Render/transfer_buffer.h"
 #include "UICore/GL/opengl.h"
 #include "UICore/Core/System/disposable_object.h"
 #include "gl3_buffer_object_provider.h"
@@ -38,15 +38,13 @@ namespace uicore
 {
 	class GL3GraphicContextProvider;
 
-	class GL3TransferBufferProvider : public TransferBufferProvider
+	class GL3TransferBufferProvider : public TransferBuffer
 	{
 	public:
-		GL3TransferBufferProvider();
-		~GL3TransferBufferProvider();
-		void create(int size, BufferUsage usage) override;
-		void create(void *data, int size, BufferUsage usage) override;
+		GL3TransferBufferProvider(int size, BufferUsage usage);
+		GL3TransferBufferProvider(const void *data, int size, BufferUsage usage);
 
-		void *get_data() override { return buffer.get_data(); }
+		void *data() override { return buffer.get_data(); }
 		GLuint get_handle() const { return buffer.get_handle(); }
 
 		void lock(GraphicContext &gc, BufferAccess access) override { buffer.lock(gc, access); }

@@ -100,7 +100,6 @@ namespace uicore
 		bool has_compute_shader_support() const override { return false; }
 		TextureProvider *alloc_texture(TextureDimensions texture_dimensions) override;
 		PixelBufferProvider *alloc_pixel_buffer() override;
-		TransferBufferProvider *alloc_transfer_buffer() override;
 		PrimitivesArrayProvider *alloc_primitives_array() override;
 		std::shared_ptr<RasterizerState> create_rasterizer_state(const RasterizerStateDescription &desc) override;
 		std::shared_ptr<BlendState> create_blend_state(const BlendStateDescription &desc) override;
@@ -119,6 +118,8 @@ namespace uicore
 		std::shared_ptr<VertexArrayBuffer> create_vertex_array_buffer(const void *data, int size, BufferUsage usage) override;
 		std::shared_ptr<UniformBuffer> create_uniform_buffer(int size, BufferUsage usage) override;
 		std::shared_ptr<UniformBuffer> create_uniform_buffer(const void *data, int size, BufferUsage usage) override;
+		std::shared_ptr<TransferBuffer> create_transfer_buffer(int size, BufferUsage usage) override;
+		std::shared_ptr<TransferBuffer> create_transfer_buffer(const void *data, int size, BufferUsage usage) override;
 		void set_rasterizer_state(RasterizerState *state) override;
 		void set_blend_state(BlendState *state, const Colorf &blend_color, unsigned int sample_mask) override;
 		void set_depth_stencil_state(DepthStencilState *state, int stencil_ref) override;

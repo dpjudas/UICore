@@ -130,13 +130,13 @@ namespace uicore
 		upload_data(gc, 0, data, size);
 	}
 
-	void GL3BufferObjectProvider::copy_from(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size)
+	void GL3BufferObjectProvider::copy_from(GraphicContext &gc, const TransferBufferPtr &buffer, int dest_pos, int src_pos, int size)
 	{
 		throw_if_disposed();
 		OpenGL::set_active(gc);
 
 		glBindBuffer(GL_COPY_WRITE_BUFFER, handle);
-		glBindBuffer(GL_COPY_READ_BUFFER, static_cast<GL3TransferBufferProvider*>(buffer.get_provider())->get_handle());
+		glBindBuffer(GL_COPY_READ_BUFFER, static_cast<GL3TransferBufferProvider*>(buffer.get())->get_handle());
 
 		glCopyBufferSubData(GL_COPY_READ_BUFFER, GL_COPY_WRITE_BUFFER, src_pos, dest_pos, size);
 
@@ -144,12 +144,12 @@ namespace uicore
 		glBindBuffer(GL_COPY_READ_BUFFER, 0);
 	}
 
-	void GL3BufferObjectProvider::copy_to(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size)
+	void GL3BufferObjectProvider::copy_to(GraphicContext &gc, const TransferBufferPtr &buffer, int dest_pos, int src_pos, int size)
 	{
 		throw_if_disposed();
 		OpenGL::set_active(gc);
 
-		glBindBuffer(GL_COPY_WRITE_BUFFER, static_cast<GL3TransferBufferProvider*>(buffer.get_provider())->get_handle());
+		glBindBuffer(GL_COPY_WRITE_BUFFER, static_cast<GL3TransferBufferProvider*>(buffer.get())->get_handle());
 		glBindBuffer(GL_COPY_READ_BUFFER, handle);
 
 		glCopyBufferSubData(GL_COPY_READ_BUFFER, GL_COPY_WRITE_BUFFER, dest_pos, src_pos, size);

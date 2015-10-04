@@ -59,15 +59,15 @@ namespace uicore
 		memcpy(this->data, data, size);
 	}
 
-	void GL1UniformBufferProvider::copy_from(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size)
+	void GL1UniformBufferProvider::copy_from(GraphicContext &gc, const TransferBufferPtr &buffer, int dest_pos, int src_pos, int size)
 	{
-		buffer.lock(gc, access_read_only);
-		memcpy(this->data + dest_pos, (char *)buffer.get_data() + src_pos, size);
-		buffer.unlock();
+		buffer->lock(gc, access_read_only);
+		memcpy(this->data + dest_pos, (char *)buffer->data() + src_pos, size);
+		buffer->unlock();
 	}
 
-	void GL1UniformBufferProvider::copy_to(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size)
+	void GL1UniformBufferProvider::copy_to(GraphicContext &gc, const TransferBufferPtr &buffer, int dest_pos, int src_pos, int size)
 	{
-		buffer.upload_data(gc, dest_pos, this->data + src_pos, size);
+		buffer->upload_data(gc, dest_pos, this->data + src_pos, size);
 	}
 }

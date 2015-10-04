@@ -32,66 +32,63 @@
 
 namespace uicore
 {
-	/// \brief Transfer Vector
-	///
+	/// \brief Typed access to a transfer buffer
 	template<typename Type>
 	class TransferVector : public TransferBuffer
 	{
 	public:
-		/// \brief Constructs a null instance.
+		/// \brief Constructs a transfer vector
 		TransferVector()
 		{
 		}
 
-		/// \brief Constructs a TransferVector
-		///
-		/// \param gc = Graphic Context
-		/// \param size = value
-		/// \param usage = Buffer Usage
-		TransferVector(GraphicContext &gc, int size, BufferUsage usage = usage_dynamic_copy)
-			: TransferBuffer(gc, size * sizeof(Type), usage)
+		TransferVector(const TransferBufferPtr &transfer_buffer)
+			: _buffer(transfer_buffer)
 		{
 		}
 
-		/// \brief Constructs a TransferVector
-		///
-		/// \param gc = Graphic Context
-		/// \param data = void
-		/// \param size = value
-		/// \param usage = Buffer Usage
+		TransferVector(GraphicContext &gc, int size, BufferUsage usage = usage_dynamic_copy)
+			: _buffer(TransferBuffer::create(gc, size * sizeof(Type), usage))
+		{
+		}
+
 		TransferVector(GraphicContext &gc, Type *data, int size, BufferUsage usage = usage_dynamic_copy)
-			: TransferBuffer(gc, data, size * sizeof(Type), usage)
+			: _buffer(TransferBuffer:.create(gc, data, size * sizeof(Type), usage))
 		{
 		}
 
 		TransferVector(GraphicContext &gc, const std::vector<Type> &data, BufferUsage usage = usage_dynamic_copy)
-			: TransferBuffer(gc, data.empty() ? (Type*)0 : &data[0], data.size() * sizeof(Type), usage)
+			: _buffer(TransferBuffer::create(gc, data.empty() ? (Type*)0 : &data[0], data.size() * sizeof(Type), usage))
 		{
 		}
 
-		/// \brief Constructs a TransferVector from an existing buffer
-		explicit TransferVector(const TransferBuffer &transfer_buffer)
-			: TransferBuffer(transfer_buffer)
-		{
-		}
+		/// Returns the buffer used by the vector
+		const TransferBufferPtr &buffer() const { return _buffer; }
+
+		operator const TransferBufferPtr &() const { return buffer(); }
 
 		/// \brief Retrieves a pointer to the mapped buffer.
-		Type *get_data() { return reinterpret_cast<Type*>(TransferBuffer::get_data()); }
+		Type *data() { return reinterpret_cast<Type*>(_buffer->data()); }
 
-		Type &operator[](int index) { return get_data()[index]; }
-		Type &operator[](unsigned int index) { return get_data()[index]; }
+		/// \brief Maps buffer into system memory.
+		void lock(GraphicContext &gc, BufferAccess access) { _buffer->lock(gc, access); }
+
+		/// \brief Unmaps buffer.
+		void unlock() { _buffer->unlock(); }
 
 		/// \brief Uploads data to transfer buffer.
 		void upload_data(GraphicContext &gc, int offset, const Type *data, int size)
 		{
-			TransferBuffer::upload_data(gc, offset * sizeof(Type), data, size * sizeof(Type));
+			_buffer->upload_data(gc, offset * sizeof(Type), data, size * sizeof(Type));
 		}
 
 		/// \brief Uploads data to transfer buffer.
 		void upload_data(GraphicContext &gc, int offset, const std::vector<Type> &data)
 		{
-			if (!data.empty())
-				TransferBuffer::upload_data(gc, offset * sizeof(Type), &data[0], data.size() * sizeof(Type));
+			_buffer->upload_data(gc, offset * sizeof(Type), data.data(), data.size() * sizeof(Type));
 		}
+
+	private:
+		TransferBufferPtr _buffer;
 	};
 }

@@ -293,11 +293,6 @@ namespace uicore
 		return std::make_shared<GL3RenderBufferProvider>(width, height, texture_format, multisample_samples);
 	}
 
-	TransferBufferProvider *GL3GraphicContextProvider::alloc_transfer_buffer()
-	{
-		return new GL3TransferBufferProvider();
-	}
-
 	PixelBufferProvider *GL3GraphicContextProvider::alloc_pixel_buffer()
 	{
 		return new GL3PixelBufferProvider();
@@ -416,6 +411,16 @@ namespace uicore
 	std::shared_ptr<UniformBuffer> GL3GraphicContextProvider::create_uniform_buffer(const void *data, int size, BufferUsage usage)
 	{
 		return std::make_shared<GL3UniformBufferProvider>(data, size, usage);
+	}
+
+	std::shared_ptr<TransferBuffer> GL3GraphicContextProvider::create_transfer_buffer(int size, BufferUsage usage)
+	{
+		return std::make_shared<GL3TransferBufferProvider>(size, usage);
+	}
+
+	std::shared_ptr<TransferBuffer> GL3GraphicContextProvider::create_transfer_buffer(const void *data, int size, BufferUsage usage)
+	{
+		return std::make_shared<GL3TransferBufferProvider>(data, size, usage);
 	}
 
 	void GL3GraphicContextProvider::set_rasterizer_state(RasterizerState *state)

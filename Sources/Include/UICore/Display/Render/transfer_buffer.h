@@ -34,60 +34,27 @@
 namespace uicore
 {
 	class GraphicContext;
-	class TransferBufferProvider;
-	class TransferBuffer_Impl;
 
 	/// \brief Transfer Buffer
 	class TransferBuffer
 	{
 	public:
-		/// \brief Constructs a null instance.
-		TransferBuffer();
-
 		/// \brief Constructs a transfer buffer
-		///
-		/// \param gc = Graphic Context
-		/// \param size = value
-		/// \param usage = Buffer Usage
-		TransferBuffer(GraphicContext &gc, int size, BufferUsage usage = usage_dynamic_copy);
-
-		/// \brief Constructs a transfer buffer
-		///
-		/// \param gc = Graphic Context
-		/// \param data = void
-		/// \param size = value
-		/// \param usage = Buffer Usage
-		TransferBuffer(GraphicContext &gc, const void *data, int size, BufferUsage usage = usage_dynamic_copy);
-
-		virtual ~TransferBuffer();
-
-		/// \brief Returns true if this object is invalid.
-		bool is_null() const { return !impl; }
-
-		/// \brief Throw an exception if this object is invalid.
-		void throw_if_null() const;
+		static std::shared_ptr<TransferBuffer> create(GraphicContext &gc, int size, BufferUsage usage = usage_dynamic_copy);
+		static std::shared_ptr<TransferBuffer> create(GraphicContext &gc, const void *data, int size, BufferUsage usage = usage_dynamic_copy);
 
 		/// \brief Retrieves a pointer to the mapped buffer.
-		void *get_data();
-
-		/// \brief Get Provider
-		///
-		/// \return provider
-		TransferBufferProvider *get_provider() const;
-
-		/// \brief Handle comparison operator.
-		bool operator==(const TransferBuffer &other) const;
+		virtual void *data() = 0;
 
 		/// \brief Maps buffer into system memory.
-		void lock(GraphicContext &gc, BufferAccess access);
+		virtual void lock(GraphicContext &gc, BufferAccess access) = 0;
 
 		/// \brief Unmaps buffer.
-		void unlock();
+		virtual void unlock() = 0;
 
 		/// \brief Uploads data to transfer buffer.
-		void upload_data(GraphicContext &gc, int offset, const void *data, int size);
-
-	private:
-		std::shared_ptr<TransferBuffer_Impl> impl;
+		virtual void upload_data(GraphicContext &gc, int offset, const void *data, int size) = 0;
 	};
+
+	typedef std::shared_ptr<TransferBuffer> TransferBufferPtr;
 }

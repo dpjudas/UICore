@@ -81,7 +81,6 @@ namespace uicore
 		PixelBuffer get_pixeldata(const Rect& rect, TextureFormat texture_format, bool clamp) const;
 		TextureProvider *alloc_texture(TextureDimensions texture_dimensions);
 		UniformBufferProvider *alloc_uniform_buffer();
-		TransferBufferProvider *alloc_transfer_buffer();
 		PixelBufferProvider *alloc_pixel_buffer();
 		PrimitivesArrayProvider *alloc_primitives_array();
 		std::shared_ptr<RasterizerState> create_rasterizer_state(const RasterizerStateDescription &desc) override;
@@ -101,6 +100,8 @@ namespace uicore
 		std::shared_ptr<VertexArrayBuffer> create_vertex_array_buffer(const void *data, int size, BufferUsage usage) override;
 		std::shared_ptr<UniformBuffer> create_uniform_buffer(int size, BufferUsage usage) override;
 		std::shared_ptr<UniformBuffer> create_uniform_buffer(const void *data, int size, BufferUsage usage) override;
+		std::shared_ptr<TransferBuffer> create_transfer_buffer(int size, BufferUsage usage) override;
+		std::shared_ptr<TransferBuffer> create_transfer_buffer(const void *data, int size, BufferUsage usage) override;
 		void set_rasterizer_state(RasterizerState *state);
 		void set_blend_state(BlendState *state, const Colorf &blend_color, unsigned int sample_mask);
 		void set_depth_stencil_state(DepthStencilState *state, int stencil_ref);

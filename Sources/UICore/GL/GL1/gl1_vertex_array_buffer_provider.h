@@ -42,8 +42,8 @@ namespace uicore
 		void *get_data() const { return data; }
 
 		void upload_data(GraphicContext &gc, int offset, const void *data, int size) override;
-		void copy_from(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size) override;
-		void copy_to(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size) override;
+		void copy_from(GraphicContext &gc, const TransferBufferPtr &buffer, int dest_pos, int src_pos, int size) override;
+		void copy_to(GraphicContext &gc, const TransferBufferPtr &buffer, int dest_pos, int src_pos, int size) override;
 
 	private:
 		char *data = nullptr;

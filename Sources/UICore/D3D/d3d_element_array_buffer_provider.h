@@ -43,8 +43,8 @@ namespace uicore
 		ComPtr<ID3D11Buffer> &get_buffer(const ComPtr<ID3D11Device> &device);
 
 		void upload_data(GraphicContext &gc, const void *data, int size);
-		void copy_from(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size);
-		void copy_to(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size);
+		void copy_from(GraphicContext &gc, const TransferBufferPtr &buffer, int dest_pos, int src_pos, int size);
+		void copy_to(GraphicContext &gc, const TransferBufferPtr &buffer, int dest_pos, int src_pos, int size);
 
 	private:
 		struct DeviceHandles

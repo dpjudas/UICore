@@ -29,27 +29,26 @@
 
 #pragma once
 
-#include "UICore/Display/TargetProviders/transfer_buffer_provider.h"
+#include "UICore/Display/Render/transfer_buffer.h"
 #include "UICore/Core/System/disposable_object.h"
 
 namespace uicore
 {
-	class GL1TransferBufferProvider : public TransferBufferProvider
+	class GL1TransferBufferProvider : public TransferBuffer
 	{
 	public:
-		GL1TransferBufferProvider();
+		GL1TransferBufferProvider(int size, BufferUsage usage);
+		GL1TransferBufferProvider(const void *data, int size, BufferUsage usage);
 		~GL1TransferBufferProvider();
-		void create(int size, BufferUsage usage) override;
-		void create(void *data, int size, BufferUsage usage) override;
 
-		void *get_data() override { return data; }
+		void *data() override { return data_ptr; }
 
 		void lock(GraphicContext &gc, BufferAccess access) override {}
 		void unlock() override {}
 		void upload_data(GraphicContext &gc, int offset, const void *data, int size) override;
 
 	private:
-		char *data;
-		int size;
+		char *data_ptr = nullptr;
+		int size = 0;
 	};
 }

@@ -183,11 +183,6 @@ namespace uicore
 		return new D3DTextureProvider(window->get_device(), window->get_feature_level(), texture_dimensions);
 	}
 
-	TransferBufferProvider *D3DGraphicContextProvider::alloc_transfer_buffer()
-	{
-		return new D3DTransferBufferProvider(window->get_device());
-	}
-
 	PixelBufferProvider *D3DGraphicContextProvider::alloc_pixel_buffer()
 	{
 		return new D3DPixelBufferProvider(window->get_device());
@@ -311,6 +306,16 @@ namespace uicore
 	std::shared_ptr<UniformBuffer> D3DGraphicContextProvider::create_uniform_buffer(const void *data, int size, BufferUsage usage)
 	{
 		return std::make_shared<D3DUniformBufferProvider>(window->get_device(), data, size, usage);
+	}
+
+	std::shared_ptr<TransferBuffer> D3DGraphicContextProvider::create_transfer_buffer(int size, BufferUsage usage)
+	{
+		return std::make_shared<D3DTransferBufferProvider>(window->get_device(), size, usage);
+	}
+
+	std::shared_ptr<TransferBuffer> D3DGraphicContextProvider::create_transfer_buffer(const void *data, int size, BufferUsage usage)
+	{
+		return std::make_shared<D3DTransferBufferProvider>(window->get_device(), data, size, usage);
 	}
 
 	void D3DGraphicContextProvider::set_rasterizer_state(RasterizerState *state)

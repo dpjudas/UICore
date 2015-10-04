@@ -247,11 +247,6 @@ namespace uicore
 		return new GL1TextureProvider(texture_dimensions);
 	}
 
-	TransferBufferProvider *GL1GraphicContextProvider::alloc_transfer_buffer()
-	{
-		return new GL1TransferBufferProvider;
-	}
-
 	PixelBufferProvider *GL1GraphicContextProvider::alloc_pixel_buffer()
 	{
 		throw Exception("Pixel Buffers Objects are not supported for OpenGL 1.3");
@@ -375,6 +370,16 @@ namespace uicore
 	std::shared_ptr<UniformBuffer> GL1GraphicContextProvider::create_uniform_buffer(const void *data, int size, BufferUsage usage)
 	{
 		return std::make_shared<GL1UniformBufferProvider>(data, size, usage);
+	}
+
+	std::shared_ptr<TransferBuffer> GL1GraphicContextProvider::create_transfer_buffer(int size, BufferUsage usage)
+	{
+		return std::make_shared<GL1TransferBufferProvider>(size, usage);
+	}
+
+	std::shared_ptr<TransferBuffer> GL1GraphicContextProvider::create_transfer_buffer(const void *data, int size, BufferUsage usage)
+	{
+		return std::make_shared<GL1TransferBufferProvider>(data, size, usage);
 	}
 
 	void GL1GraphicContextProvider::set_rasterizer_state(RasterizerState *state)

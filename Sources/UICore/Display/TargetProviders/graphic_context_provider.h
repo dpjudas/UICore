@@ -120,9 +120,6 @@ namespace uicore
 		/// \brief Allocate texture provider for this gc.
 		virtual TextureProvider *alloc_texture(TextureDimensions texture_dimensions) = 0;
 
-		/// \brief Allocate transfer buffer provider for this gc.
-		virtual TransferBufferProvider *alloc_transfer_buffer() = 0;
-
 		/// \brief Allocate pixel buffer provider for this gc.
 		virtual PixelBufferProvider *alloc_pixel_buffer() = 0;
 
@@ -146,6 +143,8 @@ namespace uicore
 		virtual std::shared_ptr<VertexArrayBuffer> create_vertex_array_buffer(const void *data, int size, BufferUsage usage) = 0;
 		virtual std::shared_ptr<UniformBuffer> create_uniform_buffer(int size, BufferUsage usage) = 0;
 		virtual std::shared_ptr<UniformBuffer> create_uniform_buffer(const void *data, int size, BufferUsage usage) = 0;
+		virtual std::shared_ptr<TransferBuffer> create_transfer_buffer(int size, BufferUsage usage) = 0;
+		virtual std::shared_ptr<TransferBuffer> create_transfer_buffer(const void *data, int size, BufferUsage usage) = 0;
 
 		/// \brief Set active rasterizer state
 		virtual void set_rasterizer_state(RasterizerState *state) = 0;
