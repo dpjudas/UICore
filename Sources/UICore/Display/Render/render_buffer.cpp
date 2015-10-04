@@ -32,53 +32,11 @@
 #include "UICore/Display/Render/frame_buffer.h"
 #include "UICore/Display/Render/graphic_context.h"
 #include "UICore/Display/TargetProviders/graphic_context_provider.h"
-#include "UICore/Display/TargetProviders/render_buffer_provider.h"
 
 namespace uicore
 {
-	class RenderBuffer_Impl
+	std::shared_ptr<RenderBuffer> RenderBuffer::create(GraphicContext &gc, int width, int height, TextureFormat texture_format, int multisample_samples)
 	{
-	public:
-		RenderBuffer_Impl() : provider(nullptr)
-		{
-		}
-
-		RenderBufferProvider *provider;
-		Size size;
-	};
-
-	RenderBuffer::RenderBuffer()
-	{
-	}
-
-	RenderBuffer::RenderBuffer(GraphicContext &context, int width, int height, TextureFormat texture_format, int multisample_samples)
-		: impl(std::make_shared<RenderBuffer_Impl>())
-	{
-		GraphicContextProvider *gc_provider = context.get_provider();
-		impl->provider = gc_provider->alloc_render_buffer();
-		impl->provider->create(width, height, texture_format, multisample_samples);
-		impl->size.width = width;
-		impl->size.height = height;
-	}
-
-	void RenderBuffer::throw_if_null() const
-	{
-		if (!impl)
-			throw Exception("RenderBuffer is null");
-	}
-
-	RenderBufferProvider *RenderBuffer::get_provider() const
-	{
-		return impl->provider;
-	}
-
-	const Size &RenderBuffer::get_size() const
-	{
-		return impl->size;
-	}
-
-	bool RenderBuffer::operator==(const RenderBuffer &other) const
-	{
-		return impl == other.impl;
+		return gc.get_provider()->create_render_buffer(width, height, texture_format, multisample_samples);
 	}
 }

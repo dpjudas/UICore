@@ -34,44 +34,18 @@
 
 namespace uicore
 {
-	class RenderBuffer;
 	class GraphicContext;
-	class RenderBufferProvider;
-	class RenderBuffer_Impl;
 
-	/// \brief Render-buffer object class.
+	/// \brief Render target buffer object class.
 	class RenderBuffer
 	{
 	public:
-		/// \brief Constructs a null instance.
-		RenderBuffer();
-
-		/// \brief Constructs a RenderBuffer
-		///
-		/// \param context = Graphic Context
-		/// \param width = value
-		/// \param height = value
-		/// \param internal_format = Texture Format
-		RenderBuffer(GraphicContext &context, int width, int height, TextureFormat texture_format = tf_rgba8, int multisample_samples = 0);
-
-		/// \brief Returns true if this object is invalid.
-		bool is_null() const { return !impl; }
-
-		/// \brief Throw an exception if this object is invalid.
-		void throw_if_null() const;
+		/// \brief Constructs a render target buffer
+		static std::shared_ptr<RenderBuffer> create(GraphicContext &context, int width, int height, TextureFormat texture_format = tf_rgba8, int multisample_samples = 0);
 
 		/// \brief Returns the render buffer size.
-		const Size &get_size() const;
-
-		/// \brief Get Provider
-		///
-		/// \return provider
-		RenderBufferProvider *get_provider() const;
-
-		/// \brief Equality operator
-		bool operator==(const RenderBuffer &other) const;
-
-	private:
-		std::shared_ptr<RenderBuffer_Impl> impl;
+		virtual Size size() const = 0;
 	};
+
+	typedef std::shared_ptr<RenderBuffer> RenderBufferPtr;
 }

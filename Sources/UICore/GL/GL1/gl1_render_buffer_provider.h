@@ -31,18 +31,21 @@
 
 
 #include "gl1_graphic_context_provider.h"
-#include "UICore/Display/TargetProviders/render_buffer_provider.h"
+#include "UICore/Display/Render/render_buffer.h"
 
 namespace uicore
 {
-	class GL1RenderBufferProvider : public RenderBufferProvider
+	class GL1RenderBufferProvider : public RenderBuffer
 	{
 	public:
-		GL1RenderBufferProvider(GL1GraphicContextProvider *gc_provider);
+		GL1RenderBufferProvider(GL1GraphicContextProvider *gc_provider, int width, int height, TextureFormat texture_format, int multisample_samples);
 		~GL1RenderBufferProvider();
 
+		Size size() const override  { return _size; }
+
 		GLuint get_handle();
-		/// \brief Creates a render buffer image of the specified dimensions.
-		virtual void create(int width, int height, TextureFormat texture_format, int multisample_samples) override;
+
+	private:
+		Size _size;
 	};
 }

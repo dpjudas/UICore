@@ -28,14 +28,13 @@
 */
 
 #include "UICore/precomp.h"
-#include "UICore/Display/TargetProviders/render_buffer_provider.h"
 #include "UICore/GL/opengl_wrap.h"
 #include "UICore/GL/opengl.h"
 #include "gl1_render_buffer_provider.h"
 
 namespace uicore
 {
-	GL1RenderBufferProvider::GL1RenderBufferProvider(GL1GraphicContextProvider *gc_provider)
+	GL1RenderBufferProvider::GL1RenderBufferProvider(GL1GraphicContextProvider *gc_provider, int width, int height, TextureFormat texture_format, int multisample_samples) : _size({ width, height })
 	{
 		throw Exception("GL1RenderBuffer is not supported");
 	}
@@ -47,9 +46,5 @@ namespace uicore
 	GLuint GL1RenderBufferProvider::get_handle()
 	{
 		return 0;
-	}
-
-	void GL1RenderBufferProvider::create(int width, int height, TextureFormat texture_format, int multisample_samples)
-	{
 	}
 }

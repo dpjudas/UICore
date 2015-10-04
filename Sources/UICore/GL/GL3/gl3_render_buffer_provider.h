@@ -31,25 +31,25 @@
 
 
 #include "gl3_graphic_context_provider.h"
-#include "UICore/Display/TargetProviders/render_buffer_provider.h"
+#include "UICore/Display/Render/render_buffer.h"
 #include "UICore/Core/System/disposable_object.h"
 
 namespace uicore
 {
-	class GL3RenderBufferProvider : public RenderBufferProvider, DisposableObject
+	class GL3RenderBufferProvider : public RenderBuffer, DisposableObject
 	{
 	public:
-		GL3RenderBufferProvider();
+		GL3RenderBufferProvider(int width, int height, TextureFormat texture_format, int multisample_samples);
 		~GL3RenderBufferProvider();
 
 		GLuint get_handle();
 
-		/// \brief Creates a render buffer image of the specified dimensions.
-		void create(int width, int height, TextureFormat texture_format, int multisample_samples) override;
+		Size size() const override { return _size; }
 
 	private:
 		void on_dispose() override;
 
-		GLuint handle;
+		GLuint handle = 0;
+		Size _size;
 	};
 }

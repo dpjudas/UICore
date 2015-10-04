@@ -35,7 +35,6 @@
 #include "UICore/Display/Render/texture_2d_array.h"
 #include "UICore/Display/Render/texture_3d.h"
 #include "UICore/Display/Render/texture_cube.h"
-#include "UICore/Display/TargetProviders/render_buffer_provider.h"
 #include "UICore/Core/Text/string_format.h"
 #include "UICore/Display/Render/texture.h"
 #include "UICore/GL/opengl_wrap.h"
@@ -81,8 +80,7 @@ namespace uicore
 			if (!attached_textures[cnt].is_null())
 				attached_textures[cnt] = Texture2D();
 
-			if (!attached_renderbuffers[cnt].is_null())
-				attached_renderbuffers[cnt] = RenderBuffer();
+			attached_renderbuffers[cnt].reset();
 		}
 		gc_provider->remove_disposable(this);
 	}
@@ -117,9 +115,9 @@ namespace uicore
 				}
 			}
 
-			if (!attached_renderbuffers[cnt].is_null())
+			if (attached_renderbuffers[cnt])
 			{
-				Size texture_size = attached_renderbuffers[cnt].get_size();
+				Size texture_size = attached_renderbuffers[cnt]->size();
 				if (size_set)
 				{
 					if (texture_size.width < size.width)
@@ -143,7 +141,7 @@ namespace uicore
 		return bind_target;
 	}
 
-	void GL3FrameBufferProvider::attach_color(int attachment_index, const RenderBuffer &render_buffer)
+	void GL3FrameBufferProvider::attach_color(int attachment_index, const RenderBufferPtr &render_buffer)
 	{
 		FrameBufferStateTracker tracker(bind_target, handle, gc_provider);
 		bool replaced_object = attach_object(GL_COLOR_ATTACHMENT0 + attachment_index, render_buffer);
@@ -228,7 +226,7 @@ namespace uicore
 		count_color_attachments--;
 	}
 
-	void GL3FrameBufferProvider::attach_stencil(const RenderBuffer &render_buffer)
+	void GL3FrameBufferProvider::attach_stencil(const RenderBufferPtr &render_buffer)
 	{
 		FrameBufferStateTracker tracker(bind_target, handle, gc_provider);
 		attach_object(GL_STENCIL_ATTACHMENT, render_buffer);
@@ -252,7 +250,7 @@ namespace uicore
 		detach_object(GL_STENCIL_ATTACHMENT);
 	}
 
-	void GL3FrameBufferProvider::attach_depth(const RenderBuffer &render_buffer)
+	void GL3FrameBufferProvider::attach_depth(const RenderBufferPtr &render_buffer)
 	{
 		FrameBufferStateTracker tracker(bind_target, handle, gc_provider);
 		attach_object(GL_DEPTH_ATTACHMENT, render_buffer);
@@ -276,7 +274,7 @@ namespace uicore
 		detach_object(GL_DEPTH_ATTACHMENT);
 	}
 
-	void GL3FrameBufferProvider::attach_depth_stencil(const RenderBuffer &render_buffer)
+	void GL3FrameBufferProvider::attach_depth_stencil(const RenderBufferPtr &render_buffer)
 	{
 		FrameBufferStateTracker tracker(bind_target, handle, gc_provider);
 		attach_object(GL_DEPTH_STENCIL_ATTACHMENT, render_buffer);
@@ -420,16 +418,16 @@ namespace uicore
 	}
 
 
-	bool GL3FrameBufferProvider::attach_object(GLenum opengl_attachment, const RenderBuffer &render_buffer)
+	bool GL3FrameBufferProvider::attach_object(GLenum opengl_attachment, const RenderBufferPtr &render_buffer)
 	{
 		int internal_attachment_offset = decode_internal_attachment_offset(opengl_attachment);
 
 		// Check for object replacement
 		bool is_replaced_object = false;
-		if (!attached_renderbuffers[internal_attachment_offset].is_null())
+		if (attached_renderbuffers[internal_attachment_offset])
 		{
 			is_replaced_object = true;
-			attached_renderbuffers[internal_attachment_offset] = RenderBuffer();
+			attached_renderbuffers[internal_attachment_offset].reset();
 		}
 		if (!attached_textures[internal_attachment_offset].is_null())
 		{
@@ -441,7 +439,7 @@ namespace uicore
 		attached_renderbuffers[internal_attachment_offset] = render_buffer;
 
 		// Bind the renderbuffer
-		GL3RenderBufferProvider *gl_render_buffer = static_cast<GL3RenderBufferProvider *>(render_buffer.get_provider());
+		GL3RenderBufferProvider *gl_render_buffer = static_cast<GL3RenderBufferProvider *>(render_buffer.get());
 		if (!gl_render_buffer)
 			throw Exception("Invalid render buffer");
 
@@ -463,10 +461,10 @@ namespace uicore
 
 		// Check for object replacement
 		bool is_replaced_object = false;
-		if (!attached_renderbuffers[internal_attachment_offset].is_null())
+		if (attached_renderbuffers[internal_attachment_offset])
 		{
 			is_replaced_object = true;
-			attached_renderbuffers[internal_attachment_offset] = RenderBuffer();
+			attached_renderbuffers[internal_attachment_offset].reset();
 		}
 		if (!attached_textures[internal_attachment_offset].is_null())
 		{
@@ -519,10 +517,10 @@ namespace uicore
 		if (bind_target == framebuffer_read)
 			target = GL_READ_FRAMEBUFFER;
 
-		if (!attached_renderbuffers[internal_attachment_offset].is_null())
+		if (attached_renderbuffers[internal_attachment_offset])
 		{
 			glFramebufferRenderbuffer(target, opengl_attachment, GL_RENDERBUFFER, 0);
-			attached_renderbuffers[internal_attachment_offset] = RenderBuffer();
+			attached_renderbuffers[internal_attachment_offset].reset();
 		}
 
 		if (!attached_textures[internal_attachment_offset].is_null())

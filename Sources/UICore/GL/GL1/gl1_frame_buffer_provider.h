@@ -49,7 +49,7 @@ namespace uicore
 		Size get_size() const override;
 		FrameBufferBindTarget get_bind_target() const override;
 
-		void attach_color(int attachment_index, const RenderBuffer &render_buffer) override;
+		void attach_color(int attachment_index, const RenderBufferPtr &render_buffer) override;
 		void attach_color(int attachment_index, const Texture1D &texture, int level) override;
 		void attach_color(int attachment_index, const Texture1DArray &texture, int array_index, int level) override;
 		void attach_color(int attachment_index, const Texture2D &texture, int level) override;
@@ -58,17 +58,17 @@ namespace uicore
 		void attach_color(int attachment_index, const TextureCube &texture, TextureSubtype subtype, int level) override;
 		void detach_color(int attachment_index) override;
 
-		void attach_stencil(const RenderBuffer &render_buffer) override;
+		void attach_stencil(const RenderBufferPtr &render_buffer) override;
 		void attach_stencil(const Texture2D &texture, int level) override;
 		void attach_stencil(const TextureCube &texture, TextureSubtype subtype, int level) override;
 		void detach_stencil() override;
 
-		void attach_depth(const RenderBuffer &render_buffer) override;
+		void attach_depth(const RenderBufferPtr &render_buffer) override;
 		void attach_depth(const Texture2D &texture, int level) override;
 		void attach_depth(const TextureCube &texture, TextureSubtype subtype, int level) override;
 		void detach_depth() override;
 
-		void attach_depth_stencil(const RenderBuffer &render_buffer) override;
+		void attach_depth_stencil(const RenderBufferPtr &render_buffer) override;
 		void attach_depth_stencil(const Texture2D &texture, int level) override;
 		void attach_depth_stencil(const TextureCube &texture, TextureSubtype subtype, int level) override;
 		void detach_depth_stencil() override;

@@ -28,23 +28,23 @@
 
 #pragma once
 
-#include "UICore/Display/TargetProviders/render_buffer_provider.h"
+#include "UICore/Display/Render/render_buffer.h"
 #include "UICore/Display/Image/pixel_buffer.h"
 #include "UICore/Core/System/comptr.h"
 
 namespace uicore
 {
-	class D3DRenderBufferProvider : public RenderBufferProvider
+	class D3DRenderBufferProvider : public RenderBuffer
 	{
 	public:
-		D3DRenderBufferProvider(const ComPtr<ID3D11Device> &device);
+		D3DRenderBufferProvider(const ComPtr<ID3D11Device> &device, int width, int height, TextureFormat texture_format, int multisample_samples);
 		~D3DRenderBufferProvider();
 
 		ComPtr<ID3D11Texture2D> &get_texture(const ComPtr<ID3D11Device> &device);
 		ComPtr<ID3D11RenderTargetView> create_rtv(const ComPtr<ID3D11Device> &device);
 		ComPtr<ID3D11DepthStencilView> create_dsv(const ComPtr<ID3D11Device> &device);
 
-		void create(int width, int height, TextureFormat texture_format, int multisample_samples);
+		Size size() const override { return _size; }
 
 	private:
 		struct DeviceHandles
@@ -58,6 +58,7 @@ namespace uicore
 		void device_destroyed(ID3D11Device *device);
 		DeviceHandles &get_handles(const ComPtr<ID3D11Device> &device);
 
+		Size _size;
 		std::vector<std::shared_ptr<DeviceHandles> > handles;
 	};
 }

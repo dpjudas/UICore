@@ -183,11 +183,6 @@ namespace uicore
 		return new D3DTextureProvider(window->get_device(), window->get_feature_level(), texture_dimensions);
 	}
 
-	RenderBufferProvider *D3DGraphicContextProvider::alloc_render_buffer()
-	{
-		return new D3DRenderBufferProvider(window->get_device());
-	}
-
 	VertexArrayBufferProvider *D3DGraphicContextProvider::alloc_vertex_array_buffer()
 	{
 		return new D3DVertexArrayBufferProvider(window->get_device());
@@ -291,6 +286,11 @@ namespace uicore
 	std::shared_ptr<FrameBuffer> D3DGraphicContextProvider::create_frame_buffer()
 	{
 		return std::make_shared<D3DFrameBufferProvider>(window->get_device());
+	}
+
+	std::shared_ptr<RenderBuffer> D3DGraphicContextProvider::create_render_buffer(int width, int height, TextureFormat texture_format, int multisample_samples)
+	{
+		return std::make_shared<D3DRenderBufferProvider>(window->get_device(), width, height, texture_format, multisample_samples);
 	}
 
 	void D3DGraphicContextProvider::set_rasterizer_state(RasterizerState *state)
@@ -829,8 +829,7 @@ namespace uicore
 
 			Size viewport_size = get_display_window_size();
 
-			default_depth_render_buffer = std::shared_ptr<D3DRenderBufferProvider>(new D3DRenderBufferProvider(window->get_device()));
-			default_depth_render_buffer->create(viewport_size.width, viewport_size.height, texture_format, 1);
+			default_depth_render_buffer = std::make_shared<D3DRenderBufferProvider>(window->get_device(), viewport_size.width, viewport_size.height, texture_format, 1);
 			default_dsv = default_depth_render_buffer->create_dsv(window->get_device());
 		}
 

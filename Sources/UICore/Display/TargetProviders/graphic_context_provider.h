@@ -46,8 +46,8 @@ namespace uicore
 	class OcclusionQuery;
 	class ProgramObjectProvider;
 	class ShaderObjectProvider;
-	class FrameBufferProvider;
-	class RenderBufferProvider;
+	class FrameBuffer;
+	class RenderBuffer;
 	class VertexArrayBufferProvider;
 	class ElementArrayBufferProvider;
 	class TransferBufferProvider;
@@ -120,9 +120,6 @@ namespace uicore
 		/// \brief Allocate texture provider for this gc.
 		virtual TextureProvider *alloc_texture(TextureDimensions texture_dimensions) = 0;
 
-		/// \brief Allocate render buffer provider for this gc.
-		virtual RenderBufferProvider *alloc_render_buffer() = 0;
-
 		/// \brief Allocate vertex array buffer provider for this gc.
 		virtual VertexArrayBufferProvider *alloc_vertex_array_buffer() = 0;
 
@@ -152,6 +149,7 @@ namespace uicore
 		virtual std::shared_ptr<ShaderObject> create_shader(ShaderType type, const void *bytecode, int bytecode_size) = 0;
 		virtual std::shared_ptr<OcclusionQuery> create_occlusion_query() = 0;
 		virtual std::shared_ptr<FrameBuffer> create_frame_buffer() = 0;
+		virtual std::shared_ptr<RenderBuffer> create_render_buffer(int width, int height, TextureFormat texture_format, int multisample_samples) = 0;
 
 		/// \brief Set active rasterizer state
 		virtual void set_rasterizer_state(RasterizerState *state) = 0;

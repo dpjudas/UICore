@@ -111,7 +111,6 @@ namespace uicore
 		int get_minor_version() const override { int major = 0, minor = 0; get_opengl_version(major, minor); return minor; }
 		bool has_compute_shader_support() const override { return false; }
 		TextureProvider *alloc_texture(TextureDimensions texture_dimensions) override;
-		RenderBufferProvider *alloc_render_buffer() override;
 		VertexArrayBufferProvider *alloc_vertex_array_buffer() override;
 		UniformBufferProvider *alloc_uniform_buffer() override;
 		StorageBufferProvider *alloc_storage_buffer() override;
@@ -127,6 +126,7 @@ namespace uicore
 		std::shared_ptr<ShaderObject> create_shader(ShaderType type, const void *bytecode, int bytecode_size) override;
 		std::shared_ptr<OcclusionQuery> create_occlusion_query() override;
 		std::shared_ptr<FrameBuffer> create_frame_buffer() override;
+		std::shared_ptr<RenderBuffer> create_render_buffer(int width, int height, TextureFormat texture_format, int multisample_samples) override;
 		void set_rasterizer_state(RasterizerState *state) override;
 		void set_blend_state(BlendState *state, const Colorf &blend_color, unsigned int sample_mask) override;
 		void set_depth_stencil_state(DepthStencilState *state, int stencil_ref) override;

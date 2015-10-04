@@ -33,9 +33,29 @@
 
 namespace uicore
 {
-	D3DRenderBufferProvider::D3DRenderBufferProvider(const ComPtr<ID3D11Device> &device)
+	D3DRenderBufferProvider::D3DRenderBufferProvider(const ComPtr<ID3D11Device> &device, int width, int height, TextureFormat texture_format, int multisample_samples)
 	{
+		_size = { width, height };
 		handles.push_back(std::shared_ptr<DeviceHandles>(new DeviceHandles(device)));
+
+		D3D11_TEXTURE2D_DESC texture_desc;
+		texture_desc.Width = width;
+		texture_desc.Height = height;
+		texture_desc.MipLevels = 1;
+		texture_desc.ArraySize = 1;
+		texture_desc.Format = D3DTextureProvider::to_d3d_format(texture_format);
+		texture_desc.SampleDesc.Count = multisample_samples;
+		texture_desc.SampleDesc.Quality = 0;
+		texture_desc.Usage = D3D11_USAGE_DEFAULT;
+		texture_desc.CPUAccessFlags = 0;
+		texture_desc.MiscFlags = D3D11_RESOURCE_MISC_SHARED;
+		if (D3DTextureProvider::is_stencil_or_depth_format(texture_format))
+			texture_desc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+		else
+			texture_desc.BindFlags = D3D11_BIND_RENDER_TARGET;
+
+		HRESULT result = handles.front()->device->CreateTexture2D(&texture_desc, 0, handles.front()->texture.output_variable());
+		D3DTarget::throw_if_failed("ID3D11Device.CreateTexture2D failed", result);
 	}
 
 	D3DRenderBufferProvider::~D3DRenderBufferProvider()
@@ -75,31 +95,6 @@ namespace uicore
 		HRESULT result = device->CreateDepthStencilView(get_handles(device).texture, &dsv_desc, dsv.output_variable());
 		D3DTarget::throw_if_failed("ID3D11Device.CreateDepthStencilView failed", result);
 		return dsv;
-	}
-
-	void D3DRenderBufferProvider::create(int width, int height, TextureFormat texture_format, int multisample_samples)
-	{
-		handles.resize(1);
-		handles.front()->texture.clear();
-
-		D3D11_TEXTURE2D_DESC texture_desc;
-		texture_desc.Width = width;
-		texture_desc.Height = height;
-		texture_desc.MipLevels = 1;
-		texture_desc.ArraySize = 1;
-		texture_desc.Format = D3DTextureProvider::to_d3d_format(texture_format);
-		texture_desc.SampleDesc.Count = multisample_samples;
-		texture_desc.SampleDesc.Quality = 0;
-		texture_desc.Usage = D3D11_USAGE_DEFAULT;
-		texture_desc.CPUAccessFlags = 0;
-		texture_desc.MiscFlags = D3D11_RESOURCE_MISC_SHARED;
-		if (D3DTextureProvider::is_stencil_or_depth_format(texture_format))
-			texture_desc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-		else
-			texture_desc.BindFlags = D3D11_BIND_RENDER_TARGET;
-
-		HRESULT result = handles.front()->device->CreateTexture2D(&texture_desc, 0, handles.front()->texture.output_variable());
-		D3DTarget::throw_if_failed("ID3D11Device.CreateTexture2D failed", result);
 	}
 
 	void D3DRenderBufferProvider::device_destroyed(ID3D11Device *device)

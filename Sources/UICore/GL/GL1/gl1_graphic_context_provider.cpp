@@ -247,11 +247,6 @@ namespace uicore
 		return new GL1TextureProvider(texture_dimensions);
 	}
 
-	RenderBufferProvider *GL1GraphicContextProvider::alloc_render_buffer()
-	{
-		return new GL1RenderBufferProvider(this);
-	}
-
 	VertexArrayBufferProvider *GL1GraphicContextProvider::alloc_vertex_array_buffer()
 	{
 		return new GL1VertexArrayBufferProvider;
@@ -356,6 +351,12 @@ namespace uicore
 	{
 		return std::make_shared<GL1FrameBufferProvider>(this);
 	}
+
+	std::shared_ptr<RenderBuffer> GL1GraphicContextProvider::create_render_buffer(int width, int height, TextureFormat texture_format, int multisample_samples)
+	{
+		return std::make_shared<GL1RenderBufferProvider>(this, width, height, texture_format, multisample_samples);
+	}
+
 
 	void GL1GraphicContextProvider::set_rasterizer_state(RasterizerState *state)
 	{

@@ -28,7 +28,6 @@
 */
 
 #include "UICore/precomp.h"
-#include "UICore/Display/TargetProviders/render_buffer_provider.h"
 #include "UICore/GL/opengl_wrap.h"
 #include "UICore/GL/opengl.h"
 #include "gl3_render_buffer_provider.h"
@@ -36,9 +35,22 @@
 
 namespace uicore
 {
-	GL3RenderBufferProvider::GL3RenderBufferProvider()
-		: handle(0)
+	GL3RenderBufferProvider::GL3RenderBufferProvider(int width, int height, TextureFormat texture_format, int multisample_samples) : _size({width, height})
 	{
+		OpenGL::set_active();
+		GLuint last_render_buffer = 0;
+		glGetIntegerv(GL_RENDERBUFFER_BINDING, (GLint *)&last_render_buffer);
+
+		TextureFormat_GL tf = OpenGL::get_textureformat(texture_format);
+		if (!tf.valid)
+			throw Exception("Texture format not supported by OpenGL");
+
+		glGenRenderbuffers(1, &handle);
+		glBindRenderbuffer(GL_RENDERBUFFER, handle);
+		glRenderbufferStorageMultisample(GL_RENDERBUFFER, multisample_samples, tf.pixel_format, width, height);
+
+		glBindRenderbuffer(GL_RENDERBUFFER, last_render_buffer);
+
 		SharedGCData::add_disposable(this);
 	}
 
@@ -62,22 +74,5 @@ namespace uicore
 	GLuint GL3RenderBufferProvider::get_handle()
 	{
 		return handle;
-	}
-
-	void GL3RenderBufferProvider::create(int width, int height, TextureFormat texture_format, int multisample_samples)
-	{
-		OpenGL::set_active();
-		GLuint last_render_buffer = 0;
-		glGetIntegerv(GL_RENDERBUFFER_BINDING, (GLint *)&last_render_buffer);
-
-		TextureFormat_GL tf = OpenGL::get_textureformat(texture_format);
-		if (!tf.valid)
-			throw Exception("Texture format not supported by OpenGL");
-
-		glGenRenderbuffers(1, &handle);
-		glBindRenderbuffer(GL_RENDERBUFFER, handle);
-		glRenderbufferStorageMultisample(GL_RENDERBUFFER, multisample_samples, tf.pixel_format, width, height);
-
-		glBindRenderbuffer(GL_RENDERBUFFER, last_render_buffer);
 	}
 }

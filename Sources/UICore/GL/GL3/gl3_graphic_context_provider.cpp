@@ -288,9 +288,9 @@ namespace uicore
 		return new GL3TextureProvider(texture_dimensions);
 	}
 
-	RenderBufferProvider *GL3GraphicContextProvider::alloc_render_buffer()
+	std::shared_ptr<RenderBuffer> GL3GraphicContextProvider::create_render_buffer(int width, int height, TextureFormat texture_format, int multisample_samples)
 	{
-		return new GL3RenderBufferProvider();
+		return std::make_shared<GL3RenderBufferProvider>(width, height, texture_format, multisample_samples);
 	}
 
 	VertexArrayBufferProvider *GL3GraphicContextProvider::alloc_vertex_array_buffer()

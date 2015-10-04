@@ -30,7 +30,6 @@
 
 #include "UICore/precomp.h"
 #include "UICore/Display/Render/render_buffer.h"
-#include "UICore/Display/TargetProviders/render_buffer_provider.h"
 #include "UICore/Core/Text/string_format.h"
 #include "UICore/Display/Render/texture.h"
 #include "UICore/GL/opengl_wrap.h"
@@ -66,7 +65,7 @@ namespace uicore
 		return framebuffer_draw;
 	}
 
-	void GL1FrameBufferProvider::attach_color(int attachment_index, const RenderBuffer &render_buffer){}
+	void GL1FrameBufferProvider::attach_color(int attachment_index, const RenderBufferPtr &render_buffer) {}
 	void GL1FrameBufferProvider::attach_color(int attachment_index, const Texture1D &texture, int level) {}
 	void GL1FrameBufferProvider::attach_color(int attachment_index, const Texture1DArray &texture, int array_index, int level) {}
 
@@ -127,17 +126,17 @@ namespace uicore
 	void GL1FrameBufferProvider::attach_color(int attachment_index, const TextureCube &texture, TextureSubtype subtype, int level) {}
 	void GL1FrameBufferProvider::detach_color(int attachment_index) {}
 
-	void GL1FrameBufferProvider::attach_stencil(const RenderBuffer &render_buffer) {}
+	void GL1FrameBufferProvider::attach_stencil(const RenderBufferPtr &render_buffer) {}
 	void GL1FrameBufferProvider::attach_stencil(const Texture2D &texture, int level) {}
 	void GL1FrameBufferProvider::attach_stencil(const TextureCube &texture, TextureSubtype subtype, int level) {}
 	void GL1FrameBufferProvider::detach_stencil() {}
 
-	void GL1FrameBufferProvider::attach_depth(const RenderBuffer &render_buffer) {}
+	void GL1FrameBufferProvider::attach_depth(const RenderBufferPtr &render_buffer) {}
 	void GL1FrameBufferProvider::attach_depth(const Texture2D &texture, int level) {}
 	void GL1FrameBufferProvider::attach_depth(const TextureCube &texture, TextureSubtype subtype, int level) {}
 	void GL1FrameBufferProvider::detach_depth() {}
 
-	void GL1FrameBufferProvider::attach_depth_stencil(const RenderBuffer &render_buffer) {}
+	void GL1FrameBufferProvider::attach_depth_stencil(const RenderBufferPtr &render_buffer) {}
 	void GL1FrameBufferProvider::attach_depth_stencil(const Texture2D &texture, int level) {}
 	void GL1FrameBufferProvider::attach_depth_stencil(const TextureCube &texture, TextureSubtype subtype, int level) {}
 	void GL1FrameBufferProvider::detach_depth_stencil() {}

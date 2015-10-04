@@ -54,7 +54,7 @@ namespace uicore
 			D3D11_TEXTURE2D_DESC desc;
 			if (!color_buffers[i].texture.is_null())
 				color_buffers[i].get_texture_provider()->get_texture_2d(device)->GetDesc(&desc);
-			else if (!color_buffers[i].render_buffer.is_null())
+			else if (color_buffers[i].render_buffer)
 				color_buffers[i].get_render_buffer_provider()->get_texture(device)->GetDesc(&desc);
 
 			size.width = max(desc.Width, UINT(size.width));
@@ -79,7 +79,7 @@ namespace uicore
 				{
 					color_buffers[i].rtv = color_buffers[i].get_texture_provider()->create_rtv(device, color_buffers[i].level, color_buffers[i].slice, color_buffers[i].subtype);
 				}
-				else if (!color_buffers[i].render_buffer.is_null())
+				else if (color_buffers[i].render_buffer)
 				{
 					color_buffers[i].rtv = color_buffers[i].get_render_buffer_provider()->create_rtv(device);
 				}
@@ -91,7 +91,7 @@ namespace uicore
 		{
 			if (!depth_buffer.texture.is_null())
 				depth_buffer.dsv = depth_buffer.get_texture_provider()->create_dsv(device, depth_buffer.level, depth_buffer.slice, depth_buffer.subtype);
-			else if (!depth_buffer.render_buffer.is_null())
+			else if (depth_buffer.render_buffer)
 				depth_buffer.dsv = depth_buffer.get_render_buffer_provider()->create_dsv(device);
 		}
 		out_dsv = depth_buffer.dsv;
@@ -99,7 +99,7 @@ namespace uicore
 		return views;
 	}
 
-	void D3DFrameBufferProvider::attach_color(int attachment_index, const RenderBuffer &render_buffer)
+	void D3DFrameBufferProvider::attach_color(int attachment_index, const RenderBufferPtr &render_buffer)
 	{
 		color_buffers.resize(max((size_t)attachment_index + 1, color_buffers.size()));
 		color_buffers[attachment_index] = AttachedBuffer(render_buffer);
@@ -147,7 +147,7 @@ namespace uicore
 		color_buffers[attachment_index] = AttachedBuffer();
 	}
 
-	void D3DFrameBufferProvider::attach_stencil(const RenderBuffer &render_buffer)
+	void D3DFrameBufferProvider::attach_stencil(const RenderBufferPtr &render_buffer)
 	{
 		stencil_buffer = AttachedBuffer(render_buffer);
 	}
@@ -167,7 +167,7 @@ namespace uicore
 		stencil_buffer = AttachedBuffer();
 	}
 
-	void D3DFrameBufferProvider::attach_depth(const RenderBuffer &render_buffer)
+	void D3DFrameBufferProvider::attach_depth(const RenderBufferPtr &render_buffer)
 	{
 		depth_buffer = AttachedBuffer(render_buffer);
 	}
@@ -187,7 +187,7 @@ namespace uicore
 		depth_buffer = AttachedBuffer();
 	}
 
-	void D3DFrameBufferProvider::attach_depth_stencil(const RenderBuffer &render_buffer)
+	void D3DFrameBufferProvider::attach_depth_stencil(const RenderBufferPtr &render_buffer)
 	{
 		depth_buffer = AttachedBuffer(render_buffer);
 		stencil_buffer = AttachedBuffer(render_buffer);

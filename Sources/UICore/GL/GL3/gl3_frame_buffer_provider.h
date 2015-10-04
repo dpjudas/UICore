@@ -48,7 +48,7 @@ namespace uicore
 		FrameBufferBindTarget get_bind_target() const override;
 		GL3GraphicContextProvider *get_gc_provider() { return gc_provider; }
 
-		void attach_color(int attachment_index, const RenderBuffer &render_buffer) override;
+		void attach_color(int attachment_index, const RenderBufferPtr &render_buffer) override;
 		void attach_color(int attachment_index, const Texture1D &texture, int level) override;
 		void attach_color(int attachment_index, const Texture1DArray &texture, int array_index, int level) override;
 		void attach_color(int attachment_index, const Texture2D &texture, int level) override;
@@ -57,17 +57,17 @@ namespace uicore
 		void attach_color(int attachment_index, const TextureCube &texture, TextureSubtype subtype, int level) override;
 		void detach_color(int attachment_index) override;
 
-		void attach_stencil(const RenderBuffer &render_buffer) override;
+		void attach_stencil(const RenderBufferPtr &render_buffer) override;
 		void attach_stencil(const Texture2D &texture, int level) override;
 		void attach_stencil(const TextureCube &texture, TextureSubtype subtype, int level) override;
 		void detach_stencil() override;
 
-		void attach_depth(const RenderBuffer &render_buffer) override;
+		void attach_depth(const RenderBufferPtr &render_buffer) override;
 		void attach_depth(const Texture2D &texture, int level) override;
 		void attach_depth(const TextureCube &texture, TextureSubtype subtype, int level) override;
 		void detach_depth() override;
 
-		void attach_depth_stencil(const RenderBuffer &render_buffer) override;
+		void attach_depth_stencil(const RenderBufferPtr &render_buffer) override;
 		void attach_depth_stencil(const Texture2D &texture, int level) override;
 		void attach_depth_stencil(const TextureCube &texture, TextureSubtype subtype, int level) override;
 		void detach_depth_stencil() override;
@@ -86,7 +86,7 @@ namespace uicore
 
 		// Returns true if the object was replaced
 		bool attach_object(GLenum opengl_attachment, const Texture &texture, int level, int zoffset, GLuint texture_target);
-		bool attach_object(GLenum opengl_attachment, const RenderBuffer &render_buffer);
+		bool attach_object(GLenum opengl_attachment, const RenderBufferPtr &render_buffer);
 
 		int decode_internal_attachment_offset(GLenum opengl_attachment);
 
@@ -98,7 +98,7 @@ namespace uicore
 		static const int num_attachment_offsets = color_attachment_offset + max_color_attachments;
 
 		Texture attached_textures[num_attachment_offsets];
-		RenderBuffer attached_renderbuffers[num_attachment_offsets];
+		RenderBufferPtr attached_renderbuffers[num_attachment_offsets];
 
 		int count_color_attachments = 0;
 		GLuint handle = 0;
