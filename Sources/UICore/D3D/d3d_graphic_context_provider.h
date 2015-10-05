@@ -82,7 +82,6 @@ namespace uicore
 		TextureProvider *alloc_texture(TextureDimensions texture_dimensions);
 		UniformBufferProvider *alloc_uniform_buffer();
 		PixelBufferProvider *alloc_pixel_buffer();
-		PrimitivesArrayProvider *alloc_primitives_array();
 		std::shared_ptr<RasterizerState> create_rasterizer_state(const RasterizerStateDescription &desc) override;
 		std::shared_ptr<BlendState> create_blend_state(const BlendStateDescription &desc) override;
 		std::shared_ptr<DepthStencilState> create_depth_stencil_state(const DepthStencilStateDescription &desc) override;
@@ -102,6 +101,7 @@ namespace uicore
 		std::shared_ptr<UniformBuffer> create_uniform_buffer(const void *data, int size, BufferUsage usage) override;
 		std::shared_ptr<TransferBuffer> create_transfer_buffer(int size, BufferUsage usage) override;
 		std::shared_ptr<TransferBuffer> create_transfer_buffer(const void *data, int size, BufferUsage usage) override;
+		std::shared_ptr<PrimitivesArray> create_primitives_array() override;
 		void set_rasterizer_state(RasterizerState *state);
 		void set_blend_state(BlendState *state, const Colorf &blend_color, unsigned int sample_mask);
 		void set_depth_stencil_state(DepthStencilState *state, int stencil_ref);
@@ -121,9 +121,9 @@ namespace uicore
 		void reset_frame_buffer();
 		void set_draw_buffer(DrawBuffer buffer);
 
-		bool is_primitives_array_owner(const PrimitivesArray &primitives_array);
-		void draw_primitives(PrimitivesType type, int num_vertices, const PrimitivesArray &primitives_array);
-		void set_primitives_array(const PrimitivesArray &primitives_array);
+		bool is_primitives_array_owner(const PrimitivesArrayPtr &primitives_array);
+		void draw_primitives(PrimitivesType type, int num_vertices, const PrimitivesArrayPtr &primitives_array);
+		void set_primitives_array(const PrimitivesArrayPtr &primitives_array);
 		void draw_primitives_array(PrimitivesType type, int offset, int num_vertices);
 		void draw_primitives_array_instanced(PrimitivesType type, int offset, int num_vertices, int instance_count);
 		void set_primitives_elements(ElementArrayBuffer *array_provider);

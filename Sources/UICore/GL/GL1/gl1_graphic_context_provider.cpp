@@ -252,11 +252,6 @@ namespace uicore
 		throw Exception("Pixel Buffers Objects are not supported for OpenGL 1.3");
 	}
 
-	PrimitivesArrayProvider *GL1GraphicContextProvider::alloc_primitives_array()
-	{
-		return new GL1PrimitivesArrayProvider();
-	}
-
 	std::shared_ptr<RasterizerState> GL1GraphicContextProvider::create_rasterizer_state(const RasterizerStateDescription &desc)
 	{
 		auto it = rasterizer_states.find(desc);
@@ -380,6 +375,11 @@ namespace uicore
 	std::shared_ptr<TransferBuffer> GL1GraphicContextProvider::create_transfer_buffer(const void *data, int size, BufferUsage usage)
 	{
 		return std::make_shared<GL1TransferBufferProvider>(data, size, usage);
+	}
+
+	std::shared_ptr<PrimitivesArray> GL1GraphicContextProvider::create_primitives_array()
+	{
+		return std::make_shared<GL1PrimitivesArrayProvider>();
 	}
 
 	void GL1GraphicContextProvider::set_rasterizer_state(RasterizerState *state)
@@ -594,21 +594,21 @@ namespace uicore
 	{
 	}
 
-	bool GL1GraphicContextProvider::is_primitives_array_owner(const PrimitivesArray &primitives_array)
+	bool GL1GraphicContextProvider::is_primitives_array_owner(const PrimitivesArrayPtr &primitives_array)
 	{
 		return true;
 	}
 
-	void GL1GraphicContextProvider::draw_primitives(PrimitivesType type, int num_vertices, const PrimitivesArray &primitives_array)
+	void GL1GraphicContextProvider::draw_primitives(PrimitivesType type, int num_vertices, const PrimitivesArrayPtr &primitives_array)
 	{
 		set_primitives_array(primitives_array);
 		draw_primitives_array(type, 0, num_vertices);
 		reset_primitives_array();
 	}
 
-	void GL1GraphicContextProvider::set_primitives_array(const PrimitivesArray &primitives_array)
+	void GL1GraphicContextProvider::set_primitives_array(const PrimitivesArrayPtr &primitives_array)
 	{
-		GL1PrimitivesArrayProvider * prim_array = static_cast<GL1PrimitivesArrayProvider *>(primitives_array.get_provider());
+		GL1PrimitivesArrayProvider * prim_array = static_cast<GL1PrimitivesArrayProvider *>(primitives_array.get());
 		if (prim_arrays_set)
 			reset_primitives_array();
 		set_active();

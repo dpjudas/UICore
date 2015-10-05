@@ -323,17 +323,17 @@ namespace uicore
 		impl->reset_program_object();
 	}
 
-	bool GraphicContext::is_primitives_array_owner(const PrimitivesArray &primitives_array)
+	bool GraphicContext::is_primitives_array_owner(const PrimitivesArrayPtr &primitives_array)
 	{
 		return get_provider()->is_primitives_array_owner(primitives_array);
 	}
 
-	void GraphicContext::draw_primitives(PrimitivesType type, int num_vertices, const PrimitivesArray &prim_array)
+	void GraphicContext::draw_primitives(PrimitivesType type, int num_vertices, const PrimitivesArrayPtr &prim_array)
 	{
 		get_provider()->draw_primitives(type, num_vertices, prim_array);
 	}
 
-	void GraphicContext::set_primitives_array(const PrimitivesArray &prim_array)
+	void GraphicContext::set_primitives_array(const PrimitivesArrayPtr &prim_array)
 	{
 		get_provider()->set_primitives_array(prim_array);
 	}

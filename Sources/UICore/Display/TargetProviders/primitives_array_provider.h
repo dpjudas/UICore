@@ -32,12 +32,9 @@
 
 namespace uicore
 {
-	/// \brief Interface for implementing a PrimitivesArray target.
-	class PrimitivesArrayProvider
+	class PrimitivesArrayProvider : public PrimitivesArray
 	{
 	public:
-		virtual ~PrimitivesArrayProvider() { return; }
-
 		class VertexData
 		{
 		public:
@@ -53,7 +50,12 @@ namespace uicore
 			int stride;
 		};
 
-		/// \brief Sets a vertex attribute.
 		virtual void set_attribute(int index, const VertexData &data, bool normalize = false) = 0;
+
+		void set_attributes(int index, const VertexArrayBufferPtr &buffer, int size, VertexAttributeDataType type, size_t offset, int stride, bool normalize) override
+		{
+			VertexData data(buffer.get(), type, offset, size, stride);
+			set_attribute(index, data, normalize);
+		}
 	};
 }

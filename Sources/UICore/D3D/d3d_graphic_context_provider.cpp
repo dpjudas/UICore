@@ -188,11 +188,6 @@ namespace uicore
 		return new D3DPixelBufferProvider(window->get_device());
 	}
 
-	PrimitivesArrayProvider *D3DGraphicContextProvider::alloc_primitives_array()
-	{
-		return new D3DPrimitivesArrayProvider(window->get_device());
-	}
-
 	std::shared_ptr<RasterizerState> D3DGraphicContextProvider::create_rasterizer_state(const RasterizerStateDescription &desc)
 	{
 		auto it = rasterizer_states.find(desc);
@@ -316,6 +311,11 @@ namespace uicore
 	std::shared_ptr<TransferBuffer> D3DGraphicContextProvider::create_transfer_buffer(const void *data, int size, BufferUsage usage)
 	{
 		return std::make_shared<D3DTransferBufferProvider>(window->get_device(), data, size, usage);
+	}
+
+	std::shared_ptr<PrimitivesArray> D3DGraphicContextProvider::create_primitives_array()
+	{
+		return std::make_shared<D3DPrimitivesArrayProvider>(window->get_device());
 	}
 
 	void D3DGraphicContextProvider::set_rasterizer_state(RasterizerState *state)
@@ -492,9 +492,9 @@ namespace uicore
 		// To do: what does this map to in D3D?
 	}
 
-	bool D3DGraphicContextProvider::is_primitives_array_owner(const PrimitivesArray &primitives_array)
+	bool D3DGraphicContextProvider::is_primitives_array_owner(const PrimitivesArrayPtr &primitives_array)
 	{
-		D3DPrimitivesArrayProvider *array_provider = static_cast<D3DPrimitivesArrayProvider *>(primitives_array.get_provider());
+		D3DPrimitivesArrayProvider *array_provider = static_cast<D3DPrimitivesArrayProvider *>(primitives_array.get());
 		if (array_provider)
 			return array_provider->get_device() == window->get_device();
 		else
@@ -519,17 +519,17 @@ namespace uicore
 		}
 	}
 
-	void D3DGraphicContextProvider::draw_primitives(PrimitivesType type, int num_vertices, const PrimitivesArray &primitives_array)
+	void D3DGraphicContextProvider::draw_primitives(PrimitivesType type, int num_vertices, const PrimitivesArrayPtr &primitives_array)
 	{
 		set_primitives_array(primitives_array);
 		draw_primitives_array(type, 0, num_vertices);
 		reset_primitives_array();
 	}
 
-	void D3DGraphicContextProvider::set_primitives_array(const PrimitivesArray &primitives_array)
+	void D3DGraphicContextProvider::set_primitives_array(const PrimitivesArrayPtr &primitives_array)
 	{
 		reset_primitives_array();
-		current_prim_array_provider = static_cast<D3DPrimitivesArrayProvider *>(primitives_array.get_provider());
+		current_prim_array_provider = static_cast<D3DPrimitivesArrayProvider *>(primitives_array.get());
 		std::vector<ID3D11Buffer*> buffers;
 		std::vector<UINT> strides, offsets;
 		current_prim_array_provider->get_vertex_buffers(buffers, strides, offsets);

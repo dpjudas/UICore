@@ -66,6 +66,7 @@ namespace uicore
 	typedef std::shared_ptr<FrameBuffer> FrameBufferPtr;
 	typedef std::shared_ptr<StorageBuffer> StorageBufferPtr;
 	typedef std::shared_ptr<UniformBuffer> UniformBufferPtr;
+	typedef std::shared_ptr<PrimitivesArray> PrimitivesArrayPtr;
 
 	/// Polygon culling modes.
 	enum CullMode
@@ -490,13 +491,13 @@ namespace uicore
 		///
 		/// Primitive array objects cannot be shared between graphic contexts.  This function verifies that the primitives array
 		/// belongs to this graphic context.
-		bool is_primitives_array_owner(const PrimitivesArray &primitives_array);
+		bool is_primitives_array_owner(const PrimitivesArrayPtr &primitives_array);
 
 		/// Draw primitives on gc.
-		void draw_primitives(PrimitivesType type, int num_vertices, const PrimitivesArray &array);
+		void draw_primitives(PrimitivesType type, int num_vertices, const PrimitivesArrayPtr &array);
 
 		/// Set the primitives array on the gc.
-		void set_primitives_array(const PrimitivesArray &array);
+		void set_primitives_array(const PrimitivesArrayPtr &array);
 
 		/// Draws primitives from the current assigned primitives array.
 		void draw_primitives_array(PrimitivesType type, int num_vertices);

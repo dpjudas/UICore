@@ -37,34 +37,8 @@
 
 namespace uicore
 {
-	PrimitivesArray::PrimitivesArray()
+	std::shared_ptr<PrimitivesArray> PrimitivesArray::create(GraphicContext &gc)
 	{
-	}
-
-	PrimitivesArray::PrimitivesArray(GraphicContext &gc)
-		: impl(std::make_shared<PrimitivesArray_Impl>())
-	{
-		impl->provider = gc.get_provider()->alloc_primitives_array();
-	}
-
-	PrimitivesArray::~PrimitivesArray()
-	{
-	}
-
-	void PrimitivesArray::throw_if_null() const
-	{
-		if (!impl)
-			throw Exception("is null");
-	}
-
-	PrimitivesArrayProvider *PrimitivesArray::get_provider() const
-	{
-		return impl->provider;
-	}
-
-	void PrimitivesArray::set_attributes(int index, const VertexArrayBufferPtr &buffer, int size, VertexAttributeDataType type, size_t offset, int stride, bool normalize)
-	{
-		PrimitivesArrayProvider::VertexData data(buffer.get(), type, offset, size, stride);
-		impl->provider->set_attribute(index, data, normalize);
+		return gc.get_provider()->create_primitives_array();
 	}
 }

@@ -83,7 +83,7 @@ namespace uicore
 
 		RenderBatchBuffer *batch_buffer;
 
-		PrimitivesArray prim_array[RenderBatchBuffer::num_vertex_buffers];
+		PrimitivesArrayPtr prim_array[RenderBatchBuffer::num_vertex_buffers];
 
 		static const int max_number_of_texture_coords = 32;
 

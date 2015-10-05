@@ -81,11 +81,11 @@ namespace uicore
 			int gpu_index;
 			VertexArrayVector<PointVertex> gpu_vertices(batch_buffer->get_vertex_buffer(gc, gpu_index));
 
-			if (prim_array[gpu_index].is_null())
+			if (!prim_array[gpu_index])
 			{
-				prim_array[gpu_index] = PrimitivesArray(gc);
-				prim_array[gpu_index].set_attributes(0, gpu_vertices, cl_offsetof(PointVertex, position));
-				prim_array[gpu_index].set_attributes(1, gpu_vertices, cl_offsetof(PointVertex, color));
+				prim_array[gpu_index] = PrimitivesArray::create(gc);
+				prim_array[gpu_index]->set_attributes(0, gpu_vertices, cl_offsetof(PointVertex, position));
+				prim_array[gpu_index]->set_attributes(1, gpu_vertices, cl_offsetof(PointVertex, color));
 			}
 
 			gpu_vertices.upload_data(gc, 0, vertices, position);

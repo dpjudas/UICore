@@ -38,7 +38,7 @@ namespace uicore
 		GL1PrimitivesArrayProvider();
 		~GL1PrimitivesArrayProvider();
 
-		std::vector<PrimitivesArrayProvider::VertexData> attributes;
+		std::vector<VertexData> attributes;
 		std::vector<bool> normalize_attributes;
 		std::vector<bool> attribute_set;
 

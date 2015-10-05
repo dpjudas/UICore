@@ -39,12 +39,8 @@
 
 namespace uicore
 {
-	class GraphicContext;
-	class Colorf;
 	class Colorf;
 	class GraphicContext;
-	class PrimitivesArray_Impl;
-	class PrimitivesArrayProvider;
 
 	#define cl_offsetof(s,m) (&(((s *)0)->m))
 
@@ -64,27 +60,11 @@ namespace uicore
 	class PrimitivesArray
 	{
 	public:
-		/// \brief Construct a null instance
-		PrimitivesArray();
-
 		/// \brief Constructs a PrimitivesArray
-		///
-		/// \param gc = Graphic Context
-		PrimitivesArray(GraphicContext &gc);
-
-		~PrimitivesArray();
-
-		/// \brief Returns true if this object is invalid.
-		bool is_null() const { return !impl; }
-
-		/// \brief Throw an exception if this object is invalid.
-		void throw_if_null() const;
-
-		/// \brief Returns the target provider for the primitives array.
-		PrimitivesArrayProvider *get_provider() const;
+		static std::shared_ptr<PrimitivesArray> create(GraphicContext &gc);
 
 		/// \brief Set attributes
-		void set_attributes(int index, const VertexArrayBufferPtr &buffer, int size, VertexAttributeDataType type, size_t offset = 0, int stride = 0, bool normalize = false);
+		virtual void set_attributes(int index, const VertexArrayBufferPtr &buffer, int size, VertexAttributeDataType type, size_t offset = 0, int stride = 0, bool normalize = false) = 0;
 
 		void set_attributes(int index, const VertexArrayVector<unsigned char> &buffer, int size, bool normalize = false)
 		{
@@ -439,8 +419,5 @@ namespace uicore
 		{
 			set_attributes(index, buffer, 4, type_float, (size_t)member_offset, sizeof(Type), false);
 		}
-
-	private:
-		std::shared_ptr<PrimitivesArray_Impl> impl;
 	};
 }

@@ -60,7 +60,7 @@ namespace uicore
 		LineTextureVertex *vertices;
 		RenderBatchBuffer *batch_buffer;
 
-		PrimitivesArray prim_array[RenderBatchBuffer::num_vertex_buffers];
+		PrimitivesArrayPtr prim_array[RenderBatchBuffer::num_vertex_buffers];
 		int position = 0;
 		Mat4f modelview_projection_matrix;
 		Texture2D current_texture;

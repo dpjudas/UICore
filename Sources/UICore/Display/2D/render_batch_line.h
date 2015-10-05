@@ -59,7 +59,7 @@ namespace uicore
 		enum { max_vertices = RenderBatchBuffer::vertex_buffer_size / sizeof(LineVertex) };
 		LineVertex *vertices;
 		RenderBatchBuffer *batch_buffer;
-		PrimitivesArray prim_array[RenderBatchBuffer::num_vertex_buffers];
+		PrimitivesArrayPtr prim_array[RenderBatchBuffer::num_vertex_buffers];
 		int position;
 		Mat4f modelview_projection_matrix;
 	};

@@ -256,7 +256,7 @@ namespace uicore
 		Texture2D mask_texture;
 		TransferTexture instance_buffer;
 		Texture2D instance_texture;
-		PrimitivesArray prim_array[RenderBatchBuffer::num_vertex_buffers];
+		PrimitivesArrayPtr prim_array[RenderBatchBuffer::num_vertex_buffers];
 		BlendStatePtr blend_state;
 	};
 }

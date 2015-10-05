@@ -298,11 +298,6 @@ namespace uicore
 		return new GL3PixelBufferProvider();
 	}
 
-	PrimitivesArrayProvider *GL3GraphicContextProvider::alloc_primitives_array()
-	{
-		return new GL3PrimitivesArrayProvider(this);
-	}
-
 	std::shared_ptr<RasterizerState> GL3GraphicContextProvider::create_rasterizer_state(const RasterizerStateDescription &desc)
 	{
 		auto it = rasterizer_states.find(desc);
@@ -421,6 +416,11 @@ namespace uicore
 	std::shared_ptr<TransferBuffer> GL3GraphicContextProvider::create_transfer_buffer(const void *data, int size, BufferUsage usage)
 	{
 		return std::make_shared<GL3TransferBufferProvider>(data, size, usage);
+	}
+
+	std::shared_ptr<PrimitivesArray> GL3GraphicContextProvider::create_primitives_array()
+	{
+		return std::make_shared<GL3PrimitivesArrayProvider>(this);
 	}
 
 	void GL3GraphicContextProvider::set_rasterizer_state(RasterizerState *state)
@@ -651,25 +651,25 @@ namespace uicore
 		glUseProgram(0);
 	}
 
-	bool GL3GraphicContextProvider::is_primitives_array_owner(const PrimitivesArray &prim_array)
+	bool GL3GraphicContextProvider::is_primitives_array_owner(const PrimitivesArrayPtr &prim_array)
 	{
-		GL3PrimitivesArrayProvider *prim_array_provider = dynamic_cast<GL3PrimitivesArrayProvider *>(prim_array.get_provider());
+		GL3PrimitivesArrayProvider *prim_array_provider = dynamic_cast<GL3PrimitivesArrayProvider *>(prim_array.get());
 		if (prim_array_provider)
 			return prim_array_provider->get_gc_provider() == this;
 		else
 			return false;
 	}
 
-	void GL3GraphicContextProvider::draw_primitives(PrimitivesType type, int num_vertices, const PrimitivesArray &primitives_array)
+	void GL3GraphicContextProvider::draw_primitives(PrimitivesType type, int num_vertices, const PrimitivesArrayPtr &primitives_array)
 	{
 		set_primitives_array(primitives_array);
 		draw_primitives_array(type, 0, num_vertices);
 		reset_primitives_array();
 	}
 
-	void GL3GraphicContextProvider::set_primitives_array(const PrimitivesArray &primitives_array)
+	void GL3GraphicContextProvider::set_primitives_array(const PrimitivesArrayPtr &primitives_array)
 	{
-		GL3PrimitivesArrayProvider *prim_array = static_cast<GL3PrimitivesArrayProvider *>(primitives_array.get_provider());
+		GL3PrimitivesArrayProvider *prim_array = static_cast<GL3PrimitivesArrayProvider *>(primitives_array.get());
 
 		OpenGL::set_active(this);
 		glBindVertexArray(prim_array->handle);

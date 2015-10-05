@@ -123,9 +123,6 @@ namespace uicore
 		/// \brief Allocate pixel buffer provider for this gc.
 		virtual PixelBufferProvider *alloc_pixel_buffer() = 0;
 
-		/// \brief Allocate primitives array provider for this gc.
-		virtual PrimitivesArrayProvider *alloc_primitives_array() = 0;
-
 		virtual std::shared_ptr<RasterizerState> create_rasterizer_state(const RasterizerStateDescription &desc) = 0;
 		virtual std::shared_ptr<BlendState> create_blend_state(const BlendStateDescription &desc) = 0;
 		virtual std::shared_ptr<DepthStencilState> create_depth_stencil_state(const DepthStencilStateDescription &desc) = 0;
@@ -145,6 +142,7 @@ namespace uicore
 		virtual std::shared_ptr<UniformBuffer> create_uniform_buffer(const void *data, int size, BufferUsage usage) = 0;
 		virtual std::shared_ptr<TransferBuffer> create_transfer_buffer(int size, BufferUsage usage) = 0;
 		virtual std::shared_ptr<TransferBuffer> create_transfer_buffer(const void *data, int size, BufferUsage usage) = 0;
+		virtual std::shared_ptr<PrimitivesArray> create_primitives_array() = 0;
 
 		/// \brief Set active rasterizer state
 		virtual void set_rasterizer_state(RasterizerState *state) = 0;
@@ -202,13 +200,13 @@ namespace uicore
 		virtual void set_draw_buffer(DrawBuffer buffer) = 0;
 
 		/// \brief Returns true if this primitives_array is owned by this graphic context.
-		virtual bool is_primitives_array_owner(const PrimitivesArray &primitives_array) = 0;
+		virtual bool is_primitives_array_owner(const PrimitivesArrayPtr &primitives_array) = 0;
 
 		/// \brief Draw primitives on gc.
-		virtual void draw_primitives(PrimitivesType type, int num_vertices, const PrimitivesArray &primitives_array) = 0;
+		virtual void draw_primitives(PrimitivesType type, int num_vertices, const PrimitivesArrayPtr &primitives_array) = 0;
 
 		/// \brief Set the primitives array on the gc.
-		virtual void set_primitives_array(const PrimitivesArray &primitives_array) = 0;
+		virtual void set_primitives_array(const PrimitivesArrayPtr &primitives_array) = 0;
 
 		/// \brief Draws primitives from the current assigned primitives array.
 		virtual void draw_primitives_array(PrimitivesType type, int offset, int num_vertices) = 0;
