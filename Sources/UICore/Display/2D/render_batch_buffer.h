@@ -43,8 +43,8 @@ namespace uicore
 		RenderBatchBuffer(GraphicContext &gc);
 
 		VertexArrayBufferPtr get_vertex_buffer(GraphicContext &gc, int &out_index);
-		Texture2D get_texture_rgba32f(GraphicContext &gc);
-		Texture2D get_texture_r8(GraphicContext &gc);
+		Texture2DPtr get_texture_rgba32f(GraphicContext &gc);
+		Texture2DPtr get_texture_r8(GraphicContext &gc);
 		TransferTexture get_transfer_rgba32f(GraphicContext &gc);
 
 		TransferTexture get_transfer_r8(GraphicContext &gc, int &out_index);
@@ -62,10 +62,10 @@ namespace uicore
 		VertexArrayBufferPtr vertex_buffers[num_vertex_buffers];
 		int current_vertex_buffer = 0;
 
-		Texture2D textures_rgba32f[num_rgba32f_buffers];
+		Texture2DPtr textures_rgba32f[num_rgba32f_buffers];
 		int current_rgba32f_texture = 0;
 
-		Texture2D textures_r8[num_r8_buffers];
+		Texture2DPtr textures_r8[num_r8_buffers];
 		int current_r8_texture = 0;
 
 		TransferTexture transfers_rgba32f[num_rgba32f_buffers];

@@ -44,28 +44,20 @@ namespace uicore
 	class Image_Impl
 	{
 	public:
-		Image_Impl() :
-			color(1.0f, 1.0f, 1.0f, 1.0f),
-			scale_x(1.0f),
-			scale_y(1.0f),
-			translation_hotspot(0, 0),
-			translated_hotspot(0, 0),
-			translation_origin(origin_top_left) {};
-		~Image_Impl() {};
-
 		void calc_hotspot();
 
-		Colorf color;
+		Colorf color = Colorf::white;
 
-		float scale_x, scale_y;
+		float scale_x = 1.0f, scale_y = 1.0f;
 
 		Pointf translation_hotspot;
-		Origin translation_origin;
+		Origin translation_origin = origin_top_left;
 
 		Pointf translated_hotspot;	// Precalculated from calc_hotspot()
 
-		Texture2D texture;
+		Texture2DPtr texture;
 		Rect texture_rect;
+		float pixel_ratio = 1.0f;
 	};
 
 	void Image_Impl::calc_hotspot()
@@ -102,10 +94,10 @@ namespace uicore
 			break;
 		}
 
-		if (texture.get_pixel_ratio() != 0.0f)
+		if (pixel_ratio != 0.0f)
 		{
-			translated_hotspot.x /= texture.get_pixel_ratio();
-			translated_hotspot.y /= texture.get_pixel_ratio();
+			translated_hotspot.x /= pixel_ratio;
+			translated_hotspot.y /= pixel_ratio;
 		}
 	}
 
@@ -113,33 +105,37 @@ namespace uicore
 	{
 	}
 
-	Image::Image(Canvas &canvas, const PixelBuffer &pb, const Rect &rect)
+	Image::Image(Canvas &canvas, const PixelBuffer &pb, const Rect &rect, float pixel_ratio)
 		: impl(std::make_shared<Image_Impl>())
 	{
-		impl->texture = Texture2D(canvas, pb.get_width(), pb.get_height(), pb.get_format());
-		impl->texture.set_subimage(canvas, 0, 0, pb, rect);
+		impl->texture = Texture2D::create(canvas, pb.get_width(), pb.get_height(), pb.get_format());
+		impl->texture->set_subimage(canvas, 0, 0, pb, rect);
 		impl->texture_rect = Rect(0, 0, pb.get_width(), pb.get_height());
+		impl->pixel_ratio = pixel_ratio;
 	}
 
-	Image::Image(Texture2D texture, const Rect &rect)
+	Image::Image(Texture2DPtr texture, const Rect &rect, float pixel_ratio)
 		: impl(std::make_shared<Image_Impl>())
 	{
 		impl->texture = texture;
 		impl->texture_rect = rect;
+		impl->pixel_ratio = pixel_ratio;
 	}
 
-	Image::Image(Subtexture &sub_texture)
+	Image::Image(Subtexture &sub_texture, float pixel_ratio)
 		: impl(std::make_shared<Image_Impl>())
 	{
 		impl->texture = sub_texture.get_texture();
 		impl->texture_rect = sub_texture.get_geometry();
+		impl->pixel_ratio = pixel_ratio;
 	}
 
-	Image::Image(Canvas &canvas, const std::string &filename, const ImageImportDescription &import_desc)
+	Image::Image(Canvas &canvas, const std::string &filename, const ImageImportDescription &import_desc, float pixel_ratio)
 		: impl(std::make_shared<Image_Impl>())
 	{
-		impl->texture = Texture2D(canvas, filename, import_desc);
-		impl->texture_rect = impl->texture.get_size();
+		impl->texture = Texture2D::create(canvas, filename, import_desc);
+		impl->texture_rect = impl->texture->size();
+		impl->pixel_ratio = pixel_ratio;
 	}
 
 	Image::~Image()
@@ -194,16 +190,16 @@ namespace uicore
 
 	float Image::get_width() const
 	{
-		if (impl->texture.get_pixel_ratio() != 0.0f)
-			return impl->texture_rect.get_width() / impl->texture.get_pixel_ratio();
+		if (impl->pixel_ratio != 0.0f)
+			return impl->texture_rect.get_width() / impl->pixel_ratio;
 		else
 			return impl->texture_rect.get_width();
 	}
 
 	float Image::get_height() const
 	{
-		if (impl->texture.get_pixel_ratio() != 0.0f)
-			return impl->texture_rect.get_height() / impl->texture.get_pixel_ratio();
+		if (impl->pixel_ratio != 0.0f)
+			return impl->texture_rect.get_height() / impl->pixel_ratio;
 		else
 			return impl->texture_rect.get_height();
 	}
@@ -300,13 +296,13 @@ namespace uicore
 		TextureWrapMode wrap_s,
 		TextureWrapMode wrap_t)
 	{
-		impl->texture.set_wrap_mode(wrap_s, wrap_t);
+		impl->texture->set_wrap_mode(wrap_s, wrap_t);
 	}
 
 	void Image::set_linear_filter(bool linear_filter)
 	{
-		impl->texture.set_mag_filter(linear_filter ? filter_linear : filter_nearest);
-		impl->texture.set_min_filter(linear_filter ? filter_linear : filter_nearest);
+		impl->texture->set_mag_filter(linear_filter ? filter_linear : filter_nearest);
+		impl->texture->set_min_filter(linear_filter ? filter_linear : filter_nearest);
 	}
 
 	void Image::set_subimage(
@@ -317,6 +313,6 @@ namespace uicore
 		const Rect &src_rect,
 		int level)
 	{
-		impl->texture.set_subimage(canvas, x, y, image, src_rect, level);
+		impl->texture->set_subimage(canvas, x, y, image, src_rect, level);
 	}
 }

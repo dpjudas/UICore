@@ -57,6 +57,7 @@
 #include "UICore/Display/Render/frame_buffer.h"
 #include "UICore/Display/Render/program_object.h"
 #include "UICore/Display/TargetProviders/display_window_provider.h"
+#include "UICore/Display/TargetProviders/texture_provider.h"
 #include "UICore/Display/Render/shared_gc_data.h"
 #include "UICore/GL/opengl.h"
 #include "UICore/GL/opengl_wrap.h"
@@ -283,11 +284,6 @@ namespace uicore
 		return render_window->get_pixel_ratio();
 	}
 
-	TextureProvider *GL3GraphicContextProvider::alloc_texture(TextureDimensions texture_dimensions)
-	{
-		return new GL3TextureProvider(texture_dimensions);
-	}
-
 	std::shared_ptr<RenderBuffer> GL3GraphicContextProvider::create_render_buffer(int width, int height, TextureFormat texture_format, int multisample_samples)
 	{
 		return std::make_shared<GL3RenderBufferProvider>(width, height, texture_format, multisample_samples);
@@ -423,6 +419,41 @@ namespace uicore
 		return std::make_shared<GL3PrimitivesArrayProvider>(this);
 	}
 
+	std::shared_ptr<Texture1D> GL3GraphicContextProvider::create_texture_1d(int width, TextureFormat texture_format, int levels)
+	{
+		return std::make_shared<Texture1DImpl<GL3TextureProvider>>(GL3TextureProvider::InitData(), width, texture_format, levels);
+	}
+
+	std::shared_ptr<Texture1DArray> GL3GraphicContextProvider::create_texture_1d_array(int width, int array_size, TextureFormat texture_format, int levels)
+	{
+		return std::make_shared<Texture1DArrayImpl<GL3TextureProvider>>(GL3TextureProvider::InitData(), width, array_size, texture_format, levels);
+	}
+
+	std::shared_ptr<Texture2D> GL3GraphicContextProvider::create_texture_2d(int width, int height, TextureFormat texture_format, int levels)
+	{
+		return std::make_shared<Texture2DImpl<GL3TextureProvider>>(GL3TextureProvider::InitData(), width, height, texture_format, levels);
+	}
+
+	std::shared_ptr<Texture2DArray> GL3GraphicContextProvider::create_texture_2d_array(int width, int height, int array_size, TextureFormat texture_format, int levels)
+	{
+		return std::make_shared<Texture2DArrayImpl<GL3TextureProvider>>(GL3TextureProvider::InitData(), width, height, array_size, texture_format, levels);
+	}
+
+	std::shared_ptr<Texture3D> GL3GraphicContextProvider::create_texture_3d(int width, int height, int depth, TextureFormat texture_format, int levels)
+	{
+		return std::make_shared<Texture3DImpl<GL3TextureProvider>>(GL3TextureProvider::InitData(), width, height, depth, texture_format, levels);
+	}
+
+	std::shared_ptr<TextureCube> GL3GraphicContextProvider::create_texture_cube(int width, int height, TextureFormat texture_format, int levels)
+	{
+		return std::make_shared<TextureCubeImpl<GL3TextureProvider>>(GL3TextureProvider::InitData(), width, height, texture_format, levels);
+	}
+
+	std::shared_ptr<TextureCubeArray> GL3GraphicContextProvider::create_texture_cube_array(int width, int height, int array_size, TextureFormat texture_format, int levels)
+	{
+		return std::make_shared<TextureCubeArrayImpl<GL3TextureProvider>>(GL3TextureProvider::InitData(), width, height, array_size, texture_format, levels);
+	}
+
 	void GL3GraphicContextProvider::set_rasterizer_state(RasterizerState *state)
 	{
 		if (state)
@@ -516,7 +547,7 @@ namespace uicore
 		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, index, 0);
 	}
 
-	void GL3GraphicContextProvider::set_texture(int unit_index, const Texture &texture)
+	void GL3GraphicContextProvider::set_texture(int unit_index, const TexturePtr &texture)
 	{
 		OpenGL::set_active(this);
 
@@ -529,9 +560,9 @@ namespace uicore
 			return;
 		}
 
-		if (!texture.is_null())
+		if (texture)
 		{
-			GL3TextureProvider *provider = static_cast<GL3TextureProvider *>(texture.get_provider());
+			GL3TextureProvider *provider = static_cast<GL3TextureProvider*>(texture->texture_object());
 			glBindTexture(provider->get_texture_type(), provider->get_handle());
 		}
 	}
@@ -552,14 +583,14 @@ namespace uicore
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
-	void GL3GraphicContextProvider::set_image_texture(int unit_index, const Texture &texture)
+	void GL3GraphicContextProvider::set_image_texture(int unit_index, const TexturePtr &texture)
 	{
 		OpenGL::set_active(this);
 
-		if (!texture.is_null())
+		if (texture)
 		{
 			OpenGL::set_active(this);
-			GL3TextureProvider *provider = static_cast<GL3TextureProvider *>(texture.get_provider());
+			GL3TextureProvider *provider = static_cast<GL3TextureProvider*>(texture->texture_object());
 			glBindImageTexture(unit_index, provider->get_handle(), 0, GL_FALSE, 0, GL_READ_WRITE, provider->get_internal_format());
 		}
 	}

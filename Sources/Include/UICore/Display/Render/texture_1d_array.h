@@ -34,34 +34,22 @@
 namespace uicore
 {
 	/// \brief 1D texture array object class.
-	class Texture1DArray : public Texture
+	class Texture1DArray : public virtual Texture
 	{
 	public:
-		/// \brief Constructs a null instance.
-		Texture1DArray();
-
-		/// \brief Constructs a texture from an implementation
+		/// \brief Constructs a 1D array texture
 		///
-		/// \param impl = The implementation
-		Texture1DArray(const std::shared_ptr<Texture_Impl> &impl) : Texture(impl) { }
-
-		/// \brief Constructs a Texture
-		///
-		/// \param context = Graphic Context
-		/// \param size = value
-		/// \param height = value
-		/// \param internal_format = Texture Format
-		/// \param levels = Mipmap levels for the texture. 0 = all levels
-		Texture1DArray(GraphicContext &context, int size, int array_size, TextureFormat texture_format = tf_rgba8, int levels = 1);
+		/// If levels is set to zero it will create a texture containing all mipmap levels
+		static std::shared_ptr<Texture1DArray> create(GraphicContext &context, int size, int array_size, TextureFormat texture_format = tf_rgba8, int levels = 1);
 
 		/// \brief Get the texture width.
-		int get_size() const;
+		virtual int size() const = 0;
 
 		/// \brief Get the texture array size
-		int get_array_size() const;
+		virtual int array_size() const = 0;
 
 		/// \brief Get the texture wrap mode for the s coordinate.
-		TextureWrapMode get_wrap_mode_s() const;
+		virtual TextureWrapMode wrap_mode_s() const = 0;
 
 		/// \brief Upload image to texture.
 		///
@@ -69,7 +57,7 @@ namespace uicore
 		/// \param array_index Index in the array
 		/// \param image Image to upload.
 		/// \param level Mipmap level-of-detail number.
-		void set_image(GraphicContext &context, int array_index, PixelBuffer &image, int level = 0);
+		virtual void set_image(GraphicContext &context, int array_index, const PixelBuffer &image, int level = 0) = 0;
 
 		/// \brief Upload image to sub texture.
 		///
@@ -77,15 +65,8 @@ namespace uicore
 		/// \param array_index Index in the array
 		/// \param image Image to upload.
 		/// \param level Mipmap level-of-detail number.
-		void set_subimage(
-			GraphicContext &context,
-			int array_index,
-			int x,
-			const PixelBuffer &image,
-			const int src_x,
-			const int src_width,
-			int level = 0);
+		virtual void set_subimage(GraphicContext &context, int array_index, int x, const PixelBuffer &image, const int src_x, const int src_width, int level = 0) = 0;
 
-		void set_wrap_mode(TextureWrapMode wrap_s);
+		virtual void set_wrap_mode(TextureWrapMode wrap_s) = 0;
 	};
 }

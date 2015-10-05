@@ -34,18 +34,10 @@
 namespace uicore
 {
 	/// \brief 3D texture object class.
-	class Texture3D : public Texture
+	class Texture3D : public virtual Texture
 	{
 	public:
-		/// \brief Constructs a null instance.
-		Texture3D();
-
-		/// \brief Constructs a texture from an implementation
-		///
-		/// \param impl = The implementation
-		Texture3D(const std::shared_ptr<Texture_Impl> &impl) : Texture(impl) { }
-
-		/// \brief Constructs a 3D Texture
+		/// \brief Constructs a 3D texture
 		///
 		/// \param context = Graphic Context
 		/// \param width = value
@@ -53,66 +45,45 @@ namespace uicore
 		/// \param depth = value
 		/// \param internal_format = Texture Format
 		/// \param levels = Mipmap levels for the texture. 0 = all levels
-		Texture3D(GraphicContext &context, int width, int height, int depth, TextureFormat texture_format = tf_rgba8, int levels = 1);
-
-		/// \brief Constructs a Texture
-		///
-		/// \param context = Graphic Context
-		/// \param size = Size
-		/// \param internal_format = Texture Format
-		/// \param levels = Mipmap levels for the texture. 0 = all levels
-		Texture3D(GraphicContext &context, const Vec3i &size, TextureFormat texture_format = tf_rgba8, int levels = 1);
+		static std::shared_ptr<Texture3D> create(GraphicContext &context, int width, int height, int depth, TextureFormat texture_format = tf_rgba8, int levels = 1);
+		static std::shared_ptr<Texture3D> create(GraphicContext &context, const Vec3i &size, TextureFormat texture_format = tf_rgba8, int levels = 1);
 
 		/// \brief Get the texture width.
-		int get_width() const;
+		virtual int width() const = 0;
 
 		/// \brief Get the texture height.
-		int get_height() const;
+		virtual int height() const = 0;
 
 		/// \brief Get the texture depth.
-		int get_depth() const;
+		virtual int depth() const = 0;
 
 		/// \brief Get the texture size.
-		Vec3i get_size() const;
+		Vec3i size() const { return Vec3i(width(), height(), depth()); }
 
 		/// \brief Get the texture wrap mode for the s coordinate.
-		TextureWrapMode get_wrap_mode_s() const;
+		virtual TextureWrapMode wrap_mode_s() const = 0;
 
 		/// \brief Get the texture wrap mode for the t coordinate.
-		TextureWrapMode get_wrap_mode_t() const;
+		virtual TextureWrapMode wrap_mode_t() const = 0;
 
 		/// \brief Get the texture wrap mode for the r coordinate.
-		TextureWrapMode get_wrap_mode_r() const;
+		virtual TextureWrapMode wrap_mode_r() const = 0;
 
 		/// \brief Upload image to texture.
 		///
 		/// \param context Graphic context to use for the request
 		/// \param image Image to upload.
 		/// \param level Mipmap level-of-detail number.
-		void set_image(
-			GraphicContext &context,
-			PixelBuffer &image,
-			int depth,
-			int level = 0);
+		virtual void set_image(GraphicContext &context, const PixelBuffer &image, int depth, int level = 0) = 0;
 
 		/// \brief Upload image to sub texture.
 		///
 		/// \param context Graphic context to use for the request
 		/// \param image Image to upload.
 		/// \param level Mipmap level-of-detail number.
-		void set_subimage(
-			GraphicContext &context,
-			int x,
-			int y,
-			int z,
-			const PixelBuffer &image,
-			const Rect &src_rect,
-			int level = 0);
+		virtual void set_subimage(GraphicContext &context, int x, int y, int z, const PixelBuffer &image, const Rect &src_rect, int level = 0) = 0;
 
 		/// \brief Set the texture wrapping mode.
-		void set_wrap_mode(
-			TextureWrapMode wrap_s,
-			TextureWrapMode wrap_t,
-			TextureWrapMode wrap_r);
+		virtual void set_wrap_mode(TextureWrapMode wrap_s, TextureWrapMode wrap_t, TextureWrapMode wrap_r) = 0;
 	};
 }

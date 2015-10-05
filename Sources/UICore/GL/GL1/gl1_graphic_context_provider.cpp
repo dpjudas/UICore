@@ -242,11 +242,6 @@ namespace uicore
 		}
 	}
 
-	TextureProvider *GL1GraphicContextProvider::alloc_texture(TextureDimensions texture_dimensions)
-	{
-		return new GL1TextureProvider(texture_dimensions);
-	}
-
 	PixelBufferProvider *GL1GraphicContextProvider::alloc_pixel_buffer()
 	{
 		throw Exception("Pixel Buffers Objects are not supported for OpenGL 1.3");
@@ -382,6 +377,41 @@ namespace uicore
 		return std::make_shared<GL1PrimitivesArrayProvider>();
 	}
 
+	std::shared_ptr<Texture1D> GL1GraphicContextProvider::create_texture_1d(int width, TextureFormat texture_format, int levels)
+	{
+		return std::make_shared<Texture1DImpl<GL1TextureProvider>>(GL1TextureProvider::InitData(), width, texture_format, levels);
+	}
+
+	std::shared_ptr<Texture1DArray> GL1GraphicContextProvider::create_texture_1d_array(int width, int array_size, TextureFormat texture_format, int levels)
+	{
+		return std::make_shared<Texture1DArrayImpl<GL1TextureProvider>>(GL1TextureProvider::InitData(), width, array_size, texture_format, levels);
+	}
+
+	std::shared_ptr<Texture2D> GL1GraphicContextProvider::create_texture_2d(int width, int height, TextureFormat texture_format, int levels)
+	{
+		return std::make_shared<Texture2DImpl<GL1TextureProvider>>(GL1TextureProvider::InitData(), width, height, texture_format, levels);
+	}
+
+	std::shared_ptr<Texture2DArray> GL1GraphicContextProvider::create_texture_2d_array(int width, int height, int array_size, TextureFormat texture_format, int levels)
+	{
+		return std::make_shared<Texture2DArrayImpl<GL1TextureProvider>>(GL1TextureProvider::InitData(), width, height, array_size, texture_format, levels);
+	}
+
+	std::shared_ptr<Texture3D> GL1GraphicContextProvider::create_texture_3d(int width, int height, int depth, TextureFormat texture_format, int levels)
+	{
+		return std::make_shared<Texture3DImpl<GL1TextureProvider>>(GL1TextureProvider::InitData(), width, height, depth, texture_format, levels);
+	}
+
+	std::shared_ptr<TextureCube> GL1GraphicContextProvider::create_texture_cube(int width, int height, TextureFormat texture_format, int levels)
+	{
+		return std::make_shared<TextureCubeImpl<GL1TextureProvider>>(GL1TextureProvider::InitData(), width, height, texture_format, levels);
+	}
+
+	std::shared_ptr<TextureCubeArray> GL1GraphicContextProvider::create_texture_cube_array(int width, int height, int array_size, TextureFormat texture_format, int levels)
+	{
+		return std::make_shared<TextureCubeArrayImpl<GL1TextureProvider>>(GL1TextureProvider::InitData(), width, height, array_size, texture_format, levels);
+	}
+
 	void GL1GraphicContextProvider::set_rasterizer_state(RasterizerState *state)
 	{
 		if (state)
@@ -470,7 +500,7 @@ namespace uicore
 	{
 	}
 
-	void GL1GraphicContextProvider::set_texture(int unit_index, const Texture &texture)
+	void GL1GraphicContextProvider::set_texture(int unit_index, const TexturePtr &texture)
 	{
 		set_active();
 
@@ -489,7 +519,7 @@ namespace uicore
 			return;
 		}
 
-		if (texture.is_null())
+		if (!texture)
 		{
 #ifndef __ANDROID__
 			glDisable(GL_TEXTURE_1D);
@@ -502,7 +532,7 @@ namespace uicore
 		}
 		else
 		{
-			GL1TextureProvider *provider = static_cast<GL1TextureProvider *>(texture.get_provider());
+			GL1TextureProvider *provider = static_cast<GL1TextureProvider*>(texture->texture_object());
 			selected_textures[unit_index].texture = provider;
 
 			glEnable(provider->get_texture_type());
@@ -540,7 +570,7 @@ namespace uicore
 
 	}
 
-	void GL1GraphicContextProvider::set_image_texture(int unit_index, const Texture &texture)
+	void GL1GraphicContextProvider::set_image_texture(int unit_index, const TexturePtr &texture)
 	{
 	}
 

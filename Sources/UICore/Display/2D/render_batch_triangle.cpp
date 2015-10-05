@@ -45,7 +45,7 @@ namespace uicore
 		vertices = (SpriteVertex *)batch_buffer->buffer;
 	}
 
-	void RenderBatchTriangle::draw_sprite(Canvas &canvas, const Pointf texture_position[4], const Pointf dest_position[4], const Texture2D &texture, const Colorf &color)
+	void RenderBatchTriangle::draw_sprite(Canvas &canvas, const Pointf texture_position[4], const Pointf dest_position[4], const Texture2DPtr &texture, const Colorf &color)
 	{
 		int texindex = set_batcher_active(canvas, texture);
 
@@ -89,7 +89,7 @@ namespace uicore
 		}
 	}
 
-	void RenderBatchTriangle::fill_triangles(Canvas &canvas, const Vec2f *positions, const Vec2f *texture_positions, int num_vertices, const Texture2D &texture, const Colorf &color)
+	void RenderBatchTriangle::fill_triangles(Canvas &canvas, const Vec2f *positions, const Vec2f *texture_positions, int num_vertices, const Texture2DPtr &texture, const Colorf &color)
 	{
 		int texindex = set_batcher_active(canvas, texture);
 
@@ -105,7 +105,7 @@ namespace uicore
 
 	}
 
-	void RenderBatchTriangle::fill_triangles(Canvas &canvas, const Vec2f *positions, const Vec2f *texture_positions, int num_vertices, const Texture2D &texture, const Colorf *colors)
+	void RenderBatchTriangle::fill_triangles(Canvas &canvas, const Vec2f *positions, const Vec2f *texture_positions, int num_vertices, const Texture2DPtr &texture, const Colorf *colors)
 	{
 		int texindex = set_batcher_active(canvas, texture);
 
@@ -128,7 +128,7 @@ namespace uicore
 		v.texindex = texindex;
 	}
 
-	void RenderBatchTriangle::draw_image(Canvas &canvas, const Rectf &src, const Rectf &dest, const Colorf &color, const Texture2D &texture)
+	void RenderBatchTriangle::draw_image(Canvas &canvas, const Rectf &src, const Rectf &dest, const Colorf &color, const Texture2DPtr &texture)
 	{
 		int texindex = set_batcher_active(canvas, texture);
 
@@ -156,7 +156,7 @@ namespace uicore
 		position += 6;
 	}
 
-	void RenderBatchTriangle::draw_image(Canvas &canvas, const Rectf &src, const Quadf &dest, const Colorf &color, const Texture2D &texture)
+	void RenderBatchTriangle::draw_image(Canvas &canvas, const Rectf &src, const Quadf &dest, const Colorf &color, const Texture2DPtr &texture)
 	{
 		int texindex = set_batcher_active(canvas, texture);
 
@@ -184,7 +184,7 @@ namespace uicore
 		position += 6;
 	}
 
-	void RenderBatchTriangle::draw_glyph_subpixel(Canvas &canvas, const Rectf &src, const Rectf &dest, const Colorf &color, const Texture2D &texture)
+	void RenderBatchTriangle::draw_glyph_subpixel(Canvas &canvas, const Rectf &src, const Rectf &dest, const Colorf &color, const Texture2DPtr &texture)
 	{
 		int texindex = set_batcher_active(canvas, texture, true, color);
 
@@ -241,7 +241,7 @@ namespace uicore
 	}
 
 
-	int RenderBatchTriangle::set_batcher_active(Canvas &canvas, const Texture2D &texture, bool glyph_program, const Colorf &new_constant_color)
+	int RenderBatchTriangle::set_batcher_active(Canvas &canvas, const Texture2DPtr &texture, bool glyph_program, const Colorf &new_constant_color)
 	{
 		if (use_glyph_program != glyph_program || constant_color != new_constant_color)
 		{
@@ -263,7 +263,7 @@ namespace uicore
 		{
 			texindex = num_current_textures;
 			current_textures[num_current_textures++] = texture;
-			tex_sizes[texindex] = Sizef((float)current_textures[texindex].get_width(), (float)current_textures[texindex].get_height());
+			tex_sizes[texindex] = Sizef((float)current_textures[texindex]->width(), (float)current_textures[texindex]->height());
 		}
 
 		if (position == 0 || position + 6 > max_vertices || texindex == -1)
@@ -272,7 +272,7 @@ namespace uicore
 			texindex = 0;
 			current_textures[texindex] = texture;
 			num_current_textures = 1;
-			tex_sizes[texindex] = Sizef((float)current_textures[texindex].get_width(), (float)current_textures[texindex].get_height());
+			tex_sizes[texindex] = Sizef((float)current_textures[texindex]->width(), (float)current_textures[texindex]->height());
 		}
 		canvas.set_batcher(this);
 		return texindex;
@@ -358,7 +358,7 @@ namespace uicore
 
 			position = 0;
 			for (int i = 0; i < num_current_textures; i++)
-				current_textures[i] = Texture2D();
+				current_textures[i] = Texture2DPtr();
 			num_current_textures = 0;
 
 		}

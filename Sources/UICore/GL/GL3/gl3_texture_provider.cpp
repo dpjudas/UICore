@@ -33,6 +33,7 @@
 #include "UICore/Display/Image/pixel_buffer.h"
 #include "UICore/Display/Render/texture.h"
 #include "UICore/Display/Render/shared_gc_data.h"
+#include "UICore/Display/TargetProviders/texture_provider.h"
 #include "UICore/GL/opengl_wrap.h"
 #include "UICore/GL/opengl.h"
 #include "UICore/Core/System/databuffer.h"
@@ -40,104 +41,36 @@
 
 namespace uicore
 {
-	GL3TextureProvider::GL3TextureProvider(GLuint texture_type, GLuint handle)
-		: width(0), height(0), depth(0), array_size(0), handle(handle), texture_type(texture_type)
+	GL3TextureProvider::GL3TextureProvider(const HandleInit &init)
+		: handle(init.handle), texture_type(init.texture_type)
 	{
-		SharedGCData::add_disposable(this);
-		TextureStateTracker state_tracker(texture_type, handle);
-		glGetIntegerv(GL_TEXTURE_WIDTH, &width);
-		glGetIntegerv(GL_TEXTURE_HEIGHT, &height);
-		glGetIntegerv(GL_TEXTURE_DEPTH, &depth);
-	}
-
-	GL3TextureProvider::GL3TextureProvider(TextureDimensions texture_dimensions)
-		: width(0), height(0), depth(0), handle(0), texture_type(0)
-	{
-		create_initial(texture_dimensions);
-	}
-
-	GL3TextureProvider::GL3TextureProvider(GL3TextureProvider *orig_texture, TextureDimensions texture_dimensions, TextureFormat texture_format, int min_level, int num_levels, int min_layer, int num_layers)
-		: width(0), height(0), depth(0), handle(0), texture_type(0)
-	{
-		create_initial(texture_dimensions);
-
-		TextureFormat_GL tf = OpenGL::get_textureformat(texture_format);
-		if (!tf.valid)
-			throw Exception("Texture format not supported by OpenGL");
-
-		if (!glTextureView)
-			throw Exception("glTextureView required OpenGL 4.3");
-
-		glTextureView(handle, texture_type, orig_texture->handle, tf.internal_format, min_level, num_levels, min_layer, num_layers);
-	}
-
-	void GL3TextureProvider::create_initial(TextureDimensions texture_dimensions)
-	{
-		switch (texture_dimensions)
+		if (init.orig_texture == nullptr)
 		{
-		case texture_1d:
-			texture_type = GL_TEXTURE_1D;
-			break;
-		case texture_1d_array:
-			texture_type = GL_TEXTURE_1D_ARRAY;
-			break;
-		case texture_2d:
-			texture_type = GL_TEXTURE_2D;
-			break;
-		case texture_2d_array:
-			texture_type = GL_TEXTURE_2D_ARRAY;
-			break;
-		case texture_3d:
-			texture_type = GL_TEXTURE_3D;
-			break;
-		case texture_cube:
-			texture_type = GL_TEXTURE_CUBE_MAP;
-			break;
-		default:
-			throw Exception("Unsupported texture type");
+			SharedGCData::add_disposable(this);
+			TextureStateTracker state_tracker(texture_type, handle);
+			glGetIntegerv(GL_TEXTURE_WIDTH, &width);
+			glGetIntegerv(GL_TEXTURE_HEIGHT, &height);
+			glGetIntegerv(GL_TEXTURE_DEPTH, &depth);
 		}
-
-		SharedGCData::add_disposable(this);
-
-		TextureStateTracker state_tracker(texture_type, 0);
-		glGenTextures(1, &handle);
-		glBindTexture(texture_type, handle);
-		glTexParameteri(texture_type, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(texture_type, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(texture_type, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		if (texture_type != GL_TEXTURE_1D)
-			glTexParameteri(texture_type, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		if (texture_type == GL_TEXTURE_3D)
-			glTexParameteri(texture_type, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-	}
-
-	GL3TextureProvider::~GL3TextureProvider()
-	{
-		dispose();
-		SharedGCData::remove_disposable(this);
-	}
-
-	void GL3TextureProvider::on_dispose()
-	{
-		if (handle)
+		else
 		{
-			if (OpenGL::set_active())
-			{
-				glDeleteTextures(1, &handle);
-			}
+			create_initial(init.texture_dimensions);
+
+			TextureFormat_GL tf = OpenGL::get_textureformat(init.texture_format);
+			if (!tf.valid)
+				throw Exception("Texture format not supported by OpenGL");
+
+			if (!glTextureView)
+				throw Exception("glTextureView required OpenGL 4.3");
+
+			glTextureView(handle, texture_type, init.orig_texture->handle, tf.internal_format, init.min_level, init.num_levels, init.min_layer, init.num_layers);
 		}
 	}
 
-	void GL3TextureProvider::generate_mipmap()
+	GL3TextureProvider::GL3TextureProvider(const InitData &init, TextureDimensions texture_dimensions, int new_width, int new_height, int new_depth, int new_array_size, TextureFormat texture_format, int levels)
+		: width(0), height(0), depth(0), handle(0), texture_type(0)
 	{
-		throw_if_disposed();
-		TextureStateTracker state_tracker(texture_type, handle);
-		glGenerateMipmap(texture_type);
-	}
-
-	void GL3TextureProvider::create(int new_width, int new_height, int new_depth, int new_array_size, TextureFormat texture_format, int levels)
-	{
-		throw_if_disposed();
+		create_initial(texture_dimensions);
 
 		TextureFormat_GL tf = OpenGL::get_textureformat(texture_format);
 		if (!tf.valid)
@@ -217,6 +150,73 @@ namespace uicore
 				glTexImage3D(GL_TEXTURE_3D, level, tf.internal_format, mip_width, mip_height, depth, 0, tf.pixel_format, tf.pixel_datatype, nullptr);
 			}
 		}
+	}
+
+	void GL3TextureProvider::create_initial(TextureDimensions texture_dimensions)
+	{
+		switch (texture_dimensions)
+		{
+		case texture_1d:
+			texture_type = GL_TEXTURE_1D;
+			break;
+		case texture_1d_array:
+			texture_type = GL_TEXTURE_1D_ARRAY;
+			break;
+		case texture_2d:
+			texture_type = GL_TEXTURE_2D;
+			break;
+		case texture_2d_array:
+			texture_type = GL_TEXTURE_2D_ARRAY;
+			break;
+		case texture_3d:
+			texture_type = GL_TEXTURE_3D;
+			break;
+		case texture_cube:
+			texture_type = GL_TEXTURE_CUBE_MAP;
+			break;
+		case texture_cube_array:
+			texture_type = GL_TEXTURE_CUBE_MAP_ARRAY;
+			break;
+		default:
+			throw Exception("Unsupported texture type");
+		}
+
+		SharedGCData::add_disposable(this);
+
+		TextureStateTracker state_tracker(texture_type, 0);
+		glGenTextures(1, &handle);
+		glBindTexture(texture_type, handle);
+		glTexParameteri(texture_type, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(texture_type, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(texture_type, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		if (texture_type != GL_TEXTURE_1D)
+			glTexParameteri(texture_type, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		if (texture_type == GL_TEXTURE_3D)
+			glTexParameteri(texture_type, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+	}
+
+	GL3TextureProvider::~GL3TextureProvider()
+	{
+		dispose();
+		SharedGCData::remove_disposable(this);
+	}
+
+	void GL3TextureProvider::on_dispose()
+	{
+		if (handle)
+		{
+			if (OpenGL::set_active())
+			{
+				glDeleteTextures(1, &handle);
+			}
+		}
+	}
+
+	void GL3TextureProvider::generate_mipmap()
+	{
+		throw_if_disposed();
+		TextureStateTracker state_tracker(texture_type, handle);
+		glGenerateMipmap(texture_type);
 	}
 
 	PixelBuffer GL3TextureProvider::get_pixeldata(GraphicContext &gc, TextureFormat texture_format, int level) const
@@ -511,9 +511,27 @@ namespace uicore
 		glTexParameteri(texture_type, GL_TEXTURE_COMPARE_FUNC, OpenGL::to_enum(func));
 	}
 
-	TextureProvider *GL3TextureProvider::create_view(TextureDimensions texture_dimensions, TextureFormat texture_format, int min_level, int num_levels, int min_layer, int num_layers)
+	std::shared_ptr<Texture> GL3TextureProvider::create_view(TextureDimensions texture_dimensions, TextureFormat texture_format, int min_level, int num_levels, int min_layer, int num_layers)
 	{
-		return new GL3TextureProvider(this, texture_dimensions, texture_format, min_level, num_levels, min_layer, num_layers);
+		switch (texture_dimensions)
+		{
+		case texture_1d:
+			return std::make_shared<Texture1DImpl<GL3TextureProvider>>(HandleInit(this, texture_dimensions, texture_format, min_level, num_levels, min_layer, num_layers));
+		case texture_1d_array:
+			return std::make_shared<Texture1DArrayImpl<GL3TextureProvider>>(HandleInit(this, texture_dimensions, texture_format, min_level, num_levels, min_layer, num_layers));
+		case texture_2d:
+			return std::make_shared<Texture2DImpl<GL3TextureProvider>>(HandleInit(this, texture_dimensions, texture_format, min_level, num_levels, min_layer, num_layers));
+		case texture_2d_array:
+			return std::make_shared<Texture2DArrayImpl<GL3TextureProvider>>(HandleInit(this, texture_dimensions, texture_format, min_level, num_levels, min_layer, num_layers));
+		case texture_3d:
+			return std::make_shared<Texture3DImpl<GL3TextureProvider>>(HandleInit(this, texture_dimensions, texture_format, min_level, num_levels, min_layer, num_layers));
+		case texture_cube:
+			return std::make_shared<TextureCubeImpl<GL3TextureProvider>>(HandleInit(this, texture_dimensions, texture_format, min_level, num_levels, min_layer, num_layers));
+		case texture_cube_array:
+			return std::make_shared<TextureCubeArrayImpl<GL3TextureProvider>>(HandleInit(this, texture_dimensions, texture_format, min_level, num_levels, min_layer, num_layers));
+		default:
+			throw Exception("Unsupported texture type");
+		}
 	}
 
 	/////////////////////////////////////////////////////////////////////////////

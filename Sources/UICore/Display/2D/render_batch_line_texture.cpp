@@ -48,7 +48,7 @@ namespace uicore
 			modelview_projection_matrix.matrix[0 * 4 + 3] * x + modelview_projection_matrix.matrix[1 * 4 + 3] * y + modelview_projection_matrix.matrix[3 * 4 + 3]);
 	}
 
-	void RenderBatchLineTexture::draw_lines(Canvas &canvas, const Vec2f *line_positions, const Vec2f *texture_positions, int num_vertices, const Texture2D &texture, const Vec4f &line_color)
+	void RenderBatchLineTexture::draw_lines(Canvas &canvas, const Vec2f *line_positions, const Vec2f *texture_positions, int num_vertices, const Texture2DPtr &texture, const Vec4f &line_color)
 	{
 		if (num_vertices < 2)
 		{
@@ -72,7 +72,7 @@ namespace uicore
 	}
 
 
-	void RenderBatchLineTexture::set_batcher_active(Canvas &canvas, int num_vertices, const Texture2D &texture)
+	void RenderBatchLineTexture::set_batcher_active(Canvas &canvas, int num_vertices, const Texture2DPtr &texture)
 	{
 		if (position + num_vertices > max_vertices)
 			canvas.flush();
@@ -81,7 +81,7 @@ namespace uicore
 			throw Exception("Too many vertices for RenderBatchLineTexture");
 
 
-		if (!current_texture.is_null())
+		if (current_texture)
 		{
 			if (current_texture != texture)
 				canvas.flush();
@@ -119,7 +119,7 @@ namespace uicore
 			gc.reset_program_object();
 
 			gc.reset_texture(0);
-			current_texture = Texture2D();
+			current_texture.reset();
 
 			position = 0;
 		}

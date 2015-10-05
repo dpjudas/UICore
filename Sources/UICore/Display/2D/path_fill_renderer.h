@@ -88,7 +88,7 @@ namespace uicore
 		Vec4f *get_buffer() const { return buffer; }
 		int get_position() const { return end_position; }
 
-		Texture2D get_texture() const { return current_texture; }
+		Texture2DPtr get_texture() const { return current_texture; }
 
 	private:
 		static Pointf transform_point(Pointf point, const Mat3f &brush_transform, const Mat4f &fill_transform);
@@ -104,7 +104,7 @@ namespace uicore
 		int max_entries = 0;
 		int end_position = 0;		// The next free position
 
-		Texture2D current_texture;
+		Texture2DPtr current_texture;
 	};
 
 	class PathVertexBuffer
@@ -253,9 +253,9 @@ namespace uicore
 
 		TransferTexture mask_buffer;
 		int mask_buffer_id;	// Buffer index of the mask buffer
-		Texture2D mask_texture;
+		Texture2DPtr mask_texture;
 		TransferTexture instance_buffer;
-		Texture2D instance_texture;
+		Texture2DPtr instance_texture;
 		PrimitivesArrayPtr prim_array[RenderBatchBuffer::num_vertex_buffers];
 		BlendStatePtr blend_state;
 	};

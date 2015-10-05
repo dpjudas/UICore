@@ -62,9 +62,9 @@ namespace uicore
 		DisplayTarget::set_current_target(target);
 	}
 
-	ID3D11Texture2D *D3DTarget::get_texture2d_handle(const GraphicContext &gc, const Texture &texture)
+	ID3D11Texture2D *D3DTarget::get_texture2d_handle(const GraphicContext &gc, const TexturePtr &texture)
 	{
-		D3DTextureProvider *provider = static_cast<D3DTextureProvider *>(texture.get_provider());
+		D3DTextureProvider *provider = static_cast<D3DTextureProvider *>(texture->texture_object());
 		return provider->get_texture_2d(static_cast<const D3DGraphicContextProvider *>(gc.get_provider())->get_window()->get_device());
 	}
 
@@ -99,9 +99,9 @@ namespace uicore
 		return provider->get_buffer(static_cast<const D3DGraphicContextProvider *>(gc.get_provider())->get_window()->get_device());
 	}
 
-	ID3D11ShaderResourceView *D3DTarget::get_srv_handle(const GraphicContext &gc, const Texture &texture)
+	ID3D11ShaderResourceView *D3DTarget::get_srv_handle(const GraphicContext &gc, const TexturePtr &texture)
 	{
-		D3DTextureProvider *provider = static_cast<D3DTextureProvider *>(texture.get_provider());
+		D3DTextureProvider *provider = static_cast<D3DTextureProvider *>(texture->texture_object());
 		return provider->get_srv(static_cast<const D3DGraphicContextProvider *>(gc.get_provider())->get_window()->get_device());
 	}
 

@@ -47,9 +47,9 @@ namespace uicore
 		Type object;
 	};
 
-	typedef D3DUnit<Texture> D3DSamplerUnit;
-	typedef D3DUnit<Texture> D3DTextureUnit;
-	typedef D3DUnit<Texture> D3DImageUnit;
+	typedef D3DUnit<TexturePtr> D3DSamplerUnit;
+	typedef D3DUnit<TexturePtr> D3DTextureUnit;
+	typedef D3DUnit<TexturePtr> D3DImageUnit;
 	typedef D3DUnit<UniformBufferPtr> D3DUniformUnit;
 
 	class D3DStorageUnit
@@ -66,9 +66,9 @@ namespace uicore
 	public:
 		void bind_program(D3DGraphicContextProvider *gc, D3DProgramObjectProvider *program);
 		void unbind_program(D3DGraphicContextProvider *gc, D3DProgramObjectProvider *program);
-		void set_sampler(D3DGraphicContextProvider *gc, int index, const Texture &texture);
-		void set_texture(D3DGraphicContextProvider *gc, int index, const Texture &texture);
-		void set_image(D3DGraphicContextProvider *gc, int index, const Texture &texture);
+		void set_sampler(D3DGraphicContextProvider *gc, int index, const TexturePtr &texture);
+		void set_texture(D3DGraphicContextProvider *gc, int index, const TexturePtr &texture);
+		void set_image(D3DGraphicContextProvider *gc, int index, const TexturePtr &texture);
 		void set_uniform_buffer(D3DGraphicContextProvider *gc, int index, const UniformBufferPtr &buffer);
 		void set_storage_buffer(D3DGraphicContextProvider *gc, int index, const StorageBufferPtr &buffer);
 

@@ -44,7 +44,7 @@ namespace uicore
 		{
 		}
 
-		Texture2D texture;
+		Texture2DPtr texture;
 
 		Rect geometry;
 	};
@@ -53,7 +53,7 @@ namespace uicore
 	{
 	}
 
-	Subtexture::Subtexture(Texture2D texture, const Rect &geometry)
+	Subtexture::Subtexture(Texture2DPtr texture, const Rect &geometry)
 		: impl(std::make_shared<Subtexture_Impl>())
 	{
 		impl->texture = texture;
@@ -70,7 +70,7 @@ namespace uicore
 			throw Exception("Subtexture is null");
 	}
 
-	Texture2D Subtexture::get_texture()
+	Texture2DPtr Subtexture::get_texture()
 	{
 		return impl->texture;
 	}

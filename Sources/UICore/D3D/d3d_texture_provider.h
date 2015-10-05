@@ -36,11 +36,34 @@
 
 namespace uicore
 {
-	class D3DTextureProvider : public TextureProvider, D3DSharedResource
+	class D3DTextureProvider : public TextureObject, public D3DSharedResource
 	{
 	public:
-		D3DTextureProvider(const ComPtr<ID3D11Device> &device, D3D_FEATURE_LEVEL feature_level, TextureDimensions texture_dimensions);
-		D3DTextureProvider(D3DTextureProvider *orig_texture, TextureDimensions texture_dimensions, TextureFormat texture_format, int min_level, int num_levels, int min_layer, int num_layers);
+		struct HandleInit
+		{
+			HandleInit(D3DTextureProvider *orig_texture, TextureDimensions texture_dimensions, TextureFormat texture_format, int min_level, int num_levels, int min_layer, int num_layers)
+				: orig_texture(orig_texture), texture_dimensions(texture_dimensions), texture_format(texture_format), min_level(min_level), num_levels(num_levels), min_layer(min_layer), num_layers(num_layers)
+			{
+			}
+
+			D3DTextureProvider *orig_texture;
+			TextureDimensions texture_dimensions;
+			TextureFormat texture_format;
+			int min_level;
+			int num_levels;
+			int min_layer;
+			int num_layers;
+		};
+
+		struct InitData
+		{
+			InitData(const ComPtr<ID3D11Device> &device, D3D_FEATURE_LEVEL feature_level) : device(device), feature_level(feature_level) { }
+			const ComPtr<ID3D11Device> &device;
+			D3D_FEATURE_LEVEL feature_level;
+		};
+
+		D3DTextureProvider(const InitData &init, TextureDimensions texture_dimensions, int width, int height, int depth, int array_size, TextureFormat texture_format, int levels);
+		D3DTextureProvider(const HandleInit &init);
 		~D3DTextureProvider();
 
 		static bool is_stencil_or_depth_format(TextureFormat format);
@@ -56,7 +79,6 @@ namespace uicore
 		ComPtr<ID3D11UnorderedAccessView> &get_uav(const ComPtr<ID3D11Device> &device);
 
 		void generate_mipmap();
-		void create(int width, int height, int depth, int array_size, TextureFormat texture_format, int levels);
 		PixelBuffer get_pixeldata(GraphicContext &gc, TextureFormat texture_format, int level) const;
 
 		void copy_from(GraphicContext &gc, int x, int y, int slice, int level, const PixelBuffer &src, const Rect &src_rect);
@@ -103,7 +125,7 @@ namespace uicore
 		void set_max_anisotropy(float v);
 		void set_texture_compare(TextureCompareMode mode, CompareFunction func);
 
-		TextureProvider *create_view(TextureDimensions texture_dimensions, TextureFormat texture_format, int min_level, int num_levels, int min_layer, int num_layers);
+		std::shared_ptr<Texture> create_view(TextureDimensions texture_dimensions, TextureFormat texture_format, int min_level, int num_levels, int min_layer, int num_layers);
 
 		ComPtr<ID3D11RenderTargetView> create_rtv(const ComPtr<ID3D11Device> &device, int level, int slice, TextureSubtype subtype);
 		ComPtr<ID3D11DepthStencilView> create_dsv(const ComPtr<ID3D11Device> &device, int level, int slice, TextureSubtype subtype);

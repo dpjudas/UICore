@@ -45,74 +45,40 @@ namespace uicore
 	};
 
 	/// \brief 2D texture cube object class.
-	class TextureCube : public Texture
+	class TextureCube : public virtual Texture
 	{
 	public:
-		/// \brief Constructs a null instance.
-		TextureCube();
-
-		/// \brief Constructs a texture from an implementation
+		/// \brief Constructs a cube texture
 		///
-		/// \param impl = The implementation
-		TextureCube(const std::shared_ptr<Texture_Impl> &impl) : Texture(impl) { }
-
-		/// \brief Constructs a Texture
-		///
-		/// \param context = Graphic Context
-		/// \param width = value
-		/// \param height = value
-		/// \param internal_format = Texture Format
-		/// \param levels = Mipmap levels for the texture. 0 = all levels
-		TextureCube(GraphicContext &context, int width, int height, TextureFormat texture_format = tf_rgba8, int levels = 1);
-
-		/// \brief Constructs a Texture
-		///
-		/// \param context = Graphic Context
-		/// \param size = Size
-		/// \param internal_format = Texture Format
-		/// \param levels = Mipmap levels for the texture. 0 = all levels
-		TextureCube(GraphicContext &context, const Size &size, TextureFormat texture_format = tf_rgba8, int levels = 1);
+		/// If levels is set to zero it will create a texture containing all mipmap levels
+		static std::shared_ptr<TextureCube> create(GraphicContext &context, int width, int height, TextureFormat texture_format = tf_rgba8, int levels = 1);
+		static std::shared_ptr<TextureCube> create(GraphicContext &context, const Size &size, TextureFormat texture_format = tf_rgba8, int levels = 1);
 
 		/// \brief Get the texture width.
-		int get_width() const;
+		virtual int width() const = 0;
 
 		/// \brief Get the texture height.
-		int get_height() const;
+		virtual int height() const = 0;
 
 		/// \brief Get the texture size.
-		Size get_size() const;
+		Size size() const { return Size(width(), height()); }
 
 		/// \brief Upload image to texture.
 		///
 		/// \param context Graphic context to use for the request
 		/// \param image Image to upload.
 		/// \param level Mipmap level-of-detail number.
-		void set_image(
-			GraphicContext &context,
-			TextureCubeDirection cube_direction,
-			PixelBuffer &image,
-			int level = 0);
+		virtual void set_image(GraphicContext &context, TextureCubeDirection cube_direction, const PixelBuffer &image, int level = 0) = 0;
 
 		/// \brief Upload image to sub texture.
 		///
 		/// \param context Graphic context to use for the request
 		/// \param image Image to upload.
 		/// \param level Mipmap level-of-detail number.
-		void set_subimage(
-			GraphicContext &context,
-			TextureCubeDirection cube_direction,
-			int x,
-			int y,
-			const PixelBuffer &image,
-			const Rect &src_rect,
-			int level = 0);
-
-		void set_subimage(
-			GraphicContext &context,
-			TextureCubeDirection cube_direction,
-			const Point &point,
-			const PixelBuffer &image,
-			const Rect &src_rect,
-			int level = 0);
+		virtual void set_subimage(GraphicContext &context, TextureCubeDirection cube_direction, int x, int y, const PixelBuffer &image, const Rect &src_rect, int level = 0) = 0;
+		void set_subimage(GraphicContext &context, TextureCubeDirection cube_direction, const Point &point, const PixelBuffer &image, const Rect &src_rect, int level = 0)
+		{
+			set_subimage(context, cube_direction, point.x, point.y, image, src_rect, level);
+		}
 	};
 }

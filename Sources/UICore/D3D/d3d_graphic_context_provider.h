@@ -79,7 +79,6 @@ namespace uicore
 		int get_minor_version() const;
 		bool has_compute_shader_support() const;
 		PixelBuffer get_pixeldata(const Rect& rect, TextureFormat texture_format, bool clamp) const;
-		TextureProvider *alloc_texture(TextureDimensions texture_dimensions);
 		UniformBufferProvider *alloc_uniform_buffer();
 		PixelBufferProvider *alloc_pixel_buffer();
 		std::shared_ptr<RasterizerState> create_rasterizer_state(const RasterizerStateDescription &desc) override;
@@ -102,6 +101,13 @@ namespace uicore
 		std::shared_ptr<TransferBuffer> create_transfer_buffer(int size, BufferUsage usage) override;
 		std::shared_ptr<TransferBuffer> create_transfer_buffer(const void *data, int size, BufferUsage usage) override;
 		std::shared_ptr<PrimitivesArray> create_primitives_array() override;
+		std::shared_ptr<Texture1D> create_texture_1d(int width, TextureFormat texture_format, int levels) override;
+		std::shared_ptr<Texture1DArray> create_texture_1d_array(int width, int array_size, TextureFormat texture_format, int levels) override;
+		std::shared_ptr<Texture2D> create_texture_2d(int width, int height, TextureFormat texture_format, int levels) override;
+		std::shared_ptr<Texture2DArray> create_texture_2d_array(int width, int height, int array_size, TextureFormat texture_format, int levels) override;
+		std::shared_ptr<Texture3D> create_texture_3d(int width, int height, int depth, TextureFormat texture_format, int levels) override;
+		std::shared_ptr<TextureCube> create_texture_cube(int width, int height, TextureFormat texture_format, int levels) override;
+		std::shared_ptr<TextureCubeArray> create_texture_cube_array(int width, int height, int array_size, TextureFormat texture_format, int levels) override;
 		void set_rasterizer_state(RasterizerState *state);
 		void set_blend_state(BlendState *state, const Colorf &blend_color, unsigned int sample_mask);
 		void set_depth_stencil_state(DepthStencilState *state, int stencil_ref);
@@ -112,9 +118,9 @@ namespace uicore
 		void reset_uniform_buffer(int index);
 		void set_storage_buffer(int index, const StorageBufferPtr &buffer);
 		void reset_storage_buffer(int index);
-		void set_texture(int unit_index, const Texture &texture);
+		void set_texture(int unit_index, const TexturePtr &texture);
 		void reset_texture(int unit_index);
-		void set_image_texture(int unit_index, const Texture &texture);
+		void set_image_texture(int unit_index, const TexturePtr &texture);
 		void reset_image_texture(int unit_index);
 		bool is_frame_buffer_owner(const FrameBufferPtr &fb);
 		void set_frame_buffer(const FrameBufferPtr &write_buffer, const FrameBufferPtr &read_buffer);

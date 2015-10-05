@@ -35,6 +35,7 @@ namespace uicore
 	class Size;
 	class Rect;
 	class Texture2D;
+	typedef std::shared_ptr<Texture2D> Texture2DPtr;
 	class Subtexture_Impl;
 
 	/// \brief Sub-texture description.
@@ -48,7 +49,7 @@ namespace uicore
 		///
 		/// \param texture = Texture
 		/// \param geometry = Rect
-		Subtexture(Texture2D texture, const Rect &geometry);
+		Subtexture(Texture2DPtr texture, const Rect &geometry);
 		~Subtexture();
 
 		/// \brief Returns true if this object is invalid.
@@ -58,7 +59,7 @@ namespace uicore
 		void throw_if_null() const;
 
 		/// \brief Returns the texture.
-		Texture2D get_texture();
+		Texture2DPtr get_texture();
 
 		/// \brief Returns the part of the texture used by this object.
 		Rect get_geometry() const;

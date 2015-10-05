@@ -72,9 +72,9 @@ namespace uicore
 		return count;
 	}
 
-	std::vector<Texture2D> TextureGroup_Impl::get_textures() const
+	std::vector<Texture2DPtr> TextureGroup_Impl::get_textures() const
 	{
-		std::vector<Texture2D> textures;
+		std::vector<Texture2DPtr> textures;
 
 		std::vector<RootNode *>::size_type index, size;
 		size = root_nodes.size();
@@ -144,7 +144,7 @@ namespace uicore
 		Node node(rect);
 
 		active_root = new RootNode();
-		active_root->texture = Texture2D(context, texture_size);
+		active_root->texture = Texture2D::create(context, texture_size);
 		active_root->node = node;
 
 		root_nodes.push_back(active_root);
@@ -152,7 +152,7 @@ namespace uicore
 		return active_root;
 	}
 
-	void TextureGroup_Impl::insert_texture(Texture2D &texture, const Rect &texture_rect)
+	void TextureGroup_Impl::insert_texture(const Texture2DPtr &texture, const Rect &texture_rect)
 	{
 		Node node(texture_rect);
 
@@ -167,7 +167,7 @@ namespace uicore
 	{
 		// Find the texture
 		Node *node = nullptr;
-		Texture2D texture = subtexture.get_texture();
+		Texture2DPtr texture = subtexture.get_texture();
 		Rect rect = subtexture.get_geometry();
 
 		std::vector<RootNode *>::size_type index, size;

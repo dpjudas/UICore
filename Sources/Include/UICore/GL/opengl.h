@@ -113,12 +113,7 @@ namespace uicore
 		static std::vector<MessageLog_GL> get_message_log(GLuint numMsgs);
 
 		/// \brief Returns the OpenGL texture handle
-		static GLuint get_texture_handle(Texture &texture);
-
-		/// \brief Creates a texture object from an OpenGL texture handle
-		///
-		/// The returned object takes ownership of the texture handle (it calls glDeleteTextures when destroyed)
-		static Texture from_texture_handle(GLuint type, GLuint handle);
+		static GLuint get_texture_handle(const TexturePtr &texture);
 
 		static GLenum to_enum(DrawBuffer buf);
 		static GLenum to_enum(CompareFunction func);

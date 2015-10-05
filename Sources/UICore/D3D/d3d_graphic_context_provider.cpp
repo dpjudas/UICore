@@ -178,11 +178,6 @@ namespace uicore
 		return pixels;
 	}
 
-	TextureProvider *D3DGraphicContextProvider::alloc_texture(TextureDimensions texture_dimensions)
-	{
-		return new D3DTextureProvider(window->get_device(), window->get_feature_level(), texture_dimensions);
-	}
-
 	PixelBufferProvider *D3DGraphicContextProvider::alloc_pixel_buffer()
 	{
 		return new D3DPixelBufferProvider(window->get_device());
@@ -318,6 +313,41 @@ namespace uicore
 		return std::make_shared<D3DPrimitivesArrayProvider>(window->get_device());
 	}
 
+	std::shared_ptr<Texture1D> D3DGraphicContextProvider::create_texture_1d(int width, TextureFormat texture_format, int levels)
+	{
+		return std::make_shared<Texture1DImpl<D3DTextureProvider>>(D3DTextureProvider::InitData(window->get_device(), window->get_feature_level()), width, texture_format, levels);
+	}
+
+	std::shared_ptr<Texture1DArray> D3DGraphicContextProvider::create_texture_1d_array(int width, int array_size, TextureFormat texture_format, int levels)
+	{
+		return std::make_shared<Texture1DArrayImpl<D3DTextureProvider>>(D3DTextureProvider::InitData(window->get_device(), window->get_feature_level()), width, array_size, texture_format, levels);
+	}
+
+	std::shared_ptr<Texture2D> D3DGraphicContextProvider::create_texture_2d(int width, int height, TextureFormat texture_format, int levels)
+	{
+		return std::make_shared<Texture2DImpl<D3DTextureProvider>>(D3DTextureProvider::InitData(window->get_device(), window->get_feature_level()), width, height, texture_format, levels);
+	}
+
+	std::shared_ptr<Texture2DArray> D3DGraphicContextProvider::create_texture_2d_array(int width, int height, int array_size, TextureFormat texture_format, int levels)
+	{
+		return std::make_shared<Texture2DArrayImpl<D3DTextureProvider>>(D3DTextureProvider::InitData(window->get_device(), window->get_feature_level()), width, height, array_size, texture_format, levels);
+	}
+
+	std::shared_ptr<Texture3D> D3DGraphicContextProvider::create_texture_3d(int width, int height, int depth, TextureFormat texture_format, int levels)
+	{
+		return std::make_shared<Texture3DImpl<D3DTextureProvider>>(D3DTextureProvider::InitData(window->get_device(), window->get_feature_level()), width, height, depth, texture_format, levels);
+	}
+
+	std::shared_ptr<TextureCube> D3DGraphicContextProvider::create_texture_cube(int width, int height, TextureFormat texture_format, int levels)
+	{
+		return std::make_shared<TextureCubeImpl<D3DTextureProvider>>(D3DTextureProvider::InitData(window->get_device(), window->get_feature_level()), width, height, texture_format, levels);
+	}
+
+	std::shared_ptr<TextureCubeArray> D3DGraphicContextProvider::create_texture_cube_array(int width, int height, int array_size, TextureFormat texture_format, int levels)
+	{
+		return std::make_shared<TextureCubeArrayImpl<D3DTextureProvider>>(D3DTextureProvider::InitData(window->get_device(), window->get_feature_level()), width, height, array_size, texture_format, levels);
+	}
+
 	void D3DGraphicContextProvider::set_rasterizer_state(RasterizerState *state)
 	{
 		if (state)
@@ -445,24 +475,24 @@ namespace uicore
 		unit_map.set_storage_buffer(this, index, StorageBufferPtr());
 	}
 
-	void D3DGraphicContextProvider::set_texture(int unit_index, const Texture &texture)
+	void D3DGraphicContextProvider::set_texture(int unit_index, const TexturePtr &texture)
 	{
 		unit_map.set_texture(this, unit_index, texture);
 	}
 
 	void D3DGraphicContextProvider::reset_texture(int unit_index)
 	{
-		unit_map.set_texture(this, unit_index, Texture());
+		unit_map.set_texture(this, unit_index, TexturePtr());
 	}
 
-	void D3DGraphicContextProvider::set_image_texture(int unit_index, const Texture &texture)
+	void D3DGraphicContextProvider::set_image_texture(int unit_index, const TexturePtr &texture)
 	{
 		unit_map.set_image(this, unit_index, texture);
 	}
 
 	void D3DGraphicContextProvider::reset_image_texture(int unit_index)
 	{
-		unit_map.set_image(this, unit_index, Texture());
+		unit_map.set_image(this, unit_index, TexturePtr());
 	}
 
 	bool D3DGraphicContextProvider::is_frame_buffer_owner(const FrameBufferPtr &fb)

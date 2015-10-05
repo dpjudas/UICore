@@ -114,7 +114,7 @@ namespace uicore
 			font_glyph->texture = sub_texture.get_texture();
 			font_glyph->geometry = Rect(sub_texture.get_geometry().left + glyph_border_size, sub_texture.get_geometry().top + glyph_border_size, pb.buffer_rect.get_size());
 			font_glyph->size = pb.size;
-			sub_texture.get_texture().set_subimage(gc, sub_texture.get_geometry().left, sub_texture.get_geometry().top, buffer_with_border, buffer_with_border.get_size());
+			sub_texture.get_texture()->set_subimage(gc, sub_texture.get_geometry().left, sub_texture.get_geometry().top, buffer_with_border, buffer_with_border.get_size());
 		}
 
 		glyph_list.push_back(std::move(font_glyph));

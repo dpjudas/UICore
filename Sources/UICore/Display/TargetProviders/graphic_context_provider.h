@@ -117,9 +117,6 @@ namespace uicore
 		/// \brief Return the content of the draw buffer into a pixel buffer.
 		virtual PixelBuffer get_pixeldata(const Rect& rect, TextureFormat texture_format, bool clamp) const = 0;
 
-		/// \brief Allocate texture provider for this gc.
-		virtual TextureProvider *alloc_texture(TextureDimensions texture_dimensions) = 0;
-
 		/// \brief Allocate pixel buffer provider for this gc.
 		virtual PixelBufferProvider *alloc_pixel_buffer() = 0;
 
@@ -143,6 +140,13 @@ namespace uicore
 		virtual std::shared_ptr<TransferBuffer> create_transfer_buffer(int size, BufferUsage usage) = 0;
 		virtual std::shared_ptr<TransferBuffer> create_transfer_buffer(const void *data, int size, BufferUsage usage) = 0;
 		virtual std::shared_ptr<PrimitivesArray> create_primitives_array() = 0;
+		virtual std::shared_ptr<Texture1D> create_texture_1d(int width, TextureFormat texture_format, int levels) = 0;
+		virtual std::shared_ptr<Texture1DArray> create_texture_1d_array(int width, int array_size, TextureFormat texture_format, int levels) = 0;
+		virtual std::shared_ptr<Texture2D> create_texture_2d(int width, int height, TextureFormat texture_format, int levels) = 0;
+		virtual std::shared_ptr<Texture2DArray> create_texture_2d_array(int width, int height, int array_size, TextureFormat texture_format, int levels) = 0;
+		virtual std::shared_ptr<Texture3D> create_texture_3d(int width, int height, int depth, TextureFormat texture_format, int levels) = 0;
+		virtual std::shared_ptr<TextureCube> create_texture_cube(int width, int height, TextureFormat texture_format, int levels) = 0;
+		virtual std::shared_ptr<TextureCubeArray> create_texture_cube_array(int width, int height, int array_size, TextureFormat texture_format, int levels) = 0;
 
 		/// \brief Set active rasterizer state
 		virtual void set_rasterizer_state(RasterizerState *state) = 0;
@@ -177,13 +181,13 @@ namespace uicore
 		virtual void reset_storage_buffer(int index) = 0;
 
 		/// \brief Select texture into unit.
-		virtual void set_texture(int unit_index, const Texture &texture) = 0;
+		virtual void set_texture(int unit_index, const TexturePtr &texture) = 0;
 
 		/// \brief Remove texture from unit.
 		virtual void reset_texture(int unit_index) = 0;
 
 		/// \brief Select texture into image unit.
-		virtual void set_image_texture(int unit_index, const Texture &texture) = 0;
+		virtual void set_image_texture(int unit_index, const TexturePtr &texture) = 0;
 
 		/// \brief Remove texture from image unit.
 		virtual void reset_image_texture(int unit_index) = 0;

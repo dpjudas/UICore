@@ -34,55 +34,36 @@
 namespace uicore
 {
 	/// \brief 1D texture object class.
-	class Texture1D : public Texture
+	class Texture1D : public virtual Texture
 	{
 	public:
-		/// \brief Constructs a null instance.
-		Texture1D();
-
-		/// \brief Constructs a texture from an implementation
+		/// \brief Constructs a 1D texture
 		///
-		/// \param impl = The implementation
-		Texture1D(const std::shared_ptr<Texture_Impl> &impl) : Texture(impl) { }
-
-		/// \brief Constructs a Texture
-		///
-		/// \param context = Graphic Context
-		/// \param size = value
-		/// \param height = value
-		/// \param internal_format = Texture Format
-		/// \param levels = Mipmap levels for the texture. 0 = all levels
-		Texture1D(GraphicContext &context, int size, TextureFormat texture_format = tf_rgba8, int levels = 1);
-
-		Texture1D(GraphicContext &context, const PixelBuffer &image, bool is_srgb = false);
-		Texture1D(GraphicContext &context, const PixelBuffer &image, int src_x, int width, bool is_srgb = false);
+		/// If levels is set to zero it will create a texture containing all mipmap levels
+		static std::shared_ptr<Texture1D> create(GraphicContext &context, int size, TextureFormat texture_format = tf_rgba8, int levels = 1);
+		static std::shared_ptr<Texture1D> create(GraphicContext &context, const PixelBuffer &image, bool is_srgb = false);
+		static std::shared_ptr<Texture1D> create(GraphicContext &context, const PixelBuffer &image, int src_x, int width, bool is_srgb = false);
 
 		/// \brief Get the texture width.
-		int get_size() const;
+		virtual int size() const = 0;
 
 		/// \brief Get the texture wrap mode for the s coordinate.
-		TextureWrapMode get_wrap_mode_s() const;
+		virtual TextureWrapMode wrap_mode_s() const = 0;
 
 		/// \brief Upload image to texture.
 		///
 		/// \param context Graphic context to use for the request
 		/// \param image Image to upload.
 		/// \param level Mipmap level-of-detail number.
-		void set_image(GraphicContext &context, PixelBuffer &image, int level = 0);
+		virtual void set_image(GraphicContext &context, const PixelBuffer &image, int level = 0) = 0;
 
 		/// \brief Upload image to sub texture.
 		///
 		/// \param context Graphic context to use for the request
 		/// \param image Image to upload.
 		/// \param level Mipmap level-of-detail number.
-		void set_subimage(
-			GraphicContext &context,
-			int x,
-			const PixelBuffer &image,
-			const int src_x,
-			const int src_width,
-			int level = 0);
+		virtual void set_subimage(GraphicContext &context, int x, const PixelBuffer &image, const int src_x, const int src_width, int level = 0) = 0;
 
-		void set_wrap_mode(TextureWrapMode wrap_s);
+		virtual void set_wrap_mode(TextureWrapMode wrap_s) = 0;
 	};
 }

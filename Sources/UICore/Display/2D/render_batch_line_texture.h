@@ -41,7 +41,7 @@ namespace uicore
 	{
 	public:
 		RenderBatchLineTexture(GraphicContext &gc, RenderBatchBuffer *batch_buffer);
-		void draw_lines(Canvas &canvas, const Vec2f *line_positions, const Vec2f *texture_positions, int num_vertices, const Texture2D &texture, const Vec4f &line_color);
+		void draw_lines(Canvas &canvas, const Vec2f *line_positions, const Vec2f *texture_positions, int num_vertices, const Texture2DPtr &texture, const Vec4f &line_color);
 
 	private:
 		struct LineTextureVertex
@@ -52,7 +52,7 @@ namespace uicore
 		};
 
 		inline Vec4f to_position(float x, float y) const;
-		void set_batcher_active(Canvas &canvas, int num_vertices, const Texture2D &texture);
+		void set_batcher_active(Canvas &canvas, int num_vertices, const Texture2DPtr &texture);
 		void flush(GraphicContext &gc) override;
 		void matrix_changed(const Mat4f &modelview, const Mat4f &projection, TextureImageYAxis image_yaxis, float pixel_ratio) override;
 
@@ -63,7 +63,7 @@ namespace uicore
 		PrimitivesArrayPtr prim_array[RenderBatchBuffer::num_vertex_buffers];
 		int position = 0;
 		Mat4f modelview_projection_matrix;
-		Texture2D current_texture;
+		Texture2DPtr current_texture;
 
 	};
 }

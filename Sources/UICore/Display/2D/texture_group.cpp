@@ -78,7 +78,7 @@ namespace uicore
 		return impl->initial_texture_size;
 	}
 
-	std::vector<Texture2D> TextureGroup::get_textures() const
+	std::vector<Texture2DPtr> TextureGroup::get_textures() const
 	{
 		return impl->get_textures();
 	}
@@ -98,7 +98,7 @@ namespace uicore
 		impl->texture_allocation_policy = policy;
 	}
 
-	void TextureGroup::insert_texture(Texture2D &texture, const Rect &texture_rect)
+	void TextureGroup::insert_texture(Texture2DPtr &texture, const Rect &texture_rect)
 	{
 		impl->insert_texture(texture, texture_rect);
 	}

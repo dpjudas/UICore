@@ -37,14 +37,31 @@
 
 namespace uicore
 {
-	D3DTextureProvider::D3DTextureProvider(const ComPtr<ID3D11Device> &device, D3D_FEATURE_LEVEL feature_level, TextureDimensions texture_dimensions)
-	: data(new D3DTextureData(device, feature_level, texture_dimensions)), view_min_layer(-1)
+	D3DTextureProvider::D3DTextureProvider(const InitData &init, TextureDimensions texture_dimensions, int width, int height, int depth, int array_size, TextureFormat texture_format, int levels)
+	: data(new D3DTextureData(init.device, init.feature_level, texture_dimensions)), view_min_layer(-1)
 	{
-		view_handles.push_back(std::shared_ptr<ViewHandles>(new ViewHandles(device)));
+		view_handles.push_back(std::shared_ptr<ViewHandles>(new ViewHandles(init.device)));
+
+		if (data->texture_dimensions == texture_1d || data->texture_dimensions == texture_1d_array)
+		{
+			create_1d(width, height, depth, array_size, texture_format, levels);
+		}
+		else if (data->texture_dimensions == texture_2d || data->texture_dimensions == texture_2d_array || data->texture_dimensions == texture_cube || data->texture_dimensions == texture_cube_array)
+		{
+			create_2d(width, height, depth, array_size, texture_format, levels);
+		}
+		else if (data->texture_dimensions == texture_3d)
+		{
+			create_3d(width, height, depth, array_size, texture_format, levels);
+		}
+		else
+		{
+			throw Exception("Unknown texture dimensions type");
+		}
 	}
 
-	D3DTextureProvider::D3DTextureProvider(D3DTextureProvider *orig_texture, TextureDimensions texture_dimensions, TextureFormat texture_format, int min_level, int num_levels, int min_layer, int num_layers)
-	: data(orig_texture->data), view_min_layer(min_layer)
+	D3DTextureProvider::D3DTextureProvider(const HandleInit &init)
+	: data(init.orig_texture->data), view_min_layer(init.min_layer)
 	{
 		// To do: save and use all view parameters
 		view_handles.push_back(std::shared_ptr<ViewHandles>(new ViewHandles(data->handles.front()->device)));
@@ -508,9 +525,27 @@ namespace uicore
 		return dsv;
 	}
 
-	TextureProvider *D3DTextureProvider::create_view(TextureDimensions texture_dimensions, TextureFormat texture_format, int min_level, int num_levels, int min_layer, int num_layers)
+	std::shared_ptr<Texture> D3DTextureProvider::create_view(TextureDimensions texture_dimensions, TextureFormat texture_format, int min_level, int num_levels, int min_layer, int num_layers)
 	{
-		return new D3DTextureProvider(this, texture_dimensions, texture_format, min_level, num_levels, min_layer, num_layers);
+		switch (data->texture_dimensions)
+		{
+		case texture_1d:
+			return std::make_shared<Texture1DImpl<D3DTextureProvider>>(HandleInit(this, texture_dimensions, texture_format, min_level, num_levels, min_layer, num_layers));
+		case texture_1d_array:
+			return std::make_shared<Texture1DArrayImpl<D3DTextureProvider>>(HandleInit(this, texture_dimensions, texture_format, min_level, num_levels, min_layer, num_layers));
+		case texture_2d:
+			return std::make_shared<Texture2DImpl<D3DTextureProvider>>(HandleInit(this, texture_dimensions, texture_format, min_level, num_levels, min_layer, num_layers));
+		case texture_2d_array:
+			return std::make_shared<Texture2DArrayImpl<D3DTextureProvider>>(HandleInit(this, texture_dimensions, texture_format, min_level, num_levels, min_layer, num_layers));
+		case texture_3d:
+			return std::make_shared<Texture3DImpl<D3DTextureProvider>>(HandleInit(this, texture_dimensions, texture_format, min_level, num_levels, min_layer, num_layers));
+		case texture_cube:
+			return std::make_shared<TextureCubeImpl<D3DTextureProvider>>(HandleInit(this, texture_dimensions, texture_format, min_level, num_levels, min_layer, num_layers));
+		case texture_cube_array:
+			return std::make_shared<TextureCubeArrayImpl<D3DTextureProvider>>(HandleInit(this, texture_dimensions, texture_format, min_level, num_levels, min_layer, num_layers));
+		default:
+			throw Exception("Unknown texture dimension enumeration value");
+		}
 	}
 
 	void D3DTextureProvider::generate_mipmap()
@@ -520,26 +555,6 @@ namespace uicore
 		ComPtr<ID3D11DeviceContext> device_context;
 		view_handles.front()->device->GetImmediateContext(device_context.output_variable());
 		device_context->GenerateMips(get_srv(view_handles.front()->device));
-	}
-
-	void D3DTextureProvider::create(int width, int height, int depth, int array_size, TextureFormat texture_format, int levels)
-	{
-		if (data->texture_dimensions == texture_1d || data->texture_dimensions == texture_1d_array)
-		{
-			create_1d(width, height, depth, array_size, texture_format, levels);
-		}
-		else if (data->texture_dimensions == texture_2d || data->texture_dimensions == texture_2d_array || data->texture_dimensions == texture_cube || data->texture_dimensions == texture_cube_array)
-		{
-			create_2d(width, height, depth, array_size, texture_format, levels);
-		}
-		else if (data->texture_dimensions == texture_3d)
-		{
-			create_3d(width, height, depth, array_size, texture_format, levels);
-		}
-		else
-		{
-			throw Exception("Unknown texture dimensions type");
-		}
 	}
 
 	void D3DTextureProvider::create_1d(int width, int height, int depth, int array_size, TextureFormat texture_format, int levels)

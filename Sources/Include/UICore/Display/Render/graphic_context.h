@@ -67,6 +67,7 @@ namespace uicore
 	typedef std::shared_ptr<StorageBuffer> StorageBufferPtr;
 	typedef std::shared_ptr<UniformBuffer> UniformBufferPtr;
 	typedef std::shared_ptr<PrimitivesArray> PrimitivesArrayPtr;
+	typedef std::shared_ptr<Texture> TexturePtr;
 
 	/// Polygon culling modes.
 	enum CullMode
@@ -318,13 +319,13 @@ namespace uicore
 		 *  \return The texture on the specified index. Use Texture::is_null() to
 		 *          determine whether the texture has been selected by the context.
 		 */
-		Texture get_texture(int index) const;
+		TexturePtr get_texture(int index) const;
 
 		/** Returns the textures currently selected in this context.
 		 *  \return A vector containing the selected textures. The vector may
 		 *          contain null (unselected) texture elements within it..
 		 */
-		std::vector<Texture> get_textures() const;
+		std::vector<TexturePtr> get_textures() const;
 
 		/** Returns the currently selected write frame buffer.
 		 *  \return The frame buffer.
@@ -422,14 +423,14 @@ namespace uicore
 		///
 		/// \param unit_index = 0 to x, the index of this texture
 		/// \param texture = The texture to select.  This can be an empty texture Texture()
-		void set_texture(int unit_index, const Texture &texture);
+		void set_texture(int unit_index, const TexturePtr &texture);
 
 		/// Select textures
 		///
 		/// Only textures units from 0 to textures.size()-1 are set.
 		///
 		/// \param textures = The texture to select (placed at unit_index 0 to texture.size()-1).  These may contain null textures
-		void set_textures(std::vector<Texture> &textures);
+		void set_textures(std::vector<TexturePtr> &textures);
 
 		/// Remove texture from index.
 		///
@@ -443,14 +444,14 @@ namespace uicore
 		///
 		/// \param unit_index = 0 to x, the index of this texture
 		/// \param texture = The texture to select.  This can be an empty texture Texture()
-		void set_image_texture(int unit_index, const Texture &texture);
+		void set_image_texture(int unit_index, const TexturePtr &texture);
 
 		/// Select texture images
 		///
 		/// Only textures units from 0 to textures.size()-1 are set.
 		///
 		/// \param textures = The texture to select (placed at unit_index 0 to texture.size()-1).  These may contain null textures
-		void set_image_texture(std::vector<Texture> &textures);
+		void set_image_texture(std::vector<TexturePtr> &textures);
 
 		/// Remove texture from index.
 		///

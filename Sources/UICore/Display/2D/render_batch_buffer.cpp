@@ -53,34 +53,34 @@ namespace uicore
 		return vertex_buffers[out_index];
 	}
 
-	Texture2D RenderBatchBuffer::get_texture_rgba32f(GraphicContext &gc)
+	Texture2DPtr RenderBatchBuffer::get_texture_rgba32f(GraphicContext &gc)
 	{
 		current_rgba32f_texture++;
 		if (current_rgba32f_texture == num_r8_buffers)
 			current_rgba32f_texture = 0;
 
-		if (textures_rgba32f[current_rgba32f_texture].is_null())
+		if (!textures_rgba32f[current_rgba32f_texture])
 		{
-			textures_rgba32f[current_rgba32f_texture] = Texture2D(gc, rgba32f_width, rgba32f_height, tf_rgba32f);
-			textures_rgba32f[current_rgba32f_texture].set_min_filter(filter_nearest);
-			textures_rgba32f[current_rgba32f_texture].set_mag_filter(filter_nearest);
+			textures_rgba32f[current_rgba32f_texture] = Texture2D::create(gc, rgba32f_width, rgba32f_height, tf_rgba32f);
+			textures_rgba32f[current_rgba32f_texture]->set_min_filter(filter_nearest);
+			textures_rgba32f[current_rgba32f_texture]->set_mag_filter(filter_nearest);
 
 		}
 
 		return textures_rgba32f[current_rgba32f_texture];
 	}
 
-	Texture2D RenderBatchBuffer::get_texture_r8(GraphicContext &gc)
+	Texture2DPtr RenderBatchBuffer::get_texture_r8(GraphicContext &gc)
 	{
 		current_r8_texture++;
 		if (current_r8_texture == num_r8_buffers)
 			current_r8_texture = 0;
 
-		if (textures_r8[current_r8_texture].is_null())
+		if (!textures_r8[current_r8_texture])
 		{
-			textures_r8[current_r8_texture] = Texture2D(gc, r8_size, r8_size, tf_r8);
-			textures_r8[current_r8_texture].set_min_filter(filter_nearest);
-			textures_r8[current_r8_texture].set_mag_filter(filter_nearest);
+			textures_r8[current_r8_texture] = Texture2D::create(gc, r8_size, r8_size, tf_r8);
+			textures_r8[current_r8_texture]->set_min_filter(filter_nearest);
+			textures_r8[current_r8_texture]->set_mag_filter(filter_nearest);
 		}
 		return textures_r8[current_r8_texture];
 	}

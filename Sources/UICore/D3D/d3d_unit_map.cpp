@@ -131,7 +131,7 @@ namespace uicore
 		}
 	}
 
-	void D3DUnitMap::set_sampler(D3DGraphicContextProvider *gc, int index, const Texture &texture)
+	void D3DUnitMap::set_sampler(D3DGraphicContextProvider *gc, int index, const TexturePtr &texture)
 	{
 		if (sampler_units.size() < index + 1)
 			sampler_units.resize(index + 1);
@@ -139,7 +139,7 @@ namespace uicore
 		bind_sampler(gc, index);
 	}
 
-	void D3DUnitMap::set_texture(D3DGraphicContextProvider *gc, int index, const Texture &texture)
+	void D3DUnitMap::set_texture(D3DGraphicContextProvider *gc, int index, const TexturePtr &texture)
 	{
 		if (texture_units.size() < index + 1)
 			texture_units.resize(index + 1);
@@ -149,7 +149,7 @@ namespace uicore
 		set_sampler(gc, index, texture);
 	}
 
-	void D3DUnitMap::set_image(D3DGraphicContextProvider *gc, int index, const Texture &texture)
+	void D3DUnitMap::set_image(D3DGraphicContextProvider *gc, int index, const TexturePtr &texture)
 	{
 		if (image_units.size() < index + 1)
 			image_units.resize(index + 1);
@@ -182,8 +182,8 @@ namespace uicore
 				if (sampler_units[index].shader_index[j] != -1)
 				{
 					ID3D11SamplerState *sampler_state = 0;
-					if (!sampler_units[index].object.is_null())
-						sampler_state = static_cast<D3DTextureProvider*>(sampler_units[index].object.get_provider())->get_sampler_state(gc->get_window()->get_device());
+					if (sampler_units[index].object)
+						sampler_state = static_cast<D3DTextureProvider *>(sampler_units[index].object->texture_object())->get_sampler_state(gc->get_window()->get_device());
 					switch (j)
 					{
 					case ShaderType::vertex:
@@ -219,8 +219,8 @@ namespace uicore
 				if (texture_units[index].shader_index[j] != -1)
 				{
 					ID3D11ShaderResourceView *srv = 0;
-					if (!texture_units[index].object.is_null())
-						srv = static_cast<D3DTextureProvider*>(texture_units[index].object.get_provider())->get_srv(gc->get_window()->get_device());
+					if (texture_units[index].object)
+						srv = static_cast<D3DTextureProvider *>(texture_units[index].object->texture_object())->get_srv(gc->get_window()->get_device());
 					switch (j)
 					{
 					case ShaderType::vertex:
@@ -256,8 +256,8 @@ namespace uicore
 			{
 				ID3D11UnorderedAccessView *uav = 0;
 				UINT uav_initial_count_value = 0;
-				if (!image_units[index].object.is_null())
-					uav = static_cast<D3DTextureProvider*>(image_units[index].object.get_provider())->get_uav(gc->get_window()->get_device());
+				if (image_units[index].object)
+					uav = static_cast<D3DTextureProvider*>(image_units[index].object->texture_object())->get_uav(gc->get_window()->get_device());
 				gc->get_window()->get_device_context()->CSSetUnorderedAccessViews(image_units[index].shader_index[(int)ShaderType::compute], 1, &uav, &uav_initial_count_value);
 			}
 		}

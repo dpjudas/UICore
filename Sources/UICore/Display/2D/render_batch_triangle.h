@@ -45,14 +45,14 @@ namespace uicore
 	{
 	public:
 		RenderBatchTriangle(GraphicContext &gc, RenderBatchBuffer *batch_buffer);
-		void draw_sprite(Canvas &canvas, const Pointf texture_position[4], const Pointf dest_position[4], const Texture2D &texture, const Colorf &color);
-		void draw_image(Canvas &canvas, const Rectf &src, const Rectf &dest, const Colorf &color, const Texture2D &texture);
-		void draw_image(Canvas &canvas, const Rectf &src, const Quadf &dest, const Colorf &color, const Texture2D &texture);
-		void draw_glyph_subpixel(Canvas &canvas, const Rectf &src, const Rectf &dest, const Colorf &color, const Texture2D &texture);
+		void draw_sprite(Canvas &canvas, const Pointf texture_position[4], const Pointf dest_position[4], const Texture2DPtr &texture, const Colorf &color);
+		void draw_image(Canvas &canvas, const Rectf &src, const Rectf &dest, const Colorf &color, const Texture2DPtr &texture);
+		void draw_image(Canvas &canvas, const Rectf &src, const Quadf &dest, const Colorf &color, const Texture2DPtr &texture);
+		void draw_glyph_subpixel(Canvas &canvas, const Rectf &src, const Rectf &dest, const Colorf &color, const Texture2DPtr &texture);
 		void fill_triangle(Canvas &canvas, const Vec2f *triangle_positions, const Vec4f *triangle_colors, int num_vertices);
 		void fill_triangle(Canvas &canvas, const Vec2f *triangle_positions, const Colorf &color, int num_vertices);
-		void fill_triangles(Canvas &canvas, const Vec2f *positions, const Vec2f *texture_positions, int num_vertices, const Texture2D &texture, const Colorf &color);
-		void fill_triangles(Canvas &canvas, const Vec2f *positions, const Vec2f *texture_positions, int num_vertices, const Texture2D &texture, const Colorf *colors);
+		void fill_triangles(Canvas &canvas, const Vec2f *positions, const Vec2f *texture_positions, int num_vertices, const Texture2DPtr &texture, const Colorf &color);
+		void fill_triangles(Canvas &canvas, const Vec2f *positions, const Vec2f *texture_positions, int num_vertices, const Texture2DPtr &texture, const Colorf *colors);
 		void fill(Canvas &canvas, float x1, float y1, float x2, float y2, const Colorf &color);
 
 	public:
@@ -67,7 +67,7 @@ namespace uicore
 			int texindex;
 		};
 
-		int set_batcher_active(Canvas &canvas, const Texture2D &texture, bool glyph_program = false, const Colorf &constant_color = Colorf::black);
+		int set_batcher_active(Canvas &canvas, const Texture2DPtr &texture, bool glyph_program = false, const Colorf &constant_color = Colorf::black);
 		int set_batcher_active(Canvas &canvas);
 		int set_batcher_active(Canvas &canvas, int num_vertices);
 		void flush(GraphicContext &gc) override;
@@ -87,7 +87,7 @@ namespace uicore
 
 		static const int max_number_of_texture_coords = 32;
 
-		Texture2D current_textures[max_number_of_texture_coords];
+		Texture2DPtr current_textures[max_number_of_texture_coords];
 		int num_current_textures = 0;
 		Sizef tex_sizes[max_number_of_texture_coords];
 		bool use_glyph_program = false;

@@ -119,15 +119,15 @@ namespace uicore
 		return get_provider()->has_compute_shader_support();
 	}
 
-	Texture GraphicContext::get_texture(int unit) const
+	TexturePtr GraphicContext::get_texture(int unit) const
 	{
 		if ((unit < 0) || (unit >= impl->textures.size()))
-			return Texture();
+			return TexturePtr();
 		else
 			return impl->textures[unit];
 	}
 
-	std::vector<Texture> GraphicContext::get_textures() const
+	std::vector<TexturePtr> GraphicContext::get_textures() const
 	{
 		return impl->textures;
 	}
@@ -227,49 +227,49 @@ namespace uicore
 		impl->set_storage_buffer(index, null_buffer);
 	}
 
-	void GraphicContext::set_texture(int unit_index, const Texture &texture)
+	void GraphicContext::set_texture(int unit_index, const TexturePtr &texture)
 	{
 		impl->set_texture(unit_index, texture);
 	}
 
-	void GraphicContext::set_textures(std::vector<Texture> &textures)
+	void GraphicContext::set_textures(std::vector<TexturePtr> &textures)
 	{
 		impl->set_textures(textures);
 	}
 
 	void GraphicContext::reset_texture(int unit_index)
 	{
-		Texture null_texture;
+		TexturePtr null_texture;
 		impl->set_texture(unit_index, null_texture);
 	}
 
 	void GraphicContext::reset_textures()
 	{
-		Texture null_texture;
-		std::vector<Texture> null_textures;
+		TexturePtr null_texture;
+		std::vector<TexturePtr> null_textures;
 		impl->set_textures(null_textures);
 	}
 
-	void GraphicContext::set_image_texture(int unit_index, const Texture &texture)
+	void GraphicContext::set_image_texture(int unit_index, const TexturePtr &texture)
 	{
 		impl->set_image_texture(unit_index, texture);
 	}
 
-	void GraphicContext::set_image_texture(std::vector<Texture> &textures)
+	void GraphicContext::set_image_texture(std::vector<TexturePtr> &textures)
 	{
 		impl->set_image_textures(textures);
 	}
 
 	void GraphicContext::reset_image_texture(int unit_index)
 	{
-		Texture null_texture;
+		TexturePtr null_texture;
 		impl->set_image_texture(unit_index, null_texture);
 	}
 
 	void GraphicContext::reset_image_textures()
 	{
-		Texture null_texture;
-		std::vector<Texture> null_textures;
+		TexturePtr null_texture;
+		std::vector<TexturePtr> null_textures;
 		impl->set_image_textures(null_textures);
 	}
 

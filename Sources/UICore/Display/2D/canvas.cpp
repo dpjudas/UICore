@@ -291,7 +291,7 @@ namespace uicore
 		batcher->draw_lines(*this, positions, color, num_vertices);
 	}
 
-	void Canvas::draw_lines(const Vec2f *line_positions, const Vec2f *texture_positions, int num_vertices, const Texture2D &texture, const Colorf &line_color)
+	void Canvas::draw_lines(const Vec2f *line_positions, const Vec2f *texture_positions, int num_vertices, const Texture2DPtr &texture, const Colorf &line_color)
 	{
 		RenderBatchLineTexture *batcher = impl->batcher.get_line_texture_batcher();
 		batcher->draw_lines(*this, line_positions, texture_positions, num_vertices, texture, line_color);
@@ -539,19 +539,19 @@ namespace uicore
 		fill_triangle(dest_triangle.p, dest_triangle.q, dest_triangle.r, color);
 	}
 
-	void Canvas::fill_triangles(const Vec2f *positions, const Vec2f *texture_positions, int num_vertices, const Texture2D &texture, const Colorf &color)
+	void Canvas::fill_triangles(const Vec2f *positions, const Vec2f *texture_positions, int num_vertices, const Texture2DPtr &texture, const Colorf &color)
 	{
 		RenderBatchTriangle *batcher = impl->batcher.get_triangle_batcher();
 		batcher->fill_triangles(*this, positions, texture_positions, num_vertices, texture, color);
 	}
 
-	void Canvas::fill_triangles(const Vec2f *positions, const Vec2f *texture_positions, int num_vertices, const Texture2D &texture, const Colorf *colors)
+	void Canvas::fill_triangles(const Vec2f *positions, const Vec2f *texture_positions, int num_vertices, const Texture2DPtr &texture, const Colorf *colors)
 	{
 		RenderBatchTriangle *batcher = impl->batcher.get_triangle_batcher();
 		batcher->fill_triangles(*this, positions, texture_positions, num_vertices, texture, colors);
 	}
 
-	void Canvas::fill_triangles(const std::vector<Vec2f> &positions, const std::vector<Vec2f> &texture_positions, const Texture2D &texture, const Colorf &color)
+	void Canvas::fill_triangles(const std::vector<Vec2f> &positions, const std::vector<Vec2f> &texture_positions, const Texture2DPtr &texture, const Colorf &color)
 	{
 		if (!positions.empty())
 		{
@@ -560,7 +560,7 @@ namespace uicore
 		}
 	}
 
-	void Canvas::fill_triangles(const std::vector<Vec2f> &positions, const std::vector<Vec2f> &texture_positions, const Texture2D &texture, const std::vector<Colorf> &colors)
+	void Canvas::fill_triangles(const std::vector<Vec2f> &positions, const std::vector<Vec2f> &texture_positions, const Texture2DPtr &texture, const std::vector<Colorf> &colors)
 	{
 		if (!positions.empty())
 		{
@@ -570,12 +570,12 @@ namespace uicore
 	}
 
 
-	void Canvas::fill_triangles(const std::vector<Vec2f> &positions, const Texture2D &texture, const Colorf &color)
+	void Canvas::fill_triangles(const std::vector<Vec2f> &positions, const Texture2DPtr &texture, const Colorf &color)
 	{
-		fill_triangles(positions, texture, texture.get_size(), color);
+		fill_triangles(positions, texture, texture->size(), color);
 	}
 
-	void Canvas::fill_triangles(const std::vector<Vec2f> &positions, const Texture2D &texture, const Rect &texture_rect, const Colorf &color)
+	void Canvas::fill_triangles(const std::vector<Vec2f> &positions, const Texture2DPtr &texture, const Rect &texture_rect, const Colorf &color)
 	{
 		if (!positions.empty())
 		{
@@ -587,12 +587,12 @@ namespace uicore
 		}
 	}
 
-	void Canvas::fill_triangles(const Vec2f *triangle_positions, int num_vertices, const Texture2D &texture, const Colorf &color)
+	void Canvas::fill_triangles(const Vec2f *triangle_positions, int num_vertices, const Texture2DPtr &texture, const Colorf &color)
 	{
-		fill_triangles(triangle_positions, num_vertices, texture, texture.get_size(), color);
+		fill_triangles(triangle_positions, num_vertices, texture, texture->size(), color);
 	}
 
-	void Canvas::fill_triangles(const Vec2f *triangle_positions, int num_vertices, const Texture2D &texture, const Rect &texture_rect, const Colorf &color)
+	void Canvas::fill_triangles(const Vec2f *triangle_positions, int num_vertices, const Texture2DPtr &texture, const Rect &texture_rect, const Colorf &color)
 	{
 		if (num_vertices)
 		{
@@ -604,12 +604,12 @@ namespace uicore
 		}
 	}
 
-	void Canvas::fill_triangles(const std::vector<Vec2f> &positions, const Texture2D &texture, const Gradient &gradient)
+	void Canvas::fill_triangles(const std::vector<Vec2f> &positions, const Texture2DPtr &texture, const Gradient &gradient)
 	{
-		fill_triangles(positions, texture, texture.get_size(), gradient);
+		fill_triangles(positions, texture, texture->size(), gradient);
 	}
 
-	void Canvas::fill_triangles(const std::vector<Vec2f> &positions, const Texture2D &texture, const Rect &texture_rect, const Gradient &gradient)
+	void Canvas::fill_triangles(const std::vector<Vec2f> &positions, const Texture2DPtr &texture, const Rect &texture_rect, const Gradient &gradient)
 	{
 		if (!positions.empty())
 		{
@@ -623,12 +623,12 @@ namespace uicore
 		}
 	}
 
-	void Canvas::fill_triangles(const Vec2f *triangle_positions, int num_vertices, const Texture2D &texture, const Gradient &gradient)
+	void Canvas::fill_triangles(const Vec2f *triangle_positions, int num_vertices, const Texture2DPtr &texture, const Gradient &gradient)
 	{
-		fill_triangles(triangle_positions, num_vertices, texture, texture.get_size(), gradient);
+		fill_triangles(triangle_positions, num_vertices, texture, texture->size(), gradient);
 	}
 
-	void Canvas::fill_triangles(const Vec2f *triangle_positions, int num_vertices, const Texture2D &texture, const Rect &texture_rect, const Gradient &gradient)
+	void Canvas::fill_triangles(const Vec2f *triangle_positions, int num_vertices, const Texture2DPtr &texture, const Rect &texture_rect, const Gradient &gradient)
 	{
 		if (num_vertices)
 		{

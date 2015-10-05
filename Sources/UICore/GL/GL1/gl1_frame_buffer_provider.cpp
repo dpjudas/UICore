@@ -41,7 +41,6 @@
 
 namespace uicore
 {
-
 	GL1FrameBufferProvider::GL1FrameBufferProvider(GL1GraphicContextProvider *gc_provider) :
 		gc_provider(gc_provider)
 	{
@@ -55,9 +54,9 @@ namespace uicore
 
 	Size GL1FrameBufferProvider::get_size() const
 	{
-		if (selected_surface.is_null())
+		if (!selected_surface)
 			return Size();
-		return selected_surface.get_size();
+		return selected_surface->size();
 	}
 
 	FrameBufferBindTarget GL1FrameBufferProvider::get_bind_target() const
@@ -66,17 +65,17 @@ namespace uicore
 	}
 
 	void GL1FrameBufferProvider::attach_color(int attachment_index, const RenderBufferPtr &render_buffer) {}
-	void GL1FrameBufferProvider::attach_color(int attachment_index, const Texture1D &texture, int level) {}
-	void GL1FrameBufferProvider::attach_color(int attachment_index, const Texture1DArray &texture, int array_index, int level) {}
+	void GL1FrameBufferProvider::attach_color(int attachment_index, const Texture1DPtr &texture, int level) {}
+	void GL1FrameBufferProvider::attach_color(int attachment_index, const Texture1DArrayPtr &texture, int array_index, int level) {}
 
-	void GL1FrameBufferProvider::attach_color(int attachment_index, const Texture2D &texture, int level)
+	void GL1FrameBufferProvider::attach_color(int attachment_index, const Texture2DPtr &texture, int level)
 	{
 		throw_if_disposed();
 
 		if (!pbuffer.is_null())
 			sync_texture();
 
-		GL1TextureProvider *texture_provider = dynamic_cast<GL1TextureProvider *> (texture.get_provider());
+		GL1TextureProvider *texture_provider = dynamic_cast<GL1TextureProvider*>(texture->texture_object());
 		if (texture_provider == nullptr)
 		{
 			throw Exception("Selected texture is not a GL1 texture");
@@ -85,7 +84,7 @@ namespace uicore
 		Size surface_size = texture_provider->get_surface_size();
 
 		// Find existing pbuffer
-		std::weak_ptr<Texture_Impl> texture_impl(texture.get_impl());
+		std::weak_ptr<Texture2D> texture_impl = texture;
 		auto texture_it = texture_pbuffer_map.find(texture_impl);
 		if (texture_it == texture_pbuffer_map.end())
 		{
@@ -121,24 +120,24 @@ namespace uicore
 			}
 		}
 	}
-	void GL1FrameBufferProvider::attach_color(int attachment_index, const Texture2DArray &texture, int array_index, int level) {}
-	void GL1FrameBufferProvider::attach_color(int attachment_index, const Texture3D &texture, int depth, int level) {}
-	void GL1FrameBufferProvider::attach_color(int attachment_index, const TextureCube &texture, TextureSubtype subtype, int level) {}
+	void GL1FrameBufferProvider::attach_color(int attachment_index, const Texture2DArrayPtr &texture, int array_index, int level) {}
+	void GL1FrameBufferProvider::attach_color(int attachment_index, const Texture3DPtr &texture, int depth, int level) {}
+	void GL1FrameBufferProvider::attach_color(int attachment_index, const TextureCubePtr &texture, TextureSubtype subtype, int level) {}
 	void GL1FrameBufferProvider::detach_color(int attachment_index) {}
 
 	void GL1FrameBufferProvider::attach_stencil(const RenderBufferPtr &render_buffer) {}
-	void GL1FrameBufferProvider::attach_stencil(const Texture2D &texture, int level) {}
-	void GL1FrameBufferProvider::attach_stencil(const TextureCube &texture, TextureSubtype subtype, int level) {}
+	void GL1FrameBufferProvider::attach_stencil(const Texture2DPtr &texture, int level) {}
+	void GL1FrameBufferProvider::attach_stencil(const TextureCubePtr &texture, TextureSubtype subtype, int level) {}
 	void GL1FrameBufferProvider::detach_stencil() {}
 
 	void GL1FrameBufferProvider::attach_depth(const RenderBufferPtr &render_buffer) {}
-	void GL1FrameBufferProvider::attach_depth(const Texture2D &texture, int level) {}
-	void GL1FrameBufferProvider::attach_depth(const TextureCube &texture, TextureSubtype subtype, int level) {}
+	void GL1FrameBufferProvider::attach_depth(const Texture2DPtr &texture, int level) {}
+	void GL1FrameBufferProvider::attach_depth(const TextureCubePtr &texture, TextureSubtype subtype, int level) {}
 	void GL1FrameBufferProvider::detach_depth() {}
 
 	void GL1FrameBufferProvider::attach_depth_stencil(const RenderBufferPtr &render_buffer) {}
-	void GL1FrameBufferProvider::attach_depth_stencil(const Texture2D &texture, int level) {}
-	void GL1FrameBufferProvider::attach_depth_stencil(const TextureCube &texture, TextureSubtype subtype, int level) {}
+	void GL1FrameBufferProvider::attach_depth_stencil(const Texture2DPtr &texture, int level) {}
+	void GL1FrameBufferProvider::attach_depth_stencil(const TextureCubePtr &texture, TextureSubtype subtype, int level) {}
 	void GL1FrameBufferProvider::detach_depth_stencil() {}
 
 
@@ -189,7 +188,7 @@ namespace uicore
 
 	void GL1FrameBufferProvider::sync_pbuffer()
 	{
-		if (selected_surface.is_null())
+		if (!selected_surface)
 			return;
 
 		set_active();
@@ -284,7 +283,7 @@ namespace uicore
 
 	void GL1FrameBufferProvider::sync_texture()
 	{
-		if (pbuffer_changed && (!pbuffer.is_null()) && !selected_surface.is_null())
+		if (pbuffer_changed && (!pbuffer.is_null()) && selected_surface)
 		{
 			set_active();
 
@@ -346,7 +345,7 @@ namespace uicore
 	{
 		stop();
 		pbuffer = PBuffer_GL1();
-		selected_surface = Texture2D();
+		selected_surface.reset();
 	}
 
 	void GL1FrameBufferProvider::set_active()
@@ -362,5 +361,4 @@ namespace uicore
 			throw Exception("GL1 Framebuffer does not contain a texture");
 		}
 	}
-
 }

@@ -64,7 +64,7 @@ namespace uicore
 		struct RootNode
 		{
 		public:
-			Texture2D texture;
+			Texture2DPtr texture;
 			Node node;
 		};
 
@@ -73,10 +73,10 @@ namespace uicore
 
 		int get_subtexture_count() const;
 		int get_subtexture_count(unsigned int texture_index) const;
-		void insert_texture(Texture2D &texture, const Rect &texture_rect);
+		void insert_texture(const Texture2DPtr &texture, const Rect &texture_rect);
 		void remove(Subtexture &subtexture);
 
-		std::vector<Texture2D> get_textures() const;
+		std::vector<Texture2DPtr> get_textures() const;
 
 		Subtexture add_new_node(GraphicContext &context, const Size &texture_size);
 

@@ -68,7 +68,7 @@ namespace uicore
 		}
 	}
 
-	void GraphicContext_Impl::set_texture(int unit_index, const Texture &texture)
+	void GraphicContext_Impl::set_texture(int unit_index, const TexturePtr &texture)
 	{
 		// Limit the number of unit index to 255, this should always be enough. This simplifies the saving of the texture
 		if ((unit_index < 0) || (unit_index > 255))
@@ -79,13 +79,13 @@ namespace uicore
 			textures.resize(unit_index + 1);
 
 		textures[unit_index] = texture;
-		if (!texture.is_null())
+		if (texture)
 			provider->set_texture(unit_index, texture);
 		else
 			provider->reset_texture(unit_index);
 	}
 
-	void GraphicContext_Impl::set_textures(std::vector<Texture> &new_textures)
+	void GraphicContext_Impl::set_textures(std::vector<TexturePtr> &new_textures)
 	{
 		for (auto i = textures.size(); i < new_textures.size(); i++)
 			provider->reset_texture(i);
@@ -95,7 +95,7 @@ namespace uicore
 		int i = 0;
 		for (const auto &texture : textures)
 		{
-			if (!texture.is_null())
+			if (texture)
 				provider->set_texture(i, texture);
 			else
 				provider->reset_texture(i);
@@ -103,7 +103,7 @@ namespace uicore
 		}
 	}
 
-	void GraphicContext_Impl::set_image_texture(int unit_index, const Texture &texture)
+	void GraphicContext_Impl::set_image_texture(int unit_index, const TexturePtr &texture)
 	{
 		// Limit the number of unit index to 255, this should always be enough. This simplifies the saving of the texture
 		if ((unit_index < 0) || (unit_index > 255))
@@ -115,13 +115,13 @@ namespace uicore
 
 		image_textures[unit_index] = texture;
 
-		if (!texture.is_null())
+		if (texture)
 			provider->set_image_texture(unit_index, texture);
 		else
 			provider->reset_image_texture(unit_index);
 	}
 
-	void GraphicContext_Impl::set_image_textures(std::vector<Texture> &new_textures)
+	void GraphicContext_Impl::set_image_textures(std::vector<TexturePtr> &new_textures)
 	{
 		for (auto i = textures.size(); i < new_textures.size(); i++)
 			provider->reset_texture(i);
@@ -131,7 +131,7 @@ namespace uicore
 		int i = 0;
 		for (const auto &texture : image_textures)
 		{
-			if (!texture.is_null())
+			if (texture)
 				provider->set_image_texture(i, texture);
 			else
 				provider->reset_image_texture(i);

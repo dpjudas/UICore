@@ -49,27 +49,27 @@ namespace uicore
 		std::vector<ID3D11RenderTargetView*> get_views(ID3D11DepthStencilView *&out_dsv);
 
 		void attach_color(int attachment_index, const RenderBufferPtr &render_buffer) override;
-		void attach_color(int attachment_index, const Texture1D &texture, int level) override;
-		void attach_color(int attachment_index, const Texture1DArray &texture, int array_index, int level) override;
-		void attach_color(int attachment_index, const Texture2D &texture, int level) override;
-		void attach_color(int attachment_index, const Texture2DArray &texture, int array_index, int level) override;
-		void attach_color(int attachment_index, const Texture3D &texture, int depth, int level) override;
-		void attach_color(int attachment_index, const TextureCube &texture, TextureSubtype subtype, int level) override;
+		void attach_color(int attachment_index, const Texture1DPtr &texture, int level) override;
+		void attach_color(int attachment_index, const Texture1DArrayPtr &texture, int array_index, int level) override;
+		void attach_color(int attachment_index, const Texture2DPtr &texture, int level) override;
+		void attach_color(int attachment_index, const Texture2DArrayPtr &texture, int array_index, int level) override;
+		void attach_color(int attachment_index, const Texture3DPtr &texture, int depth, int level) override;
+		void attach_color(int attachment_index, const TextureCubePtr &texture, TextureSubtype subtype, int level) override;
 		void detach_color(int attachment_index) override;
 
 		void attach_stencil(const RenderBufferPtr &render_buffer) override;
-		void attach_stencil(const Texture2D &texture, int level) override;
-		void attach_stencil(const TextureCube &texture, TextureSubtype subtype, int level) override;
+		void attach_stencil(const Texture2DPtr &texture, int level) override;
+		void attach_stencil(const TextureCubePtr &texture, TextureSubtype subtype, int level) override;
 		void detach_stencil() override;
 
 		void attach_depth(const RenderBufferPtr &render_buffer) override;
-		void attach_depth(const Texture2D &texture, int level) override;
-		void attach_depth(const TextureCube &texture, TextureSubtype subtype, int level) override;
+		void attach_depth(const Texture2DPtr &texture, int level) override;
+		void attach_depth(const TextureCubePtr &texture, TextureSubtype subtype, int level) override;
 		void detach_depth() override;
 
 		void attach_depth_stencil(const RenderBufferPtr &render_buffer) override;
-		void attach_depth_stencil(const Texture2D &texture, int level) override;
-		void attach_depth_stencil(const TextureCube &texture, TextureSubtype subtype, int level) override;
+		void attach_depth_stencil(const Texture2DPtr &texture, int level) override;
+		void attach_depth_stencil(const TextureCubePtr &texture, TextureSubtype subtype, int level) override;
 		void detach_depth_stencil() override;
 
 		void set_bind_target(FrameBufferBindTarget target) override;
@@ -79,13 +79,13 @@ namespace uicore
 		{
 			AttachedBuffer() : level(0), slice(0), subtype() { }
 			AttachedBuffer(RenderBufferPtr render_buffer) : render_buffer(render_buffer), level(0), slice(0), subtype() { }
-			AttachedBuffer(Texture texture, int level = 0, int slice = 0, TextureSubtype subtype = TextureSubtype()) : texture(texture), level(level), slice(slice), subtype(subtype) { }
+			AttachedBuffer(TexturePtr texture, int level = 0, int slice = 0, TextureSubtype subtype = TextureSubtype()) : texture(texture), level(level), slice(slice), subtype(subtype) { }
 
 			D3DRenderBufferProvider *get_render_buffer_provider() const { return static_cast<D3DRenderBufferProvider*>(render_buffer.get()); }
-			D3DTextureProvider *get_texture_provider() const { return static_cast<D3DTextureProvider*>(texture.get_provider()); }
+			D3DTextureProvider *get_texture_provider() const { return static_cast<D3DTextureProvider*>(texture->texture_object()); }
 
 			RenderBufferPtr render_buffer;
-			Texture texture;
+			TexturePtr texture;
 			int level;
 			int slice;
 			TextureSubtype subtype;

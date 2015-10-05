@@ -61,7 +61,7 @@ namespace uicore
 		/// \brief The pixel buffer containing the glyph.
 		///
 		/// This maybe a null texture
-		Texture2D texture;
+		Texture2DPtr texture;
 
 		/// \brief Geometry of the glyph inside the subtexture (excluding the border)
 		Rect geometry;

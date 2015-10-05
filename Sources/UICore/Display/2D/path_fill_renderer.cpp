@@ -211,9 +211,9 @@ namespace uicore
 		gpu_vertices.upload_data(gc, 0, vertices.get_vertices(), vertices.get_position());
 
 		int block_y = (((mask_blocks.next_block-1) * mask_block_size) / mask_texture_size)* mask_block_size;
-		mask_texture.set_subimage(gc, 0, 0, mask_buffer, Rect(Point(0, 0), Size(mask_texture_size, block_y + mask_block_size)));
+		mask_texture->set_subimage(gc, 0, 0, mask_buffer, Rect(Point(0, 0), Size(mask_texture_size, block_y + mask_block_size)));
 
-		instance_texture.set_subimage(gc, 0, 0, instance_buffer, Rect(Point(0, 0), Size(instance_buffer_width, (instances.get_position() + instance_buffer_width - 1) / instance_buffer_width)));
+		instance_texture->set_subimage(gc, 0, 0, instance_buffer, Rect(Point(0, 0), Size(instance_buffer_width, (instances.get_position() + instance_buffer_width - 1) / instance_buffer_width)));
 
 		gc.set_blend_state(blend_state);
 		gc.set_program_object(program_path);
@@ -224,12 +224,12 @@ namespace uicore
 		gc.set_texture(0, mask_texture);
 		gc.set_texture(1, instance_texture);
 
-		Texture2D current_texture = instances.get_texture();
+		Texture2DPtr current_texture = instances.get_texture();
 
-		if (!current_texture.is_null())
+		if (current_texture)
 			gc.set_texture(2, current_texture);
 		gc.draw_primitives(type_triangles, vertices.get_position(), prim_array[gpu_index]);
-		if (!current_texture.is_null())
+		if (current_texture)
 		{
 			gc.reset_texture(2);
 		}
@@ -244,14 +244,14 @@ namespace uicore
 
 		// Finished with the buffers
 		mask_buffer = TransferTexture();
-		mask_texture = Texture2D();
+		mask_texture.reset();
 		instance_buffer = TransferTexture();
-		instance_texture = Texture2D();
+		instance_texture.reset();
 	}
 
 	void PathFillRenderer::initialise_buffers(Canvas &canvas)
 	{
-		if (mask_texture.is_null())
+		if (!mask_texture)
 		{
 			GraphicContext gc = canvas.get_gc();
 			mask_texture = batch_buffer->get_texture_r8(gc);
@@ -583,7 +583,7 @@ namespace uicore
 	{
 		buffer = new_buffer;
 		max_entries = new_max_entries;
-		current_texture = Texture2D();
+		current_texture.reset();
 
 		buffer[0] = Vec4f(gc.get_width(), gc.get_height(), 0, 0);
 		end_position = 1;
@@ -709,7 +709,7 @@ namespace uicore
 		if (subtexture.is_null())
 			throw Exception("BrushType::image used without a valid texture");
 
-		if (!current_texture.is_null() && subtexture.get_texture() != current_texture)
+		if (current_texture && subtexture.get_texture() != current_texture)
 			return 0;		// Change in texture, must flush now
 
 		int instance_position = next_position(6);
@@ -719,7 +719,7 @@ namespace uicore
 
 
 		current_texture = subtexture.get_texture();
-		if (current_texture.is_null())
+		if (!current_texture)
 			throw Exception("BrushType::image used without a valid texture");
 
 		Mat3f inv_brush_transform = Mat3f::inverse(brush.transform);
@@ -728,7 +728,7 @@ namespace uicore
 		Rectf src = subtexture.get_geometry();
 
 		Vec4f brush_data1(src.left, src.top, src.right, src.bottom);
-		Vec4f brush_data2(current_texture.get_width(), current_texture.get_height(), 0, 0);
+		Vec4f brush_data2(current_texture->width(), current_texture->height(), 0, 0);
 
 		brush_data1.x = (float)PathShaderDrawMode::image;
 		buffer[position++] = brush_data1;

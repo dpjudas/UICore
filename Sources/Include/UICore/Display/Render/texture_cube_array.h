@@ -34,45 +34,26 @@
 namespace uicore
 {
 	/// \brief 2D texture cube array object class.
-	class TextureCubeArray : public Texture
+	class TextureCubeArray : public virtual Texture
 	{
 	public:
-		/// \brief Constructs a null instance.
-		TextureCubeArray();
-
-		/// \brief Constructs a texture from an implementation
-		///
-		/// \param impl = The implementation
-		TextureCubeArray(const std::shared_ptr<Texture_Impl> &impl) : Texture(impl) { }
-
 		/// \brief Constructs a Texture
 		///
-		/// \param context = Graphic Context
-		/// \param width = value
-		/// \param height = value
-		/// \param internal_format = Texture Format
-		/// \param levels = Mipmap levels for the texture. 0 = all levels
-		TextureCubeArray(GraphicContext &context, int width, int height, int array_size, TextureFormat texture_format = tf_rgba8, int levels = 1);
-
-		/// \brief Constructs a Texture
-		///
-		/// \param context = Graphic Context
-		/// \param size = Size
-		/// \param internal_format = Texture Format
-		/// \param levels = Mipmap levels for the texture. 0 = all levels
-		TextureCubeArray(GraphicContext &context, const Size &size, int array_size, TextureFormat texture_format = tf_rgba8, int levels = 1);
+		/// If levels is set to zero it will create a texture containing all mipmap levels
+		static std::shared_ptr<TextureCubeArray> create(GraphicContext &context, int width, int height, int array_size, TextureFormat texture_format = tf_rgba8, int levels = 1);
+		static std::shared_ptr<TextureCubeArray> create(GraphicContext &context, const Size &size, int array_size, TextureFormat texture_format = tf_rgba8, int levels = 1);
 
 		/// \brief Get the texture width.
-		int get_width() const;
+		virtual int width() const = 0;
 
 		/// \brief Get the texture height.
-		int get_height() const;
+		virtual int height() const = 0;
 
 		/// \brief Get the texture size.
-		Size get_size() const;
+		Size size() const { return Size(width(), height()); }
 
 		/// \brief Get the texture array size
-		int get_array_size() const;
+		virtual int array_size() const = 0;
 
 		/// \brief Upload image to texture.
 		///
@@ -80,12 +61,7 @@ namespace uicore
 		/// \param array_index Index in the array
 		/// \param image Image to upload.
 		/// \param level Mipmap level-of-detail number.
-		void set_image(
-			GraphicContext &context,
-			int array_index,
-			TextureCubeDirection cube_direction,
-			PixelBuffer &image,
-			int level = 0);
+		virtual void set_image(GraphicContext &context, int array_index, TextureCubeDirection cube_direction, const PixelBuffer &image, int level = 0) = 0;
 
 		/// \brief Upload image to sub texture.
 		///
@@ -93,23 +69,10 @@ namespace uicore
 		/// \param array_index Index in the array
 		/// \param image Image to upload.
 		/// \param level Mipmap level-of-detail number.
-		void set_subimage(
-			GraphicContext &context,
-			int array_index,
-			TextureCubeDirection cube_direction,
-			int x,
-			int y,
-			const PixelBuffer &image,
-			const Rect &src_rect,
-			int level = 0);
-
-		void set_subimage(
-			GraphicContext &context,
-			int array_index,
-			TextureCubeDirection cube_direction,
-			const Point &point,
-			const PixelBuffer &image,
-			const Rect &src_rect,
-			int level = 0);
+		virtual void set_subimage(GraphicContext &context, int array_index, TextureCubeDirection cube_direction, int x, int y, const PixelBuffer &image, const Rect &src_rect, int level = 0) = 0;
+		virtual void set_subimage(GraphicContext &context, int array_index, TextureCubeDirection cube_direction, const Point &point, const PixelBuffer &image, const Rect &src_rect, int level = 0)
+		{
+			set_subimage(context, array_index, cube_direction, point.x, point.y, image, src_rect, level);
+		}
 	};
 }

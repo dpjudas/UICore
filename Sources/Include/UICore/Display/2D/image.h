@@ -42,6 +42,7 @@ namespace uicore
 	class Rectf;
 	class Image_Impl;
 	class Texture2D;
+	typedef std::shared_ptr<Texture2D> Texture2DPtr;
 	class Subtexture;
 	class PixelBuffer;
 	class Canvas;
@@ -58,26 +59,26 @@ namespace uicore
 		///
 		/// \param texture = Texture to get image data from
 		/// \param rect = Position and size in texture to get image data from
-		Image(Texture2D texture, const Rect &rect);
+		Image(Texture2DPtr texture, const Rect &rect, float pixel_ratio = 1.0f);
 
 		/// \brief Constructs an image from a subtexture.
 		///
 		/// \param sub_texture = Subtexture to get image data from
-		Image(Subtexture &sub_texture);
+		Image(Subtexture &sub_texture, float pixel_ratio = 1.0f);
 
 		/// \brief Constructs a Image from a pixelbuffer.
 		///
 		/// \param canvas = Canvas
 		/// \param pixelbuffer = Pixelbuffer to get image data from
 		/// \param rect = pixelbuffer rect
-		Image(Canvas &canvas, const PixelBuffer &pixelbuffer, const Rect &rect);
+		Image(Canvas &canvas, const PixelBuffer &pixelbuffer, const Rect &rect, float pixel_ratio = 1.0f);
 
 		/// \brief Constructs a Image
 		///
 		/// \param canvas = Canvas
 		/// \param filename Filename of image to load
 		/// \param import_desc = Image Import Description
-		Image(Canvas &canvas, const std::string &filename, const ImageImportDescription &import_desc = ImageImportDescription());
+		Image(Canvas &canvas, const std::string &filename, const ImageImportDescription &import_desc = ImageImportDescription(), float pixel_ratio = 1.0f);
 
 		virtual ~Image();
 

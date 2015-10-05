@@ -45,7 +45,7 @@
 
 namespace uicore
 {
-	GL1TextureProvider::GL1TextureProvider(TextureDimensions texture_dimensions)
+	GL1TextureProvider::GL1TextureProvider(InitData, TextureDimensions texture_dimensions, int new_width, int new_height, int new_depth, int array_size, TextureFormat texture_format, int levels)
 	: width(0), height(0), depth(0), handle(0), texture_type(0)
 	{
 		SharedGCData::add_disposable(this);
@@ -89,53 +89,27 @@ namespace uicore
 		}
 		if (texture_type == GL_TEXTURE_3D)
 			glTexParameteri(texture_type, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-	}
-
-	GL1TextureProvider::~GL1TextureProvider()
-	{
-		dispose();
-		SharedGCData::remove_disposable(this);
-	}
-
-	void GL1TextureProvider::on_dispose()
-	{
-		if (handle)
-		{
-			if (OpenGL::set_active())
-			{
-				glDeleteTextures(1, &handle);
-			}
-		}
-	}
-
-	void GL1TextureProvider::generate_mipmap()
-	{
-	}
-
-	void GL1TextureProvider::create(int new_width, int new_height, int new_depth, int array_size, TextureFormat texture_format, int levels)
-	{
-		throw_if_disposed();
 
 		GLint gl_internal_format;
 		GLenum gl_pixel_format;
 		to_opengl_textureformat(texture_format, gl_internal_format, gl_pixel_format);
 
-		if ( (new_width > 32768) || (new_width < 1) )
+		if ((new_width > 32768) || (new_width < 1))
 		{
 			throw Exception("Invalid texture width in the GL1 target");
 		}
 
-		if ( (texture_type == GL_TEXTURE_2D) || (texture_type == GL_TEXTURE_3D) )
+		if ((texture_type == GL_TEXTURE_2D) || (texture_type == GL_TEXTURE_3D))
 		{
-			if ( (new_height > 32768) || (new_height < 1) )
+			if ((new_height > 32768) || (new_height < 1))
 			{
 				throw Exception("Invalid texture height in the GL1 target");
 			}
 		}
 
-		if ( texture_type == GL_TEXTURE_3D )
+		if (texture_type == GL_TEXTURE_3D)
 		{
-			if ( (new_depth > 32768) || (new_depth < 1) )
+			if ((new_depth > 32768) || (new_depth < 1))
 			{
 				throw Exception("Invalid texture depth in the GL1 target");
 			}
@@ -144,22 +118,21 @@ namespace uicore
 		width = new_width;
 		height = new_height;
 		depth = new_depth;
-		GL1TextureStateTracker state_tracker(texture_type, handle);
 
-	#ifndef __ANDROID__
+#ifndef __ANDROID__
 		if (texture_type == GL_TEXTURE_1D)
 		{
 			pot_width = get_next_power_of_two(new_width);
 			if (pot_width == new_width)
 			{
-				power_of_two_texture=true;
+				power_of_two_texture = true;
 			}
 			else
 			{
-				power_of_two_texture=false;
+				power_of_two_texture = false;
 			}
 
-			pot_ratio_width = (float) width / pot_width;
+			pot_ratio_width = (float)width / pot_width;
 			glTexImage1D(
 				GL_TEXTURE_1D,			// target
 				0,						// level
@@ -170,21 +143,21 @@ namespace uicore
 				GL_UNSIGNED_BYTE,		// type (it really doesn't matter since nothing is uploaded)
 				nullptr);						// texels (0 to avoid uploading)
 		}
-	#endif
+#endif
 		if (texture_type == GL_TEXTURE_2D)
 		{
 			pot_width = get_next_power_of_two(new_width);
 			pot_height = get_next_power_of_two(new_height);
-			if ( (pot_width == new_width) && (pot_height == new_height))
+			if ((pot_width == new_width) && (pot_height == new_height))
 			{
-				power_of_two_texture=true;
+				power_of_two_texture = true;
 			}
 			else
 			{
-				power_of_two_texture=false;
+				power_of_two_texture = false;
 			}
-			pot_ratio_width = (float) width / pot_width;
-			pot_ratio_height = (float) height / pot_height;
+			pot_ratio_width = (float)width / pot_width;
+			pot_ratio_height = (float)height / pot_height;
 
 			glTexImage2D(
 				GL_TEXTURE_2D,			// target
@@ -210,11 +183,11 @@ namespace uicore
 
 				glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 				const int bytesPerPixel = image.get_bytes_per_pixel();
-	#ifndef __ANDROID__
+#ifndef __ANDROID__
 				glPixelStorei(GL_UNPACK_ROW_LENGTH, image.get_pitch() / bytesPerPixel);
 				glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
 				glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
-	#endif
+#endif
 				glTexImage2D(
 					GL_TEXTURE_2D,		// target
 					0,					// level
@@ -233,16 +206,16 @@ namespace uicore
 			pot_width = get_next_power_of_two(new_width);
 			pot_height = get_next_power_of_two(new_height);
 			pot_depth = get_next_power_of_two(new_depth);
-			pot_ratio_width = (float) width / pot_width;
-			pot_ratio_height = (float) height / pot_height;
-			pot_ratio_depth = (float) depth / pot_depth;
-			if ( (pot_width == new_width) && (pot_height == new_height) && (pot_depth == new_depth))
+			pot_ratio_width = (float)width / pot_width;
+			pot_ratio_height = (float)height / pot_height;
+			pot_ratio_depth = (float)depth / pot_depth;
+			if ((pot_width == new_width) && (pot_height == new_height) && (pot_depth == new_depth))
 			{
-				power_of_two_texture=true;
+				power_of_two_texture = true;
 			}
 			else
 			{
-				power_of_two_texture=false;
+				power_of_two_texture = false;
 			}
 
 			glTexImage3D(
@@ -258,6 +231,28 @@ namespace uicore
 				nullptr);						// texels (0 to avoid uploading)
 		}
 	}
+
+	GL1TextureProvider::~GL1TextureProvider()
+	{
+		dispose();
+		SharedGCData::remove_disposable(this);
+	}
+
+	void GL1TextureProvider::on_dispose()
+	{
+		if (handle)
+		{
+			if (OpenGL::set_active())
+			{
+				glDeleteTextures(1, &handle);
+			}
+		}
+	}
+
+	void GL1TextureProvider::generate_mipmap()
+	{
+	}
+
 	PixelBuffer GL1TextureProvider::get_pixeldata(GraphicContext &gc, TextureFormat texture_format, int level) const
 	{
 		throw_if_disposed();
@@ -625,7 +620,7 @@ namespace uicore
 		}
 	}
 
-	TextureProvider *GL1TextureProvider::create_view(TextureDimensions texture_dimensions, TextureFormat texture_format, int min_level, int num_levels, int min_layer, int num_layers)
+	std::shared_ptr<Texture> GL1TextureProvider::create_view(TextureDimensions texture_dimensions, TextureFormat texture_format, int min_level, int num_levels, int min_layer, int num_layers)
 	{
 		throw Exception("OpenGL 1 does not support texture views");
 	}

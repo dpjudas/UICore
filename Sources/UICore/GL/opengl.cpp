@@ -1470,15 +1470,8 @@ namespace uicore
 		}
 	}
 
-
-	GLuint OpenGL::get_texture_handle(Texture &texture)
+	GLuint OpenGL::get_texture_handle(const TexturePtr &texture)
 	{
-		return static_cast<GL3TextureProvider*>(texture.get_provider())->get_handle();
-	}
-
-	Texture OpenGL::from_texture_handle(GLuint type, GLuint handle)
-	{
-		//FIXME For GL1
-		return Texture(new GL3TextureProvider(type, handle));
+		return static_cast<GL3TextureProvider*>(texture->texture_object())->get_handle();
 	}
 }

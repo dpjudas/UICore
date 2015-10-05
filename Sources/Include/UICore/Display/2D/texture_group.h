@@ -36,6 +36,7 @@ namespace uicore
 	class Size;
 	class Rect;
 	class Texture2D;
+	typedef std::shared_ptr<Texture2D> Texture2DPtr;
 	class Subtexture;
 	class TextureGroup_Impl;
 	class GraphicContext;
@@ -81,7 +82,7 @@ namespace uicore
 		Size get_texture_sizes() const;
 
 		/// \brief Returns the textures.
-		std::vector<Texture2D> get_textures() const;
+		std::vector<Texture2DPtr> get_textures() const;
 
 		/// \brief Allocate space for another sub texture.
 		Subtexture add(GraphicContext &context, const Size &size);
@@ -100,7 +101,7 @@ namespace uicore
 		///
 		/// \param texture = Texture to insert
 		/// \param texture_rect = Free space within the texture that the texture group can use
-		void insert_texture(Texture2D &texture, const Rect &texture_rect);
+		void insert_texture(Texture2DPtr &texture, const Rect &texture_rect);
 
 	private:
 		std::shared_ptr<TextureGroup_Impl> impl;

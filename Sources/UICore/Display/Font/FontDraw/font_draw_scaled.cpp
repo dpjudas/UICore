@@ -84,7 +84,7 @@ namespace uicore
 			Font_TextureGlyph *gptr = glyph_cache->get_glyph(canvas, font_engine, glyph);
 			if (gptr)
 			{
-				if (!gptr->texture.is_null())
+				if (gptr->texture)
 				{
 					float xp = gptr->offset.x;
 					float yp = gptr->offset.y;

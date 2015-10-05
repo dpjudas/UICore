@@ -300,7 +300,7 @@ namespace uicore
 		gc.reset_scissor();
 	}
 
-	void Canvas_Impl::get_texture_coords(const Vec2f *triangles, int num_vertex, const Texture2D &texture, const Rect &texture_rect, std::vector<Vec2f> &out_texture_positions)
+	void Canvas_Impl::get_texture_coords(const Vec2f *triangles, int num_vertex, const Texture2DPtr &texture, const Rect &texture_rect, std::vector<Vec2f> &out_texture_positions)
 	{
 		out_texture_positions.clear();
 		out_texture_positions.reserve(num_vertex);
@@ -313,7 +313,7 @@ namespace uicore
 			if (bounding_box_size.height <= 0.0f)
 				bounding_box_size.height = 1.0f;
 
-			Sizef texture_size = texture.get_size();
+			Sizef texture_size = texture->size();
 			Rectf texture_rect_scaled(texture_rect.left / texture_size.width, texture_rect.top / texture_size.height, texture_rect.right / texture_size.width, texture_rect.bottom / texture_size.height);
 
 			Sizef bounding_box_invert_size(texture_rect_scaled.get_width() / bounding_box_size.width, texture_rect_scaled.get_height() / bounding_box_size.height);
