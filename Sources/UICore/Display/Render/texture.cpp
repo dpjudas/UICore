@@ -42,88 +42,88 @@
 
 namespace uicore
 {
-	std::shared_ptr<Texture> Texture::create(GraphicContext &gc, PixelBufferSet pixelbuffer_set)
+	std::shared_ptr<Texture> Texture::create(GraphicContext &gc, PixelBufferSetPtr pixelbuffer_set)
 	{
-		if (pixelbuffer_set.get_dimensions() == texture_1d)
+		if (pixelbuffer_set->dimensions() == texture_1d)
 		{
-			auto texture = Texture1D::create(gc, pixelbuffer_set.get_width(), pixelbuffer_set.get_format(), pixelbuffer_set.get_max_level() + 1);
-			for (int level = 0; level <= pixelbuffer_set.get_max_level(); level++)
+			auto texture = Texture1D::create(gc, pixelbuffer_set->width(), pixelbuffer_set->format(), pixelbuffer_set->max_level() + 1);
+			for (int level = 0; level <= pixelbuffer_set->max_level(); level++)
 			{
-				PixelBufferPtr buffer = pixelbuffer_set.get_image(0, level);
+				PixelBufferPtr buffer = pixelbuffer_set->image(0, level);
 				texture->set_image(gc, buffer, level);
 			}
 			return texture;
 		}
-		else if (pixelbuffer_set.get_dimensions() == texture_1d_array)
+		else if (pixelbuffer_set->dimensions() == texture_1d_array)
 		{
-			auto texture = Texture1DArray::create(gc, pixelbuffer_set.get_width(), pixelbuffer_set.get_slice_count(), pixelbuffer_set.get_format(), pixelbuffer_set.get_max_level() + 1);
-			for (int slice = 0; slice < pixelbuffer_set.get_slice_count(); slice++)
+			auto texture = Texture1DArray::create(gc, pixelbuffer_set->width(), pixelbuffer_set->slice_count(), pixelbuffer_set->format(), pixelbuffer_set->max_level() + 1);
+			for (int slice = 0; slice < pixelbuffer_set->slice_count(); slice++)
 			{
-				for (int level = 0; level <= pixelbuffer_set.get_max_level(); level++)
+				for (int level = 0; level <= pixelbuffer_set->max_level(); level++)
 				{
-					PixelBufferPtr buffer = pixelbuffer_set.get_image(slice, level);
+					PixelBufferPtr buffer = pixelbuffer_set->image(slice, level);
 					texture->set_image(gc, slice, buffer, level);
 				}
 			}
 			return texture;
 		}
-		else if (pixelbuffer_set.get_dimensions() == texture_2d)
+		else if (pixelbuffer_set->dimensions() == texture_2d)
 		{
-			auto texture = Texture2D::create(gc, pixelbuffer_set.get_width(), pixelbuffer_set.get_height(), pixelbuffer_set.get_format(), pixelbuffer_set.get_max_level() + 1);
-			for (int level = 0; level <= pixelbuffer_set.get_max_level(); level++)
+			auto texture = Texture2D::create(gc, pixelbuffer_set->width(), pixelbuffer_set->height(), pixelbuffer_set->format(), pixelbuffer_set->max_level() + 1);
+			for (int level = 0; level <= pixelbuffer_set->max_level(); level++)
 			{
-				PixelBufferPtr buffer = pixelbuffer_set.get_image(0, level);
+				PixelBufferPtr buffer = pixelbuffer_set->image(0, level);
 				texture->set_image(gc, buffer, level);
 			}
 			return texture;
 		}
-		else if (pixelbuffer_set.get_dimensions() == texture_2d_array)
+		else if (pixelbuffer_set->dimensions() == texture_2d_array)
 		{
-			auto texture = Texture2DArray::create(gc, pixelbuffer_set.get_width(), pixelbuffer_set.get_height(), pixelbuffer_set.get_slice_count(), pixelbuffer_set.get_format(), pixelbuffer_set.get_max_level() + 1);
-			for (int slice = 0; slice < pixelbuffer_set.get_slice_count(); slice++)
+			auto texture = Texture2DArray::create(gc, pixelbuffer_set->width(), pixelbuffer_set->height(), pixelbuffer_set->slice_count(), pixelbuffer_set->format(), pixelbuffer_set->max_level() + 1);
+			for (int slice = 0; slice < pixelbuffer_set->slice_count(); slice++)
 			{
-				for (int level = 0; level <= pixelbuffer_set.get_max_level(); level++)
+				for (int level = 0; level <= pixelbuffer_set->max_level(); level++)
 				{
-					PixelBufferPtr buffer = pixelbuffer_set.get_image(slice, level);
+					PixelBufferPtr buffer = pixelbuffer_set->image(slice, level);
 					texture->set_image(gc, slice, buffer, level);
 				}
 			}
 			return texture;
 		}
-		else if (pixelbuffer_set.get_dimensions() == texture_3d)
+		else if (pixelbuffer_set->dimensions() == texture_3d)
 		{
-			auto texture = Texture3D::create(gc, pixelbuffer_set.get_width(), pixelbuffer_set.get_height(), pixelbuffer_set.get_slice_count(), pixelbuffer_set.get_format(), pixelbuffer_set.get_max_level() + 1);
-			for (int slice = 0; slice < pixelbuffer_set.get_slice_count(); slice++)
+			auto texture = Texture3D::create(gc, pixelbuffer_set->width(), pixelbuffer_set->height(), pixelbuffer_set->slice_count(), pixelbuffer_set->format(), pixelbuffer_set->max_level() + 1);
+			for (int slice = 0; slice < pixelbuffer_set->slice_count(); slice++)
 			{
-				for (int level = 0; level <= pixelbuffer_set.get_max_level(); level++)
+				for (int level = 0; level <= pixelbuffer_set->max_level(); level++)
 				{
-					PixelBufferPtr buffer = pixelbuffer_set.get_image(slice, level);
+					PixelBufferPtr buffer = pixelbuffer_set->image(slice, level);
 					texture->set_image(gc, buffer, slice, level);
 				}
 			}
 			return texture;
 		}
-		else if (pixelbuffer_set.get_dimensions() == texture_cube)
+		else if (pixelbuffer_set->dimensions() == texture_cube)
 		{
-			auto texture = TextureCube::create(gc, pixelbuffer_set.get_width(), pixelbuffer_set.get_height(), pixelbuffer_set.get_format(), pixelbuffer_set.get_max_level() + 1);
-			for (int slice = 0; slice < pixelbuffer_set.get_slice_count(); slice++)
+			auto texture = TextureCube::create(gc, pixelbuffer_set->width(), pixelbuffer_set->height(), pixelbuffer_set->format(), pixelbuffer_set->max_level() + 1);
+			for (int slice = 0; slice < pixelbuffer_set->slice_count(); slice++)
 			{
-				for (int level = 0; level <= pixelbuffer_set.get_max_level(); level++)
+				for (int level = 0; level <= pixelbuffer_set->max_level(); level++)
 				{
-					PixelBufferPtr buffer = pixelbuffer_set.get_image(slice, level);
+					PixelBufferPtr buffer = pixelbuffer_set->image(slice, level);
 					texture->set_image(gc, (TextureCubeDirection)slice, buffer, level);
 				}
 			}
 			return texture;
 		}
-		else if (pixelbuffer_set.get_dimensions() == texture_cube_array)
+		else if (pixelbuffer_set->dimensions() == texture_cube_array)
 		{
-			auto texture = TextureCubeArray::create(gc, pixelbuffer_set.get_width(), pixelbuffer_set.get_height(), pixelbuffer_set.get_slice_count(), pixelbuffer_set.get_format(), pixelbuffer_set.get_max_level() + 1);
-			for (int slice = 0; slice < pixelbuffer_set.get_slice_count(); slice++)
+			auto texture = TextureCubeArray::create(gc, pixelbuffer_set->width(), pixelbuffer_set->height(), pixelbuffer_set->slice_count(), pixelbuffer_set->format(), pixelbuffer_set->max_level() + 1);
+			for (int slice = 0; slice < pixelbuffer_set->slice_count(); slice++)
 			{
-				for (int level = 0; level <= pixelbuffer_set.get_max_level(); level++)
+				for (int level = 0; level <= pixelbuffer_set->max_level(); level++)
 				{
-					PixelBufferPtr buffer = pixelbuffer_set.get_image(slice, level);
+					PixelBufferPtr buffer = pixelbuffer_set->image(slice, level);
 					texture->set_image(gc, slice / 6, (TextureCubeDirection)(slice % 6), buffer, level);
 				}
 			}

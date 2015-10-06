@@ -37,55 +37,44 @@ namespace uicore
 {
 	class PixelBuffer;
 	typedef std::shared_ptr<PixelBuffer> PixelBufferPtr;
-	class PixelBufferSet_Impl;
 
 	/// \brief Set of images that combined form a complete texture
 	class PixelBufferSet
 	{
 	public:
-		/// \brief Constructs a null instance
-		PixelBufferSet();
-
 		/// \brief Constructs an image set of the specified dimensions type and internal format
-		PixelBufferSet(TextureDimensions dimensions, TextureFormat format, int width, int height = 1, int slices = 1);
+		static std::shared_ptr<PixelBufferSet> create(TextureDimensions dimensions, TextureFormat format, int width, int height = 1, int slices = 1);
 
 		/// \brief Constructs an image set with a single image using the dimensions and internal format of the pixel buffer
-		PixelBufferSet(const PixelBufferPtr &image);
-
-		/// \brief Returns true if this object is invalid.
-		bool is_null() const { return !impl; }
-
-		/// \brief Throw an exception if this object is invalid.
-		void throw_if_null() const;
+		static std::shared_ptr<PixelBufferSet> create(const PixelBufferPtr &image);
 
 		/// \brief Returns the texture dimensions used by the image set
-		TextureDimensions get_dimensions() const;
+		virtual TextureDimensions dimensions() const = 0;
 
 		/// \brief Returns the internal texture format used by the image
-		TextureFormat get_format() const;
+		virtual TextureFormat format() const = 0;
 
 		/// \brief Returns the width of the image
-		int get_width() const;
+		virtual int width() const = 0;
 
 		/// \brief Returns the height of the image
-		int get_height() const;
+		virtual int height() const = 0;
 
 		/// \brief Returns the number of depth/array/cube slices in the set
-		int get_slice_count() const;
+		virtual int slice_count() const = 0;
 
 		/// \brief Returns the lowest mip level specified in the set
-		int get_base_level() const;
+		virtual int base_level() const = 0;
 
 		/// \brief Returns the highest mip level specified in the set
-		int get_max_level() const;
+		virtual int max_level() const = 0;
 
 		/// \brief Returns the pixel buffer for a specific slice and level
-		PixelBufferPtr get_image(int slice, int level);
+		virtual PixelBufferPtr image(int slice, int level) = 0;
 
 		/// \brief Set the pixel buffer to be used for the specified slice and level
-		void set_image(int slice, int level, const PixelBufferPtr &image);
-
-	private:
-		std::shared_ptr<PixelBufferSet_Impl> impl;
+		virtual void set_image(int slice, int level, const PixelBufferPtr &image) = 0;
 	};
+
+	typedef std::shared_ptr<PixelBufferSet> PixelBufferSetPtr;
 }

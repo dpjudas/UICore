@@ -37,13 +37,13 @@
 
 namespace uicore
 {
-	PixelBufferSet DDSFormat::load(const std::string &filename)
+	PixelBufferSetPtr DDSFormat::load(const std::string &filename)
 	{
 		auto file = File::open_existing(filename);
 		return load(*file);
 	}
 
-	PixelBufferSet DDSFormat::load(IODevice &file)
+	PixelBufferSetPtr DDSFormat::load(IODevice &file)
 	{
 #define fourccvalue(a,b,c,d) ((static_cast<unsigned int>(a)) | (static_cast<unsigned int>(b) << 8) | (static_cast<unsigned int>(c) << 16) | (static_cast<unsigned int>(d) << 24))
 #define isbitmask(r,g,b,a) (format_red_bit_mask == (r) && format_green_bit_mask == (g) && format_blue_bit_mask == (b) && format_alpha_bit_mask == (a))
@@ -282,7 +282,7 @@ namespace uicore
 		if (texture_format == tf_bgra8 || texture_format == tf_rgb8 || texture_format == tf_bgr8)
 			texture_format = tf_rgba8;
 
-		PixelBufferSet set(texture_dimensions, texture_format, texture_width, texture_height, texture_slices);
+		auto set = PixelBufferSet::create(texture_dimensions, texture_format, texture_width, texture_height, texture_slices);
 
 		int bytes_per_pixel = 0;
 		int bytes_per_block = 0;
@@ -318,7 +318,7 @@ namespace uicore
 				if (texture_format != original_format)
 					buffer = buffer->to_format(texture_format);
 
-				set.set_image(slice, level, buffer);
+				set->set_image(slice, level, buffer);
 			}
 		}
 

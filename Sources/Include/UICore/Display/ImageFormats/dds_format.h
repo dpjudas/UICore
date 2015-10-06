@@ -36,7 +36,7 @@ namespace uicore
 	class DDSFormat
 	{
 	public:
-		static PixelBufferSet load(const std::string &filename);
-		static PixelBufferSet load(IODevice &file);
+		static PixelBufferSetPtr load(const std::string &filename);
+		static PixelBufferSetPtr load(IODevice &file);
 	};
 }
