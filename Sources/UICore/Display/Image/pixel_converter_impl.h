@@ -57,20 +57,34 @@ namespace uicore
 		virtual void filter(Vec4f *pixels, int num_pixels) = 0;
 	};
 
-	class PixelConverter_Impl
+	class PixelConverterImpl : public PixelConverter
 	{
 	public:
-		PixelConverter_Impl() : premultiply_alpha(false), flip_vertical(false), gamma(1.0f), swizzle(0, 1, 2, 3), input_is_ycrcb(false), output_is_ycrcb(false) { }
+		bool premultiply_alpha() const override { return _premultiply_alpha; }
+		bool flip_vertical() const override { return _flip_vertical; }
+		float gamma() const override { return _gamma; }
+		Vec4i swizzle() const override { return _swizzle; }
+		bool input_is_ycrcb() const override { return _input_is_ycrcb; }
+		bool output_is_ycrcb() const override { return _output_is_ycrcb; }
+		void set_premultiply_alpha(bool value) override { _premultiply_alpha = value; }
+		void set_flip_vertical(bool value) override { _flip_vertical = value; }
+		void set_gamma(float value) override { _gamma = value; }
+		void set_swizzle(const Vec4i &value) override { _swizzle = value; }
+		void set_input_is_ycrcb(bool value) override { _input_is_ycrcb = value; }
+		void set_output_is_ycrcb(bool value) override { _output_is_ycrcb = value; }
 
+		void convert(void *output, int output_pitch, TextureFormat output_format, const void *input, int input_pitch, TextureFormat input_format, int width, int height) override;
+
+	private:
 		std::unique_ptr<PixelReader> create_reader(TextureFormat format, bool sse2);
 		std::unique_ptr<PixelWriter> create_writer(TextureFormat format, bool sse2, bool sse4);
 		std::vector<std::shared_ptr<PixelFilter> > create_filters(bool sse2);
 
-		bool premultiply_alpha;
-		bool flip_vertical;
-		float gamma;
-		Vec4i swizzle;
-		bool input_is_ycrcb;
-		bool output_is_ycrcb;
+		bool _premultiply_alpha = false;
+		bool _flip_vertical = false;
+		float _gamma = 1.0f;
+		Vec4i _swizzle = Vec4i(0, 1, 2, 3);
+		bool _input_is_ycrcb = false;
+		bool _output_is_ycrcb = false;
 	};
 }

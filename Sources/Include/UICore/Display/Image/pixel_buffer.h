@@ -46,6 +46,7 @@ namespace uicore
 	class IODevice;
 	class GraphicContext;
 	class PixelConverter;
+	typedef std::shared_ptr<PixelConverter> PixelConverterPtr;
 
 	/// \brief Pixel buffer prefered direction
 	enum PixelBufferDirection
@@ -203,7 +204,7 @@ namespace uicore
 		/// \brief Copy source pixel buffer into this buffer, doing a format conversion if needed
 		///
 		/// \param source Source pixel buffer.
-		void set_image(const std::shared_ptr<PixelBuffer> &source, PixelConverter &converter);
+		void set_image(const std::shared_ptr<PixelBuffer> &source, const PixelConverterPtr &converter);
 
 		/// \brief Copy source pixel buffer into this buffer, doing a format conversion if needed
 		///
@@ -217,13 +218,13 @@ namespace uicore
 		/// \param source Source pixel buffer.
 		/// \param dest_rect Destination position for copy.
 		/// \param src_rect Source rectangle for copy.
-		void set_subimage(const std::shared_ptr<PixelBuffer> &source, const Point &dest_pos, const Rect &src_rect, PixelConverter &converter);
+		void set_subimage(const std::shared_ptr<PixelBuffer> &source, const Point &dest_pos, const Rect &src_rect, const PixelConverterPtr &converter);
 
 		/// \brief Converts current buffer to a new pixel format and returns the result.
 		std::shared_ptr<PixelBuffer> to_format(TextureFormat texture_format) const;
 
 		/// \brief Converts current buffer to a new pixel format and returns the result.
-		std::shared_ptr<PixelBuffer> to_format(TextureFormat texture_format, PixelConverter &converter) const;
+		std::shared_ptr<PixelBuffer> to_format(TextureFormat texture_format, const PixelConverterPtr &converter) const;
 
 		/// \brief Flip the entire image vertically (turn it upside down)
 		void flip_vertical();

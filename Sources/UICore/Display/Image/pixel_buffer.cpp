@@ -24,7 +24,6 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    Harry Storbacka
 **    Mark Page
 */
 
@@ -50,7 +49,7 @@ namespace uicore
 	class PixelBufferImpl
 	{
 	public:
-		static void convert(const PixelBuffer *source, PixelBuffer *target, const Rect &dest_rect, const Rect &src_rect, PixelConverter &converter)
+		static void convert(const PixelBuffer *source, PixelBuffer *target, const Rect &dest_rect, const Rect &src_rect, const PixelConverterPtr &converter)
 		{
 			if (dest_rect.get_size() != src_rect.get_size())
 			{
@@ -66,7 +65,7 @@ namespace uicore
 			src_data += src_rect.top * src_pitch + src_rect.left * source->bytes_per_pixel();
 			dest_data += dest_rect.top * dest_pitch + dest_rect.left * target->bytes_per_pixel();
 
-			converter.convert(dest_data, dest_pitch, target->format(), src_data, src_pitch, source->format(), dest_rect.get_width(), dest_rect.get_height());
+			converter->convert(dest_data, dest_pitch, target->format(), src_data, src_pitch, source->format(), dest_rect.get_width(), dest_rect.get_height());
 		}
 	};
 
@@ -371,27 +370,27 @@ namespace uicore
 
 	void PixelBuffer::set_subimage(const std::shared_ptr<PixelBuffer> &source, const Point &dest_pos, const Rect &src_rect)
 	{
-		PixelConverter converter;
+		auto converter = PixelConverter::create();
 		PixelBufferImpl::convert(source.get(), this, Rect(dest_pos, src_rect.get_size()), src_rect, converter);
 	}
 
-	void PixelBuffer::set_image(const std::shared_ptr<PixelBuffer> &source, PixelConverter &converter)
+	void PixelBuffer::set_image(const std::shared_ptr<PixelBuffer> &source, const PixelConverterPtr &converter)
 	{
 		set_subimage(source, Point(0, 0), Rect(Point(0, 0), source->size()), converter);
 	}
 
-	void PixelBuffer::set_subimage(const std::shared_ptr<PixelBuffer> &source, const Point &dest_pos, const Rect &src_rect, PixelConverter &converter)
+	void PixelBuffer::set_subimage(const std::shared_ptr<PixelBuffer> &source, const Point &dest_pos, const Rect &src_rect, const PixelConverterPtr &converter)
 	{
 		PixelBufferImpl::convert(source.get(), this, Rect(dest_pos, src_rect.get_size()), src_rect, converter);
 	}
 
 	std::shared_ptr<PixelBuffer> PixelBuffer::to_format(TextureFormat texture_format) const
 	{
-		PixelConverter converter;
+		auto converter = PixelConverter::create();
 		return to_format(texture_format, converter);
 	}
 
-	std::shared_ptr<PixelBuffer> PixelBuffer::to_format(TextureFormat texture_format, PixelConverter &converter) const
+	std::shared_ptr<PixelBuffer> PixelBuffer::to_format(TextureFormat texture_format, const PixelConverterPtr &converter) const
 	{
 		auto result = PixelBuffer::create(width(), height(), texture_format);
 		PixelBufferImpl::convert(this, result.get(), Rect(Point(), size()), Rect(Point(), size()), converter);

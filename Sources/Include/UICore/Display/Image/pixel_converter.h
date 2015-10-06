@@ -35,65 +35,61 @@
 
 namespace uicore
 {
-	class PixelConverter_Impl;
-
-	/// \brief Low level pixel format converter class.
+	/// \brief Pixel format converter class.
 	class PixelConverter
 	{
 	public:
 		/// \brief Constructs a pixel format converter
-		PixelConverter();
-		~PixelConverter();
+		static std::shared_ptr<PixelConverter> create();
 
 		/// \brief Returns the premultiply alpha setting
-		bool get_premultiply_alpha() const;
+		virtual bool premultiply_alpha() const = 0;
 
 		/// \brief Returns the flip vertical setting
-		bool flip_vertical() const;
+		virtual bool flip_vertical() const = 0;
 
 		/// \brief Returns the gamma setting
-		float get_gamma() const;
+		virtual float gamma() const = 0;
 
 		/// \brief Returns the input channel used for each output channel
-		Vec4i get_swizzle() const;
+		virtual Vec4i swizzle() const = 0;
 
 		/// \brief Returns the JPEG JFIF YCrCb input setting
-		bool get_input_is_ycrcb() const;
+		virtual bool input_is_ycrcb() const = 0;
 
 		/// \brief Returns the JPEG JFIF YCrCb output setting
-		bool get_output_is_ycrcb() const;
+		virtual bool output_is_ycrcb() const = 0;
 
 		/// \brief Set the premultiply alpha setting
 		///
 		/// This defaults to off.
-		void set_premultiply_alpha(bool enable);
+		virtual void set_premultiply_alpha(bool enable) = 0;
 
 		/// \brief Set the flip vertical setting
 		///
 		/// This defaults to off.
-		void set_flip_vertical(bool enable);
+		virtual void set_flip_vertical(bool enable) = 0;
 
 		/// \brief Set the gamma applied when converting
 		///
 		/// This defaults to 1.0 (off).
-		void set_gamma(float gamma);
+		virtual void set_gamma(float gamma) = 0;
 
 		/// \brief Set the input channel used for each output channel
 		///
 		/// Values 0-3 accepted. 0 = red, 1 = green, 2 = blue, 3 = alpha.
-		void set_swizzle(int red_source, int green_source, int blue_source, int alpha_source);
-		void set_swizzle(const Vec4i &swizzle);
+		virtual void set_swizzle(const Vec4i &swizzle) = 0;
+		void set_swizzle(int red_source, int green_source, int blue_source, int alpha_source) { set_swizzle(Vec4i(red_source, green_source, blue_source, alpha_source)); }
 
 		/// \brief Converts from JPEG JFIF YCrCb
-		void set_input_is_ycrcb(bool enable);
+		virtual void set_input_is_ycrcb(bool enable) = 0;
 
 		/// \brief Converts to JPEG JFIF YCrCb
-		void set_output_is_ycrcb(bool enable);
+		virtual void set_output_is_ycrcb(bool enable) = 0;
 
 		/// \brief Convert some pixel data
-		void convert(void *output, int output_pitch, TextureFormat output_format, const void *input, int input_pitch, TextureFormat input_format, int width, int height);
-
-	private:
-		std::shared_ptr<PixelConverter_Impl> impl;
+		virtual void convert(void *output, int output_pitch, TextureFormat output_format, const void *input, int input_pitch, TextureFormat input_format, int width, int height) = 0;
 	};
+
+	typedef std::shared_ptr<PixelConverter> PixelConverterPtr;
 }

@@ -57,94 +57,25 @@
 
 namespace uicore
 {
-	PixelConverter::PixelConverter()
-		: impl(std::make_shared<PixelConverter_Impl>())
+	std::shared_ptr<PixelConverter> PixelConverter::create()
 	{
+		return std::make_shared<PixelConverterImpl>();
 	}
 
-	PixelConverter::~PixelConverter()
-	{
-	}
-
-	bool PixelConverter::get_premultiply_alpha() const
-	{
-		return impl->premultiply_alpha;
-	}
-
-	bool PixelConverter::flip_vertical() const
-	{
-		return impl->flip_vertical;
-	}
-
-	float PixelConverter::get_gamma() const
-	{
-		return impl->gamma;
-	}
-
-	Vec4i PixelConverter::get_swizzle() const
-	{
-		return impl->swizzle;
-	}
-
-	bool PixelConverter::get_input_is_ycrcb() const
-	{
-		return impl->input_is_ycrcb;
-	}
-
-	bool PixelConverter::get_output_is_ycrcb() const
-	{
-		return impl->output_is_ycrcb;
-	}
-
-	void PixelConverter::set_premultiply_alpha(bool enable)
-	{
-		impl->premultiply_alpha = enable;
-	}
-
-	void PixelConverter::set_flip_vertical(bool enable)
-	{
-		impl->flip_vertical = enable;
-	}
-
-	void PixelConverter::set_gamma(float gamma)
-	{
-		impl->gamma = gamma;
-	}
-
-	void PixelConverter::set_swizzle(int red_source, int green_source, int blue_source, int alpha_source)
-	{
-		set_swizzle(Vec4i(red_source, green_source, blue_source, alpha_source));
-	}
-
-	void PixelConverter::set_swizzle(const Vec4i &swizzle)
-	{
-		impl->swizzle = swizzle;
-	}
-
-	void PixelConverter::set_input_is_ycrcb(bool enable)
-	{
-		impl->input_is_ycrcb = enable;
-	}
-
-	void PixelConverter::set_output_is_ycrcb(bool enable)
-	{
-		impl->output_is_ycrcb = enable;
-	}
-
-	void PixelConverter::convert(void *output, int output_pitch, TextureFormat output_format, const void *input, int input_pitch, TextureFormat input_format, int width, int height)
+	void PixelConverterImpl::convert(void *output, int output_pitch, TextureFormat output_format, const void *input, int input_pitch, TextureFormat input_format, int width, int height)
 	{
 		bool sse2 = System::detect_cpu_extension(System::sse2);
 		bool sse4 = System::detect_cpu_extension(System::sse4_1);
 
-		std::unique_ptr<PixelReader> reader = impl->create_reader(input_format, sse2);
-		std::unique_ptr<PixelWriter> writer = impl->create_writer(output_format, sse2, sse4);
-		std::vector<std::shared_ptr<PixelFilter> > filters = impl->create_filters(sse2);
+		std::unique_ptr<PixelReader> reader = create_reader(input_format, sse2);
+		std::unique_ptr<PixelWriter> writer = create_writer(output_format, sse2, sse4);
+		std::vector<std::shared_ptr<PixelFilter> > filters = create_filters(sse2);
 
 		auto work_buffer = DataBuffer::create(width * sizeof(Vec4f));
 		Vec4f *temp = work_buffer->data<Vec4f>();
 		for (int input_y = 0; input_y < height; input_y++)
 		{
-			int output_y = impl->flip_vertical ? (height - 1 - input_y) : input_y;
+			int output_y = _flip_vertical ? (height - 1 - input_y) : input_y;
 
 			const char *input_line = static_cast<const char*>(input)+input_pitch * input_y;
 			char *output_line = static_cast<char*>(output)+output_pitch * output_y;
@@ -155,7 +86,7 @@ namespace uicore
 		}
 	}
 
-	std::unique_ptr<PixelReader> PixelConverter_Impl::create_reader(TextureFormat format, bool sse2)
+	std::unique_ptr<PixelReader> PixelConverterImpl::create_reader(TextureFormat format, bool sse2)
 	{
 		switch (format)
 		{
@@ -342,7 +273,7 @@ namespace uicore
 		throw Exception("Pixel format not yet supported");
 	}
 
-	std::unique_ptr<PixelWriter> PixelConverter_Impl::create_writer(TextureFormat format, bool sse2, bool sse4)
+	std::unique_ptr<PixelWriter> PixelConverterImpl::create_writer(TextureFormat format, bool sse2, bool sse4)
 	{
 		switch (format)
 		{
@@ -531,11 +462,11 @@ namespace uicore
 		throw Exception("Pixel format not yet supported");
 	}
 
-	std::vector<std::shared_ptr<PixelFilter> > PixelConverter_Impl::create_filters(bool sse2)
+	std::vector<std::shared_ptr<PixelFilter> > PixelConverterImpl::create_filters(bool sse2)
 	{
 		std::vector<std::shared_ptr<PixelFilter> > filters;
 
-		if (input_is_ycrcb)
+		if (input_is_ycrcb())
 		{
 #if !defined __ANDROID__ && ! defined CL_DISABLE_SSE2
 			if (sse2)
@@ -545,7 +476,7 @@ namespace uicore
 				filters.push_back(std::shared_ptr<PixelFilter>(new PixelFilterYCrCbToRGB()));
 		}
 
-		if (premultiply_alpha)
+		if (premultiply_alpha())
 		{
 #if !defined __ANDROID__ && ! defined CL_DISABLE_SSE2
 			if (sse2)
@@ -555,27 +486,27 @@ namespace uicore
 				filters.push_back(std::shared_ptr<PixelFilter>(new PixelFilterPremultiplyAlpha()));
 		}
 
-		if (gamma != 1.0f)
+		if (gamma() != 1.0f)
 		{
 #if !defined __ANDROID__ && ! defined CL_DISABLE_SSE2
 			if (sse2)
-				filters.push_back(std::shared_ptr<PixelFilter>(new PixelFilterGammaSSE2(gamma)));
+				filters.push_back(std::shared_ptr<PixelFilter>(new PixelFilterGammaSSE2(gamma())));
 			else
 #endif
-				filters.push_back(std::shared_ptr<PixelFilter>(new PixelFilterGamma(gamma)));
+				filters.push_back(std::shared_ptr<PixelFilter>(new PixelFilterGamma(gamma())));
 		}
 
-		if (swizzle != Vec4i(0, 1, 2, 3))
+		if (swizzle() != Vec4i(0, 1, 2, 3))
 		{
 #if !defined __ANDROID__ && ! defined CL_DISABLE_SSE2
 			if (sse2)
-				filters.push_back(std::shared_ptr<PixelFilter>(new PixelFilterSwizzleSSE2(swizzle)));
+				filters.push_back(std::shared_ptr<PixelFilter>(new PixelFilterSwizzleSSE2(swizzle())));
 			else
 #endif
-				filters.push_back(std::shared_ptr<PixelFilter>(new PixelFilterSwizzle(swizzle)));
+				filters.push_back(std::shared_ptr<PixelFilter>(new PixelFilterSwizzle(swizzle())));
 		}
 
-		if (output_is_ycrcb)
+		if (output_is_ycrcb())
 		{
 #if !defined __ANDROID__ && ! defined CL_DISABLE_SSE2
 			if (sse2)
