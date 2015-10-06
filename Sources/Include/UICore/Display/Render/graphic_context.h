@@ -617,6 +617,4 @@ namespace uicore
 
 		friend class OpenGL;
 	};
-
-	const float pixelcenter_constant = 0.375f;
 }
