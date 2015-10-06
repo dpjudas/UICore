@@ -28,7 +28,6 @@
 
 #include "UICore/precomp.h"
 #include "targa_loader.h"
-#include "UICore/Display/Image/pixel_buffer_lock.h"
 
 namespace uicore
 {
@@ -224,11 +223,10 @@ namespace uicore
 
 	void TargaLoader::decode_color_mapped()
 	{
-		PixelBufferLock4ub pixels(image);
 		unsigned char *input = reinterpret_cast<unsigned char*>(image_data->data());
 		for (int y = 0; y < image_height; y++)
 		{
-			Vec4ub *output_line = pixels.get_row(top_down ? y : image_height - y - 1);
+			Vec4ub *output_line = image->line<Vec4ub>(top_down ? y : image_height - y - 1);
 			for (int x = 0; x < image_width; x++)
 			{
 				int index = 0;
@@ -242,13 +240,12 @@ namespace uicore
 
 	void TargaLoader::decode_true_color()
 	{
-		PixelBufferLock4ub pixels(image);
 		if (image_pixel_size == 32)
 		{
 			for (int y = 0; y < image_height; y++)
 			{
 				unsigned int *input_line = reinterpret_cast<unsigned int*>(image_data->data()) + y * image_width;
-				Vec4ub *output_line = pixels.get_row(top_down ? y : image_height - y - 1);
+				Vec4ub *output_line = image->line<Vec4ub>(top_down ? y : image_height - y - 1);
 				for (int x = 0; x < image_width; x++)
 				{
 					output_line[right_to_left ? image_width - 1 - x : x] = Vec4ub(
@@ -264,7 +261,7 @@ namespace uicore
 			for (int y = 0; y < image_height; y++)
 			{
 				unsigned char *input_line = reinterpret_cast<unsigned char*>(image_data->data()) + y * image_width * 3;
-				Vec4ub *output_line = pixels.get_row(top_down ? y : image_height - y - 1);
+				Vec4ub *output_line = image->line<Vec4ub>(top_down ? y : image_height - y - 1);
 				for (int x = 0; x < image_width; x++)
 				{
 					output_line[right_to_left ? image_width - 1 - x : x] = Vec4ub(
@@ -280,7 +277,7 @@ namespace uicore
 			for (int y = 0; y < image_height; y++)
 			{
 				unsigned short *input_line = reinterpret_cast<unsigned short*>(image_data->data()) + y * image_width;
-				Vec4ub *output_line = pixels.get_row(top_down ? y : image_height - y - 1);
+				Vec4ub *output_line = image->line<Vec4ub>(top_down ? y : image_height - y - 1);
 				for (int x = 0; x < image_width; x++)
 				{
 					output_line[right_to_left ? image_width - 1 - x : x] = Vec4ub(
@@ -299,13 +296,12 @@ namespace uicore
 
 	void TargaLoader::decode_grayscale()
 	{
-		PixelBufferLock4ub pixels(image);
 		if (image_pixel_size == 8)
 		{
 			for (int y = 0; y < image_height; y++)
 			{
 				unsigned char *input_line = reinterpret_cast<unsigned char*>(image_data->data()) + y * image_width;
-				Vec4ub *output_line = pixels.get_row(top_down ? y : image_height - y - 1);
+				Vec4ub *output_line = image->line<Vec4ub>(top_down ? y : image_height - y - 1);
 				for (int x = 0; x < image_width; x++)
 				{
 					output_line[right_to_left ? image_width - 1 - x : x] = Vec4ub(input_line[x], input_line[x], input_line[x], 255);

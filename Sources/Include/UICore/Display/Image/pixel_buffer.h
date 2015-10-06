@@ -127,6 +127,9 @@ namespace uicore
 		void *line(int line) { unsigned char *d = data_uint8(); return d + line * pitch(); }
 		const void *line(int line) const { const unsigned char *d = data_uint8(); return d + line * pitch(); }
 
+		template<typename T> T *line(int line) { unsigned char *d = data_uint8(); return reinterpret_cast<T*>(d + line * pitch()); }
+		template<typename T> const T *line(int line) const { const unsigned char *d = data_uint8(); return reinterpret_cast<const T*>(d + line * pitch()); }
+
 		/// \brief Returns a pointer to the beginning of a specific line as 8 bit data.
 		unsigned char *line_uint8(int index) { return reinterpret_cast<unsigned char*>(line(index)); }
 		const unsigned char *line_uint8(int index) const { return reinterpret_cast<const unsigned char*>(line(index)); }

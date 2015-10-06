@@ -28,7 +28,6 @@
 
 #include "UICore/precomp.h"
 #include "png_loader.h"
-#include "UICore/Display/Image/pixel_buffer_lock.h"
 #include "UICore/Core/Zip/zlib_compression.h"
 #include "UICore/Core/System/system.h"
 #include "UICore/Display/ImageFormats/PNGWriter/png_writer.h"
@@ -278,7 +277,6 @@ namespace uicore
 			scanline[i] = 0;
 
 		int data_pos = 0;
-		PixelBufferLockAny pixels(image);
 		for (int y = 0; y < image_height; y++)
 		{
 			unsigned char *tmp = scanline;
@@ -296,7 +294,7 @@ namespace uicore
 			else
 				convert_scanline_4us(image_width);
 
-			unsigned char *output_line = pixels.get_row(y);
+			unsigned char *output_line = image->line_uint8(y);
 			if (bit_depth <= 8)
 				memcpy(output_line, scanline_4ub, image_width * 4);
 			else
@@ -318,9 +316,8 @@ namespace uicore
 		//int block_height[7]  = { 8, 8, 4, 4, 2, 2, 1 };
 		//int block_width[7]   = { 8, 4, 4, 2, 2, 1, 1 };
 
-		PixelBufferLockAny pixels(image);
-		unsigned char *output = pixels.get_data();
-		int output_pitch = pixels.get_pitch();
+		unsigned char *output = image->data_uint8();
+		int output_pitch = image->pitch();
 		for (int pass = 0; pass < 7; pass++)
 		{
 			for (size_t i = 0; i < scanline_size; i++)

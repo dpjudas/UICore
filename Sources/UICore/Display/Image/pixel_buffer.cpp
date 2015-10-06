@@ -31,7 +31,6 @@
 #include "UICore/precomp.h"
 #include "UICore/Display/Image/pixel_buffer.h"
 #include "UICore/Display/Image/pixel_converter.h"
-#include "UICore/Display/Image/pixel_buffer_lock.h"
 #include "UICore/Display/2D/color.h"
 #include "UICore/Core/System/exception.h"
 #include "UICore/Core/IOData/path_help.h"
@@ -42,6 +41,7 @@
 #include "UICore/Core/Text/text.h"
 #include "UICore/Display/Image/texture_format.h"
 #include "UICore/Core/Math/half_float.h"
+#include "UICore/Core/Math/half_float_vector.h"
 #include "cpu_pixel_buffer_provider.h"
 #include <cstdint>
 
@@ -567,16 +567,16 @@ namespace uicore
 			int h = height();
 			for (int y = 0; y < h; y++)
 			{
-				Vec4ub *line = (Vec4ub*)PixelBuffer::line(y);
+				Vec4ub *pixels = line<Vec4ub>(y);
 				for (int x = 0; x < w; x++)
 				{
 					const float rcp_255 = 1.0f / 255.0f;
-					float red = std::pow(line[x].r * rcp_255, gamma);
-					float green = std::pow(line[x].g * rcp_255, gamma);
-					float blue = std::pow(line[x].b * rcp_255, gamma);
-					line[x].r = static_cast<unsigned short>(clamp(red * 255.0f + 0.5f, 0.0f, 255.0f));
-					line[x].g = static_cast<unsigned short>(clamp(green * 255.0f + 0.5f, 0.0f, 255.0f));
-					line[x].b = static_cast<unsigned short>(clamp(blue * 255.0f + 0.5f, 0.0f, 255.0f));
+					float red = std::pow(pixels[x].r * rcp_255, gamma);
+					float green = std::pow(pixels[x].g * rcp_255, gamma);
+					float blue = std::pow(pixels[x].b * rcp_255, gamma);
+					pixels[x].r = static_cast<unsigned short>(clamp(red * 255.0f + 0.5f, 0.0f, 255.0f));
+					pixels[x].g = static_cast<unsigned short>(clamp(green * 255.0f + 0.5f, 0.0f, 255.0f));
+					pixels[x].b = static_cast<unsigned short>(clamp(blue * 255.0f + 0.5f, 0.0f, 255.0f));
 				}
 			}
 		}
@@ -586,16 +586,16 @@ namespace uicore
 			int h = height();
 			for (int y = 0; y < h; y++)
 			{
-				Vec4us *line = (Vec4us*)PixelBuffer::line(y);
+				Vec4us *pixels = line<Vec4us>(y);
 				for (int x = 0; x < w; x++)
 				{
 					const float rcp_65535 = 1.0f / 65535.0f;
-					float red = std::pow(line[x].r * rcp_65535, gamma);
-					float green = std::pow(line[x].g * rcp_65535, gamma);
-					float blue = std::pow(line[x].b * rcp_65535, gamma);
-					line[x].r = static_cast<unsigned short>(clamp(red * 65535.0f + 0.5f, 0.0f, 65535.0f));
-					line[x].g = static_cast<unsigned short>(clamp(green * 65535.0f + 0.5f, 0.0f, 65535.0f));
-					line[x].b = static_cast<unsigned short>(clamp(blue * 65535.0f + 0.5f, 0.0f, 65535.0f));
+					float red = std::pow(pixels[x].r * rcp_65535, gamma);
+					float green = std::pow(pixels[x].g * rcp_65535, gamma);
+					float blue = std::pow(pixels[x].b * rcp_65535, gamma);
+					pixels[x].r = static_cast<unsigned short>(clamp(red * 65535.0f + 0.5f, 0.0f, 65535.0f));
+					pixels[x].g = static_cast<unsigned short>(clamp(green * 65535.0f + 0.5f, 0.0f, 65535.0f));
+					pixels[x].b = static_cast<unsigned short>(clamp(blue * 65535.0f + 0.5f, 0.0f, 65535.0f));
 				}
 			}
 		}
@@ -605,14 +605,14 @@ namespace uicore
 			int h = height();
 			for (int y = 0; y < h; y++)
 			{
-				Vec4hf *line = (Vec4hf*)PixelBuffer::line(y);
+				Vec4hf *pixels = line<Vec4hf>(y);
 				for (int x = 0; x < w; x++)
 				{
-					Vec4f v = line[x].to_float();
+					Vec4f v = pixels[x].to_float();
 					v.r = std::pow(v.r, gamma);
 					v.g = std::pow(v.g, gamma);
 					v.b = std::pow(v.b, gamma);
-					line[x] = Vec4hf(v);
+					pixels[x] = Vec4hf(v);
 				}
 			}
 		}
@@ -622,12 +622,12 @@ namespace uicore
 			int h = height();
 			for (int y = 0; y < h; y++)
 			{
-				Vec4f *line = (Vec4f*)PixelBuffer::line(y);
+				Vec4f *pixels = line<Vec4f>(y);
 				for (int x = 0; x < w; x++)
 				{
-					line[x].r = std::pow(line[x].r, gamma);
-					line[x].g = std::pow(line[x].g, gamma);
-					line[x].b = std::pow(line[x].b, gamma);
+					pixels[x].r = std::pow(pixels[x].r, gamma);
+					pixels[x].g = std::pow(pixels[x].g, gamma);
+					pixels[x].b = std::pow(pixels[x].b, gamma);
 				}
 			}
 		}
