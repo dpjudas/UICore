@@ -28,7 +28,7 @@
 
 #pragma once
 
-#include "UICore/Display/TargetProviders/pixel_buffer_provider.h"
+#include "UICore/Display/Render/transfer_texture.h"
 #include "UICore/Core/System/comptr.h"
 #include "d3d_share_list.h"
 
@@ -36,25 +36,30 @@ namespace uicore
 {
 	class D3DGraphicContextProvider;
 
-	class D3DPixelBufferProvider : public PixelBufferProvider, D3DSharedResource
+	class D3DPixelBufferProvider : public TransferTexture, D3DSharedResource
 	{
 	public:
-		D3DPixelBufferProvider(const ComPtr<ID3D11Device> &device);
+		D3DPixelBufferProvider(const ComPtr<ID3D11Device> &device, const void *data, const Size &new_size, PixelBufferDirection direction, TextureFormat new_format, BufferUsage usage);
 		~D3DPixelBufferProvider();
-		void create(const void *data, const Size &new_size, PixelBufferDirection direction, TextureFormat new_format, BufferUsage usage);
 
-		void *get_data();
-		int get_pitch() const;
+		void *data() override;
+		const void *data() const override;
+		int pitch() const override;
 
 		ComPtr<ID3D11Texture2D> &get_texture_2d(const ComPtr<ID3D11Device> &device);
-		Size get_size() const { return size; }
-		bool is_gpu() const { return true; }
 
-		TextureFormat get_format() const { return texture_format; };
+		int width() const override { return _size.width; }
+		int height() const override { return _size.height; }
+		bool is_gpu() const override { return true; }
 
-		void lock(GraphicContext &gc, BufferAccess access);
-		void unlock();
-		void upload_data(GraphicContext &gc, const Rect &dest_rect, const void *data);
+		TextureFormat format() const override { return texture_format; };
+
+		float pixel_ratio() const override { return _pixel_ratio; }
+		void set_pixel_ratio(float ratio) override { _pixel_ratio = ratio; }
+
+		void lock(GraphicContext &gc, BufferAccess access) override;
+		void unlock() override;
+		void upload_data(GraphicContext &gc, const Rect &dest_rect, const void *data) override;
 
 	private:
 		struct DeviceHandles
@@ -73,10 +78,11 @@ namespace uicore
 
 		std::vector<std::shared_ptr<DeviceHandles> > handles;
 		D3D11_MAPPED_SUBRESOURCE map_data;
-		D3DGraphicContextProvider *map_gc_provider;
+		D3DGraphicContextProvider *map_gc_provider = nullptr;
 
-		Size size;
+		Size _size;
 		TextureFormat texture_format;
-		bool data_locked;	// lock() has been called
+		bool data_locked = false;	// lock() has been called
+		float _pixel_ratio = 0.0f;
 	};
 }

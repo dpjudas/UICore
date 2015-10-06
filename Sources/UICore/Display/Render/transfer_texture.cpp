@@ -35,33 +35,13 @@
 
 namespace uicore
 {
-	TransferTexture::TransferTexture()
+	std::shared_ptr<TransferTexture> TransferTexture::create(GraphicContext &gc, int width, int height, PixelBufferDirection direction, TextureFormat texture_format, const void *data, BufferUsage usage)
 	{
+		return gc.get_provider()->create_transfer_texture(data, Size(width, height), direction, texture_format, usage);
 	}
 
-	TransferTexture::TransferTexture(PixelBufferProvider *provider) : PixelBuffer(provider)
+	std::shared_ptr<TransferTexture> TransferTexture::create(GraphicContext &gc, const PixelBufferPtr &pbuff, PixelBufferDirection direction, BufferUsage usage)
 	{
-	}
-
-	TransferTexture::TransferTexture(GraphicContext &gc, int width, int height, PixelBufferDirection direction, TextureFormat texture_format, const void *data, BufferUsage usage)
-	{
-		GraphicContextProvider *gc_provider = gc.get_provider();
-		PixelBufferProvider *provider = gc_provider->alloc_pixel_buffer();
-		*this = TransferTexture(provider);
-
-		provider->create(data, Size(width, height), direction, texture_format, usage);
-	}
-
-	TransferTexture::TransferTexture(GraphicContext &gc, const PixelBuffer &pbuff, PixelBufferDirection direction, BufferUsage usage)
-	{
-		GraphicContextProvider *gc_provider = gc.get_provider();
-		PixelBufferProvider *provider = gc_provider->alloc_pixel_buffer();
-		*this = TransferTexture(provider);
-
-		provider->create(pbuff.get_data(), pbuff.get_size(), direction, pbuff.get_format(), usage);
-	}
-
-	TransferTexture::~TransferTexture()
-	{
+		return gc.get_provider()->create_transfer_texture(pbuff->data(), pbuff->size(), direction, pbuff->format(), usage);
 	}
 }

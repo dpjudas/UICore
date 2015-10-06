@@ -40,6 +40,6 @@ namespace uicore
 		bool srgb = false;
 		bool cached = false;
 
-		std::function<PixelBuffer(PixelBuffer &)> func_process;
+		std::function<PixelBufferPtr(PixelBufferPtr)> func_process;
 	};
 }

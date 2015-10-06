@@ -108,13 +108,13 @@ namespace uicore
 		return Rectf(0, 0, get_width(), get_height());
 	}
 
-	PixelBuffer Canvas::get_pixeldata(const Rect &rect2, TextureFormat texture_format, bool clamp)
+	PixelBufferPtr Canvas::get_pixeldata(const Rect &rect2, TextureFormat texture_format, bool clamp)
 	{
 		flush();
 		return get_gc().get_pixeldata(rect2, texture_format, clamp);
 	}
 
-	PixelBuffer Canvas::get_pixeldata(TextureFormat texture_format, bool clamp)
+	PixelBufferPtr Canvas::get_pixeldata(TextureFormat texture_format, bool clamp)
 	{
 		flush();
 		return get_gc().get_pixeldata(texture_format, clamp);

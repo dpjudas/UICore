@@ -161,12 +161,11 @@ namespace uicore
 		return standard_programs.get_program_object(standard_program);
 	}
 
-	PixelBuffer D3DGraphicContextProvider::get_pixeldata(const Rect& rect, TextureFormat texture_format, bool clamp) const
+	std::shared_ptr<PixelBuffer> D3DGraphicContextProvider::get_pixeldata(const Rect& rect, TextureFormat texture_format, bool clamp) const
 	{
 		// To do: fetch format from window->get_back_buffer()->GetDesc(&desc)
 		// To do: window->get_back_buffer() is only correct when no frame buffer is bound
-		TransferTexture pixels(const_cast<D3DDisplayWindowProvider*>(window)->get_gc(), rect.get_width(), rect.get_height(), data_from_gpu, texture_format);
-		D3DPixelBufferProvider *pb_provider = static_cast<D3DPixelBufferProvider *>(pixels.get_provider());
+		auto pixels = std::make_shared<D3DPixelBufferProvider>(window->get_device(), nullptr, rect.get_size(), data_from_gpu, texture_format, usage_stream_copy);
 		D3D11_BOX box;
 		box.left = rect.left;
 		box.top = rect.top;
@@ -174,13 +173,8 @@ namespace uicore
 		box.bottom = rect.bottom;
 		box.front = 0;
 		box.back = 1;
-		window->get_device_context()->CopySubresourceRegion(pb_provider->get_texture_2d(window->get_device()), 0, 0, 0, 0, window->get_back_buffer(), 0, &box);
+		window->get_device_context()->CopySubresourceRegion(pixels->get_texture_2d(window->get_device()), 0, 0, 0, 0, window->get_back_buffer(), 0, &box);
 		return pixels;
-	}
-
-	PixelBufferProvider *D3DGraphicContextProvider::alloc_pixel_buffer()
-	{
-		return new D3DPixelBufferProvider(window->get_device());
 	}
 
 	std::shared_ptr<RasterizerState> D3DGraphicContextProvider::create_rasterizer_state(const RasterizerStateDescription &desc)
@@ -346,6 +340,11 @@ namespace uicore
 	std::shared_ptr<TextureCubeArray> D3DGraphicContextProvider::create_texture_cube_array(int width, int height, int array_size, TextureFormat texture_format, int levels)
 	{
 		return std::make_shared<TextureCubeArrayImpl<D3DTextureProvider>>(D3DTextureProvider::InitData(window->get_device(), window->get_feature_level()), width, height, array_size, texture_format, levels);
+	}
+
+	std::shared_ptr<TransferTexture> D3DGraphicContextProvider::create_transfer_texture(const void *data, const Size &size, PixelBufferDirection direction, TextureFormat format, BufferUsage usage)
+	{
+		return std::make_shared<D3DPixelBufferProvider>(window->get_device(), data, size, direction, format, usage);
 	}
 
 	void D3DGraphicContextProvider::set_rasterizer_state(RasterizerState *state)

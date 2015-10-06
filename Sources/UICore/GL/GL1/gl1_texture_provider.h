@@ -60,7 +60,7 @@ namespace uicore
 		/// \brief Get a OpenGL format out of a pixel format.
 		/** <p>The function returns false if pixelformat color depth is not convertible to
 			OpenGL pixel format, otherwise the format and type are returned with values in format and type.</p>*/
-		static bool to_opengl_pixelformat(const PixelBuffer &pbuffer, GLenum &format, GLenum &type);
+		static bool to_opengl_pixelformat(const PixelBufferPtr &pbuffer, GLenum &format, GLenum &type);
 
 		/// \brief Get a OpenGL format out of a pixel format.
 		/** <p>The function returns false if pixelformat color depth is not convertible to
@@ -75,9 +75,9 @@ namespace uicore
 		static void to_opengl_textureformat(TextureFormat format, GLint &gl_internal_format, GLenum &gl_pixel_format);
 
 		void generate_mipmap();
-		PixelBuffer get_pixeldata(GraphicContext &gc, TextureFormat texture_format, int level) const;
+		PixelBufferPtr get_pixeldata(GraphicContext &gc, TextureFormat texture_format, int level) const;
 
-		void copy_from(GraphicContext &gc, int x, int y, int slice, int level, const PixelBuffer &src, const Rect &src_rect);
+		void copy_from(GraphicContext &gc, int x, int y, int slice, int level, const PixelBufferPtr &src, const Rect &src_rect);
 
 		void copy_image_from(int x, int y, int width, int height, int level, TextureFormat texture_format, GraphicContextProvider *gc);
 		void copy_subimage_from(int offset_x, int offset_y, int x, int y, int width, int height, int level, GraphicContextProvider *gc);
@@ -111,8 +111,8 @@ namespace uicore
 
 	private:
 		void on_dispose();
-		void set_texture_image2d(GLuint target, PixelBuffer &image, int level);
-		void set_texture_image3d(GLuint target, PixelBuffer &image, int image_depth, int level);
+		void set_texture_image2d(GLuint target, const PixelBufferPtr &image, int level);
+		void set_texture_image3d(GLuint target, const PixelBufferPtr &image, int image_depth, int level);
 		int get_next_power_of_two(int value);
 
 		int width, height, depth;

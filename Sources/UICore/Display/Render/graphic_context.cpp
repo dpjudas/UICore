@@ -183,7 +183,7 @@ namespace uicore
 			return nullptr;
 	}
 
-	PixelBuffer GraphicContext::get_pixeldata(const Rect &rect2, TextureFormat texture_format, bool clamp)
+	PixelBufferPtr GraphicContext::get_pixeldata(const Rect &rect2, TextureFormat texture_format, bool clamp)
 	{
 		Rect rect = rect2;
 		if (rect == Rect())
@@ -200,7 +200,7 @@ namespace uicore
 		return get_provider()->get_pixeldata(rect, texture_format, clamp);
 	}
 
-	PixelBuffer GraphicContext::get_pixeldata(TextureFormat texture_format, bool clamp)
+	PixelBufferPtr GraphicContext::get_pixeldata(TextureFormat texture_format, bool clamp)
 	{
 		return get_provider()->get_pixeldata(Rect(0, 0, get_size()), texture_format, clamp);
 	}

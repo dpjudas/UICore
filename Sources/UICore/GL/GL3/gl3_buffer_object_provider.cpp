@@ -86,6 +86,13 @@ namespace uicore
 		return data_ptr;
 	}
 
+	const void *GL3BufferObjectProvider::get_data() const
+	{
+		if (data_ptr == nullptr)
+			throw Exception("PixelBuffer was not locked");
+		return data_ptr;
+	}
+
 	void GL3BufferObjectProvider::lock(GraphicContext &gc, BufferAccess access)
 	{
 		throw_if_disposed();

@@ -251,10 +251,10 @@ namespace uicore
 
 		RenderBatchBuffer *batch_buffer;
 
-		TransferTexture mask_buffer;
+		TransferTexturePtr mask_buffer;
 		int mask_buffer_id;	// Buffer index of the mask buffer
 		Texture2DPtr mask_texture;
-		TransferTexture instance_buffer;
+		TransferTexturePtr instance_buffer;
 		Texture2DPtr instance_texture;
 		PrimitivesArrayPtr prim_array[RenderBatchBuffer::num_vertex_buffers];
 		BlendStatePtr blend_state;

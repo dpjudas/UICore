@@ -35,7 +35,7 @@
 
 namespace uicore
 {
-	PixelBuffer PNGLoader::load(IODevice &iodevice, bool srgb)
+	PixelBufferPtr PNGLoader::load(IODevice &iodevice, bool srgb)
 	{
 		PNGLoader loader(iodevice, srgb);
 		return loader.image;
@@ -241,9 +241,9 @@ namespace uicore
 	void PNGLoader::create_image()
 	{
 		if (bit_depth <= 8)
-			image = PixelBuffer(image_width, image_height, force_srgb ? tf_srgb8_alpha8 : tf_rgba8);
+			image = PixelBuffer::create(image_width, image_height, force_srgb ? tf_srgb8_alpha8 : tf_rgba8);
 		else
-			image = PixelBuffer(image_width, image_height, tf_rgba16);
+			image = PixelBuffer::create(image_width, image_height, tf_rgba16);
 	}
 
 	void PNGLoader::create_scanline_buffers()

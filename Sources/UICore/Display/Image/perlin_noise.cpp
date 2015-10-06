@@ -63,9 +63,9 @@ namespace uicore
 	class PerlinNoise_PixelWriter_RGBA8 : public PerlinNoise_PixelWriter
 	{
 	public:
-		PerlinNoise_PixelWriter_RGBA8(PixelBuffer &pbuff)
-			: pitch(pbuff.get_pitch() / pbuff.get_bytes_per_pixel()),
-			current_ptr((uint32_t *)pbuff.get_data()),
+		PerlinNoise_PixelWriter_RGBA8(const PixelBufferPtr &pbuff)
+			: pitch(pbuff->pitch() / pbuff->bytes_per_pixel()),
+			current_ptr((uint32_t *)pbuff->data()),
 			line_start_ptr(current_ptr)
 		{
 		}
@@ -95,9 +95,9 @@ namespace uicore
 	class PerlinNoise_PixelWriter_RGB8 : public PerlinNoise_PixelWriter
 	{
 	public:
-		PerlinNoise_PixelWriter_RGB8(PixelBuffer &pbuff)
-			: pitch(pbuff.get_pitch()),
-			current_ptr((uint8_t *)pbuff.get_data()),
+		PerlinNoise_PixelWriter_RGB8(const PixelBufferPtr &pbuff)
+			: pitch(pbuff->pitch()),
+			current_ptr((uint8_t *)pbuff->data()),
 			line_start_ptr(current_ptr)
 		{
 		}
@@ -129,9 +129,9 @@ namespace uicore
 	class PerlinNoise_PixelWriter_R8 : public PerlinNoise_PixelWriter
 	{
 	public:
-		PerlinNoise_PixelWriter_R8(PixelBuffer &pbuff)
-			: pitch(pbuff.get_pitch()),
-			current_ptr((uint8_t *)pbuff.get_data()),
+		PerlinNoise_PixelWriter_R8(const PixelBufferPtr &pbuff)
+			: pitch(pbuff->pitch()),
+			current_ptr((uint8_t *)pbuff->data()),
 			line_start_ptr(current_ptr)
 		{
 		}
@@ -161,9 +161,9 @@ namespace uicore
 	class PerlinNoise_PixelWriter_R32f : public PerlinNoise_PixelWriter
 	{
 	public:
-		PerlinNoise_PixelWriter_R32f(PixelBuffer &pbuff)
-			: pitch(pbuff.get_pitch() / sizeof(float)),
-			current_ptr((float *)pbuff.get_data()),
+		PerlinNoise_PixelWriter_R32f(const PixelBufferPtr &pbuff)
+			: pitch(pbuff->pitch() / sizeof(float)),
+			current_ptr((float *)pbuff->data()),
 			line_start_ptr(current_ptr)
 		{
 		}
@@ -193,10 +193,10 @@ namespace uicore
 
 		void set_permutations(const unsigned char *table, unsigned int size);
 
-		PixelBuffer create_noise4d(float start_x, float end_x, float start_y, float end_y, float z_position, float w_position);
-		PixelBuffer create_noise3d(float start_x, float end_x, float start_y, float end_y, float z_position);
-		PixelBuffer create_noise2d(float start_x, float end_x, float start_y, float end_y);
-		PixelBuffer create_noise1d(float start_x, float end_x);
+		PixelBufferPtr create_noise4d(float start_x, float end_x, float start_y, float end_y, float z_position, float w_position);
+		PixelBufferPtr create_noise3d(float start_x, float end_x, float start_y, float end_y, float z_position);
+		PixelBufferPtr create_noise2d(float start_x, float end_x, float start_y, float end_y);
+		PixelBufferPtr create_noise1d(float start_x, float end_x);
 
 	public:
 		TextureFormat texture_format = tf_rgb8;
@@ -242,22 +242,22 @@ namespace uicore
 		impl->set_permutations(table, size);
 	}
 
-	PixelBuffer PerlinNoise::create_noise1d(float start_x, float end_x)
+	PixelBufferPtr PerlinNoise::create_noise1d(float start_x, float end_x)
 	{
 		return impl->create_noise1d(start_x, end_x);
 	}
 
-	PixelBuffer PerlinNoise::create_noise2d(float start_x, float end_x, float start_y, float end_y)
+	PixelBufferPtr PerlinNoise::create_noise2d(float start_x, float end_x, float start_y, float end_y)
 	{
 		return impl->create_noise2d(start_x, end_x, start_y, end_y);
 	}
 
-	PixelBuffer PerlinNoise::create_noise3d(float start_x, float end_x, float start_y, float end_y, float z_position)
+	PixelBufferPtr PerlinNoise::create_noise3d(float start_x, float end_x, float start_y, float end_y, float z_position)
 	{
 		return impl->create_noise3d(start_x, end_x, start_y, end_y, z_position);
 	}
 
-	PixelBuffer PerlinNoise::create_noise4d(float start_x, float end_x, float start_y, float end_y, float z_position, float w_position)
+	PixelBufferPtr PerlinNoise::create_noise4d(float start_x, float end_x, float start_y, float end_y, float z_position, float w_position)
 	{
 		return impl->create_noise4d(start_x, end_x, start_y, end_y, z_position, w_position);
 	}
@@ -669,34 +669,34 @@ namespace uicore
 		}
 	}
 
-	PixelBuffer PerlinNoise_Impl::create_noise2d(float start_x, float end_x, float start_y, float end_y)
+	PixelBufferPtr PerlinNoise_Impl::create_noise2d(float start_x, float end_x, float start_y, float end_y)
 	{
 		setup();
 
 		if (texture_format == tf_rgba8)
 		{
-			PixelBuffer pbuff(width, height, texture_format);
+			auto pbuff = PixelBuffer::create(width, height, texture_format);
 			PerlinNoise_PixelWriter_RGBA8 writer(pbuff);
 			create_noise2d(writer, start_x, end_x, start_y, end_y);
 			return pbuff;
 		}
 		if (texture_format == tf_rgb8)
 		{
-			PixelBuffer pbuff(width, height, texture_format);
+			auto pbuff = PixelBuffer::create(width, height, texture_format);
 			PerlinNoise_PixelWriter_RGB8 writer(pbuff);
 			create_noise2d(writer, start_x, end_x, start_y, end_y);
 			return pbuff;
 		}
 		if (texture_format == tf_r8)
 		{
-			PixelBuffer pbuff(width, height, texture_format);
+			auto pbuff = PixelBuffer::create(width, height, texture_format);
 			PerlinNoise_PixelWriter_R8 writer(pbuff);
 			create_noise2d(writer, start_x, end_x, start_y, end_y);
 			return pbuff;
 		}
 		if (texture_format == tf_r32f)
 		{
-			PixelBuffer pbuff(width, height, texture_format);
+			auto pbuff = PixelBuffer::create(width, height, texture_format);
 			PerlinNoise_PixelWriter_R32f writer(pbuff);
 			create_noise2d(writer, start_x, end_x, start_y, end_y);
 			return pbuff;
@@ -736,34 +736,34 @@ namespace uicore
 		}
 	}
 
-	PixelBuffer PerlinNoise_Impl::create_noise1d(float start_x, float end_x)
+	PixelBufferPtr PerlinNoise_Impl::create_noise1d(float start_x, float end_x)
 	{
 		setup();
 
 		if (texture_format == tf_rgba8)
 		{
-			PixelBuffer pbuff(width, height, texture_format);
+			auto pbuff = PixelBuffer::create(width, height, texture_format);
 			PerlinNoise_PixelWriter_RGBA8 writer(pbuff);
 			create_noise1d(writer, start_x, end_x);
 			return pbuff;
 		}
 		if (texture_format == tf_rgb8)
 		{
-			PixelBuffer pbuff(width, height, texture_format);
+			auto pbuff = PixelBuffer::create(width, height, texture_format);
 			PerlinNoise_PixelWriter_RGB8 writer(pbuff);
 			create_noise1d(writer, start_x, end_x);
 			return pbuff;
 		}
 		if (texture_format == tf_r8)
 		{
-			PixelBuffer pbuff(width, height, texture_format);
+			auto pbuff = PixelBuffer::create(width, height, texture_format);
 			PerlinNoise_PixelWriter_R8 writer(pbuff);
 			create_noise1d(writer, start_x, end_x);
 			return pbuff;
 		}
 		if (texture_format == tf_r32f)
 		{
-			PixelBuffer pbuff(width, height, texture_format);
+			auto pbuff = PixelBuffer::create(width, height, texture_format);
 			PerlinNoise_PixelWriter_R32f writer(pbuff);
 			create_noise1d(writer, start_x, end_x);
 			return pbuff;
@@ -799,34 +799,34 @@ namespace uicore
 		}
 	}
 
-	PixelBuffer PerlinNoise_Impl::create_noise3d(float start_x, float end_x, float start_y, float end_y, float z_position)
+	PixelBufferPtr PerlinNoise_Impl::create_noise3d(float start_x, float end_x, float start_y, float end_y, float z_position)
 	{
 		setup();
 
 		if (texture_format == tf_rgba8)
 		{
-			PixelBuffer pbuff(width, height, texture_format);
+			auto pbuff = PixelBuffer::create(width, height, texture_format);
 			PerlinNoise_PixelWriter_RGBA8 writer(pbuff);
 			create_noise3d(writer, start_x, end_x, start_y, end_y, z_position);
 			return pbuff;
 		}
 		if (texture_format == tf_rgb8)
 		{
-			PixelBuffer pbuff(width, height, texture_format);
+			auto pbuff = PixelBuffer::create(width, height, texture_format);
 			PerlinNoise_PixelWriter_RGB8 writer(pbuff);
 			create_noise3d(writer, start_x, end_x, start_y, end_y, z_position);
 			return pbuff;
 		}
 		if (texture_format == tf_r8)
 		{
-			PixelBuffer pbuff(width, height, texture_format);
+			auto pbuff = PixelBuffer::create(width, height, texture_format);
 			PerlinNoise_PixelWriter_R8 writer(pbuff);
 			create_noise3d(writer, start_x, end_x, start_y, end_y, z_position);
 			return pbuff;
 		}
 		if (texture_format == tf_r32f)
 		{
-			PixelBuffer pbuff(width, height, texture_format);
+			auto pbuff = PixelBuffer::create(width, height, texture_format);
 			PerlinNoise_PixelWriter_R32f writer(pbuff);
 			create_noise3d(writer, start_x, end_x, start_y, end_y, z_position);
 			return pbuff;
@@ -868,34 +868,34 @@ namespace uicore
 		}
 	}
 
-	PixelBuffer PerlinNoise_Impl::create_noise4d(float start_x, float end_x, float start_y, float end_y, float z_position, float w_position)
+	PixelBufferPtr PerlinNoise_Impl::create_noise4d(float start_x, float end_x, float start_y, float end_y, float z_position, float w_position)
 	{
 		setup();
 
 		if (texture_format == tf_rgba8)
 		{
-			PixelBuffer pbuff(width, height, texture_format);
+			auto pbuff = PixelBuffer::create(width, height, texture_format);
 			PerlinNoise_PixelWriter_RGBA8 writer(pbuff);
 			create_noise4d(writer, start_x, end_x, start_y, end_y, z_position, w_position);
 			return pbuff;
 		}
 		if (texture_format == tf_rgb8)
 		{
-			PixelBuffer pbuff(width, height, texture_format);
+			auto pbuff = PixelBuffer::create(width, height, texture_format);
 			PerlinNoise_PixelWriter_RGB8 writer(pbuff);
 			create_noise4d(writer, start_x, end_x, start_y, end_y, z_position, w_position);
 			return pbuff;
 		}
 		if (texture_format == tf_r8)
 		{
-			PixelBuffer pbuff(width, height, texture_format);
+			auto pbuff = PixelBuffer::create(width, height, texture_format);
 			PerlinNoise_PixelWriter_R8 writer(pbuff);
 			create_noise4d(writer, start_x, end_x, start_y, end_y, z_position, w_position);
 			return pbuff;
 		}
 		if (texture_format == tf_r32f)
 		{
-			PixelBuffer pbuff(width, height, texture_format);
+			auto pbuff = PixelBuffer::create(width, height, texture_format);
 			PerlinNoise_PixelWriter_R32f writer(pbuff);
 			create_noise4d(writer, start_x, end_x, start_y, end_y, z_position, w_position);
 			return pbuff;

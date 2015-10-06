@@ -242,11 +242,6 @@ namespace uicore
 		}
 	}
 
-	PixelBufferProvider *GL1GraphicContextProvider::alloc_pixel_buffer()
-	{
-		throw Exception("Pixel Buffers Objects are not supported for OpenGL 1.3");
-	}
-
 	std::shared_ptr<RasterizerState> GL1GraphicContextProvider::create_rasterizer_state(const RasterizerStateDescription &desc)
 	{
 		auto it = rasterizer_states.find(desc);
@@ -412,6 +407,11 @@ namespace uicore
 		return std::make_shared<TextureCubeArrayImpl<GL1TextureProvider>>(GL1TextureProvider::InitData(), width, height, array_size, texture_format, levels);
 	}
 
+	std::shared_ptr<PixelBuffer> create_pixel_buffer(const void *data, const Size &new_size, PixelBufferDirection direction, TextureFormat new_format, BufferUsage usage)
+	{
+		throw Exception("Pixel Buffers Objects are not supported for OpenGL 1.3");
+	}
+
 	void GL1GraphicContextProvider::set_rasterizer_state(RasterizerState *state)
 	{
 		if (state)
@@ -457,7 +457,7 @@ namespace uicore
 		}
 	}
 
-	PixelBuffer GL1GraphicContextProvider::get_pixeldata(const Rect& rect, TextureFormat texture_format, bool clamp) const
+	PixelBufferPtr GL1GraphicContextProvider::get_pixeldata(const Rect& rect, TextureFormat texture_format, bool clamp) const
 	{
 		GLenum format;
 		GLenum type;
@@ -465,7 +465,7 @@ namespace uicore
 		if (!found)
 			throw Exception("Unsupported pixel format passed to GraphicContext::get_pixeldata");
 
-		PixelBuffer pbuf(rect.get_width(), rect.get_height(), texture_format);
+		auto pbuf = PixelBuffer::create(rect.get_width(), rect.get_height(), texture_format);
 		set_active();
 		if (!framebuffer_bound)
 			render_window->is_double_buffered() ? glReadBuffer(GL_BACK) : glReadBuffer(GL_FRONT);
@@ -474,12 +474,12 @@ namespace uicore
 
 		glPixelStorei(GL_PACK_ALIGNMENT, 1);
 #ifndef __ANDROID__
-		glPixelStorei(GL_PACK_ROW_LENGTH, pbuf.get_pitch() / pbuf.get_bytes_per_pixel());
+		glPixelStorei(GL_PACK_ROW_LENGTH, pbuf->pitch() / pbuf->bytes_per_pixel());
 		glPixelStorei(GL_PACK_SKIP_PIXELS, 0);
 		glPixelStorei(GL_PACK_SKIP_ROWS, 0);
 #endif
-		glReadPixels(rect.left, display_size.height - rect.bottom, rect.get_width(), rect.get_height(), format, type, pbuf.get_data());
-		pbuf.flip_vertical();
+		glReadPixels(rect.left, display_size.height - rect.bottom, rect.get_width(), rect.get_height(), format, type, pbuf->data());
+		pbuf->flip_vertical();
 		return pbuf;
 	}
 

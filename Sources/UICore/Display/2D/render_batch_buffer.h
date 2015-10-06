@@ -45,9 +45,9 @@ namespace uicore
 		VertexArrayBufferPtr get_vertex_buffer(GraphicContext &gc, int &out_index);
 		Texture2DPtr get_texture_rgba32f(GraphicContext &gc);
 		Texture2DPtr get_texture_r8(GraphicContext &gc);
-		TransferTexture get_transfer_rgba32f(GraphicContext &gc);
+		TransferTexturePtr get_transfer_rgba32f(GraphicContext &gc);
 
-		TransferTexture get_transfer_r8(GraphicContext &gc, int &out_index);
+		TransferTexturePtr get_transfer_r8(GraphicContext &gc, int &out_index);
 		static const int num_vertex_buffers = 4;
 		enum { vertex_buffer_size = 1024 * 1024 };
 		char buffer[vertex_buffer_size];
@@ -68,9 +68,9 @@ namespace uicore
 		Texture2DPtr textures_r8[num_r8_buffers];
 		int current_r8_texture = 0;
 
-		TransferTexture transfers_rgba32f[num_rgba32f_buffers];
+		TransferTexturePtr transfers_rgba32f[num_rgba32f_buffers];
 		int current_rgba32f_transfer = 0;
-		TransferTexture transfers_r8[num_r8_buffers];
+		TransferTexturePtr transfers_r8[num_r8_buffers];
 		int current_r8_transfer = 0;
 	};
 }

@@ -82,13 +82,13 @@ namespace uicore
 		impl->cached = enable;
 	}
 
-	PixelBuffer ImageImportDescription::process(PixelBuffer &image) const
+	PixelBufferPtr ImageImportDescription::process(PixelBufferPtr image) const
 	{
 		if (impl->premultiply_alpha)
-			image.premultiply_alpha();
+			image->premultiply_alpha();
 
 		if (impl->flip_vertical)
-			image.flip_vertical();
+			image->flip_vertical();
 
 		if (impl->func_process)
 			image = impl->func_process(image);
@@ -96,7 +96,7 @@ namespace uicore
 		return image;
 	}
 
-	std::function<PixelBuffer(PixelBuffer &)> &ImageImportDescription::func_process()
+	std::function<PixelBufferPtr(PixelBufferPtr)> &ImageImportDescription::func_process()
 	{
 		return impl->func_process;
 	}

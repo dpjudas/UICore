@@ -33,7 +33,6 @@
 #include "UICore/Display/Image/pixel_converter.h"
 #include "UICore/Display/Image/pixel_buffer_lock.h"
 #include "UICore/Display/2D/color.h"
-#include "pixel_buffer_impl.h"
 #include "UICore/Core/System/exception.h"
 #include "UICore/Core/IOData/path_help.h"
 #include "UICore/Display/ImageFormats/image_file.h"
@@ -43,77 +42,42 @@
 #include "UICore/Core/Text/text.h"
 #include "UICore/Display/Image/texture_format.h"
 #include "UICore/Core/Math/half_float.h"
+#include "cpu_pixel_buffer_provider.h"
 #include <cstdint>
 
 namespace uicore
 {
-	PixelBuffer::PixelBuffer()
+	class PixelBufferImpl
 	{
-	}
+	public:
+		static void convert(const PixelBuffer *source, PixelBuffer *target, const Rect &dest_rect, const Rect &src_rect, PixelConverter &converter)
+		{
+			if (dest_rect.get_size() != src_rect.get_size())
+			{
+				throw Exception("Source and destination rects must have same size. Scaled converting not supported.");
+			}
 
-	PixelBuffer::PixelBuffer(PixelBufferProvider *provider)
-		: impl(std::make_shared<PixelBuffer_Impl>(provider))
-	{
-	}
+			const char *src_data = source->data<char>();
+			char *dest_data = target->data<char>();
 
-	PixelBuffer::PixelBuffer(int width, int height, TextureFormat texture_format, const void *data, bool only_reference_data)
-		: impl(std::make_shared<PixelBuffer_Impl>(width, height, texture_format, data, only_reference_data))
-	{
-	}
+			int src_pitch = source->width() * source->bytes_per_pixel();
+			int dest_pitch = target->width() * target->bytes_per_pixel();
 
-	PixelBuffer::PixelBuffer(const std::string &filename, bool srgb)
-	{
-		*this = ImageFile::load(filename, "", srgb);
-	}
+			src_data += src_rect.top * src_pitch + src_rect.left * source->bytes_per_pixel();
+			dest_data += dest_rect.top * dest_pitch + dest_rect.left * target->bytes_per_pixel();
 
-	PixelBuffer::PixelBuffer(IODevice &file, const std::string &image_type, bool srgb)
-	{
-		*this = ImageFile::load(file, image_type, srgb);
-	}
+			converter.convert(dest_data, dest_pitch, target->format(), src_data, src_pitch, source->format(), dest_rect.get_width(), dest_rect.get_height());
+		}
+	};
 
-	PixelBuffer::~PixelBuffer()
+	std::shared_ptr<PixelBuffer> PixelBuffer::create(int width, int height, TextureFormat texture_format, const void *data, bool only_reference_data)
 	{
-	}
-
-	void PixelBuffer::throw_if_null() const
-	{
-		if (!impl)
-			throw Exception("PixelBuffer is null");
-	}
-
-	int PixelBuffer::get_width() const
-	{
-		return impl->provider->get_size().width;
-	}
-
-	int PixelBuffer::get_height() const
-	{
-		return impl->provider->get_size().height;
-	}
-
-	bool PixelBuffer::is_gpu() const
-	{
-		return impl->provider->is_gpu();
-	}
-
-	int PixelBuffer::get_pitch() const
-	{
-		return impl->provider->get_pitch();
-	}
-
-	void *PixelBuffer::get_data()
-	{
-		return impl->provider->get_data();
-	}
-
-	const void *PixelBuffer::get_data() const
-	{
-		return impl->provider->get_data();
+		return std::make_shared<CPUPixelBufferProvider>(texture_format, Size(width, height), data, only_reference_data);
 	}
 
 	bool PixelBuffer::has_transparency() const
 	{
-		switch (get_format())
+		switch (format())
 		{
 		case tf_rgba8:
 		case tf_bgra8:
@@ -216,112 +180,181 @@ namespace uicore
 		}
 	}
 
-	unsigned int PixelBuffer::get_bytes_per_pixel() const
+	unsigned int PixelBuffer::bytes_per_pixel() const
 	{
-		return impl->get_bytes_per_pixel();
+		return bytes_per_pixel(format());
 	}
 
-	unsigned int PixelBuffer::get_bytes_per_pixel(TextureFormat texture_format)
+	unsigned int PixelBuffer::bytes_per_pixel(TextureFormat texture_format)
 	{
-		return PixelBuffer_Impl::get_bytes_per_pixel(texture_format);
+		unsigned int count;
+		switch (texture_format)
+		{
+		case tf_r8: count = 8;	break; //RED 8
+		case tf_r8_snorm: count = 8; break; //RED, s8
+		case tf_r16: count = 16; break; //RED, 16
+		case tf_r16_snorm: count = 16; break; //RED, s16
+		case tf_rg8: count = 8 + 8; break; //RG, 8, 8
+		case tf_rg8_snorm: count = 8 + 8; break; //RG, s8, s8
+		case tf_rg16: count = 16 + 16; break; //RG, 16, 16
+		case tf_rg16_snorm: count = 16 + 16; break; //RG, s16, s16
+		case tf_r3_g3_b2: count = 3 + 3 + 2; break; //RGB, 3, 3, 2
+		case tf_rgb4: count = 4 + 4 + 4; break; //RGB, 4, 4, 4
+		case tf_rgb5: count = 5 + 5 + 5; break; //RGB, 5, 5, 5
+		case tf_rgb8: count = 8 + 8 + 8; break; //RGB, 8, 8, 8
+		case tf_bgr8: count = 8 + 8 + 8; break; //BGR, 8, 8, 8
+		case tf_rgb8_snorm: count = 8 + 8 + 8; break; //RGB, s8, s8, s8
+		case tf_rgb10: count = 10 + 10 + 10; break; //RGB, 10, 10, 10
+		case tf_rgb12: count = 12 + 12 + 12; break; //RGB, 12, 12, 12
+		case tf_rgb16: count = 16 + 16 + 16; break; //RGB, 16, 16, 16
+		case tf_rgb16_snorm: count = 16 + 16 + 16; break; //RGB, s16, s16, s16
+		case tf_rgba2: count = 2 + 2 + 2 + 2; break; //RGBA, 2, 2, 2, 2
+		case tf_rgba4: count = 4 + 4 + 4 + 4; break; //RGBA, 4, 4, 4, 4
+		case tf_rgb5_a1: count = 5 + 5 + 5 + 1; break; //RGBA, 5, 5, 5, 1
+		case tf_rgba8: count = 8 + 8 + 8 + 8; break; //RGBA, 8, 8, 8, 8
+		case tf_rgba8_snorm: count = 8 + 8 + 8 + 8; break; //RGBA, s8, s8, s8, s8
+		case tf_bgra8: count = 8 + 8 + 8 + 8; break; //BGRA, 8, 8, 8, 8
+		case tf_rgb10_a2: count = 10 + 10 + 10 + 2; break; //RGBA, 10, 10, 10, 2
+		case tf_rgba12: count = 12 + 12 + 12 + 12; break; //RGBA, 12, 12, 12, 12
+		case tf_rgba16: count = 16 + 16 + 16 + 16; break; //RGBA, 16, 16, 16, 16
+		case tf_rgba16_snorm: count = 16 + 16 + 16 + 16; break; //RGBA, s16, s16, s16, s16
+		case tf_srgb8: count = 8 + 8 + 8; break; //RGB, 8, 8, 8
+		case tf_srgb8_alpha8: count = 8 + 8 + 8 + 8; break; //RGBA, 8, 8, 8, 8
+		case tf_r16f: count = 16; break; //RED, f16
+		case tf_rg16f: count = 16 + 16; break; //RG, f16, f16
+		case tf_rgb16f: count = 16 + 16 + 16; break; //RGB, f16, f16, f16
+		case tf_rgba16f: count = 16 + 16 + 16 + 16; break; //RGBA, f16, f16, f16, f16
+		case tf_r32f: count = 32; break; //RED, f32
+		case tf_rg32f: count = 32 + 32; break; //RG, f32, f32
+		case tf_rgb32f: count = 32 + 32 + 32; break; //RGB, f32, f32, f32
+		case tf_rgba32f: count = 32 + 32 + 32 + 32; break; //RGBA, f32, f32, f32, f32
+		case tf_r11f_g11f_b10f: count = 11 + 11 + 10; break; //RGB, f11, f11, f10
+		case tf_rgb9_e5: count = 9 + 9 + 9 + 5; break; //RGB, 9, 9, 9, 5
+		case tf_r8i: count = 8; break; //RED, i8
+		case tf_r8ui: count = 8; break; //RED, ui8
+		case tf_r16i: count = 16; break; //RED, i16
+		case tf_r16ui: count = 16; break; //RED, ui16
+		case tf_r32i: count = 32; break; //RED, i32
+		case tf_r32ui: count = 32; break; //RED, ui32
+		case tf_rg8i: count = 8 + 8; break; //RG, i8, i8
+		case tf_rg8ui: count = 8 + 8; break; //RG, ui8, ui8
+		case tf_rg16i: count = 16 + 16; break; //RG, i16, i16
+		case tf_rg16ui: count = 16 + 16; break; //RG, ui16, ui16
+		case tf_rg32i: count = 32 + 32; break; //RG, i32, i32
+		case tf_rg32ui: count = 32 + 32; break; //RG, ui32, ui32
+		case tf_rgb8i: count = 8 + 8 + 8; break; //RGB, i8, i8, i8
+		case tf_rgb8ui: count = 8 + 8 + 8; break; //RGB, ui8, ui8, ui8
+		case tf_rgb16i: count = 16 + 16 + 16; break; //RGB, i16, i16, i16
+		case tf_rgb16ui: count = 16 + 16 + 16; break; //RGB, ui16, ui16, ui16
+		case tf_rgb32i: count = 32 + 32 + 32; break; //RGB, i32, i32, i32
+		case tf_rgb32ui: count = 32 + 32 + 32; break; //RGB, ui32, ui32, ui32
+		case tf_rgba8i: count = 8 + 8 + 8 + 8; break; //RGBA, i8, i8, i8, i8
+		case tf_rgba8ui: count = 8 + 8 + 8 + 8; break; //RGBA, ui8, ui8, ui8, ui8
+		case tf_rgba16i: count = 16 + 16 + 16 + 16; break; //RGBA, i16, i16, i16, i16
+		case tf_rgba16ui: count = 16 + 16 + 16 + 16; break; //RGBA, ui16, ui16, ui16, ui16
+		case tf_rgba32i: count = 32 + 32 + 32 + 32; break; //RGBA, i32, i32, i32, i32
+		case tf_rgba32ui: count = 32 + 32 + 32 + 32; break; //RGBA, ui32, ui32, ui32, ui32
+		case tf_depth_component16: count = 16; break; //DEPTH_COMPONENT, 16
+		case tf_depth_component24: count = 24; break; //DEPTH_COMPONENT, 24
+		case tf_depth_component32: count = 32; break; //DEPTH_COMPONENT, 32
+		case tf_depth_component32f: count = 32; break; //DEPTH_COMPONENT, f32
+		case tf_depth24_stencil8: count = 24 + 8; break; //DEPTH_STENCIL, 24, 8
+		case tf_depth32f_stencil8: count = 32 + 8; break; //DEPTH_STENCIL, f32, 8
+		default:
+			throw Exception("cannot obtain pixel count for this TextureFormat");
+		}
+
+		return (count + 7) / 8;
 	}
 
-	unsigned int PixelBuffer::get_bytes_per_block() const
+	unsigned int PixelBuffer::bytes_per_block() const
 	{
-		return impl->get_bytes_per_block();
+		return bytes_per_block(format());
 	}
 
-	unsigned int PixelBuffer::get_bytes_per_block(TextureFormat texture_format)
+	unsigned int PixelBuffer::bytes_per_block(TextureFormat texture_format)
 	{
-		return PixelBuffer_Impl::get_bytes_per_block(texture_format);
+		switch (texture_format)
+		{
+		case tf_compressed_rgb_s3tc_dxt1:
+		case tf_compressed_rgba_s3tc_dxt1:
+		case tf_compressed_rgba_s3tc_dxt3:
+		case tf_compressed_srgb_s3tc_dxt1:
+		case tf_compressed_srgb_alpha_s3tc_dxt1:
+		case tf_compressed_srgb_alpha_s3tc_dxt3:
+			return 8;
+		case tf_compressed_rgba_s3tc_dxt5:
+		case tf_compressed_srgb_alpha_s3tc_dxt5:
+			return 16;
+		default:
+			throw Exception("cannot obtain block count for this TextureFormat");
+		}
 	}
 
-	unsigned int PixelBuffer::get_data_size() const
+	unsigned int PixelBuffer::data_size() const
 	{
-		return PixelBuffer_Impl::get_data_size(get_size(), get_format());
+		return data_size(size(), format());
 	}
 
-	unsigned int PixelBuffer::get_data_size(const Size &size, TextureFormat texture_format)
+	unsigned int PixelBuffer::data_size(const Size &size, TextureFormat texture_format)
 	{
-		return PixelBuffer_Impl::get_data_size(size, texture_format);
+		if (is_compressed(texture_format))
+		{
+			return ((size.width + 3) / 4) * ((size.height + 3) / 4) * bytes_per_block(texture_format);
+		}
+		else
+		{
+			return size.width * size.height * bytes_per_pixel(texture_format);
+		}
 	}
 
 	bool PixelBuffer::is_compressed() const
 	{
-		return PixelBuffer_Impl::is_compressed(impl->get_format());
+		return is_compressed(format());
 	}
 
 	bool PixelBuffer::is_compressed(TextureFormat texture_format)
 	{
-		return PixelBuffer_Impl::is_compressed(texture_format);
+		switch (texture_format)
+		{
+		case tf_compressed_rgb_s3tc_dxt1:
+		case tf_compressed_rgba_s3tc_dxt1:
+		case tf_compressed_rgba_s3tc_dxt3:
+		case tf_compressed_srgb_s3tc_dxt1:
+		case tf_compressed_srgb_alpha_s3tc_dxt1:
+		case tf_compressed_srgb_alpha_s3tc_dxt3:
+		case tf_compressed_rgba_s3tc_dxt5:
+		case tf_compressed_srgb_alpha_s3tc_dxt5:
+			return true;
+		default:
+			return false;
+		}
 	}
 
-	TextureFormat PixelBuffer::get_format() const
+	std::shared_ptr<PixelBuffer> PixelBuffer::copy() const
 	{
-		return impl->get_format();
-	}
-
-	PixelBufferProvider *PixelBuffer::get_provider() const
-	{
-		return impl->provider;
-	}
-
-	Colorf PixelBuffer::get_pixel(int x, int y)
-	{
-		return impl->get_pixel(x, y);
-	}
-
-	float PixelBuffer::get_pixel_ratio() const
-	{
-		return impl->pixel_ratio;
-	}
-
-	void PixelBuffer::set_pixel_ratio(float ratio)
-	{
-		impl->pixel_ratio = ratio;
-	}
-
-	void PixelBuffer::lock(GraphicContext &gc, BufferAccess access)
-	{
-		impl->provider->lock(gc, access);
-	}
-
-	void PixelBuffer::unlock()
-	{
-		impl->provider->unlock();
-	}
-
-	void PixelBuffer::upload_data(GraphicContext &gc, const Rect &dest_rect, const void *data)
-	{
-		impl->provider->upload_data(gc, dest_rect, data);
-	}
-
-	PixelBuffer PixelBuffer::copy() const
-	{
-		PixelBuffer pbuf(get_width(), get_height(), get_format());
-		void *dst_data = (void *)pbuf.get_data();
-		void *src_data = (void *)get_data();
-		memcpy(dst_data, src_data, get_height()*get_pitch());
+		auto pbuf = PixelBuffer::create(width(), height(), format());
+		void *dst_data = pbuf->data();
+		const void *src_data = data();
+		memcpy(dst_data, src_data, height()*pitch());
 		return pbuf;
 	}
 
-	PixelBuffer PixelBuffer::copy(const Rect &rect) const
+	std::shared_ptr<PixelBuffer> PixelBuffer::copy(const Rect &rect) const
 	{
-		Size size = impl->provider->get_size();
-
-		if (rect.left < 0 || rect.top < 0 || rect.right > size.width || rect.bottom > size.height)
+		if (rect.left < 0 || rect.top < 0 || rect.right > width() || rect.bottom > height())
 			throw Exception("Rectangle passed to PixelBuffer::copy() out of bounds");
 
 		int new_width = rect.get_width();
 		int new_height = rect.get_height();
 
-		PixelBuffer pbuf(new_width, new_height, get_format());
-		uint8_t *dst_data = (uint8_t *)pbuf.get_data();
-		uint8_t *src_data = (uint8_t *)get_data() + (rect.top*size.width + rect.left)*get_bytes_per_pixel();
+		auto pbuf = PixelBuffer::create(new_width, new_height, format());
+		uint8_t *dst_data = pbuf->data<uint8_t>();
+		const uint8_t *src_data = data<uint8_t>() + (rect.top * width() + rect.left) * bytes_per_pixel();
 
-		int byte_width = new_width * get_bytes_per_pixel();
-		int src_pitch = get_pitch();
-		int dest_pitch = pbuf.get_pitch();
+		int byte_width = new_width * bytes_per_pixel();
+		int src_pitch = pitch();
+		int dest_pitch = pbuf->pitch();
 		for (int y_cnt = 0; y_cnt < new_height; y_cnt++)
 		{
 			memcpy(dst_data, src_data, byte_width);
@@ -331,98 +364,61 @@ namespace uicore
 		return pbuf;
 	}
 
-	void PixelBuffer::set_image(const PixelBuffer &source)
+	void PixelBuffer::set_image(const std::shared_ptr<PixelBuffer> &source)
 	{
-		set_subimage(source, Point(0, 0), Rect(Point(0, 0), source.get_size()));
+		set_subimage(source, Point(0, 0), Rect(Point(0, 0), source->size()));
 	}
 
-	void PixelBuffer::set_subimage(const PixelBuffer &source, const Point &dest_pos, const Rect &src_rect)
+	void PixelBuffer::set_subimage(const std::shared_ptr<PixelBuffer> &source, const Point &dest_pos, const Rect &src_rect)
 	{
 		PixelConverter converter;
-		source.impl->convert(*this, Rect(dest_pos, src_rect.get_size()), src_rect, converter);
+		PixelBufferImpl::convert(source.get(), this, Rect(dest_pos, src_rect.get_size()), src_rect, converter);
 	}
 
-	void PixelBuffer::set_image(const PixelBuffer &source, PixelConverter &converter)
+	void PixelBuffer::set_image(const std::shared_ptr<PixelBuffer> &source, PixelConverter &converter)
 	{
-		set_subimage(source, Point(0, 0), Rect(Point(0, 0), source.get_size()), converter);
+		set_subimage(source, Point(0, 0), Rect(Point(0, 0), source->size()), converter);
 	}
 
-	void PixelBuffer::set_subimage(const PixelBuffer &source, const Point &dest_pos, const Rect &src_rect, PixelConverter &converter)
+	void PixelBuffer::set_subimage(const std::shared_ptr<PixelBuffer> &source, const Point &dest_pos, const Rect &src_rect, PixelConverter &converter)
 	{
-		source.impl->convert(*this, Rect(dest_pos, src_rect.get_size()), src_rect, converter);
+		PixelBufferImpl::convert(source.get(), this, Rect(dest_pos, src_rect.get_size()), src_rect, converter);
 	}
 
-
-	PixelBuffer PixelBuffer::to_cpu(GraphicContext &gc)
+	std::shared_ptr<PixelBuffer> PixelBuffer::to_format(TextureFormat texture_format) const
 	{
-		if (is_gpu())
-		{
-			PixelBuffer cpu_buffer(get_width(), get_height(), get_format());
-			PixelBufferLockAny data_cpu(gc, cpu_buffer, access_read_only);
-			PixelBufferLockAny data_gpu(gc, *this, access_read_only);
-			int bytes_per_row = get_bytes_per_pixel() * get_width();
-			int height = get_height();
-			for (int y = 0; y < height; y++)
-			{
-				memcpy(data_cpu.get_row(y), data_gpu.get_row(y), bytes_per_row);
-			}
-			return cpu_buffer;
-		}
-		else
-		{
-			return *this;
-		}
+		PixelConverter converter;
+		return to_format(texture_format, converter);
 	}
 
-	PixelBuffer PixelBuffer::to_gpu(GraphicContext &gc)
+	std::shared_ptr<PixelBuffer> PixelBuffer::to_format(TextureFormat texture_format, PixelConverter &converter) const
 	{
-		if (!is_gpu())
-		{
-			return TransferTexture(gc, *this);
-		}
-		else
-		{
-			return *this;
-		}
-	}
-
-	PixelBuffer PixelBuffer::to_format(TextureFormat texture_format) const
-	{
-		PixelBuffer result(get_width(), get_height(), texture_format);
-		result.set_image(*this);
+		auto result = PixelBuffer::create(width(), height(), texture_format);
+		PixelBufferImpl::convert(this, result.get(), Rect(Point(), size()), Rect(Point(), size()), converter);
 		return result;
 	}
-
-	PixelBuffer PixelBuffer::to_format(TextureFormat texture_format, PixelConverter &converter) const
-	{
-		PixelBuffer result(get_width(), get_height(), texture_format);
-		result.set_image(*this, converter);
-		return result;
-	}
-
 
 	void PixelBuffer::flip_vertical()
 	{
-		Size size = impl->provider->get_size();
-		if ((size.width == 0) || (size.height <= 1))
+		if (width() == 0 || height() <= 1)
 			return;
 
-		unsigned int pitch = get_pitch();
+		unsigned int line_pitch = pitch();
 		std::vector<unsigned char> line_buffer;
-		line_buffer.resize(pitch);
+		line_buffer.resize(line_pitch);
 
-		int num_lines = (size.height - 1) / 2;
+		int num_lines = (height() - 1) / 2;
 
 		int start_offset = 0;
-		int end_offset = (size.height - 1) * pitch;
+		int end_offset = (height() - 1) * line_pitch;
 
-		char *data = (char *)get_data();
+		char *d = data<char>();
 
-		for (int cnt = 0; cnt < num_lines; cnt++, start_offset += pitch, end_offset -= pitch)
+		for (int cnt = 0; cnt < num_lines; cnt++, start_offset += line_pitch, end_offset -= line_pitch)
 		{
-			memcpy(&line_buffer[0], &data[start_offset], pitch);
-			memcpy(&data[start_offset], &data[end_offset], pitch);
-			memcpy(&data[end_offset], &line_buffer[0], pitch);
+			memcpy(&line_buffer[0], &d[start_offset], line_pitch);
+			memcpy(&d[start_offset], &d[end_offset], line_pitch);
+			memcpy(&d[end_offset], &line_buffer[0], line_pitch);
 		}
 	}
 
@@ -430,11 +426,11 @@ namespace uicore
 	{
 		if (has_transparency())
 		{
-			if (get_format() == tf_rgba8 || get_format() == tf_srgb8_alpha8)
+			if (format() == tf_rgba8 || format() == tf_srgb8_alpha8)
 			{
-				int w = get_width();
-				int h = get_height();
-				uint32_t *p = (uint32_t *)get_data();
+				int w = width();
+				int h = height();
+				uint32_t *p = data<uint32_t>();
 				for (int y = 0; y < h; y++)
 				{
 					int index = y * w;
@@ -454,11 +450,11 @@ namespace uicore
 					}
 				}
 			}
-			else if (get_format() == tf_bgra8)
+			else if (format() == tf_bgra8)
 			{
-				int w = get_width();
-				int h = get_height();
-				uint32_t *p = (uint32_t *)get_data();
+				int w = width();
+				int h = height();
+				uint32_t *p = data<uint32_t>();
 				for (int y = 0; y < h; y++)
 				{
 					int index = y * w;
@@ -478,11 +474,11 @@ namespace uicore
 					}
 				}
 			}
-			else if (get_format() == tf_rgba16)
+			else if (format() == tf_rgba16)
 			{
-				int w = get_width();
-				int h = get_height();
-				uint16_t *p = (uint16_t *)get_data();
+				int w = width();
+				int h = height();
+				uint16_t *p = data<uint16_t>();
 				for (int y = 0; y < h; y++)
 				{
 					int index = y * w;
@@ -504,11 +500,11 @@ namespace uicore
 					}
 				}
 			}
-			else if (get_format() == tf_rgba16f)
+			else if (format() == tf_rgba16f)
 			{
-				int w = get_width();
-				int h = get_height();
-				unsigned short *p = (unsigned short *)get_data();
+				int w = width();
+				int h = height();
+				unsigned short *p = data<unsigned short>();
 				for (int y = 0; y < h; y++)
 				{
 					int index = y * w;
@@ -530,11 +526,11 @@ namespace uicore
 					}
 				}
 			}
-			else if (get_format() == tf_rgba32f)
+			else if (format() == tf_rgba32f)
 			{
-				int w = get_width();
-				int h = get_height();
-				float *p = (float *)get_data();
+				int w = width();
+				int h = height();
+				float *p = data<float>();
 				for (int y = 0; y < h; y++)
 				{
 					int index = y * w;
@@ -565,13 +561,14 @@ namespace uicore
 
 	void PixelBuffer::premultiply_gamma(float gamma)
 	{
-		if (get_format() == tf_rgba8 || get_format() == tf_srgb8_alpha8 || get_format() == tf_bgra8)
+		if (format() == tf_rgba8 || format() == tf_srgb8_alpha8 || format() == tf_bgra8)
 		{
-			PixelBufferLock4ub lock(*this);
-			for (int y = 0; y < lock.get_height(); y++)
+			int w = width();
+			int h = height();
+			for (int y = 0; y < h; y++)
 			{
-				Vec4ub *line = lock.get_row(y);
-				for (int x = 0; x < lock.get_width(); x++)
+				Vec4ub *line = (Vec4ub*)PixelBuffer::line(y);
+				for (int x = 0; x < w; x++)
 				{
 					const float rcp_255 = 1.0f / 255.0f;
 					float red = std::pow(line[x].r * rcp_255, gamma);
@@ -583,13 +580,14 @@ namespace uicore
 				}
 			}
 		}
-		else if (get_format() == tf_rgba16)
+		else if (format() == tf_rgba16)
 		{
-			PixelBufferLock4us lock(*this);
-			for (int y = 0; y < lock.get_height(); y++)
+			int w = width();
+			int h = height();
+			for (int y = 0; y < h; y++)
 			{
-				Vec4us *line = lock.get_row(y);
-				for (int x = 0; x < lock.get_width(); x++)
+				Vec4us *line = (Vec4us*)PixelBuffer::line(y);
+				for (int x = 0; x < w; x++)
 				{
 					const float rcp_65535 = 1.0f / 65535.0f;
 					float red = std::pow(line[x].r * rcp_65535, gamma);
@@ -601,13 +599,14 @@ namespace uicore
 				}
 			}
 		}
-		else if (get_format() == tf_rgba16f)
+		else if (format() == tf_rgba16f)
 		{
-			PixelBufferLock4hf lock(*this);
-			for (int y = 0; y < lock.get_height(); y++)
+			int w = width();
+			int h = height();
+			for (int y = 0; y < h; y++)
 			{
-				Vec4hf *line = lock.get_row(y);
-				for (int x = 0; x < lock.get_width(); x++)
+				Vec4hf *line = (Vec4hf*)PixelBuffer::line(y);
+				for (int x = 0; x < w; x++)
 				{
 					Vec4f v = line[x].to_float();
 					v.r = std::pow(v.r, gamma);
@@ -617,13 +616,14 @@ namespace uicore
 				}
 			}
 		}
-		else if (get_format() == tf_rgba32f)
+		else if (format() == tf_rgba32f)
 		{
-			PixelBufferLock4f lock(*this);
-			for (int y = 0; y < lock.get_height(); y++)
+			int w = width();
+			int h = height();
+			for (int y = 0; y < h; y++)
 			{
-				Vec4f *line = lock.get_row(y);
-				for (int x = 0; x < lock.get_width(); x++)
+				Vec4f *line = (Vec4f*)PixelBuffer::line(y);
+				for (int x = 0; x < w; x++)
 				{
 					line[x].r = std::pow(line[x].r, gamma);
 					line[x].g = std::pow(line[x].g, gamma);

@@ -68,6 +68,7 @@ namespace uicore
 	typedef std::shared_ptr<UniformBuffer> UniformBufferPtr;
 	typedef std::shared_ptr<PrimitivesArray> PrimitivesArrayPtr;
 	typedef std::shared_ptr<Texture> TexturePtr;
+	typedef std::shared_ptr<PixelBuffer> PixelBufferPtr;
 
 	/// Polygon culling modes.
 	enum CullMode
@@ -377,10 +378,10 @@ namespace uicore
 		const GraphicContextProvider * get_provider() const;
 
 		/// Return the content of the read buffer into a pixel buffer.
-		PixelBuffer get_pixeldata(const Rect& rect, TextureFormat texture_format = tf_rgba8, bool clamp = true);
+		PixelBufferPtr get_pixeldata(const Rect& rect, TextureFormat texture_format = tf_rgba8, bool clamp = true);
 
 		/// Return the content of the read buffer into a pixel buffer.
-		PixelBuffer get_pixeldata(TextureFormat texture_format = tf_rgba8, bool clamp = true);
+		PixelBufferPtr get_pixeldata(TextureFormat texture_format = tf_rgba8, bool clamp = true);
 
 		/** Returns `true` if this frame buffer object is owned by this graphic
 		 *  context.

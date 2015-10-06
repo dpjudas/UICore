@@ -394,7 +394,7 @@ namespace uicore
 		window.set_clipboard_text(text);
 	}
 
-	void D3DDisplayWindowProvider::set_clipboard_image(const PixelBuffer &buf)
+	void D3DDisplayWindowProvider::set_clipboard_image(const PixelBufferPtr &buf)
 	{
 		window.set_clipboard_image(buf);
 	}
@@ -404,7 +404,7 @@ namespace uicore
 		return window.get_clipboard_text();
 	}
 
-	PixelBuffer D3DDisplayWindowProvider::get_clipboard_image() const
+	PixelBufferPtr D3DDisplayWindowProvider::get_clipboard_image() const
 	{
 		return window.get_clipboard_image();
 	}
@@ -414,12 +414,12 @@ namespace uicore
 		window.request_repaint();
 	}
 
-	void D3DDisplayWindowProvider::set_large_icon(const PixelBuffer &image)
+	void D3DDisplayWindowProvider::set_large_icon(const PixelBufferPtr &image)
 	{
 		window.set_large_icon(image);
 	}
 
-	void D3DDisplayWindowProvider::set_small_icon(const PixelBuffer &image)
+	void D3DDisplayWindowProvider::set_small_icon(const PixelBufferPtr &image)
 	{
 		window.set_small_icon(image);
 	}

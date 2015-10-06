@@ -698,7 +698,7 @@ namespace uicore
 		D3DTarget::throw_if_failed("ID3D11Device.CreateTexture3D failed", result);
 	}
 
-	PixelBuffer D3DTextureProvider::get_pixeldata(GraphicContext &gc, TextureFormat texture_format, int level) const
+	PixelBufferPtr D3DTextureProvider::get_pixeldata(GraphicContext &gc, TextureFormat texture_format, int level) const
 	{
 		D3DGraphicContextProvider *gc_provider = static_cast<D3DGraphicContextProvider*>(gc.get_provider());
 		D3DTextureData::DeviceHandles &data_handles = data->get_handles(gc_provider->get_window()->get_device());
@@ -735,8 +735,8 @@ namespace uicore
 			format = texture_desc.Format;
 		}
 
-		TransferTexture pixels(gc, width, height, data_from_gpu, from_d3d_format(format));
-		D3DPixelBufferProvider *pb_provider = static_cast<D3DPixelBufferProvider *>(pixels.get_provider());
+		auto pixels = TransferTexture::create(gc, width, height, data_from_gpu, from_d3d_format(format));
+		D3DPixelBufferProvider *pb_provider = static_cast<D3DPixelBufferProvider *>(pixels.get());
 		D3D11_BOX box;
 		box.left = 0;
 		box.top = 0;
@@ -748,7 +748,7 @@ namespace uicore
 		return pixels;
 	}
 
-	void D3DTextureProvider::copy_from(GraphicContext &gc, int x, int y, int slice, int level, const PixelBuffer &source_image, const Rect &src_rect)
+	void D3DTextureProvider::copy_from(GraphicContext &gc, int x, int y, int slice, int level, const PixelBufferPtr &source_image, const Rect &src_rect)
 	{
 		D3DGraphicContextProvider *gc_provider = static_cast<D3DGraphicContextProvider*>(gc.get_provider());
 		D3DTextureData::DeviceHandles &data_handles = data->get_handles(gc_provider->get_window()->get_device());
@@ -799,7 +799,7 @@ namespace uicore
 
 		int dest_subresource = D3D11CalcSubresource(level, array_slice, mip_levels);
 
-		D3DPixelBufferProvider *pb_provider = dynamic_cast<D3DPixelBufferProvider*>(source_image.get_provider());
+		D3DPixelBufferProvider *pb_provider = dynamic_cast<D3DPixelBufferProvider*>(source_image.get());
 		if (pb_provider)
 		{
 			int src_subresource = D3D11CalcSubresource(0, 0, 1);
@@ -817,11 +817,11 @@ namespace uicore
 		{
 			TextureFormat dest_format = from_d3d_format(format);
 
-			PixelBuffer src_image_converted;
-			if (dest_format == source_image.get_format())
+			PixelBufferPtr src_image_converted;
+			if (dest_format == source_image->format())
 				src_image_converted = source_image;
 			else
-				src_image_converted = source_image.to_format(dest_format);
+				src_image_converted = source_image->to_format(dest_format);
 
 			D3D11_BOX box;
 			box.left = x;
@@ -831,28 +831,28 @@ namespace uicore
 			box.front = z;
 			box.back = z + 1;
 
-			if (source_image.is_compressed())
+			if (source_image->is_compressed())
 			{
 				int block_x = src_rect.left / 4;
 				int block_y = src_rect.top / 4;
 
-				int blocks_per_row = (source_image.get_width() + 3) / 4;
-				int bytes_per_block = src_image_converted.get_bytes_per_block();
+				int blocks_per_row = (source_image->width() + 3) / 4;
+				int bytes_per_block = src_image_converted->bytes_per_block();
 
 				int row_pitch = blocks_per_row * bytes_per_block;
 				int slice_pitch = 0;
 
-				const unsigned char *src_data = src_image_converted.get_data_uint8();
+				const unsigned char *src_data = src_image_converted->data_uint8();
 				//src_data += (block_x + block_y * blocks_per_row) * bytes_per_block;
 
 				device_context->UpdateSubresource(data_handles.texture, dest_subresource, &box, src_data, row_pitch, slice_pitch);
 			}
 			else
 			{
-				int row_pitch = src_image_converted.get_pitch();
-				int slice_pitch = src_image_converted.get_pitch() * src_image_converted.get_height();
+				int row_pitch = src_image_converted->pitch();
+				int slice_pitch = src_image_converted->pitch() * src_image_converted->height();
 
-				const unsigned char *src_data = src_image_converted.get_data_uint8();
+				const unsigned char *src_data = src_image_converted->data_uint8();
 				//src_data += src_rect.left * src_image_converted.get_bytes_per_pixel() + src_rect.top * src_image_converted.get_pitch();
 
 				device_context->UpdateSubresource(data_handles.texture, dest_subresource, &box, src_data, row_pitch, slice_pitch);

@@ -37,6 +37,7 @@ namespace uicore
 	class Rect;
 	class ImageImportDescription_Impl;
 	class PixelBuffer;
+	typedef std::shared_ptr<PixelBuffer> PixelBufferPtr;
 
 	/// \brief Image Import Description Class.
 	///
@@ -64,7 +65,7 @@ namespace uicore
 		///
 		/// Note, the output may point to a different pixel buffer than the input\n
 		/// The input image may be written to.
-		PixelBuffer process(PixelBuffer &image) const;
+		PixelBufferPtr process(PixelBufferPtr image) const;
 
 		/// \brief Set the premultiply alpha setting
 		///
@@ -88,10 +89,8 @@ namespace uicore
 
 		/// \brief User defined fine control of the pixel buffer
 		///
-		/// Note, the output maybe different to the input, if desired\n
-		/// \n
-		/// PixelBuffer func_process(PixelBuffer &input)
-		std::function<PixelBuffer(PixelBuffer &)> &func_process();
+		/// Note, the output maybe different to the input, if desired
+		std::function<PixelBufferPtr(PixelBufferPtr)> &func_process();
 
 	private:
 		std::shared_ptr<ImageImportDescription_Impl> impl;

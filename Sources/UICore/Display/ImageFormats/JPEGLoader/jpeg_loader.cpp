@@ -35,7 +35,7 @@
 
 namespace uicore
 {
-	PixelBuffer JPEGLoader::load(IODevice &iodevice, bool srgb)
+	PixelBufferPtr JPEGLoader::load(IODevice &iodevice, bool srgb)
 	{
 		JPEGLoader loader(iodevice);
 		JPEGMCUDecoder mcu_decoder(&loader);
@@ -43,8 +43,8 @@ namespace uicore
 
 		int image_width = loader.start_of_frame.width;
 		int image_height = loader.start_of_frame.height;
-		PixelBuffer image(image_width, image_height, srgb ? tf_srgb8_alpha8 : tf_rgba8);
-		unsigned int *image_pixels = reinterpret_cast<unsigned int *>(image.get_data());
+		auto image = PixelBuffer::create(image_width, image_height, srgb ? tf_srgb8_alpha8 : tf_rgba8);
+		unsigned int *image_pixels = image->data_uint32();
 
 		const unsigned int *block_pixels = rgb_decoder.get_pixels();
 		int block_width = rgb_decoder.get_width();

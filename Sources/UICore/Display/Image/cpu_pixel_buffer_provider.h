@@ -29,26 +29,28 @@
 
 #pragma once
 
-#include "UICore/Display/TargetProviders/pixel_buffer_provider.h"
+#include "UICore/Display/Image/pixel_buffer.h"
 
 namespace uicore
 {
 	class PixelBuffer_Impl;
 
-	class CPUPixelBufferProvider : public PixelBufferProvider
+	class CPUPixelBufferProvider : public PixelBuffer
 	{
 	public:
-		CPUPixelBufferProvider();
+		CPUPixelBufferProvider(TextureFormat new_format, const Size &new_size, const void *data_ptr, bool only_reference_data);
 		~CPUPixelBufferProvider();
 
-		void create(TextureFormat new_format, const Size &new_size, const void *data_ptr, bool only_reference_data);
-		void create(const void *data, const Size &new_size, PixelBufferDirection direction, TextureFormat new_format, BufferUsage usage) override;
-
-		void *get_data() override { return data; }
-		int get_pitch() const override { return size.width * PixelBuffer::get_bytes_per_pixel(texture_format); }
-		Size get_size() const override { return size; }
+		void *data() override { return _data; }
+		const void *data() const override { return _data; }
+		int pitch() const override { return _width * bytes_per_pixel(texture_format); }
+		int width() const override { return _width; }
+		int height() const override { return _height; }
 		bool is_gpu() const override { return false; }
-		TextureFormat get_format() const override { return texture_format; };
+		TextureFormat format() const override { return texture_format; };
+
+		float pixel_ratio() const override { return _pixel_ratio; }
+		void set_pixel_ratio(float ratio) override { _pixel_ratio = ratio; }
 
 		void lock(GraphicContext &gc, BufferAccess access) override { }
 		void unlock() override { }
@@ -56,13 +58,12 @@ namespace uicore
 		void upload_data(GraphicContext &gc, const Rect &dest_rect, const void *data) override;
 
 	private:
-		/// \brief Boolean indicating if pixel data should be deleted on destruction.
-		bool delete_data;
+		bool delete_data = true;
+		unsigned char *_data = nullptr;
 
-		/// \brief Pixel data.
-		unsigned char *data;
-
-		Size size;
+		int _width = 0;
+		int _height = 0;
 		TextureFormat texture_format;
+		float _pixel_ratio = 0.0f;
 	};
 }

@@ -57,7 +57,7 @@ namespace uicore
 		/// \param array_index Index in the array
 		/// \param image Image to upload.
 		/// \param level Mipmap level-of-detail number.
-		virtual void set_image(GraphicContext &context, int array_index, const PixelBuffer &image, int level = 0) = 0;
+		virtual void set_image(GraphicContext &context, int array_index, const PixelBufferPtr &image, int level = 0) = 0;
 
 		/// \brief Upload image to sub texture.
 		///
@@ -65,7 +65,7 @@ namespace uicore
 		/// \param array_index Index in the array
 		/// \param image Image to upload.
 		/// \param level Mipmap level-of-detail number.
-		virtual void set_subimage(GraphicContext &context, int array_index, int x, const PixelBuffer &image, const int src_x, const int src_width, int level = 0) = 0;
+		virtual void set_subimage(GraphicContext &context, int array_index, int x, const PixelBufferPtr &image, const int src_x, const int src_width, int level = 0) = 0;
 
 		virtual void set_wrap_mode(TextureWrapMode wrap_s) = 0;
 	};

@@ -85,27 +85,27 @@ namespace uicore
 		return textures_r8[current_r8_texture];
 	}
 
-	TransferTexture RenderBatchBuffer::get_transfer_rgba32f(GraphicContext &gc)
+	TransferTexturePtr RenderBatchBuffer::get_transfer_rgba32f(GraphicContext &gc)
 	{
 		current_rgba32f_transfer++;
 		if (current_rgba32f_transfer == num_r8_buffers)
 			current_rgba32f_transfer = 0;
 
-		if (transfers_rgba32f[current_rgba32f_transfer].is_null())
-			transfers_rgba32f[current_rgba32f_transfer] = TransferTexture(gc, rgba32f_width, rgba32f_height, data_to_gpu, tf_rgba32f);
+		if (!transfers_rgba32f[current_rgba32f_transfer])
+			transfers_rgba32f[current_rgba32f_transfer] = TransferTexture::create(gc, rgba32f_width, rgba32f_height, data_to_gpu, tf_rgba32f);
 
 		return transfers_rgba32f[current_rgba32f_transfer];
 	}
 
-	TransferTexture RenderBatchBuffer::get_transfer_r8(GraphicContext &gc, int &out_index)
+	TransferTexturePtr RenderBatchBuffer::get_transfer_r8(GraphicContext &gc, int &out_index)
 	{
 		current_r8_transfer++;
 		if (current_r8_transfer == num_r8_buffers)
 			current_r8_transfer = 0;
 
-		if (transfers_r8[current_r8_transfer].is_null())
+		if (!transfers_r8[current_r8_transfer])
 		{
-			transfers_r8[current_r8_transfer] = TransferTexture(gc, r8_size, r8_size, data_to_gpu, tf_r8);
+			transfers_r8[current_r8_transfer] = TransferTexture::create(gc, r8_size, r8_size, data_to_gpu, tf_r8);
 		}
 		out_index = current_r8_transfer;
 

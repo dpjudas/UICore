@@ -200,9 +200,9 @@ namespace uicore
 		header.bV5BlueMask = 0x0000ff00;
 		header.bV5AlphaMask = 0x000000ff;
 		header.bV5SizeImage = bitmap_size.height * 4;
-		PixelBuffer pixelbuffer(bitmap_size.width, bitmap_size.height, tf_bgra8);
-		int scanlines = GetDIBits(screen_dc, bitmap, 0, bitmap_size.height, pixelbuffer.get_data(), (LPBITMAPINFO)&header, DIB_RGB_COLORS);
-		unsigned char *p = (unsigned char *)pixelbuffer.get_data();
+		auto pixelbuffer = PixelBuffer::create(bitmap_size.width, bitmap_size.height, tf_bgra8);
+		int scanlines = GetDIBits(screen_dc, bitmap, 0, bitmap_size.height, pixelbuffer->data(), (LPBITMAPINFO)&header, DIB_RGB_COLORS);
+		unsigned char *p = (unsigned char *)pixelbuffer->data();
 		for (int i = 0; i < bitmap_size.width*bitmap_size.height; i++)
 		{
 			p[i * 4 + 0] = 255 - p[i * 4 + 0];
@@ -217,8 +217,8 @@ namespace uicore
 		FontPixelBuffer font_buffer;
 		font_buffer.glyph = glyph;
 		font_buffer.buffer = pixelbuffer;
-		font_buffer.buffer_rect = pixelbuffer.get_size();
-		font_buffer.size = Sizef(pixelbuffer.get_width() / pixel_ratio, pixelbuffer.get_height() / pixel_ratio);
+		font_buffer.buffer_rect = pixelbuffer->size();
+		font_buffer.size = Sizef(pixelbuffer->width() / pixel_ratio, pixelbuffer->height() / pixel_ratio);
 		font_buffer.offset.x = -cursor.x / pixel_ratio;
 		font_buffer.offset.y = -cursor.y / pixel_ratio;
 		font_buffer.empty_buffer = false;
@@ -240,13 +240,13 @@ namespace uicore
 		matrix.eM22.value = 1;
 		if (try_load_glyph_bitmap(glyph, GGO_GRAY8_BITMAP, matrix, glyph_bitmap, glyph_metrics))
 		{
-			PixelBuffer pixelbuffer(glyph_metrics.gmBlackBoxX, glyph_metrics.gmBlackBoxY, tf_rgba8);
+			auto pixelbuffer = PixelBuffer::create(glyph_metrics.gmBlackBoxX, glyph_metrics.gmBlackBoxY, tf_rgba8);
 
 			DWORD s_pitch = (glyph_metrics.gmBlackBoxX + 3) / 4 * 4;
 			unsigned char *s = (unsigned char *)glyph_bitmap->data();
 
 			DWORD d_width = glyph_metrics.gmBlackBoxX;
-			Vec4ub *d = pixelbuffer.get_data<Vec4ub>();
+			Vec4ub *d = pixelbuffer->data<Vec4ub>();
 
 			for (DWORD py = 0; py < glyph_metrics.gmBlackBoxY; py++)
 			{
@@ -260,8 +260,8 @@ namespace uicore
 			FontPixelBuffer font_buffer;
 			font_buffer.glyph = glyph;
 			font_buffer.buffer = pixelbuffer;
-			font_buffer.buffer_rect = pixelbuffer.get_size();
-			font_buffer.size = Sizef(pixelbuffer.get_width() / pixel_ratio, pixelbuffer.get_height() / pixel_ratio);
+			font_buffer.buffer_rect = pixelbuffer->size();
+			font_buffer.size = Sizef(pixelbuffer->width() / pixel_ratio, pixelbuffer->height() / pixel_ratio);
 			font_buffer.offset.x = glyph_metrics.gmptGlyphOrigin.x / pixel_ratio;
 			font_buffer.offset.y = -glyph_metrics.gmptGlyphOrigin.y / pixel_ratio;
 			font_buffer.empty_buffer = false;
@@ -288,13 +288,13 @@ namespace uicore
 		matrix.eM22.value = 1;
 		if (try_load_glyph_bitmap(glyph, GGO_BITMAP, matrix, glyph_bitmap, glyph_metrics))
 		{
-			PixelBuffer pixelbuffer(glyph_metrics.gmBlackBoxX, glyph_metrics.gmBlackBoxY, tf_rgba8);
+			auto pixelbuffer = PixelBuffer::create(glyph_metrics.gmBlackBoxX, glyph_metrics.gmBlackBoxY, tf_rgba8);
 
 			DWORD s_pitch = (glyph_metrics.gmBlackBoxX + 31) / 32 * 4;
 			unsigned char *s = (unsigned char *)glyph_bitmap->data();
 
 			DWORD d_width = glyph_metrics.gmBlackBoxX;
-			Vec4ub *d = pixelbuffer.get_data<Vec4ub>();
+			Vec4ub *d = pixelbuffer->data<Vec4ub>();
 
 			for (DWORD py = 0; py < glyph_metrics.gmBlackBoxY; py++)
 			{
@@ -307,8 +307,8 @@ namespace uicore
 			FontPixelBuffer font_buffer;
 			font_buffer.glyph = glyph;
 			font_buffer.buffer = pixelbuffer;
-			font_buffer.buffer_rect = pixelbuffer.get_size();
-			font_buffer.size = Sizef(pixelbuffer.get_width() / pixel_ratio, pixelbuffer.get_height() / pixel_ratio);
+			font_buffer.buffer_rect = pixelbuffer->size();
+			font_buffer.size = Sizef(pixelbuffer->width() / pixel_ratio, pixelbuffer->height() / pixel_ratio);
 			font_buffer.offset.x = glyph_metrics.gmptGlyphOrigin.x / pixel_ratio;
 			font_buffer.offset.y = -glyph_metrics.gmptGlyphOrigin.y / pixel_ratio;
 			font_buffer.empty_buffer = false;

@@ -55,7 +55,7 @@ namespace uicore
 		bool empty_buffer;
 
 		/// \brief The pixel buffer containing the glyph
-		PixelBuffer buffer;
+		PixelBufferPtr buffer;
 
 		/// \brief The rect containing the image inside "buffer"
 		Rect buffer_rect;

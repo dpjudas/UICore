@@ -36,6 +36,7 @@
 namespace uicore
 {
 	class PixelBuffer;
+	typedef std::shared_ptr<PixelBuffer> PixelBufferPtr;
 	class PixelBufferSet_Impl;
 
 	/// \brief Set of images that combined form a complete texture
@@ -49,7 +50,7 @@ namespace uicore
 		PixelBufferSet(TextureDimensions dimensions, TextureFormat format, int width, int height = 1, int slices = 1);
 
 		/// \brief Constructs an image set with a single image using the dimensions and internal format of the pixel buffer
-		PixelBufferSet(const PixelBuffer &image);
+		PixelBufferSet(const PixelBufferPtr &image);
 
 		/// \brief Returns true if this object is invalid.
 		bool is_null() const { return !impl; }
@@ -79,10 +80,10 @@ namespace uicore
 		int get_max_level() const;
 
 		/// \brief Returns the pixel buffer for a specific slice and level
-		PixelBuffer get_image(int slice, int level);
+		PixelBufferPtr get_image(int slice, int level);
 
 		/// \brief Set the pixel buffer to be used for the specified slice and level
-		void set_image(int slice, int level, const PixelBuffer &image);
+		void set_image(int slice, int level, const PixelBufferPtr &image);
 
 	private:
 		std::shared_ptr<PixelBufferSet_Impl> impl;

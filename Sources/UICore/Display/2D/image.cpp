@@ -105,12 +105,12 @@ namespace uicore
 	{
 	}
 
-	Image::Image(Canvas &canvas, const PixelBuffer &pb, const Rect &rect, float pixel_ratio)
+	Image::Image(Canvas &canvas, const PixelBufferPtr &pb, const Rect &rect, float pixel_ratio)
 		: impl(std::make_shared<Image_Impl>())
 	{
-		impl->texture = Texture2D::create(canvas, pb.get_width(), pb.get_height(), pb.get_format());
+		impl->texture = Texture2D::create(canvas, pb->width(), pb->height(), pb->format());
 		impl->texture->set_subimage(canvas, 0, 0, pb, rect);
-		impl->texture_rect = Rect(0, 0, pb.get_width(), pb.get_height());
+		impl->texture_rect = Rect(0, 0, pb->width(), pb->height());
 		impl->pixel_ratio = pixel_ratio;
 	}
 
@@ -305,13 +305,7 @@ namespace uicore
 		impl->texture->set_min_filter(linear_filter ? filter_linear : filter_nearest);
 	}
 
-	void Image::set_subimage(
-		Canvas &canvas,
-		int x,
-		int y,
-		const PixelBuffer &image,
-		const Rect &src_rect,
-		int level)
+	void Image::set_subimage(Canvas &canvas, int x, int y, const PixelBufferPtr &image, const Rect &src_rect, int level)
 	{
 		impl->texture->set_subimage(canvas, x, y, image, src_rect, level);
 	}

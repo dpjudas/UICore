@@ -44,7 +44,7 @@ namespace uicore
 		TextureFormat format;
 		int width;
 		int height;
-		std::vector<std::vector<PixelBuffer> > slices;
+		std::vector<std::vector<PixelBufferPtr> > slices;
 		int base_level;
 		int max_level;
 	};
@@ -58,8 +58,8 @@ namespace uicore
 	{
 	}
 
-	PixelBufferSet::PixelBufferSet(const PixelBuffer &image)
-		: impl(std::make_shared<PixelBufferSet_Impl>(texture_2d, image.get_format(), image.get_width(), image.get_height(), 1))
+	PixelBufferSet::PixelBufferSet(const PixelBufferPtr &image)
+		: impl(std::make_shared<PixelBufferSet_Impl>(texture_2d, image->format(), image->width(), image->height(), 1))
 	{
 		set_image(0, 0, image);
 	}
@@ -112,7 +112,7 @@ namespace uicore
 		return impl->max_level;
 	}
 
-	PixelBuffer PixelBufferSet::get_image(int slice, int level)
+	PixelBufferPtr PixelBufferSet::get_image(int slice, int level)
 	{
 		throw_if_null();
 
@@ -125,11 +125,11 @@ namespace uicore
 		}
 		else
 		{
-			return PixelBuffer();
+			return PixelBufferPtr();
 		}
 	}
 
-	void PixelBufferSet::set_image(int slice, int level, const PixelBuffer &image)
+	void PixelBufferSet::set_image(int slice, int level, const PixelBufferPtr &image)
 	{
 		throw_if_null();
 

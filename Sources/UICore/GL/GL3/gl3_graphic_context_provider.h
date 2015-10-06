@@ -98,7 +98,6 @@ namespace uicore
 		int get_major_version() const override { int major = 0, minor = 0; get_opengl_version(major, minor); return major; }
 		int get_minor_version() const override { int major = 0, minor = 0; get_opengl_version(major, minor); return minor; }
 		bool has_compute_shader_support() const override { return false; }
-		PixelBufferProvider *alloc_pixel_buffer() override;
 		std::shared_ptr<RasterizerState> create_rasterizer_state(const RasterizerStateDescription &desc) override;
 		std::shared_ptr<BlendState> create_blend_state(const BlendStateDescription &desc) override;
 		std::shared_ptr<DepthStencilState> create_depth_stencil_state(const DepthStencilStateDescription &desc) override;
@@ -126,10 +125,11 @@ namespace uicore
 		std::shared_ptr<Texture3D> create_texture_3d(int width, int height, int depth, TextureFormat texture_format, int levels) override;
 		std::shared_ptr<TextureCube> create_texture_cube(int width, int height, TextureFormat texture_format, int levels) override;
 		std::shared_ptr<TextureCubeArray> create_texture_cube_array(int width, int height, int array_size, TextureFormat texture_format, int levels) override;
+		std::shared_ptr<TransferTexture> create_transfer_texture(const void *data, const Size &size, PixelBufferDirection direction, TextureFormat new_format, BufferUsage usage) override;
 		void set_rasterizer_state(RasterizerState *state) override;
 		void set_blend_state(BlendState *state, const Colorf &blend_color, unsigned int sample_mask) override;
 		void set_depth_stencil_state(DepthStencilState *state, int stencil_ref) override;
-		PixelBuffer get_pixeldata(const Rect& rect, TextureFormat texture_format, bool clamp) const override;
+		std::shared_ptr<PixelBuffer> get_pixeldata(const Rect& rect, TextureFormat texture_format, bool clamp) const override;
 		void set_uniform_buffer(int index, const UniformBufferPtr &buffer) override;
 		void reset_uniform_buffer(int index) override;
 		void set_storage_buffer(int index, const StorageBufferPtr &buffer) override;

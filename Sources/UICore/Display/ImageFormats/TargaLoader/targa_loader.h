@@ -38,7 +38,7 @@ namespace uicore
 	class TargaLoader
 	{
 	public:
-		static PixelBuffer load(IODevice &iodevice, bool srgb);
+		static PixelBufferPtr load(IODevice &iodevice, bool srgb);
 
 	private:
 		TargaLoader(IODevice &iodevice, bool srgb);
@@ -82,6 +82,6 @@ namespace uicore
 		std::vector<Vec4ub> palette;
 		DataBufferPtr image_data;
 
-		PixelBuffer image;
+		PixelBufferPtr image;
 	};
 }

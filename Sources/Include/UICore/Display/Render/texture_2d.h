@@ -53,8 +53,8 @@ namespace uicore
 		static std::shared_ptr<Texture2D> create(GraphicContext &context, const std::string &filename, const ImageImportDescription &import_desc = {});
 		static std::shared_ptr<Texture2D> create(GraphicContext &context, IODevice &file, const std::string &image_type, const ImageImportDescription &import_desc = {});
 
-		static std::shared_ptr<Texture2D> create(GraphicContext &context, const PixelBuffer &image, bool is_srgb = false);
-		static std::shared_ptr<Texture2D> create(GraphicContext &context, const PixelBuffer &image, const Rect &src_rect, bool is_srgb = false);
+		static std::shared_ptr<Texture2D> create(GraphicContext &context, const PixelBufferPtr &image, bool is_srgb = false);
+		static std::shared_ptr<Texture2D> create(GraphicContext &context, const PixelBufferPtr &image, const Rect &src_rect, bool is_srgb = false);
 
 		/// Retrieves the actual width of the texture in the display.
 		virtual int width() const = 0;
@@ -69,8 +69,8 @@ namespace uicore
 		 *  \param format Output data format.
 		 *  \param level  Mipmap level of the texture to retrieve data from.
 		 */
-		virtual PixelBuffer pixeldata(GraphicContext &gc, int level = 0) const = 0;
-		virtual PixelBuffer pixeldata(GraphicContext &gc, TextureFormat texture_format, int level = 0) const = 0;
+		virtual PixelBufferPtr pixeldata(GraphicContext &gc, int level = 0) const = 0;
+		virtual PixelBufferPtr pixeldata(GraphicContext &gc, TextureFormat texture_format, int level = 0) const = 0;
 
 		/// Get the texture wrap mode for the s coordinate.
 		virtual TextureWrapMode wrap_mode_s() const = 0;
@@ -83,7 +83,7 @@ namespace uicore
 		 *  \param image   Image to upload.
 		 *  \param level   Mipmap level-of-detail number.
 		 */
-		virtual void set_image(GraphicContext &context, const PixelBuffer &image, int level = 0) = 0;
+		virtual void set_image(GraphicContext &context, const PixelBufferPtr &image, int level = 0) = 0;
 
 		/** Upload image to sub-texture.
 		 *  \param context Graphic context to use for the request.
@@ -93,14 +93,14 @@ namespace uicore
 		 *  \param image   Image to upload.
 		 *  \param level   Mipmap level-of-detail number.
 		 */
-		virtual void set_subimage(GraphicContext &context, int x, int y, const PixelBuffer &image, const Rect &src_rect, int level = 0) = 0;
+		virtual void set_subimage(GraphicContext &context, int x, int y, const PixelBufferPtr &image, const Rect &src_rect, int level = 0) = 0;
 
 		/** Upload image to sub-texture.
 		 *  \param context Graphic context to use for the request.
 		 *  \param image   Image to upload.
 		 *  \param level   Mipmap level-of-detail number.
 		 */
-		void set_subimage(GraphicContext &context, const Point &point, const PixelBuffer &image, const Rect &src_rect, int level = 0)
+		void set_subimage(GraphicContext &context, const Point &point, const PixelBufferPtr &image, const Rect &src_rect, int level = 0)
 		{
 			set_subimage(context, point.x, point.y, image, src_rect, level);
 		}

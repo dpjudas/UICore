@@ -60,6 +60,7 @@ namespace uicore
 	class DisplayWindowProvider;
 	class DisplayWindow_Impl;
 	class PixelBuffer;
+	typedef std::shared_ptr<PixelBuffer> PixelBufferPtr;
 
 	/// \brief Standard Cursor
 	enum class StandardCursor
@@ -234,7 +235,7 @@ namespace uicore
 
 		/// \brief Returns an image stored in the clipboard.
 		/// <p>Returns a null pixelbuffer if no image is available.</p>
-		PixelBuffer get_clipboard_image() const;
+		PixelBufferPtr get_clipboard_image() const;
 
 		/// \brief Returns the minimum size the window can be resized to by the application user.
 		Sizef get_minimum_size(bool client_area = false);
@@ -358,13 +359,13 @@ namespace uicore
 		void set_clipboard_text(const std::string &text);
 
 		/// \brief Stores an image in the clipboard.
-		void set_clipboard_image(const PixelBuffer &buf);
+		void set_clipboard_image(const PixelBufferPtr &buf);
 
 		/// \brief Sets the large icon used for this window.
-		void set_large_icon(const PixelBuffer &image);
+		void set_large_icon(const PixelBufferPtr &image);
 
 		/// \brief Sets the small icon used for this window.
-		void set_small_icon(const PixelBuffer &image);
+		void set_small_icon(const PixelBufferPtr &image);
 
 		/// \brief Enable alpha channel for this window.
 		///

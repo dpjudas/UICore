@@ -37,12 +37,12 @@ namespace uicore
 		return context.get_provider()->create_texture_1d(size, texture_format, levels);
 	}
 
-	std::shared_ptr<Texture1D> Texture1D::create(GraphicContext &context, const PixelBuffer &image, bool is_srgb)
+	std::shared_ptr<Texture1D> Texture1D::create(GraphicContext &context, const PixelBufferPtr &image, bool is_srgb)
 	{
-		return create(context, image, 0, image.get_width(), is_srgb);
+		return create(context, image, 0, image->width(), is_srgb);
 	}
 
-	std::shared_ptr<Texture1D> Texture1D::create(GraphicContext &context, const PixelBuffer &image, int src_x, int width, bool is_srgb)
+	std::shared_ptr<Texture1D> Texture1D::create(GraphicContext &context, const PixelBufferPtr &image, int src_x, int width, bool is_srgb)
 	{
 		auto texture = create(context, width, is_srgb ? tf_srgb8_alpha8 : tf_rgba8);
 		texture->set_subimage(context, 0, image, src_x, width, 0);

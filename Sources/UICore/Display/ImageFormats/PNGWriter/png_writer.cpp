@@ -32,19 +32,19 @@
 
 namespace uicore
 {
-	void PNGWriter::save(IODevice &iodevice, PixelBuffer image)
+	void PNGWriter::save(IODevice &iodevice, PixelBufferPtr image)
 	{
 		PNGWriter writer(iodevice, image);
 		writer.save();
 	}
 	
-	PNGWriter::PNGWriter(IODevice &iodevice, PixelBuffer src_image) : device(iodevice)
+	PNGWriter::PNGWriter(IODevice &iodevice, PixelBufferPtr src_image) : device(iodevice)
 	{
 		// This writer only supports RGBA format
-		if (src_image.get_bytes_per_pixel() < 8)
-			image = src_image.to_format(tf_rgba8);
+		if (src_image->bytes_per_pixel() < 8)
+			image = src_image->to_format(tf_rgba8);
 		else
-			image = src_image.to_format(tf_rgba16);
+			image = src_image->to_format(tf_rgba16);
 	}
 	
 	void PNGWriter::save()
@@ -63,13 +63,13 @@ namespace uicore
 	
 	void PNGWriter::write_headers()
 	{
-		int ppm = (int)std::round(3800 * image.get_pixel_ratio());
+		int ppm = (int)std::round(3800 * image->pixel_ratio());
 		int ppm_x = ppm;
 		int ppm_y = ppm;
 		
-		int width = image.get_width();
-		int height = image.get_height();
-		int bit_depth = image.get_bytes_per_pixel() == 8 ? 16 : 8;
+		int width = image->width();
+		int height = image->height();
+		int bit_depth = image->bytes_per_pixel() == 8 ? 16 : 8;
 		int color_type = 6;
 		int compression_method = 0;
 		int filter_method = 0;
@@ -114,21 +114,21 @@ namespace uicore
 	
 	void PNGWriter::write_data()
 	{
-		//int width = image.get_width();
-		int height = image.get_height();
-		int bytes_per_pixel = image.get_bytes_per_pixel();
+		//int width = image->width();
+		int height = image->height();
+		int bytes_per_pixel = image->bytes_per_pixel();
 		
 		std::vector<unsigned char> scanline_orig;
 		std::vector<unsigned char> scanline_filtered;
-		scanline_orig.resize((image.get_width() + 1) * bytes_per_pixel);
-		scanline_filtered.resize(image.get_width() * bytes_per_pixel + 1);
+		scanline_orig.resize((image->width() + 1) * bytes_per_pixel);
+		scanline_filtered.resize(image->width() * bytes_per_pixel + 1);
 		
 		auto idat_uncompressed = DataBuffer::create(height * scanline_filtered.size());
 		
 		for (int y = 0; y < height; y++)
 		{
 			// Grab scanline
-			memcpy(scanline_orig.data() + bytes_per_pixel, image.get_line(y), scanline_orig.size() - bytes_per_pixel);
+			memcpy(scanline_orig.data() + bytes_per_pixel, image->line(y), scanline_orig.size() - bytes_per_pixel);
 
 			// Convert to big endian for 16 bit
 			if (bytes_per_pixel == 8)

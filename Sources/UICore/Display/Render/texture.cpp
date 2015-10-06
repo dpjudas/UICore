@@ -49,7 +49,7 @@ namespace uicore
 			auto texture = Texture1D::create(gc, pixelbuffer_set.get_width(), pixelbuffer_set.get_format(), pixelbuffer_set.get_max_level() + 1);
 			for (int level = 0; level <= pixelbuffer_set.get_max_level(); level++)
 			{
-				PixelBuffer buffer = pixelbuffer_set.get_image(0, level);
+				PixelBufferPtr buffer = pixelbuffer_set.get_image(0, level);
 				texture->set_image(gc, buffer, level);
 			}
 			return texture;
@@ -61,7 +61,7 @@ namespace uicore
 			{
 				for (int level = 0; level <= pixelbuffer_set.get_max_level(); level++)
 				{
-					PixelBuffer buffer = pixelbuffer_set.get_image(slice, level);
+					PixelBufferPtr buffer = pixelbuffer_set.get_image(slice, level);
 					texture->set_image(gc, slice, buffer, level);
 				}
 			}
@@ -72,7 +72,7 @@ namespace uicore
 			auto texture = Texture2D::create(gc, pixelbuffer_set.get_width(), pixelbuffer_set.get_height(), pixelbuffer_set.get_format(), pixelbuffer_set.get_max_level() + 1);
 			for (int level = 0; level <= pixelbuffer_set.get_max_level(); level++)
 			{
-				PixelBuffer buffer = pixelbuffer_set.get_image(0, level);
+				PixelBufferPtr buffer = pixelbuffer_set.get_image(0, level);
 				texture->set_image(gc, buffer, level);
 			}
 			return texture;
@@ -84,7 +84,7 @@ namespace uicore
 			{
 				for (int level = 0; level <= pixelbuffer_set.get_max_level(); level++)
 				{
-					PixelBuffer buffer = pixelbuffer_set.get_image(slice, level);
+					PixelBufferPtr buffer = pixelbuffer_set.get_image(slice, level);
 					texture->set_image(gc, slice, buffer, level);
 				}
 			}
@@ -97,7 +97,7 @@ namespace uicore
 			{
 				for (int level = 0; level <= pixelbuffer_set.get_max_level(); level++)
 				{
-					PixelBuffer buffer = pixelbuffer_set.get_image(slice, level);
+					PixelBufferPtr buffer = pixelbuffer_set.get_image(slice, level);
 					texture->set_image(gc, buffer, slice, level);
 				}
 			}
@@ -110,7 +110,7 @@ namespace uicore
 			{
 				for (int level = 0; level <= pixelbuffer_set.get_max_level(); level++)
 				{
-					PixelBuffer buffer = pixelbuffer_set.get_image(slice, level);
+					PixelBufferPtr buffer = pixelbuffer_set.get_image(slice, level);
 					texture->set_image(gc, (TextureCubeDirection)slice, buffer, level);
 				}
 			}
@@ -123,7 +123,7 @@ namespace uicore
 			{
 				for (int level = 0; level <= pixelbuffer_set.get_max_level(); level++)
 				{
-					PixelBuffer buffer = pixelbuffer_set.get_image(slice, level);
+					PixelBufferPtr buffer = pixelbuffer_set.get_image(slice, level);
 					texture->set_image(gc, slice / 6, (TextureCubeDirection)(slice % 6), buffer, level);
 				}
 			}

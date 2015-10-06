@@ -71,7 +71,7 @@ namespace uicore
 		bool is_clipboard_text_available() const;
 		bool is_clipboard_image_available() const;
 		std::string get_clipboard_text() const;
-		PixelBuffer get_clipboard_image() const;
+		PixelBufferPtr get_clipboard_image() const;
 		float get_pixel_ratio() const override;
 
 		void make_current() const;
@@ -109,13 +109,13 @@ namespace uicore
 		/// \brief Stores text in the clipboard.
 		void set_clipboard_text(const std::string &text);
 
-		void set_clipboard_image(const PixelBuffer &buf);
+		void set_clipboard_image(const PixelBufferPtr &buf);
 
 		/// \brief Invalidates a region of a screen, causing a repaint.
 		void request_repaint();
 
-		void set_large_icon(const PixelBuffer &image);
-		void set_small_icon(const PixelBuffer &image);
+		void set_large_icon(const PixelBufferPtr &image);
+		void set_small_icon(const PixelBufferPtr &image);
 
 		void enable_alpha_channel(const Rect &blur_rect);
 		void extend_frame_into_client_area(int left, int top, int right, int bottom);

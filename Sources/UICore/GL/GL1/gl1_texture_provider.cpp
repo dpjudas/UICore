@@ -173,8 +173,8 @@ namespace uicore
 			// Clear the whole texture if it is npot
 			if (!power_of_two_texture)
 			{
-				PixelBuffer image = PixelBuffer(pot_width, pot_height, tf_rgba8);
-				void *data = image.get_data();
+				auto image = PixelBuffer::create(pot_width, pot_height, tf_rgba8);
+				void *data = image->data();
 				memset(data, 0, pot_width * pot_height * 4);
 
 				GLenum format;
@@ -182,9 +182,9 @@ namespace uicore
 				to_opengl_pixelformat(image, format, type);
 
 				glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-				const int bytesPerPixel = image.get_bytes_per_pixel();
+				const int bytesPerPixel = image->bytes_per_pixel();
 #ifndef __ANDROID__
-				glPixelStorei(GL_UNPACK_ROW_LENGTH, image.get_pitch() / bytesPerPixel);
+				glPixelStorei(GL_UNPACK_ROW_LENGTH, image->pitch() / bytesPerPixel);
 				glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
 				glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
 #endif
@@ -253,7 +253,7 @@ namespace uicore
 	{
 	}
 
-	PixelBuffer GL1TextureProvider::get_pixeldata(GraphicContext &gc, TextureFormat texture_format, int level) const
+	PixelBufferPtr GL1TextureProvider::get_pixeldata(GraphicContext &gc, TextureFormat texture_format, int level) const
 	{
 		throw_if_disposed();
 
@@ -264,44 +264,44 @@ namespace uicore
 		bool supported = to_opengl_pixelformat(texture_format, gl_format, gl_type);
 		if (supported)
 		{
-			PixelBuffer buffer(pot_width, pot_height, texture_format);
+			auto buffer = PixelBuffer::create(pot_width, pot_height, texture_format);
 			glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 	#ifndef __ANDROID__
-			glPixelStorei(GL_UNPACK_ROW_LENGTH, buffer.get_pitch() / buffer.get_bytes_per_pixel());
+			glPixelStorei(GL_UNPACK_ROW_LENGTH, buffer->pitch() / buffer->bytes_per_pixel());
 			glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
 			glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
 	#endif
-			glGetTexImage(texture_type, level, gl_format, gl_type, buffer.get_data());
-			return buffer.copy(Rect(0,0, width, height));
+			glGetTexImage(texture_type, level, gl_format, gl_type, buffer->data());
+			return buffer->copy(Rect(0,0, width, height));
 		}
 		else
 		{
-			PixelBuffer buffer(pot_width, pot_height, tf_rgba8);
+			auto buffer = PixelBuffer::create(pot_width, pot_height, tf_rgba8);
 			glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 	#ifndef __ANDROID__
-			glPixelStorei(GL_UNPACK_ROW_LENGTH, buffer.get_pitch() / buffer.get_bytes_per_pixel());
+			glPixelStorei(GL_UNPACK_ROW_LENGTH, buffer->pitch() / buffer->bytes_per_pixel());
 			glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
 			glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
 	#endif
-			glGetTexImage(texture_type, level, GL_RGBA, GL_UNSIGNED_BYTE, buffer.get_data());
-			return buffer.copy(Rect(0,0, width, height)).to_format(texture_format);
+			glGetTexImage(texture_type, level, GL_RGBA, GL_UNSIGNED_BYTE, buffer->data());
+			return buffer->copy(Rect(0,0, width, height))->to_format(texture_format);
 		}
 	}
 
-	void GL1TextureProvider::copy_from(GraphicContext &gc, int x, int y, int slice, int level, const PixelBuffer &ximage, const Rect &src_rect)
+	void GL1TextureProvider::copy_from(GraphicContext &gc, int x, int y, int slice, int level, const PixelBufferPtr &ximage, const Rect &src_rect)
 	{
 		OpenGL::set_active(gc);
 
-		PixelBuffer image = ximage;
+		PixelBufferPtr image = ximage;
 
-		if (src_rect.left < 0 || src_rect.top < 0 || src_rect.right > image.get_width() || src_rect.bottom > image.get_height())
+		if (src_rect.left < 0 || src_rect.top < 0 || src_rect.right > image->width() || src_rect.bottom > image->height())
 			throw Exception("Rectangle out of bounds");
 
 		throw_if_disposed();
 		GL1TextureStateTracker state_tracker(texture_type, handle);
 
 		// check out if the original texture needs or doesn't need an alpha channel
-		bool needs_alpha = image.has_transparency();
+		bool needs_alpha = image->has_transparency();
 
 		GLenum format;
 		GLenum type;
@@ -310,8 +310,8 @@ namespace uicore
 		// also check for the pitch (GL1 can only skip pixels, not bytes)
 		if (!conv_needed)
 		{
-			const int bytesPerPixel = image.get_bytes_per_pixel();
-			if (image.get_pitch() % bytesPerPixel != 0)
+			const int bytesPerPixel = image->bytes_per_pixel();
+			if (image->pitch() % bytesPerPixel != 0)
 				conv_needed = true;
 		}
 
@@ -320,9 +320,9 @@ namespace uicore
 		{
 			// change alignment
 			glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-			const int bytesPerPixel = image.get_bytes_per_pixel();
+			const int bytesPerPixel = image->bytes_per_pixel();
 	#ifndef __ANDROID__
-			glPixelStorei(GL_UNPACK_ROW_LENGTH, image.get_pitch() / bytesPerPixel);
+			glPixelStorei(GL_UNPACK_ROW_LENGTH, image->pitch() / bytesPerPixel);
 			glPixelStorei(GL_UNPACK_SKIP_PIXELS, src_rect.left);
 			glPixelStorei(GL_UNPACK_SKIP_ROWS, src_rect.top);
 	#endif
@@ -331,11 +331,9 @@ namespace uicore
 		// conversion needed
 		else
 		{
-			PixelBuffer buffer(
-				src_rect.get_width(), src_rect.get_height(),
-				needs_alpha ? tf_rgba8 : tf_rgb8);
+			auto buffer = PixelBuffer::create(src_rect.get_width(), src_rect.get_height(), needs_alpha ? tf_rgba8 : tf_rgb8);
 	
-			buffer.set_subimage(image, Point(0, 0), src_rect);
+			buffer->set_subimage(image, Point(0, 0), src_rect);
 
 			format = needs_alpha ? GL_RGBA : GL_RGB;
 
@@ -344,9 +342,9 @@ namespace uicore
 
 			// change alignment
 			glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-			const int bytesPerPixel = buffer.get_bytes_per_pixel();
+			const int bytesPerPixel = buffer->bytes_per_pixel();
 	#ifndef __ANDROID__
-			glPixelStorei(GL_UNPACK_ROW_LENGTH, buffer.get_pitch() / bytesPerPixel);
+			glPixelStorei(GL_UNPACK_ROW_LENGTH, buffer->pitch() / bytesPerPixel);
 			glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
 			glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
 	#endif
@@ -364,18 +362,18 @@ namespace uicore
 			src_rect.get_height(),       // height
 			format,					  // format
 			type,					  // type
-			image.get_data());        // texels
+			image->data());        // texels
 
 		if (!power_of_two_texture)
 		{
 			// TODO: This needs corrected.It should be optimised and currently it does not write to the lower right quadrant
 
 			// Check extend the right edge
-			int right_edge = x + image.get_width();
+			int right_edge = x + image->width();
 			if ( right_edge >= width )
 			{
-				char *edge_data = (char *) image.get_data();
-				edge_data += image.get_bytes_per_pixel() * (width-1);
+				char *edge_data = image->data<char>();
+				edge_data += image->bytes_per_pixel() * (width-1);
 
 				for(int edge_cnt = right_edge; edge_cnt < pot_width; edge_cnt++)
 				{
@@ -391,11 +389,11 @@ namespace uicore
 				}
 			}
 			// Check extend the bottom edge
-			int bottom_edge = y + image.get_height();
+			int bottom_edge = y + image->height();
 			if ( bottom_edge >= height )
 			{
-				char *edge_data = (char *) image.get_data();
-				edge_data += image.get_pitch() * (height-1);
+				char *edge_data = image->data<char>();
+				edge_data += image->pitch() * (height-1);
 
 				for(int edge_cnt = bottom_edge; edge_cnt < pot_height; edge_cnt++)
 				{
@@ -625,17 +623,14 @@ namespace uicore
 		throw Exception("OpenGL 1 does not support texture views");
 	}
 
-	void GL1TextureProvider::set_texture_image2d(
-		GLuint target,
-		PixelBuffer &image,
-		int level)
+	void GL1TextureProvider::set_texture_image2d(GLuint target, const PixelBufferPtr &image, int level)
 	{
 		throw_if_disposed();
 		GL1TextureStateTracker state_tracker(texture_type, handle);
 
 		GLint gl_internal_format;
 		GLenum gl_pixel_format;
-		to_opengl_textureformat(image.get_format(), gl_internal_format, gl_pixel_format);
+		to_opengl_textureformat(image->format(), gl_internal_format, gl_pixel_format);
 
 
 	/*
@@ -651,7 +646,7 @@ namespace uicore
 	*/
 
 		// check out if the original texture needs or doesn't need an alpha channel
-		bool needs_alpha = image.has_transparency();
+		bool needs_alpha = image->has_transparency();
 
 		GLenum format;
 		GLenum type;
@@ -660,8 +655,8 @@ namespace uicore
 		// also check for the pitch (GL1 can only skip pixels, not bytes)
 		if (!conv_needed)
 		{
-			const int bytesPerPixel = image.get_bytes_per_pixel();
-			if (image.get_pitch() % bytesPerPixel != 0)
+			const int bytesPerPixel = image->bytes_per_pixel();
+			if (image->pitch() % bytesPerPixel != 0)
 				conv_needed = true;
 		}
 
@@ -672,15 +667,15 @@ namespace uicore
 
 			// change alignment
 			glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-			const int bytesPerPixel = image.get_bytes_per_pixel();
+			const int bytesPerPixel = image->bytes_per_pixel();
 	#ifndef __ANDROID__
-			glPixelStorei(GL_UNPACK_ROW_LENGTH, image.get_pitch() / bytesPerPixel);
+			glPixelStorei(GL_UNPACK_ROW_LENGTH, image->pitch() / bytesPerPixel);
 			glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
 			glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
 	#endif
-			char *data = (char *) image.get_data();
-			int image_width = image.get_width();
-			int image_height = image.get_height();
+			char *data = image->data<char>();
+			int image_width = image->width();
+			int image_height = image->height();
 	/*
 			int image_width = 1;
 			int image_height = 1;
@@ -701,11 +696,9 @@ namespace uicore
 		// conversion needed
 		else
 		{
-			PixelBuffer buffer(
-				image.get_width(), image.get_height(),
-				needs_alpha ? tf_rgba8 : tf_rgb8);
+			auto buffer = PixelBuffer::create(image->width(), image->height(), needs_alpha ? tf_rgba8 : tf_rgb8);
 	
-			buffer.set_image(image);
+			buffer->set_image(image);
 
 			format = needs_alpha ? GL_RGBA : GL_RGB;
 
@@ -713,9 +706,9 @@ namespace uicore
 
 			// change alignment
 			glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-			const int bytesPerPixel = buffer.get_bytes_per_pixel();
+			const int bytesPerPixel = buffer->bytes_per_pixel();
 	#ifndef __ANDROID__
-			glPixelStorei(GL_UNPACK_ROW_LENGTH, buffer.get_pitch() / bytesPerPixel);
+			glPixelStorei(GL_UNPACK_ROW_LENGTH, buffer->pitch() / bytesPerPixel);
 			glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
 			glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
 	#endif
@@ -724,12 +717,12 @@ namespace uicore
 				target,                   // target
 				level,                    // level
 				gl_internal_format,           // internalformat
-				image.get_width(),        // width
-				image.get_height(),       // height
+				image->width(),        // width
+				image->height(),       // height
 				0,                        // border
 				format,                   // format
 				GL_UNSIGNED_BYTE,         // type
-				buffer.get_data());       // texels
+				buffer->data());       // texels
 
 			/*
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -740,21 +733,17 @@ namespace uicore
 		}
 	}
 
-	void GL1TextureProvider::set_texture_image3d(
-		GLuint target,
-		PixelBuffer &image,
-		int image_depth,
-		int level)
+	void GL1TextureProvider::set_texture_image3d(GLuint target, const PixelBufferPtr &image, int image_depth, int level)
 	{
 		throw_if_disposed();
 		GL1TextureStateTracker state_tracker(texture_type, handle);
 
 		GLint gl_internal_format;
 		GLenum gl_pixel_format;
-		to_opengl_textureformat(image.get_format(), gl_internal_format, gl_pixel_format);
+		to_opengl_textureformat(image->format(), gl_internal_format, gl_pixel_format);
 
 		// check out if the original texture needs or doesn't need an alpha channel
-		bool needs_alpha = image.has_transparency();
+		bool needs_alpha = image->has_transparency();
 
 		GLenum format;
 		GLenum type;
@@ -763,8 +752,8 @@ namespace uicore
 		// also check for the pitch (GL1 can only skip pixels, not bytes)
 		if (!conv_needed)
 		{
-			const int bytesPerPixel = image.get_bytes_per_pixel();
-			if (image.get_pitch() % bytesPerPixel != 0)
+			const int bytesPerPixel = image->bytes_per_pixel();
+			if (image->pitch() % bytesPerPixel != 0)
 				conv_needed = true;
 		}
 
@@ -775,16 +764,16 @@ namespace uicore
 
 			// change alignment
 			glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-			const int bytesPerPixel = image.get_bytes_per_pixel();
+			const int bytesPerPixel = image->bytes_per_pixel();
 	#ifndef __ANDROID__
-			glPixelStorei(GL_UNPACK_ROW_LENGTH, image.get_pitch() / bytesPerPixel);
+			glPixelStorei(GL_UNPACK_ROW_LENGTH, image->pitch() / bytesPerPixel);
 			glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
 			glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
 	#endif
 
-			char *data = (char *) image.get_data();
-			int image_width = image.get_width();
-			int image_height = image.get_height() / image_depth;
+			char *data = image->data<char>();
+			int image_width = image->width();
+			int image_height = image->height() / image_depth;
 
 			glTexImage3D(
 				target,                   // target
@@ -801,11 +790,9 @@ namespace uicore
 		// conversion needed
 		else
 		{
-			PixelBuffer buffer(
-				image.get_width(), image.get_height(),
-				needs_alpha ? tf_rgba8 : tf_rgb8);
+			auto buffer = PixelBuffer::create(image->width(), image->height(), needs_alpha ? tf_rgba8 : tf_rgb8);
 	
-			buffer.set_image(image);
+			buffer->set_image(image);
 
 			format = needs_alpha ? GL_RGBA : GL_RGB;
 
@@ -813,14 +800,14 @@ namespace uicore
 
 			// change alignment
 			glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-			const int bytesPerPixel = buffer.get_bytes_per_pixel();
+			const int bytesPerPixel = buffer->bytes_per_pixel();
 	#ifndef __ANDROID__
-			glPixelStorei(GL_UNPACK_ROW_LENGTH, buffer.get_pitch() / bytesPerPixel);
+			glPixelStorei(GL_UNPACK_ROW_LENGTH, buffer->pitch() / bytesPerPixel);
 			glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
 			glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
 	#endif
-			int image_width = image.get_width();
-			int image_height = image.get_height() / image_depth;
+			int image_width = image->width();
+			int image_height = image->height() / image_depth;
 
 			// upload
 			glTexImage3D(
@@ -833,7 +820,7 @@ namespace uicore
 				0,                        // border
 				format,                   // format
 				GL_UNSIGNED_BYTE,         // type
-				buffer.get_data());       // texels
+				buffer->data());       // texels
 
 		}
 	}
@@ -1319,8 +1306,8 @@ namespace uicore
 		return valid;
 	}
 
-	bool GL1TextureProvider::to_opengl_pixelformat(const PixelBuffer &pbuffer, GLenum &format, GLenum &type)
+	bool GL1TextureProvider::to_opengl_pixelformat(const PixelBufferPtr &pbuffer, GLenum &format, GLenum &type)
 	{
-		return to_opengl_pixelformat(pbuffer.get_format(), format, type);
+		return to_opengl_pixelformat(pbuffer->format(), format, type);
 	}
 }

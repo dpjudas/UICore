@@ -35,31 +35,22 @@
 
 namespace uicore
 {
-	D3DPixelBufferProvider::D3DPixelBufferProvider(const ComPtr<ID3D11Device> &device)
-		: map_gc_provider(0)
-
+	D3DPixelBufferProvider::D3DPixelBufferProvider(const ComPtr<ID3D11Device> &device, const void *data, const Size &new_size, PixelBufferDirection direction, TextureFormat format, BufferUsage usage)
 	{
 		handles.push_back(std::shared_ptr<DeviceHandles>(new DeviceHandles(device)));
 		map_data.pData = 0;
 		map_data.RowPitch = 0;
 		map_data.DepthPitch = 0;
-	}
 
-	D3DPixelBufferProvider::~D3DPixelBufferProvider()
-	{
-	}
-
-	void D3DPixelBufferProvider::create(const void *data, const Size &new_size, PixelBufferDirection direction, TextureFormat format, BufferUsage usage)
-	{
 		data_locked = false;
 		texture_format = format;
-		size = new_size;
+		_size = new_size;
 		handles.resize(1);
 		handles.front()->texture.clear();
 
 		D3D11_TEXTURE2D_DESC texture_desc;
-		texture_desc.Width = size.width;
-		texture_desc.Height = size.height;
+		texture_desc.Width = _size.width;
+		texture_desc.Height = _size.height;
 		texture_desc.MipLevels = 1;
 		texture_desc.ArraySize = 1;
 		texture_desc.Format = D3DTextureProvider::to_d3d_format(format);
@@ -82,7 +73,19 @@ namespace uicore
 		D3DTarget::throw_if_failed("ID3D11Device.CreateTexture2D failed", result);
 	}
 
-	void *D3DPixelBufferProvider::get_data()
+	D3DPixelBufferProvider::~D3DPixelBufferProvider()
+	{
+	}
+
+	void *D3DPixelBufferProvider::data()
+	{
+		if (!data_locked)
+			throw Exception("lock() not called before get_data()");
+
+		return map_data.pData;
+	}
+
+	const void *D3DPixelBufferProvider::data() const
 	{
 		if (!data_locked)
 			throw Exception("lock() not called before get_data()");
@@ -98,14 +101,13 @@ namespace uicore
 			return handles.front()->texture;
 	}
 
-	int D3DPixelBufferProvider::get_pitch() const
+	int D3DPixelBufferProvider::pitch() const
 	{
 		if (!data_locked)
 			throw Exception("lock() not called before get_pitch()");
 
 		return map_data.RowPitch;
 	}
-
 
 	void D3DPixelBufferProvider::lock(GraphicContext &gc, BufferAccess access)
 	{

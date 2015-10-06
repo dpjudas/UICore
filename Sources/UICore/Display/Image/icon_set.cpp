@@ -38,10 +38,10 @@ namespace uicore
 	class IconSet_Impl
 	{
 	public:
-		std::vector<PixelBuffer> images;
+		std::vector<PixelBufferPtr> images;
 
-		static DataBufferPtr create_ico_helper(const std::vector<PixelBuffer> &images, int type, const std::vector<Point> &hotspots);
-		static PixelBuffer create_bitmap_data(const PixelBuffer &image);
+		static DataBufferPtr create_ico_helper(const std::vector<PixelBufferPtr> &images, int type, const std::vector<Point> &hotspots);
+		static PixelBufferPtr create_bitmap_data(const PixelBufferPtr &image);
 
 		struct IconHeader
 		{
@@ -104,12 +104,12 @@ namespace uicore
 	{
 	}
 
-	std::vector<PixelBuffer> IconSet::get_images() const
+	std::vector<PixelBufferPtr> IconSet::get_images() const
 	{
 		return impl->images;
 	}
 
-	void IconSet::add_image(const PixelBuffer &image)
+	void IconSet::add_image(const PixelBufferPtr &image)
 	{
 		impl->images.push_back(image);
 	}
@@ -119,7 +119,7 @@ namespace uicore
 		return impl->create_ico_helper(impl->images, 1, std::vector<Point>());
 	}
 
-	DataBufferPtr IconSet_Impl::create_ico_helper(const std::vector<PixelBuffer> &images, int type, const std::vector<Point> &hotspots)
+	DataBufferPtr IconSet_Impl::create_ico_helper(const std::vector<PixelBufferPtr> &images, int type, const std::vector<Point> &hotspots)
 	{
 		auto buf = DataBuffer::create(0);
 		buf->set_capacity(32 * 1024);
@@ -131,7 +131,7 @@ namespace uicore
 		header.idCount = images.size();
 		device->write(&header, sizeof(IconHeader));
 
-		std::vector<PixelBuffer> bmp_images;
+		std::vector<PixelBufferPtr> bmp_images;
 		for (auto & image : images)
 			bmp_images.push_back(create_bitmap_data(image));
 
@@ -140,12 +140,12 @@ namespace uicore
 		{
 			IconDirectoryEntry entry;
 			memset(&entry, 0, sizeof(IconDirectoryEntry));
-			entry.bWidth = bmp_images[i].get_width();
-			entry.bHeight = bmp_images[i].get_height();
+			entry.bWidth = bmp_images[i]->width();
+			entry.bHeight = bmp_images[i]->height();
 			entry.bColorCount = 0;
 			entry.wPlanes = 1;
 			entry.wBitCount = 32;
-			entry.dwBytesInRes = size_bitmap_info + bmp_images[i].get_pitch() * bmp_images[i].get_height();
+			entry.dwBytesInRes = size_bitmap_info + bmp_images[i]->pitch() * bmp_images[i]->height();
 			entry.dwImageOffset = image_offset;
 			if (type == 2)
 			{
@@ -161,32 +161,32 @@ namespace uicore
 			IconBitmapInfoHeader bmp_header;
 			memset(&bmp_header, 0, sizeof(IconBitmapInfoHeader));
 			bmp_header.biSize = size_bitmap_info;
-			bmp_header.biWidth = bmp_image.get_width();
-			bmp_header.biHeight = bmp_image.get_height() * 2; // why on earth do I have to multiply this by two??
+			bmp_header.biWidth = bmp_image->width();
+			bmp_header.biHeight = bmp_image->height() * 2; // why on earth do I have to multiply this by two??
 			bmp_header.biPlanes = 1;
 			bmp_header.biBitCount = 32;
 			bmp_header.biCompression = bi_rgb;
 			device->write(&bmp_header, size_bitmap_info);
-			device->write(bmp_image.get_data(), bmp_image.get_pitch() * bmp_image.get_height());
+			device->write(bmp_image->data(), bmp_image->pitch() * bmp_image->height());
 		}
 
 		return device->buffer();
 	}
 
-	PixelBuffer IconSet_Impl::create_bitmap_data(const PixelBuffer &image)
+	PixelBufferPtr IconSet_Impl::create_bitmap_data(const PixelBufferPtr &image)
 	{
 		// Convert pixel buffer to DIB compatible format:
 
-		PixelBuffer bmp_image = image.to_format(tf_bgra8);
+		PixelBufferPtr bmp_image = image->to_format(tf_bgra8);
 
 		// Note that the APIs use pre-multiplied alpha, which means that the red,
 		// green and blue channel values in the bitmap must be pre-multiplied with
 		// the alpha channel value. For example, if the alpha channel value is x,
 		// the red, green and blue channels must be multiplied by x and divided by
 		// 0xff prior to the call.
-		int w = bmp_image.get_width();
-		int h = bmp_image.get_height();
-		unsigned int *p = (unsigned int *)bmp_image.get_data();
+		int w = bmp_image->width();
+		int h = bmp_image->height();
+		unsigned int *p = (unsigned int *)bmp_image->data();
 		for (int y = 0; y < h; y++)
 		{
 			int index = y * w;

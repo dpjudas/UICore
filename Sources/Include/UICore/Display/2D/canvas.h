@@ -119,10 +119,10 @@ namespace uicore
 		Rectf get_cliprect() const;
 
 		/// \brief Return the content of the read buffer into a pixel buffer.
-		PixelBuffer get_pixeldata(const Rect& rect, TextureFormat texture_format = tf_rgba8, bool clamp = true);
+		PixelBufferPtr get_pixeldata(const Rect& rect, TextureFormat texture_format = tf_rgba8, bool clamp = true);
 
 		/// \brief Return the content of the read buffer into a pixel buffer.
-		PixelBuffer get_pixeldata(TextureFormat texture_format = tf_rgba8, bool clamp = true);
+		PixelBufferPtr get_pixeldata(TextureFormat texture_format = tf_rgba8, bool clamp = true);
 
 		/// Retrieves the display pixel ratio of the context.
 		/// \seealso Resolution Independence

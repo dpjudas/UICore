@@ -35,19 +35,11 @@
 
 namespace uicore
 {
-	GL3PixelBufferProvider::GL3PixelBufferProvider()
-	{
-	}
-
-	GL3PixelBufferProvider::~GL3PixelBufferProvider()
-	{
-	}
-
-	void GL3PixelBufferProvider::create(const void *data, const Size &new_size, PixelBufferDirection direction, TextureFormat new_format, BufferUsage usage)
+	GL3PixelBufferProvider::GL3PixelBufferProvider(const void *data, const Size &new_size, PixelBufferDirection direction, TextureFormat new_format, BufferUsage usage)
 	{
 		data_locked = false;
 		texture_format = new_format;
-		size = new_size;
+		_size = new_size;
 		if (direction == data_from_gpu)
 		{
 			selected_binding = GL_PIXEL_PACK_BUFFER_BINDING;
@@ -59,21 +51,25 @@ namespace uicore
 			selected_target = GL_PIXEL_UNPACK_BUFFER;
 		}
 
-		int total_size = PixelBuffer::get_bytes_per_pixel(new_format);
-		bytes_per_pixel = total_size;
-		pitch = bytes_per_pixel * size.width;
-		total_size = pitch * size.height;
+		int total_size = bytes_per_pixel(new_format);
+		_bytes_per_pixel = total_size;
+		_pitch = _bytes_per_pixel * _size.width;
+		total_size = _pitch * _size.height;
 
 		buffer.create(data, total_size, usage, selected_binding, selected_target);
+	}
+
+	GL3PixelBufferProvider::~GL3PixelBufferProvider()
+	{
 	}
 
 	void GL3PixelBufferProvider::upload_data(GraphicContext &gc, const Rect &dest_rect, const void *data)
 	{
 		// Handle the simple base
-		if ((dest_rect.left == 0) && (dest_rect.get_width() == size.width))
+		if (dest_rect.left == 0 && dest_rect.get_width() == _size.width)
 		{
-			int offset = dest_rect.top * pitch;
-			int total_size = dest_rect.get_height() * pitch;
+			int offset = dest_rect.top * _pitch;
+			int total_size = dest_rect.get_height() * _pitch;
 			buffer.upload_data(gc, offset, data, total_size);
 		}
 		else
@@ -83,7 +79,15 @@ namespace uicore
 		}
 	}
 
-	void *GL3PixelBufferProvider::get_data()
+	void *GL3PixelBufferProvider::data()
+	{
+		if (!data_locked)
+			throw Exception("lock() not called before get_data()");
+
+		return buffer.get_data();
+	}
+
+	const void *GL3PixelBufferProvider::data() const
 	{
 		if (!data_locked)
 			throw Exception("lock() not called before get_data()");

@@ -30,7 +30,7 @@
 #pragma once
 
 
-#include "UICore/Display/TargetProviders/pixel_buffer_provider.h"
+#include "UICore/Display/Render/transfer_texture.h"
 #include "UICore/GL/opengl.h"
 #include "UICore/Core/System/disposable_object.h"
 #include "gl3_buffer_object_provider.h"
@@ -39,20 +39,24 @@ namespace uicore
 {
 	class GL3GraphicContextProvider;
 
-	class GL3PixelBufferProvider : public PixelBufferProvider
+	class GL3PixelBufferProvider : public TransferTexture
 	{
 	public:
-		GL3PixelBufferProvider();
+		GL3PixelBufferProvider(const void *data, const Size &new_size, PixelBufferDirection direction, TextureFormat new_format, BufferUsage usage);
 		~GL3PixelBufferProvider();
-		void create(const void *data, const Size &new_size, PixelBufferDirection direction, TextureFormat new_format, BufferUsage usage) override;
 
-		void *get_data() override;
-		int get_pitch() const override { return pitch; }
-		Size get_size() const override { return size; }
+		void *data() override;
+		const void *data() const override;
+		int pitch() const override { return _pitch; }
+		int width() const override { return _size.width; }
+		int height() const override { return _size.height; }
 
 		bool is_gpu() const override { return true; }
 
-		TextureFormat get_format() const override { return texture_format; };
+		TextureFormat format() const override { return texture_format; };
+
+		float pixel_ratio() const override { return _pixel_ratio; }
+		void set_pixel_ratio(float ratio) override { _pixel_ratio = ratio; }
 
 		GLuint get_handle() const { return buffer.get_handle(); }
 		GLenum get_binding() const { return buffer.get_binding(); }
@@ -64,12 +68,13 @@ namespace uicore
 
 	private:
 		GL3BufferObjectProvider buffer;
-		Size size;
+		Size _size;
 		TextureFormat texture_format;
-		int pitch;
-		int bytes_per_pixel;
+		int _pitch;
+		int _bytes_per_pixel;
 		GLenum selected_binding;
 		GLenum selected_target;
 		bool data_locked;	// lock() has been called
+		float _pixel_ratio = 0.0f;
 	};
 }

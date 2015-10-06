@@ -32,7 +32,7 @@
 
 namespace uicore
 {
-	class PixelBuffer;
+	class IODevice;
 
 	/// \brief Provider type
 	class ImageFileType
@@ -45,11 +45,11 @@ namespace uicore
 		virtual ~ImageFileType();
 
 		/// \brief Called to load an image with this provider type.
-		virtual PixelBuffer load(const std::string &filename, bool srgb) = 0;
-		virtual PixelBuffer load(IODevice &file, bool srgb) = 0;
+		virtual PixelBufferPtr load(const std::string &filename, bool srgb) = 0;
+		virtual PixelBufferPtr load(IODevice &file, bool srgb) = 0;
 
 		/// \brief Called to save a given PixelBuffer to a file
-		virtual void save(PixelBuffer buffer, const std::string &filename) = 0;
-		virtual void save(PixelBuffer buffer, IODevice &file) = 0;
+		virtual void save(PixelBufferPtr buffer, const std::string &filename) = 0;
+		virtual void save(PixelBufferPtr buffer, IODevice &file) = 0;
 	};
 }

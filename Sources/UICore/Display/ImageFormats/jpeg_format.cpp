@@ -40,38 +40,38 @@
 
 namespace uicore
 {
-	PixelBuffer JPEGFormat::load(const std::string &filename, bool srgb)
+	PixelBufferPtr JPEGFormat::load(const std::string &filename, bool srgb)
 	{
 		auto file = File::open_existing(filename);
 		return JPEGLoader::load(*file, srgb);
 	}
 
-	PixelBuffer JPEGFormat::load(IODevice &file, bool srgb)
+	PixelBufferPtr JPEGFormat::load(IODevice &file, bool srgb)
 	{
 		return JPEGLoader::load(file, srgb);
 	}
 
-	void JPEGFormat::save(PixelBuffer buffer, const std::string &filename, int quality)
+	void JPEGFormat::save(PixelBufferPtr buffer, const std::string &filename, int quality)
 	{
 		auto file = File::create_always(filename);
 		return JPEGFormat::save(buffer, *file, quality);
 	}
 
-	void JPEGFormat::save(PixelBuffer buffer, IODevice &file, int quality)
+	void JPEGFormat::save(PixelBufferPtr buffer, IODevice &file, int quality)
 	{
-		if (buffer.get_format() != tf_rgb8)
+		if (buffer->format() != tf_rgb8)
 		{
-			PixelBuffer newbuf(buffer.get_width(), buffer.get_height(), tf_rgb8);
-			newbuf.set_image(buffer);
+			auto newbuf = PixelBuffer::create(buffer->width(), buffer->height(), tf_rgb8);
+			newbuf->set_image(buffer);
 			buffer = newbuf;
 		}
 
-		auto output = DataBuffer::create(buffer.get_width() * buffer.get_height() * 5);
+		auto output = DataBuffer::create(buffer->width() * buffer->height() * 5);
 		int size = output->size();
 
 		uicore_jpge::params desc;
 		desc.m_quality = quality;
-		bool result = uicore_jpge::compress_image_to_jpeg_file_in_memory(output->data(), size, buffer.get_width(), buffer.get_height(), 3, output->data<uicore_jpge::uint8>(), desc);
+		bool result = uicore_jpge::compress_image_to_jpeg_file_in_memory(output->data(), size, buffer->width(), buffer->height(), 3, output->data<uicore_jpge::uint8>(), desc);
 		if (!result)
 			throw Exception("Unable to compress JPEG image");
 

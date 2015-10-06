@@ -37,6 +37,6 @@ namespace uicore
 	{
 	public:
 		/// \brief Add a border around a pixelbuffer, duplicating the edge pixels
-		static PixelBuffer add_border(const PixelBuffer &pb, int border_size, const Rect &rect);
+		static PixelBufferPtr add_border(const PixelBufferPtr &pb, int border_size, const Rect &rect);
 	};
 }

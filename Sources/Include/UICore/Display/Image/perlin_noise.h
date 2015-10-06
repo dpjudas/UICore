@@ -54,7 +54,7 @@ namespace uicore
 		/// \param end_x = End x position of the noise
 		/// \param start_y = Start y position of the noise
 		/// \param end_y = End y position of the noise
-		PixelBuffer create_noise1d(float start_x, float end_x);
+		PixelBufferPtr create_noise1d(float start_x, float end_x);
 
 		/// \brief Create the perlin noise
 		///
@@ -64,7 +64,7 @@ namespace uicore
 		/// \param end_x = End x position of the noise
 		/// \param start_y = Start y position of the noise
 		/// \param end_y = End y position of the noise
-		PixelBuffer create_noise2d(float start_x, float end_x, float start_y, float end_y);
+		PixelBufferPtr create_noise2d(float start_x, float end_x, float start_y, float end_y);
 
 		/// \brief Create the perlin noise
 		///
@@ -75,7 +75,7 @@ namespace uicore
 		/// \param start_y = Start y position of the noise
 		/// \param end_y = End y position of the noise
 		/// \param z_position = The z position of the noise
-		PixelBuffer create_noise3d(float start_x, float end_x, float start_y, float end_y, float z_position);
+		PixelBufferPtr create_noise3d(float start_x, float end_x, float start_y, float end_y, float z_position);
 
 		/// \brief Create the perlin noise
 		///
@@ -87,7 +87,7 @@ namespace uicore
 		/// \param end_y = End y position of the noise
 		/// \param z_position = The z position of the noise
 		/// \param w_position = The w position of the noise
-		PixelBuffer create_noise4d(float start_x, float end_x, float start_y, float end_y, float z_position, float w_position);
+		PixelBufferPtr create_noise4d(float start_x, float end_x, float start_y, float end_y, float z_position, float w_position);
 
 		/// \brief Get the size of the output pixelbuffer
 		Size get_size() const;

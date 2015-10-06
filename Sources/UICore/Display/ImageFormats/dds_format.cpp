@@ -288,11 +288,11 @@ namespace uicore
 		int bytes_per_block = 0;
 		if (PixelBuffer::is_compressed(original_format))
 		{
-			bytes_per_block = PixelBuffer::get_bytes_per_block(original_format);
+			bytes_per_block = PixelBuffer::bytes_per_block(original_format);
 		}
 		else
 		{
-			bytes_per_pixel = PixelBuffer::get_bytes_per_pixel(original_format);
+			bytes_per_pixel = PixelBuffer::bytes_per_pixel(original_format);
 		}
 
 		for (int slice = 0; slice < texture_slices; slice++)
@@ -302,21 +302,21 @@ namespace uicore
 				int mip_width = max(texture_width >> level, 1);
 				int mip_height = max(texture_height >> level, 1);
 
-				PixelBuffer buffer(mip_width, mip_height, original_format);
+				auto buffer = PixelBuffer::create(mip_width, mip_height, original_format);
 
 				if (bytes_per_block)
 				{
 					int blocks_width = (mip_width + 3) / 4;
 					int blocks_height = (mip_height + 3) / 4;
-					file.read(buffer.get_data(), bytes_per_block * blocks_width * blocks_height);
+					file.read(buffer->data(), bytes_per_block * blocks_width * blocks_height);
 				}
 				else
 				{
-					file.read(buffer.get_data(), bytes_per_pixel * mip_width * mip_height);
+					file.read(buffer->data(), bytes_per_pixel * mip_width * mip_height);
 				}
 
 				if (texture_format != original_format)
-					buffer = buffer.to_format(texture_format);
+					buffer = buffer->to_format(texture_format);
 
 				set.set_image(slice, level, buffer);
 			}

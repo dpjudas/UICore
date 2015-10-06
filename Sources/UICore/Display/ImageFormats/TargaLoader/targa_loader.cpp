@@ -32,7 +32,7 @@
 
 namespace uicore
 {
-	PixelBuffer TargaLoader::load(IODevice &iodevice, bool srgb)
+	PixelBufferPtr TargaLoader::load(IODevice &iodevice, bool srgb)
 	{
 		TargaLoader loader(iodevice, srgb);
 		return loader.image;
@@ -195,7 +195,7 @@ namespace uicore
 
 	void TargaLoader::decode_image()
 	{
-		image = PixelBuffer(image_width, image_height, srgb ? tf_srgb8_alpha8 : tf_rgba8);
+		image = PixelBuffer::create(image_width, image_height, srgb ? tf_srgb8_alpha8 : tf_rgba8);
 
 		// single color-map index for Pseudo-Color
 		// Attribute, Red, Green and Blue ordered data for True-Color

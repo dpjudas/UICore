@@ -68,7 +68,7 @@ namespace uicore
 		return provider->get_texture_2d(static_cast<const D3DGraphicContextProvider *>(gc.get_provider())->get_window()->get_device());
 	}
 
-	ID3D11Texture2D *D3DTarget::get_texture2d_handle(const GraphicContext &gc, const PixelBuffer &pixel_buffer)
+	ID3D11Texture2D *D3DTarget::get_texture2d_handle(const GraphicContext &gc, const PixelBufferPtr &pixel_buffer)
 	{
 		//D3DPixelBufferProvider *provider = static_cast<D3DPixelBufferProvider *>(pixel_buffer.get_provider());
 		//return provider->get_texture_2d();

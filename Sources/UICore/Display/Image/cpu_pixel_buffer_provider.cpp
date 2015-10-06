@@ -29,34 +29,24 @@
 
 #include "UICore/precomp.h"
 #include "cpu_pixel_buffer_provider.h"
-#include "pixel_buffer_impl.h"
 #include "UICore/Core/System/system.h"
 
 namespace uicore
 {
-	CPUPixelBufferProvider::CPUPixelBufferProvider() : delete_data(false), data(nullptr)
+	CPUPixelBufferProvider::CPUPixelBufferProvider(TextureFormat new_format, const Size &size, const void *data_ptr, bool only_reference_data)
 	{
-	}
-
-	CPUPixelBufferProvider::~CPUPixelBufferProvider()
-	{
-		if (delete_data)
-			System::aligned_free(data);
-	}
-
-	void CPUPixelBufferProvider::create(TextureFormat new_format, const Size &new_size, const void *data_ptr, bool only_reference_data)
-	{
-		size = new_size;
+		_width = size.width;
+		_height = size.height;
 		texture_format = new_format;
 
-		unsigned int data_size = PixelBuffer::get_data_size(size, new_format);
+		unsigned int alloc_size = data_size(size, new_format);
 
 		if (only_reference_data)
 		{
 			if (!data_ptr)
 				throw Exception("PixelBuffer only_reference_data set without data");
 
-			data = (unsigned char *)data_ptr;
+			_data = (unsigned char *)data_ptr;
 			delete_data = false;
 		}
 		else
@@ -64,30 +54,30 @@ namespace uicore
 			if (data_ptr)
 			{
 				delete_data = true;
-				data = (unsigned char *)System::aligned_alloc(data_size, 16);
-				memcpy(data, data_ptr, data_size);
+				_data = (unsigned char *)System::aligned_alloc(alloc_size, 16);
+				memcpy(_data, data_ptr, alloc_size);
 			}
 			else
 			{
 				delete_data = true;
-				data = (unsigned char *)System::aligned_alloc(data_size, 16);
+				_data = (unsigned char *)System::aligned_alloc(alloc_size, 16);
 			}
 		}
 	}
 
-	void CPUPixelBufferProvider::create(const void *data, const Size &new_size, PixelBufferDirection direction, TextureFormat new_format, BufferUsage usage)
+	CPUPixelBufferProvider::~CPUPixelBufferProvider()
 	{
-		// GPU only, this is never called
-		throw Exception("Never call me");
+		if (delete_data)
+			System::aligned_free(_data);
 	}
 
 	void CPUPixelBufferProvider::upload_data(GraphicContext &gc, const Rect &dest_rect, const void *data)
 	{
 		// Handle the simple base
-		if ((dest_rect.left == 0) && (dest_rect.get_width() == size.width))
+		if (dest_rect.left == 0 && dest_rect.get_width() == _width)
 		{
-			unsigned int data_size = PixelBuffer::get_data_size(Size(size.width, dest_rect.get_height()), texture_format);
-			memcpy(this->data, data, data_size);
+			unsigned int data_size = PixelBuffer::data_size(Size(_width, dest_rect.get_height()), texture_format);
+			memcpy(_data, data, data_size);
 		}
 		else
 		{

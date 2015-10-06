@@ -74,14 +74,14 @@ namespace uicore
 		/// \param context Graphic context to use for the request
 		/// \param image Image to upload.
 		/// \param level Mipmap level-of-detail number.
-		virtual void set_image(GraphicContext &context, const PixelBuffer &image, int depth, int level = 0) = 0;
+		virtual void set_image(GraphicContext &context, const PixelBufferPtr &image, int depth, int level = 0) = 0;
 
 		/// \brief Upload image to sub texture.
 		///
 		/// \param context Graphic context to use for the request
 		/// \param image Image to upload.
 		/// \param level Mipmap level-of-detail number.
-		virtual void set_subimage(GraphicContext &context, int x, int y, int z, const PixelBuffer &image, const Rect &src_rect, int level = 0) = 0;
+		virtual void set_subimage(GraphicContext &context, int x, int y, int z, const PixelBufferPtr &image, const Rect &src_rect, int level = 0) = 0;
 
 		/// \brief Set the texture wrapping mode.
 		virtual void set_wrap_mode(TextureWrapMode wrap_s, TextureWrapMode wrap_t, TextureWrapMode wrap_r) = 0;

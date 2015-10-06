@@ -502,9 +502,9 @@ namespace uicore
 					glReadBuffer(GL_FRONT);
 				}
 
-				PixelBuffer pixelbuffer(width, height, tf_bgra8);
+				auto pixelbuffer = PixelBuffer::create(width, height, tf_bgra8);
 				glPixelStorei(GL_PACK_ALIGNMENT, 1);
-				glPixelStorei(GL_PACK_ROW_LENGTH, pixelbuffer.get_pitch() / pixelbuffer.get_bytes_per_pixel());
+				glPixelStorei(GL_PACK_ROW_LENGTH, pixelbuffer->pitch() / pixelbuffer->bytes_per_pixel());
 				glPixelStorei(GL_PACK_SKIP_PIXELS, 0);
 				glPixelStorei(GL_PACK_SKIP_ROWS, 0);
 				glReadPixels(
@@ -512,7 +512,7 @@ namespace uicore
 					width, height,
 					GL_BGRA,
 					GL_UNSIGNED_BYTE,
-					pixelbuffer.get_data());
+					pixelbuffer->data());
 
 				win32_window.update_layered(pixelbuffer);
 			}
@@ -541,9 +541,9 @@ namespace uicore
 				glRasterPos2i(0, 0);
 				glPixelZoom(1.0f, 1.0f);
 
-				PixelBuffer pixelbuffer(width, height, tf_rgba8);
+				auto pixelbuffer = PixelBuffer::create(width, height, tf_rgba8);
 				glPixelStorei(GL_PACK_ALIGNMENT, 1);
-				glPixelStorei(GL_PACK_ROW_LENGTH, pixelbuffer.get_pitch() / pixelbuffer.get_bytes_per_pixel());
+				glPixelStorei(GL_PACK_ROW_LENGTH, pixelbuffer->pitch() / pixelbuffer->bytes_per_pixel());
 				glPixelStorei(GL_PACK_SKIP_PIXELS, 0);
 				glPixelStorei(GL_PACK_SKIP_ROWS, 0);
 				glReadPixels(
@@ -551,7 +551,7 @@ namespace uicore
 					width, height,
 					GL_RGBA,
 					GL_UNSIGNED_BYTE,
-					pixelbuffer.get_data());
+					pixelbuffer->data());
 
 				win32_window.update_layered(pixelbuffer);
 
@@ -583,9 +583,9 @@ namespace uicore
 
 				glReadBuffer(GL_FRONT);
 
-				PixelBuffer pixelbuffer(width, height, tf_r8);
+				auto pixelbuffer = PixelBuffer::create(width, height, tf_r8);
 				glPixelStorei(GL_PACK_ALIGNMENT, 1);
-				glPixelStorei(GL_PACK_ROW_LENGTH, pixelbuffer.get_pitch() / pixelbuffer.get_bytes_per_pixel());
+				glPixelStorei(GL_PACK_ROW_LENGTH, pixelbuffer->pitch() / pixelbuffer->bytes_per_pixel());
 				glPixelStorei(GL_PACK_SKIP_PIXELS, 0);
 				glPixelStorei(GL_PACK_SKIP_ROWS, 0);
 				glReadPixels(
@@ -593,7 +593,7 @@ namespace uicore
 					width, height,
 					GL_ALPHA,
 					GL_BYTE, // use GL_BITMAP here for even less transfer?
-					pixelbuffer.get_data());
+					pixelbuffer->data());
 
 				win32_window.update_layered(pixelbuffer);
 			}
@@ -621,12 +621,12 @@ namespace uicore
 		win32_window.request_repaint();
 	}
 
-	void OpenGLWindowProvider::set_large_icon(const PixelBuffer &image)
+	void OpenGLWindowProvider::set_large_icon(const PixelBufferPtr &image)
 	{
 		win32_window.set_large_icon(image);
 	}
 
-	void OpenGLWindowProvider::set_small_icon(const PixelBuffer &image)
+	void OpenGLWindowProvider::set_small_icon(const PixelBufferPtr &image)
 	{
 		win32_window.set_small_icon(image);
 	}
@@ -671,12 +671,12 @@ namespace uicore
 		return share_context;
 	}
 
-	void OpenGLWindowProvider::set_clipboard_image(const PixelBuffer &buf)
+	void OpenGLWindowProvider::set_clipboard_image(const PixelBufferPtr &buf)
 	{
 		win32_window.set_clipboard_image(buf);
 	}
 
-	PixelBuffer OpenGLWindowProvider::get_clipboard_image() const
+	PixelBufferPtr OpenGLWindowProvider::get_clipboard_image() const
 	{
 		return win32_window.get_clipboard_image();
 	}

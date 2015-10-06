@@ -71,7 +71,7 @@ namespace uicore
 		/// \param canvas = Canvas
 		/// \param pixelbuffer = Pixelbuffer to get image data from
 		/// \param rect = pixelbuffer rect
-		Image(Canvas &canvas, const PixelBuffer &pixelbuffer, const Rect &rect, float pixel_ratio = 1.0f);
+		Image(Canvas &canvas, const PixelBufferPtr &pixelbuffer, const Rect &rect, float pixel_ratio = 1.0f);
 
 		/// \brief Constructs a Image
 		///
@@ -221,13 +221,7 @@ namespace uicore
 		*  \param image   Image to upload.
 		*  \param level   Mipmap level-of-detail number.
 		*/
-		void set_subimage(
-			Canvas &canvas,
-			int x,
-			int y,
-			const PixelBuffer &image,
-			const Rect &src_rect,
-			int level = 0);
+		void set_subimage(Canvas &canvas, int x, int y, const PixelBufferPtr &image, const Rect &src_rect, int level = 0);
 
 	private:
 		std::shared_ptr<Image_Impl> impl;

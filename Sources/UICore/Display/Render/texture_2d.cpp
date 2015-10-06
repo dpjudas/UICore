@@ -51,30 +51,30 @@ namespace uicore
 
 	std::shared_ptr<Texture2D> Texture2D::create(GraphicContext &context, const std::string &filename, const ImageImportDescription &import_desc)
 	{
-		PixelBuffer pb = ImageFile::load(filename, std::string());
+		PixelBufferPtr pb = ImageFile::load(filename, std::string());
 		pb = import_desc.process(pb);
 
-		auto texture = create(context, pb.get_width(), pb.get_height(), import_desc.is_srgb() ? tf_srgb8_alpha8 : tf_rgba8);
-		texture->set_subimage(context, Point(0, 0), pb, Rect(pb.get_size()), 0);
+		auto texture = create(context, pb->width(), pb->height(), import_desc.is_srgb() ? tf_srgb8_alpha8 : tf_rgba8);
+		texture->set_subimage(context, Point(0, 0), pb, Rect(pb->size()), 0);
 		return texture;
 	}
 
 	std::shared_ptr<Texture2D> Texture2D::create(GraphicContext &context, IODevice &file, const std::string &image_type, const ImageImportDescription &import_desc)
 	{
-		PixelBuffer pb = ImageFile::load(file, image_type);
+		PixelBufferPtr pb = ImageFile::load(file, image_type);
 		pb = import_desc.process(pb);
 
-		auto texture = create(context, pb.get_width(), pb.get_height(), import_desc.is_srgb() ? tf_srgb8_alpha8 : tf_rgba8);
-		texture->set_subimage(context, Point(0, 0), pb, Rect(pb.get_size()), 0);
+		auto texture = create(context, pb->width(), pb->height(), import_desc.is_srgb() ? tf_srgb8_alpha8 : tf_rgba8);
+		texture->set_subimage(context, Point(0, 0), pb, Rect(pb->size()), 0);
 		return texture;
 	}
 
-	std::shared_ptr<Texture2D> Texture2D::create(GraphicContext &context, const PixelBuffer &image, bool is_srgb)
+	std::shared_ptr<Texture2D> Texture2D::create(GraphicContext &context, const PixelBufferPtr &image, bool is_srgb)
 	{
-		return create(context, image, image.get_size(), is_srgb);
+		return create(context, image, image->size(), is_srgb);
 	}
 
-	std::shared_ptr<Texture2D> Texture2D::create(GraphicContext &context, const PixelBuffer &image, const Rect &src_rect, bool is_srgb)
+	std::shared_ptr<Texture2D> Texture2D::create(GraphicContext &context, const PixelBufferPtr &image, const Rect &src_rect, bool is_srgb)
 	{
 		auto texture = create(context, src_rect.get_width(), src_rect.get_height(), is_srgb ? tf_srgb8_alpha8 : tf_rgba8);
 		texture->set_subimage(context, Point(0, 0), image, src_rect, 0);

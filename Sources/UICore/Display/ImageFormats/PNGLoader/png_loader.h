@@ -38,7 +38,7 @@ namespace uicore
 	class PNGLoader
 	{
 	public:
-		static PixelBuffer load(IODevice &iodevice, bool srgb);
+		static PixelBufferPtr load(IODevice &iodevice, bool srgb);
 
 	private:
 		PNGLoader(IODevice &iodevice, bool force_srgb);
@@ -93,7 +93,7 @@ namespace uicore
 		IODevice &file;
 		bool force_srgb;
 
-		PixelBuffer image;
+		PixelBufferPtr image;
 
 		DataBufferPtr ihdr; // image header, which is the first chunk in a PNG datastream.
 		DataBufferPtr plte; // palette table associated with indexed PNG images.

@@ -37,6 +37,7 @@ namespace uicore
 	class Texture;
 	typedef std::shared_ptr<Texture> TexturePtr;
 	class PixelBuffer;
+	typedef std::shared_ptr<PixelBuffer> PixelBufferPtr;
 	class VertexArrayBuffer;
 	typedef std::shared_ptr<VertexArrayBuffer> VertexArrayBufferPtr;
 	class ElementArrayBuffer;
@@ -64,7 +65,7 @@ namespace uicore
 		/// \brief Returns the Direct3D handle used by the pixel buffer object
 		///
 		/// The reference count on the COM object is not increased (AddRef is not called).
-		static ID3D11Texture2D *get_texture2d_handle(const GraphicContext &gc, const PixelBuffer &pixel_buffer);
+		static ID3D11Texture2D *get_texture2d_handle(const GraphicContext &gc, const PixelBufferPtr &pixel_buffer);
 
 		/// \brief Returns the Direct3D handle used by the render buffer object
 		///

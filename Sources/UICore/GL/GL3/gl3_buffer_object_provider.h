@@ -48,6 +48,7 @@ namespace uicore
 		void create(const void *data, int size, BufferUsage usage, GLenum new_binding, GLenum new_target);
 
 		void *get_data();
+		const void *get_data() const;
 
 		GLuint get_handle() const { return handle; }
 		GLenum get_binding() const { return binding; }

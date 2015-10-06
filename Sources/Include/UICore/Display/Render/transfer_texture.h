@@ -41,7 +41,6 @@ namespace uicore
 	class Point;
 	class PixelBuffer;
 	class PixelFormat;
-	class PixelBufferProvider;
 	class TransferTexture_Impl;
 	class SharedGCData_Impl;
 
@@ -49,14 +48,6 @@ namespace uicore
 	class TransferTexture : public PixelBuffer
 	{
 	public:
-		/// \brief Constructs a null instance.
-		TransferTexture();
-
-		/// \brief Constructs a GPU Transfer Buffer
-		///
-		/// \param provider = Font Provider
-		TransferTexture(PixelBufferProvider *provider);
-
 		/// \brief Constructs a GPU Transfer Buffer
 		///
 		/// \param gc = Graphic Context
@@ -64,18 +55,12 @@ namespace uicore
 		/// \param height = value
 		/// \param direction = prefered direction that you will use tranferring the pixel buffer data
 		/// \param sized_format = Texture Format
-		/// \param data = data to copy from (May be NULL)
+		/// \param data = data to copy from (May be nullptr)
 		/// \param usage = Buffer Usage
-		TransferTexture(GraphicContext &gc, int width, int height, PixelBufferDirection direction = data_to_gpu, TextureFormat texture_format = tf_rgba8, const void *data = nullptr, BufferUsage usage = usage_stream_draw);
-
-		/// \brief Constructs a GPU Transfer Buffer from an existing pixelbuffer
-		///
-		/// \param gc = Graphic Context
 		/// \param pbuff = The pixelbuffer to copy from
-		/// \param direction = prefered direction that you will use tranferring the pixel buffer data
-		/// \param usage = Buffer Usage
-		TransferTexture(GraphicContext &gc, const PixelBuffer &pbuff, PixelBufferDirection direction = data_to_gpu, BufferUsage usage = usage_stream_draw);
-
-		~TransferTexture();
+		static std::shared_ptr<TransferTexture> create(GraphicContext &gc, int width, int height, PixelBufferDirection direction = data_to_gpu, TextureFormat texture_format = tf_rgba8, const void *data = nullptr, BufferUsage usage = usage_stream_draw);
+		static std::shared_ptr<TransferTexture> create(GraphicContext &gc, const PixelBufferPtr &pbuff, PixelBufferDirection direction = data_to_gpu, BufferUsage usage = usage_stream_draw);
 	};
+
+	typedef std::shared_ptr<TransferTexture> TransferTexturePtr;
 }

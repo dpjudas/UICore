@@ -288,7 +288,7 @@ namespace uicore
 		return impl->provider->get_clipboard_text();
 	}
 
-	PixelBuffer DisplayWindow::get_clipboard_image() const
+	PixelBufferPtr DisplayWindow::get_clipboard_image() const
 	{
 		return impl->provider->get_clipboard_image();
 	}
@@ -483,17 +483,17 @@ namespace uicore
 		impl->provider->set_clipboard_text(text);
 	}
 
-	void DisplayWindow::set_clipboard_image(const PixelBuffer &buf)
+	void DisplayWindow::set_clipboard_image(const PixelBufferPtr &buf)
 	{
 		impl->provider->set_clipboard_image(buf);
 	}
 
-	void DisplayWindow::set_large_icon(const PixelBuffer &image)
+	void DisplayWindow::set_large_icon(const PixelBufferPtr &image)
 	{
 		impl->provider->set_large_icon(image);
 	}
 
-	void DisplayWindow::set_small_icon(const PixelBuffer &image)
+	void DisplayWindow::set_small_icon(const PixelBufferPtr &image)
 	{
 		impl->provider->set_small_icon(image);
 	}

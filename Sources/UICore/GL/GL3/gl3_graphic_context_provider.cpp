@@ -289,11 +289,6 @@ namespace uicore
 		return std::make_shared<GL3RenderBufferProvider>(width, height, texture_format, multisample_samples);
 	}
 
-	PixelBufferProvider *GL3GraphicContextProvider::alloc_pixel_buffer()
-	{
-		return new GL3PixelBufferProvider();
-	}
-
 	std::shared_ptr<RasterizerState> GL3GraphicContextProvider::create_rasterizer_state(const RasterizerStateDescription &desc)
 	{
 		auto it = rasterizer_states.find(desc);
@@ -454,6 +449,11 @@ namespace uicore
 		return std::make_shared<TextureCubeArrayImpl<GL3TextureProvider>>(GL3TextureProvider::InitData(), width, height, array_size, texture_format, levels);
 	}
 
+	std::shared_ptr<TransferTexture> GL3GraphicContextProvider::create_transfer_texture(const void *data, const Size &size, PixelBufferDirection direction, TextureFormat format, BufferUsage usage)
+	{
+		return std::make_shared<GL3PixelBufferProvider>(data, size, direction, format, usage);
+	}
+
 	void GL3GraphicContextProvider::set_rasterizer_state(RasterizerState *state)
 	{
 		if (state)
@@ -497,13 +497,13 @@ namespace uicore
 		}
 	}
 
-	PixelBuffer GL3GraphicContextProvider::get_pixeldata(const Rect& rect, TextureFormat texture_format, bool clamp) const
+	std::shared_ptr<PixelBuffer> GL3GraphicContextProvider::get_pixeldata(const Rect& rect, TextureFormat texture_format, bool clamp) const
 	{
 		TextureFormat_GL tf = OpenGL::get_textureformat(texture_format);
 		if (!tf.valid)
 			throw Exception("Unsupported texture format passed to GraphicContext::get_pixeldata");
 
-		PixelBuffer pbuf(rect.get_width(), rect.get_height(), texture_format);
+		auto pbuf = PixelBuffer::create(rect.get_width(), rect.get_height(), texture_format);
 		OpenGL::set_active(this);
 		if (!framebuffer_bound)
 		{
@@ -515,11 +515,11 @@ namespace uicore
 		Size display_size = get_display_window_size();
 
 		glPixelStorei(GL_PACK_ALIGNMENT, 1);
-		glPixelStorei(GL_PACK_ROW_LENGTH, pbuf.get_pitch() / pbuf.get_bytes_per_pixel());
+		glPixelStorei(GL_PACK_ROW_LENGTH, pbuf->pitch() / pbuf->bytes_per_pixel());
 		glPixelStorei(GL_PACK_SKIP_PIXELS, 0);
 		glPixelStorei(GL_PACK_SKIP_ROWS, 0);
-		glReadPixels(rect.left, display_size.height - rect.bottom, rect.get_width(), rect.get_height(), tf.pixel_format, tf.pixel_datatype, pbuf.get_data());
-		pbuf.flip_vertical();
+		glReadPixels(rect.left, display_size.height - rect.bottom, rect.get_width(), rect.get_height(), tf.pixel_format, tf.pixel_datatype, pbuf->data());
+		pbuf->flip_vertical();
 		return pbuf;
 	}
 

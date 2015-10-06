@@ -34,6 +34,7 @@
 namespace uicore
 {
 	class PixelBuffer;
+	typedef std::shared_ptr<PixelBuffer> PixelBufferPtr;
 	class IconSet_Impl;
 
 	/// \brief Icon set class.
@@ -44,10 +45,10 @@ namespace uicore
 		IconSet();
 
 		/// \brief Returns all the images in the icon set
-		std::vector<PixelBuffer> get_images() const;
+		std::vector<PixelBufferPtr> get_images() const;
 
 		/// \brief Adds an image to the icon set
-		void add_image(const PixelBuffer &image);
+		void add_image(const PixelBufferPtr &image);
 
 		/// \brief Generates a Windows .ICO format icon from the set
 		DataBufferPtr create_win32_icon();

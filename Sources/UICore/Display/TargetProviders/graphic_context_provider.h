@@ -58,14 +58,14 @@ namespace uicore
 	class RasterizerStateDescription;
 	class BlendStateDescription;
 	class DepthStencilStateDescription;
+	class TransferTexture;
 	enum class ShaderType;
+	enum PixelBufferDirection;
 
 	class GraphicContextProvider
 	{
 	public:
 		virtual ~GraphicContextProvider() { }
-
-		virtual PixelBufferProvider *alloc_pixel_buffer() = 0;
 
 		virtual std::shared_ptr<RasterizerState> create_rasterizer_state(const RasterizerStateDescription &desc) = 0;
 		virtual std::shared_ptr<BlendState> create_blend_state(const BlendStateDescription &desc) = 0;
@@ -94,6 +94,7 @@ namespace uicore
 		virtual std::shared_ptr<Texture3D> create_texture_3d(int width, int height, int depth, TextureFormat texture_format, int levels) = 0;
 		virtual std::shared_ptr<TextureCube> create_texture_cube(int width, int height, TextureFormat texture_format, int levels) = 0;
 		virtual std::shared_ptr<TextureCubeArray> create_texture_cube_array(int width, int height, int array_size, TextureFormat texture_format, int levels) = 0;
+		virtual std::shared_ptr<TransferTexture> create_transfer_texture(const void *data, const Size &new_size, PixelBufferDirection direction, TextureFormat new_format, BufferUsage usage) = 0;
 
 		virtual int get_max_attributes() = 0;
 		virtual Size get_max_texture_size() const = 0;
@@ -112,7 +113,7 @@ namespace uicore
 		virtual int get_minor_version() const = 0;
 		virtual bool has_compute_shader_support() const = 0;
 
-		virtual PixelBuffer get_pixeldata(const Rect& rect, TextureFormat texture_format, bool clamp) const = 0;
+		virtual std::shared_ptr<PixelBuffer> get_pixeldata(const Rect& rect, TextureFormat texture_format, bool clamp) const = 0;
 
 		virtual void set_rasterizer_state(RasterizerState *state) = 0;
 		virtual void set_blend_state(BlendState *state, const Colorf &blend_color, unsigned int sample_mask) = 0;

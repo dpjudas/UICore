@@ -196,8 +196,8 @@ namespace uicore
 			return;
 
 		mask_blocks.flush_block();
-		mask_buffer.unlock();
-		instance_buffer.unlock();
+		mask_buffer->unlock();
+		instance_buffer->unlock();
 
 		int gpu_index;
 		VertexArrayVector<Vec4i> gpu_vertices(batch_buffer->get_vertex_buffer(gc, gpu_index));
@@ -243,9 +243,9 @@ namespace uicore
 		mask_blocks.next_block = 0;
 
 		// Finished with the buffers
-		mask_buffer = TransferTexture();
+		mask_buffer.reset();
 		mask_texture.reset();
-		instance_buffer = TransferTexture();
+		instance_buffer.reset();
 		instance_texture.reset();
 	}
 
@@ -259,13 +259,13 @@ namespace uicore
 			instance_texture = batch_buffer->get_texture_rgba32f(gc);
 			instance_buffer = batch_buffer->get_transfer_rgba32f(gc);
 
-			mask_buffer.lock(gc, access_write_discard);
-			instance_buffer.lock(gc, access_write_discard);
+			mask_buffer->lock(gc, access_write_discard);
+			instance_buffer->lock(gc, access_write_discard);
 
-			instances.reset(gc, instance_buffer.get_data<Vec4f>(), instance_buffer_width * instance_buffer_height);
+			instances.reset(gc, instance_buffer->data<Vec4f>(), instance_buffer_width * instance_buffer_height);
 			vertices.reset((Vec4i *)batch_buffer->buffer, max_vertices);
 
-			mask_blocks.reset(mask_buffer.get_data_uint8(), mask_buffer.get_pitch());
+			mask_blocks.reset(mask_buffer->data_uint8(), mask_buffer->pitch());
 		}
 	}
 

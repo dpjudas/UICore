@@ -1056,7 +1056,7 @@ namespace uicore
 		return false;
 	}
 
-	void Win32Window::set_clipboard_image(const PixelBuffer &image)
+	void Win32Window::set_clipboard_image(const PixelBufferPtr &image)
 	{
 		BOOL result = OpenClipboard(hwnd);
 		if (result == FALSE)
@@ -1076,7 +1076,7 @@ namespace uicore
 	}
 
 
-	void Win32Window::add_png_to_clipboard(const PixelBuffer &image)
+	void Win32Window::add_png_to_clipboard(const PixelBufferPtr &image)
 	{
 		auto png_data_buf = DataBuffer::create(1024*8);
 		auto iodev_mem = MemoryDevice::open(png_data_buf);
@@ -1113,11 +1113,11 @@ namespace uicore
 		}
 	}
 
-	void Win32Window::add_dib_to_clipboard(const PixelBuffer &image)
+	void Win32Window::add_dib_to_clipboard(const PixelBufferPtr &image)
 	{
-		PixelBuffer bmp_image = create_bitmap_data(image, image.get_size());
+		PixelBufferPtr bmp_image = create_bitmap_data(image, image->size());
 
-		unsigned int length = sizeof(BITMAPV5HEADER) + bmp_image.get_pitch() * bmp_image.get_height();
+		unsigned int length = sizeof(BITMAPV5HEADER) + bmp_image->pitch() * bmp_image->height();
 		HANDLE handle = GlobalAlloc(GMEM_MOVEABLE, length);
 		if (handle == 0)
 		{
@@ -1136,15 +1136,15 @@ namespace uicore
 		BITMAPV5HEADER *bmp_header = (BITMAPV5HEADER*) data;
 		memset(bmp_header, 0, sizeof(BITMAPV5HEADER));
 		bmp_header->bV5Size = sizeof(BITMAPV5HEADER);
-		bmp_header->bV5Width = bmp_image.get_width();
-		bmp_header->bV5Height = bmp_image.get_height();
+		bmp_header->bV5Width = bmp_image->width();
+		bmp_header->bV5Height = bmp_image->height();
 		bmp_header->bV5Planes = 1;
 		bmp_header->bV5BitCount = 32;
 		bmp_header->bV5Compression = BI_RGB;
 		bmp_header->bV5AlphaMask = 0xff000000;
 		bmp_header->bV5CSType = LCS_WINDOWS_COLOR_SPACE;
 
-		memcpy(data + sizeof(BITMAPV5HEADER), bmp_image.get_data(), bmp_image.get_pitch() * bmp_image.get_height());
+		memcpy(data + sizeof(BITMAPV5HEADER), bmp_image->data(), bmp_image->pitch() * bmp_image->height());
 
 		GlobalUnlock(handle);
 
@@ -1158,26 +1158,26 @@ namespace uicore
 		}
 	}
 
-	PixelBuffer Win32Window::create_bitmap_data(const PixelBuffer &image, const Rect &rect)
+	PixelBufferPtr Win32Window::create_bitmap_data(const PixelBufferPtr &image, const Rect &rect)
 	{
-		if (rect.left < 0 || rect.top < 0 || rect.right > image.get_width(), rect.bottom > image.get_height())
+		if (rect.left < 0 || rect.top < 0 || rect.right > image->width(), rect.bottom > image->height())
 			throw Exception("Rectangle passed to Win32Window::create_bitmap_data() out of bounds");
 
 		// Convert pixel buffer to DIB compatible format:
 		int pitch = 4;
-		PixelBuffer bmp_image(rect.get_width(), rect.get_height(), tf_bgra8);
+		auto bmp_image = PixelBuffer::create(rect.get_width(), rect.get_height(), tf_bgra8);
 
-		bmp_image.set_subimage(image, Point(0, 0), rect);
-		bmp_image.flip_vertical(); // flip_vertical() ensures the pixels are stored upside-down as expected by the BMP format
+		bmp_image->set_subimage(image, Point(0, 0), rect);
+		bmp_image->flip_vertical(); // flip_vertical() ensures the pixels are stored upside-down as expected by the BMP format
 
 		// Note that the APIs use pre-multiplied alpha, which means that the red,
 		// green and blue channel values in the bitmap must be pre-multiplied with
 		// the alpha channel value. For example, if the alpha channel value is x,
 		// the red, green and blue channels must be multiplied by x and divided by
 		// 0xff prior to the call.
-		int w = bmp_image.get_width();
-		int h = bmp_image.get_height();
-		unsigned int *p = (unsigned int *) bmp_image.get_data();
+		int w = bmp_image->width();
+		int h = bmp_image->height();
+		unsigned int *p = (unsigned int *) bmp_image->data();
 		for (int y = 0; y < h; y++)
 		{
 			int index = y * w;
@@ -1200,24 +1200,24 @@ namespace uicore
 		return bmp_image;
 	}
 
-	HBITMAP Win32Window::create_bitmap(HDC hdc, const PixelBuffer &image)
+	HBITMAP Win32Window::create_bitmap(HDC hdc, const PixelBufferPtr &image)
 	{
-		PixelBuffer bmp_image = create_bitmap_data(image, image.get_size());
+		PixelBufferPtr bmp_image = create_bitmap_data(image, image->size());
 
 		BITMAPV5HEADER bmp_header;
 		memset(&bmp_header, 0, sizeof(BITMAPV5HEADER));
 		bmp_header.bV5Size = sizeof(BITMAPV5HEADER);
-		bmp_header.bV5Width = bmp_image.get_width();
-		bmp_header.bV5Height = bmp_image.get_height();
+		bmp_header.bV5Width = bmp_image->width();
+		bmp_header.bV5Height = bmp_image->height();
 		bmp_header.bV5Planes = 1;
 		bmp_header.bV5BitCount = 32;
 		bmp_header.bV5Compression = BI_RGB;
 
-		HBITMAP bitmap = CreateDIBitmap(hdc, (BITMAPINFOHEADER*) &bmp_header, CBM_INIT, bmp_image.get_data(), (BITMAPINFO *) &bmp_header, DIB_RGB_COLORS);
+		HBITMAP bitmap = CreateDIBitmap(hdc, (BITMAPINFOHEADER*) &bmp_header, CBM_INIT, bmp_image->data(), (BITMAPINFO *) &bmp_header, DIB_RGB_COLORS);
 		return bitmap;
 	}
 
-	HICON Win32Window::create_icon(const PixelBuffer &image) const
+	HICON Win32Window::create_icon(const PixelBufferPtr &image) const
 	{
 		HDC hdc = GetDC(hwnd);
 		HBITMAP bitmap = create_bitmap(hdc, image);
@@ -1264,7 +1264,7 @@ namespace uicore
 		pixel_ratio = ratio;
 	}
 
-	PixelBuffer Win32Window::get_clipboard_image() const
+	PixelBufferPtr Win32Window::get_clipboard_image() const
 	{
 		BOOL result = OpenClipboard(hwnd);
 		if (result == FALSE)
@@ -1295,7 +1295,7 @@ namespace uicore
 				uint8_t *data = reinterpret_cast<uint8_t *>(GlobalLock(handle));
 				size_t size = GlobalSize(handle);
 
-				PixelBuffer image = get_argb8888_from_png(data, size);
+				PixelBufferPtr image = get_argb8888_from_png(data, size);
 
 				GlobalUnlock(handle);
 				CloseClipboard();
@@ -1310,7 +1310,7 @@ namespace uicore
 				BITMAPV5HEADER *data = reinterpret_cast<BITMAPV5HEADER*>(GlobalLock(handle));
 				size_t size = GlobalSize(handle);
 
-				PixelBuffer image;
+				PixelBufferPtr image;
 				if (data->bV5Compression == BI_RGB)
 					image = get_argb8888_from_rgb_dib(data, size);
 				else if (data->bV5Compression == BI_BITFIELDS)
@@ -1323,10 +1323,10 @@ namespace uicore
 		}
 
 		CloseClipboard();
-		return PixelBuffer();
+		return PixelBufferPtr();
 	}
 
-	PixelBuffer Win32Window::get_argb8888_from_rgb_dib(BITMAPV5HEADER *bitmapInfo, size_t size) const
+	PixelBufferPtr Win32Window::get_argb8888_from_rgb_dib(BITMAPV5HEADER *bitmapInfo, size_t size) const
 	{
 		size_t offsetBitmapBits = bitmapInfo->bV5Size + bitmapInfo->bV5ClrUsed * sizeof(RGBQUAD);
 		char *bitmapBits = reinterpret_cast<char*>(bitmapInfo)+offsetBitmapBits;
@@ -1375,7 +1375,7 @@ namespace uicore
 		}
 
 
-		PixelBuffer pixelbuffer(rgbBitmapInfo.bV5Width, abs(rgbBitmapInfo.bV5Height), tf_bgra8, bitmap_data->data());
+		auto pixelbuffer = PixelBuffer::create(rgbBitmapInfo.bV5Width, abs(rgbBitmapInfo.bV5Height), tf_bgra8, bitmap_data->data());
 
 		ReleaseDC(0, hdc);
 
@@ -1386,7 +1386,7 @@ namespace uicore
 	}
 
 
-	PixelBuffer Win32Window::get_argb8888_from_bitfields_dib(BITMAPV5HEADER *bitmapInfo, size_t size) const
+	PixelBufferPtr Win32Window::get_argb8888_from_bitfields_dib(BITMAPV5HEADER *bitmapInfo, size_t size) const
 	{
 		size_t offsetBitmapBits = bitmapInfo->bV5Size + 3 * sizeof(DWORD);
 		char *bitmapBits = reinterpret_cast<char*>(bitmapInfo)+offsetBitmapBits;
@@ -1437,8 +1437,7 @@ namespace uicore
 			}
 		}
 
-
-		PixelBuffer pixelbuffer(rgbBitmapInfo.bV5Width, abs(rgbBitmapInfo.bV5Height), tf_bgra8, bitmap_data->data());
+		auto pixelbuffer = PixelBuffer::create(rgbBitmapInfo.bV5Width, abs(rgbBitmapInfo.bV5Height), tf_bgra8, bitmap_data->data());
 
 		ReleaseDC(0, hdc);
 
@@ -1448,16 +1447,16 @@ namespace uicore
 		return pixelbuffer;
 	}
 
-	void Win32Window::flip_pixelbuffer_vertical(PixelBuffer &pbuf) const
+	void Win32Window::flip_pixelbuffer_vertical(const PixelBufferPtr &pbuf) const
 	{
-		uint8_t *data = (uint8_t*)pbuf.get_data();
+		uint8_t *data = (uint8_t*)pbuf->data();
 
-		for (int y=0; y<(pbuf.get_height()/2); y++)
+		for (int y=0; y<(pbuf->height()/2); y++)
 		{
-			uint32_t *dy = (uint32_t*)(data + (y*pbuf.get_pitch()));
-			uint32_t *dy2 = (uint32_t*)(data + (pbuf.get_height()-y-1)*pbuf.get_pitch());
+			uint32_t *dy = (uint32_t*)(data + (y*pbuf->pitch()));
+			uint32_t *dy2 = (uint32_t*)(data + (pbuf->height()-y-1)*pbuf->pitch());
 
-			for (int x=0; x<pbuf.get_width(); x++)
+			for (int x=0; x<pbuf->width(); x++)
 			{
 				uint32_t tmp = dy[x];
 				dy[x] = dy2[x];
@@ -1466,12 +1465,11 @@ namespace uicore
 		}
 	}
 
-	PixelBuffer Win32Window::get_argb8888_from_png(uint8_t *data, size_t size) const
+	PixelBufferPtr Win32Window::get_argb8888_from_png(uint8_t *data, size_t size) const
 	{
 		auto data_buffer = DataBuffer::create(data, size);
 		auto iodev = MemoryDevice::open(data_buffer);
-		PixelBuffer pbuf = PNGFormat::load(*iodev);
-		return pbuf;
+		return PNGFormat::load(*iodev);
 	}
 
 	void Win32Window::register_clipboard_formats()
@@ -1481,7 +1479,7 @@ namespace uicore
 		png_clipboard_format = RegisterClipboardFormat(png_format_str);
 	}
 
-	void Win32Window::set_large_icon(const PixelBuffer &image)
+	void Win32Window::set_large_icon(const PixelBufferPtr &image)
 	{
 		if (large_icon)
 			DestroyIcon(large_icon);
@@ -1491,7 +1489,7 @@ namespace uicore
 		SendMessage(hwnd, WM_SETICON, ICON_BIG, reinterpret_cast<LPARAM>(large_icon));
 	}
 
-	void Win32Window::set_small_icon(const PixelBuffer &image)
+	void Win32Window::set_small_icon(const PixelBufferPtr &image)
 	{
 		if (small_icon)
 			DestroyIcon(small_icon);
@@ -1746,7 +1744,7 @@ namespace uicore
 		return window_rect;
 	}
 
-	void Win32Window::update_layered(PixelBuffer &image)
+	void Win32Window::update_layered(PixelBufferPtr &image)
 	{
 		if (!update_window_worker_thread_started)
 		{
@@ -1797,7 +1795,7 @@ namespace uicore
 			}
 
 			lock.lock();
-			update_window_image = PixelBuffer();
+			update_window_image.reset();
 			update_window_completed_flag = true;
 			lock.unlock();
 			update_window_main_event.notify_one();
@@ -1806,9 +1804,9 @@ namespace uicore
 
 	void Win32Window::update_layered_worker_thread_process_dwm()
 	{
-		int width = update_window_image.get_width();
-		int height = update_window_image.get_height();
-		const unsigned char *pixels = update_window_image.get_data_uint8();
+		int width = update_window_image->width();
+		int height = update_window_image->height();
+		const unsigned char *pixels = update_window_image->data_uint8();
 
 		RECT bbox;
 		bbox.left =   0x7ffffff;
@@ -1913,18 +1911,18 @@ namespace uicore
 		BITMAPV5HEADER bmp_header;
 		memset(&bmp_header, 0, sizeof(BITMAPV5HEADER));
 		bmp_header.bV5Size = sizeof(BITMAPV5HEADER);
-		bmp_header.bV5Width = update_window_image.get_width();
-		bmp_header.bV5Height = update_window_image.get_height();
+		bmp_header.bV5Width = update_window_image->width();
+		bmp_header.bV5Height = update_window_image->height();
 		bmp_header.bV5Planes = 1;
 		bmp_header.bV5BitCount = 32;
 		bmp_header.bV5Compression = BI_RGB;
 
 		HDC hdc = GetDC(hwnd);
 		HDC bitmap_dc = CreateCompatibleDC(hdc);
-		HBITMAP bitmap = CreateDIBitmap(hdc, (BITMAPINFOHEADER *) &bmp_header, CBM_INIT, update_window_image.get_data(), (BITMAPINFO *) &bmp_header, DIB_RGB_COLORS);
+		HBITMAP bitmap = CreateDIBitmap(hdc, (BITMAPINFOHEADER *) &bmp_header, CBM_INIT, update_window_image->data(), (BITMAPINFO *) &bmp_header, DIB_RGB_COLORS);
 		HGDIOBJ old_bitmap = SelectObject(bitmap_dc, bitmap);
 
-		SIZE size = { update_window_image.get_width(), update_window_image.get_height() };
+		SIZE size = { update_window_image->width(), update_window_image->height() };
 		POINT point = { 0, 0 };
 		COLORREF rgb_colorkey = RGB(0, 0, 0);
 		BLENDFUNCTION blend;

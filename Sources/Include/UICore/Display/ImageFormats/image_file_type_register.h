@@ -42,22 +42,22 @@ namespace uicore
 		{
 		}
 
-		virtual PixelBuffer load(const std::string &filename, bool srgb) override
+		virtual PixelBufferPtr load(const std::string &filename, bool srgb) override
 		{
 			return ProviderClass::load(filename, srgb);
 		}
 
-		virtual PixelBuffer load(IODevice &file, bool srgb) override
+		virtual PixelBufferPtr load(IODevice &file, bool srgb) override
 		{
 			return ProviderClass::load(file, srgb);
 		}
 
-		virtual void save(PixelBuffer buffer, const std::string &filename) override
+		virtual void save(PixelBufferPtr buffer, const std::string &filename) override
 		{
 			ProviderClass::save(buffer, filename);
 		}
 
-		virtual void save(PixelBuffer buffer, IODevice &file) override
+		virtual void save(PixelBufferPtr buffer, IODevice &file) override
 		{
 			ProviderClass::save(buffer, file);
 		}

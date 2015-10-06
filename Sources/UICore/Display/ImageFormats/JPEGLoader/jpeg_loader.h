@@ -45,7 +45,7 @@ namespace uicore
 	class JPEGLoader
 	{
 	public:
-		static PixelBuffer load(IODevice &iodevice, bool srgb);
+		static PixelBufferPtr load(IODevice &iodevice, bool srgb);
 
 	private:
 		enum ColorSpace

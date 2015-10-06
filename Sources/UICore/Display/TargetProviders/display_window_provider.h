@@ -158,7 +158,7 @@ namespace uicore
 		virtual std::string get_clipboard_text() const = 0;
 
 		/// Returns the image stored in the clipboard.
-		virtual PixelBuffer get_clipboard_image() const = 0;
+		virtual PixelBufferPtr get_clipboard_image() const = 0;
 
 		/// Convert from window client coordinates to screen coordinates.
 		virtual Point client_to_screen(const Point &client) = 0;
@@ -259,13 +259,13 @@ namespace uicore
 		virtual void set_clipboard_text(const std::string &text) = 0;
 
 		/// Stores an image in the clipboard.
-		virtual void set_clipboard_image(const PixelBuffer &buf) = 0;
+		virtual void set_clipboard_image(const PixelBufferPtr &buf) = 0;
 
 		/// Sets the large icon used for this window.
-		virtual void set_large_icon(const PixelBuffer &image) = 0;
+		virtual void set_large_icon(const PixelBufferPtr &image) = 0;
 
 		/// Sets the small icon used for this window.
-		virtual void set_small_icon(const PixelBuffer &image) = 0;
+		virtual void set_small_icon(const PixelBufferPtr &image) = 0;
 
 		/** Enable alpha channel blending for this window.
 		 *

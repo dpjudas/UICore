@@ -45,29 +45,29 @@ namespace uicore
 	{
 	public:
 		/// \brief Constructs a gpu pixel buffer lock
-		PixelBufferLock(GraphicContext &gc, PixelBuffer &pixel_buffer, BufferAccess access, bool lock_pixelbuffer = true)
+		PixelBufferLock(GraphicContext &gc, const PixelBufferPtr &pixel_buffer, BufferAccess access, bool lock_pixelbuffer = true)
 			: pixel_buffer(pixel_buffer), lock_count(0), pitch(0), data(nullptr)
 		{
-			width = pixel_buffer.get_width();
-			height = pixel_buffer.get_height();
+			width = pixel_buffer->width();
+			height = pixel_buffer->height();
 			if (lock_pixelbuffer)
 				lock(gc, access);
 		}
 
 		/// \brief Constructs a system pixel buffer lock
-		PixelBufferLock(PixelBuffer &pixel_buffer, bool lock_pixelbuffer = true)
+		PixelBufferLock(const PixelBufferPtr &pixel_buffer, bool lock_pixelbuffer = true)
 			: pixel_buffer(pixel_buffer), lock_count(0), pitch(0), data(nullptr)
 		{
-			width = pixel_buffer.get_width();
-			height = pixel_buffer.get_height();
+			width = pixel_buffer->width();
+			height = pixel_buffer->height();
 			if (lock_pixelbuffer)
 				lock();
 		}
 
 		~PixelBufferLock()
 		{
-			if (lock_count > 0 && !(pixel_buffer.is_null()))
-				pixel_buffer.unlock();
+			if (lock_count > 0 && pixel_buffer)
+				pixel_buffer->unlock();
 			lock_count = 0;
 		}
 
@@ -99,15 +99,15 @@ namespace uicore
 		/// \brief Lock the system pixel_buffer.
 		void lock()
 		{
-			if (!pixel_buffer.is_null())
+			if (pixel_buffer)
 			{
-				if (pixel_buffer.is_gpu())
+				if (pixel_buffer->is_gpu())
 					throw Exception("Incorrect PixelBufferLock constructor called with a GPU pixelbuffer");
 
 				// lock() does not do anything on system pixel buffers, so we do not call it
 
-				data = static_cast<unsigned char*>(pixel_buffer.get_data());
-				pitch = pixel_buffer.get_pitch();
+				data = static_cast<unsigned char*>(pixel_buffer->data());
+				pitch = pixel_buffer->pitch();
 			}
 			lock_count++;
 		}
@@ -118,9 +118,9 @@ namespace uicore
 			if (lock_count <= 0)
 				return;
 
-			if (!pixel_buffer.is_null())
+			if (pixel_buffer)
 			{
-				pixel_buffer.unlock();
+				pixel_buffer->unlock();
 				pitch = 0;
 				data = 0;
 			}
@@ -128,7 +128,7 @@ namespace uicore
 		}
 
 	private:
-		PixelBuffer pixel_buffer;
+		PixelBufferPtr pixel_buffer;
 		int lock_count;
 		int width;
 		int height;

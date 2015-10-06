@@ -74,7 +74,7 @@ namespace uicore
 		 *  \param image       Image to upload.
 		 *  \param level       Mipmap level-of-detail number.
 		 */
-		virtual void set_image(GraphicContext &context, int array_index, const PixelBuffer &image, int level = 0) = 0;
+		virtual void set_image(GraphicContext &context, int array_index, const PixelBufferPtr &image, int level = 0) = 0;
 
 		/** Upload image to sub-texture.
 		 *  \param context     Graphic context to use for the request.
@@ -85,8 +85,8 @@ namespace uicore
 		 *  \param image       Image to upload.
 		 *  \param level       Mipmap level-of-detail number.
 		 */
-		virtual void set_subimage(GraphicContext &context, int array_index, int x, int y, const PixelBuffer &image, const Rect &src_rect, int level = 0) = 0;
-		void set_subimage(GraphicContext &context, int array_index, const Point &point, const PixelBuffer &image, const Rect &src_rect, int level = 0)
+		virtual void set_subimage(GraphicContext &context, int array_index, int x, int y, const PixelBufferPtr &image, const Rect &src_rect, int level = 0) = 0;
+		void set_subimage(GraphicContext &context, int array_index, const Point &point, const PixelBufferPtr &image, const Rect &src_rect, int level = 0)
 		{
 			set_subimage(context, array_index, point.x, point.y, image, src_rect, level);
 		}

@@ -67,27 +67,27 @@ namespace uicore
 		return *this;
 	}
 
-	void CursorDescription::add_frame(const PixelBuffer &pixelbuffer)
+	void CursorDescription::add_frame(const PixelBufferPtr &pixelbuffer)
 	{
-		impl->frames.push_back(CursorDescriptionFrame(pixelbuffer, Rect(0, 0, pixelbuffer.get_width(), pixelbuffer.get_height())));
+		impl->frames.push_back(CursorDescriptionFrame(pixelbuffer, Rect(0, 0, pixelbuffer->width(), pixelbuffer->height())));
 	}
 
 	void CursorDescription::add_frame(const std::string &filename, const ImageImportDescription &import_desc)
 	{
-		PixelBuffer image = ImageFile::load(filename);
+		PixelBufferPtr image = ImageFile::load(filename);
 		image = import_desc.process(image);
 		add_frame(image);
 	}
 
 	void CursorDescription::add_frame(IODevice &file, const std::string &image_type, const ImageImportDescription &import_desc)
 	{
-		PixelBuffer image = ImageFile::load(file, image_type);
+		PixelBufferPtr image = ImageFile::load(file, image_type);
 		image = import_desc.process(image);
 		add_frame(image);
 	}
 
 	void CursorDescription::add_gridclipped_frames(
-		const PixelBuffer &pixelbuffer,
+		const PixelBufferPtr &pixelbuffer,
 		int xpos, int ypos,
 		int width, int height,
 		int xarray, int yarray,
@@ -103,7 +103,7 @@ namespace uicore
 				if (y == yarray - 1 && x >= xarray - array_skipframes)
 					break;
 
-				if (xstart + width > pixelbuffer.get_width() || ystart + height > pixelbuffer.get_height())
+				if (xstart + width > pixelbuffer->width() || ystart + height > pixelbuffer->height())
 					throw Exception("add_gridclipped_frames: Outside pixelbuffer bounds");
 
 				impl->frames.push_back(CursorDescriptionFrame(pixelbuffer, Rect(xstart, ystart, xstart + width, ystart + height)));
@@ -114,17 +114,17 @@ namespace uicore
 	}
 
 	void CursorDescription::add_alphaclipped_frames(
-		const PixelBuffer &pixelbuffer,
+		const PixelBufferPtr &pixelbuffer,
 		int xpos, int ypos,
 		float trans_limit)
 	{
-		PixelBuffer alpha_buffer = pixelbuffer.to_format(tf_rgba8);
+		PixelBufferPtr alpha_buffer = pixelbuffer->to_format(tf_rgba8);
 
 		int begin = 0;
 		bool prev_trans = true;
 
-		int alpha_width = alpha_buffer.get_width();
-		int alpha_height = alpha_buffer.get_height();
+		int alpha_width = alpha_buffer->width();
+		int alpha_height = alpha_buffer->height();
 		bool found_opaque = false;
 		bool found_trans = false;
 
@@ -137,12 +137,12 @@ namespace uicore
 		int cut_top = ypos;
 		int cut_bottom = alpha_height;
 
-		char *data = (char *)alpha_buffer.get_data();
+		char *data = alpha_buffer->data<char>();
 
 		for (int y = ypos; y < alpha_height; y++)
 		{
 			bool opaque_line = false;
-			Vec4ub *line = (Vec4ub *)(data + alpha_buffer.get_pitch()*y);
+			Vec4ub *line = (Vec4ub *)(data + alpha_buffer->pitch()*y);
 			for (int x = 0; x < alpha_width; x++)
 			{
 				if (line[x].a > trans_limit * 255)
@@ -197,21 +197,21 @@ namespace uicore
 	}
 
 	void CursorDescription::add_alphaclipped_frames_free(
-		const PixelBuffer &pixelbuffer,
+		const PixelBufferPtr &pixelbuffer,
 		int xpos, int ypos,
 		float trans_limit)
 	{
-		PixelBuffer alpha_buffer = pixelbuffer.to_format(tf_rgba8);
+		PixelBufferPtr alpha_buffer = pixelbuffer->to_format(tf_rgba8);
 
-		int width = alpha_buffer.get_width();
-		int height = alpha_buffer.get_height();
+		int width = alpha_buffer->width();
+		int height = alpha_buffer->height();
 
 		std::vector<int> explored_vector;
 		explored_vector.resize(width * height);
 		int *explored = &(explored_vector[0]);
 		memset(explored, 0, width * height * sizeof(int));
 
-		Vec4ub *data = alpha_buffer.get_data<Vec4ub>();
+		Vec4ub *data = alpha_buffer->data<Vec4ub>();
 		int x1, y1, x2, y2;
 		bool more;
 

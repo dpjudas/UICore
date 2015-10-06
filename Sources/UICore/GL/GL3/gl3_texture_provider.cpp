@@ -114,7 +114,7 @@ namespace uicore
 			{
 				if (PixelBuffer::is_compressed(texture_format))
 				{
-					unsigned data_size = PixelBuffer::get_data_size(Size(mip_width, mip_height), texture_format);
+					unsigned data_size = PixelBuffer::data_size(Size(mip_width, mip_height), texture_format);
 					glCompressedTexImage2D(GL_TEXTURE_2D, level, tf.internal_format, mip_width, mip_height, 0, data_size, nullptr);
 				}
 				else
@@ -219,7 +219,7 @@ namespace uicore
 		glGenerateMipmap(texture_type);
 	}
 
-	PixelBuffer GL3TextureProvider::get_pixeldata(GraphicContext &gc, TextureFormat texture_format, int level) const
+	PixelBufferPtr GL3TextureProvider::get_pixeldata(GraphicContext &gc, TextureFormat texture_format, int level) const
 	{
 		throw_if_disposed();
 
@@ -228,44 +228,44 @@ namespace uicore
 		TextureFormat_GL tf = OpenGL::get_textureformat(texture_format);
 		if (tf.valid)
 		{
-			PixelBuffer buffer(width, height, texture_format);
+			auto buffer = PixelBuffer::create(width, height, texture_format);
 			glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-			glPixelStorei(GL_UNPACK_ROW_LENGTH, buffer.get_pitch() / buffer.get_bytes_per_pixel());
+			glPixelStorei(GL_UNPACK_ROW_LENGTH, buffer->pitch() / buffer->bytes_per_pixel());
 			glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
 			glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
-			glGetTexImage(texture_type, level, tf.pixel_format, tf.pixel_datatype, buffer.get_data());
+			glGetTexImage(texture_type, level, tf.pixel_format, tf.pixel_datatype, buffer->data());
 			return buffer;
 		}
 		else
 		{
-			PixelBuffer buffer(width, height, tf_bgra8);
+			auto buffer = PixelBuffer::create(width, height, tf_bgra8);
 			glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-			glPixelStorei(GL_UNPACK_ROW_LENGTH, buffer.get_pitch() / buffer.get_bytes_per_pixel());
+			glPixelStorei(GL_UNPACK_ROW_LENGTH, buffer->pitch() / buffer->bytes_per_pixel());
 			glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
 			glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
-			glGetTexImage(texture_type, level, GL_RGBA, GL_UNSIGNED_BYTE, buffer.get_data());
-			return buffer.to_format(texture_format);
+			glGetTexImage(texture_type, level, GL_RGBA, GL_UNSIGNED_BYTE, buffer->data());
+			return buffer->to_format(texture_format);
 		}
 	}
 
-	void GL3TextureProvider::copy_from(GraphicContext &gc, int x, int y, int slice, int level, const PixelBuffer &src, const Rect &src_rect)
+	void GL3TextureProvider::copy_from(GraphicContext &gc, int x, int y, int slice, int level, const PixelBufferPtr &src, const Rect &src_rect)
 	{
 		throw_if_disposed();
-		if (src_rect.left < 0 || src_rect.top < 0 || src_rect.right > src.get_width() || src_rect.bottom > src.get_height())
+		if (src_rect.left < 0 || src_rect.top < 0 || src_rect.right > src->width() || src_rect.bottom > src->height())
 			throw Exception("Rectangle out of bounds");
 
-		TextureFormat_GL tf = OpenGL::get_textureformat(src.get_format());
+		TextureFormat_GL tf = OpenGL::get_textureformat(src->format());
 		bool conv_needed = !tf.valid;
 
-		PixelBuffer src_converted;
+		PixelBufferPtr src_converted;
 		if (conv_needed)
 		{
-			src_converted = src.to_format(tf_rgba8); // To do: it should use the internal format here (monkey function missing for this)
+			src_converted = src->to_format(tf_rgba8); // To do: it should use the internal format here (monkey function missing for this)
 		}
 		else
 		{
 			src_converted = src;
-			tf = OpenGL::get_textureformat(src_converted.get_format());
+			tf = OpenGL::get_textureformat(src_converted->format());
 		}
 
 		OpenGL::set_active(gc);
@@ -274,24 +274,23 @@ namespace uicore
 		const unsigned char *data = nullptr;
 		GL3PixelBufferProvider *buffer_provider = nullptr;
 		GLint last_buffer = 0;
-		buffer_provider = dynamic_cast<GL3PixelBufferProvider*>(src_converted.get_provider());
+		buffer_provider = dynamic_cast<GL3PixelBufferProvider*>(src_converted.get());
 		if (buffer_provider)
 		{
-
 			glGetIntegerv(GL_PIXEL_UNPACK_BUFFER_BINDING, &last_buffer);
 			glBindBuffer(GL_PIXEL_UNPACK_BUFFER, buffer_provider->get_handle());
 		}
 		else
 		{
-			data = src_converted.get_data<unsigned char>();
+			data = src_converted->data<unsigned char>();
 		}
 
-		if (src_converted.is_compressed())
+		if (src_converted->is_compressed())
 		{
-			if (Rect(Point(0, 0), src.get_size()) != src_rect)
+			if (Rect(Point(0, 0), src->size()) != src_rect)
 				throw Exception("Entire pixel buffer must be used for compressed texture uploads");
 
-			unsigned data_size = src.get_data_size();
+			unsigned data_size = src->data_size();
 
 			if (texture_type == GL_TEXTURE_1D)
 			{
@@ -320,10 +319,10 @@ namespace uicore
 		}
 		else
 		{
-			const int bytes_per_pixel = src_converted.get_bytes_per_pixel();
+			const int bytes_per_pixel = src_converted->bytes_per_pixel();
 
 			glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-			glPixelStorei(GL_UNPACK_ROW_LENGTH, src_converted.get_pitch() / bytes_per_pixel);
+			glPixelStorei(GL_UNPACK_ROW_LENGTH, src_converted->pitch() / bytes_per_pixel);
 			glPixelStorei(GL_UNPACK_SKIP_PIXELS, src_rect.left);
 			glPixelStorei(GL_UNPACK_SKIP_ROWS, src_rect.top);
 

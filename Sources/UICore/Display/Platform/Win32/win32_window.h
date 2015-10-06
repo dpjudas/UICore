@@ -94,8 +94,8 @@ namespace uicore
 		void hide_system_cursor();
 		void set_cursor_handle(HCURSOR cursor);
 
-		void set_large_icon(const PixelBuffer &image);
-		void set_small_icon(const PixelBuffer &image);
+		void set_large_icon(const PixelBufferPtr &image);
+		void set_small_icon(const PixelBufferPtr &image);
 
 		void set_title(const std::string &new_title);
 		void set_enabled(bool enable);
@@ -121,18 +121,18 @@ namespace uicore
 
 		void set_clipboard_text(const std::string &text);
 		std::string get_clipboard_text() const;
-		PixelBuffer get_clipboard_image() const;
-		void set_clipboard_image(const PixelBuffer &image);
-		static PixelBuffer create_bitmap_data(const PixelBuffer &image, const Rect &rect);
+		PixelBufferPtr get_clipboard_image() const;
+		void set_clipboard_image(const PixelBufferPtr &image);
+		static PixelBufferPtr create_bitmap_data(const PixelBufferPtr &image, const Rect &rect);
 
-		static HBITMAP create_bitmap(HDC hdc, const PixelBuffer &image);
-		HICON create_icon(const PixelBuffer &image) const;
+		static HBITMAP create_bitmap(HDC hdc, const PixelBufferPtr &image);
+		HICON create_icon(const PixelBufferPtr &image) const;
 
 		void request_repaint();
 
 		void set_modifier_keys(InputEvent &key);
 
-		void update_layered(PixelBuffer &image);
+		void update_layered(PixelBufferPtr &image);
 
 		void set_allow_drop_shadow(bool value) { allow_dropshadow = value; }
 
@@ -174,13 +174,13 @@ namespace uicore
 
 		void create_hid_devices();
 
-		PixelBuffer get_argb8888_from_png(uint8_t *data, size_t size) const;
-		PixelBuffer get_argb8888_from_rgb_dib(BITMAPV5HEADER *bitmapInfo, size_t size) const;
-		PixelBuffer get_argb8888_from_bitfields_dib(BITMAPV5HEADER *bitmapInfo, size_t size) const;
+		PixelBufferPtr get_argb8888_from_png(uint8_t *data, size_t size) const;
+		PixelBufferPtr get_argb8888_from_rgb_dib(BITMAPV5HEADER *bitmapInfo, size_t size) const;
+		PixelBufferPtr get_argb8888_from_bitfields_dib(BITMAPV5HEADER *bitmapInfo, size_t size) const;
 
-		void flip_pixelbuffer_vertical(PixelBuffer &pbuf) const;
-		void add_png_to_clipboard(const PixelBuffer &image);
-		void add_dib_to_clipboard(const PixelBuffer &image);
+		void flip_pixelbuffer_vertical(const PixelBufferPtr &pbuf) const;
+		void add_png_to_clipboard(const PixelBufferPtr &image);
+		void add_dib_to_clipboard(const PixelBufferPtr &image);
 		void register_clipboard_formats();
 
 		InputDeviceProvider_Win32Keyboard *get_keyboard_provider();
@@ -215,7 +215,7 @@ namespace uicore
 
 		std::thread update_window_worker_thread;
 		bool update_window_worker_thread_started;
-		PixelBuffer update_window_image;
+		PixelBufferPtr update_window_image;
 		bool update_window_stop_flag = false;
 		bool update_window_start_flag = false;
 		bool update_window_completed_flag = false;

@@ -62,19 +62,19 @@ namespace uicore
 		return (HCURSOR)icon;
 	}
 
-	DataBufferPtr CursorProvider_Win32::create_ico_file(const PixelBuffer &image)
+	DataBufferPtr CursorProvider_Win32::create_ico_file(const PixelBufferPtr &image)
 	{
-		return create_ico_helper(image, Rectf(image.get_size()), 1, Point(0, 0));
+		return create_ico_helper(image, Rectf(image->size()), 1, Point(0, 0));
 	}
 
-	DataBufferPtr CursorProvider_Win32::create_cur_file(const PixelBuffer &image, const Rect &rect, const Point &hotspot)
+	DataBufferPtr CursorProvider_Win32::create_cur_file(const PixelBufferPtr &image, const Rect &rect, const Point &hotspot)
 	{
 		return create_ico_helper(image, rect, 2, hotspot);
 	}
 
-	DataBufferPtr CursorProvider_Win32::create_ico_helper(const PixelBuffer &image, const Rect &rect, WORD type, const Point &hotspot)
+	DataBufferPtr CursorProvider_Win32::create_ico_helper(const PixelBufferPtr &image, const Rect &rect, WORD type, const Point &hotspot)
 	{
-		std::vector<PixelBuffer> images;
+		std::vector<PixelBufferPtr> images;
 		std::vector<Rect> rects;
 		std::vector<Point> hotspots;
 		images.push_back(image);
@@ -83,7 +83,7 @@ namespace uicore
 		return create_ico_helper(images, rects, type, hotspots);
 	}
 
-	DataBufferPtr CursorProvider_Win32::create_ico_helper(const std::vector<PixelBuffer> &images, const std::vector<Rect> &rects, WORD type, const std::vector<Point> &hotspots)
+	DataBufferPtr CursorProvider_Win32::create_ico_helper(const std::vector<PixelBufferPtr> &images, const std::vector<Rect> &rects, WORD type, const std::vector<Point> &hotspots)
 	{
 		auto buf = DataBuffer::create(0);
 		buf->set_capacity(32 * 1024);
@@ -95,7 +95,7 @@ namespace uicore
 		header.idCount = images.size();
 		device->write(&header, sizeof(ICONHEADER));
 
-		std::vector<PixelBuffer> bmp_images;
+		std::vector<PixelBufferPtr> bmp_images;
 		for (size_t i = 0; i < images.size(); i++)
 			bmp_images.push_back(Win32Window::create_bitmap_data(images[i], rects[i]));
 
@@ -103,12 +103,12 @@ namespace uicore
 		{
 			IconDirectoryEntry entry;
 			memset(&entry, 0, sizeof(IconDirectoryEntry));
-			entry.bWidth = bmp_images[i].get_width();
-			entry.bHeight = bmp_images[i].get_height();
+			entry.bWidth = bmp_images[i]->width();
+			entry.bHeight = bmp_images[i]->height();
 			entry.bColorCount = 0;
 			entry.wPlanes = 1;
 			entry.wBitCount = 32;
-			entry.dwBytesInRes = sizeof(BITMAPINFOHEADER) + bmp_images[i].get_pitch() * bmp_images[i].get_height();
+			entry.dwBytesInRes = sizeof(BITMAPINFOHEADER) + bmp_images[i]->pitch() * bmp_images[i]->height();
 			entry.dwImageOffset = size_header + size_direntry*bmp_images.size();
 			if (type == 2)
 			{
@@ -123,14 +123,14 @@ namespace uicore
 			BITMAPINFOHEADER bmp_header;
 			memset(&bmp_header, 0, sizeof(BITMAPINFOHEADER));
 			bmp_header.biSize = sizeof(BITMAPINFOHEADER);
-			bmp_header.biWidth = bmp_images[i].get_width();
-			bmp_header.biHeight = bmp_images[i].get_height() * 2; // why on earth do I have to multiply this by two??
+			bmp_header.biWidth = bmp_images[i]->width();
+			bmp_header.biHeight = bmp_images[i]->height() * 2; // why on earth do I have to multiply this by two??
 			bmp_header.biPlanes = 1;
 			bmp_header.biBitCount = 32;
 			bmp_header.biCompression = BI_RGB;
-			bmp_header.biSizeImage = bmp_images[i].get_pitch() * bmp_images[i].get_height();
+			bmp_header.biSizeImage = bmp_images[i]->pitch() * bmp_images[i]->height();
 			device->write(&bmp_header, sizeof(BITMAPINFOHEADER));
-			device->write(bmp_images[i].get_data(), bmp_images[i].get_pitch() * bmp_images[i].get_height());
+			device->write(bmp_images[i]->data(), bmp_images[i]->pitch() * bmp_images[i]->height());
 		}
 
 		return device->buffer();
