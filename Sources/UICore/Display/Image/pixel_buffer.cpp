@@ -631,4 +631,70 @@ namespace uicore
 			}
 		}
 	}
+
+	PixelBufferPtr PixelBuffer::add_border(const PixelBufferPtr &pb, int border_size, const Rect &rect)
+	{
+		if (rect.left < 0 || rect.top < 0 || rect.right > pb->width() || rect.bottom > pb->height())
+			throw Exception("Rectangle passed to PixelBuffer::add_border() out of bounds");
+
+		if (border_size < 0)
+		{
+			border_size = 0;
+		}
+
+		int old_width = pb->width();
+		int old_height = pb->height();
+
+		int new_width = rect.get_width() + border_size * 2;
+		int new_height = rect.get_height() + border_size * 2;
+
+		// Convert pixel buffer if in an unsupported format
+		PixelBufferPtr work_buffer;
+		PixelBufferPtr work_pb = pb;
+		if (work_pb->format() != tf_rgba8)
+		{
+			work_buffer = pb->to_format(tf_rgba8);
+			work_pb = work_buffer;
+		}
+
+		auto new_pb = PixelBuffer::create(new_width, new_height, work_pb->format(), nullptr);
+
+		int old_pitch = work_pb->pitch();
+		int new_pitch = new_pb->pitch();
+
+		int32_t *actual_src_data = (int32_t *)work_pb->data();
+		actual_src_data += (rect.top * old_pitch) / 4;
+		actual_src_data += rect.left;
+
+		int32_t *actual_dest_data = (int32_t *)new_pb->data();
+
+		for (int ypos = 0; ypos < new_height; ypos++)
+		{
+			int real_ypos = ypos - border_size;
+			if (real_ypos < 0)
+				real_ypos = 0;
+
+			if (real_ypos >= old_height)
+				real_ypos = old_height - 1;
+
+			int32_t *src_data = actual_src_data;
+			src_data += (old_pitch * real_ypos) / 4;
+
+			int32_t *dest_data = actual_dest_data;
+			dest_data += (new_pitch * ypos) / 4;
+
+			for (int xpos = 0; xpos < new_width; xpos++)
+			{
+				int real_xpos = xpos - border_size;
+				if (real_xpos < 0)
+					real_xpos = 0;
+
+				if (real_xpos >= old_width)
+					real_xpos = old_width - 1;
+
+				dest_data[xpos] = src_data[real_xpos];
+			}
+		}
+		return new_pb;
+	}
 }

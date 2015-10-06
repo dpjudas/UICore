@@ -31,7 +31,6 @@
 #include "glyph_cache.h"
 #include "FontEngine/font_engine.h"
 #include "UICore/Display/Image/pixel_buffer.h"
-#include "UICore/Display/Image/pixel_buffer_help.h"
 #include "UICore/Display/2D/color.h"
 #include "UICore/Display/2D/subtexture.h"
 #include "UICore/Display/2D/texture_group.h"
@@ -108,7 +107,7 @@ namespace uicore
 
 		if (!pb.empty_buffer)
 		{
-			PixelBufferPtr buffer_with_border = PixelBufferHelp::add_border(pb.buffer, glyph_border_size, pb.buffer_rect);
+			PixelBufferPtr buffer_with_border = PixelBuffer::add_border(pb.buffer, glyph_border_size, pb.buffer_rect);
 			GraphicContext gc = canvas.get_gc();
 			Subtexture sub_texture = texture_group.add(gc, buffer_with_border->size());
 			font_glyph->texture = sub_texture.get_texture();

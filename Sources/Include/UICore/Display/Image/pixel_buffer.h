@@ -242,6 +242,9 @@ namespace uicore
 
 		/// Sets the display pixel ratio for this image.
 		virtual void set_pixel_ratio(float ratio) = 0;
+
+		/// \brief Add a border around a pixelbuffer, duplicating the edge pixels
+		static std::shared_ptr<PixelBuffer> add_border(const std::shared_ptr<PixelBuffer> &pb, int border_size, const Rect &rect);
 	};
 
 	typedef std::shared_ptr<PixelBuffer> PixelBufferPtr;

@@ -33,7 +33,6 @@
 #include "UICore/Core/System/databuffer.h"
 #include "UICore/Core/Text/string_format.h"
 #include "UICore/Display/Image/pixel_buffer.h"
-#include "UICore/Display/Image/pixel_buffer_help.h"
 #include "UICore/Display/2D/color.h"
 #include "UICore/Display/2D/subtexture.h"
 #include "UICore/Display/2D/texture_group.h"
