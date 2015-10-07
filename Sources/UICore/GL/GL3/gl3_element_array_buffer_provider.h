@@ -46,9 +46,9 @@ namespace uicore
 
 		GLuint get_handle() const { return buffer.get_handle(); }
 
-		void upload_data(GraphicContext &gc, const void *data, int size) override { buffer.upload_data(gc, data, size); }
-		void copy_from(GraphicContext &gc, const TransferBufferPtr &transfer_buffer, int dest_pos, int src_pos, int size) override { buffer.copy_from(gc, transfer_buffer, dest_pos, src_pos, size); }
-		void copy_to(GraphicContext &gc, const TransferBufferPtr &transfer_buffer, int dest_pos, int src_pos, int size) override { buffer.copy_to(gc, transfer_buffer, dest_pos, src_pos, size); }
+		void upload_data(const GraphicContextPtr &gc, const void *data, int size) override { buffer.upload_data(gc, data, size); }
+		void copy_from(const GraphicContextPtr &gc, const TransferBufferPtr &transfer_buffer, int dest_pos, int src_pos, int size) override { buffer.copy_from(gc, transfer_buffer, dest_pos, src_pos, size); }
+		void copy_to(const GraphicContextPtr &gc, const TransferBufferPtr &transfer_buffer, int dest_pos, int src_pos, int size) override { buffer.copy_to(gc, transfer_buffer, dest_pos, src_pos, size); }
 
 	private:
 		GL3BufferObjectProvider buffer;

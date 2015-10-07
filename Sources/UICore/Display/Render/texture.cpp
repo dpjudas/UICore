@@ -42,7 +42,7 @@
 
 namespace uicore
 {
-	std::shared_ptr<Texture> Texture::create(GraphicContext &gc, PixelBufferSetPtr pixelbuffer_set)
+	std::shared_ptr<Texture> Texture::create(const GraphicContextPtr &gc, PixelBufferSetPtr pixelbuffer_set)
 	{
 		if (pixelbuffer_set->dimensions() == texture_1d)
 		{

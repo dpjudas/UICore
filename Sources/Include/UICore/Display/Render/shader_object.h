@@ -55,16 +55,16 @@ namespace uicore
 	{
 	public:
 		/// \brief Constructs a shader
-		static std::shared_ptr<ShaderObject> create(GraphicContext &gc, ShaderType type, const std::string &source);
-		static std::shared_ptr<ShaderObject> create(GraphicContext &gc, ShaderType type, const void *bytecode, int bytecode_size);
+		static std::shared_ptr<ShaderObject> create(const GraphicContextPtr &gc, ShaderType type, const std::string &source);
+		static std::shared_ptr<ShaderObject> create(const GraphicContextPtr &gc, ShaderType type, const void *bytecode, int bytecode_size);
 
 		/// \brief Load
-		static std::shared_ptr<ShaderObject> load(GraphicContext &gc, ShaderType type, const std::string &fullname);
-		static std::shared_ptr<ShaderObject> load(GraphicContext &gc, ShaderType type, IODevice &file);
+		static std::shared_ptr<ShaderObject> load(const GraphicContextPtr &gc, ShaderType type, const std::string &fullname);
+		static std::shared_ptr<ShaderObject> load(const GraphicContextPtr &gc, ShaderType type, IODevice &file);
 
 		/// \brief Load and compile
-		static std::shared_ptr<ShaderObject> load_and_compile(GraphicContext &gc, ShaderType type, const std::string &filename);
-		static std::shared_ptr<ShaderObject> load_and_compile(GraphicContext &gc, ShaderType type, IODevice &file);
+		static std::shared_ptr<ShaderObject> load_and_compile(const GraphicContextPtr &gc, ShaderType type, const std::string &filename);
+		static std::shared_ptr<ShaderObject> load_and_compile(const GraphicContextPtr &gc, ShaderType type, IODevice &file);
 
 		/// \brief Gets the shader type
 		virtual ShaderType shader_type() const = 0;

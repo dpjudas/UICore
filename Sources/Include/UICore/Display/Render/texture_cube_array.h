@@ -40,8 +40,8 @@ namespace uicore
 		/// \brief Constructs a Texture
 		///
 		/// If levels is set to zero it will create a texture containing all mipmap levels
-		static std::shared_ptr<TextureCubeArray> create(GraphicContext &context, int width, int height, int array_size, TextureFormat texture_format = tf_rgba8, int levels = 1);
-		static std::shared_ptr<TextureCubeArray> create(GraphicContext &context, const Size &size, int array_size, TextureFormat texture_format = tf_rgba8, int levels = 1);
+		static std::shared_ptr<TextureCubeArray> create(const GraphicContextPtr &context, int width, int height, int array_size, TextureFormat texture_format = tf_rgba8, int levels = 1);
+		static std::shared_ptr<TextureCubeArray> create(const GraphicContextPtr &context, const Size &size, int array_size, TextureFormat texture_format = tf_rgba8, int levels = 1);
 
 		/// \brief Get the texture width.
 		virtual int width() const = 0;
@@ -61,7 +61,7 @@ namespace uicore
 		/// \param array_index Index in the array
 		/// \param image Image to upload.
 		/// \param level Mipmap level-of-detail number.
-		virtual void set_image(GraphicContext &context, int array_index, TextureCubeDirection cube_direction, const PixelBufferPtr &image, int level = 0) = 0;
+		virtual void set_image(const GraphicContextPtr &context, int array_index, TextureCubeDirection cube_direction, const PixelBufferPtr &image, int level = 0) = 0;
 
 		/// \brief Upload image to sub texture.
 		///
@@ -69,8 +69,8 @@ namespace uicore
 		/// \param array_index Index in the array
 		/// \param image Image to upload.
 		/// \param level Mipmap level-of-detail number.
-		virtual void set_subimage(GraphicContext &context, int array_index, TextureCubeDirection cube_direction, int x, int y, const PixelBufferPtr &image, const Rect &src_rect, int level = 0) = 0;
-		virtual void set_subimage(GraphicContext &context, int array_index, TextureCubeDirection cube_direction, const Point &point, const PixelBufferPtr &image, const Rect &src_rect, int level = 0)
+		virtual void set_subimage(const GraphicContextPtr &context, int array_index, TextureCubeDirection cube_direction, int x, int y, const PixelBufferPtr &image, const Rect &src_rect, int level = 0) = 0;
+		virtual void set_subimage(const GraphicContextPtr &context, int array_index, TextureCubeDirection cube_direction, const Point &point, const PixelBufferPtr &image, const Rect &src_rect, int level = 0)
 		{
 			set_subimage(context, array_index, cube_direction, point.x, point.y, image, src_rect, level);
 		}

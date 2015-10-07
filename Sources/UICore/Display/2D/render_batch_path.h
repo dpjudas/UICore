@@ -47,7 +47,7 @@ namespace uicore
 	class RenderBatchPath : public RenderBatcher
 	{
 	public:
-		RenderBatchPath(GraphicContext &gc, RenderBatchBuffer *batch_buffer);
+		RenderBatchPath(const GraphicContextPtr &gc, RenderBatchBuffer *batch_buffer);
 
 		void fill(Canvas &canvas, const Path &path, const Brush &brush);
 		void stroke(Canvas &canvas, const Path &path, const Pen &pen);
@@ -56,7 +56,7 @@ namespace uicore
 		void render(const Path &path, PathRenderer *renderer);
 
 		int set_batcher_active(Canvas &canvas);
-		void flush(GraphicContext &gc) override;
+		void flush(const GraphicContextPtr &gc) override;
 		void matrix_changed(const Mat4f &modelview, const Mat4f &projection, TextureImageYAxis image_yaxis, float pixel_ratio) override;
 
 		inline Pointf to_position(const uicore::Pointf &point) const;

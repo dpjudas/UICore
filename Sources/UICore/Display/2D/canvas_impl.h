@@ -65,8 +65,7 @@ namespace uicore
 		void pop_cliprect();
 		void reset_cliprect();
 
-		GraphicContext get_gc() const { return gc; }
-		GraphicContext& get_gc() { return gc; }
+		const GraphicContextPtr &get_gc() const { return gc; }
 
 		void set_transform(const Mat4f &matrix);
 		const Mat4f &get_transform() const;
@@ -86,7 +85,7 @@ namespace uicore
 		CanvasBatcher batcher;
 
 	private:
-		void setup(GraphicContext &new_gc);
+		void setup(const GraphicContextPtr &new_gc);
 		void calculate_map_mode_matrices();
 		MapMode get_top_down_map_mode() const;
 		void on_window_resized(const Size &size);
@@ -94,7 +93,7 @@ namespace uicore
 		void write_cliprect(const Rectf &rect);
 		void on_window_flip();
 
-		GraphicContext gc;
+		GraphicContextPtr gc;
 		SlotContainer sc;
 
 		Mat4f canvas_transform;

@@ -39,7 +39,7 @@ namespace uicore
 	// Warning: Ensure this number does not exceed RenderBatchTriangle::max_number_of_texture_coords
 	int RenderBatchTriangle::max_textures = 4;
 
-	RenderBatchTriangle::RenderBatchTriangle(GraphicContext &gc, RenderBatchBuffer *batch_buffer)
+	RenderBatchTriangle::RenderBatchTriangle(const GraphicContextPtr &gc, RenderBatchBuffer *batch_buffer)
 		: batch_buffer(batch_buffer)
 	{
 		vertices = (SpriteVertex *)batch_buffer->buffer;
@@ -310,11 +310,11 @@ namespace uicore
 		return RenderBatchTriangle::max_textures;
 	}
 
-	void RenderBatchTriangle::flush(GraphicContext &gc)
+	void RenderBatchTriangle::flush(const GraphicContextPtr &gc)
 	{
 		if (position > 0)
 		{
-			gc.set_program_object(program_sprite);
+			gc->set_program_object(program_sprite);
 
 			int gpu_index;
 			VertexArrayVector<SpriteVertex> gpu_vertices(batch_buffer->get_vertex_buffer(gc, gpu_index));
@@ -331,30 +331,30 @@ namespace uicore
 				{
 					BlendStateDescription blend_desc;
 					blend_desc.set_blend_function(blend_constant_color, blend_one_minus_src_color, blend_zero, blend_one);
-					glyph_blend = gc.create_blend_state(blend_desc);
+					glyph_blend = gc->create_blend_state(blend_desc);
 				}
 			}
 
 			gpu_vertices.upload_data(gc, 0, vertices, position);
 
 			for (int i = 0; i < num_current_textures; i++)
-				gc.set_texture(i, current_textures[i]);
+				gc->set_texture(i, current_textures[i]);
 
 			if (use_glyph_program)
 			{
-				gc.set_blend_state(glyph_blend, constant_color);
-				gc.draw_primitives(type_triangles, position, prim_array[gpu_index]);
-				gc.reset_blend_state();
+				gc->set_blend_state(glyph_blend, constant_color);
+				gc->draw_primitives(type_triangles, position, prim_array[gpu_index]);
+				gc->reset_blend_state();
 			}
 			else
 			{
-				gc.draw_primitives(type_triangles, position, prim_array[gpu_index]);
+				gc->draw_primitives(type_triangles, position, prim_array[gpu_index]);
 			}
 
 			for (int i = 0; i < num_current_textures; i++)
-				gc.reset_texture(i);
+				gc->reset_texture(i);
 
-			gc.reset_program_object();
+			gc->reset_program_object();
 
 			position = 0;
 			for (int i = 0; i < num_current_textures; i++)

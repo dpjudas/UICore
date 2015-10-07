@@ -45,9 +45,9 @@ namespace uicore
 
 		int get_size() const { return size; }
 
-		void lock(GraphicContext &gc, BufferAccess access) override;
+		void lock(const GraphicContextPtr &gc, BufferAccess access) override;
 		void unlock() override;
-		void upload_data(GraphicContext &gc, int offset, const void *data, int size) override;
+		void upload_data(const GraphicContextPtr &gc, int offset, const void *data, int size) override;
 
 	private:
 		struct DeviceHandles

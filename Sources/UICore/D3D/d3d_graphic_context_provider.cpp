@@ -156,11 +156,6 @@ namespace uicore
 		return 0; //window->get_device_context();
 	}
 
-	ProgramObjectPtr D3DGraphicContextProvider::get_program_object(StandardProgram standard_program) const
-	{
-		return standard_programs.get_program_object(standard_program);
-	}
-
 	std::shared_ptr<PixelBuffer> D3DGraphicContextProvider::get_pixeldata(const Rect& rect, TextureFormat texture_format, bool clamp) const
 	{
 		// To do: fetch format from window->get_back_buffer()->GetDesc(&desc)
@@ -347,96 +342,74 @@ namespace uicore
 		return std::make_shared<D3DPixelBufferProvider>(window->get_device(), data, size, direction, format, usage);
 	}
 
-	void D3DGraphicContextProvider::set_rasterizer_state(RasterizerState *state)
+	void D3DGraphicContextProvider::set_rasterizer_state(const RasterizerStatePtr &state)
 	{
 		if (state)
 		{
-			D3DRasterizerState *d3d_state = static_cast<D3DRasterizerState*>(state);
+			D3DRasterizerState *d3d_state = static_cast<D3DRasterizerState*>(state.get());
 			window->get_device_context()->RSSetState(d3d_state->state);
 		}
 	}
 
-	void D3DGraphicContextProvider::set_blend_state(BlendState *state, const Colorf &blend_color, unsigned int sample_mask)
+	void D3DGraphicContextProvider::set_blend_state(const BlendStatePtr &state, const Colorf &blend_color, unsigned int sample_mask)
 	{
 		if (state)
 		{
-			D3DBlendState *d3d_state = static_cast<D3DBlendState*>(state);
+			D3DBlendState *d3d_state = static_cast<D3DBlendState*>(state.get());
 			FLOAT blend_factor[4] = { blend_color.r, blend_color.g, blend_color.b, blend_color.a };
 			window->get_device_context()->OMSetBlendState(d3d_state->state, blend_factor, sample_mask);
 		}
 	}
 
-	void D3DGraphicContextProvider::set_depth_stencil_state(DepthStencilState *state, int stencil_ref)
+	void D3DGraphicContextProvider::set_depth_stencil_state(const DepthStencilStatePtr &state, int stencil_ref)
 	{
 		if (state)
 		{
-			D3DDepthStencilState *d3d_state = static_cast<D3DDepthStencilState*>(state);
+			D3DDepthStencilState *d3d_state = static_cast<D3DDepthStencilState*>(state.get());
 			window->get_device_context()->OMSetDepthStencilState(d3d_state->state, stencil_ref);
 		}
 	}
 
 	void D3DGraphicContextProvider::set_program_object(StandardProgram standard_program)
 	{
-		ProgramObjectPtr program = get_program_object(standard_program);
+		ProgramObjectPtr program = standard_programs.get_program_object(standard_program);
 		set_program_object(program);
 	}
 
 	void D3DGraphicContextProvider::set_program_object(const ProgramObjectPtr &program)
 	{
-		D3DProgramObjectProvider *new_program_provider = static_cast<D3DProgramObjectProvider *>(program.get());
-		if (new_program_provider == current_program_provider)
-			return;
+		_program_object = program;
 
-		if (current_program_provider)
-			unit_map.unbind_program(this, current_program_provider);
-
-		current_program_provider = new_program_provider;
-
-		clear_input_layout();
-
-		for (int j = 0; j < (int)ShaderType::num_types; j++)
+		if (program)
 		{
-			D3DShaderObjectProvider *shader_provider = current_program_provider->get_shader_provider((ShaderType)j);
-			if (shader_provider)
-			{
-				switch ((ShaderType)j)
-				{
-				case ShaderType::vertex: window->get_device_context()->VSSetShader(shader_provider->get_vertex(), 0, 0); break;
-				case ShaderType::tess_control: window->get_device_context()->HSSetShader(shader_provider->get_hull(), 0, 0); break;
-				case ShaderType::tess_evaluation: window->get_device_context()->DSSetShader(shader_provider->get_domain(), 0, 0); break;
-				case ShaderType::geometry: window->get_device_context()->GSSetShader(shader_provider->get_geometry(), 0, 0); break;
-				case ShaderType::fragment: window->get_device_context()->PSSetShader(shader_provider->get_pixel(), 0, 0); break;
-				case ShaderType::compute: window->get_device_context()->CSSetShader(shader_provider->get_compute(), 0, 0); break;
-				}
-				shader_bound[j] = true;
-			}
-			else if (shader_bound[j])
-			{
-				switch ((ShaderType)j)
-				{
-				case ShaderType::vertex: window->get_device_context()->VSSetShader(0, 0, 0); break;
-				case ShaderType::tess_control: window->get_device_context()->HSSetShader(0, 0, 0); break;
-				case ShaderType::tess_evaluation: window->get_device_context()->DSSetShader(0, 0, 0); break;
-				case ShaderType::geometry: window->get_device_context()->GSSetShader(0, 0, 0); break;
-				case ShaderType::fragment: window->get_device_context()->PSSetShader(0, 0, 0); break;
-				case ShaderType::compute: window->get_device_context()->CSSetShader(0, 0, 0); break;
-				}
-				shader_bound[j] = false;
-			}
-		}
+			D3DProgramObjectProvider *new_program_provider = static_cast<D3DProgramObjectProvider *>(program.get());
+			if (new_program_provider == current_program_provider)
+				return;
 
-		unit_map.bind_program(this, current_program_provider);
-	}
+			if (current_program_provider)
+				unit_map.unbind_program(this, current_program_provider);
 
-	void D3DGraphicContextProvider::reset_program_object()
-	{
-		if (current_program_provider)
-		{
-			unit_map.unbind_program(this, current_program_provider);
-			current_program_provider = 0;
+			current_program_provider = new_program_provider;
+
+			clear_input_layout();
+
 			for (int j = 0; j < (int)ShaderType::num_types; j++)
 			{
-				if (shader_bound[j])
+				D3DShaderObjectProvider *shader_provider = current_program_provider->get_shader_provider((ShaderType)j);
+				if (shader_provider)
+				{
+					switch ((ShaderType)j)
+					{
+					case ShaderType::vertex: window->get_device_context()->VSSetShader(shader_provider->get_vertex(), 0, 0); break;
+					case ShaderType::tess_control: window->get_device_context()->HSSetShader(shader_provider->get_hull(), 0, 0); break;
+					case ShaderType::tess_evaluation: window->get_device_context()->DSSetShader(shader_provider->get_domain(), 0, 0); break;
+					case ShaderType::geometry: window->get_device_context()->GSSetShader(shader_provider->get_geometry(), 0, 0); break;
+					case ShaderType::fragment: window->get_device_context()->PSSetShader(shader_provider->get_pixel(), 0, 0); break;
+					case ShaderType::compute: window->get_device_context()->CSSetShader(shader_provider->get_compute(), 0, 0); break;
+					}
+					shader_bound[j] = true;
+				}
+				else if (shader_bound[j])
 				{
 					switch ((ShaderType)j)
 					{
@@ -450,7 +423,33 @@ namespace uicore
 					shader_bound[j] = false;
 				}
 			}
-			clear_input_layout();
+
+			unit_map.bind_program(this, current_program_provider);
+		}
+		else
+		{
+			if (current_program_provider)
+			{
+				unit_map.unbind_program(this, current_program_provider);
+				current_program_provider = 0;
+				for (int j = 0; j < (int)ShaderType::num_types; j++)
+				{
+					if (shader_bound[j])
+					{
+						switch ((ShaderType)j)
+						{
+						case ShaderType::vertex: window->get_device_context()->VSSetShader(0, 0, 0); break;
+						case ShaderType::tess_control: window->get_device_context()->HSSetShader(0, 0, 0); break;
+						case ShaderType::tess_evaluation: window->get_device_context()->DSSetShader(0, 0, 0); break;
+						case ShaderType::geometry: window->get_device_context()->GSSetShader(0, 0, 0); break;
+						case ShaderType::fragment: window->get_device_context()->PSSetShader(0, 0, 0); break;
+						case ShaderType::compute: window->get_device_context()->CSSetShader(0, 0, 0); break;
+						}
+						shader_bound[j] = false;
+					}
+				}
+				clear_input_layout();
+			}
 		}
 	}
 
@@ -459,19 +458,9 @@ namespace uicore
 		unit_map.set_uniform_buffer(this, index, buffer);
 	}
 
-	void D3DGraphicContextProvider::reset_uniform_buffer(int index)
-	{
-		unit_map.set_uniform_buffer(this, index, UniformBufferPtr());
-	}
-
 	void D3DGraphicContextProvider::set_storage_buffer(int index, const StorageBufferPtr &buffer)
 	{
 		unit_map.set_storage_buffer(this, index, buffer);
-	}
-
-	void D3DGraphicContextProvider::reset_storage_buffer(int index)
-	{
-		unit_map.set_storage_buffer(this, index, StorageBufferPtr());
 	}
 
 	void D3DGraphicContextProvider::set_texture(int unit_index, const TexturePtr &texture)
@@ -479,19 +468,9 @@ namespace uicore
 		unit_map.set_texture(this, unit_index, texture);
 	}
 
-	void D3DGraphicContextProvider::reset_texture(int unit_index)
-	{
-		unit_map.set_texture(this, unit_index, TexturePtr());
-	}
-
 	void D3DGraphicContextProvider::set_image_texture(int unit_index, const TexturePtr &texture)
 	{
 		unit_map.set_image(this, unit_index, texture);
-	}
-
-	void D3DGraphicContextProvider::reset_image_texture(int unit_index)
-	{
-		unit_map.set_image(this, unit_index, TexturePtr());
 	}
 
 	bool D3DGraphicContextProvider::is_frame_buffer_owner(const FrameBufferPtr &fb)
@@ -505,15 +484,20 @@ namespace uicore
 
 	void D3DGraphicContextProvider::set_frame_buffer(const FrameBufferPtr &write_buffer, const FrameBufferPtr &read_buffer)
 	{
-		D3DFrameBufferProvider *fb_provider = static_cast<D3DFrameBufferProvider *>(write_buffer.get());
-		ID3D11DepthStencilView *dsv = 0;
-		std::vector<ID3D11RenderTargetView *> rtvs = fb_provider->get_views(dsv);
-		window->get_device_context()->OMSetRenderTargets(rtvs.size(), (!rtvs.empty()) ? &rtvs[0] : 0, dsv);
-	}
+		_write_frame_buffer = write_buffer;
+		_read_frame_buffer = read_buffer;
 
-	void D3DGraphicContextProvider::reset_frame_buffer()
-	{
-		set_default_dsv();
+		if (write_buffer && read_buffer)
+		{
+			D3DFrameBufferProvider *fb_provider = static_cast<D3DFrameBufferProvider *>(write_buffer.get());
+			ID3D11DepthStencilView *dsv = 0;
+			std::vector<ID3D11RenderTargetView *> rtvs = fb_provider->get_views(dsv);
+			window->get_device_context()->OMSetRenderTargets(rtvs.size(), (!rtvs.empty()) ? &rtvs[0] : 0, dsv);
+		}
+		else
+		{
+			set_default_dsv();
+		}
 	}
 
 	void D3DGraphicContextProvider::set_draw_buffer(DrawBuffer buffer)
@@ -557,17 +541,6 @@ namespace uicore
 
 	void D3DGraphicContextProvider::set_primitives_array(const PrimitivesArrayPtr &primitives_array)
 	{
-		reset_primitives_array();
-		current_prim_array_provider = static_cast<D3DPrimitivesArrayProvider *>(primitives_array.get());
-		std::vector<ID3D11Buffer*> buffers;
-		std::vector<UINT> strides, offsets;
-		current_prim_array_provider->get_vertex_buffers(buffers, strides, offsets);
-		if (!buffers.empty())
-			window->get_device_context()->IASetVertexBuffers(0, buffers.size(), &buffers[0], &strides[0], &offsets[0]);
-	}
-
-	void D3DGraphicContextProvider::reset_primitives_array()
-	{
 		clear_input_layout();
 		if (current_prim_array_provider)
 		{
@@ -582,6 +555,16 @@ namespace uicore
 		}
 
 		current_prim_array_provider = 0;
+
+		if (primitives_array)
+		{
+			current_prim_array_provider = static_cast<D3DPrimitivesArrayProvider *>(primitives_array.get());
+			std::vector<ID3D11Buffer*> buffers;
+			std::vector<UINT> strides, offsets;
+			current_prim_array_provider->get_vertex_buffers(buffers, strides, offsets);
+			if (!buffers.empty())
+				window->get_device_context()->IASetVertexBuffers(0, buffers.size(), &buffers[0], &strides[0], &offsets[0]);
+		}
 	}
 
 	void D3DGraphicContextProvider::draw_primitives_array(PrimitivesType type, int offset, int num_vertices)
@@ -600,15 +583,17 @@ namespace uicore
 		window->get_device_context()->DrawInstanced(num_vertices, instance_count, offset, 0);
 	}
 
-	void D3DGraphicContextProvider::set_primitives_elements(ElementArrayBuffer *array_provider)
+	void D3DGraphicContextProvider::set_primitives_elements(const ElementArrayBufferPtr &array_provider)
 	{
-		current_element_array_provider = static_cast<D3DElementArrayBufferProvider*>(array_provider);
-	}
-
-	void D3DGraphicContextProvider::reset_primitives_elements()
-	{
-		window->get_device_context()->IASetIndexBuffer(0, DXGI_FORMAT_UNKNOWN, 0);
-		current_element_array_provider = 0;
+		if (array_provider)
+		{
+			current_element_array_provider = static_cast<D3DElementArrayBufferProvider*>(array_provider.get());
+		}
+		else
+		{
+			window->get_device_context()->IASetIndexBuffer(0, DXGI_FORMAT_UNKNOWN, 0);
+			current_element_array_provider = 0;
+		}
 	}
 
 	void D3DGraphicContextProvider::draw_primitives_elements(PrimitivesType type, int count, VertexAttributeDataType indices_type, size_t offset)
@@ -629,25 +614,25 @@ namespace uicore
 		window->get_device_context()->DrawIndexedInstanced(count, instance_count, to_d3d_index_location(indices_type, offset), 0, 0);
 	}
 
-	void D3DGraphicContextProvider::draw_primitives_elements(PrimitivesType type, int count, ElementArrayBuffer *array_provider, VertexAttributeDataType indices_type, void *offset)
+	void D3DGraphicContextProvider::draw_primitives_elements(PrimitivesType type, int count, const ElementArrayBufferPtr &array_provider, VertexAttributeDataType indices_type, size_t offset)
 	{
 		set_primitives_elements(array_provider);
 		apply_input_layout();
 		window->get_device_context()->IASetPrimitiveTopology(to_d3d_primitive_topology(type));
 		window->get_device_context()->IASetIndexBuffer(current_element_array_provider->get_buffer(window->get_device()), to_d3d_format(indices_type), 0);
 		window->validate_context();
-		window->get_device_context()->DrawIndexed(count, to_d3d_index_location(indices_type, reinterpret_cast<UINT>(offset)), 0);
+		window->get_device_context()->DrawIndexed(count, to_d3d_index_location(indices_type, static_cast<UINT>(offset)), 0);
 		reset_primitives_elements();
 	}
 
-	void D3DGraphicContextProvider::draw_primitives_elements_instanced(PrimitivesType type, int count, ElementArrayBuffer *array_provider, VertexAttributeDataType indices_type, void *offset, int instance_count)
+	void D3DGraphicContextProvider::draw_primitives_elements_instanced(PrimitivesType type, int count, const ElementArrayBufferPtr &array_provider, VertexAttributeDataType indices_type, size_t offset, int instance_count)
 	{
 		set_primitives_elements(array_provider);
 		apply_input_layout();
 		window->get_device_context()->IASetPrimitiveTopology(to_d3d_primitive_topology(type));
 		window->get_device_context()->IASetIndexBuffer(current_element_array_provider->get_buffer(window->get_device()), to_d3d_format(indices_type), 0);
 		window->validate_context();
-		window->get_device_context()->DrawIndexedInstanced(count, instance_count, to_d3d_index_location(indices_type, reinterpret_cast<UINT>(offset)), 0, 0);
+		window->get_device_context()->DrawIndexedInstanced(count, instance_count, to_d3d_index_location(indices_type, static_cast<UINT>(offset)), 0, 0);
 		reset_primitives_elements();
 	}
 
@@ -737,22 +722,21 @@ namespace uicore
 		}
 	}
 
-	void D3DGraphicContextProvider::set_depth_range(float n, float f)
-	{
-		for (int i = 0; i < D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT; i++)
-		{
-			viewports[i].MinDepth = n;
-			viewports[i].MaxDepth = f;
-		}
-		window->get_device_context()->RSSetViewports(D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT, viewports);
-	}
-
 	void D3DGraphicContextProvider::set_depth_range(int index, float n, float f)
 	{
 		if (index >= 0 && index < D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT)
 		{
 			viewports[index].MinDepth = n;
 			viewports[index].MaxDepth = f;
+			window->get_device_context()->RSSetViewports(D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT, viewports);
+		}
+		else if (index == -1)
+		{
+			for (int i = 0; i < D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT; i++)
+			{
+				viewports[i].MinDepth = n;
+				viewports[i].MaxDepth = f;
+			}
 			window->get_device_context()->RSSetViewports(D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT, viewports);
 		}
 	}

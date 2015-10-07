@@ -47,15 +47,15 @@ namespace uicore
 	{
 	public:
 		CanvasBatcher();
-		CanvasBatcher(GraphicContext &gc);
+		CanvasBatcher(const GraphicContextPtr &gc);
 		~CanvasBatcher();
 
 		/// \brief Returns true if this object is invalid.
 		bool is_null() const { return !impl; }
 
 		void flush();
-		bool set_batcher(GraphicContext &gc, RenderBatcher *batcher);
-		void update_batcher_matrix(GraphicContext &gc, const Mat4f &modelview, const Mat4f &projection, TextureImageYAxis image_yaxis);
+		bool set_batcher(const GraphicContextPtr &gc, RenderBatcher *batcher);
+		void update_batcher_matrix(const GraphicContextPtr &gc, const Mat4f &modelview, const Mat4f &projection, TextureImageYAxis image_yaxis);
 
 		RenderBatchTriangle *get_triangle_batcher();
 		RenderBatchLine *get_line_batcher();

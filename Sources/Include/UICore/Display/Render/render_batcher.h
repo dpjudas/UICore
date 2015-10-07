@@ -46,7 +46,7 @@ namespace uicore
 		/** Flush render batcher contents.
 		 *  \param gc Graphic context to flush contents to.
 		 */
-		virtual void flush(GraphicContext &gc) = 0;
+		virtual void flush(const GraphicContextPtr &gc) = 0;
 
 		/** Function to call when matrices are changed.
 		 *  \param modelview    New wodel view matrix.

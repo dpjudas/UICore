@@ -71,7 +71,7 @@ namespace uicore
 			System::aligned_free(_data);
 	}
 
-	void CPUPixelBufferProvider::upload_data(GraphicContext &gc, const Rect &dest_rect, const void *data)
+	void CPUPixelBufferProvider::upload_data(const GraphicContextPtr &gc, const Rect &dest_rect, const void *data)
 	{
 		// Handle the simple base
 		if (dest_rect.left == 0 && dest_rect.get_width() == _width)

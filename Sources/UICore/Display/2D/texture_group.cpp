@@ -83,7 +83,7 @@ namespace uicore
 		return impl->get_textures();
 	}
 
-	Subtexture TextureGroup::add(GraphicContext &context, const Size &size)
+	Subtexture TextureGroup::add(const GraphicContextPtr &context, const Size &size)
 	{
 		return impl->add_new_node(context, size);
 	}

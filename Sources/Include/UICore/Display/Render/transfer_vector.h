@@ -47,17 +47,17 @@ namespace uicore
 		{
 		}
 
-		TransferVector(GraphicContext &gc, int size, BufferUsage usage = usage_dynamic_copy)
+		TransferVector(const GraphicContextPtr &gc, int size, BufferUsage usage = usage_dynamic_copy)
 			: _buffer(TransferBuffer::create(gc, size * sizeof(Type), usage))
 		{
 		}
 
-		TransferVector(GraphicContext &gc, Type *data, int size, BufferUsage usage = usage_dynamic_copy)
+		TransferVector(const GraphicContextPtr &gc, Type *data, int size, BufferUsage usage = usage_dynamic_copy)
 			: _buffer(TransferBuffer:.create(gc, data, size * sizeof(Type), usage))
 		{
 		}
 
-		TransferVector(GraphicContext &gc, const std::vector<Type> &data, BufferUsage usage = usage_dynamic_copy)
+		TransferVector(const GraphicContextPtr &gc, const std::vector<Type> &data, BufferUsage usage = usage_dynamic_copy)
 			: _buffer(TransferBuffer::create(gc, data.empty() ? (Type*)0 : &data[0], data.size() * sizeof(Type), usage))
 		{
 		}
@@ -71,19 +71,19 @@ namespace uicore
 		Type *data() { return reinterpret_cast<Type*>(_buffer->data()); }
 
 		/// \brief Maps buffer into system memory.
-		void lock(GraphicContext &gc, BufferAccess access) { _buffer->lock(gc, access); }
+		void lock(const GraphicContextPtr &gc, BufferAccess access) { _buffer->lock(gc, access); }
 
 		/// \brief Unmaps buffer.
 		void unlock() { _buffer->unlock(); }
 
 		/// \brief Uploads data to transfer buffer.
-		void upload_data(GraphicContext &gc, int offset, const Type *data, int size)
+		void upload_data(const GraphicContextPtr &gc, int offset, const Type *data, int size)
 		{
 			_buffer->upload_data(gc, offset * sizeof(Type), data, size * sizeof(Type));
 		}
 
 		/// \brief Uploads data to transfer buffer.
-		void upload_data(GraphicContext &gc, int offset, const std::vector<Type> &data)
+		void upload_data(const GraphicContextPtr &gc, int offset, const std::vector<Type> &data)
 		{
 			_buffer->upload_data(gc, offset * sizeof(Type), data.data(), data.size() * sizeof(Type));
 		}

@@ -87,7 +87,7 @@ namespace uicore
 		static TextureFormat_GL get_textureformat(TextureFormat format);
 
 		/// \brief Sets the thread's OpenGL context to the one used by the graphic context.
-		static void set_active(GraphicContext &gc);
+		static void set_active(const GraphicContextPtr &gc);
 
 		/// \brief Sets the thread's OpenGL context to the one used by the graphic context.
 		static void set_active(const OpenGLGraphicContextProvider * const gc_provider);

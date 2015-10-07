@@ -42,11 +42,11 @@ using namespace uicore::PathConstants;
 
 namespace uicore
 {
-	PathFillRenderer::PathFillRenderer(GraphicContext &gc, RenderBatchBuffer *batch_buffer) : batch_buffer(batch_buffer)
+	PathFillRenderer::PathFillRenderer(const GraphicContextPtr &gc, RenderBatchBuffer *batch_buffer) : batch_buffer(batch_buffer)
 	{
 		BlendStateDescription blend_desc;
 		blend_desc.set_blend_function(blend_one, blend_one_minus_src_alpha, blend_one, blend_one_minus_src_alpha);
-		blend_state = gc.create_blend_state(blend_desc);
+		blend_state = gc->create_blend_state(blend_desc);
 	}
 
 	void PathFillRenderer::set_size(Canvas &canvas, int new_width, int new_height)
@@ -140,7 +140,7 @@ namespace uicore
 			current_instance_offset = instances.push(canvas, brush, transform);
 		}
 
-		int max_width = canvas.get_gc().get_width() * antialias_level;
+		int max_width = canvas.get_gc()->get_width() * antialias_level;
 
 		int start_y = first_scanline / scanline_block_size * scanline_block_size;
 		int end_y = (last_scanline + scanline_block_size - 1) / scanline_block_size * scanline_block_size;
@@ -190,7 +190,7 @@ namespace uicore
 		return extent;
 	}
 
-	void PathFillRenderer::flush(GraphicContext &gc)
+	void PathFillRenderer::flush(const GraphicContextPtr &gc)
 	{
 		if (mask_blocks.next_block == 0) // Nothing to flush
 			return;
@@ -215,28 +215,28 @@ namespace uicore
 
 		instance_texture->set_subimage(gc, 0, 0, instance_buffer, Rect(Point(0, 0), Size(instance_buffer_width, (instances.get_position() + instance_buffer_width - 1) / instance_buffer_width)));
 
-		gc.set_blend_state(blend_state);
-		gc.set_program_object(program_path);
+		gc->set_blend_state(blend_state);
+		gc->set_program_object(program_path);
 
-		auto obj = gc.get_program_object();
+		auto obj = gc->get_program_object();
 		obj->set_uniform1f("ypos_scale", image_yaxis == y_axis_top_down ? 1.0f : -1.0f);
 
-		gc.set_texture(0, mask_texture);
-		gc.set_texture(1, instance_texture);
+		gc->set_texture(0, mask_texture);
+		gc->set_texture(1, instance_texture);
 
 		Texture2DPtr current_texture = instances.get_texture();
 
 		if (current_texture)
-			gc.set_texture(2, current_texture);
-		gc.draw_primitives(type_triangles, vertices.get_position(), prim_array[gpu_index]);
+			gc->set_texture(2, current_texture);
+		gc->draw_primitives(type_triangles, vertices.get_position(), prim_array[gpu_index]);
 		if (current_texture)
 		{
-			gc.reset_texture(2);
+			gc->reset_texture(2);
 		}
-		gc.reset_texture(1);
-		gc.reset_texture(0);
-		gc.reset_program_object();
-		gc.reset_blend_state();
+		gc->reset_texture(1);
+		gc->reset_texture(0);
+		gc->reset_program_object();
+		gc->reset_blend_state();
 
 		// Set nothing more to flush.
 		// Although this is cleared in PathMaskBuffer::reset() called by initialise_buffers(), It is still possible for this function to be called without reinitialising the buffers
@@ -253,7 +253,7 @@ namespace uicore
 	{
 		if (!mask_texture)
 		{
-			GraphicContext gc = canvas.get_gc();
+			GraphicContextPtr gc = canvas.get_gc();
 			mask_texture = batch_buffer->get_texture_r8(gc);
 			mask_buffer = batch_buffer->get_transfer_r8(gc, mask_buffer_id);
 			instance_texture = batch_buffer->get_texture_rgba32f(gc);
@@ -579,13 +579,13 @@ namespace uicore
 
 	/////////////////////////////////////////////////////////////////////////
 
-	void PathInstanceBuffer::reset(GraphicContext &gc, Vec4f *new_buffer, int new_max_entries)
+	void PathInstanceBuffer::reset(const GraphicContextPtr &gc, Vec4f *new_buffer, int new_max_entries)
 	{
 		buffer = new_buffer;
 		max_entries = new_max_entries;
 		current_texture.reset();
 
-		buffer[0] = Vec4f(gc.get_width(), gc.get_height(), 0, 0);
+		buffer[0] = Vec4f(gc->get_width(), gc->get_height(), 0, 0);
 		end_position = 1;
 	}
 

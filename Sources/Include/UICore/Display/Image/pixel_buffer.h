@@ -45,6 +45,7 @@ namespace uicore
 	class PixelBuffer;
 	class IODevice;
 	class GraphicContext;
+	typedef std::shared_ptr<GraphicContext> GraphicContextPtr;
 	class PixelConverter;
 	typedef std::shared_ptr<PixelConverter> PixelConverterPtr;
 
@@ -188,13 +189,13 @@ namespace uicore
 		/// \brief Maps buffer into system memory.
 		///
 		/// Locking before accessing data is only required for GPU based buffers.
-		virtual void lock(GraphicContext &gc, BufferAccess access) = 0;
+		virtual void lock(const GraphicContextPtr &gc, BufferAccess access) = 0;
 
 		/// \brief Unmaps buffer.
 		virtual void unlock() = 0;
 
 		/// \brief Uploads data to buffer.
-		virtual void upload_data(GraphicContext &gc, const Rect &dest_rect, const void *data) = 0;
+		virtual void upload_data(const GraphicContextPtr &gc, const Rect &dest_rect, const void *data) = 0;
 
 		/// \brief Copy source pixel buffer into this buffer, doing a format conversion if needed
 		///

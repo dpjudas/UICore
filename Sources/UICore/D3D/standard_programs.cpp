@@ -58,7 +58,7 @@ namespace uicore
 	{
 	}
 
-	StandardPrograms::StandardPrograms(GraphicContext &gc) : impl(std::make_shared<StandardPrograms_Impl>())
+	StandardPrograms::StandardPrograms(const GraphicContextPtr &gc) : impl(std::make_shared<StandardPrograms_Impl>())
 	{
 		auto color_only_program = compile(gc, color_only_vertex, sizeof(color_only_vertex), color_only_fragment, sizeof(color_only_fragment));
 		color_only_program->bind_attribute_location(0, "VertexPosition");
@@ -119,7 +119,7 @@ namespace uicore
 		throw Exception("Unsupported standard program");
 	}
 
-	ProgramObjectPtr StandardPrograms::compile(GraphicContext &gc, const void *vertex_code, int vertex_code_size, const void *fragment_code, int fragment_code_size)
+	ProgramObjectPtr StandardPrograms::compile(const GraphicContextPtr &gc, const void *vertex_code, int vertex_code_size, const void *fragment_code, int fragment_code_size)
 	{
 		auto vertex_shader = ShaderObject::create(gc, ShaderType::vertex, vertex_code, vertex_code_size);
 		if (!vertex_shader->try_compile())

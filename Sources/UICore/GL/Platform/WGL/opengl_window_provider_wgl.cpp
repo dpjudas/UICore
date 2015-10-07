@@ -64,17 +64,17 @@ namespace uicore
 	{
 		if (opengl_context)
 		{
-			if (!gc.is_null())
+			if (gc)
 			{
 				if (using_gl3)
 				{
-					GL3GraphicContextProvider *gl_provider = dynamic_cast<GL3GraphicContextProvider*>(gc.get_provider());
+					GL3GraphicContextProvider *gl_provider = dynamic_cast<GL3GraphicContextProvider*>(gc.get());
 					if (gl_provider)
 						gl_provider->dispose();
 				}
 				else
 				{
-					GL1GraphicContextProvider *gl_provider = dynamic_cast<GL1GraphicContextProvider*>(gc.get_provider());
+					GL1GraphicContextProvider *gl_provider = dynamic_cast<GL1GraphicContextProvider*>(gc.get());
 					if (gl_provider)
 						gl_provider->dispose();
 				}
@@ -334,12 +334,12 @@ namespace uicore
 			if (use_gl3)
 			{
 				using_gl3 = true;
-				gc = GraphicContext(new GL3GraphicContextProvider(this));
+				gc = std::make_shared<GL3GraphicContextProvider>(this);
 			}
 			else
 			{
 				using_gl3 = false;
-				gc = GraphicContext(new GL1GraphicContextProvider(this));
+				gc = std::make_shared<GL1GraphicContextProvider>(this);
 			}
 		}
 
@@ -377,13 +377,13 @@ namespace uicore
 
 		if (using_gl3)
 		{
-			GL3GraphicContextProvider *gl_provider = dynamic_cast<GL3GraphicContextProvider*>(gc.get_provider());
+			GL3GraphicContextProvider *gl_provider = dynamic_cast<GL3GraphicContextProvider*>(gc.get());
 			if (gl_provider)
 				gl_provider->on_window_resized();
 		}
 		else
 		{
-			GL1GraphicContextProvider *gl_provider = dynamic_cast<GL1GraphicContextProvider*>(gc.get_provider());
+			GL1GraphicContextProvider *gl_provider = dynamic_cast<GL1GraphicContextProvider*>(gc.get());
 			if (gl_provider)
 				gl_provider->on_window_resized();
 		}

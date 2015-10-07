@@ -35,8 +35,8 @@
 
 namespace uicore
 {
-	std::shared_ptr<RenderBuffer> RenderBuffer::create(GraphicContext &gc, int width, int height, TextureFormat texture_format, int multisample_samples)
+	std::shared_ptr<RenderBuffer> RenderBuffer::create(const GraphicContextPtr &gc, int width, int height, TextureFormat texture_format, int multisample_samples)
 	{
-		return gc.get_provider()->create_render_buffer(width, height, texture_format, multisample_samples);
+		return static_cast<GraphicContextProvider*>(gc.get())->create_render_buffer(width, height, texture_format, multisample_samples);
 	}
 }

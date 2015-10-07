@@ -41,7 +41,7 @@ namespace uicore
 	{
 	public:
 		/// \brief Constructs a render target buffer
-		static std::shared_ptr<RenderBuffer> create(GraphicContext &context, int width, int height, TextureFormat texture_format = tf_rgba8, int multisample_samples = 0);
+		static std::shared_ptr<RenderBuffer> create(const GraphicContextPtr &context, int width, int height, TextureFormat texture_format = tf_rgba8, int multisample_samples = 0);
 
 		/// \brief Returns the render buffer size.
 		virtual Size size() const = 0;

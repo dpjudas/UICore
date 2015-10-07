@@ -24,21 +24,18 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    Harry Storbacka
-**    Kenneth Gangstoe
 */
 
 #include "UICore/precomp.h"
 #include "UICore/Display/Render/primitives_array.h"
 #include "UICore/Display/Render/graphic_context.h"
 #include "UICore/Display/Render/vertex_array_buffer.h"
-#include "graphic_context_impl.h"
-#include "primitives_array_impl.h"
+#include "UICore/Display/TargetProviders/graphic_context_provider.h"
 
 namespace uicore
 {
-	std::shared_ptr<PrimitivesArray> PrimitivesArray::create(GraphicContext &gc)
+	std::shared_ptr<PrimitivesArray> PrimitivesArray::create(const GraphicContextPtr &gc)
 	{
-		return gc.get_provider()->create_primitives_array();
+		return static_cast<GraphicContextProvider*>(gc.get())->create_primitives_array();
 	}
 }

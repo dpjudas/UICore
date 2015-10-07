@@ -63,7 +63,7 @@ namespace uicore
 	{
 	}
 
-	void GL3PixelBufferProvider::upload_data(GraphicContext &gc, const Rect &dest_rect, const void *data)
+	void GL3PixelBufferProvider::upload_data(const GraphicContextPtr &gc, const Rect &dest_rect, const void *data)
 	{
 		// Handle the simple base
 		if (dest_rect.left == 0 && dest_rect.get_width() == _size.width)

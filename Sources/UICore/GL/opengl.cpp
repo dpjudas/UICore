@@ -38,7 +38,7 @@
 #include "UICore/Display/Render/texture.h"
 #include "UICore/Display/TargetProviders/display_window_provider.h"
 #include "UICore/Display/Render/shared_gc_data.h"
-#include "UICore/Display/Render/graphic_context_impl.h"
+#include "UICore/Display/TargetProviders/graphic_context_provider.h"
 #include "GL3/gl3_graphic_context_provider.h"
 #include "GL3/gl3_texture_provider.h"
 #include <map>
@@ -286,7 +286,7 @@ namespace uicore
 		return nullptr;
 	}
 
-	void OpenGL::set_active(GraphicContext &gc)
+	void OpenGL::set_active(const GraphicContextPtr &gc)
 	{
 		OpenGLTarget::set_active_context(gc);
 	}

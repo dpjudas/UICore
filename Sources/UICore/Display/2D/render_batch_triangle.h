@@ -44,7 +44,7 @@ namespace uicore
 	class RenderBatchTriangle : public RenderBatcher
 	{
 	public:
-		RenderBatchTriangle(GraphicContext &gc, RenderBatchBuffer *batch_buffer);
+		RenderBatchTriangle(const GraphicContextPtr &gc, RenderBatchBuffer *batch_buffer);
 		void draw_sprite(Canvas &canvas, const Pointf texture_position[4], const Pointf dest_position[4], const Texture2DPtr &texture, const Colorf &color);
 		void draw_image(Canvas &canvas, const Rectf &src, const Rectf &dest, const Colorf &color, const Texture2DPtr &texture);
 		void draw_image(Canvas &canvas, const Rectf &src, const Quadf &dest, const Colorf &color, const Texture2DPtr &texture);
@@ -70,7 +70,7 @@ namespace uicore
 		int set_batcher_active(Canvas &canvas, const Texture2DPtr &texture, bool glyph_program = false, const Colorf &constant_color = Colorf::black);
 		int set_batcher_active(Canvas &canvas);
 		int set_batcher_active(Canvas &canvas, int num_vertices);
-		void flush(GraphicContext &gc) override;
+		void flush(const GraphicContextPtr &gc) override;
 		void matrix_changed(const Mat4f &modelview, const Mat4f &projection, TextureImageYAxis image_yaxis, float pixel_ratio) override;
 
 		inline void to_sprite_vertex(const Pointf &texture_position, const Pointf &dest_position, RenderBatchTriangle::SpriteVertex &v, int texindex, const Colorf &color) const;

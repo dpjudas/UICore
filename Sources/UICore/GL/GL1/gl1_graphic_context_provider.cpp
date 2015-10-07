@@ -412,11 +412,11 @@ namespace uicore
 		throw Exception("Pixel Buffers Objects are not supported for OpenGL 1.3");
 	}
 
-	void GL1GraphicContextProvider::set_rasterizer_state(RasterizerState *state)
+	void GL1GraphicContextProvider::set_rasterizer_state(const RasterizerStatePtr &state)
 	{
 		if (state)
 		{
-			OpenGLRasterizerState *gl1_state = static_cast<OpenGLRasterizerState*>(state);
+			OpenGLRasterizerState *gl1_state = static_cast<OpenGLRasterizerState*>(state.get());
 			if (gl1_state)
 			{
 				selected_state.rasterizer.set(*gl1_state);
@@ -429,11 +429,11 @@ namespace uicore
 		}
 	}
 
-	void GL1GraphicContextProvider::set_blend_state(BlendState *state, const Colorf &blend_color, unsigned int sample_mask)
+	void GL1GraphicContextProvider::set_blend_state(const BlendStatePtr &state, const Colorf &blend_color, unsigned int sample_mask)
 	{
 		if (state)
 		{
-			OpenGLBlendState *gl1_state = static_cast<OpenGLBlendState*>(state);
+			OpenGLBlendState *gl1_state = static_cast<OpenGLBlendState*>(state.get());
 			if (gl1_state)
 			{
 				selected_state.blend.set(gl1_state->desc, blend_color);
@@ -443,11 +443,11 @@ namespace uicore
 		}
 	}
 
-	void GL1GraphicContextProvider::set_depth_stencil_state(DepthStencilState *state, int stencil_ref)
+	void GL1GraphicContextProvider::set_depth_stencil_state(const DepthStencilStatePtr &state, int stencil_ref)
 	{
 		if (state)
 		{
-			OpenGLDepthStencilState *gl1_state = static_cast<OpenGLDepthStencilState*>(state);
+			OpenGLDepthStencilState *gl1_state = static_cast<OpenGLDepthStencilState*>(state.get());
 			if (gl1_state)
 			{
 				selected_state.depth_stencil.set(gl1_state->desc);
@@ -488,39 +488,69 @@ namespace uicore
 		//GL1UniformBufferProvider *provider = static_cast<GL1UniformBufferProvider*>(buffer.get_provider());
 	}
 
-	void GL1GraphicContextProvider::reset_uniform_buffer(int index)
-	{
-	}
-
 	void GL1GraphicContextProvider::set_storage_buffer(int index, const StorageBufferPtr &buffer)
-	{
-	}
-
-	void GL1GraphicContextProvider::reset_storage_buffer(int index)
 	{
 	}
 
 	void GL1GraphicContextProvider::set_texture(int unit_index, const TexturePtr &texture)
 	{
-		set_active();
+		if (texture)
+		{
+			set_active();
 
-		if ((unit_index < 0) || (unit_index >= max_texture_coords))
-		{
-			throw Exception("Invalid texture unit index in GL1 target");
-		}
-		selected_textures[unit_index].texture = nullptr;
+			if ((unit_index < 0) || (unit_index >= max_texture_coords))
+			{
+				throw Exception("Invalid texture unit index in GL1 target");
+			}
+			selected_textures[unit_index].texture = nullptr;
 
-		if (glActiveTexture != nullptr)
-		{
-			glActiveTexture(GL_TEXTURE0 + unit_index);
-		}
-		else if (unit_index > 0)
-		{
-			return;
-		}
+			if (glActiveTexture != nullptr)
+			{
+				glActiveTexture(GL_TEXTURE0 + unit_index);
+			}
+			else if (unit_index > 0)
+			{
+				return;
+			}
 
-		if (!texture)
+			if (!texture)
+			{
+#ifndef __ANDROID__
+				glDisable(GL_TEXTURE_1D);
+#endif
+				glDisable(GL_TEXTURE_2D);
+				glDisable(GL_TEXTURE_3D);
+#ifndef __ANDROID__
+				glDisable(GL_TEXTURE_CUBE_MAP);
+#endif
+			}
+			else
+			{
+				GL1TextureProvider *provider = static_cast<GL1TextureProvider*>(texture->texture_object());
+				selected_textures[unit_index].texture = provider;
+
+				glEnable(provider->get_texture_type());
+				glBindTexture(provider->get_texture_type(), provider->get_handle());
+			}
+		}
+		else
 		{
+			set_active();
+
+			if ((unit_index >= 0) && (unit_index < max_texture_coords))
+			{
+				selected_textures[unit_index].texture = nullptr;
+			}
+
+			if (glActiveTexture != nullptr)
+			{
+				glActiveTexture(GL_TEXTURE0 + unit_index);
+			}
+			else if (unit_index > 0)
+			{
+				return;
+			}
+
 #ifndef __ANDROID__
 			glDisable(GL_TEXTURE_1D);
 #endif
@@ -529,52 +559,11 @@ namespace uicore
 #ifndef __ANDROID__
 			glDisable(GL_TEXTURE_CUBE_MAP);
 #endif
+			glBindTexture(GL_TEXTURE_2D, 0);
 		}
-		else
-		{
-			GL1TextureProvider *provider = static_cast<GL1TextureProvider*>(texture->texture_object());
-			selected_textures[unit_index].texture = provider;
-
-			glEnable(provider->get_texture_type());
-			glBindTexture(provider->get_texture_type(), provider->get_handle());
-		}
-	}
-
-	void GL1GraphicContextProvider::reset_texture(int unit_index)
-	{
-		set_active();
-
-		if ((unit_index >= 0) && (unit_index < max_texture_coords))
-		{
-			selected_textures[unit_index].texture = nullptr;
-		}
-
-		if (glActiveTexture != nullptr)
-		{
-			glActiveTexture(GL_TEXTURE0 + unit_index);
-		}
-		else if (unit_index > 0)
-		{
-			return;
-		}
-
-#ifndef __ANDROID__
-		glDisable(GL_TEXTURE_1D);
-#endif
-		glDisable(GL_TEXTURE_2D);
-		glDisable(GL_TEXTURE_3D);
-#ifndef __ANDROID__
-		glDisable(GL_TEXTURE_CUBE_MAP);
-#endif
-		glBindTexture(GL_TEXTURE_2D, 0);
-
 	}
 
 	void GL1GraphicContextProvider::set_image_texture(int unit_index, const TexturePtr &texture)
-	{
-	}
-
-	void GL1GraphicContextProvider::reset_image_texture(int unit_index)
 	{
 	}
 
@@ -585,24 +574,29 @@ namespace uicore
 
 	void GL1GraphicContextProvider::set_frame_buffer(const FrameBufferPtr &w_buffer, const FrameBufferPtr &r_buffer)
 	{
-		framebuffer_provider = dynamic_cast<GL1FrameBufferProvider *>(w_buffer.get());
-		framebuffer_provider->set_active();
-		framebuffer_provider->set_state(selected_state);
-		framebuffer_provider->start();
+		_write_frame_buffer = w_buffer;
+		_read_frame_buffer = r_buffer;
 
-		framebuffer_bound = true;
-	}
-
-	void GL1GraphicContextProvider::reset_frame_buffer()
-	{
-		if (framebuffer_bound)
+		if (w_buffer && r_buffer)
 		{
-			framebuffer_bound = false;
-
+			framebuffer_provider = dynamic_cast<GL1FrameBufferProvider *>(w_buffer.get());
 			framebuffer_provider->set_active();
-			framebuffer_provider->stop();
-			OpenGL::set_active(this);
-			selected_state.apply();
+			framebuffer_provider->set_state(selected_state);
+			framebuffer_provider->start();
+
+			framebuffer_bound = true;
+		}
+		else
+		{
+			if (framebuffer_bound)
+			{
+				framebuffer_bound = false;
+
+				framebuffer_provider->set_active();
+				framebuffer_provider->stop();
+				OpenGL::set_active(this);
+				selected_state.apply();
+			}
 		}
 	}
 
@@ -610,7 +604,7 @@ namespace uicore
 	{
 	}
 
-	ProgramObjectPtr GL1GraphicContextProvider::get_program_object(StandardProgram standard_program) const
+	ProgramObjectPtr GL1GraphicContextProvider::get_program_object() const
 	{
 		return internal_program;
 	}
@@ -618,10 +612,6 @@ namespace uicore
 	void GL1GraphicContextProvider::set_program_object(const ProgramObjectPtr &program)
 	{
 		throw Exception("GLSL program objects are not supported on OpenGL 1.3");
-	}
-
-	void GL1GraphicContextProvider::reset_program_object()
-	{
 	}
 
 	bool GL1GraphicContextProvider::is_primitives_array_owner(const PrimitivesArrayPtr &primitives_array)
@@ -638,51 +628,85 @@ namespace uicore
 
 	void GL1GraphicContextProvider::set_primitives_array(const PrimitivesArrayPtr &primitives_array)
 	{
-		GL1PrimitivesArrayProvider * prim_array = static_cast<GL1PrimitivesArrayProvider *>(primitives_array.get());
-		if (prim_arrays_set)
-			reset_primitives_array();
-		set_active();
-		prim_arrays_set = true;
-
-		num_set_tex_arrays = 0;
-
-		for (size_t attribute_index = 0; attribute_index < prim_array->attributes.size(); attribute_index++)
+		if (primitives_array)
 		{
-			if (!prim_array->attribute_set[attribute_index])
-				continue;
+			GL1PrimitivesArrayProvider * prim_array = static_cast<GL1PrimitivesArrayProvider *>(primitives_array.get());
+			if (prim_arrays_set)
+				reset_primitives_array();
+			set_active();
+			prim_arrays_set = true;
 
-			const PrimitivesArrayProvider::VertexData &attribute = prim_array->attributes[attribute_index];
+			num_set_tex_arrays = 0;
 
-			GL1VertexArrayBufferProvider *vertex_array_ptr = static_cast<GL1VertexArrayBufferProvider *>(attribute.array_provider);
-			if (!vertex_array_ptr)
-				throw Exception("Invalid BindBuffer Provider");
-
-			const char *data_ptr = ((const char *)vertex_array_ptr->get_data()) + attribute.offset;
-
-			switch (attribute_index)
+			for (size_t attribute_index = 0; attribute_index < prim_array->attributes.size(); attribute_index++)
 			{
-			case 0: // POSITION
-				glEnableClientState(GL_VERTEX_ARRAY);
-				glVertexPointer(attribute.size, OpenGL::to_enum(attribute.type), attribute.stride, data_ptr);
-				break;
-			case 1: // COLOR
-				glEnableClientState(GL_COLOR_ARRAY);
-				glColorPointer(attribute.size, OpenGL::to_enum(attribute.type), attribute.stride, data_ptr);
+				if (!prim_array->attribute_set[attribute_index])
+					continue;
 
-				break;
-			case 2: // TEXTURE
-				primitives_array_texture = attribute;
-				primitives_array_texture_set = true;
-				break;
-			case 3: // TEXINDEX
-				primitives_array_texindex = attribute;
-				primitives_array_texindex_set = true;
-				break;
-			case 4: // NORMAL
-				glEnableClientState(GL_NORMAL_ARRAY);
-				glNormalPointer(OpenGL::to_enum(attribute.type), attribute.stride, data_ptr);
-				break;
+				const PrimitivesArrayProvider::VertexData &attribute = prim_array->attributes[attribute_index];
+
+				GL1VertexArrayBufferProvider *vertex_array_ptr = static_cast<GL1VertexArrayBufferProvider *>(attribute.array_provider);
+				if (!vertex_array_ptr)
+					throw Exception("Invalid BindBuffer Provider");
+
+				const char *data_ptr = ((const char *)vertex_array_ptr->get_data()) + attribute.offset;
+
+				switch (attribute_index)
+				{
+				case 0: // POSITION
+					glEnableClientState(GL_VERTEX_ARRAY);
+					glVertexPointer(attribute.size, OpenGL::to_enum(attribute.type), attribute.stride, data_ptr);
+					break;
+				case 1: // COLOR
+					glEnableClientState(GL_COLOR_ARRAY);
+					glColorPointer(attribute.size, OpenGL::to_enum(attribute.type), attribute.stride, data_ptr);
+
+					break;
+				case 2: // TEXTURE
+					primitives_array_texture = attribute;
+					primitives_array_texture_set = true;
+					break;
+				case 3: // TEXINDEX
+					primitives_array_texindex = attribute;
+					primitives_array_texindex_set = true;
+					break;
+				case 4: // NORMAL
+					glEnableClientState(GL_NORMAL_ARRAY);
+					glNormalPointer(OpenGL::to_enum(attribute.type), attribute.stride, data_ptr);
+					break;
+				}
 			}
+		}
+		else
+		{
+			set_active();
+
+			primitives_array_texture_set = false;
+			primitives_array_texindex_set = false;
+
+			glDisableClientState(GL_VERTEX_ARRAY);
+			glDisableClientState(GL_COLOR_ARRAY);
+			glDisableClientState(GL_NORMAL_ARRAY);
+#ifndef __ANDROID__
+			glDisableClientState(GL_EDGE_FLAG_ARRAY);
+#endif
+			glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+
+			if (glClientActiveTexture)
+			{
+				for (int i = 0; i < num_set_tex_arrays; ++i)
+				{
+					glClientActiveTexture(GL_TEXTURE0 + i);
+					glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+				}
+				num_set_tex_arrays = 0;
+			}
+			else
+			{
+				glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+			}
+
+			prim_arrays_set = false;
 		}
 	}
 
@@ -781,7 +805,7 @@ namespace uicore
 		throw Exception("Cannot draw instanced for the OpenGL 1.3 target");
 	}
 
-	void GL1GraphicContextProvider::set_primitives_elements(ElementArrayBuffer *array_provider)
+	void GL1GraphicContextProvider::set_primitives_elements(const ElementArrayBufferPtr &array_provider)
 	{
 		throw Exception("Cannot draw Element Array Buffers for the OpenGL 1.3 target");
 	}
@@ -796,17 +820,12 @@ namespace uicore
 		throw Exception("Cannot draw instanced for the OpenGL 1.3 target");
 	}
 
-	void GL1GraphicContextProvider::reset_primitives_elements()
-	{
-		throw Exception("Cannot draw Element Array Buffers for the OpenGL 1.3 target");
-	}
-
 	void GL1GraphicContextProvider::draw_primitives_elements(
 		PrimitivesType type,
 		int count,
-		ElementArrayBuffer *array_provider,
+		const ElementArrayBufferPtr &array_provider,
 		VertexAttributeDataType indices_type,
-		void *offset)
+		size_t offset)
 	{
 		throw Exception("Cannot draw Element Array Buffers for the OpenGL 1.3 target");
 	}
@@ -814,44 +833,12 @@ namespace uicore
 	void GL1GraphicContextProvider::draw_primitives_elements_instanced(
 		PrimitivesType type,
 		int count,
-		ElementArrayBuffer *array_provider,
+		const ElementArrayBufferPtr &array_provider,
 		VertexAttributeDataType indices_type,
-		void *offset,
+		size_t offset,
 		int instance_count)
 	{
 		throw Exception("Cannot draw Element Array Buffers for the OpenGL 1.3 target");
-	}
-
-	void GL1GraphicContextProvider::reset_primitives_array()
-	{
-		set_active();
-
-		primitives_array_texture_set = false;
-		primitives_array_texindex_set = false;
-
-		glDisableClientState(GL_VERTEX_ARRAY);
-		glDisableClientState(GL_COLOR_ARRAY);
-		glDisableClientState(GL_NORMAL_ARRAY);
-#ifndef __ANDROID__
-		glDisableClientState(GL_EDGE_FLAG_ARRAY);
-#endif
-		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-
-		if (glClientActiveTexture)
-		{
-			for (int i = 0; i < num_set_tex_arrays; ++i)
-			{
-				glClientActiveTexture(GL_TEXTURE0 + i);
-				glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-			}
-			num_set_tex_arrays = 0;
-		}
-		else
-		{
-			glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-		}
-
-		prim_arrays_set = false;
 	}
 
 	void GL1GraphicContextProvider::set_scissor(const Rect &rect)
@@ -926,18 +913,12 @@ namespace uicore
 			set_viewport(viewport);
 	}
 
-	void GL1GraphicContextProvider::set_depth_range(float n, float f)
-	{
-		set_active();
-		glDepthRange((float)n, (float)f);
-	}
-
 	void GL1GraphicContextProvider::set_depth_range(int viewport, float n, float f)
 	{
-		if (viewport == 0)
+		if (viewport <= 0)
 		{
 			set_active();
-			glDepthRange((float)n, (float)f);
+			glDepthRange(n, f);
 		}
 	}
 

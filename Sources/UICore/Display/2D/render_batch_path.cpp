@@ -37,7 +37,7 @@
 
 namespace uicore
 {
-	RenderBatchPath::RenderBatchPath(GraphicContext &gc, RenderBatchBuffer *batch_buffer) : batch_buffer(batch_buffer), fill_renderer(gc, batch_buffer), stroke_renderer(gc)
+	RenderBatchPath::RenderBatchPath(const GraphicContextPtr &gc, RenderBatchBuffer *batch_buffer) : batch_buffer(batch_buffer), fill_renderer(gc, batch_buffer), stroke_renderer(gc)
 	{
 	}
 
@@ -52,7 +52,7 @@ namespace uicore
 	{
 		canvas.set_batcher(this);
 
-		fill_renderer.set_size(canvas, canvas.get_gc().get_width(), canvas.get_gc().get_height());
+		fill_renderer.set_size(canvas, canvas.get_gc()->get_width(), canvas.get_gc()->get_height());
 		fill_renderer.clear();
 		render(path, &fill_renderer);
 		fill_renderer.fill(canvas, path.get_impl()->fill_mode, brush, modelview_matrix);
@@ -66,7 +66,7 @@ namespace uicore
 		render(path, &stroke_renderer);
 	}
 
-	void RenderBatchPath::flush(GraphicContext &gc)
+	void RenderBatchPath::flush(const GraphicContextPtr &gc)
 	{
 		fill_renderer.flush(gc);
 	}

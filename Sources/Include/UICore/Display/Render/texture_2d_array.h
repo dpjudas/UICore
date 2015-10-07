@@ -47,8 +47,8 @@ namespace uicore
 		 *  \param format     Data format of the new texture.
 		 *  \param levels     Number of mipmap levels for the new texture. Setting this to 0 enables all levels.
 		 */
-		static std::shared_ptr<Texture2DArray> create(GraphicContext &context, int width, int height, int array_size, TextureFormat texture_format = tf_rgba8, int levels = 1);
-		static std::shared_ptr<Texture2DArray> create(GraphicContext &context, const Size &size, int array_size, TextureFormat texture_format = tf_rgba8, int levels = 1);
+		static std::shared_ptr<Texture2DArray> create(const GraphicContextPtr &context, int width, int height, int array_size, TextureFormat texture_format = tf_rgba8, int levels = 1);
+		static std::shared_ptr<Texture2DArray> create(const GraphicContextPtr &context, const Size &size, int array_size, TextureFormat texture_format = tf_rgba8, int levels = 1);
 
 		/// Retrieves the actual width of the texture in the display.
 		virtual int width() const = 0;
@@ -74,7 +74,7 @@ namespace uicore
 		 *  \param image       Image to upload.
 		 *  \param level       Mipmap level-of-detail number.
 		 */
-		virtual void set_image(GraphicContext &context, int array_index, const PixelBufferPtr &image, int level = 0) = 0;
+		virtual void set_image(const GraphicContextPtr &context, int array_index, const PixelBufferPtr &image, int level = 0) = 0;
 
 		/** Upload image to sub-texture.
 		 *  \param context     Graphic context to use for the request.
@@ -85,8 +85,8 @@ namespace uicore
 		 *  \param image       Image to upload.
 		 *  \param level       Mipmap level-of-detail number.
 		 */
-		virtual void set_subimage(GraphicContext &context, int array_index, int x, int y, const PixelBufferPtr &image, const Rect &src_rect, int level = 0) = 0;
-		void set_subimage(GraphicContext &context, int array_index, const Point &point, const PixelBufferPtr &image, const Rect &src_rect, int level = 0)
+		virtual void set_subimage(const GraphicContextPtr &context, int array_index, int x, int y, const PixelBufferPtr &image, const Rect &src_rect, int level = 0) = 0;
+		void set_subimage(const GraphicContextPtr &context, int array_index, const Point &point, const PixelBufferPtr &image, const Rect &src_rect, int level = 0)
 		{
 			set_subimage(context, array_index, point.x, point.y, image, src_rect, level);
 		}

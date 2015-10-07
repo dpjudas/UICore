@@ -54,13 +54,13 @@ namespace uicore
 		GLenum get_binding() const { return binding; }
 		GLenum get_target() const { return target; }
 
-		void lock(GraphicContext &gc, BufferAccess access);
+		void lock(const GraphicContextPtr &gc, BufferAccess access);
 		void unlock();
-		void upload_data(GraphicContext &gc, int offset, const void *data, int size);
+		void upload_data(const GraphicContextPtr &gc, int offset, const void *data, int size);
 
-		void upload_data(GraphicContext &gc, const void *data, int size);
-		void copy_from(GraphicContext &gc, const TransferBufferPtr &buffer, int dest_pos, int src_pos, int size);
-		void copy_to(GraphicContext &gc, const TransferBufferPtr &buffer, int dest_pos, int src_pos, int size);
+		void upload_data(const GraphicContextPtr &gc, const void *data, int size);
+		void copy_from(const GraphicContextPtr &gc, const TransferBufferPtr &buffer, int dest_pos, int src_pos, int size);
+		void copy_to(const GraphicContextPtr &gc, const TransferBufferPtr &buffer, int dest_pos, int src_pos, int size);
 
 	private:
 		void on_dispose() override;
@@ -70,6 +70,6 @@ namespace uicore
 		GLenum target;
 
 		void *data_ptr;
-		GraphicContext lock_gc;
+		GraphicContextPtr lock_gc;
 	};
 }

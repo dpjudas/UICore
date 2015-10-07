@@ -40,12 +40,12 @@
 
 namespace uicore
 {
-	std::shared_ptr<ProgramObject> ProgramObject::create(GraphicContext &gc)
+	std::shared_ptr<ProgramObject> ProgramObject::create(const GraphicContextPtr &gc)
 	{
-		return gc.get_provider()->create_program();
+		return static_cast<GraphicContextProvider*>(gc.get())->create_program();
 	}
 
-	std::shared_ptr<ProgramObject> ProgramObject::load(GraphicContext &gc, const std::string &vertex_filename, const std::string &fragment_filename)
+	std::shared_ptr<ProgramObject> ProgramObject::load(const GraphicContextPtr &gc, const std::string &vertex_filename, const std::string &fragment_filename)
 	{
 		auto program_object = create(gc);
 
@@ -58,7 +58,7 @@ namespace uicore
 		return program_object;
 	}
 
-	std::shared_ptr<ProgramObject> ProgramObject::load(GraphicContext &gc, const std::string &vertex_filename, const std::string &geometry_filename, const std::string &fragment_filename)
+	std::shared_ptr<ProgramObject> ProgramObject::load(const GraphicContextPtr &gc, const std::string &vertex_filename, const std::string &geometry_filename, const std::string &fragment_filename)
 	{
 		auto program_object = create(gc);
 
@@ -74,7 +74,7 @@ namespace uicore
 		return program_object;
 	}
 
-	std::shared_ptr<ProgramObject> ProgramObject::load(GraphicContext &gc, IODevice &vertex_file, IODevice &fragment_file)
+	std::shared_ptr<ProgramObject> ProgramObject::load(const GraphicContextPtr &gc, IODevice &vertex_file, IODevice &fragment_file)
 	{
 		auto program_object = create(gc);
 
@@ -87,7 +87,7 @@ namespace uicore
 		return program_object;
 	}
 
-	std::shared_ptr<ProgramObject> ProgramObject::load(GraphicContext &gc, IODevice &vertex_file, IODevice &geometry_file, IODevice &fragment_file)
+	std::shared_ptr<ProgramObject> ProgramObject::load(const GraphicContextPtr &gc, IODevice &vertex_file, IODevice &geometry_file, IODevice &fragment_file)
 	{
 		auto program_object = create(gc);
 
@@ -103,7 +103,7 @@ namespace uicore
 		return program_object;
 	}
 
-	std::shared_ptr<ProgramObject> ProgramObject::load_and_link(GraphicContext &gc, const std::string &vertex_filename, const std::string &fragment_filename)
+	std::shared_ptr<ProgramObject> ProgramObject::load_and_link(const GraphicContextPtr &gc, const std::string &vertex_filename, const std::string &fragment_filename)
 	{
 		auto program_object = load(gc, vertex_filename, fragment_filename);
 
@@ -113,7 +113,7 @@ namespace uicore
 		return program_object;
 	}
 
-	std::shared_ptr<ProgramObject> ProgramObject::load_and_link(GraphicContext &gc, const std::string &vertex_filename, const std::string &geometry_filename, const std::string &fragment_filename)
+	std::shared_ptr<ProgramObject> ProgramObject::load_and_link(const GraphicContextPtr &gc, const std::string &vertex_filename, const std::string &geometry_filename, const std::string &fragment_filename)
 	{
 		auto program_object = load(gc, vertex_filename, geometry_filename, fragment_filename);
 
@@ -123,7 +123,7 @@ namespace uicore
 		return program_object;
 	}
 
-	std::shared_ptr<ProgramObject> ProgramObject::load_and_link(GraphicContext &gc, IODevice &vertex_file, IODevice &fragment_file)
+	std::shared_ptr<ProgramObject> ProgramObject::load_and_link(const GraphicContextPtr &gc, IODevice &vertex_file, IODevice &fragment_file)
 	{
 		auto program_object = load(gc, vertex_file, fragment_file);
 
@@ -133,7 +133,7 @@ namespace uicore
 		return program_object;
 	}
 
-	std::shared_ptr<ProgramObject> ProgramObject::load_and_link(GraphicContext &gc, IODevice &vertex_file, IODevice &geometry_file, IODevice &fragment_file)
+	std::shared_ptr<ProgramObject> ProgramObject::load_and_link(const GraphicContextPtr &gc, IODevice &vertex_file, IODevice &geometry_file, IODevice &fragment_file)
 	{
 		auto program_object = load(gc, vertex_file, geometry_file, fragment_file);
 

@@ -86,7 +86,7 @@ namespace uicore
 		return textures;
 	}
 
-	Subtexture TextureGroup_Impl::add_new_node(GraphicContext &context, const Size &texture_size)
+	Subtexture TextureGroup_Impl::add_new_node(const GraphicContextPtr &context, const Size &texture_size)
 	{
 		// Try inserting in current active texture
 		Node *node;
@@ -138,7 +138,7 @@ namespace uicore
 		return Subtexture(active_root->texture, node->image_rect);
 	}
 
-	TextureGroup_Impl::RootNode *TextureGroup_Impl::add_new_root(GraphicContext &context, const Size &texture_size)
+	TextureGroup_Impl::RootNode *TextureGroup_Impl::add_new_root(const GraphicContextPtr &context, const Size &texture_size)
 	{
 		Rect rect(Point(0, 0), texture_size);
 		Node node(rect);

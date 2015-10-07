@@ -133,7 +133,7 @@ namespace uicore
 		virtual std::string get_title() const = 0;
 
 		/// Returns the graphic context for the window.
-		virtual GraphicContext& get_gc() = 0;
+		virtual const GraphicContextPtr &get_gc() const = 0;
 
 		/// \brief Returns the keyboard input device.
 		virtual InputDevice &get_keyboard() = 0;

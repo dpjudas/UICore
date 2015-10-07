@@ -78,7 +78,7 @@ namespace uicore
 
 		std::vector<Texture2DPtr> get_textures() const;
 
-		Subtexture add_new_node(GraphicContext &context, const Size &texture_size);
+		Subtexture add_new_node(const GraphicContextPtr &context, const Size &texture_size);
 
 		std::vector<RootNode *> root_nodes;
 
@@ -86,7 +86,7 @@ namespace uicore
 		TextureGroup::TextureAllocationPolicy texture_allocation_policy;
 
 	private:
-		RootNode *add_new_root(GraphicContext &context, const Size &texture_size);
+		RootNode *add_new_root(const GraphicContextPtr &context, const Size &texture_size);
 
 		RootNode *active_root;
 		int next_id;

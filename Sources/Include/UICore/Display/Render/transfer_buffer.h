@@ -34,26 +34,27 @@
 namespace uicore
 {
 	class GraphicContext;
+	typedef std::shared_ptr<GraphicContext> GraphicContextPtr;
 
 	/// \brief Transfer Buffer
 	class TransferBuffer
 	{
 	public:
 		/// \brief Constructs a transfer buffer
-		static std::shared_ptr<TransferBuffer> create(GraphicContext &gc, int size, BufferUsage usage = usage_dynamic_copy);
-		static std::shared_ptr<TransferBuffer> create(GraphicContext &gc, const void *data, int size, BufferUsage usage = usage_dynamic_copy);
+		static std::shared_ptr<TransferBuffer> create(const GraphicContextPtr &gc, int size, BufferUsage usage = usage_dynamic_copy);
+		static std::shared_ptr<TransferBuffer> create(const GraphicContextPtr &gc, const void *data, int size, BufferUsage usage = usage_dynamic_copy);
 
 		/// \brief Retrieves a pointer to the mapped buffer.
 		virtual void *data() = 0;
 
 		/// \brief Maps buffer into system memory.
-		virtual void lock(GraphicContext &gc, BufferAccess access) = 0;
+		virtual void lock(const GraphicContextPtr &gc, BufferAccess access) = 0;
 
 		/// \brief Unmaps buffer.
 		virtual void unlock() = 0;
 
 		/// \brief Uploads data to transfer buffer.
-		virtual void upload_data(GraphicContext &gc, int offset, const void *data, int size) = 0;
+		virtual void upload_data(const GraphicContextPtr &gc, int offset, const void *data, int size) = 0;
 	};
 
 	typedef std::shared_ptr<TransferBuffer> TransferBufferPtr;

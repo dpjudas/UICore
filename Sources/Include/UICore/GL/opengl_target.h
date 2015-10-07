@@ -35,6 +35,7 @@
 namespace uicore
 {
 	class GraphicContext;
+	typedef std::shared_ptr<GraphicContext> GraphicContextPtr;
 	class OpenGLTargetProvider;
 	class OpenGLTarget_Impl;
 	class OpenGLContextDescription;
@@ -59,31 +60,31 @@ namespace uicore
 		///
 		/// \param version_major = On Return: Major
 		/// \param version_minor = On Return: Minor
-		static void get_opengl_version(const GraphicContext &gc, int &version_major, int &version_minor);
+		static void get_opengl_version(const GraphicContextPtr &gc, int &version_major, int &version_minor);
 
 		/// \brief Get the opengl version
 		///
 		/// \param version_major = On Return: Major
 		/// \param version_minor = On Return: Minor
 		/// \param version_release = On Return: Release
-		static void get_opengl_version(const GraphicContext &gc, int &version_major, int &version_minor, int &version_release);
+		static void get_opengl_version(const GraphicContextPtr &gc, int &version_major, int &version_minor, int &version_release);
 
 		/// \brief Get the opengl shading language version
 		///
 		/// \param version_major = On Return: Major
 		/// \param version_minor = On Return: Minor
-		static void get_opengl_shading_language_version(const GraphicContext &gc, int &version_major, int &version_minor);
+		static void get_opengl_shading_language_version(const GraphicContextPtr &gc, int &version_major, int &version_minor);
 
 		/// \brief Get the opengl renderer string
-		static std::string get_renderer_string(const GraphicContext &gc);
+		static std::string get_renderer_string(const GraphicContextPtr &gc);
 
 		/// \brief Get the opengl vendor string
-		static std::string get_vendor_string(const GraphicContext &gc);
+		static std::string get_vendor_string(const GraphicContextPtr &gc);
 
 		/// \brief Get the list of opengl extensions.
-		static std::vector<std::string> get_extensions(const GraphicContext &gc);
+		static std::vector<std::string> get_extensions(const GraphicContextPtr &gc);
 
 		/// \brief Set OpenGL context used by this GraphicContext to be active
-		static void set_active_context(const GraphicContext &gc);
+		static void set_active_context(const GraphicContextPtr &gc);
 	};
 }

@@ -40,7 +40,7 @@ namespace uicore
 	class PathStrokeRenderer : public PathRenderer
 	{
 	public:
-		PathStrokeRenderer(GraphicContext &gc);
+		PathStrokeRenderer(const GraphicContextPtr &gc);
 
 		void set_pen(Canvas &canvas, const Pen &pen);
 		void line(float x, float y) override;

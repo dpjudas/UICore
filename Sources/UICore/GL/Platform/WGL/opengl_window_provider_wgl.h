@@ -64,7 +64,7 @@ namespace uicore
 		DisplayWindowHandle get_handle() const override { DisplayWindowHandle handle; handle.hwnd = win32_window.get_hwnd(); return handle; }
 		HDC get_device_context() const { return device_context; }
 		HGLRC get_opengl_context() const { return opengl_context; }
-		GraphicContext& get_gc() { return gc; }
+		const GraphicContextPtr &get_gc() const { return gc; }
 		InputDevice &get_keyboard() override { return win32_window.get_keyboard(); }
 		InputDevice &get_mouse() override { return win32_window.get_mouse(); }
 		std::vector<InputDevice> &get_game_controllers() override { return win32_window.get_game_controllers(); }
@@ -131,7 +131,7 @@ namespace uicore
 		void on_window_resized();
 		void get_opengl_version(int &version_major, int &version_minor);
 
-		GraphicContext gc;
+		GraphicContextPtr gc;
 		Win32Window win32_window;
 
 		/// \brief OpenGL rendering context for this window.

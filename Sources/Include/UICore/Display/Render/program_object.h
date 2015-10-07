@@ -45,19 +45,19 @@ namespace uicore
 	{
 	public:
 		/// \brief Constructs a ProgramObject
-		static std::shared_ptr<ProgramObject> create(GraphicContext &gc);
+		static std::shared_ptr<ProgramObject> create(const GraphicContextPtr &gc);
 
 		/// \brief Load
-		static std::shared_ptr<ProgramObject> load(GraphicContext &gc, const std::string &vertex_fullname, const std::string &fragment_fullname);
-		static std::shared_ptr<ProgramObject> load(GraphicContext &gc, const std::string &vertex_fullname, const std::string &geometry_fullname, const std::string &fragment_fullname);
-		static std::shared_ptr<ProgramObject> load(GraphicContext &gc, IODevice &vertex_file, IODevice &fragment_file);
-		static std::shared_ptr<ProgramObject> load(GraphicContext &gc, IODevice &vertex_file, IODevice &geometry_file, IODevice &fragment_file);
+		static std::shared_ptr<ProgramObject> load(const GraphicContextPtr &gc, const std::string &vertex_fullname, const std::string &fragment_fullname);
+		static std::shared_ptr<ProgramObject> load(const GraphicContextPtr &gc, const std::string &vertex_fullname, const std::string &geometry_fullname, const std::string &fragment_fullname);
+		static std::shared_ptr<ProgramObject> load(const GraphicContextPtr &gc, IODevice &vertex_file, IODevice &fragment_file);
+		static std::shared_ptr<ProgramObject> load(const GraphicContextPtr &gc, IODevice &vertex_file, IODevice &geometry_file, IODevice &fragment_file);
 
 		/// \brief Load and link
-		static std::shared_ptr<ProgramObject> load_and_link(GraphicContext &gc, const std::string &vertex_fullname, const std::string &fragment_fullname);
-		static std::shared_ptr<ProgramObject> load_and_link(GraphicContext &gc, const std::string &vertex_fullname, const std::string &geometry_fullname, const std::string &fragment_fullname);
-		static std::shared_ptr<ProgramObject> load_and_link(GraphicContext &gc, IODevice &vertex_file, IODevice &fragment_file);
-		static std::shared_ptr<ProgramObject> load_and_link(GraphicContext &gc, IODevice &vertex_file, IODevice &geometry_file, IODevice &fragment_file);
+		static std::shared_ptr<ProgramObject> load_and_link(const GraphicContextPtr &gc, const std::string &vertex_fullname, const std::string &fragment_fullname);
+		static std::shared_ptr<ProgramObject> load_and_link(const GraphicContextPtr &gc, const std::string &vertex_fullname, const std::string &geometry_fullname, const std::string &fragment_fullname);
+		static std::shared_ptr<ProgramObject> load_and_link(const GraphicContextPtr &gc, IODevice &vertex_file, IODevice &fragment_file);
+		static std::shared_ptr<ProgramObject> load_and_link(const GraphicContextPtr &gc, IODevice &vertex_file, IODevice &geometry_file, IODevice &fragment_file);
 
 		/// \brief Returns the shaders attached to the program object.
 		virtual std::vector<ShaderObjectPtr> get_shaders() const = 0;

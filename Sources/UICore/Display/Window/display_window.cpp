@@ -30,7 +30,6 @@
 
 #include "UICore/precomp.h"
 #include "display_window_impl.h"
-#include "UICore/Display/Render/graphic_context_impl.h"
 #include "../setup_display.h"
 #include "UICore/Display/Window/input_device.h"
 
@@ -119,7 +118,7 @@ namespace uicore
 		return impl->provider->has_focus();
 	}
 
-	GraphicContext& DisplayWindow::get_gc() const
+	const GraphicContextPtr &DisplayWindow::get_gc() const
 	{
 		throw_if_null();
 		return impl->provider->get_gc();

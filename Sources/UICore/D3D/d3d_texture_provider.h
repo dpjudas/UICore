@@ -79,9 +79,9 @@ namespace uicore
 		ComPtr<ID3D11UnorderedAccessView> &get_uav(const ComPtr<ID3D11Device> &device);
 
 		void generate_mipmap();
-		PixelBufferPtr get_pixeldata(GraphicContext &gc, TextureFormat texture_format, int level) const;
+		PixelBufferPtr get_pixeldata(const GraphicContextPtr &gc, TextureFormat texture_format, int level) const;
 
-		void copy_from(GraphicContext &gc, int x, int y, int slice, int level, const PixelBufferPtr &src, const Rect &src_rect);
+		void copy_from(const GraphicContextPtr &gc, int x, int y, int slice, int level, const PixelBufferPtr &src, const Rect &src_rect);
 
 		void copy_image_from(
 			int x,

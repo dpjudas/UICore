@@ -35,6 +35,7 @@ namespace uicore
 {
 	class GraphicContext;
 	class TransferBuffer;
+	typedef std::shared_ptr<GraphicContext> GraphicContextPtr;
 	typedef std::shared_ptr<TransferBuffer> TransferBufferPtr;
 
 	/// \brief Vertex Array Buffer
@@ -42,17 +43,17 @@ namespace uicore
 	{
 	public:
 		/// \brief Constructs a vertex array buffer
-		static std::shared_ptr<VertexArrayBuffer> create(GraphicContext &gc, int size, BufferUsage usage = usage_static_draw);
-		static std::shared_ptr<VertexArrayBuffer> create(GraphicContext &gc, const void *data, int size, BufferUsage usage = usage_static_draw);
+		static std::shared_ptr<VertexArrayBuffer> create(const GraphicContextPtr &gc, int size, BufferUsage usage = usage_static_draw);
+		static std::shared_ptr<VertexArrayBuffer> create(const GraphicContextPtr &gc, const void *data, int size, BufferUsage usage = usage_static_draw);
 
 		/// \brief Uploads data to vertex array buffer.
-		virtual void upload_data(GraphicContext &gc, int offset, const void *data, int size) = 0;
+		virtual void upload_data(const GraphicContextPtr &gc, int offset, const void *data, int size) = 0;
 
 		/// \brief Copies data from transfer buffer
-		virtual void copy_from(GraphicContext &gc, const TransferBufferPtr &buffer, int dest_pos = 0, int src_pos = 0, int size = -1) = 0;
+		virtual void copy_from(const GraphicContextPtr &gc, const TransferBufferPtr &buffer, int dest_pos = 0, int src_pos = 0, int size = -1) = 0;
 
 		/// \brief Copies data to transfer buffer
-		virtual void copy_to(GraphicContext &gc, const TransferBufferPtr &buffer, int dest_pos = 0, int src_pos = 0, int size = -1) = 0;
+		virtual void copy_to(const GraphicContextPtr &gc, const TransferBufferPtr &buffer, int dest_pos = 0, int src_pos = 0, int size = -1) = 0;
 	};
 
 	typedef std::shared_ptr<VertexArrayBuffer> VertexArrayBufferPtr;

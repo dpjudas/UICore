@@ -120,20 +120,20 @@ namespace uicore
 		return handles.uav;
 	}
 
-	void D3DStorageBufferProvider::upload_data(GraphicContext &gc, const void *data, int data_size)
+	void D3DStorageBufferProvider::upload_data(const GraphicContextPtr &gc, const void *data, int data_size)
 	{
 		if (data_size != size)
 			throw Exception("Upload data size does not match vertex array buffer");
 
-		const ComPtr<ID3D11Device> &device = static_cast<D3DGraphicContextProvider*>(gc.get_provider())->get_window()->get_device();
+		const ComPtr<ID3D11Device> &device = static_cast<D3DGraphicContextProvider*>(gc.get())->get_window()->get_device();
 		ComPtr<ID3D11DeviceContext> device_context;
 		device->GetImmediateContext(device_context.output_variable());
 		device_context->UpdateSubresource(get_handles(device).buffer, 0, 0, data, 0, 0);
 	}
 
-	void D3DStorageBufferProvider::copy_from(GraphicContext &gc, const TransferBufferPtr &buffer, int dest_pos, int src_pos, int copy_size)
+	void D3DStorageBufferProvider::copy_from(const GraphicContextPtr &gc, const TransferBufferPtr &buffer, int dest_pos, int src_pos, int copy_size)
 	{
-		const ComPtr<ID3D11Device> &device = static_cast<D3DGraphicContextProvider*>(gc.get_provider())->get_window()->get_device();
+		const ComPtr<ID3D11Device> &device = static_cast<D3DGraphicContextProvider*>(gc.get())->get_window()->get_device();
 		ComPtr<ID3D11Buffer> &transfer_buffer = static_cast<D3DTransferBufferProvider*>(buffer.get())->get_buffer(device);
 		int transfer_buffer_size = static_cast<D3DTransferBufferProvider*>(buffer.get())->get_size();
 
@@ -156,9 +156,9 @@ namespace uicore
 		device_context->CopySubresourceRegion(get_handles(device).buffer, 0, dest_pos, 0, 0, transfer_buffer, 0, &box);
 	}
 
-	void D3DStorageBufferProvider::copy_to(GraphicContext &gc, const TransferBufferPtr &buffer, int dest_pos, int src_pos, int copy_size)
+	void D3DStorageBufferProvider::copy_to(const GraphicContextPtr &gc, const TransferBufferPtr &buffer, int dest_pos, int src_pos, int copy_size)
 	{
-		const ComPtr<ID3D11Device> &device = static_cast<D3DGraphicContextProvider*>(gc.get_provider())->get_window()->get_device();
+		const ComPtr<ID3D11Device> &device = static_cast<D3DGraphicContextProvider*>(gc.get())->get_window()->get_device();
 		ComPtr<ID3D11Buffer> &transfer_buffer = static_cast<D3DTransferBufferProvider*>(buffer.get())->get_buffer(device);
 		int transfer_buffer_size = static_cast<D3DTransferBufferProvider*>(buffer.get())->get_size();
 

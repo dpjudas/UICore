@@ -109,9 +109,9 @@ namespace uicore
 		return map_data.RowPitch;
 	}
 
-	void D3DPixelBufferProvider::lock(GraphicContext &gc, BufferAccess access)
+	void D3DPixelBufferProvider::lock(const GraphicContextPtr &gc, BufferAccess access)
 	{
-		map_gc_provider = static_cast<D3DGraphicContextProvider *>(gc.get_provider());
+		map_gc_provider = static_cast<D3DGraphicContextProvider *>(gc.get());
 		DeviceHandles &handle = get_handles(map_gc_provider->get_window()->get_device());
 
 		HRESULT result = map_gc_provider->get_window()->get_device_context()->Map(handle.texture, 0, to_d3d_map_type(access), 0, &map_data);
@@ -130,9 +130,9 @@ namespace uicore
 		data_locked = false;
 	}
 
-	void D3DPixelBufferProvider::upload_data(GraphicContext &gc, const Rect &dest_rect, const void *data)
+	void D3DPixelBufferProvider::upload_data(const GraphicContextPtr &gc, const Rect &dest_rect, const void *data)
 	{
-		D3DGraphicContextProvider *gc_provider = static_cast<D3DGraphicContextProvider *>(gc.get_provider());
+		D3DGraphicContextProvider *gc_provider = static_cast<D3DGraphicContextProvider *>(gc.get());
 		DeviceHandles &handle = get_handles(gc_provider->get_window()->get_device());
 
 		D3D11_BOX box;

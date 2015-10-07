@@ -253,7 +253,7 @@ namespace uicore
 	{
 	}
 
-	PixelBufferPtr GL1TextureProvider::get_pixeldata(GraphicContext &gc, TextureFormat texture_format, int level) const
+	PixelBufferPtr GL1TextureProvider::get_pixeldata(const GraphicContextPtr &gc, TextureFormat texture_format, int level) const
 	{
 		throw_if_disposed();
 
@@ -288,7 +288,7 @@ namespace uicore
 		}
 	}
 
-	void GL1TextureProvider::copy_from(GraphicContext &gc, int x, int y, int slice, int level, const PixelBufferPtr &ximage, const Rect &src_rect)
+	void GL1TextureProvider::copy_from(const GraphicContextPtr &gc, int x, int y, int slice, int level, const PixelBufferPtr &ximage, const Rect &src_rect)
 	{
 		OpenGL::set_active(gc);
 

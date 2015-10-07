@@ -28,21 +28,22 @@
 
 #include "UICore/precomp.h"
 #include "UICore/Display/Render/texture_1d.h"
-#include "graphic_context_impl.h"
+#include "UICore/Display/TargetProviders/graphic_context_provider.h"
+#include "UICore/Display/Image/pixel_buffer.h"
 
 namespace uicore
 {
-	std::shared_ptr<Texture1D> Texture1D::create(GraphicContext &context, int size, TextureFormat texture_format, int levels)
+	std::shared_ptr<Texture1D> Texture1D::create(const GraphicContextPtr &context, int size, TextureFormat texture_format, int levels)
 	{
-		return context.get_provider()->create_texture_1d(size, texture_format, levels);
+		return static_cast<GraphicContextProvider*>(context.get())->create_texture_1d(size, texture_format, levels);
 	}
 
-	std::shared_ptr<Texture1D> Texture1D::create(GraphicContext &context, const PixelBufferPtr &image, bool is_srgb)
+	std::shared_ptr<Texture1D> Texture1D::create(const GraphicContextPtr &context, const PixelBufferPtr &image, bool is_srgb)
 	{
 		return create(context, image, 0, image->width(), is_srgb);
 	}
 
-	std::shared_ptr<Texture1D> Texture1D::create(GraphicContext &context, const PixelBufferPtr &image, int src_x, int width, bool is_srgb)
+	std::shared_ptr<Texture1D> Texture1D::create(const GraphicContextPtr &context, const PixelBufferPtr &image, int src_x, int width, bool is_srgb)
 	{
 		auto texture = create(context, width, is_srgb ? tf_srgb8_alpha8 : tf_rgba8);
 		texture->set_subimage(context, 0, image, src_x, width, 0);

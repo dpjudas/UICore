@@ -40,7 +40,7 @@ namespace uicore
 	class RenderBatchPoint : public RenderBatcher
 	{
 	public:
-		RenderBatchPoint(GraphicContext &gc, RenderBatchBuffer *batch_buffer);
+		RenderBatchPoint(const GraphicContextPtr &gc, RenderBatchBuffer *batch_buffer);
 		void draw_point(Canvas &canvas, Vec2f *line_positions, const Vec4f &point_color, int num_vertices);
 
 	private:
@@ -52,7 +52,7 @@ namespace uicore
 
 		inline Vec4f to_position(float x, float y) const;
 		void set_batcher_active(Canvas &canvas, int num_vertices);
-		void flush(GraphicContext &gc) override;
+		void flush(const GraphicContextPtr &gc) override;
 		void matrix_changed(const Mat4f &modelview, const Mat4f &projection, TextureImageYAxis image_yaxis, float pixel_ratio) override;
 
 		enum { max_vertices = RenderBatchBuffer::vertex_buffer_size / sizeof(PointVertex) };

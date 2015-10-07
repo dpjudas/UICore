@@ -40,14 +40,14 @@ namespace uicore
 	class RenderBatchBuffer
 	{
 	public:
-		RenderBatchBuffer(GraphicContext &gc);
+		RenderBatchBuffer(const GraphicContextPtr &gc);
 
-		VertexArrayBufferPtr get_vertex_buffer(GraphicContext &gc, int &out_index);
-		Texture2DPtr get_texture_rgba32f(GraphicContext &gc);
-		Texture2DPtr get_texture_r8(GraphicContext &gc);
-		TransferTexturePtr get_transfer_rgba32f(GraphicContext &gc);
+		VertexArrayBufferPtr get_vertex_buffer(const GraphicContextPtr &gc, int &out_index);
+		Texture2DPtr get_texture_rgba32f(const GraphicContextPtr &gc);
+		Texture2DPtr get_texture_r8(const GraphicContextPtr &gc);
+		TransferTexturePtr get_transfer_rgba32f(const GraphicContextPtr &gc);
 
-		TransferTexturePtr get_transfer_r8(GraphicContext &gc, int &out_index);
+		TransferTexturePtr get_transfer_r8(const GraphicContextPtr &gc, int &out_index);
 		static const int num_vertex_buffers = 4;
 		enum { vertex_buffer_size = 1024 * 1024 };
 		char buffer[vertex_buffer_size];

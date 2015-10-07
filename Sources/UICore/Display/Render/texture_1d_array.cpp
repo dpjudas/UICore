@@ -28,12 +28,12 @@
 
 #include "UICore/precomp.h"
 #include "UICore/Display/Render/texture_1d_array.h"
-#include "graphic_context_impl.h"
+#include "UICore/Display/TargetProviders/graphic_context_provider.h"
 
 namespace uicore
 {
-	std::shared_ptr<Texture1DArray> Texture1DArray::create(GraphicContext &context, int size, int array_size, TextureFormat texture_format, int levels)
+	std::shared_ptr<Texture1DArray> Texture1DArray::create(const GraphicContextPtr &context, int size, int array_size, TextureFormat texture_format, int levels)
 	{
-		return context.get_provider()->create_texture_1d_array(size, array_size, texture_format, levels);
+		return static_cast<GraphicContextProvider*>(context.get())->create_texture_1d_array(size, array_size, texture_format, levels);
 	}
 }

@@ -35,8 +35,8 @@
 
 namespace uicore
 {
-	std::shared_ptr<FrameBuffer> FrameBuffer::create(GraphicContext &gc)
+	std::shared_ptr<FrameBuffer> FrameBuffer::create(const GraphicContextPtr &gc)
 	{
-		return gc.get_provider()->create_frame_buffer();
+		return static_cast<GraphicContextProvider*>(gc.get())->create_frame_buffer();
 	}
 }

@@ -114,9 +114,9 @@ namespace uicore
 			return handles.front()->buffer;
 	}
 
-	void D3DTransferBufferProvider::lock(GraphicContext &gc, BufferAccess access)
+	void D3DTransferBufferProvider::lock(const GraphicContextPtr &gc, BufferAccess access)
 	{
-		map_device = static_cast<D3DGraphicContextProvider*>(gc.get_provider())->get_window()->get_device();
+		map_device = static_cast<D3DGraphicContextProvider*>(gc.get())->get_window()->get_device();
 
 		ComPtr<ID3D11DeviceContext> context;
 		map_device->GetImmediateContext(context.output_variable());
@@ -137,7 +137,7 @@ namespace uicore
 		map_data.DepthPitch = 0;
 	}
 
-	void D3DTransferBufferProvider::upload_data(GraphicContext &gc, int offset, const void *input, int input_size)
+	void D3DTransferBufferProvider::upload_data(const GraphicContextPtr &gc, int offset, const void *input, int input_size)
 	{
 		D3D11_BUFFER_DESC desc;
 		handles.front()->buffer->GetDesc(&desc);

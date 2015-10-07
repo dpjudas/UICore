@@ -48,17 +48,17 @@ namespace uicore
 		{
 		}
 
-		VertexArrayVector(GraphicContext &gc, int size, BufferUsage usage = usage_static_draw)
+		VertexArrayVector(const GraphicContextPtr &gc, int size, BufferUsage usage = usage_static_draw)
 			: _buffer(VertexArrayBuffer::create(gc, size * sizeof(Type), usage))
 		{
 		}
 
-		VertexArrayVector(GraphicContext &gc, Type *data, int size, BufferUsage usage = usage_static_draw)
+		VertexArrayVector(const GraphicContextPtr &gc, Type *data, int size, BufferUsage usage = usage_static_draw)
 			: _buffer(VertexArrayBuffer::create(gc, data, size * sizeof(Type), usage))
 		{
 		}
 
-		VertexArrayVector(GraphicContext &gc, const std::vector<Type> &data, BufferUsage usage = usage_static_draw)
+		VertexArrayVector(const GraphicContextPtr &gc, const std::vector<Type> &data, BufferUsage usage = usage_static_draw)
 			: _buffer(VertexArrayBuffer::create(gc, data.empty() ? (Type*)0 : &data[0], data.size() * sizeof(Type), usage))
 		{
 		}
@@ -69,19 +69,19 @@ namespace uicore
 		operator const VertexArrayBufferPtr &() const { return buffer(); }
 
 		/// \brief Uploads data to vertex array buffer.
-		void upload_data(GraphicContext &gc, int offset, const Type *data, int size)
+		void upload_data(const GraphicContextPtr &gc, int offset, const Type *data, int size)
 		{
 			_buffer->upload_data(gc, offset * sizeof(Type), data, size * sizeof(Type));
 		}
 
 		/// \brief Uploads data to vertex array buffer.
-		void upload_data(GraphicContext &gc, int offset, const std::vector<Type> &data)
+		void upload_data(const GraphicContextPtr &gc, int offset, const std::vector<Type> &data)
 		{
 			_buffer->upload_data(gc, offset, data.data(), data.size() * sizeof(Type));
 		}
 
 		/// \brief Copies data from transfer buffer
-		void copy_from(GraphicContext &gc, TransferVector<Type> &buffer, int dest_pos = 0, int src_pos = 0, int size = -1)
+		void copy_from(const GraphicContextPtr &gc, TransferVector<Type> &buffer, int dest_pos = 0, int src_pos = 0, int size = -1)
 		{
 			if (size != -1)
 				size = size * sizeof(Type);
@@ -89,7 +89,7 @@ namespace uicore
 		}
 
 		/// \brief Copies data to transfer buffer
-		void copy_to(GraphicContext &gc, TransferVector<Type> &buffer, int dest_pos = 0, int src_pos = 0, int size = -1)
+		void copy_to(const GraphicContextPtr &gc, TransferVector<Type> &buffer, int dest_pos = 0, int src_pos = 0, int size = -1)
 		{
 			if (size != -1)
 				size = size * sizeof(Type);

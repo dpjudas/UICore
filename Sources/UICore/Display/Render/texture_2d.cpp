@@ -29,27 +29,27 @@
 #include "UICore/precomp.h"
 #include "UICore/Display/Render/texture_2d.h"
 #include "UICore/Display/TargetProviders/texture_provider.h"
+#include "UICore/Display/TargetProviders/graphic_context_provider.h"
 #include "UICore/Display/Image/pixel_buffer.h"
 #include "UICore/Display/Image/pixel_buffer.h"
 #include "UICore/Display/2D/color.h"
 #include "UICore/Display/ImageFormats/image_file.h"
 #include "UICore/Core/IOData/path_help.h"
 #include "UICore/Core/Text/string_format.h"
-#include "graphic_context_impl.h"
 
 namespace uicore
 {
-	std::shared_ptr<Texture2D> Texture2D::create(GraphicContext &context, int width, int height, TextureFormat format, int levels)
+	std::shared_ptr<Texture2D> Texture2D::create(const GraphicContextPtr &context, int width, int height, TextureFormat format, int levels)
 	{
-		return context.get_provider()->create_texture_2d(width, height, format, levels);
+		return static_cast<GraphicContextProvider*>(context.get())->create_texture_2d(width, height, format, levels);
 	}
 
-	std::shared_ptr<Texture2D> Texture2D::create(GraphicContext &context, const Size &size, TextureFormat texture_format, int levels)
+	std::shared_ptr<Texture2D> Texture2D::create(const GraphicContextPtr &context, const Size &size, TextureFormat texture_format, int levels)
 	{
 		return create(context, size.width, size.height, texture_format, levels);
 	}
 
-	std::shared_ptr<Texture2D> Texture2D::create(GraphicContext &context, const std::string &filename, const ImageImportDescription &import_desc)
+	std::shared_ptr<Texture2D> Texture2D::create(const GraphicContextPtr &context, const std::string &filename, const ImageImportDescription &import_desc)
 	{
 		PixelBufferPtr pb = ImageFile::load(filename, std::string());
 		pb = import_desc.process(pb);
@@ -59,7 +59,7 @@ namespace uicore
 		return texture;
 	}
 
-	std::shared_ptr<Texture2D> Texture2D::create(GraphicContext &context, IODevice &file, const std::string &image_type, const ImageImportDescription &import_desc)
+	std::shared_ptr<Texture2D> Texture2D::create(const GraphicContextPtr &context, IODevice &file, const std::string &image_type, const ImageImportDescription &import_desc)
 	{
 		PixelBufferPtr pb = ImageFile::load(file, image_type);
 		pb = import_desc.process(pb);
@@ -69,12 +69,12 @@ namespace uicore
 		return texture;
 	}
 
-	std::shared_ptr<Texture2D> Texture2D::create(GraphicContext &context, const PixelBufferPtr &image, bool is_srgb)
+	std::shared_ptr<Texture2D> Texture2D::create(const GraphicContextPtr &context, const PixelBufferPtr &image, bool is_srgb)
 	{
 		return create(context, image, image->size(), is_srgb);
 	}
 
-	std::shared_ptr<Texture2D> Texture2D::create(GraphicContext &context, const PixelBufferPtr &image, const Rect &src_rect, bool is_srgb)
+	std::shared_ptr<Texture2D> Texture2D::create(const GraphicContextPtr &context, const PixelBufferPtr &image, const Rect &src_rect, bool is_srgb)
 	{
 		auto texture = create(context, src_rect.get_width(), src_rect.get_height(), is_srgb ? tf_srgb8_alpha8 : tf_rgba8);
 		texture->set_subimage(context, Point(0, 0), image, src_rect, 0);

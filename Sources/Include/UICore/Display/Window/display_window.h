@@ -51,6 +51,7 @@ namespace uicore
 	class Rectf;
 	class Display;
 	class GraphicContext;
+	typedef std::shared_ptr<GraphicContext> GraphicContextPtr;
 	class DisplayWindowMode;
 	class DisplayWindowDescription;
 	struct DisplayWindowHandle;
@@ -145,7 +146,7 @@ namespace uicore
 		bool has_focus() const;
 
 		/// \brief Return the graphic context for the window.
-		GraphicContext& get_gc() const;
+		const GraphicContextPtr &get_gc() const;
 
 		/// \brief Returns the keyboard input device.
 		InputDevice &get_keyboard();

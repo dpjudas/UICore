@@ -40,7 +40,7 @@ namespace uicore
 		/// \brief Constructs a 1D array texture
 		///
 		/// If levels is set to zero it will create a texture containing all mipmap levels
-		static std::shared_ptr<Texture1DArray> create(GraphicContext &context, int size, int array_size, TextureFormat texture_format = tf_rgba8, int levels = 1);
+		static std::shared_ptr<Texture1DArray> create(const GraphicContextPtr &context, int size, int array_size, TextureFormat texture_format = tf_rgba8, int levels = 1);
 
 		/// \brief Get the texture width.
 		virtual int size() const = 0;
@@ -57,7 +57,7 @@ namespace uicore
 		/// \param array_index Index in the array
 		/// \param image Image to upload.
 		/// \param level Mipmap level-of-detail number.
-		virtual void set_image(GraphicContext &context, int array_index, const PixelBufferPtr &image, int level = 0) = 0;
+		virtual void set_image(const GraphicContextPtr &context, int array_index, const PixelBufferPtr &image, int level = 0) = 0;
 
 		/// \brief Upload image to sub texture.
 		///
@@ -65,7 +65,7 @@ namespace uicore
 		/// \param array_index Index in the array
 		/// \param image Image to upload.
 		/// \param level Mipmap level-of-detail number.
-		virtual void set_subimage(GraphicContext &context, int array_index, int x, const PixelBufferPtr &image, const int src_x, const int src_width, int level = 0) = 0;
+		virtual void set_subimage(const GraphicContextPtr &context, int array_index, int x, const PixelBufferPtr &image, const int src_x, const int src_width, int level = 0) = 0;
 
 		virtual void set_wrap_mode(TextureWrapMode wrap_s) = 0;
 	};

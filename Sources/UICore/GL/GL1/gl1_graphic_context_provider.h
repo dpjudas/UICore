@@ -102,7 +102,9 @@ namespace uicore
 
 		Signal<void(const Size &)> &sig_window_resized() override { return window_resized_signal; }
 
-		ProgramObjectPtr get_program_object(StandardProgram standard_program) const override;
+		FrameBufferPtr get_write_frame_buffer() const { return _write_frame_buffer; }
+		FrameBufferPtr get_read_frame_buffer() const { return _read_frame_buffer; }
+		ProgramObjectPtr get_program_object() const override;
 
 		ClipZRange get_clip_z_range() const override { return clip_negative_positive_w; }
 		TextureImageYAxis get_texture_image_y_axis() const override { return y_axis_bottom_up; }
@@ -138,24 +140,18 @@ namespace uicore
 		std::shared_ptr<TextureCube> create_texture_cube(int width, int height, TextureFormat texture_format, int levels) override;
 		std::shared_ptr<TextureCubeArray> create_texture_cube_array(int width, int height, int array_size, TextureFormat texture_format, int levels) override;
 		std::shared_ptr<TransferTexture> create_transfer_texture(const void *data, const Size &size, PixelBufferDirection direction, TextureFormat new_format, BufferUsage usage) override;
-		void set_rasterizer_state(RasterizerState *state) override;
-		void set_blend_state(BlendState *state, const Colorf &blend_color, unsigned int sample_mask) override;
-		void set_depth_stencil_state(DepthStencilState *state, int stencil_ref) override;
+		void set_rasterizer_state(const RasterizerStatePtr &state) override;
+		void set_blend_state(const BlendStatePtr &state, const Colorf &blend_color, unsigned int sample_mask) override;
+		void set_depth_stencil_state(const DepthStencilStatePtr &state, int stencil_ref) override;
 		std::shared_ptr<PixelBuffer> get_pixeldata(const Rect& rect, TextureFormat texture_format, bool clamp) const override;
 		void set_uniform_buffer(int index, const UniformBufferPtr &buffer) override;
-		void reset_uniform_buffer(int index) override;
 		void set_storage_buffer(int index, const StorageBufferPtr &buffer) override;
-		void reset_storage_buffer(int index) override;
 		void set_texture(int unit_index, const TexturePtr &texture) override;
-		void reset_texture(int unit_index) override;
 		void set_image_texture(int unit_index, const TexturePtr &texture) override;
-		void reset_image_texture(int unit_index) override;
 		bool is_frame_buffer_owner(const FrameBufferPtr &fb) override;
 		void set_frame_buffer(const FrameBufferPtr &w_buffer, const FrameBufferPtr &r_buffer) override;
-		void reset_frame_buffer() override;
 		void set_program_object(StandardProgram standard_program) override;
 		void set_program_object(const ProgramObjectPtr &program) override;
-		void reset_program_object() override;
 		void set_draw_buffer(DrawBuffer buffer) override;
 
 		bool is_primitives_array_owner(const PrimitivesArrayPtr &primitives_array) override;
@@ -163,13 +159,11 @@ namespace uicore
 		void set_primitives_array(const PrimitivesArrayPtr &primitives_array) override;
 		void draw_primitives_array(PrimitivesType type, int offset, int num_vertices) override;
 		void draw_primitives_array_instanced(PrimitivesType type, int offset, int num_vertices, int instance_count) override;
-		void set_primitives_elements(ElementArrayBuffer *array_provider) override;
+		void set_primitives_elements(const ElementArrayBufferPtr &array_provider) override;
 		void draw_primitives_elements(PrimitivesType type, int count, VertexAttributeDataType indices_type, size_t offset = 0) override;
 		void draw_primitives_elements_instanced(PrimitivesType type, int count, VertexAttributeDataType indices_type, size_t offset, int instance_count) override;
-		void reset_primitives_elements() override;
-		void draw_primitives_elements(PrimitivesType type, int count, ElementArrayBuffer *array_provider, VertexAttributeDataType indices_type, void *offset) override;
-		void draw_primitives_elements_instanced(PrimitivesType type, int count, ElementArrayBuffer *array_provider, VertexAttributeDataType indices_type, void *offset, int instance_count) override;
-		void reset_primitives_array() override;
+		void draw_primitives_elements(PrimitivesType type, int count, const ElementArrayBufferPtr &array_provider, VertexAttributeDataType indices_type, size_t offset) override;
+		void draw_primitives_elements_instanced(PrimitivesType type, int count, const ElementArrayBufferPtr &array_provider, VertexAttributeDataType indices_type, size_t offset, int instance_count) override;
 		void set_scissor(const Rect &rect) override;
 		void reset_scissor() override;
 		void dispatch(int x, int y, int z) override;
@@ -178,7 +172,6 @@ namespace uicore
 		void clear_stencil(int value) override;
 		void set_viewport(const Rectf &viewport) override;
 		void set_viewport(int index, const Rectf &viewport) override;
-		void set_depth_range(float n, float f) override;
 		void set_depth_range(int viewport, float n, float f) override;
 		void on_window_resized();
 
@@ -233,5 +226,8 @@ namespace uicore
 
 		GL1FrameBufferProvider *framebuffer_provider;	// Only valid when framebuffer_bound == true
 		bool framebuffer_bound;
+
+		FrameBufferPtr _read_frame_buffer;
+		FrameBufferPtr _write_frame_buffer;
 	};
 }

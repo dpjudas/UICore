@@ -52,10 +52,10 @@ namespace uicore
 		float pixel_ratio() const override { return _pixel_ratio; }
 		void set_pixel_ratio(float ratio) override { _pixel_ratio = ratio; }
 
-		void lock(GraphicContext &gc, BufferAccess access) override { }
+		void lock(const GraphicContextPtr &gc, BufferAccess access) override { }
 		void unlock() override { }
 
-		void upload_data(GraphicContext &gc, const Rect &dest_rect, const void *data) override;
+		void upload_data(const GraphicContextPtr &gc, const Rect &dest_rect, const void *data) override;
 
 	private:
 		bool delete_data = true;

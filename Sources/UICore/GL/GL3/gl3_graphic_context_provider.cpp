@@ -274,11 +274,6 @@ namespace uicore
 		return render_window->get_viewport().get_size();
 	}
 
-	ProgramObjectPtr GL3GraphicContextProvider::get_program_object(StandardProgram standard_program) const
-	{
-		return standard_programs.get_program_object(standard_program);
-	}
-
 	float GL3GraphicContextProvider::get_pixel_ratio() const
 	{
 		return render_window->get_pixel_ratio();
@@ -454,11 +449,11 @@ namespace uicore
 		return std::make_shared<GL3PixelBufferProvider>(data, size, direction, format, usage);
 	}
 
-	void GL3GraphicContextProvider::set_rasterizer_state(RasterizerState *state)
+	void GL3GraphicContextProvider::set_rasterizer_state(const RasterizerStatePtr &state)
 	{
 		if (state)
 		{
-			OpenGLRasterizerState *gl3_state = static_cast<OpenGLRasterizerState*>(state);
+			OpenGLRasterizerState *gl3_state = static_cast<OpenGLRasterizerState*>(state.get());
 			if (gl3_state)
 			{
 				selected_rasterizer_state.set(gl3_state->desc);
@@ -469,11 +464,11 @@ namespace uicore
 		}
 	}
 
-	void GL3GraphicContextProvider::set_blend_state(BlendState *state, const Colorf &blend_color, unsigned int sample_mask)
+	void GL3GraphicContextProvider::set_blend_state(const BlendStatePtr &state, const Colorf &blend_color, unsigned int sample_mask)
 	{
 		if (state)
 		{
-			OpenGLBlendState *gl3_state = static_cast<OpenGLBlendState*>(state);
+			OpenGLBlendState *gl3_state = static_cast<OpenGLBlendState*>(state.get());
 			if (gl3_state)
 			{
 				selected_blend_state.set(gl3_state->desc, blend_color);
@@ -483,11 +478,11 @@ namespace uicore
 		}
 	}
 
-	void GL3GraphicContextProvider::set_depth_stencil_state(DepthStencilState *state, int stencil_ref)
+	void GL3GraphicContextProvider::set_depth_stencil_state(const DepthStencilStatePtr &state, int stencil_ref)
 	{
 		if (state)
 		{
-			OpenGLDepthStencilState *gl3_state = static_cast<OpenGLDepthStencilState*>(state);
+			OpenGLDepthStencilState *gl3_state = static_cast<OpenGLDepthStencilState*>(state.get());
 			if (gl3_state)
 			{
 				selected_depth_stencil_state.set(gl3_state->desc);
@@ -525,80 +520,83 @@ namespace uicore
 
 	void GL3GraphicContextProvider::set_uniform_buffer(int index, const UniformBufferPtr &buffer)
 	{
-		OpenGL::set_active(this);
-		glBindBufferBase(GL_UNIFORM_BUFFER, index, static_cast<GL3UniformBufferProvider*>(buffer.get())->get_handle());
-	}
-
-	void GL3GraphicContextProvider::reset_uniform_buffer(int index)
-	{
-		OpenGL::set_active(this);
-		glBindBufferBase(GL_UNIFORM_BUFFER, index, 0);
+		if (buffer)
+		{
+			OpenGL::set_active(this);
+			glBindBufferBase(GL_UNIFORM_BUFFER, index, static_cast<GL3UniformBufferProvider*>(buffer.get())->get_handle());
+		}
+		else
+		{
+			OpenGL::set_active(this);
+			glBindBufferBase(GL_UNIFORM_BUFFER, index, 0);
+		}
 	}
 
 	void GL3GraphicContextProvider::set_storage_buffer(int index, const StorageBufferPtr &buffer)
 	{
-		OpenGL::set_active(this);
-		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, index, static_cast<GL3StorageBufferProvider*>(buffer.get())->get_handle());
-	}
-
-	void GL3GraphicContextProvider::reset_storage_buffer(int index)
-	{
-		OpenGL::set_active(this);
-		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, index, 0);
+		if (buffer)
+		{
+			OpenGL::set_active(this);
+			glBindBufferBase(GL_SHADER_STORAGE_BUFFER, index, static_cast<GL3StorageBufferProvider*>(buffer.get())->get_handle());
+		}
+		else
+		{
+			OpenGL::set_active(this);
+			glBindBufferBase(GL_SHADER_STORAGE_BUFFER, index, 0);
+		}
 	}
 
 	void GL3GraphicContextProvider::set_texture(int unit_index, const TexturePtr &texture)
 	{
-		OpenGL::set_active(this);
-
-		if (glActiveTexture != nullptr)
-		{
-			glActiveTexture(GL_TEXTURE0 + unit_index);
-		}
-		else if (unit_index > 0)
-		{
-			return;
-		}
-
 		if (texture)
 		{
-			GL3TextureProvider *provider = static_cast<GL3TextureProvider*>(texture->texture_object());
-			glBindTexture(provider->get_texture_type(), provider->get_handle());
-		}
-	}
+			OpenGL::set_active(this);
 
-	void GL3GraphicContextProvider::reset_texture(int unit_index)
-	{
-		OpenGL::set_active(this);
+			if (glActiveTexture != nullptr)
+			{
+				glActiveTexture(GL_TEXTURE0 + unit_index);
+			}
+			else if (unit_index > 0)
+			{
+				return;
+			}
 
-		if (glActiveTexture != nullptr)
-		{
-			glActiveTexture(GL_TEXTURE0 + unit_index);
+			if (texture)
+			{
+				GL3TextureProvider *provider = static_cast<GL3TextureProvider*>(texture->texture_object());
+				glBindTexture(provider->get_texture_type(), provider->get_handle());
+			}
 		}
-		else if (unit_index > 0)
+		else
 		{
-			return;
+			OpenGL::set_active(this);
+
+			if (glActiveTexture != nullptr)
+			{
+				glActiveTexture(GL_TEXTURE0 + unit_index);
+			}
+			else if (unit_index > 0)
+			{
+				return;
+			}
+			// Set the texture to the default state
+			glBindTexture(GL_TEXTURE_2D, 0);
 		}
-		// Set the texture to the default state
-		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
 	void GL3GraphicContextProvider::set_image_texture(int unit_index, const TexturePtr &texture)
 	{
-		OpenGL::set_active(this);
-
 		if (texture)
 		{
 			OpenGL::set_active(this);
 			GL3TextureProvider *provider = static_cast<GL3TextureProvider*>(texture->texture_object());
 			glBindImageTexture(unit_index, provider->get_handle(), 0, GL_FALSE, 0, GL_READ_WRITE, provider->get_internal_format());
 		}
-	}
-
-	void GL3GraphicContextProvider::reset_image_texture(int unit_index)
-	{
-		OpenGL::set_active(this);
-		glBindImageTexture(unit_index, 0, 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGBA8);
+		else
+		{
+			OpenGL::set_active(this);
+			glBindImageTexture(unit_index, 0, 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGBA8);
+		}
 	}
 
 	bool GL3GraphicContextProvider::is_frame_buffer_owner(const FrameBufferPtr &fb)
@@ -612,47 +610,51 @@ namespace uicore
 
 	void GL3GraphicContextProvider::set_frame_buffer(const FrameBufferPtr &draw_buffer, const FrameBufferPtr &read_buffer)
 	{
-		GL3FrameBufferProvider *draw_buffer_provider = dynamic_cast<GL3FrameBufferProvider *>(draw_buffer.get());
-		GL3FrameBufferProvider *read_buffer_provider = dynamic_cast<GL3FrameBufferProvider *>(read_buffer.get());
+		_write_frame_buffer = draw_buffer;
+		_read_frame_buffer = read_buffer;
 
-		if (draw_buffer_provider->get_gc_provider() != this || read_buffer_provider->get_gc_provider() != this)
-			throw Exception("FrameBuffer objects cannot be shared between multiple GraphicContext objects");
-
-		OpenGL::set_active(this);
-
-		draw_buffer_provider->bind_framebuffer(true);
-		if (draw_buffer_provider != read_buffer_provider)		// You cannot read and write to the same framebuffer
-			read_buffer_provider->bind_framebuffer(false);
-
-		// Check for framebuffer completeness
-		draw_buffer_provider->check_framebuffer_complete();
-		if (draw_buffer_provider != read_buffer_provider)
-			read_buffer_provider->check_framebuffer_complete();
-
-		framebuffer_bound = true;
-	}
-
-	void GL3GraphicContextProvider::reset_frame_buffer()
-	{
-		OpenGL::set_active(this);
-
-		// To do: move this to OpenGLWindowProvider abstraction (some targets doesn't have a default frame buffer)
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
-
-		if (render_window->is_double_buffered())
+		if (draw_buffer && read_buffer)
 		{
-			glDrawBuffer(GL_BACK);
-			glReadBuffer(GL_BACK);
+			GL3FrameBufferProvider *draw_buffer_provider = dynamic_cast<GL3FrameBufferProvider *>(draw_buffer.get());
+			GL3FrameBufferProvider *read_buffer_provider = dynamic_cast<GL3FrameBufferProvider *>(read_buffer.get());
+
+			if (draw_buffer_provider->get_gc_provider() != this || read_buffer_provider->get_gc_provider() != this)
+				throw Exception("FrameBuffer objects cannot be shared between multiple GraphicContext objects");
+
+			OpenGL::set_active(this);
+
+			draw_buffer_provider->bind_framebuffer(true);
+			if (draw_buffer_provider != read_buffer_provider)		// You cannot read and write to the same framebuffer
+				read_buffer_provider->bind_framebuffer(false);
+
+			// Check for framebuffer completeness
+			draw_buffer_provider->check_framebuffer_complete();
+			if (draw_buffer_provider != read_buffer_provider)
+				read_buffer_provider->check_framebuffer_complete();
+
+			framebuffer_bound = true;
 		}
 		else
 		{
-			glDrawBuffer(GL_FRONT);
-			glReadBuffer(GL_FRONT);
+			OpenGL::set_active(this);
+
+			// To do: move this to OpenGLWindowProvider abstraction (some targets doesn't have a default frame buffer)
+			glBindFramebuffer(GL_FRAMEBUFFER, 0);
+			glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
+
+			if (render_window->is_double_buffered())
+			{
+				glDrawBuffer(GL_BACK);
+				glReadBuffer(GL_BACK);
+			}
+			else
+			{
+				glDrawBuffer(GL_FRONT);
+				glReadBuffer(GL_FRONT);
+			}
+
+			framebuffer_bound = false;
 		}
-
-		framebuffer_bound = false;
-
 	}
 
 	void GL3GraphicContextProvider::set_program_object(StandardProgram standard_program)
@@ -662,6 +664,8 @@ namespace uicore
 
 	void GL3GraphicContextProvider::set_program_object(const ProgramObjectPtr &program)
 	{
+		_program_object = program;
+
 		OpenGL::set_active(this);
 		if (glUseProgram == nullptr)
 			return;
@@ -674,12 +678,6 @@ namespace uicore
 		{
 			glUseProgram(0);
 		}
-	}
-
-	void GL3GraphicContextProvider::reset_program_object()
-	{
-		OpenGL::set_active(this);
-		glUseProgram(0);
 	}
 
 	bool GL3GraphicContextProvider::is_primitives_array_owner(const PrimitivesArrayPtr &prim_array)
@@ -700,10 +698,18 @@ namespace uicore
 
 	void GL3GraphicContextProvider::set_primitives_array(const PrimitivesArrayPtr &primitives_array)
 	{
-		GL3PrimitivesArrayProvider *prim_array = static_cast<GL3PrimitivesArrayProvider *>(primitives_array.get());
+		if (primitives_array)
+		{
+			GL3PrimitivesArrayProvider *prim_array = static_cast<GL3PrimitivesArrayProvider *>(primitives_array.get());
 
-		OpenGL::set_active(this);
-		glBindVertexArray(prim_array->handle);
+			OpenGL::set_active(this);
+			glBindVertexArray(prim_array->handle);
+		}
+		else
+		{
+			OpenGL::set_active(this);
+			glBindVertexArray(0);
+		}
 	}
 
 	void GL3GraphicContextProvider::draw_primitives_array(PrimitivesType type, int offset, int num_vertices)
@@ -718,10 +724,18 @@ namespace uicore
 		glDrawArraysInstanced(OpenGL::to_enum(type), offset, num_vertices, instance_count);
 	}
 
-	void GL3GraphicContextProvider::set_primitives_elements(ElementArrayBuffer *array_provider)
+	void GL3GraphicContextProvider::set_primitives_elements(const ElementArrayBufferPtr &array_provider)
 	{
-		OpenGL::set_active(this);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, static_cast<GL3ElementArrayBufferProvider *>(array_provider)->get_handle());
+		if (array_provider)
+		{
+			OpenGL::set_active(this);
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, static_cast<GL3ElementArrayBufferProvider *>(array_provider.get())->get_handle());
+		}
+		else
+		{
+			OpenGL::set_active(this);
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+		}
 	}
 
 	void GL3GraphicContextProvider::draw_primitives_elements(PrimitivesType type, int count, VertexAttributeDataType indices_type, size_t offset)
@@ -736,43 +750,31 @@ namespace uicore
 		glDrawElementsInstanced(OpenGL::to_enum(type), count, OpenGL::to_enum(indices_type), (const GLvoid*)offset, instance_count);
 	}
 
-	void GL3GraphicContextProvider::reset_primitives_elements()
-	{
-		OpenGL::set_active(this);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	}
-
 	void GL3GraphicContextProvider::draw_primitives_elements(
 		PrimitivesType type,
 		int count,
-		ElementArrayBuffer *array_provider,
+		const ElementArrayBufferPtr &array_provider,
 		VertexAttributeDataType indices_type,
-		void *offset)
+		size_t offset)
 	{
 		OpenGL::set_active(this);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, static_cast<GL3ElementArrayBufferProvider *>(array_provider)->get_handle());
-		glDrawElements(OpenGL::to_enum(type), count, OpenGL::to_enum(indices_type), offset);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, static_cast<GL3ElementArrayBufferProvider *>(array_provider.get())->get_handle());
+		glDrawElements(OpenGL::to_enum(type), count, OpenGL::to_enum(indices_type), reinterpret_cast<void*>(offset));
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	}
 
 	void GL3GraphicContextProvider::draw_primitives_elements_instanced(
 		PrimitivesType type,
 		int count,
-		ElementArrayBuffer *array_provider,
+		const ElementArrayBufferPtr &array_provider,
 		VertexAttributeDataType indices_type,
-		void *offset,
+		size_t offset,
 		int instance_count)
 	{
 		OpenGL::set_active(this);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, static_cast<GL3ElementArrayBufferProvider *>(array_provider)->get_handle());
-		glDrawElementsInstanced(OpenGL::to_enum(type), count, OpenGL::to_enum(indices_type), offset, instance_count);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, static_cast<GL3ElementArrayBufferProvider *>(array_provider.get())->get_handle());
+		glDrawElementsInstanced(OpenGL::to_enum(type), count, OpenGL::to_enum(indices_type), reinterpret_cast<void*>(offset), instance_count);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	}
-
-	void GL3GraphicContextProvider::reset_primitives_array()
-	{
-		OpenGL::set_active(this);
-		glBindVertexArray(0);
 	}
 
 	void GL3GraphicContextProvider::set_scissor(const Rect &rect)
@@ -863,16 +865,18 @@ namespace uicore
 		}
 	}
 
-	void GL3GraphicContextProvider::set_depth_range(float n, float f)
-	{
-		OpenGL::set_active(this);
-		glDepthRange((double)n, (double)f); // glDepthRangef is from the OpenGL 4.1 extension ARB_ES2_Compatibility.
-	}
-
 	void GL3GraphicContextProvider::set_depth_range(int viewport, float n, float f)
 	{
-		OpenGL::set_active(this);
-		glDepthRangeIndexed(viewport, (float)n, (float)f);
+		if (viewport == -1)
+		{
+			OpenGL::set_active(this);
+			glDepthRange((double)n, (double)f); // glDepthRangef is from the OpenGL 4.1 extension ARB_ES2_Compatibility.
+		}
+		else
+		{
+			OpenGL::set_active(this);
+			glDepthRangeIndexed(viewport, (float)n, (float)f);
+		}
 	}
 
 	void GL3GraphicContextProvider::set_draw_buffer(DrawBuffer buffer)

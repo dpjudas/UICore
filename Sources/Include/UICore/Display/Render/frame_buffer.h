@@ -45,6 +45,7 @@ namespace uicore
 	class GraphicContext;
 	class FrameBufferProvider;
 	class FrameBuffer_Impl;
+	typedef std::shared_ptr<GraphicContext> GraphicContextPtr;
 	typedef std::shared_ptr<Texture1D> Texture1DPtr;
 	typedef std::shared_ptr<Texture1DArray> Texture1DArrayPtr;
 	typedef std::shared_ptr<Texture2D> Texture2DPtr;
@@ -78,7 +79,7 @@ namespace uicore
 		/// \brief Constructs a FrameBuffer
 		///
 		/// By default, the bind target is set to framebuffer_draw. See set_bind_target()
-		static std::shared_ptr<FrameBuffer> create(GraphicContext &context);
+		static std::shared_ptr<FrameBuffer> create(const GraphicContextPtr &context);
 
 		/// \brief Get the minumum size of all the frame buffer attachments
 		virtual Size get_size() const = 0;

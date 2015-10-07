@@ -44,7 +44,6 @@
 #include "UICore/Core/Text/text.h"
 #include "UICore/Core/Text/utf8_reader.h"
 #include "UICore/Display/2D/render_batch_triangle.h"
-#include "UICore/Display/Render/graphic_context_impl.h"
 
 namespace uicore
 {

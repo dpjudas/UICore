@@ -95,7 +95,7 @@ namespace uicore
 	{
 	public:
 		/// \brief Constructs a texture as described by a pixelbuffer set
-		static std::shared_ptr<Texture> create(GraphicContext &gc, PixelBufferSetPtr pixelbuffer_set);
+		static std::shared_ptr<Texture> create(const GraphicContextPtr &gc, PixelBufferSetPtr pixelbuffer_set);
 
 		/// \brief Get the minimum level of detail.
 		virtual float min_lod() const = 0;

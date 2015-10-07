@@ -38,14 +38,14 @@ namespace uicore
 	class CanvasBatcher_Impl
 	{
 	public:
-		CanvasBatcher_Impl(GraphicContext &gc);
+		CanvasBatcher_Impl(const GraphicContextPtr &gc);
 		~CanvasBatcher_Impl();
 
 		void flush();
-		bool set_batcher(GraphicContext &gc, RenderBatcher *batcher);
-		void update_batcher_matrix(GraphicContext &gc, const Mat4f &modelview, const Mat4f &projection, TextureImageYAxis image_yaxis);
+		bool set_batcher(const GraphicContextPtr &gc, RenderBatcher *batcher);
+		void update_batcher_matrix(const GraphicContextPtr &gc, const Mat4f &modelview, const Mat4f &projection, TextureImageYAxis image_yaxis);
 
-		GraphicContext current_gc;
+		GraphicContextPtr current_gc;
 
 		RenderBatcher *active_batcher;
 		RenderBatchBuffer render_batcher_buffer;
@@ -57,7 +57,7 @@ namespace uicore
 		RenderBatchPath render_batcher_path;
 	};
 
-	CanvasBatcher_Impl::CanvasBatcher_Impl(GraphicContext &gc) : active_batcher(nullptr),
+	CanvasBatcher_Impl::CanvasBatcher_Impl(const GraphicContextPtr &gc) : active_batcher(nullptr),
 		render_batcher_buffer(gc),
 		render_batcher_triangle(gc, &render_batcher_buffer),
 		render_batcher_line(gc, &render_batcher_buffer),
@@ -76,7 +76,7 @@ namespace uicore
 	{
 	}
 
-	CanvasBatcher::CanvasBatcher(GraphicContext &gc) : impl(std::make_shared<CanvasBatcher_Impl>(gc))
+	CanvasBatcher::CanvasBatcher(const GraphicContextPtr &gc) : impl(std::make_shared<CanvasBatcher_Impl>(gc))
 	{
 	}
 
@@ -119,7 +119,7 @@ namespace uicore
 		}
 	}
 
-	void CanvasBatcher_Impl::update_batcher_matrix(GraphicContext &gc, const Mat4f &modelview, const Mat4f &projection, TextureImageYAxis image_yaxis)
+	void CanvasBatcher_Impl::update_batcher_matrix(const GraphicContextPtr &gc, const Mat4f &modelview, const Mat4f &projection, TextureImageYAxis image_yaxis)
 	{
 		if (gc != current_gc)
 		{
@@ -129,11 +129,11 @@ namespace uicore
 
 		if (active_batcher)
 		{
-			active_batcher->matrix_changed(modelview, projection, image_yaxis, gc.get_pixel_ratio());
+			active_batcher->matrix_changed(modelview, projection, image_yaxis, gc->get_pixel_ratio());
 		}
 	}
 
-	bool CanvasBatcher_Impl::set_batcher(GraphicContext &gc, RenderBatcher *batcher)
+	bool CanvasBatcher_Impl::set_batcher(const GraphicContextPtr &gc, RenderBatcher *batcher)
 	{
 		if ((active_batcher != batcher) || (gc != current_gc))
 		{
@@ -150,12 +150,12 @@ namespace uicore
 		impl->flush();
 	}
 
-	void CanvasBatcher::update_batcher_matrix(GraphicContext &gc, const Mat4f &modelview, const Mat4f &projection, TextureImageYAxis image_yaxis)
+	void CanvasBatcher::update_batcher_matrix(const GraphicContextPtr &gc, const Mat4f &modelview, const Mat4f &projection, TextureImageYAxis image_yaxis)
 	{
 		impl->update_batcher_matrix(gc, modelview, projection, image_yaxis);
 	}
 
-	bool CanvasBatcher::set_batcher(GraphicContext &gc, RenderBatcher *batcher)
+	bool CanvasBatcher::set_batcher(const GraphicContextPtr &gc, RenderBatcher *batcher)
 	{
 		return impl->set_batcher(gc, batcher);
 	}

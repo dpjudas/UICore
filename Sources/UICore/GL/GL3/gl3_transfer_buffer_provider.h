@@ -47,9 +47,9 @@ namespace uicore
 		void *data() override { return buffer.get_data(); }
 		GLuint get_handle() const { return buffer.get_handle(); }
 
-		void lock(GraphicContext &gc, BufferAccess access) override { buffer.lock(gc, access); }
+		void lock(const GraphicContextPtr &gc, BufferAccess access) override { buffer.lock(gc, access); }
 		void unlock() override { buffer.unlock(); }
-		void upload_data(GraphicContext &gc, int offset, const void *data, int size) override { buffer.upload_data(gc, offset, data, size); }
+		void upload_data(const GraphicContextPtr &gc, int offset, const void *data, int size) override { buffer.upload_data(gc, offset, data, size); }
 
 	private:
 		GL3BufferObjectProvider buffer;

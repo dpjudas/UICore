@@ -28,16 +28,16 @@
 
 #include "UICore/precomp.h"
 #include "UICore/Display/Render/texture_cube.h"
-#include "graphic_context_impl.h"
+#include "UICore/Display/TargetProviders/graphic_context_provider.h"
 
 namespace uicore
 {
-	std::shared_ptr<TextureCube> TextureCube::create(GraphicContext &context, int width, int height, TextureFormat texture_format, int levels)
+	std::shared_ptr<TextureCube> TextureCube::create(const GraphicContextPtr &context, int width, int height, TextureFormat texture_format, int levels)
 	{
-		return context.get_provider()->create_texture_cube(width, height, texture_format, levels);
+		return static_cast<GraphicContextProvider*>(context.get())->create_texture_cube(width, height, texture_format, levels);
 	}
 
-	std::shared_ptr<TextureCube> TextureCube::create(GraphicContext &context, const Size &size, TextureFormat texture_format, int levels)
+	std::shared_ptr<TextureCube> TextureCube::create(const GraphicContextPtr &context, const Size &size, TextureFormat texture_format, int levels)
 	{
 		return create(context, size.width, size.height, texture_format, levels);
 	}

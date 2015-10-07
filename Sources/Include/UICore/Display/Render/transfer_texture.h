@@ -58,8 +58,8 @@ namespace uicore
 		/// \param data = data to copy from (May be nullptr)
 		/// \param usage = Buffer Usage
 		/// \param pbuff = The pixelbuffer to copy from
-		static std::shared_ptr<TransferTexture> create(GraphicContext &gc, int width, int height, PixelBufferDirection direction = data_to_gpu, TextureFormat texture_format = tf_rgba8, const void *data = nullptr, BufferUsage usage = usage_stream_draw);
-		static std::shared_ptr<TransferTexture> create(GraphicContext &gc, const PixelBufferPtr &pbuff, PixelBufferDirection direction = data_to_gpu, BufferUsage usage = usage_stream_draw);
+		static std::shared_ptr<TransferTexture> create(const GraphicContextPtr &gc, int width, int height, PixelBufferDirection direction = data_to_gpu, TextureFormat texture_format = tf_rgba8, const void *data = nullptr, BufferUsage usage = usage_stream_draw);
+		static std::shared_ptr<TransferTexture> create(const GraphicContextPtr &gc, const PixelBufferPtr &pbuff, PixelBufferDirection direction = data_to_gpu, BufferUsage usage = usage_stream_draw);
 	};
 
 	typedef std::shared_ptr<TransferTexture> TransferTexturePtr;

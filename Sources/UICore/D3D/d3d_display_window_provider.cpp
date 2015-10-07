@@ -92,7 +92,7 @@ namespace uicore
 		return window.is_visible();
 	}
 
-	GraphicContext& D3DDisplayWindowProvider::get_gc()
+	const GraphicContextPtr &D3DDisplayWindowProvider::get_gc() const
 	{
 		return gc;
 	}
@@ -254,12 +254,12 @@ namespace uicore
 			}
 		}
 
-		gc = GraphicContext(new D3DGraphicContextProvider(this, description));
+		gc = std::make_shared<D3DGraphicContextProvider>(this, description);
 
 		if (description.is_fullscreen())
 			swap_chain->SetFullscreenState(TRUE, 0);
 
-		D3DGraphicContextProvider *d3d_gc = static_cast<D3DGraphicContextProvider*>(gc.get_provider());
+		D3DGraphicContextProvider *d3d_gc = static_cast<D3DGraphicContextProvider*>(gc.get());
 		d3d_gc->standard_programs = StandardPrograms(gc);
 	}
 
@@ -364,7 +364,7 @@ namespace uicore
 		if (use_fake_front_buffer)
 			device_context->CopyResource(fake_front_buffer, back_buffer);
 
-		//D3DGraphicContextProvider *gc_provider = static_cast<D3DGraphicContextProvider*>(gc.get_provider());
+		//D3DGraphicContextProvider *gc_provider = static_cast<D3DGraphicContextProvider*>(gc.get());
 		if (interval != -1)
 			current_interval_setting = interval;
 		swap_chain->Present(current_interval_setting, 0);
@@ -483,7 +483,7 @@ namespace uicore
 
 	void D3DDisplayWindowProvider::on_window_resized()
 	{
-		D3DGraphicContextProvider *gc_provider = static_cast<D3DGraphicContextProvider*>(gc.get_provider());
+		D3DGraphicContextProvider *gc_provider = static_cast<D3DGraphicContextProvider*>(gc.get());
 
 		if (gc_provider)
 		{
@@ -491,8 +491,7 @@ namespace uicore
 			release_swap_chain_buffers();
 
 			HRESULT result = swap_chain->ResizeBuffers(0, 0, 0, DXGI_FORMAT_UNKNOWN, DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH);
-			if (gc.get_provider())
-				((D3DGraphicContextProvider *)gc.get_provider())->on_window_resized();
+			gc_provider->on_window_resized();
 
 			create_swap_chain_buffers();
 

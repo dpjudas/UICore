@@ -698,9 +698,9 @@ namespace uicore
 		D3DTarget::throw_if_failed("ID3D11Device.CreateTexture3D failed", result);
 	}
 
-	PixelBufferPtr D3DTextureProvider::get_pixeldata(GraphicContext &gc, TextureFormat texture_format, int level) const
+	PixelBufferPtr D3DTextureProvider::get_pixeldata(const GraphicContextPtr &gc, TextureFormat texture_format, int level) const
 	{
-		D3DGraphicContextProvider *gc_provider = static_cast<D3DGraphicContextProvider*>(gc.get_provider());
+		D3DGraphicContextProvider *gc_provider = static_cast<D3DGraphicContextProvider*>(gc.get());
 		D3DTextureData::DeviceHandles &data_handles = data->get_handles(gc_provider->get_window()->get_device());
 
 		int width;
@@ -748,9 +748,9 @@ namespace uicore
 		return pixels;
 	}
 
-	void D3DTextureProvider::copy_from(GraphicContext &gc, int x, int y, int slice, int level, const PixelBufferPtr &source_image, const Rect &src_rect)
+	void D3DTextureProvider::copy_from(const GraphicContextPtr &gc, int x, int y, int slice, int level, const PixelBufferPtr &source_image, const Rect &src_rect)
 	{
-		D3DGraphicContextProvider *gc_provider = static_cast<D3DGraphicContextProvider*>(gc.get_provider());
+		D3DGraphicContextProvider *gc_provider = static_cast<D3DGraphicContextProvider*>(gc.get());
 		D3DTextureData::DeviceHandles &data_handles = data->get_handles(gc_provider->get_window()->get_device());
 
 		ComPtr<ID3D11DeviceContext> device_context;

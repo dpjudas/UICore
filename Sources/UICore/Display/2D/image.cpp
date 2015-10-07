@@ -36,7 +36,6 @@
 #include "UICore/Core/Text/text.h"
 #include "UICore/Core/Math/quad.h"
 #include "render_batch_triangle.h"
-#include "UICore/Display/Render/graphic_context_impl.h"
 #include "canvas_impl.h"
 
 namespace uicore

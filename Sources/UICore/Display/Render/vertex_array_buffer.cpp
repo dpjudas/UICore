@@ -34,13 +34,13 @@
 
 namespace uicore
 {
-	std::shared_ptr<VertexArrayBuffer> VertexArrayBuffer::create(GraphicContext &gc, int size, BufferUsage usage)
+	std::shared_ptr<VertexArrayBuffer> VertexArrayBuffer::create(const GraphicContextPtr &gc, int size, BufferUsage usage)
 	{
-		return gc.get_provider()->create_vertex_array_buffer(size, usage);
+		return static_cast<GraphicContextProvider*>(gc.get())->create_vertex_array_buffer(size, usage);
 	}
 
-	std::shared_ptr<VertexArrayBuffer> VertexArrayBuffer::create(GraphicContext &gc, const void *data, int size, BufferUsage usage)
+	std::shared_ptr<VertexArrayBuffer> VertexArrayBuffer::create(const GraphicContextPtr &gc, const void *data, int size, BufferUsage usage)
 	{
-		return gc.get_provider()->create_vertex_array_buffer(data, size, usage);
+		return static_cast<GraphicContextProvider*>(gc.get())->create_vertex_array_buffer(data, size, usage);
 	}
 }

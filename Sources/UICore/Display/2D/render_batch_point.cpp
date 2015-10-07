@@ -33,7 +33,7 @@
 
 namespace uicore
 {
-	RenderBatchPoint::RenderBatchPoint(GraphicContext &gc, RenderBatchBuffer *batch_buffer)
+	RenderBatchPoint::RenderBatchPoint(const GraphicContextPtr &gc, RenderBatchBuffer *batch_buffer)
 		: batch_buffer(batch_buffer)
 	{
 		vertices = (PointVertex *)batch_buffer->buffer;
@@ -72,11 +72,11 @@ namespace uicore
 		canvas.set_batcher(this);
 	}
 
-	void RenderBatchPoint::flush(GraphicContext &gc)
+	void RenderBatchPoint::flush(const GraphicContextPtr &gc)
 	{
 		if (position > 0)
 		{
-			gc.set_program_object(program_color_only);
+			gc->set_program_object(program_color_only);
 
 			int gpu_index;
 			VertexArrayVector<PointVertex> gpu_vertices(batch_buffer->get_vertex_buffer(gc, gpu_index));
@@ -90,9 +90,9 @@ namespace uicore
 
 			gpu_vertices.upload_data(gc, 0, vertices, position);
 
-			gc.draw_primitives(type_points, position, prim_array[gpu_index]);
+			gc->draw_primitives(type_points, position, prim_array[gpu_index]);
 
-			gc.reset_program_object();
+			gc->reset_program_object();
 
 			position = 0;
 		}

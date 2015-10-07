@@ -55,7 +55,7 @@ namespace uicore
 		Size get_minimum_size(bool client_area = false) const;
 		Size get_maximum_size(bool client_area = false) const;
 
-		GraphicContext& get_gc();
+		const GraphicContextPtr &get_gc() const;
 
 		InputDevice &get_keyboard() override { return window.get_keyboard(); }
 		InputDevice &get_mouse() override { return window.get_mouse(); }
@@ -136,7 +136,7 @@ namespace uicore
 		Win32Window window;
 
 		DisplayWindowSite *site;
-		GraphicContext gc;
+		GraphicContextPtr gc;
 
 		ComPtr<ID3D11Device> device;
 		ComPtr<ID3D11DeviceContext> device_context;

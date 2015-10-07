@@ -57,7 +57,7 @@ namespace uicore
 
 	void Font_Impl::select_font_family(Canvas &canvas)
 	{
-		float pixel_ratio = canvas.get_gc().get_pixel_ratio();
+		float pixel_ratio = canvas.get_gc()->get_pixel_ratio();
 		if (pixel_ratio == 0.0f)
 			pixel_ratio = 1.0f;
 

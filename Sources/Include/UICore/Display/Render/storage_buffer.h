@@ -34,6 +34,7 @@
 namespace uicore
 {
 	class GraphicContext;
+	typedef std::shared_ptr<GraphicContext> GraphicContextPtr;
 	class TransferBuffer;
 	typedef std::shared_ptr<TransferBuffer> TransferBufferPtr;
 
@@ -42,19 +43,19 @@ namespace uicore
 	{
 	public:
 		/// \brief Constructs a buffer
-		static std::shared_ptr<StorageBuffer> create(GraphicContext &gc, int size, int stride, BufferUsage usage = usage_dynamic_draw);
-		static std::shared_ptr<StorageBuffer> create(GraphicContext &gc, const void *data, int size, int stride, BufferUsage usage = usage_dynamic_draw);
+		static std::shared_ptr<StorageBuffer> create(const GraphicContextPtr &gc, int size, int stride, BufferUsage usage = usage_dynamic_draw);
+		static std::shared_ptr<StorageBuffer> create(const GraphicContextPtr &gc, const void *data, int size, int stride, BufferUsage usage = usage_dynamic_draw);
 
 		/// \brief Uploads data to storage buffer.
 		///
 		/// The size specified must match the size of the buffer and is only included to help guard against buffer overruns.
-		virtual void upload_data(GraphicContext &gc, const void *data, int size) = 0;
+		virtual void upload_data(const GraphicContextPtr &gc, const void *data, int size) = 0;
 
 		/// \brief Copies data from transfer buffer
-		virtual void copy_from(GraphicContext &gc, const TransferBufferPtr &buffer, int dest_pos = 0, int src_pos = 0, int size = -1) = 0;
+		virtual void copy_from(const GraphicContextPtr &gc, const TransferBufferPtr &buffer, int dest_pos = 0, int src_pos = 0, int size = -1) = 0;
 
 		/// \brief Copies data to transfer buffer
-		virtual void copy_to(GraphicContext &gc, const TransferBufferPtr &buffer, int dest_pos = 0, int src_pos = 0, int size = -1) = 0;
+		virtual void copy_to(const GraphicContextPtr &gc, const TransferBufferPtr &buffer, int dest_pos = 0, int src_pos = 0, int size = -1) = 0;
 	};
 
 	typedef std::shared_ptr<StorageBuffer> StorageBufferPtr;

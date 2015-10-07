@@ -40,7 +40,7 @@ namespace uicore
 	class RenderBatchLineTexture : public RenderBatcher
 	{
 	public:
-		RenderBatchLineTexture(GraphicContext &gc, RenderBatchBuffer *batch_buffer);
+		RenderBatchLineTexture(const GraphicContextPtr &gc, RenderBatchBuffer *batch_buffer);
 		void draw_lines(Canvas &canvas, const Vec2f *line_positions, const Vec2f *texture_positions, int num_vertices, const Texture2DPtr &texture, const Vec4f &line_color);
 
 	private:
@@ -53,7 +53,7 @@ namespace uicore
 
 		inline Vec4f to_position(float x, float y) const;
 		void set_batcher_active(Canvas &canvas, int num_vertices, const Texture2DPtr &texture);
-		void flush(GraphicContext &gc) override;
+		void flush(const GraphicContextPtr &gc) override;
 		void matrix_changed(const Mat4f &modelview, const Mat4f &projection, TextureImageYAxis image_yaxis, float pixel_ratio) override;
 
 		enum { max_vertices = RenderBatchBuffer::vertex_buffer_size / sizeof(LineTextureVertex) };

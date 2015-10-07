@@ -33,13 +33,13 @@
 
 namespace uicore
 {
-	std::shared_ptr<StorageBuffer> StorageBuffer::create(GraphicContext &gc, int size, int stride, BufferUsage usage)
+	std::shared_ptr<StorageBuffer> StorageBuffer::create(const GraphicContextPtr &gc, int size, int stride, BufferUsage usage)
 	{
-		return gc.get_provider()->create_storage_buffer(size, stride, usage);
+		return static_cast<GraphicContextProvider*>(gc.get())->create_storage_buffer(size, stride, usage);
 	}
 
-	std::shared_ptr<StorageBuffer> StorageBuffer::create(GraphicContext &gc, const void *data, int size, int stride, BufferUsage usage)
+	std::shared_ptr<StorageBuffer> StorageBuffer::create(const GraphicContextPtr &gc, const void *data, int size, int stride, BufferUsage usage)
 	{
-		return gc.get_provider()->create_storage_buffer(data, size, stride, usage);
+		return static_cast<GraphicContextProvider*>(gc.get())->create_storage_buffer(data, size, stride, usage);
 	}
 }

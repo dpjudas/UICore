@@ -40,6 +40,7 @@ namespace uicore
 	class Subtexture;
 	class TextureGroup_Impl;
 	class GraphicContext;
+	typedef std::shared_ptr<GraphicContext> GraphicContextPtr;
 
 	/// \brief Texture grouping class.
 	class TextureGroup
@@ -85,7 +86,7 @@ namespace uicore
 		std::vector<Texture2DPtr> get_textures() const;
 
 		/// \brief Allocate space for another sub texture.
-		Subtexture add(GraphicContext &context, const Size &size);
+		Subtexture add(const GraphicContextPtr &context, const Size &size);
 
 		/// \brief Deallocate space, from a previously allocated texture
 		///

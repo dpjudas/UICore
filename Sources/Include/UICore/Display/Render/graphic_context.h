@@ -271,88 +271,59 @@ namespace uicore
 	class GraphicContext
 	{
 	public:
-		/// Constructs a null instance.
-		GraphicContext();
-
-		/** Constructs a new graphic context from a provider.
-		 *  \param provider = Graphic Context Provider
-		 */
-		GraphicContext(GraphicContextProvider *provider);
-
-		~GraphicContext();
-
-		/// Returns true if this object is invalid.
-		bool is_null() const { return !impl; }
-
-		/// Throw an exception if this object is invalid.
-		void throw_if_null() const;
-
 		/// Returns in what range clip space z values are clipped.
-		ClipZRange get_clip_z_range() const;
+		virtual ClipZRange get_clip_z_range() const = 0;
 
 		/// Returns the Y axis direction for viewports, clipping rects, textures and render targets
-		TextureImageYAxis get_texture_image_y_axis() const;
+		virtual TextureImageYAxis get_texture_image_y_axis() const = 0;
 
 		/// Returns the shader language used
-		ShaderLanguage get_shader_language() const;
+		virtual ShaderLanguage get_shader_language() const = 0;
 
 		/** Returns the major version / feature level supported by the hardware.
 		 *  For an OpenGL target, this returns the major OpenGL version the driver supports.
 		 *  For a Direct3D target, this returns the major feature level.
 		 */
-		int get_major_version() const;
+		virtual int get_major_version() const = 0;
 
 		/** Returns the minor version / feature level supported by the hardware.
 		 *  For an OpenGL target, this returns the minor OpenGL version the driver supports.
 		 *  For a Direct3D target, this returns the minor feature level.
 		 */
-		int get_minor_version() const;
+		virtual int get_minor_version() const = 0;
 
 		/** Returns `true` if the hardware supports compute shaders.
 		 *  This function will always returns true for OpenGL 4.3 or newer, or
 		 *  Direct3D 11.0 or newer. For Direct3D 10.0 and 10.1, the support for
 		 *  compute shaders are optional.
 		 */
-		bool has_compute_shader_support() const;
-
-		/** Retrieves the texture selected in this context with an index number.
-		 *  \param index The texture index number to retrieve. [0 to n]
-		 *  \return The texture on the specified index. Use Texture::is_null() to
-		 *          determine whether the texture has been selected by the context.
-		 */
-		TexturePtr get_texture(int index) const;
-
-		/** Returns the textures currently selected in this context.
-		 *  \return A vector containing the selected textures. The vector may
-		 *          contain null (unselected) texture elements within it..
-		 */
-		std::vector<TexturePtr> get_textures() const;
+		virtual bool has_compute_shader_support() const = 0;
 
 		/** Returns the currently selected write frame buffer.
 		 *  \return The frame buffer.
 		 */
-		FrameBufferPtr get_write_frame_buffer() const;
+		virtual FrameBufferPtr get_write_frame_buffer() const = 0;
 
 		/// Returns the currently selected read frame buffer.
 		///
 		/// \return The frame buffer.
-		FrameBufferPtr get_read_frame_buffer() const;
+		virtual FrameBufferPtr get_read_frame_buffer() const = 0;
 
 		/// Returns the currently selected program object
-		ProgramObjectPtr get_program_object() const;
+		virtual ProgramObjectPtr get_program_object() const = 0;
 
 		/// Returns the current actual width of the context.
-		int get_width() const;
+		int get_width() const { return get_size().width; }
 
 		/// Returns the current actual height of the context.
-		int get_height() const;
+		int get_height() const { return get_size().height; }
 
 		/// Returns the current actual size of the context.
-		Size get_size() const;
+		virtual Size get_size() const = 0;
 
 		/// Retrieves the display pixel ratio of the context.
 		/// \seealso Resolution Independence
-		float get_pixel_ratio() const;
+		virtual float get_pixel_ratio() const = 0;
 
 		/// Calculates the device independent width of the context.
 		/// \seealso Resolution Independence
@@ -370,18 +341,13 @@ namespace uicore
 		 *  allow. Size(0, 0) will be returned if there is no known limitation to
 		 *  the maximum texture size allowed for the context.
 		 */
-		Size get_max_texture_size() const;
-
-		/// Returns the provider for this graphic context.
-		GraphicContextProvider *get_provider();
-
-		const GraphicContextProvider * get_provider() const;
+		virtual Size get_max_texture_size() const = 0;
 
 		/// Return the content of the read buffer into a pixel buffer.
-		PixelBufferPtr get_pixeldata(const Rect& rect, TextureFormat texture_format = tf_rgba8, bool clamp = true);
+		virtual PixelBufferPtr get_pixeldata(const Rect& rect, TextureFormat texture_format = tf_rgba8, bool clamp = true) const = 0;
 
 		/// Return the content of the read buffer into a pixel buffer.
-		PixelBufferPtr get_pixeldata(TextureFormat texture_format = tf_rgba8, bool clamp = true);
+		PixelBufferPtr get_pixeldata(TextureFormat texture_format = tf_rgba8, bool clamp = true) { return get_pixeldata(Rect(Point(), get_size()), texture_format, clamp); }
 
 		/** Returns `true` if this frame buffer object is owned by this graphic
 		 *  context.
@@ -390,126 +356,128 @@ namespace uicore
 		 *  function will verify if the frame buffer object belongs to this graphic
 		 *  context.
 		 */
-		bool is_frame_buffer_owner(const FrameBufferPtr &fb);
+		virtual bool is_frame_buffer_owner(const FrameBufferPtr &fb) = 0;
 
 		/// \brief Create rasterizer state object.
-		std::shared_ptr<RasterizerState> create_rasterizer_state(const RasterizerStateDescription &desc);
+		virtual std::shared_ptr<RasterizerState> create_rasterizer_state(const RasterizerStateDescription &desc) = 0;
 
 		/// \brief Create blend state object.
-		std::shared_ptr<BlendState> create_blend_state(const BlendStateDescription &desc);
+		virtual std::shared_ptr<BlendState> create_blend_state(const BlendStateDescription &desc) = 0;
 
 		/// \brief Create depth-stencil state object.
-		std::shared_ptr<DepthStencilState> create_depth_stencil_state(const DepthStencilStateDescription &desc);
+		virtual std::shared_ptr<DepthStencilState> create_depth_stencil_state(const DepthStencilStateDescription &desc) = 0;
 
 		/// Sets the current frame buffer.
-		void set_frame_buffer(const FrameBufferPtr &write_buffer);
-		void set_frame_buffer(const FrameBufferPtr &write_buffer, const FrameBufferPtr &read_buffer);
+		void set_frame_buffer(const FrameBufferPtr &write_buffer) { set_frame_buffer(write_buffer, write_buffer); }
+		virtual void set_frame_buffer(const FrameBufferPtr &write_buffer, const FrameBufferPtr &read_buffer) = 0;
 
 		/// Resets the current frame buffer to be the initial frame buffer.
-		void reset_frame_buffer();
+		void reset_frame_buffer() { set_frame_buffer(nullptr); }
 
 		/// Select uniform buffer into index
-		void set_uniform_buffer(int index, const UniformBufferPtr &buffer);
+		virtual void set_uniform_buffer(int index, const UniformBufferPtr &buffer) = 0;
 
 		/// Remove uniform buffer from index
-		void reset_uniform_buffer(int index);
+		void reset_uniform_buffer(int index) { set_uniform_buffer(index, nullptr); }
 
 		/// Select storage buffer into index
-		void set_storage_buffer(int index, const StorageBufferPtr &buffer);
+		virtual void set_storage_buffer(int index, const StorageBufferPtr &buffer) = 0;
 
 		/// Remove storage buffer from index
-		void reset_storage_buffer(int index);
+		void reset_storage_buffer(int index) { set_storage_buffer(index, nullptr); }
 
 		/// Select texture into index.
 		///
 		/// \param unit_index = 0 to x, the index of this texture
-		/// \param texture = The texture to select.  This can be an empty texture Texture()
-		void set_texture(int unit_index, const TexturePtr &texture);
+		/// \param texture = The texture to select. This can be a null texture to clear that unit
+		virtual void set_texture(int unit_index, const TexturePtr &texture) = 0;
 
 		/// Select textures
 		///
-		/// Only textures units from 0 to textures.size()-1 are set.
-		///
-		/// \param textures = The texture to select (placed at unit_index 0 to texture.size()-1).  These may contain null textures
-		void set_textures(std::vector<TexturePtr> &textures);
+		/// \param start_index = First unit to select the textures into
+		/// \param textures = The textures to select. These may contain null textures
+		void set_textures(const std::vector<TexturePtr> &textures) { set_textures(0, textures); }
+		void set_textures(int start_index, const std::vector<TexturePtr> &textures) { for (int i = 0; i < (int)textures.size(); i++) set_texture(start_index + i, textures[i]); }
 
 		/// Remove texture from index.
 		///
 		/// \param unit_index = 0 to x, the index of the texture
-		void reset_texture(int unit_index);
+		void reset_texture(int unit_index) { set_texture(unit_index, nullptr); }
 
 		/// Remove all selected textures
-		void reset_textures();
+		void reset_textures(int start_index, size_t count) { for (int i = 0; i < (size_t)count; i++) set_texture(start_index + i, nullptr); }
 
 		/// Select texture image into index.
 		///
 		/// \param unit_index = 0 to x, the index of this texture
-		/// \param texture = The texture to select.  This can be an empty texture Texture()
-		void set_image_texture(int unit_index, const TexturePtr &texture);
+		/// \param texture = The texture to select. This can be a null texture to clear that unit
+		virtual void set_image_texture(int unit_index, const TexturePtr &texture) = 0;
 
 		/// Select texture images
 		///
 		/// Only textures units from 0 to textures.size()-1 are set.
 		///
-		/// \param textures = The texture to select (placed at unit_index 0 to texture.size()-1).  These may contain null textures
-		void set_image_texture(std::vector<TexturePtr> &textures);
+		/// \param textures = The texture to select. These may contain null textures
+		/// \param start_index = First unit to select the textures into
+		void set_image_textures(const std::vector<TexturePtr> &textures) { set_image_textures(0, textures); }
+		void set_image_textures(int start_index, const std::vector<TexturePtr> &textures) { for (int i = 0; i < (int)textures.size(); i++) set_image_texture(start_index + i, textures[i]); }
 
 		/// Remove texture from index.
 		///
 		/// \param unit_index = 0 to x, the index of the texture
-		void reset_image_texture(int unit_index);
+		void reset_image_texture(int unit_index) { set_image_texture(unit_index, nullptr); }
 
 		/// Remove all selected textures
-		void reset_image_textures();
+		void reset_image_textures(int start_index, size_t count) { for (int i = 0; i < (size_t)count; i++) set_image_texture(start_index + i, nullptr); }
 
 		/// Set active rasterizer state
-		void set_rasterizer_state(const RasterizerStatePtr &state);
+		virtual void set_rasterizer_state(const RasterizerStatePtr &state) = 0;
 
 		/// Set active blend state
-		void set_blend_state(const BlendStatePtr &state, const Colorf &blend_color = Colorf::white, unsigned int sample_mask = 0xffffffff);
+		virtual void set_blend_state(const BlendStatePtr &state, const Colorf &blend_color = Colorf::white, unsigned int sample_mask = 0xffffffff) = 0;
 
 		/// Set active depth stencil state
-		void set_depth_stencil_state(const DepthStencilStatePtr &state, int stencil_ref = 0);
+		virtual void set_depth_stencil_state(const DepthStencilStatePtr &state, int stencil_ref = 0) = 0;
 
 		/// Set active rasterizer state
-		void reset_rasterizer_state();
+		void reset_rasterizer_state() { set_rasterizer_state(nullptr); }
 
 		/// Set active blend state
-		void reset_blend_state();
+		void reset_blend_state() { set_blend_state(nullptr); }
 
 		/// Set active depth stencil state
-		void reset_depth_stencil_state();
+		void reset_depth_stencil_state() { set_depth_stencil_state(nullptr); }
 
 		/// Set active program object to the standard program specified.
-		void set_program_object(StandardProgram standard_program);
+		virtual void set_program_object(StandardProgram standard_program) = 0;
 
 		/// Set active program object.
-		void set_program_object(const ProgramObjectPtr &program);
+		virtual void set_program_object(const ProgramObjectPtr &program) = 0;
 
 		/// Remove active program object.
-		void reset_program_object();
+		void reset_program_object() { set_program_object(nullptr); }
 
 		/// Returns true if this primitives array is owned by this graphic context.
 		///
 		/// Primitive array objects cannot be shared between graphic contexts.  This function verifies that the primitives array
 		/// belongs to this graphic context.
-		bool is_primitives_array_owner(const PrimitivesArrayPtr &primitives_array);
+		virtual bool is_primitives_array_owner(const PrimitivesArrayPtr &primitives_array) = 0;
 
-		/// Draw primitives on gc.
-		void draw_primitives(PrimitivesType type, int num_vertices, const PrimitivesArrayPtr &array);
+		/// Draw primitives on gc
+		virtual void draw_primitives(PrimitivesType type, int num_vertices, const PrimitivesArrayPtr &array) = 0;
 
-		/// Set the primitives array on the gc.
-		void set_primitives_array(const PrimitivesArrayPtr &array);
+		/// Set the primitives array on the gc
+		virtual void set_primitives_array(const PrimitivesArrayPtr &array) = 0;
 
 		/// Draws primitives from the current assigned primitives array.
-		void draw_primitives_array(PrimitivesType type, int num_vertices);
+		void draw_primitives_array(PrimitivesType type, int num_vertices) { draw_primitives_array(type, 0, num_vertices); }
 
 		/// Draw primitives array
 		///
 		/// \param type = Primitives Type
 		/// \param offset = value
 		/// \param num_vertices = value
-		void draw_primitives_array(PrimitivesType type, int offset, int num_vertices);
+		virtual void draw_primitives_array(PrimitivesType type, int offset, int num_vertices) = 0;
 
 		/// Draw primitives array instanced
 		///
@@ -517,10 +485,10 @@ namespace uicore
 		/// \param offset = value
 		/// \param num_vertices = value
 		/// \param instance_count = number of instances drawn
-		void draw_primitives_array_instanced(PrimitivesType type, int offset, int num_vertices, int instance_count);
+		virtual void draw_primitives_array_instanced(PrimitivesType type, int offset, int num_vertices, int instance_count) = 0;
 
 		/// Sets current elements array buffer
-		void set_primitives_elements(const ElementArrayBufferPtr &element_array);
+		virtual void set_primitives_elements(const ElementArrayBufferPtr &element_array) = 0;
 
 		/// Draw primitives elements
 		///
@@ -528,7 +496,7 @@ namespace uicore
 		/// \param count = value
 		/// \param indices_type = Vertex Attribute Data Type
 		/// \param offset = void
-		void draw_primitives_elements(PrimitivesType type, int count, VertexAttributeDataType indices_type, size_t offset = 0);
+		virtual void draw_primitives_elements(PrimitivesType type, int count, VertexAttributeDataType indices_type, size_t offset = 0) = 0;
 
 		/// Draw primitives elements instanced
 		///
@@ -537,10 +505,10 @@ namespace uicore
 		/// \param indices_type = Vertex Attribute Data Type
 		/// \param offset = void
 		/// \param instance_count = number of instances drawn
-		void draw_primitives_elements_instanced(PrimitivesType type, int count, VertexAttributeDataType indices_type, size_t offset, int instance_count);
+		virtual void draw_primitives_elements_instanced(PrimitivesType type, int count, VertexAttributeDataType indices_type, size_t offset, int instance_count) = 0;
 
 		/// Resets current elements array buffer
-		void reset_primitives_elements();
+		void reset_primitives_elements() { set_primitives_elements(nullptr); }
 
 		/// Draw primitives elements
 		///
@@ -549,7 +517,7 @@ namespace uicore
 		/// \param element_array = Element Array Buffer
 		/// \param indices_type = Vertex Attribute Data Type
 		/// \param offset = void
-		void draw_primitives_elements(PrimitivesType type, int count, const ElementArrayBufferPtr &element_array, VertexAttributeDataType indices_type, size_t offset = 0);
+		virtual void draw_primitives_elements(PrimitivesType type, int count, const ElementArrayBufferPtr &element_array, VertexAttributeDataType indices_type, size_t offset = 0) = 0;
 
 		/// Draw primitives elements instanced
 		///
@@ -559,62 +527,56 @@ namespace uicore
 		/// \param indices_type = Vertex Attribute Data Type
 		/// \param offset = void
 		/// \param instance_count = number of instances drawn
-		void draw_primitives_elements_instanced(PrimitivesType type, int count, const ElementArrayBufferPtr &element_array, VertexAttributeDataType indices_type, size_t offset, int instance_count);
+		virtual void draw_primitives_elements_instanced(PrimitivesType type, int count, const ElementArrayBufferPtr &element_array, VertexAttributeDataType indices_type, size_t offset, int instance_count) = 0;
 
 		/// Reset the primitives arrays.
-		void reset_primitives_array();
+		void reset_primitives_array() { set_primitives_array(nullptr); }
 
 		/// Execute a compute shader.
-		void dispatch(int x = 1, int y = 1, int z = 1);
+		virtual void dispatch(int x = 1, int y = 1, int z = 1) = 0;
 
 		/// Clears the whole context using the specified color.
-		void clear(const Colorf &color = Colorf::black);
+		virtual void clear(const Colorf &color = Colorf::black) = 0;
 
 		/// Clear the stencil buffer
 		///
 		/// \param value value to clear to.
-		void clear_stencil(int value = 0);
+		virtual void clear_stencil(int value = 0) = 0;
 
 		/// Clear the depth buffer
 		///
 		/// \param value: value to clear to. Range 0.0 - 1.0.
-		void clear_depth(float value = 0);
+		virtual void clear_depth(float value = 0) = 0;
 
 		/// Set the current clipping rectangle.
-		void set_scissor(const Rect &rect, TextureImageYAxis y_axis);
+		virtual void set_scissor(const Rect &rect, TextureImageYAxis y_axis) = 0;
 
 		/// Removes the set clipping rectangle
-		void reset_scissor();
+		virtual void reset_scissor() = 0;
 
 		/// Set the viewport to be used in user projection map mode.
 		///
 		/// \param viewport = The viewport to set
-		void set_viewport(const Rectf &viewport);
+		virtual void set_viewport(const Rectf &viewport, TextureImageYAxis y_axis) = 0;
 
 		/// Set the specified viewport to be used in user projection map mode.
 		///
 		/// \param index = The viewport index (0 to x)
 		/// \param viewport = The viewport to set
-		void set_viewport(int index, const Rectf &viewport);
+		virtual void set_viewport(int index, const Rectf &viewport, TextureImageYAxis y_axis) = 0;
 
 		/// Specifies the depth range for all viewports
-		void set_depth_range(float n, float f);
+		void set_depth_range(float n, float f) { set_depth_range(-1, n, f); }
 
 		/// Specifies the depth range for the specified viewport
-		void set_depth_range(int viewport, float n, float f);
+		virtual void set_depth_range(int viewport, float n, float f) = 0;
 
 		/// Set used draw buffer.
-		void set_draw_buffer(DrawBuffer buffer);
+		virtual void set_draw_buffer(DrawBuffer buffer) = 0;
 
 		/// Flush the command buffer
-		void flush();
-
-		bool operator ==(const GraphicContext &other) const { return impl == other.impl; }
-		bool operator !=(const GraphicContext &other) const { return impl != other.impl; }
-
-	private:
-		std::shared_ptr<GraphicContext_Impl> impl;
-
-		friend class OpenGL;
+		virtual void flush() = 0;
 	};
+
+	typedef std::shared_ptr<GraphicContext> GraphicContextPtr;
 }

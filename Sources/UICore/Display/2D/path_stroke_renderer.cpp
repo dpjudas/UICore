@@ -32,7 +32,7 @@
 
 namespace uicore
 {
-	PathStrokeRenderer::PathStrokeRenderer(GraphicContext &gc)
+	PathStrokeRenderer::PathStrokeRenderer(const GraphicContextPtr &gc)
 	{
 	}
 

@@ -82,7 +82,7 @@ namespace uicore
 	class PathInstanceBuffer
 	{
 	public:
-		void reset(GraphicContext &gc, Vec4f *buffer, int max_entries);
+		void reset(const GraphicContextPtr &gc, Vec4f *buffer, int max_entries);
 		int push(Canvas &canvas, const Brush &brush, const Mat4f &transform);
 
 		Vec4f *get_buffer() const { return buffer; }
@@ -196,7 +196,7 @@ namespace uicore
 	class PathFillRenderer : public PathRenderer
 	{
 	public:
-		PathFillRenderer(GraphicContext &gc, RenderBatchBuffer *batch_buffer);
+		PathFillRenderer(const GraphicContextPtr &gc, RenderBatchBuffer *batch_buffer);
 
 		void set_size(Canvas &canvas, int width, int height);
 		void clear();
@@ -205,7 +205,7 @@ namespace uicore
 		void end(bool close) override;
 
 		void fill(Canvas &canvas, PathFillMode mode, const Brush &brush, const Mat4f &transform);
-		void flush(GraphicContext &gc);
+		void flush(const GraphicContextPtr &gc);
 
 		void set_yaxis(TextureImageYAxis yaxis) { image_yaxis = yaxis; }
 
