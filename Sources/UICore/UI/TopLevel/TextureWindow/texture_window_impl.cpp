@@ -58,12 +58,12 @@ namespace uicore
 			slots.connect(display_window.sig_lost_focus(), uicore::bind_member(this, &TextureWindow_Impl::on_lost_focus));
 			slots.connect(display_window.sig_got_focus(), uicore::bind_member(this, &TextureWindow_Impl::on_got_focus));
 			slots.connect(display_window.sig_window_close(), uicore::bind_member(this, &TextureWindow_Impl::on_window_close));
-			slots.connect(display_window.get_keyboard().sig_key_down(), uicore::bind_member(this, &TextureWindow_Impl::transform_on_key_down));
-			slots.connect(display_window.get_keyboard().sig_key_up(), uicore::bind_member(this, &TextureWindow_Impl::transform_on_key_up));
-			slots.connect(display_window.get_mouse().sig_key_down(), uicore::bind_member(this, &TextureWindow_Impl::transform_on_mouse_down));
-			slots.connect(display_window.get_mouse().sig_key_dblclk(), uicore::bind_member(this, &TextureWindow_Impl::transform_on_mouse_dblclk));
-			slots.connect(display_window.get_mouse().sig_key_up(), uicore::bind_member(this, &TextureWindow_Impl::transform_on_mouse_up));
-			slots.connect(display_window.get_mouse().sig_pointer_move(), uicore::bind_member(this, &TextureWindow_Impl::transform_on_mouse_move));
+			slots.connect(display_window.get_keyboard()->sig_key_down(), uicore::bind_member(this, &TextureWindow_Impl::transform_on_key_down));
+			slots.connect(display_window.get_keyboard()->sig_key_up(), uicore::bind_member(this, &TextureWindow_Impl::transform_on_key_up));
+			slots.connect(display_window.get_mouse()->sig_key_down(), uicore::bind_member(this, &TextureWindow_Impl::transform_on_mouse_down));
+			slots.connect(display_window.get_mouse()->sig_key_dblclk(), uicore::bind_member(this, &TextureWindow_Impl::transform_on_mouse_dblclk));
+			slots.connect(display_window.get_mouse()->sig_key_up(), uicore::bind_member(this, &TextureWindow_Impl::transform_on_mouse_up));
+			slots.connect(display_window.get_mouse()->sig_pointer_move(), uicore::bind_member(this, &TextureWindow_Impl::transform_on_mouse_move));
 		}
 	}
 

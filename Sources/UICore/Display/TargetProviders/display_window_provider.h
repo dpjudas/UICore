@@ -136,13 +136,13 @@ namespace uicore
 		virtual const GraphicContextPtr &get_gc() const = 0;
 
 		/// \brief Returns the keyboard input device.
-		virtual InputDevice &get_keyboard() = 0;
+		virtual const InputDevicePtr &get_keyboard() const = 0;
 
 		/// \brief Returns the mouse input device.
-		virtual InputDevice &get_mouse() = 0;
+		virtual const InputDevicePtr &get_mouse() const = 0;
 
 		/// \brief Returns the game controller input device.
-		virtual std::vector<InputDevice> &get_game_controllers() = 0;
+		virtual const std::vector<InputDevicePtr> &get_game_controllers() const = 0;
 
 		/** Returns an platform-specific internal display window handle object.
 		 */

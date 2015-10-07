@@ -78,9 +78,9 @@ namespace uicore
 		bool is_clipboard_image_available() const;
 		bool is_layered() const { return window_desc.is_layered(); }
 
-		InputDevice &get_keyboard() { return keyboard; }
-		InputDevice &get_mouse() { return mouse; }
-		std::vector<InputDevice> &get_game_controllers() { return joysticks; }
+		const InputDevicePtr &get_keyboard() const { return keyboard; }
+		const InputDevicePtr &get_mouse() const { return mouse; }
+		const std::vector<InputDevicePtr> &get_game_controllers() const { return joysticks; }
 
 	public:
 		void create(DisplayWindowSite *site, const DisplayWindowDescription &description);
@@ -193,8 +193,8 @@ namespace uicore
 		HICON small_icon;
 		bool cursor_set, cursor_hidden;
 		DisplayWindowSite *site;
-		InputDevice keyboard, mouse;
-		std::vector<InputDevice> joysticks;
+		InputDevicePtr keyboard, mouse;
+		std::vector<InputDevicePtr> joysticks;
 		Point mouse_pos;
 		std::map<int, int> repeat_count;
 		std::function<void()> callback_on_resized;

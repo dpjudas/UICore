@@ -56,6 +56,7 @@ namespace uicore
 	class DisplayWindowDescription;
 	struct DisplayWindowHandle;
 	class InputDevice;
+	typedef std::shared_ptr<InputDevice> InputDevicePtr;
 	class Pointf;
 	class Cursor;
 	class DisplayWindowProvider;
@@ -149,16 +150,16 @@ namespace uicore
 		const GraphicContextPtr &get_gc() const;
 
 		/// \brief Returns the keyboard input device.
-		InputDevice &get_keyboard();
+		const InputDevicePtr &get_keyboard() const;
 
 		/// \brief Returns the mouse input device.
-		InputDevice &get_mouse();
+		const InputDevicePtr &get_mouse() const;
 
 		/// \brief Returns the game controller input device.
-		std::vector<InputDevice> &get_game_controllers();
+		const std::vector<InputDevicePtr> &get_game_controllers() const;
 
 		/// \brief Returns the input device with the given device name
-		InputDevice &get_input_device(const std::string &device_name);
+		const InputDevicePtr &get_input_device(const std::string &device_name) const;
 
 		/// \brief Signal emitted when window lost focus.
 		Signal<void()> &sig_lost_focus();

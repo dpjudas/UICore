@@ -124,42 +124,42 @@ namespace uicore
 		return impl->provider->get_gc();
 	}
 
-	InputDevice &DisplayWindow::get_keyboard()
+	const InputDevicePtr &DisplayWindow::get_keyboard() const
 	{
 		throw_if_null();
 		return impl->provider->get_keyboard();
 	}
 
-	InputDevice &DisplayWindow::get_mouse()
+	const InputDevicePtr &DisplayWindow::get_mouse() const
 	{
 		throw_if_null();
 		return impl->provider->get_mouse();
 	}
 
 
-	std::vector<InputDevice> &DisplayWindow::get_game_controllers()
+	const std::vector<InputDevicePtr> &DisplayWindow::get_game_controllers() const
 	{
 		throw_if_null();
 		return impl->provider->get_game_controllers();
 	}
 
-	InputDevice &DisplayWindow::get_input_device(const std::string &device_name)
+	const InputDevicePtr &DisplayWindow::get_input_device(const std::string &device_name) const
 	{
 		throw_if_null();
 
-		if (device_name == get_keyboard().get_device_name())
+		if (device_name == get_keyboard()->get_device_name())
 			return get_keyboard();
-		else if (device_name == get_mouse().get_device_name())
+		else if (device_name == get_mouse()->get_device_name())
 			return get_mouse();
 
-		auto &game = get_game_controllers();
+		const auto &game = get_game_controllers();
 		for (auto &elem : game)
 		{
-			if (elem.get_device_name() == device_name)
+			if (elem->get_device_name() == device_name)
 				return elem;
 		}
 
-		static InputDevice null_device;
+		static InputDevicePtr null_device;
 		return null_device;
 	}
 

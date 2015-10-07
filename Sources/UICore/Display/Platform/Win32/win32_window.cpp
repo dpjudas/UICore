@@ -73,8 +73,8 @@ namespace uicore
 		ReleaseDC(0, dc);
 		set_pixel_ratio(ppi / 96.0f);
 
-		keyboard = InputDevice(new InputDeviceProvider_Win32Keyboard(this));
-		mouse = InputDevice(new InputDeviceProvider_Win32Mouse(this));
+		keyboard = std::make_shared<InputDeviceProvider_Win32Keyboard>(this);
+		mouse = std::make_shared<InputDeviceProvider_Win32Mouse>(this);
 
 		register_clipboard_formats();
 	}
@@ -96,7 +96,7 @@ namespace uicore
 		get_mouse_provider()->dispose();
 
 		for (size_t i = 0; i < joysticks.size(); i++)
-			joysticks[i].get_provider()->dispose();
+			static_cast<InputDeviceProvider*>(joysticks[i].get())->dispose();
 
 		if (destroy_hwnd && hwnd)
 			DestroyWindow(hwnd);
@@ -828,9 +828,9 @@ namespace uicore
 
 		// Emit message:
 		if (keydown)
-			keyboard.sig_key_down()(key);
+			keyboard->sig_key_down()(key);
 		else
-			keyboard.sig_key_up()(key);
+			keyboard->sig_key_up()(key);
 	}
 
 	void Win32Window::received_mouse_input(UINT msg, WPARAM wparam, LPARAM lparam)
@@ -874,7 +874,7 @@ namespace uicore
 			if (id >= 0 && id < 32)
 				get_mouse_provider()->key_states[id] = true;
 
-			mouse.sig_key_dblclk()(key);
+			mouse->sig_key_dblclk()(key);
 		}
 
 		if (down)
@@ -885,7 +885,7 @@ namespace uicore
 			if (id >= 0 && id < 32)
 				get_mouse_provider()->key_states[id] = true;
 
-			mouse.sig_key_down()(key);
+			mouse->sig_key_down()(key);
 		}
 
 		// It is possible for 2 events to be called when the wheelmouse is used
@@ -897,7 +897,7 @@ namespace uicore
 			if (id >= 0 && id < 32)
 				get_mouse_provider()->key_states[id] = false;
 
-			mouse.sig_key_up()(key);
+			mouse->sig_key_up()(key);
 		}
 	}
 
@@ -922,7 +922,7 @@ namespace uicore
 			set_modifier_keys(key);
 
 			// Fire off signal
-			mouse.sig_pointer_move()(key);
+			mouse->sig_pointer_move()(key);
 		}
 
 		if (!cursor_set && !cursor_hidden)
@@ -956,7 +956,7 @@ namespace uicore
 					{
 						for (size_t i = 0; i < joysticks.size(); i++)
 						{
-							InputDeviceProvider_Win32Hid *hid_provider = dynamic_cast<InputDeviceProvider_Win32Hid*>(joysticks[i].get_provider());
+							InputDeviceProvider_Win32Hid *hid_provider = dynamic_cast<InputDeviceProvider_Win32Hid*>(joysticks[i].get());
 							if (hid_provider)
 								hid_provider->update(joysticks[i], rawinput);
 						}
@@ -1508,12 +1508,12 @@ namespace uicore
 
 	InputDeviceProvider_Win32Keyboard *Win32Window::get_keyboard_provider()
 	{
-		return static_cast<InputDeviceProvider_Win32Keyboard *>(keyboard.get_provider());
+		return static_cast<InputDeviceProvider_Win32Keyboard *>(keyboard.get());
 	}
 
 	InputDeviceProvider_Win32Mouse *Win32Window::get_mouse_provider()
 	{
-		return static_cast<InputDeviceProvider_Win32Mouse *>(mouse.get_provider());
+		return static_cast<InputDeviceProvider_Win32Mouse *>(mouse.get());
 	}
 
 	void Win32Window::register_window_class()
@@ -1612,7 +1612,7 @@ namespace uicore
 	*/
 
 		for (size_t i = 0; i < joysticks.size(); i++)
-			joysticks[i].get_provider()->dispose();
+			static_cast<InputDeviceProvider*>(joysticks[i].get())->dispose();
 		joysticks.clear();
 
 		create_hid_devices();
@@ -1644,7 +1644,7 @@ namespace uicore
 					{
 						try
 						{
-							InputDevice device(new InputDeviceProvider_Win32Hid(device_list[i].hDevice));
+							auto device = std::make_shared<InputDeviceProvider_Win32Hid>(device_list[i].hDevice);
 							joysticks.push_back(device);
 						}
 						catch (const Exception& error)

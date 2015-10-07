@@ -67,7 +67,7 @@ namespace uicore
 	{
 	}
 
-	void InputDeviceProvider_Win32Hid::update(InputDevice &joystick, RAWINPUT *raw_input)
+	void InputDeviceProvider_Win32Hid::update(const InputDevicePtr &joystick, RAWINPUT *raw_input)
 	{
 		auto previous_buttons = buttons;
 		auto previous_axis = axis_values;
@@ -95,7 +95,7 @@ namespace uicore
 				InputEvent input_event;
 				input_event.type = buttons[cnt] ? InputEvent::pressed : InputEvent::released;
 				input_event.id = (InputCode) cnt;
-				buttons[cnt] ? joystick.sig_key_down()(input_event) : joystick.sig_key_up()(input_event);
+				buttons[cnt] ? joystick->sig_key_down()(input_event) : joystick->sig_key_up()(input_event);
 			}
 		}
 		for (unsigned int cnt = 0; cnt < previous_axis.size(); cnt++)
@@ -106,7 +106,7 @@ namespace uicore
 				input_event.type = InputEvent::axis_moved;
 				input_event.id = (InputCode) cnt;
 				input_event.axis_pos = axis_values[cnt];
-				joystick.sig_axis_move()(input_event);
+				joystick->sig_axis_move()(input_event);
 			}
 		}
 	}

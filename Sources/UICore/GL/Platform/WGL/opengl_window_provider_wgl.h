@@ -65,9 +65,9 @@ namespace uicore
 		HDC get_device_context() const { return device_context; }
 		HGLRC get_opengl_context() const { return opengl_context; }
 		const GraphicContextPtr &get_gc() const { return gc; }
-		InputDevice &get_keyboard() override { return win32_window.get_keyboard(); }
-		InputDevice &get_mouse() override { return win32_window.get_mouse(); }
-		std::vector<InputDevice> &get_game_controllers() override { return win32_window.get_game_controllers(); }
+		const InputDevicePtr &get_keyboard() const override { return win32_window.get_keyboard(); }
+		const InputDevicePtr &get_mouse() const override { return win32_window.get_mouse(); }
+		const std::vector<InputDevicePtr> &get_game_controllers() const override { return win32_window.get_game_controllers(); }
 		bool is_clipboard_text_available() const;
 		bool is_clipboard_image_available() const;
 		std::string get_clipboard_text() const;

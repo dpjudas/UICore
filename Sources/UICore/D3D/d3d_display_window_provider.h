@@ -57,9 +57,9 @@ namespace uicore
 
 		const GraphicContextPtr &get_gc() const;
 
-		InputDevice &get_keyboard() override { return window.get_keyboard(); }
-		InputDevice &get_mouse() override { return window.get_mouse(); }
-		std::vector<InputDevice> &get_game_controllers() override { return window.get_game_controllers(); }
+		const InputDevicePtr &get_keyboard() const override { return window.get_keyboard(); }
+		const InputDevicePtr &get_mouse() const override { return window.get_mouse(); }
+		const std::vector<InputDevicePtr> &get_game_controllers() const override { return window.get_game_controllers(); }
 
 		DisplayWindowHandle get_handle() const override;
 
