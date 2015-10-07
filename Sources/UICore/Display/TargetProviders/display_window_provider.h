@@ -42,7 +42,8 @@ namespace uicore
 	class DisplayWindowDescription;
 	class GraphicContext;
 	class InputDevice;
-	class CursorProvider;
+	class Cursor;
+	typedef std::shared_ptr<Cursor> CursorPtr;
 	class CursorDescription;
 
 	/// Display Window site.
@@ -182,10 +183,10 @@ namespace uicore
 		virtual void hide_system_cursor() = 0;
 
 		/// Creates a new custom cursor.
-		virtual CursorProvider *create_cursor(const CursorDescription &cursor_description) = 0;
+		virtual CursorPtr create_cursor(const CursorDescription &cursor_description) = 0;
 
 		/// Sets the current cursor icon.
-		virtual void set_cursor(CursorProvider *cursor) = 0;
+		virtual void set_cursor(const CursorPtr &cursor) = 0;
 
 		/// Sets the current cursor icon.
 		virtual void set_cursor(StandardCursor type) = 0;

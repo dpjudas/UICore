@@ -28,7 +28,7 @@
 
 #pragma once
 
-#include "UICore/Display/TargetProviders/cursor_provider.h"
+#include "UICore/Display/Window/cursor.h"
 #include "UICore/Core/System/databuffer.h"
 #include <vector>
 
@@ -40,7 +40,7 @@ namespace uicore
 	class Rect;
 	class CursorDescription;
 
-	class CursorProvider_Win32 : public CursorProvider
+	class CursorProvider_Win32 : public Cursor
 	{
 	public:
 		CursorProvider_Win32(const CursorDescription &cursor_description);

@@ -59,6 +59,6 @@ namespace uicore
 		Signal<void()> sig_window_flip;
 		DisplayWindowProvider *provider = nullptr;
 		DisplayWindowSite site;
-		Cursor current_cursor;
+		CursorPtr current_cursor;
 	};
 }

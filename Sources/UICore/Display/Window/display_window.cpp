@@ -460,15 +460,15 @@ namespace uicore
 		impl->provider->show_system_cursor();
 	}
 
-	void DisplayWindow::set_cursor(const Cursor &cursor)
+	void DisplayWindow::set_cursor(const CursorPtr &cursor)
 	{
 		impl->current_cursor = cursor;
-		impl->provider->set_cursor(cursor.get_provider());
+		impl->provider->set_cursor(cursor);
 	}
 
 	void DisplayWindow::set_cursor(StandardCursor type)
 	{
-		impl->current_cursor = Cursor();
+		impl->current_cursor.reset();
 		impl->provider->set_cursor(type);
 	}
 

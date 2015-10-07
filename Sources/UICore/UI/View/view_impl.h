@@ -131,7 +131,7 @@ namespace uicore
 
 		StandardCursor cursor_type = StandardCursor::arrow;
 		CursorDescription cursor_desc;
-		Cursor cursor;
+		CursorPtr cursor;
 		bool is_custom_cursor = false;
 		bool is_cursor_inherited = true;
 

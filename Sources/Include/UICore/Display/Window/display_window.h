@@ -59,6 +59,7 @@ namespace uicore
 	typedef std::shared_ptr<InputDevice> InputDevicePtr;
 	class Pointf;
 	class Cursor;
+	typedef std::shared_ptr<Cursor> CursorPtr;
 	class DisplayWindowProvider;
 	class DisplayWindow_Impl;
 	class PixelBuffer;
@@ -342,7 +343,7 @@ namespace uicore
 		void show_cursor();
 
 		/// \brief Sets the current cursor icon.
-		void set_cursor(const Cursor &cursor);
+		void set_cursor(const CursorPtr &cursor);
 
 		/// \brief Set cursor
 		///

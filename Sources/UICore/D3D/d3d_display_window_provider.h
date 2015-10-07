@@ -85,8 +85,8 @@ namespace uicore
 		void create(DisplayWindowSite *site, const DisplayWindowDescription &description);
 
 		void show_system_cursor();
-		CursorProvider *create_cursor(const CursorDescription &cursor_description);
-		void set_cursor(CursorProvider *cursor);
+		CursorPtr create_cursor(const CursorDescription &cursor_description);
+		void set_cursor(const CursorPtr &cursor);
 		void set_cursor(StandardCursor type);
 		void set_cursor_handle(HCURSOR cursor);
 		void hide_system_cursor();

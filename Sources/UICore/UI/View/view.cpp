@@ -519,7 +519,7 @@ namespace uicore
 		if (impl->is_cursor_inherited || impl->cursor_desc != cursor)
 		{
 			impl->cursor_desc = cursor;
-			impl->cursor = Cursor();
+			impl->cursor.reset();
 			impl->is_custom_cursor = true;
 			impl->is_cursor_inherited = false;
 		}
@@ -531,7 +531,7 @@ namespace uicore
 		{
 			impl->cursor_type = type;
 			impl->cursor_desc = CursorDescription();
-			impl->cursor = Cursor();
+			impl->cursor.reset();
 			impl->is_custom_cursor = false;
 			impl->is_cursor_inherited = false;
 		}
@@ -542,7 +542,7 @@ namespace uicore
 		if (!impl->is_cursor_inherited)
 		{
 			impl->cursor_desc = CursorDescription();
-			impl->cursor = Cursor();
+			impl->cursor.reset();
 			impl->is_custom_cursor = false;
 			impl->is_cursor_inherited = true;
 		}
@@ -560,9 +560,9 @@ namespace uicore
 		}
 		else if (impl->is_custom_cursor)
 		{
-			if (impl->cursor.is_null())
+			if (!impl->cursor)
 			{
-				impl->cursor = Cursor(window, impl->cursor_desc);
+				impl->cursor = Cursor::create(window, impl->cursor_desc);
 			}
 			window.set_cursor(impl->cursor);
 		}

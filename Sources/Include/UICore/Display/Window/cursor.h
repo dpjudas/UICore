@@ -29,40 +29,24 @@
 #pragma once
 
 #include <memory>
-#include "../display_target.h"
 
 namespace uicore
 {
 	class DisplayWindow;
-	class CursorProvider;
 	class CursorDescription;
-	class Point;
-	class Cursor_Impl;
 
 	/// \brief Mouse cursor class.
 	class Cursor
 	{
 	public:
-		/// \brief Constructs a null instance.
-		Cursor();
+		/// \brief Constructs a mouse cursor
+		static std::shared_ptr<Cursor> create(const DisplayWindow &window, const CursorDescription &cursor_description);
 
-		/// \brief Constructs a Cursor
-		///
-		/// \param window = Display Window
-		/// \param cursor_description = Sprite Description
-		/// \param hotspot = Point
-		Cursor(const DisplayWindow &window, const CursorDescription &cursor_description);
+		virtual ~Cursor() { } // To force a virtual table as we have no public virtual functions
 
-		/// \brief Returns true if this object is invalid.
-		bool is_null() const { return !impl; }
-
-		/// \brief Throw an exception if this object is invalid.
-		void throw_if_null() const;
-
-		/// \brief Returns the cursor provider
-		CursorProvider *get_provider() const;
-
-	private:
-		std::shared_ptr<Cursor_Impl> impl;
+	protected:
+		Cursor() { }
 	};
+
+	typedef std::shared_ptr<Cursor> CursorPtr;
 }

@@ -268,14 +268,14 @@ namespace uicore
 		window.show_system_cursor();
 	}
 
-	CursorProvider *D3DDisplayWindowProvider::create_cursor(const CursorDescription &cursor_description)
+	CursorPtr D3DDisplayWindowProvider::create_cursor(const CursorDescription &cursor_description)
 	{
-		return new CursorProvider_Win32(cursor_description);
+		return std::make_shared<CursorProvider_Win32>(cursor_description);
 	}
 
-	void D3DDisplayWindowProvider::set_cursor(CursorProvider *cursor)
+	void D3DDisplayWindowProvider::set_cursor(const CursorPtr &cursor)
 	{
-		window.set_cursor(static_cast<CursorProvider_Win32 *>(cursor));
+		window.set_cursor(static_cast<CursorProvider_Win32 *>(cursor.get()));
 	}
 
 	void D3DDisplayWindowProvider::set_cursor(StandardCursor type)

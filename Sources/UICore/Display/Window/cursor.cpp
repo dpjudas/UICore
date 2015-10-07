@@ -29,41 +29,12 @@
 #include "UICore/precomp.h"
 #include "UICore/Display/Window/cursor.h"
 #include "UICore/Display/Window/display_window.h"
-#include "UICore/Display/TargetProviders/cursor_provider.h"
 #include "UICore/Display/TargetProviders/display_window_provider.h"
 
 namespace uicore
 {
-	class Cursor_Impl
+	std::shared_ptr<Cursor> Cursor::create(const DisplayWindow &window, const CursorDescription &cursor_description)
 	{
-	public:
-		Cursor_Impl() : provider(nullptr) { }
-		~Cursor_Impl() { if (provider) delete provider; }
-
-		CursorProvider *provider;
-	};
-
-	Cursor::Cursor()
-	{
-	}
-
-	Cursor::Cursor(const DisplayWindow &window, const CursorDescription &cursor_description)
-		: impl(std::make_shared<Cursor_Impl>())
-	{
-		impl->provider = window.get_provider()->create_cursor(cursor_description);
-	}
-
-	void Cursor::throw_if_null() const
-	{
-		if (!impl)
-			throw Exception("Cursor is null");
-	}
-
-	CursorProvider *Cursor::get_provider() const
-	{
-		if (impl)
-			return impl->provider;
-		else
-			return nullptr;
+		return window.get_provider()->create_cursor(cursor_description);
 	}
 }
