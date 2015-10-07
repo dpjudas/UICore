@@ -101,7 +101,7 @@ namespace uicore
 		double thumb_move_start_position = 0.0;
 		Pointf mouse_drag_start_pos;
 		Signal<void()> sig_scroll;
-		Timer scroll_timer;
+		TimerPtr scroll_timer = Timer::create();
 		bool _state_disabled = false;
 		bool _state_thumb_hot = false;
 		bool _state_thumb_pressed = false;

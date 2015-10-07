@@ -63,7 +63,7 @@ namespace uicore
 		std::shared_ptr<View> button_increment;
 
 		Signal<void()> sig_scroll;
-		Timer timer;
+		TimerPtr timer = Timer::create();
 		bool _state_disabled = false;
 		bool _state_increment_hot = false;
 		bool _state_increment_pressed = false;

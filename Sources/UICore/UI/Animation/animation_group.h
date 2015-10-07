@@ -55,7 +55,7 @@ namespace uicore
 		{
 			if (active_animations.empty())
 			{
-				timer.func_expired() = [&]()
+				timer->func_expired() = [&]()
 				{
 					std::chrono::steady_clock::time_point current_time = std::chrono::steady_clock::now();
 
@@ -81,10 +81,10 @@ namespace uicore
 					}
 
 					if (active_animations.empty())
-						timer.stop();
+						timer->stop();
 				};
 			}
-			timer.start(16, true);
+			timer->start(16, true);
 
 			animation.start_time = std::chrono::steady_clock::now();
 			active_animations.push_back(animation);
@@ -92,12 +92,12 @@ namespace uicore
 
 		void stop()
 		{
-			timer.stop();
+			timer->stop();
 			active_animations.clear();
 		}
 
 	private:
 		std::vector<Animation> active_animations;
-		Timer timer;
+		TimerPtr timer = Timer::create();
 	};
 }

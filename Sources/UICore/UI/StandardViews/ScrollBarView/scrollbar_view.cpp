@@ -105,7 +105,7 @@ namespace uicore
 		slots.connect(impl->button_increment->sig_pointer_enter(), [&](PointerEvent &e) {impl->_state_increment_hot = true;  impl->update_increment_state(); });
 		slots.connect(impl->button_increment->sig_pointer_leave(), [&](PointerEvent &e) {impl->_state_increment_hot = false;  impl->update_increment_state(); });
 
-		impl->scroll_timer.func_expired() = uicore::bind_member(impl.get(), &ScrollBarViewImpl::scroll_timer_expired);
+		impl->scroll_timer->func_expired() = uicore::bind_member(impl.get(), &ScrollBarViewImpl::scroll_timer_expired);
 
 		set_vertical();
 	}
@@ -220,7 +220,7 @@ namespace uicore
 			impl->update_decrement_state();
 
 			impl->mouse_down_mode = ScrollBarViewImpl::mouse_down_none;
-			impl->scroll_timer.stop();
+			impl->scroll_timer->stop();
 
 		}
 	}

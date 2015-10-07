@@ -84,7 +84,7 @@ namespace uicore
 		if (_state_disabled)
 			return;
 		mouse_down_mode = mouse_down_none;
-		scroll_timer.stop();
+		scroll_timer->stop();
 	}
 
 	void SliderViewImpl::on_activated(ActivationChangeEvent &e)
@@ -98,7 +98,7 @@ namespace uicore
 			return;
 
 		mouse_down_mode = mouse_down_none;
-		scroll_timer.stop();
+		scroll_timer->stop();
 	}
 
 	void SliderViewImpl::on_pointer_track_press(PointerEvent &e)
@@ -143,7 +143,7 @@ namespace uicore
 		if (_state_disabled)
 			return;
 		mouse_down_mode = mouse_down_none;
-		scroll_timer.stop();
+		scroll_timer->stop();
 	}
 
 	void SliderViewImpl::on_pointer_thumb_press(PointerEvent &e)
@@ -165,7 +165,7 @@ namespace uicore
 			return;
 		update_state();
 		mouse_down_mode = mouse_down_none;
-		scroll_timer.stop();
+		scroll_timer->stop();
 	}
 
 	void SliderViewImpl::on_pointer_move(PointerEvent &e)
@@ -250,7 +250,7 @@ namespace uicore
 				_func_value_changed();
 			slider->set_needs_layout();
 		}
-		scroll_timer.start(100, false);
+		scroll_timer->start(100, false);
 
 	}
 

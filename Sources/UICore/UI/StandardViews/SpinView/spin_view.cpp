@@ -66,7 +66,7 @@ namespace uicore
 		slots.connect(impl->button_increment->sig_pointer_enter(), [&](PointerEvent &e) {impl->_state_increment_hot = true;  impl->update_increment_state(); });
 		slots.connect(impl->button_increment->sig_pointer_leave(), [&](PointerEvent &e) {impl->_state_increment_hot = false;  impl->update_increment_state(); });
 
-		impl->timer.func_expired() = uicore::bind_member(impl.get(), &SpinView_Impl::timer_expired);
+		impl->timer->func_expired() = uicore::bind_member(impl.get(), &SpinView_Impl::timer_expired);
 	}
 
 	std::shared_ptr<View> SpinView::button_decrement() const
@@ -94,7 +94,7 @@ namespace uicore
 			impl->update_decrement_state();
 
 			impl->mouse_down_mode = SpinView_Impl::mouse_down_none;
-			impl->timer.stop();
+			impl->timer->stop();
 
 		}
 	}

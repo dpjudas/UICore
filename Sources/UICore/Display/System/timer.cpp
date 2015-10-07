@@ -37,6 +37,8 @@
 
 namespace uicore
 {
+	class TimerImpl;
+
 	class ActiveTimer
 	{
 	public:
@@ -49,15 +51,21 @@ namespace uicore
 		std::function<void()> func_expired;
 	};
 
-	class TimerImpl
+	class TimerImpl : public Timer, public std::enable_shared_from_this<TimerImpl>
 	{
 	public:
 		~TimerImpl();
 
+		bool repeating() const override { return is_repeating; }
+		unsigned int timeout() const override { return _timeout; }
+		std::function<void()> &func_expired() override { return _func_expired; }
+		void start(unsigned int timeout, bool repeat = true) override;
+		void stop() override;
+
 		bool is_repeating = false;
-		int timeout = 0;
+		int _timeout = 0;
 		std::shared_ptr<ActiveTimer> active;
-		std::function<void()> func_expired;
+		std::function<void()> _func_expired;
 	};
 
 	class TimerThread
@@ -75,10 +83,10 @@ namespace uicore
 			}
 
 			// Copy timer fields to keep TimerImpl fields updateable outside the mutex lock
-			timer->active->timeout = timer->timeout;
-			timer->active->is_repeating = timer->is_repeating;
-			timer->active->func_expired = timer->func_expired;
-			timer->active->next_awake_time = std::chrono::steady_clock::now() + std::chrono::milliseconds(timer->timeout);
+			timer->active->timeout = timer->timeout();
+			timer->active->is_repeating = timer->repeating();
+			timer->active->func_expired = timer->func_expired();
+			timer->active->next_awake_time = std::chrono::steady_clock::now() + std::chrono::milliseconds(timer->timeout());
 			stop_flag = false;
 
 			lock.unlock();
@@ -215,34 +223,20 @@ namespace uicore
 		timer_thread.stop(this);
 	}
 
-	Timer::Timer() : impl(std::make_shared<TimerImpl>())
+	std::shared_ptr<Timer> Timer::create()
 	{
+		return std::make_shared<TimerImpl>();
 	}
 
-	bool Timer::is_repeating() const
+	void TimerImpl::start(unsigned int timeout, bool repeat)
 	{
-		return impl->is_repeating;
+		_timeout = timeout;
+		is_repeating = repeat;
+		timer_thread.start(shared_from_this());
 	}
 
-	unsigned int Timer::get_timeout() const
+	void TimerImpl::stop()
 	{
-		return impl->timeout;
-	}
-
-	std::function<void()> &Timer::func_expired()
-	{
-		return impl->func_expired;
-	}
-
-	void Timer::start(unsigned int timeout, bool repeat)
-	{
-		impl->timeout = timeout;
-		impl->is_repeating = repeat;
-		timer_thread.start(impl);
-	}
-
-	void Timer::stop()
-	{
-		timer_thread.stop(impl.get());
+		timer_thread.stop(this);
 	}
 }

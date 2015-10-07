@@ -67,7 +67,7 @@ namespace uicore
 		slots.connect(sig_activated(), impl.get(), &TextViewImpl::on_activated);
 		slots.connect(sig_deactivated(), impl.get(), &TextViewImpl::on_deactivated);
 
-		impl->scroll_timer.func_expired() = [&]()
+		impl->scroll_timer->func_expired() = [&]()
 		{
 			if (impl->mouse_moves_left)
 				impl->move(-1, false, false, true);
@@ -350,12 +350,12 @@ namespace uicore
 
 	void TextViewImpl::start_blink()
 	{
-		blink_timer.func_expired() = [&]()
+		blink_timer->func_expired() = [&]()
 		{
 			cursor_blink_visible = !cursor_blink_visible;
 			textfield->set_needs_render();
 		};
-		blink_timer.start(500, true);
+		blink_timer->start(500, true);
 
 		cursor_blink_visible = true;
 		textfield->set_needs_render();
@@ -363,7 +363,7 @@ namespace uicore
 
 	void TextViewImpl::stop_blink()
 	{
-		blink_timer.stop();
+		blink_timer->stop();
 		cursor_blink_visible = false;
 		textfield->set_needs_render();
 	}
@@ -380,7 +380,7 @@ namespace uicore
 	{
 		if (mouse_selecting)
 		{
-			scroll_timer.stop();
+			scroll_timer->stop();
 			mouse_selecting = false;
 		}
 		stop_blink();
@@ -399,7 +399,7 @@ namespace uicore
 	{
 		if (mouse_selecting)
 		{
-			scroll_timer.stop();
+			scroll_timer->stop();
 			mouse_selecting = false;
 		}
 		stop_blink();
@@ -545,7 +545,7 @@ namespace uicore
 		}
 		else
 		{
-			scroll_timer.stop();
+			scroll_timer->stop();
 			mouse_selecting = false;
 			cursor_pos = get_character_index(e.pos(textfield));
 			selection.set_tail(cursor_pos);
@@ -571,11 +571,11 @@ namespace uicore
 				mouse_moves_left = false;
 
 			if (!readonly)
-				scroll_timer.start(50, true);
+				scroll_timer->start(50, true);
 		}
 		else
 		{
-			scroll_timer.stop();
+			scroll_timer->stop();
 			cursor_pos = get_character_index(pos);
 			selection.set_tail(cursor_pos);
 		}

@@ -136,9 +136,9 @@ namespace uicore
 		Vec2f scroll_pos;
 
 		bool cursor_blink_visible = false;
-		Timer blink_timer;
+		TimerPtr blink_timer = Timer::create();
 		bool mouse_moves_left = false;
-		Timer scroll_timer;
+		TimerPtr scroll_timer = Timer::create();
 		bool ignore_mouse_events = false;
 		bool mouse_selecting = false;
 

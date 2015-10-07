@@ -33,31 +33,28 @@
 
 namespace uicore
 {
-	class TimerImpl;
-
 	/// \brief Timer class that invokes a callback on a specified interval
 	class Timer
 	{
 	public:
-		/// \brief Creates a timer object
-		Timer();
+		/// \brief Constructs a timer object
+		static std::shared_ptr<Timer> create();
 
 		/// \brief Returns true if the timer repeats until it is stopped
-		bool is_repeating() const;
+		virtual bool repeating() const = 0;
 
 		/// \brief Returns the current timeout. In milliseconds.
-		unsigned int get_timeout() const;
+		virtual unsigned int timeout() const = 0;
 
 		/// \brief Callback invoked every time the timer interval occurs
-		std::function<void()> &func_expired();
+		virtual std::function<void()> &func_expired() = 0;
 
 		/// \brief Starts the timer. Timeout in milliseconds.
-		void start(unsigned int timeout, bool repeat = true);
+		virtual void start(unsigned int timeout, bool repeat = true) = 0;
 
 		/// \brief Stop the timer.
-		void stop();
-
-	private:
-		std::shared_ptr<TimerImpl> impl;
+		virtual void stop() = 0;
 	};
+
+	typedef std::shared_ptr<Timer> TimerPtr;
 }

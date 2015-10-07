@@ -65,7 +65,7 @@ namespace uicore
 		slots.connect(sig_activated(), impl.get(), &SliderViewImpl::on_activated);
 		slots.connect(sig_activated(), impl.get(), &SliderViewImpl::on_deactivated);
 
-		impl->scroll_timer.func_expired() = uicore::bind_member(impl.get(), &SliderViewImpl::scroll_timer_expired);
+		impl->scroll_timer->func_expired() = uicore::bind_member(impl.get(), &SliderViewImpl::scroll_timer_expired);
 
 		set_vertical();
 	}
@@ -82,7 +82,7 @@ namespace uicore
 			impl->_state_disabled = true;
 			impl->update_state();
 			impl->mouse_down_mode = SliderViewImpl::mouse_down_none;
-			impl->scroll_timer.stop();
+			impl->scroll_timer->stop();
 		}
 	}
 	void SliderView::set_enabled()

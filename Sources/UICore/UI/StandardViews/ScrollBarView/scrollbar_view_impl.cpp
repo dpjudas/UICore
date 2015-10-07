@@ -140,7 +140,7 @@ namespace uicore
 	void ScrollBarViewImpl::on_focus_lost(FocusChangeEvent &e)
 	{
 		mouse_down_mode = mouse_down_none;
-		scroll_timer.stop();
+		scroll_timer->stop();
 	}
 
 	void ScrollBarViewImpl::on_activated(ActivationChangeEvent &e)
@@ -150,7 +150,7 @@ namespace uicore
 	void ScrollBarViewImpl::on_deactivated(ActivationChangeEvent &e)
 	{
 		mouse_down_mode = mouse_down_none;
-		scroll_timer.stop();
+		scroll_timer->stop();
 	}
 
 	void ScrollBarViewImpl::on_pointer_track_press(PointerEvent &e)
@@ -193,7 +193,7 @@ namespace uicore
 		if (_state_disabled)
 			return;
 		mouse_down_mode = mouse_down_none;
-		scroll_timer.stop();
+		scroll_timer->stop();
 
 	}
 
@@ -236,7 +236,7 @@ namespace uicore
 		_state_decrement_pressed = false;
 		update_decrement_state();
 		mouse_down_mode = mouse_down_none;
-		scroll_timer.stop();
+		scroll_timer->stop();
 	}
 
 	void ScrollBarViewImpl::on_pointer_increment_press(PointerEvent &e)
@@ -257,7 +257,7 @@ namespace uicore
 		_state_increment_pressed = false;
 		update_increment_state();
 		mouse_down_mode = mouse_down_none;
-		scroll_timer.stop();
+		scroll_timer->stop();
 	}
 
 	void ScrollBarViewImpl::on_pointer_move(PointerEvent &e)
@@ -332,7 +332,7 @@ namespace uicore
 			sig_scroll();
 			scrollbar->set_needs_layout();
 		}
-		scroll_timer.start(100, false);
+		scroll_timer->start(100, false);
 
 	}
 

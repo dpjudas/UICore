@@ -82,7 +82,7 @@ namespace uicore
 	void SpinView_Impl::on_focus_lost(FocusChangeEvent &e)
 	{
 		mouse_down_mode = mouse_down_none;
-		timer.stop();
+		timer->stop();
 	}
 
 	void SpinView_Impl::on_activated(ActivationChangeEvent &e)
@@ -92,7 +92,7 @@ namespace uicore
 	void SpinView_Impl::on_deactivated(ActivationChangeEvent &e)
 	{
 		mouse_down_mode = mouse_down_none;
-		timer.stop();
+		timer->stop();
 	}
 
 
@@ -113,7 +113,7 @@ namespace uicore
 		_state_decrement_pressed = false;
 		update_decrement_state();
 		mouse_down_mode = mouse_down_none;
-		timer.stop();
+		timer->stop();
 	}
 
 	void SpinView_Impl::on_pointer_increment_press(PointerEvent &e)
@@ -133,7 +133,7 @@ namespace uicore
 		_state_increment_pressed = false;
 		update_increment_state();
 		mouse_down_mode = mouse_down_none;
-		timer.stop();
+		timer->stop();
 	}
 
 	void SpinView_Impl::timer_expired()
@@ -143,7 +143,7 @@ namespace uicore
 		if (mouse_down_mode == mouse_down_none)
 			return;
 
-		timer.start(100, false);
+		timer->start(100, false);
 
 	}
 
