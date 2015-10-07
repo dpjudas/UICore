@@ -28,12 +28,57 @@
 
 #include "UICore/precomp.h"
 #include "UICore/Display/System/detect_hang.h"
-#include "detect_hang_impl.h"
+#include "UICore/Display/System/run_loop.h"
+#include "UICore/Core/ErrorReporting/crash_reporter.h"
+#include <mutex>
+#include <thread>
+#include <condition_variable>
 
 namespace uicore
 {
-	DetectHang::DetectHang()
-		: impl(std::make_shared<DetectHang_Impl>())
+	class DetectHangImpl : public DetectHang
 	{
+	public:
+		DetectHangImpl()
+		{
+			thread = std::thread(&DetectHangImpl::worker_main, this);
+		}
+
+		~DetectHangImpl()
+		{
+			{
+				std::unique_lock<std::mutex> mutex_lock(mutex);
+				stop_flag = true;
+			}
+			stop_condition.notify_all();
+			thread.join();
+		}
+
+	private:
+		void worker_main()
+		{
+			while (true)
+			{
+				std::unique_lock<std::mutex> mutex_lock(mutex);
+
+				std::future<void> heartbeat = RunLoop::main_thread_task([](){});
+
+				if (stop_condition.wait_for(mutex_lock, std::chrono::seconds(30), [&]() -> bool { return stop_flag; }))
+					break;
+
+				if (heartbeat.wait_for(std::chrono::seconds(1)) == std::future_status::timeout)
+					CrashReporter::invoke();
+			}
+		}
+
+		std::mutex mutex;
+		std::condition_variable stop_condition;
+		bool stop_flag = false;
+		std::thread thread;
+	};
+
+	std::shared_ptr<DetectHang> DetectHang::create()
+	{
+		return std::make_shared<DetectHangImpl>();
 	}
 }

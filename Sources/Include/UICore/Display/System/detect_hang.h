@@ -28,21 +28,20 @@
 
 #pragma once
 
-#include <string>
 #include <memory>
 
 namespace uicore
 {
-	class DetectHang_Impl;
-
 	/// \brief Calls CrashReporter::invoke if the constructing thread does not call RunLoop::process for more than 30 seconds.
 	class DetectHang
 	{
 	public:
 		/// \brief Constructs a hang detector.
-		DetectHang();
+		static std::shared_ptr<DetectHang> create();
 
-	private:
-		std::shared_ptr<DetectHang_Impl> impl;
+	protected:
+		DetectHang() { }
 	};
+
+	typedef std::shared_ptr<DetectHang> DetectHangPtr;
 }
