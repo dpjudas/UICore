@@ -46,7 +46,7 @@ namespace uicore
 	class DisplayWindowDescription_Impl
 	{
 	public:
-		std::string title = "Untitled Clanlib Window";
+		std::string title = "Untitled Window";
 		Rectf position = Rectf(-1.0f, -1.0f, 639.0f, 479.0f);
 		bool position_client_area = false;
 		bool caption = true;
@@ -59,7 +59,7 @@ namespace uicore
 		bool drop_shadow = false;
 		bool fullscreen = false;
 		int fullscreen_monitor = 0;
-		bool allow_resize = false;
+		bool allow_resize = true;
 		int flipping_buffers = 2;
 		int swap_interval = -1;
 		int bpp = 0;
