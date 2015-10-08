@@ -77,22 +77,22 @@ namespace uicore
 	{
 	}
 
-	const std::string &DisplayWindowDescription::get_title() const
+	const std::string &DisplayWindowDescription::title() const
 	{
 		return impl->title;
 	}
 
-	Sizef DisplayWindowDescription::get_size() const
+	Sizef DisplayWindowDescription::size() const
 	{
 		return impl->position.get_size();
 	}
 
-	Rectf DisplayWindowDescription::get_position() const
+	Rectf DisplayWindowDescription::position() const
 	{
 		return impl->position;
 	}
 
-	bool DisplayWindowDescription::get_position_client_area() const
+	bool DisplayWindowDescription::position_client_area() const
 	{
 		return impl->position_client_area;
 	}
@@ -102,22 +102,22 @@ namespace uicore
 		return impl->fullscreen;
 	}
 
-	int DisplayWindowDescription::get_flipping_buffers() const
+	int DisplayWindowDescription::flipping_buffers() const
 	{
 		return impl->flipping_buffers;
 	}
 
-	int DisplayWindowDescription::get_swap_interval() const
+	int DisplayWindowDescription::swap_interval() const
 	{
 		return impl->swap_interval;
 	}
 
-	bool DisplayWindowDescription::get_allow_resize() const
+	bool DisplayWindowDescription::allow_resize() const
 	{
 		return impl->allow_resize;
 	}
 
-	DisplayWindowPtr DisplayWindowDescription::get_owner() const
+	DisplayWindowPtr DisplayWindowDescription::owner() const
 	{
 		return impl->owner;
 	}
@@ -127,17 +127,17 @@ namespace uicore
 		return impl->layered;
 	}
 
-	DisplayWindowHandle DisplayWindowDescription::get_handle() const
+	DisplayWindowHandle DisplayWindowDescription::handle() const
 	{
 		return impl->handle;
 	}
 
-	int DisplayWindowDescription::get_bpp() const
+	int DisplayWindowDescription::bpp() const
 	{
 		return impl->bpp;
 	}
 
-	int DisplayWindowDescription::get_refresh_rate() const
+	int DisplayWindowDescription::refresh_rate() const
 	{
 		return impl->refresh_rate;
 	}
@@ -182,22 +182,22 @@ namespace uicore
 		return impl->drop_shadow;
 	}
 
-	int DisplayWindowDescription::get_depth_size() const
+	int DisplayWindowDescription::depth_size() const
 	{
 		return impl->depth_size;
 	}
 
-	int DisplayWindowDescription::get_stencil_size() const
+	int DisplayWindowDescription::stencil_size() const
 	{
 		return impl->stencil_size;
 	}
 
-	int DisplayWindowDescription::get_fullscreen_monitor() const
+	int DisplayWindowDescription::fullscreen_monitor() const
 	{
 		return impl->fullscreen_monitor;
 	}
 
-	bool DisplayWindowDescription::get_allow_screensaver() const
+	bool DisplayWindowDescription::allow_screensaver() const
 	{
 		return impl->allow_screensaver;
 	}
@@ -207,7 +207,7 @@ namespace uicore
 		return impl->update_supported;
 	}
 
-	int DisplayWindowDescription::get_multisampling() const
+	int DisplayWindowDescription::multisampling() const
 	{
 		return impl->multisampling;
 	}

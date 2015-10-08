@@ -625,7 +625,7 @@ namespace uicore
 				break;
 
 			case SC_SCREENSAVE:
-				if (!window_desc.get_allow_screensaver())
+				if (!window_desc.allow_screensaver())
 					return 0;
 				break;
 
@@ -656,9 +656,9 @@ namespace uicore
 	{
 		DwmFunctions::open_dll();
 
-		if (window_desc.get_handle().hwnd)
+		if (window_desc.handle().hwnd)
 		{
-			hwnd = window_desc.get_handle().hwnd;
+			hwnd = window_desc.handle().hwnd;
 			destroy_hwnd = false;
 		}
 		else
@@ -671,13 +671,13 @@ namespace uicore
 			RECT window_rect = get_window_geometry_from_description(window_desc, style, ex_style);
 
 			HWND parent = 0;
-			if (window_desc.get_owner())
-				parent = window_desc.get_owner()->handle().hwnd;
+			if (window_desc.owner())
+				parent = window_desc.owner()->handle().hwnd;
 
 			hwnd = CreateWindowEx(
 				ex_style,
 				window_desc.has_drop_shadow() ? TEXT("ClanApplicationDS") : TEXT("ClanApplication"),
-				Text::to_utf16(window_desc.get_title()).c_str(),
+				Text::to_utf16(window_desc.title()).c_str(),
 				style,
 				window_rect.left,
 				window_rect.top,
@@ -736,10 +736,10 @@ namespace uicore
 		{
 			/*
 			extend_frame_into_client_area(
-				(int)std::round(window_desc.get_extend_frame_left() * pixel_ratio),
-				(int)std::round(window_desc.get_extend_frame_top() * pixel_ratio),
-				(int)std::round(window_desc.get_extend_frame_right() * pixel_ratio),
-				(int)std::round(window_desc.get_extend_frame_bottom() * pixel_ratio));
+				(int)std::round(window_desc.extend_frame_left() * pixel_ratio),
+				(int)std::round(window_desc.extend_frame_top() * pixel_ratio),
+				(int)std::round(window_desc.extend_frame_right() * pixel_ratio),
+				(int)std::round(window_desc.extend_frame_bottom() * pixel_ratio));
 			*/
 
 			if (window_desc.is_popup() || (window_desc.is_layered()))
@@ -1677,11 +1677,11 @@ namespace uicore
 
 		if (desc.has_sysmenu())
 			out_style |= WS_SYSMENU;
-		if (desc.get_allow_resize() && !desc.is_fullscreen())
+		if (desc.allow_resize() && !desc.is_fullscreen())
 			out_style |= WS_SIZEBOX;
 		if (desc.has_minimize_button())
 			out_style |= WS_MINIMIZEBOX;
-		if (desc.has_maximize_button() && desc.get_allow_resize())
+		if (desc.has_maximize_button() && desc.allow_resize())
 			out_style |= WS_MAXIMIZEBOX;
 
 		if (desc.is_layered())
@@ -1708,19 +1708,19 @@ namespace uicore
 
 	RECT Win32Window::get_window_geometry_from_description(const DisplayWindowDescription &desc, DWORD style, DWORD ex_style)
 	{
-		int x = (int)std::round(desc.get_position().left * pixel_ratio);
-		int y = (int)std::round(desc.get_position().top * pixel_ratio);
-		int width = (int)std::round(desc.get_size().width * pixel_ratio);
-		int height = (int)std::round(desc.get_size().height * pixel_ratio);
+		int x = (int)std::round(desc.position().left * pixel_ratio);
+		int y = (int)std::round(desc.position().top * pixel_ratio);
+		int width = (int)std::round(desc.size().width * pixel_ratio);
+		int height = (int)std::round(desc.size().height * pixel_ratio);
 
-		bool clientSize = desc.get_position_client_area();	// false = Size includes the window frame. true = Size is the drawable size.
+		bool clientSize = desc.position_client_area();	// false = Size includes the window frame. true = Size is the drawable size.
 
 		if (desc.is_fullscreen())
 		{
 			int primary_screen = 0;
 			ScreenInfo screen_info;
 			std::vector<Rectf> screen_rects = screen_info.get_screen_geometries(primary_screen);
-			Rectf R = screen_rects[desc.get_fullscreen_monitor()];
+			Rectf R = screen_rects[desc.fullscreen_monitor()];
 
 			clientSize = false;
 			x = (int)std::round(R.left * pixel_ratio);
@@ -1728,7 +1728,7 @@ namespace uicore
 			width = (int)std::round(R.get_width() * pixel_ratio);
 			height = (int)std::round(R.get_height() * pixel_ratio);
 		}
-		else if (desc.get_position().left == -1 && desc.get_position().top == -1)
+		else if (desc.position().left == -1 && desc.position().top == -1)
 		{
 			int scr_width = GetSystemMetrics(SM_CXSCREEN);
 			int scr_height = GetSystemMetrics(SM_CYSCREEN);

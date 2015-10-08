@@ -53,11 +53,11 @@ namespace uicore
 
 	HCURSOR CursorProvider_Win32::create_cursor(const CursorDescription &cursor_description)
 	{
-		if (cursor_description.get_frames().empty())
+		if (cursor_description.frames().empty())
 			throw Exception("Cannot create cursor with no image frames");
 		DataBufferPtr ani_file = create_ani_file(cursor_description);
-		int desired_width = cursor_description.get_frames().front().rect.get_width();
-		int desired_height = cursor_description.get_frames().front().rect.get_height();
+		int desired_width = cursor_description.frames().front().rect.get_width();
+		int desired_height = cursor_description.frames().front().rect.get_height();
 		HICON icon = CreateIconFromResourceEx((PBYTE)ani_file->data(), ani_file->size(), FALSE, 0x00030000, desired_width, desired_height, LR_DEFAULTCOLOR);
 		return (HCURSOR)icon;
 	}
@@ -159,10 +159,10 @@ namespace uicore
 		std::vector<DWORD> rates;
 		std::vector<DWORD> steps;
 
-		const std::vector<CursorDescriptionFrame> &frames = cursor_description.get_frames();
+		const std::vector<CursorDescriptionFrame> &frames = cursor_description.frames();
 		for (std::vector<CursorDescriptionFrame>::size_type i = 0; i < frames.size(); i++)
 		{
-			DataBufferPtr ico_file = create_cur_file(frames[i].pixelbuffer, frames[i].rect, cursor_description.get_hotspot());
+			DataBufferPtr ico_file = create_cur_file(frames[i].pixelbuffer, frames[i].rect, cursor_description.hotspot());
 			ani_frames.icons.push_back(ico_file);
 			DWORD rate = static_cast<DWORD>(frames[i].delay * 60);
 			if (rate == 0)
@@ -180,8 +180,8 @@ namespace uicore
 		ani_header.cPlanes = 1;
 		ani_header.cFrames = ani_frames.icons.size();
 		ani_header.cSteps = steps.size();
-		ani_header.cx = cursor_description.get_hotspot().x;
-		ani_header.cy = cursor_description.get_hotspot().y;
+		ani_header.cx = cursor_description.hotspot().x;
+		ani_header.cy = cursor_description.hotspot().y;
 
 		ANIInfo ani_info;
 		ani_info.author = "uicorelib";

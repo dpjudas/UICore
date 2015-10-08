@@ -69,43 +69,43 @@ namespace uicore
 		~DisplayWindowDescription();
 
 		/// \brief Returns the window title stored in the description.
-		const std::string &get_title() const;
+		const std::string &title() const;
 
 		/// \brief Returns the size of the window stored in description.
-		Sizef get_size() const;
+		Sizef size() const;
 
 		/// \brief Returns the initial position of the window.
-		Rectf get_position() const;
+		Rectf position() const;
 
 		/// \brief Returns if the client area is used for the initial position of the window
-		bool get_position_client_area() const;
+		bool position_client_area() const;
 
 		/// \brief Returns if window should be initially fullscreen.
 		bool is_fullscreen() const;
 
 		/// \brief Returns the amount of flipping buffers to be created.
-		int get_flipping_buffers() const;
+		int flipping_buffers() const;
 
 		/// \brief Returns the swap interval to be used for the window
-		int get_swap_interval() const;
+		int swap_interval() const;
 
 		/// \brief Returns true if window should be resizeable.
-		bool get_allow_resize() const;
+		bool allow_resize() const;
 
 		/// \brief Returns the numbers of bytes per pixel in the window.
-		int get_bpp() const;
+		int bpp() const;
 
 		/** Returns the refresh rate of the DisplayMode in Hertz (cycles per
 		 *  second). This value is also known as the vertical refresh rate.
 		 */
-		int get_refresh_rate() const;
+		int refresh_rate() const;
 
 		/// \brief Returns true if window is layered (black is transparent)
 		bool is_layered() const;
 
 		/** Returns an platform-specific internal display window handle object.
 		 */
-		DisplayWindowHandle get_handle() const;
+		DisplayWindowHandle handle() const;
 
 		/// \brief Returns true if a title bar is shown.
 		bool has_caption() const;
@@ -132,25 +132,25 @@ namespace uicore
 		bool has_drop_shadow() const;
 
 		/// \brief Returns the window owning this one.
-		DisplayWindowPtr get_owner() const;
+		DisplayWindowPtr owner() const;
 
 		/// \brief Returns the minimum required depth buffer.
-		int get_depth_size() const;
+		int depth_size() const;
 
 		/// \brief Returns the minimum required stencil buffer.
-		int get_stencil_size() const;
+		int stencil_size() const;
 
 		/// \brief Returns the index of the monitor to go fullscreen on. See ScreenInfo.
-		int get_fullscreen_monitor() const;
+		int fullscreen_monitor() const;
 
 		/// \brief Returns true if the screensaver is allowed
-		bool get_allow_screensaver() const;
+		bool allow_screensaver() const;
 
 		/// \brief Returns true if DisplayWindow::update should be supported
 		bool is_update_supported() const;
 
 		/// \brief Returns the number of samples per pixel.
-		int get_multisampling() const;
+		int multisampling() const;
 
 		/// \brief Returns true if it is a main window
 		bool is_main() const;

@@ -102,15 +102,15 @@ namespace uicore
 		pfd.cGreenBits = 4;
 		pfd.cBlueBits = 4;
 		pfd.cAlphaBits = 4;
-		pfd.cDepthBits = desc.get_depth_size();
-		pfd.cStencilBits = desc.get_stencil_size();
+		pfd.cDepthBits = desc.depth_size();
+		pfd.cStencilBits = desc.stencil_size();
 		if (desc.is_layered())
 		{
 			pfd.cAlphaBits = 8;
 			pfd.dwFlags |= PFD_DOUBLEBUFFER_DONTCARE; // | PFD_DRAW_TO_BITMAP
 		}
 
-		if (desc.get_multisampling() < 1)
+		if (desc.multisampling() < 1)
 		{
 			int pixelformat = ChoosePixelFormat(hdc, &pfd);
 			SetPixelFormat(hdc, pixelformat, &pfd);
@@ -145,15 +145,15 @@ namespace uicore
 				int_attributes.push_back(4);
 
 				int_attributes.push_back(WGL_DEPTH_BITS);
-				int_attributes.push_back(desc.get_depth_size());
+				int_attributes.push_back(desc.depth_size());
 
 				int_attributes.push_back(WGL_STENCIL_BITS);
-				int_attributes.push_back(desc.get_stencil_size());
+				int_attributes.push_back(desc.stencil_size());
 
 				int_attributes.push_back(WGL_SAMPLE_BUFFERS);
 				int_attributes.push_back(GL_TRUE);
 				int_attributes.push_back(WGL_SAMPLES);
-				int_attributes.push_back(desc.get_multisampling());
+				int_attributes.push_back(desc.multisampling());
 
 				float_attributes.push_back(0.0f);
 				float_attributes.push_back(0.0f);

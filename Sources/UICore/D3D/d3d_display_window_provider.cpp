@@ -55,7 +55,7 @@ namespace uicore
 
 		D3D_FEATURE_LEVEL request_levels[] = { D3D_FEATURE_LEVEL_11_0, D3D_FEATURE_LEVEL_10_1, D3D_FEATURE_LEVEL_10_0 };
 		DXGI_SWAP_CHAIN_DESC swap_chain_description;
-		swap_chain_description.BufferCount = description.get_flipping_buffers();
+		swap_chain_description.BufferCount = description.flipping_buffers();
 		swap_chain_description.BufferDesc.Width = 0;
 		swap_chain_description.BufferDesc.Height = 0;
 		swap_chain_description.BufferDesc.RefreshRate.Numerator = 60;

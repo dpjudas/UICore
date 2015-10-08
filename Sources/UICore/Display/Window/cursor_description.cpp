@@ -51,12 +51,12 @@ namespace uicore
 	{
 	}
 
-	const std::vector<CursorDescriptionFrame> &CursorDescription::get_frames() const
+	const std::vector<CursorDescriptionFrame> &CursorDescription::frames() const
 	{
 		return impl->frames;
 	}
 
-	Point CursorDescription::get_hotspot() const
+	Point CursorDescription::hotspot() const
 	{
 		return impl->hotspot;
 	}

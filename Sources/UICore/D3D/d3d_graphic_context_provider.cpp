@@ -62,7 +62,7 @@ namespace uicore
 		//	set_blend_function(blend_one, blend_zero, blend_one, blend_zero);
 		//	enable_blending(false);
 
-		default_depth = display_desc.get_depth_size();
+		default_depth = display_desc.depth_size();
 
 		Size viewport_size = display_window_size();
 		for (int i = 0; i < D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT; i++)

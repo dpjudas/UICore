@@ -182,7 +182,7 @@ namespace uicore
 		}
 
 		wglSwapIntervalEXT = (ptr_wglSwapIntervalEXT)OpenGL::get_proc_address("wglSwapIntervalEXT");
-		swap_interval = desc.get_swap_interval();
+		swap_interval = desc.swap_interval();
 		if (wglSwapIntervalEXT && swap_interval != -1)
 			wglSwapIntervalEXT(swap_interval);
 	}

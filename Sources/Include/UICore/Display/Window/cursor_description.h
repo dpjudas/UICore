@@ -76,10 +76,10 @@ namespace uicore
 		~CursorDescription();
 
 		/// \brief Returns a list over all available frames.
-		const std::vector<CursorDescriptionFrame> &get_frames() const;
+		const std::vector<CursorDescriptionFrame> &frames() const;
 
 		/// \brief the offset of where the cursor is drawn relative to cursor image
-		Point get_hotspot() const;
+		Point hotspot() const;
 
 		bool operator==(const CursorDescription &that) const { return impl == that.impl; }
 		bool operator!=(const CursorDescription &that) const { return impl != that.impl; }
