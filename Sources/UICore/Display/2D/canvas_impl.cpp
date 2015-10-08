@@ -51,7 +51,7 @@ namespace uicore
 	{
 		GraphicContextPtr gc = canvas->get_gc();
 		gc->set_frame_buffer(framebuffer);
-		gc->set_viewport(gc->get_size(), y_axis_top_down);
+		gc->set_viewport(gc->size(), y_axis_top_down);
 		batcher = canvas->batcher;		// Share the batcher resources
 		setup(gc);
 	}
@@ -71,18 +71,18 @@ namespace uicore
 			sc.connect(current_window->sig_window_flip(), bind_member(this, &Canvas_Impl::on_window_flip));
 		}
 
-		gc_clip_z_range = gc->get_clip_z_range();
+		gc_clip_z_range = gc->clip_z_range();
 		canvas_inverse_transform = canvas_transform = Mat4f::identity();
 		canvas_inverse_transform_set = true;
 
-		if (!gc->get_write_frame_buffer())	// No framebuffer attached to canvas
+		if (!gc->write_frame_buffer())	// No framebuffer attached to canvas
 		{
 			canvas_y_axis = y_axis_top_down;
 			sc.connect(static_cast<GraphicContextProvider*>(gc.get())->sig_window_resized(), bind_member(this, &Canvas_Impl::on_window_resized));
 		}
 		else
 		{
-			if (gc->get_texture_image_y_axis() == y_axis_bottom_up)
+			if (gc->texture_image_y_axis() == y_axis_bottom_up)
 			{
 				canvas_y_axis = y_axis_bottom_up;
 			}
@@ -126,7 +126,7 @@ namespace uicore
 	void Canvas_Impl::calculate_map_mode_matrices()
 	{
 		Mat4f matrix;
-		Mat4f pixel_scaling_matrix = Mat4f::scale(gc->get_pixel_ratio(), gc->get_pixel_ratio(), 1.0f);
+		Mat4f pixel_scaling_matrix = Mat4f::scale(gc->pixel_ratio(), gc->pixel_ratio(), 1.0f);
 
 		MapMode mode = (canvas_y_axis == y_axis_bottom_up) ? get_top_down_map_mode() : canvas_map_mode;
 		switch (mode)
@@ -202,7 +202,7 @@ namespace uicore
 
 	void Canvas_Impl::update_viewport_size()
 	{
-		Rectf size(gc->get_size());
+		Rectf size(gc->size());
 		if (size != viewport_rect)
 		{
 			viewport_rect = size;
@@ -212,7 +212,7 @@ namespace uicore
 
 	void Canvas_Impl::set_viewport(const Rectf &viewport)
 	{
-		viewport_rect = viewport * (1.0f * gc->get_pixel_ratio());
+		viewport_rect = viewport * (1.0f * gc->pixel_ratio());
 		calculate_map_mode_matrices();
 		gc->set_viewport(viewport_rect, y_axis_top_down);
 	}
@@ -234,10 +234,10 @@ namespace uicore
 
 		// Grid-fitted, display pixel ratio scaled clipping rect
 		Rect recti{
-			static_cast<int>(std::round(rect.left * gc->get_pixel_ratio())),
-			static_cast<int>(std::round(rect.top * gc->get_pixel_ratio())),
-			static_cast<int>(std::round(rect.right * gc->get_pixel_ratio())),
-			static_cast<int>(std::round(rect.bottom * gc->get_pixel_ratio()))
+			static_cast<int>(std::round(rect.left * gc->pixel_ratio())),
+			static_cast<int>(std::round(rect.top * gc->pixel_ratio())),
+			static_cast<int>(std::round(rect.right * gc->pixel_ratio())),
+			static_cast<int>(std::round(rect.bottom * gc->pixel_ratio()))
 		};
 
 		gc->set_scissor(recti, canvas_y_axis ? y_axis_top_down : y_axis_bottom_up);
@@ -272,7 +272,7 @@ namespace uicore
 	{
 		if (cliprects.empty())
 		{
-			cliprects.push_back(gc->get_size());
+			cliprects.push_back(gc->size());
 		}
 		else
 		{

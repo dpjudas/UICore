@@ -272,82 +272,82 @@ namespace uicore
 	{
 	public:
 		/// Returns in what range clip space z values are clipped.
-		virtual ClipZRange get_clip_z_range() const = 0;
+		virtual ClipZRange clip_z_range() const = 0;
 
 		/// Returns the Y axis direction for viewports, clipping rects, textures and render targets
-		virtual TextureImageYAxis get_texture_image_y_axis() const = 0;
+		virtual TextureImageYAxis texture_image_y_axis() const = 0;
 
 		/// Returns the shader language used
-		virtual ShaderLanguage get_shader_language() const = 0;
+		virtual ShaderLanguage shader_language() const = 0;
 
 		/** Returns the major version / feature level supported by the hardware.
 		 *  For an OpenGL target, this returns the major OpenGL version the driver supports.
 		 *  For a Direct3D target, this returns the major feature level.
 		 */
-		virtual int get_major_version() const = 0;
+		virtual int major_version() const = 0;
 
 		/** Returns the minor version / feature level supported by the hardware.
 		 *  For an OpenGL target, this returns the minor OpenGL version the driver supports.
 		 *  For a Direct3D target, this returns the minor feature level.
 		 */
-		virtual int get_minor_version() const = 0;
+		virtual int minor_version() const = 0;
 
 		/** Returns `true` if the hardware supports compute shaders.
 		 *  This function will always returns true for OpenGL 4.3 or newer, or
 		 *  Direct3D 11.0 or newer. For Direct3D 10.0 and 10.1, the support for
-		 *  compute shaders are optional.
+		 *  compute shaders is optional.
 		 */
 		virtual bool has_compute_shader_support() const = 0;
 
 		/** Returns the currently selected write frame buffer.
 		 *  \return The frame buffer.
 		 */
-		virtual FrameBufferPtr get_write_frame_buffer() const = 0;
+		virtual FrameBufferPtr write_frame_buffer() const = 0;
 
 		/// Returns the currently selected read frame buffer.
 		///
 		/// \return The frame buffer.
-		virtual FrameBufferPtr get_read_frame_buffer() const = 0;
+		virtual FrameBufferPtr read_frame_buffer() const = 0;
 
 		/// Returns the currently selected program object
-		virtual ProgramObjectPtr get_program_object() const = 0;
+		virtual ProgramObjectPtr program_object() const = 0;
 
 		/// Returns the current actual width of the context.
-		int get_width() const { return get_size().width; }
+		int width() const { return size().width; }
 
 		/// Returns the current actual height of the context.
-		int get_height() const { return get_size().height; }
+		int height() const { return size().height; }
 
 		/// Returns the current actual size of the context.
-		virtual Size get_size() const = 0;
+		virtual Size size() const = 0;
 
 		/// Retrieves the display pixel ratio of the context.
 		/// \seealso Resolution Independence
-		virtual float get_pixel_ratio() const = 0;
+		virtual float pixel_ratio() const = 0;
 
 		/// Calculates the device independent width of the context.
 		/// \seealso Resolution Independence
-		float get_dip_width() const { return get_width() / get_pixel_ratio(); }
+		float dip_width() const { return width() / pixel_ratio(); }
 
 		/// Calculates the device independent height of the context.
 		/// \seealso Resolution Independence
-		float get_dip_height() const { return get_height() / get_pixel_ratio(); }
+		float dip_height() const { return height() / pixel_ratio(); }
 
 		/// Calculates the device independent dimensions of the context.
 		/// \seealso Resolution Independence
-		Sizef get_dip_size() const { return Sizef{ get_dip_width(), get_dip_height() }; }
+		Sizef dip_size() const { return Sizef{ dip_width(), dip_height() }; }
 
 		/** Retrieves the maximum size for a texture that this graphic context will
 		 *  allow. Size(0, 0) will be returned if there is no known limitation to
 		 *  the maximum texture size allowed for the context.
 		 */
-		virtual Size get_max_texture_size() const = 0;
+		virtual Size max_texture_size() const = 0;
 
 		/// Return the content of the read buffer into a pixel buffer.
-		virtual PixelBufferPtr get_pixeldata(const Rect& rect, TextureFormat texture_format = tf_rgba8, bool clamp = true) const = 0;
+		virtual PixelBufferPtr pixeldata(const Rect& rect, TextureFormat texture_format = tf_rgba8, bool clamp = true) const = 0;
 
 		/// Return the content of the read buffer into a pixel buffer.
-		PixelBufferPtr get_pixeldata(TextureFormat texture_format = tf_rgba8, bool clamp = true) { return get_pixeldata(Rect(Point(), get_size()), texture_format, clamp); }
+		PixelBufferPtr pixeldata(TextureFormat texture_format = tf_rgba8, bool clamp = true) { return pixeldata(Rect(Point(), size()), texture_format, clamp); }
 
 		/** Returns `true` if this frame buffer object is owned by this graphic
 		 *  context.

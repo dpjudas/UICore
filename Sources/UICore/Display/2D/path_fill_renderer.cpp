@@ -140,7 +140,7 @@ namespace uicore
 			current_instance_offset = instances.push(canvas, brush, transform);
 		}
 
-		int max_width = canvas.get_gc()->get_width() * antialias_level;
+		int max_width = canvas.get_gc()->width() * antialias_level;
 
 		int start_y = first_scanline / scanline_block_size * scanline_block_size;
 		int end_y = (last_scanline + scanline_block_size - 1) / scanline_block_size * scanline_block_size;
@@ -218,7 +218,7 @@ namespace uicore
 		gc->set_blend_state(blend_state);
 		gc->set_program_object(program_path);
 
-		auto obj = gc->get_program_object();
+		auto obj = gc->program_object();
 		obj->set_uniform1f("ypos_scale", image_yaxis == y_axis_top_down ? 1.0f : -1.0f);
 
 		gc->set_texture(0, mask_texture);
@@ -585,7 +585,7 @@ namespace uicore
 		max_entries = new_max_entries;
 		current_texture.reset();
 
-		buffer[0] = Vec4f(gc->get_width(), gc->get_height(), 0, 0);
+		buffer[0] = Vec4f(gc->width(), gc->height(), 0, 0);
 		end_position = 1;
 	}
 

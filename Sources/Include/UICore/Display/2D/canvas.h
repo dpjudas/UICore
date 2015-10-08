@@ -108,13 +108,13 @@ namespace uicore
 		operator const GraphicContextPtr &() const { return get_gc(); }
 
 		/// \brief Returns the current width of the context.
-		inline float get_width() const { return get_gc()->get_dip_width(); }
+		inline float get_width() const { return get_gc()->dip_width(); }
 
 		/// \brief Returns the current height of the context.
-		inline float get_height() const { return get_gc()->get_dip_height(); }
+		inline float get_height() const { return get_gc()->dip_height(); }
 
 		/// \brief Returns the current size of the context.
-		inline Sizef get_size() const { return get_gc()->get_dip_size(); }
+		inline Sizef get_size() const { return get_gc()->dip_size(); }
 
 		/// \brief Returns the current clipping rectangle
 		Rectf get_cliprect() const;
@@ -127,7 +127,7 @@ namespace uicore
 
 		/// Retrieves the display pixel ratio of the context.
 		/// \seealso Resolution Independence
-		float get_pixel_ratio() const { return get_gc()->get_pixel_ratio(); }
+		float get_pixel_ratio() const { return get_gc()->pixel_ratio(); }
 
 		/// \brief Set active rasterizer state
 		void set_rasterizer_state(const RasterizerStatePtr &state);

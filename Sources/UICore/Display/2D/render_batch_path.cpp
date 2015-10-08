@@ -52,7 +52,7 @@ namespace uicore
 	{
 		canvas.set_batcher(this);
 
-		fill_renderer.set_size(canvas, canvas.get_gc()->get_width(), canvas.get_gc()->get_height());
+		fill_renderer.set_size(canvas, canvas.get_gc()->width(), canvas.get_gc()->height());
 		fill_renderer.clear();
 		render(path, &fill_renderer);
 		fill_renderer.fill(canvas, path.get_impl()->fill_mode, brush, modelview_matrix);

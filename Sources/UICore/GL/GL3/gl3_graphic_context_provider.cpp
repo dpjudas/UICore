@@ -251,7 +251,7 @@ namespace uicore
 		}
 	}
 
-	int GL3GraphicContextProvider::get_max_attributes()
+	int GL3GraphicContextProvider::max_attributes()
 	{
 		OpenGL::set_active(this);
 		GLint max_attributes = 0;
@@ -261,7 +261,7 @@ namespace uicore
 		return max_attributes;
 	}
 
-	Size GL3GraphicContextProvider::get_max_texture_size() const
+	Size GL3GraphicContextProvider::max_texture_size() const
 	{
 		OpenGL::set_active(this);
 		GLint max_size = 0;
@@ -269,12 +269,12 @@ namespace uicore
 		return Size(max_size, max_size);
 	}
 
-	Size GL3GraphicContextProvider::get_display_window_size() const
+	Size GL3GraphicContextProvider::display_window_size() const
 	{
 		return render_window->backing_viewport().get_size();
 	}
 
-	float GL3GraphicContextProvider::get_pixel_ratio() const
+	float GL3GraphicContextProvider::pixel_ratio() const
 	{
 		return render_window->pixel_ratio();
 	}
@@ -492,7 +492,7 @@ namespace uicore
 		}
 	}
 
-	std::shared_ptr<PixelBuffer> GL3GraphicContextProvider::get_pixeldata(const Rect& rect, TextureFormat texture_format, bool clamp) const
+	std::shared_ptr<PixelBuffer> GL3GraphicContextProvider::pixeldata(const Rect& rect, TextureFormat texture_format, bool clamp) const
 	{
 		TextureFormat_GL tf = OpenGL::get_textureformat(texture_format);
 		if (!tf.valid)
@@ -507,7 +507,7 @@ namespace uicore
 		if (glClampColor)
 			glClampColor(GL_CLAMP_READ_COLOR, clamp ? GL_TRUE : GL_FALSE);
 
-		Size display_size = get_display_window_size();
+		Size display_size = display_window_size();
 
 		glPixelStorei(GL_PACK_ALIGNMENT, 1);
 		glPixelStorei(GL_PACK_ROW_LENGTH, pbuf->pitch() / pbuf->bytes_per_pixel());

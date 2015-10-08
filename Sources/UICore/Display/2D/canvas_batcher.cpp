@@ -129,7 +129,7 @@ namespace uicore
 
 		if (active_batcher)
 		{
-			active_batcher->matrix_changed(modelview, projection, image_yaxis, gc->get_pixel_ratio());
+			active_batcher->matrix_changed(modelview, projection, image_yaxis, gc->pixel_ratio());
 		}
 	}
 

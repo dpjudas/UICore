@@ -64,7 +64,7 @@ namespace uicore
 
 		default_depth = display_desc.get_depth_size();
 
-		Size viewport_size = get_display_window_size();
+		Size viewport_size = display_window_size();
 		for (int i = 0; i < D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT; i++)
 		{
 			viewports[i].Width = viewport_size.width;
@@ -107,7 +107,7 @@ namespace uicore
 
 	void D3DGraphicContextProvider::end_resize_swap_chain()
 	{
-		Size viewport_size = get_display_window_size();
+		Size viewport_size = display_window_size();
 		viewports[0].Width = viewport_size.width;
 		viewports[0].Height = viewport_size.height;
 		viewports[0].TopLeftX = 0;
@@ -122,12 +122,12 @@ namespace uicore
 		window->get_device_context()->Flush();
 	}
 
-	int D3DGraphicContextProvider::get_max_attributes()
+	int D3DGraphicContextProvider::max_attributes()
 	{
 		return 16; // To do: this is the D3D10 limit - is it still the same for D3D11?
 	}
 
-	Size D3DGraphicContextProvider::get_max_texture_size() const
+	Size D3DGraphicContextProvider::max_texture_size() const
 	{
 		switch (window->get_feature_level())
 		{
@@ -141,22 +141,17 @@ namespace uicore
 		}
 	}
 
-	Size D3DGraphicContextProvider::get_display_window_size() const
+	Size D3DGraphicContextProvider::display_window_size() const
 	{
 		return window->backing_viewport().get_size();
 	}
 
-	float D3DGraphicContextProvider::get_pixel_ratio() const
+	float D3DGraphicContextProvider::pixel_ratio() const
 	{
 		return window->pixel_ratio();
 	}
 
-	HDC D3DGraphicContextProvider::get_drawable() const
-	{
-		return 0; //window->get_device_context();
-	}
-
-	std::shared_ptr<PixelBuffer> D3DGraphicContextProvider::get_pixeldata(const Rect& rect, TextureFormat texture_format, bool clamp) const
+	std::shared_ptr<PixelBuffer> D3DGraphicContextProvider::pixeldata(const Rect& rect, TextureFormat texture_format, bool clamp) const
 	{
 		// To do: fetch format from window->get_back_buffer()->GetDesc(&desc)
 		// To do: window->get_back_buffer() is only correct when no frame buffer is bound
@@ -747,7 +742,7 @@ namespace uicore
 		window_resized_signal(new_size);
 	}
 
-	int D3DGraphicContextProvider::get_major_version() const
+	int D3DGraphicContextProvider::major_version() const
 	{
 		switch (window->get_feature_level())
 		{
@@ -762,7 +757,7 @@ namespace uicore
 		}
 	}
 
-	int D3DGraphicContextProvider::get_minor_version() const
+	int D3DGraphicContextProvider::minor_version() const
 	{
 		switch (window->get_feature_level())
 		{
@@ -865,7 +860,7 @@ namespace uicore
 			else  if (default_depth <= 24)
 				texture_format = tf_depth_component24;
 
-			Size viewport_size = get_display_window_size();
+			Size viewport_size = display_window_size();
 
 			default_depth_render_buffer = std::make_shared<D3DRenderBufferProvider>(window->get_device(), viewport_size.width, viewport_size.height, texture_format, 1);
 			default_dsv = default_depth_render_buffer->create_dsv(window->get_device());

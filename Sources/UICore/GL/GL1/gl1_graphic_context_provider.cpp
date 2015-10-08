@@ -201,7 +201,7 @@ namespace uicore
 		return max_textures;
 	}
 
-	int GL1GraphicContextProvider::get_max_attributes()
+	int GL1GraphicContextProvider::max_attributes()
 	{
 		set_active();
 		GLint max_attributes = 0;
@@ -212,7 +212,7 @@ namespace uicore
 	}
 
 
-	Size GL1GraphicContextProvider::get_max_texture_size() const
+	Size GL1GraphicContextProvider::max_texture_size() const
 	{
 		set_active();
 		GLint max_size = 0;
@@ -220,12 +220,12 @@ namespace uicore
 		return Size(max_size, max_size);
 	}
 
-	Size GL1GraphicContextProvider::get_display_window_size() const
+	Size GL1GraphicContextProvider::display_window_size() const
 	{
 		return render_window->backing_viewport().get_size();
 	}
 
-	float GL1GraphicContextProvider::get_pixel_ratio() const
+	float GL1GraphicContextProvider::pixel_ratio() const
 	{
 		return render_window->pixel_ratio();
 	}
@@ -457,20 +457,20 @@ namespace uicore
 		}
 	}
 
-	PixelBufferPtr GL1GraphicContextProvider::get_pixeldata(const Rect& rect, TextureFormat texture_format, bool clamp) const
+	PixelBufferPtr GL1GraphicContextProvider::pixeldata(const Rect& rect, TextureFormat texture_format, bool clamp) const
 	{
 		GLenum format;
 		GLenum type;
 		bool found = GL1TextureProvider::to_opengl_pixelformat(texture_format, format, type);
 		if (!found)
-			throw Exception("Unsupported pixel format passed to GraphicContext::get_pixeldata");
+			throw Exception("Unsupported pixel format passed to GraphicContext::pixeldata");
 
 		auto pbuf = PixelBuffer::create(rect.get_width(), rect.get_height(), texture_format);
 		set_active();
 		if (!framebuffer_bound)
 			render_window->is_double_buffered() ? glReadBuffer(GL_BACK) : glReadBuffer(GL_FRONT);
 
-		Size display_size = get_display_window_size();
+		Size display_size = display_window_size();
 
 		glPixelStorei(GL_PACK_ALIGNMENT, 1);
 #ifndef __ANDROID__
@@ -604,7 +604,7 @@ namespace uicore
 	{
 	}
 
-	ProgramObjectPtr GL1GraphicContextProvider::get_program_object() const
+	ProgramObjectPtr GL1GraphicContextProvider::program_object() const
 	{
 		return internal_program;
 	}

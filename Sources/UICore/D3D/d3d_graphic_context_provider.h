@@ -57,29 +57,25 @@ namespace uicore
 		D3DGraphicContextProvider(D3DDisplayWindowProvider *window, const DisplayWindowDescription &display_desc);
 		~D3DGraphicContextProvider();
 
-		int get_max_attributes() override;
-		Size get_max_texture_size() const override;
-		Size get_display_window_size() const override;
-		float get_pixel_ratio() const override;
+		int max_attributes() override;
+		Size max_texture_size() const override;
+		Size display_window_size() const override;
+		float pixel_ratio() const override;
 
 		D3DDisplayWindowProvider *get_window() const { return window; }
-
-#ifdef WIN32
-		HDC get_drawable() const;
-#endif
 
 		Signal<void(const Size &)> &sig_window_resized() override { return window_resized_signal; }
 
 		StandardPrograms standard_programs;
 
-		ClipZRange get_clip_z_range() const override { return clip_zero_positive_w; }
-		TextureImageYAxis get_texture_image_y_axis() const override { return y_axis_top_down; }
+		ClipZRange clip_z_range() const override { return clip_zero_positive_w; }
+		TextureImageYAxis texture_image_y_axis() const override { return y_axis_top_down; }
 
-		ShaderLanguage get_shader_language() const override { return shader_hlsl; }
-		int get_major_version() const override;
-		int get_minor_version() const override;
+		ShaderLanguage shader_language() const override { return shader_hlsl; }
+		int major_version() const override;
+		int minor_version() const override;
 		bool has_compute_shader_support() const override;
-		std::shared_ptr<PixelBuffer> get_pixeldata(const Rect& rect, TextureFormat texture_format, bool clamp) const override;
+		std::shared_ptr<PixelBuffer> pixeldata(const Rect& rect, TextureFormat texture_format, bool clamp) const override;
 
 		std::shared_ptr<RasterizerState> create_rasterizer_state(const RasterizerStateDescription &desc) override;
 		std::shared_ptr<BlendState> create_blend_state(const BlendStateDescription &desc) override;
@@ -110,9 +106,9 @@ namespace uicore
 		std::shared_ptr<TextureCubeArray> create_texture_cube_array(int width, int height, int array_size, TextureFormat texture_format, int levels) override;
 		std::shared_ptr<TransferTexture> create_transfer_texture(const void *data, const Size &size, PixelBufferDirection direction, TextureFormat new_format, BufferUsage usage) override;
 
-		FrameBufferPtr get_write_frame_buffer() const { return _write_frame_buffer; }
-		FrameBufferPtr get_read_frame_buffer() const { return _read_frame_buffer; }
-		ProgramObjectPtr get_program_object() const override { return _program_object; }
+		FrameBufferPtr write_frame_buffer() const { return _write_frame_buffer; }
+		FrameBufferPtr read_frame_buffer() const { return _read_frame_buffer; }
+		ProgramObjectPtr program_object() const override { return _program_object; }
 
 		void set_rasterizer_state(const RasterizerStatePtr &state) override;
 		void set_blend_state(const BlendStatePtr &state, const Colorf &blend_color, unsigned int sample_mask) override;

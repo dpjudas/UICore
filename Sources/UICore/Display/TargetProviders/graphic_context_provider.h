@@ -91,18 +91,18 @@ namespace uicore
 		virtual std::shared_ptr<TextureCubeArray> create_texture_cube_array(int width, int height, int array_size, TextureFormat texture_format, int levels) = 0;
 		virtual std::shared_ptr<TransferTexture> create_transfer_texture(const void *data, const Size &new_size, PixelBufferDirection direction, TextureFormat new_format, BufferUsage usage) = 0;
 
-		virtual Size get_display_window_size() const = 0;
+		virtual Size display_window_size() const = 0;
 		virtual Signal<void(const Size &)> &sig_window_resized() = 0;
 		virtual void on_window_resized() = 0;
 
-		virtual int get_max_attributes() = 0;
+		virtual int max_attributes() = 0;
 
 		void set_viewport(const Rectf &rect, TextureImageYAxis y_axis)
 		{
 			Rectf rect2 = rect;
-			if (get_texture_image_y_axis() != y_axis)
+			if (texture_image_y_axis() != y_axis)
 			{
-				rect2 = Rectf(Pointf(rect.left, get_size().height - rect.bottom), rect.get_size());
+				rect2 = Rectf(Pointf(rect.left, size().height - rect.bottom), rect.get_size());
 			}
 			set_viewport(rect2);
 		}
@@ -110,9 +110,9 @@ namespace uicore
 		void set_viewport(int index, const Rectf &rect, TextureImageYAxis y_axis)
 		{
 			Rectf rect2 = rect;
-			if (get_texture_image_y_axis() != y_axis)
+			if (texture_image_y_axis() != y_axis)
 			{
-				rect2 = Rectf(Pointf(rect.left, get_size().height - rect.bottom), rect.get_size());
+				rect2 = Rectf(Pointf(rect.left, size().height - rect.bottom), rect.get_size());
 			}
 			set_viewport(index, rect2);
 		}
@@ -123,24 +123,24 @@ namespace uicore
 		void set_scissor(const Rect &rect, TextureImageYAxis y_axis) override
 		{
 			Rect rect2 = rect;
-			if (get_texture_image_y_axis() != y_axis)
+			if (texture_image_y_axis() != y_axis)
 			{
-				rect2 = Rect(Point(rect.left, get_size().height - rect.bottom), rect.get_size());
+				rect2 = Rect(Point(rect.left, size().height - rect.bottom), rect.get_size());
 			}
 			set_scissor(rect2);
 		}
 
 		virtual void set_scissor(const Rect &rect) = 0;
 
-		Size get_size() const override
+		Size size() const override
 		{
-			if (!get_write_frame_buffer())
+			if (!write_frame_buffer())
 			{
-				return get_display_window_size();
+				return display_window_size();
 			}
 			else
 			{
-				return get_write_frame_buffer()->get_size();
+				return write_frame_buffer()->get_size();
 			}
 		}
 

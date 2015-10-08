@@ -111,13 +111,13 @@ namespace uicore
 	PixelBufferPtr Canvas::get_pixeldata(const Rect &rect2, TextureFormat texture_format, bool clamp)
 	{
 		flush();
-		return get_gc()->get_pixeldata(rect2, texture_format, clamp);
+		return get_gc()->pixeldata(rect2, texture_format, clamp);
 	}
 
 	PixelBufferPtr Canvas::get_pixeldata(TextureFormat texture_format, bool clamp)
 	{
 		flush();
-		return get_gc()->get_pixeldata(texture_format, clamp);
+		return get_gc()->pixeldata(texture_format, clamp);
 	}
 
 	void Canvas::set_rasterizer_state(const RasterizerStatePtr &state)
@@ -670,7 +670,7 @@ namespace uicore
 
 	Pointf Canvas::grid_fit(const Pointf &pos)
 	{
-		float pixel_ratio = get_gc()->get_pixel_ratio();
+		float pixel_ratio = get_gc()->pixel_ratio();
 		Vec4f world_pos = get_transform() * Vec4f(pos.x, pos.y, 0.0f, 1.0f);
 		world_pos.x = std::round(world_pos.x * pixel_ratio) / pixel_ratio;
 		world_pos.y = std::round(world_pos.y * pixel_ratio) / pixel_ratio;

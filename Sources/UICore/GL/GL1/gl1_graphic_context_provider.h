@@ -86,13 +86,13 @@ namespace uicore
 		GL1GraphicContextProvider(OpenGLWindowProvider * render_window);
 		~GL1GraphicContextProvider();
 
-		int get_max_attributes() override;
-		Size get_max_texture_size() const override;
+		int max_attributes() override;
+		Size max_texture_size() const override;
 		const DisplayWindowProvider & get_render_window() const;
 		OpenGLWindowProvider & get_opengl_window();
 
-		Size get_display_window_size() const override;
-		float get_pixel_ratio() const override;
+		Size display_window_size() const override;
+		float pixel_ratio() const override;
 
 		// GL1 Only
 		int get_max_texture_coords();
@@ -102,15 +102,15 @@ namespace uicore
 
 		Signal<void(const Size &)> &sig_window_resized() override { return window_resized_signal; }
 
-		FrameBufferPtr get_write_frame_buffer() const { return _write_frame_buffer; }
-		FrameBufferPtr get_read_frame_buffer() const { return _read_frame_buffer; }
-		ProgramObjectPtr get_program_object() const override;
+		FrameBufferPtr write_frame_buffer() const { return _write_frame_buffer; }
+		FrameBufferPtr read_frame_buffer() const { return _read_frame_buffer; }
+		ProgramObjectPtr program_object() const override;
 
-		ClipZRange get_clip_z_range() const override { return clip_negative_positive_w; }
-		TextureImageYAxis get_texture_image_y_axis() const override { return y_axis_bottom_up; }
-		ShaderLanguage get_shader_language() const override { return shader_fixed_function; }
-		int get_major_version() const override { int major = 0, minor = 0; get_opengl_version(major, minor); return major; }
-		int get_minor_version() const override { int major = 0, minor = 0; get_opengl_version(major, minor); return minor; }
+		ClipZRange clip_z_range() const override { return clip_negative_positive_w; }
+		TextureImageYAxis texture_image_y_axis() const override { return y_axis_bottom_up; }
+		ShaderLanguage shader_language() const override { return shader_fixed_function; }
+		int major_version() const override { int major = 0, minor = 0; get_opengl_version(major, minor); return major; }
+		int minor_version() const override { int major = 0, minor = 0; get_opengl_version(major, minor); return minor; }
 		bool has_compute_shader_support() const override { return false; }
 		std::shared_ptr<RasterizerState> create_rasterizer_state(const RasterizerStateDescription &desc) override;
 		std::shared_ptr<BlendState> create_blend_state(const BlendStateDescription &desc) override;
@@ -143,7 +143,7 @@ namespace uicore
 		void set_rasterizer_state(const RasterizerStatePtr &state) override;
 		void set_blend_state(const BlendStatePtr &state, const Colorf &blend_color, unsigned int sample_mask) override;
 		void set_depth_stencil_state(const DepthStencilStatePtr &state, int stencil_ref) override;
-		std::shared_ptr<PixelBuffer> get_pixeldata(const Rect& rect, TextureFormat texture_format, bool clamp) const override;
+		std::shared_ptr<PixelBuffer> pixeldata(const Rect& rect, TextureFormat texture_format, bool clamp) const override;
 		void set_uniform_buffer(int index, const UniformBufferPtr &buffer) override;
 		void set_storage_buffer(int index, const StorageBufferPtr &buffer) override;
 		void set_texture(int unit_index, const TexturePtr &texture) override;
