@@ -117,10 +117,10 @@ namespace uicore
 		static std::shared_ptr<DisplayWindow> create(const DisplayWindowDescription &description);
 
 		/// \brief Returns the position and size of the window frame.
-		virtual Rectf get_geometry() const = 0;
+		virtual Rectf geometry() const = 0;
 
 		/// \brief Returns the drawable area of the window (excluding window frame).
-		virtual Rectf get_viewport() const = 0;
+		virtual Rectf viewport() const = 0;
 
 		/// \brief Returns true if window is currently running fullscreen.
 		virtual bool is_fullscreen() const = 0;
@@ -129,19 +129,19 @@ namespace uicore
 		virtual bool has_focus() const = 0;
 
 		/// \brief Return the graphic context for the window.
-		virtual const GraphicContextPtr &get_gc() const = 0;
+		virtual const GraphicContextPtr &gc() const = 0;
 
 		/// \brief Returns the keyboard input device.
-		virtual const InputDevicePtr &get_keyboard() const = 0;
+		virtual const InputDevicePtr &keyboard() const = 0;
 
 		/// \brief Returns the mouse input device.
-		virtual const InputDevicePtr &get_mouse() const = 0;
+		virtual const InputDevicePtr &mouse() const = 0;
 
 		/// \brief Returns the game controller input device.
-		virtual const std::vector<InputDevicePtr> &get_game_controllers() const = 0;
+		virtual const std::vector<InputDevicePtr> &game_controllers() const = 0;
 
 		/// \brief Returns the input device with the given device name
-		const InputDevicePtr &get_input_device(const std::string &device_name) const;
+		const InputDevicePtr &input_device(const std::string &device_name) const;
 
 		/// \brief Signal emitted when window lost focus.
 		virtual Signal<void()> &sig_lost_focus() = 0;
@@ -206,23 +206,23 @@ namespace uicore
 		virtual bool is_clipboard_image_available() const = 0;
 
 		/// \brief Returns the text stored in the clipboard.
-		virtual std::string get_clipboard_text() const = 0;
+		virtual std::string clipboard_text() const = 0;
 
 		/// \brief Returns an image stored in the clipboard.
 		/// Returns a null pixelbuffer if no image is available.
-		virtual PixelBufferPtr get_clipboard_image() const = 0;
+		virtual PixelBufferPtr clipboard_image() const = 0;
 
 		/// \brief Returns the minimum size the window can be resized to by the application user.
-		virtual Sizef get_minimum_size(bool client_area = false) = 0;
+		virtual Sizef minimum_size(bool client_area = false) = 0;
 
 		/// \brief Returns the maximum size the window can be resized to by the application user.
-		virtual Sizef get_maximum_size(bool client_area = false) = 0;
+		virtual Sizef maximum_size(bool client_area = false) = 0;
 
 		/// \brief Returns the window title.
-		virtual std::string get_title() const = 0;
+		virtual std::string title() const = 0;
 
 		/// Returns an platform-specific internal display window handle object.
-		virtual DisplayWindowHandle get_handle() const = 0;
+		virtual DisplayWindowHandle handle() const = 0;
 
 		/// \brief Convert from window client coordinates to screen coordinates.
 		virtual Pointf client_to_screen(const Pointf &client) = 0;

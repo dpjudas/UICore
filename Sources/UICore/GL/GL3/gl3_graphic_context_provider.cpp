@@ -271,12 +271,12 @@ namespace uicore
 
 	Size GL3GraphicContextProvider::get_display_window_size() const
 	{
-		return render_window->get_backing_viewport().get_size();
+		return render_window->backing_viewport().get_size();
 	}
 
 	float GL3GraphicContextProvider::get_pixel_ratio() const
 	{
-		return render_window->get_pixel_ratio();
+		return render_window->pixel_ratio();
 	}
 
 	std::shared_ptr<RenderBuffer> GL3GraphicContextProvider::create_render_buffer(int width, int height, TextureFormat texture_format, int multisample_samples)
@@ -834,7 +834,7 @@ namespace uicore
 
 	void GL3GraphicContextProvider::on_window_resized()
 	{
-		window_resized_signal(render_window->get_backing_viewport().get_size());
+		window_resized_signal(render_window->backing_viewport().get_size());
 	}
 
 	void GL3GraphicContextProvider::set_viewport(const Rectf &viewport)

@@ -43,11 +43,11 @@ namespace uicore
 	class InputDeviceProvider : public InputDevice, public DisposableObject
 	{
 	public:
-		Pointf get_position() const override { return Pointf(0.f, 0.f); }
-		Point get_device_position() const override { return Point(0, 0); }
-		float get_axis(int index) const override { return 0.f; }
-		std::vector<int> get_axis_ids() const override { return std::vector<int>(); }
-		int get_hat(int index) const override { return -1; }
+		Pointf position() const override { return Pointf(0.f, 0.f); }
+		Point device_position() const override { return Point(0, 0); }
+		float axis(int index) const override { return 0.f; }
+		std::vector<int> axis_ids() const override { return std::vector<int>(); }
+		int hat(int index) const override { return -1; }
 		void set_position(float x, float y) override { }
 		void set_device_position(int x, int y) override { }
 

@@ -50,10 +50,10 @@ namespace uicore
 	class DisplayWindowProvider : public DisplayWindow
 	{
 	public:
-		virtual Rect get_backing_geometry() const = 0;
-		virtual Rect get_backing_viewport() const = 0;
-		virtual Size get_backing_minimum_size(bool client_area) const = 0;
-		virtual Size get_backing_maximum_size(bool client_area) const = 0;
+		virtual Rect backing_geometry() const = 0;
+		virtual Rect backing_viewport() const = 0;
+		virtual Size backing_minimum_size(bool client_area) const = 0;
+		virtual Size backing_maximum_size(bool client_area) const = 0;
 		virtual Point backing_client_to_screen(const Point &client) = 0;
 		virtual Point backing_screen_to_client(const Point &screen) = 0;
 		virtual void set_backing_position(const Rect &pos, bool client_area) = 0;
@@ -62,7 +62,7 @@ namespace uicore
 		virtual void set_backing_maximum_size(int width, int height, bool client_area) = 0;
 		virtual void backing_enable_alpha_channel(const Rect &blur_rect) = 0;
 		virtual void backing_extend_frame_into_client_area(int left, int top, int right, int bottom) = 0;
-		virtual float get_pixel_ratio() const = 0;
+		virtual float pixel_ratio() const = 0;
 		virtual void backing_flip(int interval) = 0;
 
 		virtual CursorPtr create_cursor(const CursorDescription &cursor_description) = 0;
@@ -91,125 +91,125 @@ namespace uicore
 		void show_cursor() override { show_system_cursor(); }
 		void hide_cursor() override { hide_system_cursor(); }
 
-		Rectf get_geometry() const override
+		Rectf geometry() const override
 		{
-			Rect geometryi = get_backing_geometry();
+			Rect geometryi = backing_geometry();
 			Rectf geometry;
-			geometry.left = geometryi.left / get_pixel_ratio();
-			geometry.top = geometryi.top / get_pixel_ratio();
-			geometry.right = geometryi.right / get_pixel_ratio();
-			geometry.bottom = geometryi.bottom / get_pixel_ratio();
+			geometry.left = geometryi.left / pixel_ratio();
+			geometry.top = geometryi.top / pixel_ratio();
+			geometry.right = geometryi.right / pixel_ratio();
+			geometry.bottom = geometryi.bottom / pixel_ratio();
 			return geometry;
 		}
 
-		Rectf get_viewport() const override
+		Rectf viewport() const override
 		{
-			Rect viewporti = get_backing_viewport();
+			Rect viewporti = backing_viewport();
 			Rectf viewport;
-			viewport.left = viewporti.left / get_pixel_ratio();
-			viewport.top = viewporti.top / get_pixel_ratio();
-			viewport.right = viewporti.right / get_pixel_ratio();
-			viewport.bottom = viewporti.bottom / get_pixel_ratio();
+			viewport.left = viewporti.left / pixel_ratio();
+			viewport.top = viewporti.top / pixel_ratio();
+			viewport.right = viewporti.right / pixel_ratio();
+			viewport.bottom = viewporti.bottom / pixel_ratio();
 			return viewport;
 		}
 
-		Sizef get_minimum_size(bool client_area) override
+		Sizef minimum_size(bool client_area) override
 		{
-			Size sizei = get_backing_minimum_size(client_area);
+			Size sizei = backing_minimum_size(client_area);
 			Sizef sizef;
-			sizef.width = sizei.width / get_pixel_ratio();
-			sizef.height = sizei.height / get_pixel_ratio();
+			sizef.width = sizei.width / pixel_ratio();
+			sizef.height = sizei.height / pixel_ratio();
 			return sizef;
 		}
 
-		Sizef get_maximum_size(bool client_area) override
+		Sizef maximum_size(bool client_area) override
 		{
-			Size sizei = get_backing_maximum_size(client_area);
+			Size sizei = backing_maximum_size(client_area);
 			Sizef sizef;
-			sizef.width = sizei.width / get_pixel_ratio();
-			sizef.height = sizei.height / get_pixel_ratio();
+			sizef.width = sizei.width / pixel_ratio();
+			sizef.height = sizei.height / pixel_ratio();
 			return sizef;
 		}
 
 		Pointf client_to_screen(const Pointf &client)
 		{
 			Point clienti;
-			clienti.x = (int)std::round(client.x * get_pixel_ratio());
-			clienti.y = (int)std::round(client.y * get_pixel_ratio());
+			clienti.x = (int)std::round(client.x * pixel_ratio());
+			clienti.y = (int)std::round(client.y * pixel_ratio());
 			Point screeni = backing_client_to_screen(clienti);
 			Pointf screen;
-			screen.x = screeni.x / get_pixel_ratio();
-			screen.y = screeni.y / get_pixel_ratio();
+			screen.x = screeni.x / pixel_ratio();
+			screen.y = screeni.y / pixel_ratio();
 			return screen;
 		}
 
 		Pointf screen_to_client(const Pointf &screen)
 		{
 			Point screeni;
-			screeni.x = (int)std::round(screen.x * get_pixel_ratio());
-			screeni.y = (int)std::round(screen.y * get_pixel_ratio());
+			screeni.x = (int)std::round(screen.x * pixel_ratio());
+			screeni.y = (int)std::round(screen.y * pixel_ratio());
 			Point clienti = backing_screen_to_client(screeni);
 			Pointf client;
-			client.x = clienti.x / get_pixel_ratio();
-			client.y = clienti.y / get_pixel_ratio();
+			client.x = clienti.x / pixel_ratio();
+			client.y = clienti.y / pixel_ratio();
 			return client;
 		}
 
 		void set_position(const Rectf &rect, bool client_area)
 		{
 			Rect recti;
-			recti.left = (int)std::round(rect.left * get_pixel_ratio());
-			recti.top = (int)std::round(rect.top * get_pixel_ratio());
-			recti.right = (int)std::round(rect.right * get_pixel_ratio());
-			recti.bottom = (int)std::round(rect.bottom * get_pixel_ratio());
+			recti.left = (int)std::round(rect.left * pixel_ratio());
+			recti.top = (int)std::round(rect.top * pixel_ratio());
+			recti.right = (int)std::round(rect.right * pixel_ratio());
+			recti.bottom = (int)std::round(rect.bottom * pixel_ratio());
 			set_backing_position(recti, client_area);
 		}
 
 		void set_position(float x, float y)
 		{
-			int xi = (int)std::round(x * get_pixel_ratio());
-			int yi = (int)std::round(y * get_pixel_ratio());
-			Rect geometry = get_backing_geometry();
+			int xi = (int)std::round(x * pixel_ratio());
+			int yi = (int)std::round(y * pixel_ratio());
+			Rect geometry = backing_geometry();
 			set_backing_position(Rect(xi, yi, xi + geometry.get_width(), yi + geometry.get_height()), false);
 		}
 
 		void set_size(float width, float height, bool client_area)
 		{
-			int widthi = (int)std::round(width * get_pixel_ratio());
-			int heighti = (int)std::round(height * get_pixel_ratio());
+			int widthi = (int)std::round(width * pixel_ratio());
+			int heighti = (int)std::round(height * pixel_ratio());
 			set_backing_size(widthi, heighti, client_area);
 		}
 
 		void set_minimum_size(float width, float height, bool client_area)
 		{
-			int widthi = (int)std::round(width * get_pixel_ratio());
-			int heighti = (int)std::round(height * get_pixel_ratio());
+			int widthi = (int)std::round(width * pixel_ratio());
+			int heighti = (int)std::round(height * pixel_ratio());
 			set_backing_minimum_size(widthi, heighti, client_area);
 		}
 
 		void set_maximum_size(float width, float height, bool client_area)
 		{
-			int widthi = (int)std::round(width * get_pixel_ratio());
-			int heighti = (int)std::round(height * get_pixel_ratio());
+			int widthi = (int)std::round(width * pixel_ratio());
+			int heighti = (int)std::round(height * pixel_ratio());
 			set_backing_maximum_size(widthi, heighti, client_area);
 		}
 
 		void enable_alpha_channel(const Rectf &blur_rect)
 		{
 			Rect blur_recti;
-			blur_recti.left = (int)std::round(blur_rect.left * get_pixel_ratio());
-			blur_recti.top = (int)std::round(blur_rect.top * get_pixel_ratio());
-			blur_recti.right = (int)std::round(blur_rect.right * get_pixel_ratio());
-			blur_recti.bottom = (int)std::round(blur_rect.bottom * get_pixel_ratio());
+			blur_recti.left = (int)std::round(blur_rect.left * pixel_ratio());
+			blur_recti.top = (int)std::round(blur_rect.top * pixel_ratio());
+			blur_recti.right = (int)std::round(blur_rect.right * pixel_ratio());
+			blur_recti.bottom = (int)std::round(blur_rect.bottom * pixel_ratio());
 			backing_enable_alpha_channel(blur_recti);
 		}
 
 		void extend_frame_into_client_area(float left, float top, float right, float bottom)
 		{
-			int lefti = (int)std::round(left * get_pixel_ratio());
-			int topi = (int)std::round(top * get_pixel_ratio());
-			int righti = (int)std::round(right * get_pixel_ratio());
-			int bottomi = (int)std::round(bottom * get_pixel_ratio());
+			int lefti = (int)std::round(left * pixel_ratio());
+			int topi = (int)std::round(top * pixel_ratio());
+			int righti = (int)std::round(right * pixel_ratio());
+			int bottomi = (int)std::round(bottom * pixel_ratio());
 			backing_extend_frame_into_client_area(lefti, topi, righti, bottomi);
 		}
 

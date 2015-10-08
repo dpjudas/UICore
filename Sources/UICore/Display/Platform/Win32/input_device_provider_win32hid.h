@@ -41,15 +41,15 @@ namespace uicore
 		InputDeviceProvider_Win32Hid(HANDLE rawinput_device);
 		~InputDeviceProvider_Win32Hid();
 
-		std::string get_name() const override;
-		std::string get_device_name() const override;
-		InputDevice::Type get_type() const override;
-		std::string get_key_name(int id) const override;
-		bool get_keycode(int keycode) const override;
-		float get_axis(int index) const override;
-		std::vector<int> get_axis_ids() const override;
-		int get_hat(int index) const override;
-		int get_button_count() const override;
+		std::string name() const override;
+		std::string device_name() const override;
+		InputDevice::Type type() const override;
+		std::string key_name(int id) const override;
+		bool keycode(int keycode) const override;
+		float axis(int index) const override;
+		std::vector<int> axis_ids() const override;
+		int hat(int index) const override;
+		int button_count() const override;
 
 		void update(const InputDevicePtr &joystick, RAWINPUT *raw_input);
 
@@ -78,7 +78,7 @@ namespace uicore
 		std::vector<float> axis_values;
 		std::vector<int> hat_values;
 
-		std::vector<int> axis_ids;
+		std::vector<int> _axis_ids;
 
 		std::vector<std::string> button_names;
 		std::vector<std::string> axis_names;

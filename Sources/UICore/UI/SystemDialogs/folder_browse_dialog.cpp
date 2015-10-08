@@ -104,7 +104,7 @@ namespace uicore
 
 				ViewTree *tree = owner->view_tree();
 				if (tree)
-					result = open_dialog->Show(tree->get_display_window()->get_handle().hwnd);
+					result = open_dialog->Show(tree->get_display_window()->handle().hwnd);
 				else
 					result = open_dialog->Show(0);
 
@@ -150,7 +150,7 @@ namespace uicore
 
 				ViewTree *tree = owner->view_tree();
 				if (tree)
-					bi.hwndOwner = tree->get_display_window()->get_handle().hwnd;
+					bi.hwndOwner = tree->get_display_window()->handle().hwnd;
 				else
 					bi.hwndOwner = 0;
 

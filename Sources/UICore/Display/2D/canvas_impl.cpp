@@ -59,7 +59,7 @@ namespace uicore
 	void Canvas_Impl::init(const DisplayWindowPtr &window)
 	{
 		current_window = window;
-		setup(window->get_gc());
+		setup(window->gc());
 	}
 
 	void Canvas_Impl::setup(const GraphicContextPtr &new_gc)

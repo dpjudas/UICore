@@ -46,7 +46,7 @@ namespace uicore
 		dispose();
 	}
 
-	bool InputDeviceProvider_Win32Keyboard::get_keycode(int keycode) const
+	bool InputDeviceProvider_Win32Keyboard::keycode(int keycode) const
 	{
 		throw_if_disposed();
 
@@ -57,7 +57,7 @@ namespace uicore
 		return (GetKeyState(keycode) & 0xfe) != 0;
 	}
 
-	std::string InputDeviceProvider_Win32Keyboard::get_key_name(int virtual_key) const
+	std::string InputDeviceProvider_Win32Keyboard::key_name(int virtual_key) const
 	{
 		throw_if_disposed();
 
@@ -67,19 +67,19 @@ namespace uicore
 		return std::string(Text::from_utf16(name), length);
 	}
 
-	std::string InputDeviceProvider_Win32Keyboard::get_name() const
+	std::string InputDeviceProvider_Win32Keyboard::name() const
 	{
 		throw_if_disposed();
 		return "System Keyboard";
 	}
 
-	std::string InputDeviceProvider_Win32Keyboard::get_device_name() const
+	std::string InputDeviceProvider_Win32Keyboard::device_name() const
 	{
 		throw_if_disposed();
 		return "System Keyboard";
 	}
 
-	int InputDeviceProvider_Win32Keyboard::get_button_count() const
+	int InputDeviceProvider_Win32Keyboard::button_count() const
 	{
 		throw_if_disposed();
 		return -1;

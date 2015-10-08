@@ -41,12 +41,12 @@ namespace uicore
 		InputDeviceProvider_Win32Keyboard(Win32Window *window);
 		~InputDeviceProvider_Win32Keyboard();
 
-		InputDevice::Type get_type() const override { return InputDevice::keyboard; }
-		bool get_keycode(int keycode) const override;
-		std::string get_key_name(int id) const override;
-		std::string get_name() const override;
-		std::string get_device_name() const override;
-		int get_button_count() const override;
+		InputDevice::Type type() const override { return InputDevice::keyboard; }
+		bool keycode(int keycode) const override;
+		std::string key_name(int id) const override;
+		std::string name() const override;
+		std::string device_name() const override;
+		int button_count() const override;
 
 	private:
 		void on_dispose();

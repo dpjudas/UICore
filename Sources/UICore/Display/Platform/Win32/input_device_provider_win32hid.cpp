@@ -111,12 +111,12 @@ namespace uicore
 		}
 	}
 
-	std::string InputDeviceProvider_Win32Hid::get_name() const
+	std::string InputDeviceProvider_Win32Hid::name() const
 	{
 		return product_name;
 	}
 
-	std::string InputDeviceProvider_Win32Hid::get_device_name() const
+	std::string InputDeviceProvider_Win32Hid::device_name() const
 	{
 		UINT name_size = 0;
 		UINT result = GetRawInputDeviceInfo(rawinput_device, RIDI_DEVICENAME, 0, &name_size);
@@ -131,12 +131,12 @@ namespace uicore
 		return Text::from_utf16(name_buffer.get());
 	}
 
-	InputDevice::Type InputDeviceProvider_Win32Hid::get_type() const
+	InputDevice::Type InputDeviceProvider_Win32Hid::type() const
 	{
 		return InputDevice::joystick;
 	}
 
-	std::string InputDeviceProvider_Win32Hid::get_key_name(int id) const
+	std::string InputDeviceProvider_Win32Hid::key_name(int id) const
 	{
 		if (id >= 0 && id < button_names.size())
 			return button_names[id];
@@ -144,7 +144,7 @@ namespace uicore
 			return std::string();
 	}
 
-	bool InputDeviceProvider_Win32Hid::get_keycode(int id) const
+	bool InputDeviceProvider_Win32Hid::keycode(int id) const
 	{
 		if (id >= 0 && id < button_names.size())
 			return buttons[id];
@@ -152,7 +152,7 @@ namespace uicore
 			return false;
 	}
 
-	float InputDeviceProvider_Win32Hid::get_axis(int id) const
+	float InputDeviceProvider_Win32Hid::axis(int id) const
 	{
 		if (id >= 0 && id < axis_names.size())
 			return axis_values[id];
@@ -160,12 +160,12 @@ namespace uicore
 			return 0.0f;
 	}
 
-	std::vector<int> InputDeviceProvider_Win32Hid::get_axis_ids() const
+	std::vector<int> InputDeviceProvider_Win32Hid::axis_ids() const
 	{
-		return axis_ids;
+		return _axis_ids;
 	}
 
-	int InputDeviceProvider_Win32Hid::get_hat(int id) const
+	int InputDeviceProvider_Win32Hid::hat(int id) const
 	{
 		if (id >= 0 && id < hat_names.size())
 			return hat_values[id];
@@ -173,7 +173,7 @@ namespace uicore
 			return -1;
 	}
 
-	int InputDeviceProvider_Win32Hid::get_button_count() const
+	int InputDeviceProvider_Win32Hid::button_count() const
 	{
 		return buttons.size();
 	}
@@ -328,7 +328,7 @@ namespace uicore
 						{
 							axis_names.push_back(string_format("Axis%1", next_axis_index++));
 							usage_to_axis_index[usage] = axis_values.size();
-							axis_ids.push_back(axis_values.size());
+							_axis_ids.push_back(axis_values.size());
 							axis_values.push_back(0.0f);
 						}
 					}
@@ -336,15 +336,15 @@ namespace uicore
 					{
 						switch (usage)
 						{
-						case 0x30: axis_ids.push_back(joystick_x); break;
-						case 0x31: axis_ids.push_back(joystick_y); break;
-						case 0x32: axis_ids.push_back(joystick_z); break;
-						case 0x33: axis_ids.push_back(joystick_rx); break;
-						case 0x34: axis_ids.push_back(joystick_ry); break;
-						case 0x35: axis_ids.push_back(joystick_rz); break;
-						case 0x36: axis_ids.push_back(joystick_slider); break;
-						case 0x37: axis_ids.push_back(joystick_dial); break;
-						case 0x38: axis_ids.push_back(joystick_wheel); break;
+						case 0x30: _axis_ids.push_back(joystick_x); break;
+						case 0x31: _axis_ids.push_back(joystick_y); break;
+						case 0x32: _axis_ids.push_back(joystick_z); break;
+						case 0x33: _axis_ids.push_back(joystick_rx); break;
+						case 0x34: _axis_ids.push_back(joystick_ry); break;
+						case 0x35: _axis_ids.push_back(joystick_rz); break;
+						case 0x36: _axis_ids.push_back(joystick_slider); break;
+						case 0x37: _axis_ids.push_back(joystick_dial); break;
+						case 0x38: _axis_ids.push_back(joystick_wheel); break;
 							//case 0x39: hat_ids.push_back(joystick_hat); break;
 						}
 					}

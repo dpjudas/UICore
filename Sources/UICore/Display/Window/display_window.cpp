@@ -29,7 +29,6 @@
 */
 
 #include "UICore/precomp.h"
-#include "../setup_display.h"
 #include "UICore/Display/Window/display_window.h"
 #include "UICore/Display/Window/display_window_description.h"
 #include "UICore/Display/Window/input_device.h"
@@ -58,8 +57,6 @@ namespace uicore
 
 	std::shared_ptr<DisplayWindow> DisplayWindow::create(const DisplayWindowDescription &description)
 	{
-		SetupDisplay::start();
-
 		auto target = DisplayTarget::get_current_target();
 		if (!target)
 			throw Exception("No display target set");
@@ -67,17 +64,17 @@ namespace uicore
 		return target->create_display_window(description);
 	}
 
-	const InputDevicePtr &DisplayWindow::get_input_device(const std::string &device_name) const
+	const InputDevicePtr &DisplayWindow::input_device(const std::string &device_name) const
 	{
-		if (device_name == get_keyboard()->get_device_name())
-			return get_keyboard();
-		else if (device_name == get_mouse()->get_device_name())
-			return get_mouse();
+		if (device_name == keyboard()->device_name())
+			return keyboard();
+		else if (device_name == mouse()->device_name())
+			return mouse();
 
-		const auto &game = get_game_controllers();
+		const auto &game = game_controllers();
 		for (auto &elem : game)
 		{
-			if (elem->get_device_name() == device_name)
+			if (elem->device_name() == device_name)
 				return elem;
 		}
 

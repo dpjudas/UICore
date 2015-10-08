@@ -47,12 +47,12 @@ namespace uicore
 		dispose();
 	}
 
-	Pointf InputDeviceProvider_Win32Mouse::get_position() const
+	Pointf InputDeviceProvider_Win32Mouse::position() const
 	{
-		return Pointf(get_device_position()) / window->get_pixel_ratio();
+		return Pointf(device_position()) / window->get_pixel_ratio();
 	}
 
-	Point InputDeviceProvider_Win32Mouse::get_device_position() const
+	Point InputDeviceProvider_Win32Mouse::device_position() const
 	{
 		throw_if_disposed();
 		POINT cursor_pos;
@@ -64,14 +64,14 @@ namespace uicore
 		return Point(cursor_pos.x, cursor_pos.y);
 	}
 
-	bool InputDeviceProvider_Win32Mouse::get_keycode(int keycode) const
+	bool InputDeviceProvider_Win32Mouse::keycode(int keycode) const
 	{
 		throw_if_disposed();
 		if (keycode < 0 || keycode >= 32) return false;
 		return key_states[keycode];
 	}
 
-	std::string InputDeviceProvider_Win32Mouse::get_key_name(int id) const
+	std::string InputDeviceProvider_Win32Mouse::key_name(int id) const
 	{
 		throw_if_disposed();
 		switch (id)
@@ -86,19 +86,19 @@ namespace uicore
 		return string_format("Mouse button %1", id);
 	}
 
-	std::string InputDeviceProvider_Win32Mouse::get_name() const
+	std::string InputDeviceProvider_Win32Mouse::name() const
 	{
 		throw_if_disposed();
 		return "System Mouse";
 	}
 
-	std::string InputDeviceProvider_Win32Mouse::get_device_name() const
+	std::string InputDeviceProvider_Win32Mouse::device_name() const
 	{
 		throw_if_disposed();
 		return "System Mouse";
 	}
 
-	int InputDeviceProvider_Win32Mouse::get_button_count() const
+	int InputDeviceProvider_Win32Mouse::button_count() const
 	{
 		throw_if_disposed();
 		return -1;

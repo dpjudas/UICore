@@ -33,6 +33,7 @@
 #else
 #include "UICore/GL/opengl_target.h"
 #endif
+#include "setup_display.h"
 
 namespace uicore
 {
@@ -43,6 +44,8 @@ namespace uicore
 
 	const std::shared_ptr<DisplayTargetProvider> &DisplayTarget::get_current_target()
 	{
+		SetupDisplay::start();
+
 		if (!current_target)
 		{
 #ifdef WIN32

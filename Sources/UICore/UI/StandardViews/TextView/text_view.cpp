@@ -882,7 +882,7 @@ namespace uicore
 		{
 			DisplayWindowPtr window = tree->get_display_window();
 			if (window)
-				add(window->get_clipboard_text());
+				add(window->clipboard_text());
 		}
 	}
 

@@ -172,12 +172,12 @@ namespace uicore
 			if (use_gl3)
 			{
 				using_gl3 = true;
-				gc = std::make_shared<GL3GraphicContextProvider>(this);
+				_gc = std::make_shared<GL3GraphicContextProvider>(this);
 			}
 			else
 			{
 				using_gl3 = false;
-				gc = std::make_shared<GL1GraphicContextProvider>(this);
+				_gc = std::make_shared<GL1GraphicContextProvider>(this);
 			}
 		}
 
@@ -191,17 +191,17 @@ namespace uicore
 	{
 		if (opengl_context)
 		{
-			if (gc)
+			if (_gc)
 			{
 				if (using_gl3)
 				{
-					GL3GraphicContextProvider *gl_provider = dynamic_cast<GL3GraphicContextProvider*>(gc.get());
+					GL3GraphicContextProvider *gl_provider = dynamic_cast<GL3GraphicContextProvider*>(_gc.get());
 					if (gl_provider)
 						gl_provider->dispose();
 				}
 				else
 				{
-					GL1GraphicContextProvider *gl_provider = dynamic_cast<GL1GraphicContextProvider*>(gc.get());
+					GL1GraphicContextProvider *gl_provider = dynamic_cast<GL1GraphicContextProvider*>(_gc.get());
 					if (gl_provider)
 						gl_provider->dispose();
 				}
@@ -237,17 +237,17 @@ namespace uicore
 		return (void(*)())wglGetProcAddress(function_name.c_str());
 	}
 
-	Rect OpenGLWindowProvider::get_backing_geometry() const
+	Rect OpenGLWindowProvider::backing_geometry() const
 	{
 		return win32_window.get_geometry();
 	}
 
-	Rect OpenGLWindowProvider::get_backing_viewport() const
+	Rect OpenGLWindowProvider::backing_viewport() const
 	{
 		return win32_window.get_viewport();
 	}
 
-	float OpenGLWindowProvider::get_pixel_ratio() const
+	float OpenGLWindowProvider::pixel_ratio() const
 	{
 		return win32_window.get_pixel_ratio();
 	}
@@ -277,17 +277,17 @@ namespace uicore
 		return win32_window.is_visible();
 	}
 
-	Size OpenGLWindowProvider::get_backing_minimum_size(bool client_area) const
+	Size OpenGLWindowProvider::backing_minimum_size(bool client_area) const
 	{
 		return win32_window.get_minimum_size(client_area);
 	}
 
-	Size OpenGLWindowProvider::get_backing_maximum_size(bool client_area) const
+	Size OpenGLWindowProvider::backing_maximum_size(bool client_area) const
 	{
 		return win32_window.get_maximum_size(client_area);
 	}
 
-	std::string OpenGLWindowProvider::get_title() const
+	std::string OpenGLWindowProvider::title() const
 	{
 		return win32_window.get_title();
 	}
@@ -370,13 +370,13 @@ namespace uicore
 
 		if (using_gl3)
 		{
-			GL3GraphicContextProvider *gl_provider = dynamic_cast<GL3GraphicContextProvider*>(gc.get());
+			GL3GraphicContextProvider *gl_provider = dynamic_cast<GL3GraphicContextProvider*>(_gc.get());
 			if (gl_provider)
 				gl_provider->on_window_resized();
 		}
 		else
 		{
-			GL1GraphicContextProvider *gl_provider = dynamic_cast<GL1GraphicContextProvider*>(gc.get());
+			GL1GraphicContextProvider *gl_provider = dynamic_cast<GL1GraphicContextProvider*>(_gc.get());
 			if (gl_provider)
 				gl_provider->on_window_resized();
 		}
@@ -480,12 +480,12 @@ namespace uicore
 
 	void OpenGLWindowProvider::backing_flip(int interval)
 	{
-		OpenGL::set_active(get_gc());
+		OpenGL::set_active(gc());
 		glFlush();
 		if (shadow_window)
 		{
-			int width = get_viewport().get_width();
-			int height = get_viewport().get_height();
+			int width = viewport().get_width();
+			int height = viewport().get_height();
 
 			if (using_gl3)
 			{
@@ -571,8 +571,8 @@ namespace uicore
 
 			if (dwm_layered)
 			{
-				int width = get_viewport().get_width();
-				int height = get_viewport().get_height();
+				int width = viewport().get_width();
+				int height = viewport().get_height();
 
 				glReadBuffer(GL_FRONT);
 
@@ -604,7 +604,7 @@ namespace uicore
 		win32_window.set_clipboard_text(text);
 	}
 
-	std::string OpenGLWindowProvider::get_clipboard_text() const
+	std::string OpenGLWindowProvider::clipboard_text() const
 	{
 		return win32_window.get_clipboard_text();
 	}
@@ -669,7 +669,7 @@ namespace uicore
 		win32_window.set_clipboard_image(buf);
 	}
 
-	PixelBufferPtr OpenGLWindowProvider::get_clipboard_image() const
+	PixelBufferPtr OpenGLWindowProvider::clipboard_image() const
 	{
 		return win32_window.get_clipboard_image();
 	}

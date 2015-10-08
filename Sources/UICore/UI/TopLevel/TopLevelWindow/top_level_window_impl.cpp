@@ -47,12 +47,12 @@ namespace uicore
 		slots.connect(window->sig_resize(), uicore::bind_member(this, &TopLevelWindow_Impl::on_resize));
 		slots.connect(window->sig_paint(), uicore::bind_member(this, &TopLevelWindow_Impl::on_paint));
 		slots.connect(window->sig_window_close(), uicore::bind_member(this, &TopLevelWindow_Impl::on_window_close));
-		slots.connect(window->get_keyboard()->sig_key_down(), uicore::bind_member(this, &TopLevelWindow_Impl::on_key_down));
-		slots.connect(window->get_keyboard()->sig_key_up(), uicore::bind_member(this, &TopLevelWindow_Impl::on_key_up));
-		slots.connect(window->get_mouse()->sig_key_down(), uicore::bind_member(this, &TopLevelWindow_Impl::on_mouse_down));
-		slots.connect(window->get_mouse()->sig_key_dblclk(), uicore::bind_member(this, &TopLevelWindow_Impl::on_mouse_dblclk));
-		slots.connect(window->get_mouse()->sig_key_up(), uicore::bind_member(this, &TopLevelWindow_Impl::on_mouse_up));
-		slots.connect(window->get_mouse()->sig_pointer_move(), uicore::bind_member(this, &TopLevelWindow_Impl::on_mouse_move));
+		slots.connect(window->keyboard()->sig_key_down(), uicore::bind_member(this, &TopLevelWindow_Impl::on_key_down));
+		slots.connect(window->keyboard()->sig_key_up(), uicore::bind_member(this, &TopLevelWindow_Impl::on_key_up));
+		slots.connect(window->mouse()->sig_key_down(), uicore::bind_member(this, &TopLevelWindow_Impl::on_mouse_down));
+		slots.connect(window->mouse()->sig_key_dblclk(), uicore::bind_member(this, &TopLevelWindow_Impl::on_mouse_dblclk));
+		slots.connect(window->mouse()->sig_key_up(), uicore::bind_member(this, &TopLevelWindow_Impl::on_mouse_up));
+		slots.connect(window->mouse()->sig_pointer_move(), uicore::bind_member(this, &TopLevelWindow_Impl::on_mouse_move));
 	}
 
 	void TopLevelWindow_Impl::on_lost_focus()
@@ -75,7 +75,7 @@ namespace uicore
 	void TopLevelWindow_Impl::on_paint()
 	{
 		canvas.clear(uicore::Colorf::transparent);
-		window_view->render(canvas, window->get_viewport());
+		window_view->render(canvas, window->viewport());
 		canvas.flush();
 		window->flip();
 	}

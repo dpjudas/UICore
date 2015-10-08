@@ -51,28 +51,28 @@ namespace uicore
 		~OpenGLWindowProvider();
 
 		bool is_double_buffered() const { return double_buffered; }
-		Rect get_backing_geometry() const;
-		Rect get_backing_viewport() const;
+		Rect backing_geometry() const;
+		Rect backing_viewport() const;
 		bool is_fullscreen() const;
 		bool has_focus() const;
 		bool is_minimized() const;
 		bool is_maximized() const;
 		bool is_visible() const;
-		std::string get_title() const;
-		Size get_backing_minimum_size(bool client_area) const;
-		Size get_backing_maximum_size(bool client_area) const;
-		DisplayWindowHandle get_handle() const override { DisplayWindowHandle handle; handle.hwnd = win32_window.get_hwnd(); return handle; }
+		std::string title() const;
+		Size backing_minimum_size(bool client_area) const;
+		Size backing_maximum_size(bool client_area) const;
+		DisplayWindowHandle handle() const override { DisplayWindowHandle handle; handle.hwnd = win32_window.get_hwnd(); return handle; }
 		HDC get_device_context() const { return device_context; }
 		HGLRC get_opengl_context() const { return opengl_context; }
-		const GraphicContextPtr &get_gc() const { return gc; }
-		const InputDevicePtr &get_keyboard() const override { return win32_window.get_keyboard(); }
-		const InputDevicePtr &get_mouse() const override { return win32_window.get_mouse(); }
-		const std::vector<InputDevicePtr> &get_game_controllers() const override { return win32_window.get_game_controllers(); }
+		const GraphicContextPtr &gc() const { return _gc; }
+		const InputDevicePtr &keyboard() const override { return win32_window.get_keyboard(); }
+		const InputDevicePtr &mouse() const override { return win32_window.get_mouse(); }
+		const std::vector<InputDevicePtr> &game_controllers() const override { return win32_window.get_game_controllers(); }
 		bool is_clipboard_text_available() const;
 		bool is_clipboard_image_available() const;
-		std::string get_clipboard_text() const;
-		PixelBufferPtr get_clipboard_image() const;
-		float get_pixel_ratio() const override;
+		std::string clipboard_text() const;
+		PixelBufferPtr clipboard_image() const;
+		float pixel_ratio() const override;
 
 		void make_current() const;
 		Point backing_client_to_screen(const Point &client);
@@ -128,7 +128,7 @@ namespace uicore
 		void on_window_resized();
 		void get_opengl_version(int &version_major, int &version_minor);
 
-		GraphicContextPtr gc;
+		GraphicContextPtr _gc;
 		Win32Window win32_window;
 
 		/// \brief OpenGL rendering context for this window.

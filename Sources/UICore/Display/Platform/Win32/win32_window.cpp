@@ -672,7 +672,7 @@ namespace uicore
 
 			HWND parent = 0;
 			if (window_desc.get_owner())
-				parent = window_desc.get_owner()->get_handle().hwnd;
+				parent = window_desc.get_owner()->handle().hwnd;
 
 			hwnd = CreateWindowEx(
 				ex_style,

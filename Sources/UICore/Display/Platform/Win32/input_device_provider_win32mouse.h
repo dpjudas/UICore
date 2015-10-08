@@ -41,14 +41,14 @@ namespace uicore
 		InputDeviceProvider_Win32Mouse(Win32Window *window);
 		~InputDeviceProvider_Win32Mouse();
 
-		InputDevice::Type get_type() const override { return InputDevice::pointer; }
-		Pointf get_position() const override;
-		Point get_device_position() const override;
-		bool get_keycode(int keycode) const override;
-		std::string get_key_name(int id) const override;
-		std::string get_name() const override;
-		std::string get_device_name() const override;
-		int get_button_count() const override;
+		InputDevice::Type type() const override { return InputDevice::pointer; }
+		Pointf position() const override;
+		Point device_position() const override;
+		bool keycode(int keycode) const override;
+		std::string key_name(int id) const override;
+		std::string name() const override;
+		std::string device_name() const override;
+		int button_count() const override;
 
 		void set_position(float x, float y) override;
 		void set_device_position(int x, int y) override;

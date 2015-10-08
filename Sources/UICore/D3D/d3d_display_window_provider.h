@@ -42,31 +42,31 @@ namespace uicore
 		D3DDisplayWindowProvider(const DisplayWindowDescription &description);
 		~D3DDisplayWindowProvider();
 
-		Rect get_backing_geometry() const override;
-		Rect get_backing_viewport() const override;
-		float get_pixel_ratio() const override;
+		Rect backing_geometry() const override;
+		Rect backing_viewport() const override;
+		float pixel_ratio() const override;
 
 		bool has_focus() const;
 		bool is_minimized() const;
 		bool is_maximized() const;
 		bool is_visible() const;
 		bool is_fullscreen() const { return false; } // FIXME: real implementation
-		std::string get_title() const;
-		Size get_backing_minimum_size(bool client_area = false) const;
-		Size get_backing_maximum_size(bool client_area = false) const;
+		std::string title() const;
+		Size backing_minimum_size(bool client_area = false) const;
+		Size backing_maximum_size(bool client_area = false) const;
 
-		const GraphicContextPtr &get_gc() const;
+		const GraphicContextPtr &gc() const;
 
-		const InputDevicePtr &get_keyboard() const override { return window.get_keyboard(); }
-		const InputDevicePtr &get_mouse() const override { return window.get_mouse(); }
-		const std::vector<InputDevicePtr> &get_game_controllers() const override { return window.get_game_controllers(); }
+		const InputDevicePtr &keyboard() const override { return window.get_keyboard(); }
+		const InputDevicePtr &mouse() const override { return window.get_mouse(); }
+		const std::vector<InputDevicePtr> &game_controllers() const override { return window.get_game_controllers(); }
 
-		DisplayWindowHandle get_handle() const override;
+		DisplayWindowHandle handle() const override;
 
 		bool is_clipboard_text_available() const;
 		bool is_clipboard_image_available() const;
-		std::string get_clipboard_text() const;
-		PixelBufferPtr get_clipboard_image() const;
+		std::string clipboard_text() const;
+		PixelBufferPtr clipboard_image() const;
 
 		const ComPtr<ID3D11Device> &get_device() const { return device; }
 		const ComPtr<ID3D11DeviceContext> &get_device_context() const { return device_context; }
@@ -131,7 +131,7 @@ namespace uicore
 
 		Win32Window window;
 
-		GraphicContextPtr gc;
+		GraphicContextPtr _gc;
 
 		ComPtr<ID3D11Device> device;
 		ComPtr<ID3D11DeviceContext> device_context;

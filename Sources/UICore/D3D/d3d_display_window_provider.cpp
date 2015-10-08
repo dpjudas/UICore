@@ -144,13 +144,13 @@ namespace uicore
 			}
 		}
 
-		gc = std::make_shared<D3DGraphicContextProvider>(this, description);
+		_gc = std::make_shared<D3DGraphicContextProvider>(this, description);
 
 		if (description.is_fullscreen())
 			swap_chain->SetFullscreenState(TRUE, 0);
 
-		D3DGraphicContextProvider *d3d_gc = static_cast<D3DGraphicContextProvider*>(gc.get());
-		d3d_gc->standard_programs = StandardPrograms(gc);
+		D3DGraphicContextProvider *d3d_gc = static_cast<D3DGraphicContextProvider*>(_gc.get());
+		d3d_gc->standard_programs = StandardPrograms(_gc);
 	}
 
 	D3DDisplayWindowProvider::~D3DDisplayWindowProvider()
@@ -159,17 +159,17 @@ namespace uicore
 			D3DShareList::device_destroyed(device);
 	}
 
-	Rect D3DDisplayWindowProvider::get_backing_geometry() const
+	Rect D3DDisplayWindowProvider::backing_geometry() const
 	{
 		return window.get_geometry();
 	}
 
-	Rect D3DDisplayWindowProvider::get_backing_viewport() const
+	Rect D3DDisplayWindowProvider::backing_viewport() const
 	{
 		return window.get_viewport();
 	}
 
-	float D3DDisplayWindowProvider::get_pixel_ratio() const
+	float D3DDisplayWindowProvider::pixel_ratio() const
 	{
 		return window.get_pixel_ratio();
 	}
@@ -194,12 +194,12 @@ namespace uicore
 		return window.is_visible();
 	}
 
-	const GraphicContextPtr &D3DDisplayWindowProvider::get_gc() const
+	const GraphicContextPtr &D3DDisplayWindowProvider::gc() const
 	{
-		return gc;
+		return _gc;
 	}
 
-	DisplayWindowHandle D3DDisplayWindowProvider::get_handle() const
+	DisplayWindowHandle D3DDisplayWindowProvider::handle() const
 	{
 		DisplayWindowHandle handle;
 		handle.hwnd = window.get_hwnd();
@@ -216,17 +216,17 @@ namespace uicore
 		return window.is_clipboard_image_available();
 	}
 
-	Size D3DDisplayWindowProvider::get_backing_minimum_size(bool client_area) const
+	Size D3DDisplayWindowProvider::backing_minimum_size(bool client_area) const
 	{
 		return window.get_minimum_size(client_area);
 	}
 
-	Size D3DDisplayWindowProvider::get_backing_maximum_size(bool client_area/*=false*/) const
+	Size D3DDisplayWindowProvider::backing_maximum_size(bool client_area/*=false*/) const
 	{
 		return window.get_maximum_size(client_area);
 	}
 
-	std::string D3DDisplayWindowProvider::get_title() const
+	std::string D3DDisplayWindowProvider::title() const
 	{
 		return window.get_title();
 	}
@@ -382,12 +382,12 @@ namespace uicore
 		window.set_clipboard_image(buf);
 	}
 
-	std::string D3DDisplayWindowProvider::get_clipboard_text() const
+	std::string D3DDisplayWindowProvider::clipboard_text() const
 	{
 		return window.get_clipboard_text();
 	}
 
-	PixelBufferPtr D3DDisplayWindowProvider::get_clipboard_image() const
+	PixelBufferPtr D3DDisplayWindowProvider::clipboard_image() const
 	{
 		return window.get_clipboard_image();
 	}
@@ -461,7 +461,7 @@ namespace uicore
 
 	void D3DDisplayWindowProvider::on_window_resized()
 	{
-		D3DGraphicContextProvider *gc_provider = static_cast<D3DGraphicContextProvider*>(gc.get());
+		D3DGraphicContextProvider *gc_provider = static_cast<D3DGraphicContextProvider*>(_gc.get());
 
 		if (gc_provider)
 		{
