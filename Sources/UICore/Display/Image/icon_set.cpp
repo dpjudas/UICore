@@ -35,10 +35,15 @@
 
 namespace uicore
 {
-	class IconSet_Impl
+	class IconSetImpl : public IconSet
 	{
 	public:
-		std::vector<PixelBufferPtr> images;
+		const std::vector<PixelBufferPtr> &images() const override { return _images; }
+		void add_image(const PixelBufferPtr &image) override { _images.push_back(image); }
+		DataBufferPtr create_win32_icon() override { return create_ico_helper(_images, 1, std::vector<Point>()); }
+
+	private:
+		std::vector<PixelBufferPtr> _images;
 
 		static DataBufferPtr create_ico_helper(const std::vector<PixelBufferPtr> &images, int type, const std::vector<Point> &hotspots);
 		static PixelBufferPtr create_bitmap_data(const PixelBufferPtr &image);
@@ -99,27 +104,12 @@ namespace uicore
 		enum { size_header = 6, size_direntry = 16, size_bitmap_info = 40 };
 	};
 
-	IconSet::IconSet()
-		: impl(std::make_shared<IconSet_Impl>())
+	std::shared_ptr<IconSet> IconSet::create()
 	{
+		return std::make_shared<IconSetImpl>();
 	}
 
-	std::vector<PixelBufferPtr> IconSet::get_images() const
-	{
-		return impl->images;
-	}
-
-	void IconSet::add_image(const PixelBufferPtr &image)
-	{
-		impl->images.push_back(image);
-	}
-
-	DataBufferPtr IconSet::create_win32_icon()
-	{
-		return impl->create_ico_helper(impl->images, 1, std::vector<Point>());
-	}
-
-	DataBufferPtr IconSet_Impl::create_ico_helper(const std::vector<PixelBufferPtr> &images, int type, const std::vector<Point> &hotspots)
+	DataBufferPtr IconSetImpl::create_ico_helper(const std::vector<PixelBufferPtr> &images, int type, const std::vector<Point> &hotspots)
 	{
 		auto buf = DataBuffer::create(0);
 		buf->set_capacity(32 * 1024);
@@ -173,7 +163,7 @@ namespace uicore
 		return device->buffer();
 	}
 
-	PixelBufferPtr IconSet_Impl::create_bitmap_data(const PixelBufferPtr &image)
+	PixelBufferPtr IconSetImpl::create_bitmap_data(const PixelBufferPtr &image)
 	{
 		// Convert pixel buffer to DIB compatible format:
 

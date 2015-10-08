@@ -143,4 +143,6 @@ namespace uicore
 		/// \param octaves = The number of octaves to set
 		virtual void set_octaves(int octaves = 1) = 0;
 	};
+
+	typedef std::shared_ptr<PerlinNoise> PerlinNoisePtr;
 }
