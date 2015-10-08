@@ -37,33 +37,13 @@
 
 namespace uicore
 {
-	class ScreenInfo_Impl
+	std::vector<Rectf> ScreenInfo::screen_geometries(int &primary_screen_index)
 	{
-	public:
-		ScreenInfo_Impl()
-		{
 #ifdef WIN32
-			provider = new ScreenInfoProvider_Win32;
+		ScreenInfoProvider_Win32 info;
+		return info.get_screen_geometries(primary_screen_index);
 #else
-			provider = nullptr;
+		throw Exception("ScreenInfo::get_screen_geometries not implemented on this platform");
 #endif
-		}
-
-		~ScreenInfo_Impl()
-		{
-			delete provider;
-		}
-
-		ScreenInfoProvider *provider;
-	};
-
-	ScreenInfo::ScreenInfo()
-		: impl(std::make_shared<ScreenInfo_Impl>())
-	{
-	}
-
-	std::vector<Rectf> ScreenInfo::get_screen_geometries(int &primary_screen_index) const
-	{
-		return impl->provider->get_screen_geometries(primary_screen_index);
 	}
 }

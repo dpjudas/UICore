@@ -40,13 +40,7 @@ namespace uicore
 	class ScreenInfo
 	{
 	public:
-		/// \brief Constructs a ScreenInfo object.
-		ScreenInfo();
-
 		/// \brief Returns the geometries of the attached screens and the index of the primary screen in the returned array.
-		std::vector<Rectf> get_screen_geometries(int &primary_screen_index) const;
-
-	private:
-		std::shared_ptr<ScreenInfo_Impl> impl;
+		static std::vector<Rectf> screen_geometries(int &primary_screen_index);
 	};
 }

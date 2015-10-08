@@ -1718,8 +1718,7 @@ namespace uicore
 		if (desc.is_fullscreen())
 		{
 			int primary_screen = 0;
-			ScreenInfo screen_info;
-			std::vector<Rectf> screen_rects = screen_info.get_screen_geometries(primary_screen);
+			std::vector<Rectf> screen_rects = ScreenInfo::screen_geometries(primary_screen);
 			Rectf R = screen_rects[desc.fullscreen_monitor()];
 
 			clientSize = false;
