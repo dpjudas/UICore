@@ -33,17 +33,12 @@
 
 namespace uicore
 {
-	class PerlinNoise_Impl;
-
 	/// \brief Perlin Noise Generator class
 	class PerlinNoise
 	{
 	public:
 		/// \brief Constructor
-		PerlinNoise();
-
-		/// \brief Destructor
-		virtual ~PerlinNoise();
+		static std::shared_ptr<PerlinNoise> create();
 
 		/// \brief Create the perlin noise
 		///
@@ -54,7 +49,7 @@ namespace uicore
 		/// \param end_x = End x position of the noise
 		/// \param start_y = Start y position of the noise
 		/// \param end_y = End y position of the noise
-		PixelBufferPtr create_noise1d(float start_x, float end_x);
+		virtual PixelBufferPtr create_noise1d(float start_x, float end_x) = 0;
 
 		/// \brief Create the perlin noise
 		///
@@ -64,7 +59,7 @@ namespace uicore
 		/// \param end_x = End x position of the noise
 		/// \param start_y = Start y position of the noise
 		/// \param end_y = End y position of the noise
-		PixelBufferPtr create_noise2d(float start_x, float end_x, float start_y, float end_y);
+		virtual PixelBufferPtr create_noise2d(float start_x, float end_x, float start_y, float end_y) = 0;
 
 		/// \brief Create the perlin noise
 		///
@@ -75,7 +70,7 @@ namespace uicore
 		/// \param start_y = Start y position of the noise
 		/// \param end_y = End y position of the noise
 		/// \param z_position = The z position of the noise
-		PixelBufferPtr create_noise3d(float start_x, float end_x, float start_y, float end_y, float z_position);
+		virtual PixelBufferPtr create_noise3d(float start_x, float end_x, float start_y, float end_y, float z_position) = 0;
 
 		/// \brief Create the perlin noise
 		///
@@ -87,19 +82,19 @@ namespace uicore
 		/// \param end_y = End y position of the noise
 		/// \param z_position = The z position of the noise
 		/// \param w_position = The w position of the noise
-		PixelBufferPtr create_noise4d(float start_x, float end_x, float start_y, float end_y, float z_position, float w_position);
+		virtual PixelBufferPtr create_noise4d(float start_x, float end_x, float start_y, float end_y, float z_position, float w_position) = 0;
 
 		/// \brief Get the size of the output pixelbuffer
-		Size get_size() const;
+		virtual Size size() const = 0;
 
 		/// \brief Get the format of the output pixelbuffer
-		TextureFormat get_format() const;
+		virtual TextureFormat format() const = 0;
 
 		/// \brief Get the amplitude of the perlin noise
-		float get_amplitude() const;
+		virtual float amplitude() const = 0;
 
 		/// \brief Get the number of octaves of the perlin noise
-		int get_octaves() const;
+		virtual int octaves() const = 0;
 
 		/// \brief Set the permutation table
 		///
@@ -107,7 +102,7 @@ namespace uicore
 		///
 		/// \param table = The permutation table
 		/// \param size = The permutation table size (2,4,8,16,32,64,128,256). Usually 256 (the maximum) unless a lower periodic table is required
-		void set_permutations(const unsigned char *table, unsigned int size = 256);
+		virtual void set_permutations(const unsigned char *table, unsigned int size = 256) = 0;
 
 		/// \brief Set the size of the output pixelbuffer
 		///
@@ -115,7 +110,7 @@ namespace uicore
 		///
 		/// \param width = Output pixelbuffer width
 		/// \param height = Output pixelbuffer height
-		void set_size(int width = 256, int height = 256);
+		void set_size(int width = 256, int height = 256) { set_size(Size(width, height)); }
 
 		/// \brief Set the size of the output pixelbuffer
 		///
@@ -123,7 +118,7 @@ namespace uicore
 		///
 		/// \param width = Output pixelbuffer width
 		/// \param height = Output pixelbuffer height
-		void set_size(const Size &size);
+		virtual void set_size(const Size &size) = 0;
 
 		/// \brief Set the format of the output pixelbuffer
 		///
@@ -132,23 +127,20 @@ namespace uicore
 		///		tf_rgba8, tf_rgb8, tf_r8, tf_r32f
 		///
 		/// \param format = The specified format
-		void set_format(TextureFormat texture_format = tf_rgb8);
+		virtual void set_format(TextureFormat texture_format = tf_rgb8) = 0;
 
 		/// \brief Set the amplitude of the perlin noise
 		///
 		/// If this function is not used, the amplitude defaults to 1.0f
 		///
 		/// \param amplitude = The amplitude to set
-		void set_amplitude(float amplitude = 1.0f);
+		virtual void set_amplitude(float amplitude = 1.0f) = 0;
 
 		/// \brief Set the number of octaves of the perlin noise
 		///
 		/// If this function is not used, the octaves count defaults to 1
 		///
 		/// \param octaves = The number of octaves to set
-		void set_octaves(int octaves = 1);
-
-	private:
-		std::shared_ptr<PerlinNoise_Impl> impl;
+		virtual void set_octaves(int octaves = 1) = 0;
 	};
 }

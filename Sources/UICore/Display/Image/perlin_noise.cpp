@@ -184,26 +184,31 @@ namespace uicore
 		float *line_start_ptr;
 	};
 
-	class PerlinNoise_Impl
+	class PerlinNoise_Impl : public PerlinNoise
 	{
 	public:
-		PerlinNoise_Impl()
-		{
-		}
+		void set_permutations(const unsigned char *table, unsigned int size) override;
 
-		void set_permutations(const unsigned char *table, unsigned int size);
+		PixelBufferPtr create_noise4d(float start_x, float end_x, float start_y, float end_y, float z_position, float w_position) override;
+		PixelBufferPtr create_noise3d(float start_x, float end_x, float start_y, float end_y, float z_position) override;
+		PixelBufferPtr create_noise2d(float start_x, float end_x, float start_y, float end_y) override;
+		PixelBufferPtr create_noise1d(float start_x, float end_x) override;
 
-		PixelBufferPtr create_noise4d(float start_x, float end_x, float start_y, float end_y, float z_position, float w_position);
-		PixelBufferPtr create_noise3d(float start_x, float end_x, float start_y, float end_y, float z_position);
-		PixelBufferPtr create_noise2d(float start_x, float end_x, float start_y, float end_y);
-		PixelBufferPtr create_noise1d(float start_x, float end_x);
+		Size size() const override { return Size(_width, _height); }
+		TextureFormat format() const override { return _texture_format; }
+		float amplitude() const override { return _amplitude; }
+		int octaves() const override { return _octaves; }
+		void set_size(const Size &size) override { _width = size.width; _height = size.height; }
+		void set_format(TextureFormat texture_format) override { _texture_format = texture_format; }
+		void set_amplitude(float amplitude) override { _amplitude = amplitude; }
+		void set_octaves(int octaves) override { _octaves = octaves; }
 
 	public:
-		TextureFormat texture_format = tf_rgb8;
-		float amplitude = 1.0f;
-		int width = 256;
-		int height = 256;
-		int octaves = 1;
+		TextureFormat _texture_format = tf_rgb8;
+		float _amplitude = 1.0f;
+		int _width = 256;
+		int _height = 256;
+		int _octaves = 1;
 
 	private:
 		void create_noise4d(PerlinNoise_PixelWriter &writer, float start_x, float end_x, float start_y, float end_y, float z_position, float w_position);
@@ -226,86 +231,11 @@ namespace uicore
 		bool permutation_table_set = false;
 
 		unsigned char permutation_table[permutation_table_size * 2];	// Table duplicated at permutation_table_size
-
 	};
 
-	PerlinNoise::PerlinNoise() : impl(std::make_shared<PerlinNoise_Impl>())
+	std::shared_ptr<PerlinNoise> PerlinNoise::create()
 	{
-	}
-
-	PerlinNoise::~PerlinNoise()
-	{
-	}
-
-	void PerlinNoise::set_permutations(const unsigned char *table, unsigned int size)
-	{
-		impl->set_permutations(table, size);
-	}
-
-	PixelBufferPtr PerlinNoise::create_noise1d(float start_x, float end_x)
-	{
-		return impl->create_noise1d(start_x, end_x);
-	}
-
-	PixelBufferPtr PerlinNoise::create_noise2d(float start_x, float end_x, float start_y, float end_y)
-	{
-		return impl->create_noise2d(start_x, end_x, start_y, end_y);
-	}
-
-	PixelBufferPtr PerlinNoise::create_noise3d(float start_x, float end_x, float start_y, float end_y, float z_position)
-	{
-		return impl->create_noise3d(start_x, end_x, start_y, end_y, z_position);
-	}
-
-	PixelBufferPtr PerlinNoise::create_noise4d(float start_x, float end_x, float start_y, float end_y, float z_position, float w_position)
-	{
-		return impl->create_noise4d(start_x, end_x, start_y, end_y, z_position, w_position);
-	}
-
-	Size PerlinNoise::get_size() const
-	{
-		return Size(impl->width, impl->height);
-	}
-
-	TextureFormat PerlinNoise::get_format() const
-	{
-		return impl->texture_format;
-	}
-
-	float PerlinNoise::get_amplitude() const
-	{
-		return impl->amplitude;
-	}
-
-	int PerlinNoise::get_octaves() const
-	{
-		return impl->octaves;
-	}
-
-	void PerlinNoise::set_size(int width, int height)
-	{
-		impl->width = width;
-		impl->height = height;
-	}
-
-	void PerlinNoise::set_size(const Size &size)
-	{
-		impl->width = size.width;
-		impl->height = size.height;
-	}
-
-	void PerlinNoise::set_format(TextureFormat texture_format)
-	{
-		impl->texture_format = texture_format;
-	}
-
-	void PerlinNoise::set_amplitude(float amplitude)
-	{
-		impl->amplitude = amplitude;
-	}
-	void PerlinNoise::set_octaves(int octaves)
-	{
-		impl->octaves = octaves;
+		return std::make_shared<PerlinNoise_Impl>();
 	}
 
 	float PerlinNoise_Impl::gradient_1d(int permutation_value, float x)
@@ -673,56 +603,55 @@ namespace uicore
 	{
 		setup();
 
-		if (texture_format == tf_rgba8)
+		if (_texture_format == tf_rgba8)
 		{
-			auto pbuff = PixelBuffer::create(width, height, texture_format);
+			auto pbuff = PixelBuffer::create(_width, _height, _texture_format);
 			PerlinNoise_PixelWriter_RGBA8 writer(pbuff);
 			create_noise2d(writer, start_x, end_x, start_y, end_y);
 			return pbuff;
 		}
-		if (texture_format == tf_rgb8)
+		if (_texture_format == tf_rgb8)
 		{
-			auto pbuff = PixelBuffer::create(width, height, texture_format);
+			auto pbuff = PixelBuffer::create(_width, _height, _texture_format);
 			PerlinNoise_PixelWriter_RGB8 writer(pbuff);
 			create_noise2d(writer, start_x, end_x, start_y, end_y);
 			return pbuff;
 		}
-		if (texture_format == tf_r8)
+		if (_texture_format == tf_r8)
 		{
-			auto pbuff = PixelBuffer::create(width, height, texture_format);
+			auto pbuff = PixelBuffer::create(_width, _height, _texture_format);
 			PerlinNoise_PixelWriter_R8 writer(pbuff);
 			create_noise2d(writer, start_x, end_x, start_y, end_y);
 			return pbuff;
 		}
-		if (texture_format == tf_r32f)
+		if (_texture_format == tf_r32f)
 		{
-			auto pbuff = PixelBuffer::create(width, height, texture_format);
+			auto pbuff = PixelBuffer::create(_width, _height, _texture_format);
 			PerlinNoise_PixelWriter_R32f writer(pbuff);
 			create_noise2d(writer, start_x, end_x, start_y, end_y);
 			return pbuff;
 		}
 
 		throw Exception("texture format is not supported");
-
 	}
 
 	void PerlinNoise_Impl::create_noise2d(PerlinNoise_PixelWriter &writer, float start_x, float end_x, float start_y, float end_y)
 	{
 		float size_x = end_x - start_x;
 		float size_y = end_y - start_y;
-		float fheight = (float)height;
-		float fwidth = (float)width;
+		float fheight = (float)_height;
+		float fwidth = (float)_width;
 
-		for (int y = 0; y < height; y++)
+		for (int y = 0; y < _height; y++)
 		{
-			for (int x = 0; x < width; x++)
+			for (int x = 0; x < _width; x++)
 			{
 				float result = 0.0f;
-				float current_amplitude = amplitude;
+				float current_amplitude = _amplitude;
 				float value_x = start_x + (((float)x) * size_x) / fwidth;
 				float value_y = start_y + (((float)y) * size_y) / fheight;
 
-				for (int i = 0; i < octaves; i++)
+				for (int i = 0; i < _octaves; i++)
 				{
 					result += current_amplitude * noise_2d(value_x, value_y);
 					value_x *= 2.0f;
@@ -740,53 +669,52 @@ namespace uicore
 	{
 		setup();
 
-		if (texture_format == tf_rgba8)
+		if (_texture_format == tf_rgba8)
 		{
-			auto pbuff = PixelBuffer::create(width, height, texture_format);
+			auto pbuff = PixelBuffer::create(_width, _height, _texture_format);
 			PerlinNoise_PixelWriter_RGBA8 writer(pbuff);
 			create_noise1d(writer, start_x, end_x);
 			return pbuff;
 		}
-		if (texture_format == tf_rgb8)
+		if (_texture_format == tf_rgb8)
 		{
-			auto pbuff = PixelBuffer::create(width, height, texture_format);
+			auto pbuff = PixelBuffer::create(_width, _height, _texture_format);
 			PerlinNoise_PixelWriter_RGB8 writer(pbuff);
 			create_noise1d(writer, start_x, end_x);
 			return pbuff;
 		}
-		if (texture_format == tf_r8)
+		if (_texture_format == tf_r8)
 		{
-			auto pbuff = PixelBuffer::create(width, height, texture_format);
+			auto pbuff = PixelBuffer::create(_width, _height, _texture_format);
 			PerlinNoise_PixelWriter_R8 writer(pbuff);
 			create_noise1d(writer, start_x, end_x);
 			return pbuff;
 		}
-		if (texture_format == tf_r32f)
+		if (_texture_format == tf_r32f)
 		{
-			auto pbuff = PixelBuffer::create(width, height, texture_format);
+			auto pbuff = PixelBuffer::create(_width, _height, _texture_format);
 			PerlinNoise_PixelWriter_R32f writer(pbuff);
 			create_noise1d(writer, start_x, end_x);
 			return pbuff;
 		}
 
 		throw Exception("texture format is not supported");
-
 	}
 
 	void PerlinNoise_Impl::create_noise1d(PerlinNoise_PixelWriter &writer, float start_x, float end_x)
 	{
 		float size_x = end_x - start_x;
-		float fwidth = (float)width;
+		float fwidth = (float)_width;
 
-		for (int y = 0; y < height; y++)
+		for (int y = 0; y < _height; y++)
 		{
-			for (int x = 0; x < width; x++)
+			for (int x = 0; x < _width; x++)
 			{
 				float result = 0.0f;
-				float current_amplitude = amplitude;
+				float current_amplitude = _amplitude;
 				float value_x = start_x + (((float)x) * size_x) / fwidth;
 
-				for (int i = 0; i < octaves; i++)
+				for (int i = 0; i < _octaves; i++)
 				{
 					result += current_amplitude * noise_1d(value_x);
 					value_x *= 2.0f;
@@ -803,57 +731,56 @@ namespace uicore
 	{
 		setup();
 
-		if (texture_format == tf_rgba8)
+		if (_texture_format == tf_rgba8)
 		{
-			auto pbuff = PixelBuffer::create(width, height, texture_format);
+			auto pbuff = PixelBuffer::create(_width, _height, _texture_format);
 			PerlinNoise_PixelWriter_RGBA8 writer(pbuff);
 			create_noise3d(writer, start_x, end_x, start_y, end_y, z_position);
 			return pbuff;
 		}
-		if (texture_format == tf_rgb8)
+		if (_texture_format == tf_rgb8)
 		{
-			auto pbuff = PixelBuffer::create(width, height, texture_format);
+			auto pbuff = PixelBuffer::create(_width, _height, _texture_format);
 			PerlinNoise_PixelWriter_RGB8 writer(pbuff);
 			create_noise3d(writer, start_x, end_x, start_y, end_y, z_position);
 			return pbuff;
 		}
-		if (texture_format == tf_r8)
+		if (_texture_format == tf_r8)
 		{
-			auto pbuff = PixelBuffer::create(width, height, texture_format);
+			auto pbuff = PixelBuffer::create(_width, _height, _texture_format);
 			PerlinNoise_PixelWriter_R8 writer(pbuff);
 			create_noise3d(writer, start_x, end_x, start_y, end_y, z_position);
 			return pbuff;
 		}
-		if (texture_format == tf_r32f)
+		if (_texture_format == tf_r32f)
 		{
-			auto pbuff = PixelBuffer::create(width, height, texture_format);
+			auto pbuff = PixelBuffer::create(_width, _height, _texture_format);
 			PerlinNoise_PixelWriter_R32f writer(pbuff);
 			create_noise3d(writer, start_x, end_x, start_y, end_y, z_position);
 			return pbuff;
 		}
 
 		throw Exception("sized format is not supported");
-
 	}
 
 	void PerlinNoise_Impl::create_noise3d(PerlinNoise_PixelWriter &writer, float start_x, float end_x, float start_y, float end_y, float z_position)
 	{
 		float size_x = end_x - start_x;
 		float size_y = end_y - start_y;
-		float fheight = (float)height;
-		float fwidth = (float)width;
+		float fheight = (float)_height;
+		float fwidth = (float)_width;
 
-		for (int y = 0; y < height; y++)
+		for (int y = 0; y < _height; y++)
 		{
-			for (int x = 0; x < width; x++)
+			for (int x = 0; x < _width; x++)
 			{
 				float result = 0.0f;
-				float current_amplitude = amplitude;
+				float current_amplitude = _amplitude;
 				float value_x = start_x + (((float)x) * size_x) / fwidth;
 				float value_y = start_y + (((float)y) * size_y) / fheight;
 				float value_z = z_position;
 
-				for (int i = 0; i < octaves; i++)
+				for (int i = 0; i < _octaves; i++)
 				{
 					result += current_amplitude * noise_3d(value_x, value_y, value_z);
 					value_x *= 2.0f;
@@ -872,58 +799,57 @@ namespace uicore
 	{
 		setup();
 
-		if (texture_format == tf_rgba8)
+		if (_texture_format == tf_rgba8)
 		{
-			auto pbuff = PixelBuffer::create(width, height, texture_format);
+			auto pbuff = PixelBuffer::create(_width, _height, _texture_format);
 			PerlinNoise_PixelWriter_RGBA8 writer(pbuff);
 			create_noise4d(writer, start_x, end_x, start_y, end_y, z_position, w_position);
 			return pbuff;
 		}
-		if (texture_format == tf_rgb8)
+		if (_texture_format == tf_rgb8)
 		{
-			auto pbuff = PixelBuffer::create(width, height, texture_format);
+			auto pbuff = PixelBuffer::create(_width, _height, _texture_format);
 			PerlinNoise_PixelWriter_RGB8 writer(pbuff);
 			create_noise4d(writer, start_x, end_x, start_y, end_y, z_position, w_position);
 			return pbuff;
 		}
-		if (texture_format == tf_r8)
+		if (_texture_format == tf_r8)
 		{
-			auto pbuff = PixelBuffer::create(width, height, texture_format);
+			auto pbuff = PixelBuffer::create(_width, _height, _texture_format);
 			PerlinNoise_PixelWriter_R8 writer(pbuff);
 			create_noise4d(writer, start_x, end_x, start_y, end_y, z_position, w_position);
 			return pbuff;
 		}
-		if (texture_format == tf_r32f)
+		if (_texture_format == tf_r32f)
 		{
-			auto pbuff = PixelBuffer::create(width, height, texture_format);
+			auto pbuff = PixelBuffer::create(_width, _height, _texture_format);
 			PerlinNoise_PixelWriter_R32f writer(pbuff);
 			create_noise4d(writer, start_x, end_x, start_y, end_y, z_position, w_position);
 			return pbuff;
 		}
 
 		throw Exception("sized format is not supported");
-
 	}
 
 	void PerlinNoise_Impl::create_noise4d(PerlinNoise_PixelWriter &writer, float start_x, float end_x, float start_y, float end_y, float z_position, float w_position)
 	{
 		float size_x = end_x - start_x;
 		float size_y = end_y - start_y;
-		float fheight = (float)height;
-		float fwidth = (float)width;
+		float fheight = (float)_height;
+		float fwidth = (float)_width;
 
-		for (int y = 0; y < height; y++)
+		for (int y = 0; y < _height; y++)
 		{
-			for (int x = 0; x < width; x++)
+			for (int x = 0; x < _width; x++)
 			{
 				float result = 0.0f;
-				float current_amplitude = amplitude;
+				float current_amplitude = _amplitude;
 				float value_x = start_x + (((float)x) * size_x) / fwidth;
 				float value_y = start_y + (((float)y) * size_y) / fheight;
 				float value_z = z_position;
 				float value_w = w_position;
 
-				for (int i = 0; i < octaves; i++)
+				for (int i = 0; i < _octaves; i++)
 				{
 					result += current_amplitude * noise_4d(value_x, value_y, value_z, value_w);
 					value_x *= 2.0f;
