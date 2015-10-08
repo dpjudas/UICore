@@ -56,19 +56,19 @@ namespace uicore
 		setup(gc);
 	}
 
-	void Canvas_Impl::init(DisplayWindow &window)
+	void Canvas_Impl::init(const DisplayWindowPtr &window)
 	{
 		current_window = window;
-		setup(window.get_gc());
+		setup(window->get_gc());
 	}
 
 	void Canvas_Impl::setup(const GraphicContextPtr &new_gc)
 	{
 		gc = new_gc;
 
-		if (!current_window.is_null())
+		if (current_window)
 		{
-			sc.connect(current_window.sig_window_flip(), bind_member(this, &Canvas_Impl::on_window_flip));
+			sc.connect(current_window->sig_window_flip(), bind_member(this, &Canvas_Impl::on_window_flip));
 		}
 
 		gc_clip_z_range = gc->get_clip_z_range();

@@ -32,16 +32,8 @@
 
 namespace uicore
 {
-	D3DTargetProvider::D3DTargetProvider()
+	std::shared_ptr<DisplayWindow> D3DTargetProvider::create_display_window(const DisplayWindowDescription &description)
 	{
-	}
-
-	D3DTargetProvider::~D3DTargetProvider()
-	{
-	}
-
-	DisplayWindowProvider *D3DTargetProvider::alloc_display_window()
-	{
-		return new D3DDisplayWindowProvider;
+		return std::make_shared<D3DDisplayWindowProvider>(description);
 	}
 }

@@ -45,7 +45,7 @@ namespace clan
 	class OpenGLWindowProvider : public DisplayWindowProvider
 	{
 	public:
-		OpenGLWindowProvider(OpenGLContextDescription &opengl_desc);
+		OpenGLWindowProvider(OpenGLContextDescription &opengl_desc, const DisplayWindowDescription &description);
 		~OpenGLWindowProvider();
 		
 		Rect get_geometry() const override;
@@ -75,7 +75,6 @@ namespace clan
 		
 		Point client_to_screen(const Point &client) override;
 		Point screen_to_client(const Point &screen) override;
-		void create(DisplayWindowSite *site, const DisplayWindowDescription &description) override;
 
 		void show_system_cursor() override;
 		CursorProvider *create_cursor(const CursorDescription &cursor_description) override;
@@ -113,7 +112,7 @@ namespace clan
 		OpenGLWindowProvider_Impl *get_impl() { return impl.get(); }
 		
 	private:
-		InputDevice keyboard, mouse;
+		InputDevicePtr keyboard, mouse;
 
 		InputDeviceProvider_OSXKeyboard *get_keyboard_provider();
 		InputDeviceProvider_OSXMouse *get_mouse_provider();

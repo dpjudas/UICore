@@ -40,7 +40,7 @@ namespace uicore
 	public:
 		TextureWindow_Impl(TextureWindow *view, Canvas &canvas);
 
-		void set_window(const DisplayWindow &window, bool enable_automatic_events, const Mat4f &new_transform_mouse_matrix);
+		void set_window(const DisplayWindowPtr &window, bool enable_automatic_events, const Mat4f &new_transform_mouse_matrix);
 
 		void update();
 
@@ -49,7 +49,7 @@ namespace uicore
 
 		bool needs_render = false;
 		Rectf canvas_rect;
-		DisplayWindow display_window;
+		DisplayWindowPtr display_window;
 		SlotContainer slots;
 		Mat4f transform_mouse_matrix;
 		Colorf background_color = Colorf::transparent;

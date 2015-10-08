@@ -57,6 +57,7 @@ namespace uicore
 	class CursorDescription;
 	enum class StandardCursor;
 	class DisplayWindow;
+	typedef std::shared_ptr<DisplayWindow> DisplayWindowPtr;
 	class ViewTree;
 
 	/// View for an area of the user interface
@@ -271,7 +272,7 @@ namespace uicore
 		Signal<void(KeyEvent &)> &sig_key_release(bool use_capture = false);
 
 		/// Update window cursor to the cursor used by this view
-		void update_cursor(DisplayWindow &window);
+		void update_cursor(const DisplayWindowPtr &window);
 
 		/// Map from local content to screen coordinates
 		Pointf to_screen_pos(const Pointf &pos);

@@ -37,6 +37,7 @@ namespace uicore
 	class Sizef;
 	class Rectf;
 	class DisplayWindow;
+	typedef std::shared_ptr<DisplayWindow> DisplayWindowPtr;
 	class DisplayWindowDescription_Impl;
 	struct DisplayWindowHandle;
 
@@ -131,7 +132,7 @@ namespace uicore
 		bool has_drop_shadow() const;
 
 		/// \brief Returns the window owning this one.
-		DisplayWindow get_owner() const;
+		DisplayWindowPtr get_owner() const;
 
 		/// \brief Returns the minimum required depth buffer.
 		int get_depth_size() const;
@@ -214,7 +215,7 @@ namespace uicore
 		void set_drop_shadow(bool value = true);
 
 		/// \brief Specifies another window which owns this one.
-		void set_owner_window(const DisplayWindow &owner);
+		void set_owner_window(const DisplayWindowPtr &owner);
 
 		/// \brief Sets the title of the window.
 		void set_title(const std::string &title);

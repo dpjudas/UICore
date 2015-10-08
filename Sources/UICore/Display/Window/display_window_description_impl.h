@@ -64,7 +64,7 @@ namespace uicore
 		int swap_interval = -1;
 		int bpp = 0;
 		int refresh_rate = 0;
-		DisplayWindow owner;
+		DisplayWindowPtr owner;
 		bool layered = false;
 
 		DisplayWindowHandle handle;

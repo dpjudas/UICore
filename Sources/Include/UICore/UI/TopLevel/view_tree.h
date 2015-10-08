@@ -34,6 +34,7 @@
 namespace uicore
 {
 	class DisplayWindow;
+	typedef std::shared_ptr<DisplayWindow> DisplayWindowPtr;
 	class Canvas;
 	class ViewTreeImpl;
 
@@ -50,7 +51,7 @@ namespace uicore
 		/// Gets the display window used
 		///
 		/// This may return a null DisplayWindow
-		virtual DisplayWindow get_display_window() = 0;
+		virtual DisplayWindowPtr get_display_window() = 0;
 
 		/// Gets the current canvas used to render
 		virtual Canvas get_canvas() const = 0;

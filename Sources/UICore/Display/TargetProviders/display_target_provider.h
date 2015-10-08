@@ -33,15 +33,14 @@
 
 namespace uicore
 {
-	class DisplayWindowProvider;
+	class DisplayWindow;
+	class DisplayWindowDescription;
 
 	/// \brief Interface for implementing a DisplayTarget target.
 	class DisplayTargetProvider
 	{
 	public:
-		virtual ~DisplayTargetProvider() { return; }
-
 		/// \brief Allocates a display window provider.
-		virtual DisplayWindowProvider *alloc_display_window() = 0;
+		virtual std::shared_ptr<DisplayWindow> create_display_window(const DisplayWindowDescription &description) = 0;
 	};
 }

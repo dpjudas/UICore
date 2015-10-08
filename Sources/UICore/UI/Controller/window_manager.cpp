@@ -91,8 +91,8 @@ namespace uicore
 		controller->impl->window = std::make_shared<TopLevelWindow>(desc);
 		controller->impl->window->set_root_view(controller->root_view());
 
-		DisplayWindow display_window = controller->impl->window->get_display_window();
-		controller->slots.connect(display_window.sig_window_close(), bind_member(controller.get(), &WindowController::dismiss));
+		DisplayWindowPtr display_window = controller->impl->window->get_display_window();
+		controller->slots.connect(display_window->sig_window_close(), bind_member(controller.get(), &WindowController::dismiss));
 
 		WindowManagerImpl::instance()->windows[controller.get()] = controller;
 
@@ -103,13 +103,13 @@ namespace uicore
 			float height = controller->root_view()->calculate_preferred_height(canvas, width);
 			Rectf content_box(0.0f, 0.0f, width, height);
 			Rectf margin_box = ViewGeometry::from_content_box(controller->root_view()->style_cascade(), content_box).margin_box();
-			display_window.set_size(margin_box.get_width(), margin_box.get_height(), true);
+			display_window->set_size(margin_box.get_width(), margin_box.get_height(), true);
 		}
 
 		if (!controller->impl->icon_images.empty())
 		{
-			display_window.set_large_icon(ImageFile::load(PathHelp::combine(UIThread::resource_path(), controller->impl->icon_images.front())));
-			display_window.set_small_icon(ImageFile::load(PathHelp::combine(UIThread::resource_path(), controller->impl->icon_images.back())));
+			display_window->set_large_icon(ImageFile::load(PathHelp::combine(UIThread::resource_path(), controller->impl->icon_images.front())));
+			display_window->set_small_icon(ImageFile::load(PathHelp::combine(UIThread::resource_path(), controller->impl->icon_images.back())));
 		}
 
 		controller->impl->window->show(WindowShowType::show);
@@ -123,8 +123,8 @@ namespace uicore
 		desc.set_dialog_window();
 		desc.set_visible(false);
 
-		DisplayWindow owner_display_window = owner->view_tree()->get_display_window();
-		if (!owner_display_window.is_null())
+		DisplayWindowPtr owner_display_window = owner->view_tree()->get_display_window();
+		if (owner_display_window)
 			desc.set_owner_window(owner_display_window);
 		desc.set_title(controller->title());
 		desc.show_minimize_button(false);
@@ -138,9 +138,9 @@ namespace uicore
 		controller->impl->window = std::make_shared<TopLevelWindow>(desc);
 		controller->impl->window->set_root_view(controller->root_view());
 
-		DisplayWindow controller_display_window = controller->impl->window->get_display_window();
-		if (!controller_display_window.is_null())
-			controller->slots.connect(controller_display_window.sig_window_close(), bind_member(controller.get(), &WindowController::dismiss));
+		DisplayWindowPtr controller_display_window = controller->impl->window->get_display_window();
+		if (controller_display_window)
+			controller->slots.connect(controller_display_window->sig_window_close(), bind_member(controller.get(), &WindowController::dismiss));
 
 		WindowManagerImpl::instance()->windows[controller.get()] = controller;
 
@@ -151,19 +151,19 @@ namespace uicore
 			float height = controller->root_view()->calculate_preferred_height(canvas, width);
 			Rectf content_box(screen_pos.x - width * 0.5f, screen_pos.y - height * 0.5f, screen_pos.x + width * 0.5f, screen_pos.y + height * 0.5f);
 			Rectf margin_box = ViewGeometry::from_content_box(controller->root_view()->style_cascade(), content_box).margin_box();
-			if (!controller_display_window.is_null())
-				controller_display_window.set_position(margin_box, true);
+			if (controller_display_window)
+				controller_display_window->set_position(margin_box, true);
 		}
 
 		if (!controller->impl->icon_images.empty())
 		{
-			controller_display_window.set_large_icon(ImageFile::load(PathHelp::combine(UIThread::resource_path(), controller->impl->icon_images.front())));
-			controller_display_window.set_small_icon(ImageFile::load(PathHelp::combine(UIThread::resource_path(), controller->impl->icon_images.back())));
+			controller_display_window->set_large_icon(ImageFile::load(PathHelp::combine(UIThread::resource_path(), controller->impl->icon_images.front())));
+			controller_display_window->set_small_icon(ImageFile::load(PathHelp::combine(UIThread::resource_path(), controller->impl->icon_images.back())));
 		}
 
 		controller->impl->window->show(WindowShowType::show);
-		if (!owner_display_window.is_null())
-			owner_display_window.set_enabled(false);
+		if (owner_display_window)
+			owner_display_window->set_enabled(false);
 	}
 
 	void WindowManager::present_popup(View *owner, const Pointf &pos, const std::shared_ptr<WindowController> &controller)
@@ -186,9 +186,9 @@ namespace uicore
 		controller->impl->window = std::make_shared<TopLevelWindow>(desc);
 		controller->impl->window->set_root_view(controller->root_view());
 
-		DisplayWindow owner_display_window = owner->view_tree()->get_display_window();
-		if (!owner_display_window.is_null())
-			controller->slots.connect(owner_display_window.sig_lost_focus(), bind_member(controller.get(), &WindowController::dismiss));
+		DisplayWindowPtr owner_display_window = owner->view_tree()->get_display_window();
+		if (owner_display_window)
+			controller->slots.connect(owner_display_window->sig_lost_focus(), bind_member(controller.get(), &WindowController::dismiss));
 
 		WindowManagerImpl::instance()->windows[controller.get()] = controller;
 
@@ -200,9 +200,9 @@ namespace uicore
 			Rectf content_box(screen_pos.x, screen_pos.y, screen_pos.x + width, screen_pos.y + height);
 			Rectf margin_box = ViewGeometry::from_content_box(controller->root_view()->style_cascade(), content_box).margin_box();
 
-			DisplayWindow controller_display_window = controller->impl->window->get_display_window();
-			if (!controller_display_window.is_null())
-				controller_display_window.set_position(margin_box, false);
+			DisplayWindowPtr controller_display_window = controller->impl->window->get_display_window();
+			if (controller_display_window)
+				controller_display_window->set_position(margin_box, false);
 		}
 
 		controller->impl->window->show(WindowShowType::show_no_activate);
@@ -238,9 +238,9 @@ namespace uicore
 		impl->title = title;
 		if (impl->window)
 		{
-			DisplayWindow display_window = impl->window->get_display_window();
-			if (!display_window.is_null())
-				display_window.set_title(title);
+			DisplayWindowPtr display_window = impl->window->get_display_window();
+			if (display_window)
+				display_window->set_title(title);
 		}
 	}
 
@@ -251,9 +251,9 @@ namespace uicore
 		impl->resizable = resizable;
 		if (impl->window)
 		{
-			DisplayWindow display_window = impl->window->get_display_window();
-			if (!display_window.is_null())
-				display_window.set_size(size.width, size.height, false);
+			DisplayWindowPtr display_window = impl->window->get_display_window();
+			if (display_window)
+				display_window->set_size(size.width, size.height, false);
 		}
 	}
 
@@ -264,9 +264,9 @@ namespace uicore
 		impl->resizable = resizable;
 		if (impl->window)
 		{
-			DisplayWindow display_window = impl->window->get_display_window();
-			if (!display_window.is_null())
-				display_window.set_size(size.width, size.height, true);
+			DisplayWindowPtr display_window = impl->window->get_display_window();
+			if (display_window)
+				display_window->set_size(size.width, size.height, true);
 		}
 	}
 
@@ -275,11 +275,11 @@ namespace uicore
 		impl->icon_images = icon_images;
 		if (impl->window)
 		{
-			DisplayWindow display_window = impl->window->get_display_window();
-			if (!display_window.is_null() && !icon_images.empty())
+			DisplayWindowPtr display_window = impl->window->get_display_window();
+			if (display_window && !icon_images.empty())
 			{
-				display_window.set_large_icon(ImageFile::load(PathHelp::combine(UIThread::resource_path(), icon_images.front())));
-				display_window.set_small_icon(ImageFile::load(PathHelp::combine(UIThread::resource_path(), icon_images.back())));
+				display_window->set_large_icon(ImageFile::load(PathHelp::combine(UIThread::resource_path(), icon_images.front())));
+				display_window->set_small_icon(ImageFile::load(PathHelp::combine(UIThread::resource_path(), icon_images.back())));
 			}
 		}
 	}
@@ -289,12 +289,12 @@ namespace uicore
 		auto modal_owner = impl->modal_owner.lock();
 		if (modal_owner && modal_owner->view_tree())
 		{
-			DisplayWindow display_window = modal_owner->view_tree()->get_display_window();
-			if (!display_window.is_null())
+			DisplayWindowPtr display_window = modal_owner->view_tree()->get_display_window();
+			if (display_window)
 			{
-				display_window.set_enabled(true);
-				if (impl->window->get_display_window().has_focus())
-					display_window.show(true); // activate parent to workaround bug in Windows in some situations
+				display_window->set_enabled(true);
+				if (impl->window->get_display_window()->has_focus())
+					display_window->show(true); // activate parent to workaround bug in Windows in some situations
 			}
 		}
 

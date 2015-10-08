@@ -548,7 +548,7 @@ namespace uicore
 		}
 	}
 
-	void View::update_cursor(DisplayWindow &window)
+	void View::update_cursor(const DisplayWindowPtr &window)
 	{
 		if (impl->is_cursor_inherited)
 		{
@@ -556,7 +556,7 @@ namespace uicore
 			if (super)
 				super->update_cursor(window);
 			else
-				window.set_cursor(StandardCursor::arrow);
+				window->set_cursor(StandardCursor::arrow);
 		}
 		else if (impl->is_custom_cursor)
 		{
@@ -564,11 +564,11 @@ namespace uicore
 			{
 				impl->cursor = Cursor::create(window, impl->cursor_desc);
 			}
-			window.set_cursor(impl->cursor);
+			window->set_cursor(impl->cursor);
 		}
 		else
 		{
-			window.set_cursor(impl->cursor_type);
+			window->set_cursor(impl->cursor_type);
 		}
 	}
 

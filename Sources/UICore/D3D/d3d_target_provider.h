@@ -35,9 +35,6 @@ namespace uicore
 	class D3DTargetProvider : public DisplayTargetProvider
 	{
 	public:
-		D3DTargetProvider();
-		~D3DTargetProvider();
-
-		DisplayWindowProvider *alloc_display_window();
+		std::shared_ptr<DisplayWindow> create_display_window(const DisplayWindowDescription &description) override;
 	};
 }

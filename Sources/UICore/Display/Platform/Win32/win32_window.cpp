@@ -164,7 +164,7 @@ namespace uicore
 		return Text::from_utf16(std::wstring(str, len));
 	}
 
-	void Win32Window::create(DisplayWindowSite *new_site, const DisplayWindowDescription &description)
+	void Win32Window::create(DisplayWindowProvider *new_site, const DisplayWindowDescription &description)
 	{
 		window_desc = description;
 		site = new_site;
@@ -409,14 +409,14 @@ namespace uicore
 			}
 		}
 
-		if ((site) && (site->func_window_message))
+		if (site && site->func_window_message())
 		{
-			if ((site->func_window_message)(wnd, msg, wparam, lparam))
+			if (site->func_window_message()(wnd, msg, wparam, lparam))
 				return TRUE;
 		}
 		if (site)
 		{
-			site->sig_window_message(wnd, msg, wparam, lparam);
+			site->sig_window_message()(wnd, msg, wparam, lparam);
 		}
 
 		switch (msg)
@@ -474,7 +474,7 @@ namespace uicore
 		case WM_MOVE:
 			if (site)
 			{
-				(site->sig_window_moved)();
+				site->sig_window_moved()();
 			}
 			break;
 
@@ -515,8 +515,8 @@ namespace uicore
 				client_rectf.right = client_rect.right / pixel_ratio;
 				client_rectf.bottom = client_rect.bottom / pixel_ratio;
 
-				if (site->func_window_resize)
-					(site->func_window_resize)(client_rectf);
+				if (site->func_window_resize())
+					site->func_window_resize()(client_rectf);
 
 				client_rect.left = (int)std::round(client_rectf.left * pixel_ratio);
 				client_rect.top = (int)std::round(client_rectf.top * pixel_ratio);
@@ -548,24 +548,24 @@ namespace uicore
 			// The window has been maximized.
 			case SIZE_MAXIMIZED:
 				if (site)
-					(site->sig_window_maximized)();
+					site->sig_window_maximized()();
 				break;
 
 			// The window has been minimized.
 			case SIZE_MINIMIZED:
 				if (site)
-					(site->sig_window_minimized)();
+					site->sig_window_minimized()();
 				break;
 
 			// The window has been resized, but neither the SIZE_MINIMIZED nor SIZE_MAXIMIZED value applies.
 			case SIZE_RESTORED:
 				if (site)
-					(site->sig_window_restored)();
+					site->sig_window_restored()();
 				break;
 			}
 
 			if (site)
-				(site->sig_resize)(LOWORD(lparam), HIWORD(lparam));
+				site->sig_resize()(LOWORD(lparam), HIWORD(lparam));
 
 			return 0;
 
@@ -575,23 +575,23 @@ namespace uicore
 			{
 				if (LOWORD(wparam) == WA_INACTIVE)
 				{
-					(site->sig_lost_focus)();
+					site->sig_lost_focus()();
 				}
 				else
 				{
-					(site->sig_got_focus)();
+					site->sig_got_focus()();
 				}
 			}
 			return 0;
 
 		case WM_CLOSE:
 			if (site)
-				(site->sig_window_close)();
+				site->sig_window_close()();
 			return 0;
 
 		case WM_DESTROY:
 			if (site)
-				(site->sig_window_destroy)();
+				site->sig_window_destroy()();
 			return 0;
 
 		case WM_PAINT:
@@ -603,7 +603,7 @@ namespace uicore
 					try
 					{
 						if (site)
-							(site->sig_paint)();
+							site->sig_paint()();
 					}
 					catch (...)
 					{
@@ -617,9 +617,9 @@ namespace uicore
 			switch (wparam)
 			{
 			case SC_MINIMIZE:
-				if (site && (site->func_minimize_clicked))
+				if (site && site->func_minimize_clicked())
 				{
-					if ((site->func_minimize_clicked)())
+					if (site->func_minimize_clicked()())
 						return 0;
 				}
 				break;
@@ -671,8 +671,8 @@ namespace uicore
 			RECT window_rect = get_window_geometry_from_description(window_desc, style, ex_style);
 
 			HWND parent = 0;
-			if (!window_desc.get_owner().is_null())
-				parent = window_desc.get_owner().get_provider()->get_handle().hwnd;
+			if (window_desc.get_owner())
+				parent = window_desc.get_owner()->get_handle().hwnd;
 
 			hwnd = CreateWindowEx(
 				ex_style,

@@ -52,7 +52,7 @@ namespace uicore
 
 		void init(Canvas_Impl *canvas);
 		void init(Canvas_Impl *canvas, const FrameBufferPtr &framebuffer);
-		void init(DisplayWindow &window);
+		void init(const DisplayWindowPtr &window);
 
 		void clear(const Colorf &color);
 
@@ -103,7 +103,7 @@ namespace uicore
 		MapMode canvas_map_mode;
 		Rectf viewport_rect;
 
-		DisplayWindow current_window;
+		DisplayWindowPtr current_window;
 
 		TextureImageYAxis canvas_y_axis;
 

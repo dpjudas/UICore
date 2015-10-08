@@ -49,7 +49,7 @@ namespace clan
 /// \{
 
 	public:
-		OpenGLWindowProvider(OpenGLContextDescription &opengl_desc);
+		OpenGLWindowProvider(OpenGLContextDescription &opengl_desc, const DisplayWindowDescription &description);
 		~OpenGLWindowProvider();
 
 
@@ -89,7 +89,6 @@ namespace clan
 		void make_current() const;
 		Point client_to_screen(const Point &client) override;
 		Point screen_to_client(const Point &screen) override;
-		void create(DisplayWindowSite *site, const DisplayWindowDescription &description) override;
 
 		void show_system_cursor() override;
 		CursorProvider *create_cursor(const CursorDescription &cursor_description) override;

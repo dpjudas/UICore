@@ -49,7 +49,7 @@ namespace uicore
 	{
 	}
 
-	Canvas::Canvas(DisplayWindow &window) : impl(std::make_shared<Canvas_Impl>())
+	Canvas::Canvas(const DisplayWindowPtr &window) : impl(std::make_shared<Canvas_Impl>())
 	{
 		impl->init(window);
 		set_map_mode(map_2d_upper_left);

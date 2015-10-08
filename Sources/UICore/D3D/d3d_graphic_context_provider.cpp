@@ -143,7 +143,7 @@ namespace uicore
 
 	Size D3DGraphicContextProvider::get_display_window_size() const
 	{
-		return window->get_viewport().get_size();
+		return window->get_backing_viewport().get_size();
 	}
 
 	float D3DGraphicContextProvider::get_pixel_ratio() const
@@ -743,7 +743,7 @@ namespace uicore
 
 	void D3DGraphicContextProvider::on_window_resized()
 	{
-		Size new_size = window->get_viewport().get_size();
+		Size new_size = window->get_backing_viewport().get_size();
 		window_resized_signal(new_size);
 	}
 

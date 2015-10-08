@@ -44,7 +44,7 @@ namespace uicore
 	{
 	}
 
-	DisplayWindow TopLevelWindow::get_display_window()
+	DisplayWindowPtr TopLevelWindow::get_display_window()
 	{
 		return impl->window;
 	}
@@ -54,43 +54,43 @@ namespace uicore
 		switch (type)
 		{
 		case WindowShowType::hide:
-			impl->window.hide();
+			impl->window->hide();
 			break;
 		case WindowShowType::show:
 		case WindowShowType::normal:
 		case WindowShowType::restore:
 		case WindowShowType::show_default:
-			impl->window.show();
+			impl->window->show();
 			break;
 		case WindowShowType::show_no_activate:
-			impl->window.show(false);
+			impl->window->show(false);
 			break;
 		case WindowShowType::maximized:
-			impl->window.maximize();
-			impl->window.show();
+			impl->window->maximize();
+			impl->window->show();
 			break;
 		case WindowShowType::maximize:
-			impl->window.show();
-			impl->window.maximize();
+			impl->window->show();
+			impl->window->maximize();
 			break;
 		case WindowShowType::minimized:
-			impl->window.minimize();
-			impl->window.show();
+			impl->window->minimize();
+			impl->window->show();
 			break;
 		case WindowShowType::minimize:
-			impl->window.show();
-			impl->window.minimize();
+			impl->window->show();
+			impl->window->minimize();
 			break;
 		case WindowShowType::minimize_no_activate:
-			impl->window.show(false);
-			impl->window.minimize();
+			impl->window->show(false);
+			impl->window->minimize();
 			break;
 		}
 	}
 
 	void TopLevelWindow::hide()
 	{
-		impl->window.hide();
+		impl->window->hide();
 	}
 
 	Canvas TopLevelWindow::get_canvas() const
@@ -100,16 +100,16 @@ namespace uicore
 
 	void TopLevelWindow::set_needs_render()
 	{
-		impl->window.request_repaint();
+		impl->window->request_repaint();
 	}
 
 	Pointf TopLevelWindow::client_to_screen_pos(const Pointf &client_pos)
 	{
-		return Pointf(impl->window.client_to_screen(client_pos));
+		return Pointf(impl->window->client_to_screen(client_pos));
 	}
 
 	Pointf TopLevelWindow::screen_to_client_pos(const Pointf &pos)
 	{
-		return impl->window.screen_to_client(Pointf(pos));
+		return impl->window->screen_to_client(Pointf(pos));
 	}
 }

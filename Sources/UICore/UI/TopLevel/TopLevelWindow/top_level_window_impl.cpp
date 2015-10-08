@@ -38,21 +38,21 @@
 
 namespace uicore
 {
-	TopLevelWindow_Impl::TopLevelWindow_Impl(TopLevelWindow *view, const DisplayWindowDescription &desc) : window_view(view), window(desc)
+	TopLevelWindow_Impl::TopLevelWindow_Impl(TopLevelWindow *view, const DisplayWindowDescription &desc) : window_view(view), window(DisplayWindow::create(desc))
 	{
 		canvas = Canvas(window);
 
-		slots.connect(window.sig_lost_focus(), uicore::bind_member(this, &TopLevelWindow_Impl::on_lost_focus));
-		slots.connect(window.sig_got_focus(), uicore::bind_member(this, &TopLevelWindow_Impl::on_got_focus));
-		slots.connect(window.sig_resize(), uicore::bind_member(this, &TopLevelWindow_Impl::on_resize));
-		slots.connect(window.sig_paint(), uicore::bind_member(this, &TopLevelWindow_Impl::on_paint));
-		slots.connect(window.sig_window_close(), uicore::bind_member(this, &TopLevelWindow_Impl::on_window_close));
-		slots.connect(window.get_keyboard()->sig_key_down(), uicore::bind_member(this, &TopLevelWindow_Impl::on_key_down));
-		slots.connect(window.get_keyboard()->sig_key_up(), uicore::bind_member(this, &TopLevelWindow_Impl::on_key_up));
-		slots.connect(window.get_mouse()->sig_key_down(), uicore::bind_member(this, &TopLevelWindow_Impl::on_mouse_down));
-		slots.connect(window.get_mouse()->sig_key_dblclk(), uicore::bind_member(this, &TopLevelWindow_Impl::on_mouse_dblclk));
-		slots.connect(window.get_mouse()->sig_key_up(), uicore::bind_member(this, &TopLevelWindow_Impl::on_mouse_up));
-		slots.connect(window.get_mouse()->sig_pointer_move(), uicore::bind_member(this, &TopLevelWindow_Impl::on_mouse_move));
+		slots.connect(window->sig_lost_focus(), uicore::bind_member(this, &TopLevelWindow_Impl::on_lost_focus));
+		slots.connect(window->sig_got_focus(), uicore::bind_member(this, &TopLevelWindow_Impl::on_got_focus));
+		slots.connect(window->sig_resize(), uicore::bind_member(this, &TopLevelWindow_Impl::on_resize));
+		slots.connect(window->sig_paint(), uicore::bind_member(this, &TopLevelWindow_Impl::on_paint));
+		slots.connect(window->sig_window_close(), uicore::bind_member(this, &TopLevelWindow_Impl::on_window_close));
+		slots.connect(window->get_keyboard()->sig_key_down(), uicore::bind_member(this, &TopLevelWindow_Impl::on_key_down));
+		slots.connect(window->get_keyboard()->sig_key_up(), uicore::bind_member(this, &TopLevelWindow_Impl::on_key_up));
+		slots.connect(window->get_mouse()->sig_key_down(), uicore::bind_member(this, &TopLevelWindow_Impl::on_mouse_down));
+		slots.connect(window->get_mouse()->sig_key_dblclk(), uicore::bind_member(this, &TopLevelWindow_Impl::on_mouse_dblclk));
+		slots.connect(window->get_mouse()->sig_key_up(), uicore::bind_member(this, &TopLevelWindow_Impl::on_mouse_up));
+		slots.connect(window->get_mouse()->sig_pointer_move(), uicore::bind_member(this, &TopLevelWindow_Impl::on_mouse_move));
 	}
 
 	void TopLevelWindow_Impl::on_lost_focus()
@@ -69,15 +69,15 @@ namespace uicore
 
 	void TopLevelWindow_Impl::on_resize(float, float)
 	{
-		window.request_repaint();
+		window->request_repaint();
 	}
 
 	void TopLevelWindow_Impl::on_paint()
 	{
 		canvas.clear(uicore::Colorf::transparent);
-		window_view->render(canvas, window.get_viewport());
+		window_view->render(canvas, window->get_viewport());
 		canvas.flush();
-		window.flip();
+		window->flip();
 	}
 
 	void TopLevelWindow_Impl::on_window_close()
@@ -132,7 +132,7 @@ namespace uicore
 	{
 		if (captured_view)
 		{
-			window.capture_mouse(false);
+			window->capture_mouse(false);
 			captured_view.reset();
 			capture_down_counter = 0;
 		}
@@ -147,7 +147,7 @@ namespace uicore
 			{
 				captured_view = view_above_cursor;
 				if (captured_view)
-					window.capture_mouse(true);
+					window->capture_mouse(true);
 			}
 		}
 

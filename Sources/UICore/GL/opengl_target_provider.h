@@ -38,12 +38,10 @@ namespace uicore
 	class OpenGLTargetProvider : public DisplayTargetProvider
 	{
 	public:
-		OpenGLTargetProvider();
-		~OpenGLTargetProvider();
+		std::shared_ptr<DisplayWindow> create_display_window(const DisplayWindowDescription &description) override;
 
-		OpenGLContextDescription get_description() { return description; }
-		DisplayWindowProvider *alloc_display_window() override;
-		void set_description(OpenGLContextDescription &desc) { description = desc; }
+		OpenGLContextDescription get_description() { return context_description; }
+		void set_description(OpenGLContextDescription &desc) { context_description = desc; }
 
 	private:
 #ifdef WIN32
@@ -51,6 +49,6 @@ namespace uicore
 #else
 		friend class OpenGLWindowProvider;
 #endif
-		OpenGLContextDescription description;
+		OpenGLContextDescription context_description;
 	};
 }

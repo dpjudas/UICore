@@ -48,22 +48,22 @@ namespace uicore
 		opaque_blend = canvas.get_gc()->create_blend_state(blend_desc);
 	}
 
-	void TextureWindow_Impl::set_window(const DisplayWindow &window, bool enable_automatic_events, const Mat4f &new_transform_mouse_matrix)
+	void TextureWindow_Impl::set_window(const DisplayWindowPtr &window, bool enable_automatic_events, const Mat4f &new_transform_mouse_matrix)
 	{
 		slots = SlotContainer();
 		display_window = window;
 		transform_mouse_matrix = new_transform_mouse_matrix;
-		if (!display_window.is_null() && enable_automatic_events)
+		if (display_window && enable_automatic_events)
 		{
-			slots.connect(display_window.sig_lost_focus(), uicore::bind_member(this, &TextureWindow_Impl::on_lost_focus));
-			slots.connect(display_window.sig_got_focus(), uicore::bind_member(this, &TextureWindow_Impl::on_got_focus));
-			slots.connect(display_window.sig_window_close(), uicore::bind_member(this, &TextureWindow_Impl::on_window_close));
-			slots.connect(display_window.get_keyboard()->sig_key_down(), uicore::bind_member(this, &TextureWindow_Impl::transform_on_key_down));
-			slots.connect(display_window.get_keyboard()->sig_key_up(), uicore::bind_member(this, &TextureWindow_Impl::transform_on_key_up));
-			slots.connect(display_window.get_mouse()->sig_key_down(), uicore::bind_member(this, &TextureWindow_Impl::transform_on_mouse_down));
-			slots.connect(display_window.get_mouse()->sig_key_dblclk(), uicore::bind_member(this, &TextureWindow_Impl::transform_on_mouse_dblclk));
-			slots.connect(display_window.get_mouse()->sig_key_up(), uicore::bind_member(this, &TextureWindow_Impl::transform_on_mouse_up));
-			slots.connect(display_window.get_mouse()->sig_pointer_move(), uicore::bind_member(this, &TextureWindow_Impl::transform_on_mouse_move));
+			slots.connect(display_window->sig_lost_focus(), uicore::bind_member(this, &TextureWindow_Impl::on_lost_focus));
+			slots.connect(display_window->sig_got_focus(), uicore::bind_member(this, &TextureWindow_Impl::on_got_focus));
+			slots.connect(display_window->sig_window_close(), uicore::bind_member(this, &TextureWindow_Impl::on_window_close));
+			slots.connect(display_window->get_keyboard()->sig_key_down(), uicore::bind_member(this, &TextureWindow_Impl::transform_on_key_down));
+			slots.connect(display_window->get_keyboard()->sig_key_up(), uicore::bind_member(this, &TextureWindow_Impl::transform_on_key_up));
+			slots.connect(display_window->get_mouse()->sig_key_down(), uicore::bind_member(this, &TextureWindow_Impl::transform_on_mouse_down));
+			slots.connect(display_window->get_mouse()->sig_key_dblclk(), uicore::bind_member(this, &TextureWindow_Impl::transform_on_mouse_dblclk));
+			slots.connect(display_window->get_mouse()->sig_key_up(), uicore::bind_member(this, &TextureWindow_Impl::transform_on_mouse_up));
+			slots.connect(display_window->get_mouse()->sig_pointer_move(), uicore::bind_member(this, &TextureWindow_Impl::transform_on_mouse_move));
 		}
 	}
 
@@ -144,7 +144,7 @@ namespace uicore
 
 		if (hot_view)
 		{
-			if (!display_window.is_null())
+			if (display_window)
 				hot_view->update_cursor(display_window);
 		}
 
@@ -154,8 +154,8 @@ namespace uicore
 	{
 		if (captured_view)
 		{
-			if (!display_window.is_null())
-				display_window.capture_mouse(false);
+			if (display_window)
+				display_window->capture_mouse(false);
 			captured_view.reset();
 			capture_down_counter = 0;
 		}
@@ -171,8 +171,8 @@ namespace uicore
 				captured_view = view_above_cursor;
 				if (captured_view)
 				{
-					if (!display_window.is_null())
-						display_window.capture_mouse(true);
+					if (display_window)
+						display_window->capture_mouse(true);
 				}
 			}
 		}

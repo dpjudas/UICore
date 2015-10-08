@@ -33,8 +33,8 @@
 
 namespace uicore
 {
-	std::shared_ptr<Cursor> Cursor::create(const DisplayWindow &window, const CursorDescription &cursor_description)
+	std::shared_ptr<Cursor> Cursor::create(const DisplayWindowPtr &window, const CursorDescription &cursor_description)
 	{
-		return window.get_provider()->create_cursor(cursor_description);
+		return static_cast<DisplayWindowProvider*>(window.get())->create_cursor(cursor_description);
 	}
 }

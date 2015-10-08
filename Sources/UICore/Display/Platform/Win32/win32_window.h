@@ -83,7 +83,7 @@ namespace uicore
 		const std::vector<InputDevicePtr> &get_game_controllers() const { return joysticks; }
 
 	public:
-		void create(DisplayWindowSite *site, const DisplayWindowDescription &description);
+		void create(DisplayWindowProvider *site, const DisplayWindowDescription &description);
 
 		Point client_to_screen(const Point &client);
 		Point screen_to_client(const Point &screen);
@@ -192,7 +192,7 @@ namespace uicore
 		HICON large_icon;
 		HICON small_icon;
 		bool cursor_set, cursor_hidden;
-		DisplayWindowSite *site;
+		DisplayWindowProvider *site;
 		InputDevicePtr keyboard, mouse;
 		std::vector<InputDevicePtr> joysticks;
 		Point mouse_pos;

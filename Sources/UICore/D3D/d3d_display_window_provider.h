@@ -39,11 +39,11 @@ namespace uicore
 	class D3DDisplayWindowProvider : public DisplayWindowProvider
 	{
 	public:
-		D3DDisplayWindowProvider();
+		D3DDisplayWindowProvider(const DisplayWindowDescription &description);
 		~D3DDisplayWindowProvider();
 
-		Rect get_geometry() const override;
-		Rect get_viewport() const override;
+		Rect get_backing_geometry() const override;
+		Rect get_backing_viewport() const override;
 		float get_pixel_ratio() const override;
 
 		bool has_focus() const;
@@ -52,8 +52,8 @@ namespace uicore
 		bool is_visible() const;
 		bool is_fullscreen() const { return false; } // FIXME: real implementation
 		std::string get_title() const;
-		Size get_minimum_size(bool client_area = false) const;
-		Size get_maximum_size(bool client_area = false) const;
+		Size get_backing_minimum_size(bool client_area = false) const;
+		Size get_backing_maximum_size(bool client_area = false) const;
 
 		const GraphicContextPtr &get_gc() const;
 
@@ -77,12 +77,10 @@ namespace uicore
 		const ComPtr<ID3D11Debug> &get_debug() const { return debug; }
 		const ComPtr<ID3D11InfoQueue> &get_info_queue() const { return info_queue; }
 
-		Point client_to_screen(const Point &client);
-		Point screen_to_client(const Point &screen);
+		Point backing_client_to_screen(const Point &client);
+		Point backing_screen_to_client(const Point &screen);
 
 		void capture_mouse(bool capture);
-
-		void create(DisplayWindowSite *site, const DisplayWindowDescription &description);
 
 		void show_system_cursor();
 		CursorPtr create_cursor(const CursorDescription &cursor_description);
@@ -92,10 +90,10 @@ namespace uicore
 		void hide_system_cursor();
 
 		void set_title(const std::string &new_title);
-		void set_position(const Rect &pos, bool client_area);
-		void set_size(int width, int height, bool client_area);
-		void set_minimum_size(int width, int height, bool client_area);
-		void set_maximum_size(int width, int height, bool client_area);
+		void set_backing_position(const Rect &pos, bool client_area);
+		void set_backing_size(int width, int height, bool client_area);
+		void set_backing_minimum_size(int width, int height, bool client_area);
+		void set_backing_maximum_size(int width, int height, bool client_area);
 		void set_enabled(bool enable);
 
 		void minimize();
@@ -108,7 +106,7 @@ namespace uicore
 
 		void bring_to_front();
 
-		void flip(int interval);
+		void backing_flip(int interval);
 
 		void update(const Rect &rect);
 
@@ -120,12 +118,10 @@ namespace uicore
 		void set_large_icon(const PixelBufferPtr &image);
 		void set_small_icon(const PixelBufferPtr &image);
 
-		void enable_alpha_channel(const Rect &blur_rect);
-		void extend_frame_into_client_area(int left, int top, int right, int bottom);
+		void backing_enable_alpha_channel(const Rect &blur_rect);
+		void backing_extend_frame_into_client_area(int left, int top, int right, int bottom);
 
 		void validate_context();
-
-		void set_pixel_ratio(float ratio) override;
 
 	private:
 		void create_swap_chain_buffers();
@@ -135,7 +131,6 @@ namespace uicore
 
 		Win32Window window;
 
-		DisplayWindowSite *site;
 		GraphicContextPtr gc;
 
 		ComPtr<ID3D11Device> device;
@@ -147,10 +142,10 @@ namespace uicore
 		ComPtr<ID3D11Texture2D> back_buffer;
 		ComPtr<ID3D11RenderTargetView> back_buffer_rtv;
 
-		bool use_fake_front_buffer;
+		bool use_fake_front_buffer = false;
 		ComPtr<ID3D11Texture2D> fake_front_buffer;
 
-		int current_interval_setting;
+		int current_interval_setting = 1;
 
 		typedef HRESULT(WINAPI *FuncD3D11CreateDeviceAndSwapChain)(
 			__in_opt IDXGIAdapter* pAdapter,

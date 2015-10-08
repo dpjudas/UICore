@@ -51,6 +51,7 @@ namespace uicore
 	class Trianglef;
 	class Triangle;
 	class DisplayWindow;
+	typedef std::shared_ptr<DisplayWindow> DisplayWindowPtr;
 	class DisplayWindowDescription;
 	class Path;
 	class Pen;
@@ -75,7 +76,7 @@ namespace uicore
 		Canvas(Canvas &canvas, const FrameBufferPtr &framebuffer);
 
 		/// \brief Constructs a Canvas
-		explicit Canvas(DisplayWindow &window);
+		explicit Canvas(const DisplayWindowPtr &window);
 
 		~Canvas();
 

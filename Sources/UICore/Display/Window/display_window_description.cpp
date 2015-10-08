@@ -117,7 +117,7 @@ namespace uicore
 		return impl->allow_resize;
 	}
 
-	DisplayWindow DisplayWindowDescription::get_owner() const
+	DisplayWindowPtr DisplayWindowDescription::get_owner() const
 	{
 		return impl->owner;
 	}
@@ -288,7 +288,7 @@ namespace uicore
 		impl->drop_shadow = value;
 	}
 
-	void DisplayWindowDescription::set_owner_window(const DisplayWindow &owner)
+	void DisplayWindowDescription::set_owner_window(const DisplayWindowPtr &owner)
 	{
 		impl->owner = owner;
 	}

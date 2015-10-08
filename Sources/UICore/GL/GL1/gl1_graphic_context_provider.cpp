@@ -222,7 +222,7 @@ namespace uicore
 
 	Size GL1GraphicContextProvider::get_display_window_size() const
 	{
-		return render_window->get_viewport().get_size();
+		return render_window->get_backing_viewport().get_size();
 	}
 
 	float GL1GraphicContextProvider::get_pixel_ratio() const
@@ -894,7 +894,7 @@ namespace uicore
 
 	void GL1GraphicContextProvider::on_window_resized()
 	{
-		window_resized_signal(render_window->get_viewport().get_size());
+		window_resized_signal(render_window->get_backing_viewport().get_size());
 	}
 
 	void GL1GraphicContextProvider::set_viewport(const Rectf &viewport)

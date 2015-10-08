@@ -166,7 +166,7 @@ class OpenGLWindowProvider : public DisplayWindowProvider
 /// \{
 
 public:
-	OpenGLWindowProvider(OpenGLContextDescription &opengl_desc);
+	OpenGLWindowProvider(OpenGLContextDescription &opengl_desc, const DisplayWindowDescription &description);
 
 	~OpenGLWindowProvider();
 
@@ -226,8 +226,6 @@ public:
 
 	Point client_to_screen(const Point &client) override { return x11_window.client_to_screen(client); }
 	Point screen_to_client(const Point &screen) override { return x11_window.screen_to_client(screen); }
-
-	void create(DisplayWindowSite *site, const DisplayWindowDescription &description) override;
 
 	void show_system_cursor() override { x11_window.show_system_cursor(); }
 	CursorProvider *create_cursor(const CursorDescription &cursor_description) override;
@@ -289,8 +287,8 @@ private:
 
 	GLXContext create_context_glx_1_3(const DisplayWindowDescription &desc, GLXContext shared_context);
 	GLXContext create_context_glx_1_2(const DisplayWindowDescription &desc, GLXContext shared_context);
-	void create_glx_1_3(DisplayWindowSite *new_site, const DisplayWindowDescription &desc, ::Display *disp);
-	void create_glx_1_2(DisplayWindowSite *new_site, const DisplayWindowDescription &desc, ::Display *disp);
+	void create_glx_1_3(const DisplayWindowDescription &desc, ::Display *disp);
+	void create_glx_1_2(const DisplayWindowDescription &desc, ::Display *disp);
 	GLXContext create_context_glx_1_3_helper(GLXContext shared_context, int major_version, int minor_version, const DisplayWindowDescription &desc, ptr_glXCreateContextAttribs glXCreateContextAttribs);
 	void get_opengl_version(int &version_major, int &version_minor);
 
@@ -304,8 +302,6 @@ private:
 
 	/// \brief GLX rendering context handle.
 	GLXContext opengl_context;
-
-	DisplayWindowSite *site;
 
 	XVisualInfo *opengl_visual_info;
 

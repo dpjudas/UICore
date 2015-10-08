@@ -814,13 +814,13 @@ namespace uicore
 			ViewTree *tree = textfield->view_tree();
 			if (tree)
 			{
-				DisplayWindow window = tree->get_display_window();
-				if (!window.is_null())
+				DisplayWindowPtr window = tree->get_display_window();
+				if (window)
 				{
 					if (selection.length() > 0)
-						window.set_clipboard_text(get_selected_text());
+						window->set_clipboard_text(get_selected_text());
 					else
-						window.set_clipboard_text(text);
+						window->set_clipboard_text(text);
 				}
 			}
 		}
@@ -831,9 +831,9 @@ namespace uicore
 		ViewTree *tree = textfield->view_tree();
 		if (tree)
 		{
-			DisplayWindow window = tree->get_display_window();
-			if (!window.is_null())
-				add(window.get_clipboard_text());
+			DisplayWindowPtr window = tree->get_display_window();
+			if (window)
+				add(window->get_clipboard_text());
 		}
 	}
 

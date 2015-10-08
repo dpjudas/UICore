@@ -41,7 +41,7 @@ namespace uicore
 		TopLevelWindow_Impl(TopLevelWindow *view, const DisplayWindowDescription &desc);
 
 		TopLevelWindow *window_view;
-		DisplayWindow window;
+		DisplayWindowPtr window;
 		Canvas canvas;
 		SlotContainer slots;
 

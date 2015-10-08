@@ -47,20 +47,20 @@ namespace uicore
 	class OpenGLWindowProvider : public DisplayWindowProvider
 	{
 	public:
-		OpenGLWindowProvider(OpenGLContextDescription &opengl_desc);
+		OpenGLWindowProvider(OpenGLContextDescription &opengl_desc, const DisplayWindowDescription &description);
 		~OpenGLWindowProvider();
 
 		bool is_double_buffered() const { return double_buffered; }
-		Rect get_geometry() const;
-		Rect get_viewport() const;
+		Rect get_backing_geometry() const;
+		Rect get_backing_viewport() const;
 		bool is_fullscreen() const;
 		bool has_focus() const;
 		bool is_minimized() const;
 		bool is_maximized() const;
 		bool is_visible() const;
 		std::string get_title() const;
-		Size get_minimum_size(bool client_area) const;
-		Size get_maximum_size(bool client_area) const;
+		Size get_backing_minimum_size(bool client_area) const;
+		Size get_backing_maximum_size(bool client_area) const;
 		DisplayWindowHandle get_handle() const override { DisplayWindowHandle handle; handle.hwnd = win32_window.get_hwnd(); return handle; }
 		HDC get_device_context() const { return device_context; }
 		HGLRC get_opengl_context() const { return opengl_context; }
@@ -75,9 +75,8 @@ namespace uicore
 		float get_pixel_ratio() const override;
 
 		void make_current() const;
-		Point client_to_screen(const Point &client);
-		Point screen_to_client(const Point &screen);
-		void create(DisplayWindowSite *site, const DisplayWindowDescription &description);
+		Point backing_client_to_screen(const Point &client);
+		Point backing_screen_to_client(const Point &screen);
 
 		HGLRC get_share_context();
 		void show_system_cursor();
@@ -87,10 +86,10 @@ namespace uicore
 		void set_cursor_handle(HCURSOR cursor);
 		void hide_system_cursor();
 		void set_title(const std::string &new_title);
-		void set_position(const Rect &pos, bool client_area);
-		void set_size(int width, int height, bool client_area);
-		void set_minimum_size(int width, int height, bool client_area);
-		void set_maximum_size(int width, int height, bool client_area);
+		void set_backing_position(const Rect &pos, bool client_area);
+		void set_backing_size(int width, int height, bool client_area);
+		void set_backing_minimum_size(int width, int height, bool client_area);
+		void set_backing_maximum_size(int width, int height, bool client_area);
 		void set_enabled(bool enable);
 		void minimize();
 		void restore();
@@ -101,7 +100,7 @@ namespace uicore
 		void bring_to_front();
 
 		/// \brief Flip OpenGL buffers.
-		void flip(int interval);
+		void backing_flip(int interval);
 
 		/// \brief Capture/Release the mouse.
 		void capture_mouse(bool capture);
@@ -117,12 +116,10 @@ namespace uicore
 		void set_large_icon(const PixelBufferPtr &image);
 		void set_small_icon(const PixelBufferPtr &image);
 
-		void enable_alpha_channel(const Rect &blur_rect);
-		void extend_frame_into_client_area(int left, int top, int right, int bottom);
+		void backing_enable_alpha_channel(const Rect &blur_rect);
+		void backing_extend_frame_into_client_area(int left, int top, int right, int bottom);
 
 		ProcAddress *get_proc_address(const std::string& function_name) const;
-
-		void set_pixel_ratio(float ratio) override;
 
 	private:
 		static BOOL CALLBACK enum_windows_callback_save(HWND hwnd, LPARAM lParam);
@@ -135,22 +132,21 @@ namespace uicore
 		Win32Window win32_window;
 
 		/// \brief OpenGL rendering context for this window.
-		HGLRC opengl_context;
+		HGLRC opengl_context = 0;
 
 		/// \brief Device context for this window.
-		HDC device_context;
+		HDC device_context = 0;
 		HWND shadow_hwnd = 0;
-		bool shadow_window;
-		bool dwm_layered;
-		DisplayWindowSite *site;
-		bool fullscreen;
+		bool shadow_window = false;
+		bool dwm_layered = false;
+		bool fullscreen = false;
 
-		ptr_wglSwapIntervalEXT wglSwapIntervalEXT;
-		int swap_interval;
+		ptr_wglSwapIntervalEXT wglSwapIntervalEXT = nullptr;
+		int swap_interval = -1;
 
 		OpenGLContextDescription opengl_desc;
 
-		bool using_gl3;
-		bool double_buffered;
+		bool using_gl3 = true;
+		bool double_buffered = true;
 	};
 }

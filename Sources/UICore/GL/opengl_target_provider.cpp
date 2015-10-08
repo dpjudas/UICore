@@ -43,16 +43,8 @@ namespace uicore { DisplayWindowProvider *newOpenGLWindowProvider(); }
 
 namespace uicore
 {
-	OpenGLTargetProvider::OpenGLTargetProvider()
+	std::shared_ptr<DisplayWindow> OpenGLTargetProvider::create_display_window(const DisplayWindowDescription &description)
 	{
-	}
-
-	OpenGLTargetProvider::~OpenGLTargetProvider()
-	{
-	}
-
-	DisplayWindowProvider *OpenGLTargetProvider::alloc_display_window()
-	{
-		return new OpenGLWindowProvider(description);
+		return std::make_shared<OpenGLWindowProvider>(context_description, description);
 	}
 }

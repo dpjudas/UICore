@@ -32,11 +32,12 @@
 
 #include "UICore/Core/Signals/signal.h"
 #include "UICore/Display/Window/display_window.h"
+#include "UICore/Core/Math/rect.h"
+#include "UICore/Core/Math/size.h"
 #include <memory>
 
 namespace uicore
 {
-	class Rect;
 	class Size;
 	class Point;
 	class DisplayWindowDescription;
@@ -46,242 +47,196 @@ namespace uicore
 	typedef std::shared_ptr<Cursor> CursorPtr;
 	class CursorDescription;
 
-	/// Display Window site.
-	class DisplayWindowSite
+	class DisplayWindowProvider : public DisplayWindow
 	{
 	public:
-		/// Lost focus signal.
-		Signal<void()> sig_lost_focus;
-
-		/// Obtained focus signal.
-		Signal<void()> sig_got_focus;
-
-		/// Resize signal.
-		Signal<void(float, float)> sig_resize;
-
-		/// Paint signal.
-		Signal<void()> sig_paint;
-
-		/// Window close signal.
-		Signal<void()> sig_window_close;
-
-		/// Window destroy signal.
-		Signal<void()> sig_window_destroy;
-
-		/// Window minimized signal.
-		Signal<void()> sig_window_minimized;
-
-		/// Window maximized signal.
-		Signal<void()> sig_window_maximized;
-
-		/// Window restored signal.
-		Signal<void()> sig_window_restored;
-
-		/// Window resize callback function.
-		std::function<void(Rectf &)> func_window_resize;
-
-		/// Minimize button is clicked callback function.
-		std::function<bool()> func_minimize_clicked;
-
-		/// Window moved signal.
-		Signal<void()> sig_window_moved;
-
-#ifdef WIN32
-		std::function<bool(HWND, UINT, WPARAM, LPARAM)> func_window_message;
-		Signal<void(HWND, UINT, WPARAM, LPARAM)> sig_window_message;
-#endif
-	};
-
-	/// Interface for implementing a DisplayWindow target.
-	class DisplayWindowProvider
-	{
-	public:
-		virtual ~DisplayWindowProvider() { return; }
-
-		/// Returns the position and size of the window frame.
-		virtual Rect get_geometry() const = 0;
-
-		/// Returns the drawable area of the window.
-		virtual Rect get_viewport() const = 0;
-
-		/** Returns the display pixel ratio of the window.
-		 *  \seealso Resolution Independence
-		 */
+		virtual Rect get_backing_geometry() const = 0;
+		virtual Rect get_backing_viewport() const = 0;
+		virtual Size get_backing_minimum_size(bool client_area) const = 0;
+		virtual Size get_backing_maximum_size(bool client_area) const = 0;
+		virtual Point backing_client_to_screen(const Point &client) = 0;
+		virtual Point backing_screen_to_client(const Point &screen) = 0;
+		virtual void set_backing_position(const Rect &pos, bool client_area) = 0;
+		virtual void set_backing_size(int width, int height, bool client_area) = 0;
+		virtual void set_backing_minimum_size(int width, int height, bool client_area) = 0;
+		virtual void set_backing_maximum_size(int width, int height, bool client_area) = 0;
+		virtual void backing_enable_alpha_channel(const Rect &blur_rect) = 0;
+		virtual void backing_extend_frame_into_client_area(int left, int top, int right, int bottom) = 0;
 		virtual float get_pixel_ratio() const = 0;
+		virtual void backing_flip(int interval) = 0;
 
-		/// Returns true if window has focus.
-		virtual bool has_focus() const = 0;
-
-		/// Returns true if the window is minimized.
-		virtual bool is_minimized() const = 0;
-
-		/// Returns true if the window is maximized.
-		virtual bool is_maximized() const = 0;
-
-		/// Returns true if the window is visible.
-		virtual bool is_visible() const = 0;
-
-		/// Returns true if the window is fullscreen.
-		virtual bool is_fullscreen() const = 0;
-
-		/// Returns the minimum size of the window.
-		virtual Size get_minimum_size(bool client_area) const = 0;
-
-		/// Returns the maximum size of the window.
-		virtual Size get_maximum_size(bool client_area) const = 0;
-
-		/// Returns the maximum size of the window.
-		virtual std::string get_title() const = 0;
-
-		/// Returns the graphic context for the window.
-		virtual const GraphicContextPtr &get_gc() const = 0;
-
-		/// \brief Returns the keyboard input device.
-		virtual const InputDevicePtr &get_keyboard() const = 0;
-
-		/// \brief Returns the mouse input device.
-		virtual const InputDevicePtr &get_mouse() const = 0;
-
-		/// \brief Returns the game controller input device.
-		virtual const std::vector<InputDevicePtr> &get_game_controllers() const = 0;
-
-		/** Returns an platform-specific internal display window handle object.
-		 */
-		virtual DisplayWindowHandle get_handle() const = 0;
-
-		/// Returns true if text is available in the clipboard.
-		virtual bool is_clipboard_text_available() const = 0;
-
-		/// Returns true if an image is available in the clipboard.
-		virtual bool is_clipboard_image_available() const = 0;
-
-		/// Returns the text stored in the clipboard.
-		virtual std::string get_clipboard_text() const = 0;
-
-		/// Returns the image stored in the clipboard.
-		virtual PixelBufferPtr get_clipboard_image() const = 0;
-
-		/// Convert from window client coordinates to screen coordinates.
-		virtual Point client_to_screen(const Point &client) = 0;
-
-		/// Convert from screen coordinates to client coordinates.
-		virtual Point screen_to_client(const Point &screen) = 0;
-
-		/// Capture/Release the mouse.
-		virtual void capture_mouse(bool capture) = 0;
-
-		/// Invalidates the screen, causing a repaint.
-		virtual void request_repaint() = 0;
-
-		/// Creates window, assigning site and description to provider.
-		virtual void create(DisplayWindowSite *site, const DisplayWindowDescription &description) = 0;
-
-		/// Shows the mouse cursor.
-		virtual void show_system_cursor() = 0;
-
-		/// Hides the mouse cursor.
-		virtual void hide_system_cursor() = 0;
-
-		/// Creates a new custom cursor.
 		virtual CursorPtr create_cursor(const CursorDescription &cursor_description) = 0;
 
-		/// Sets the current cursor icon.
-		virtual void set_cursor(const CursorPtr &cursor) = 0;
-
-		/// Sets the current cursor icon.
-		virtual void set_cursor(StandardCursor type) = 0;
-
+		Signal<void()> &sig_lost_focus() override { return _sig_lost_focus; }
+		Signal<void()> &sig_got_focus() override { return _sig_got_focus; }
+		Signal<void(float, float)> &sig_resize() override { return _sig_resize; }
+		Signal<void()> &sig_paint() override { return _sig_paint; }
+		Signal<void()> &sig_window_close() override { return _sig_window_close; }
+		Signal<void()> &sig_window_destroy() override { return _sig_window_destroy; }
+		Signal<void()> &sig_window_minimized() override { return _sig_window_minimized; }
+		Signal<void()> &sig_window_maximized() override { return _sig_window_maximized; }
+		Signal<void()> &sig_window_restored() override { return _sig_window_restored; }
+		Signal<void()> &sig_window_moved() override { return _sig_window_moved; }
+		Signal<void()> &sig_window_flip() override { return _sig_window_flip; }
+		std::function<void(Rectf &)> &func_window_resize() override { return _func_window_resize; }
+		std::function<bool()> &func_minimize_clicked() override { return _func_minimize_clicked; }
 #ifdef WIN32
-		/// Sets the current cursor handle (win32 only)
-		virtual void set_cursor_handle(HCURSOR cursor) = 0;
+		std::function<bool(HWND, UINT, WPARAM, LPARAM)> &func_window_message() override { return _func_window_message; }
+		Signal<void(HWND, UINT, WPARAM, LPARAM)> &sig_window_message() override { return _sig_window_message; }
 #endif
 
-		/// Change window title.
-		virtual void set_title(const std::string &new_title) = 0;
+		virtual void show_system_cursor() = 0;
+		virtual void hide_system_cursor() = 0;
 
-		/// Sets the position and size of this window on the screen.
-		virtual void set_position(const Rect &pos, bool client_area) = 0;
+		void show_cursor() override { show_system_cursor(); }
+		void hide_cursor() override { hide_system_cursor(); }
 
-		/** Sets the size of this window.
-		 *  \param width       Minimum width of the window.
-		 *  \param height      Minimum height of the window.
-		 *  \param client_area Size includes the entire window frame?
-		 */
-		virtual void set_size(int width, int height, bool client_area) = 0;
+		Rectf get_geometry() const override
+		{
+			Rect geometryi = get_backing_geometry();
+			Rectf geometry;
+			geometry.left = geometryi.left / get_pixel_ratio();
+			geometry.top = geometryi.top / get_pixel_ratio();
+			geometry.right = geometryi.right / get_pixel_ratio();
+			geometry.bottom = geometryi.bottom / get_pixel_ratio();
+			return geometry;
+		}
 
-		/** Sets the minimum size allowed for this window when resizing.
-		 *  \param width       Minimum width of the window.
-		 *  \param height      Minimum height of the window.
-		 *  \param client_area Size includes the entire window frame?
-		 */
-		virtual void set_minimum_size(int width, int height, bool client_area) = 0;
+		Rectf get_viewport() const override
+		{
+			Rect viewporti = get_backing_viewport();
+			Rectf viewport;
+			viewport.left = viewporti.left / get_pixel_ratio();
+			viewport.top = viewporti.top / get_pixel_ratio();
+			viewport.right = viewporti.right / get_pixel_ratio();
+			viewport.bottom = viewporti.bottom / get_pixel_ratio();
+			return viewport;
+		}
 
-		/** Sets the maximum size allowed for this window when resizing.
-		 *  \param width       Maximum width of the window.
-		 *  \param height      Maximum height of the window.
-		 *  \param client_area Size includes the entire window frame?
-		 */
-		virtual void set_maximum_size(int width, int height, bool client_area) = 0;
+		Sizef get_minimum_size(bool client_area) override
+		{
+			Size sizei = get_backing_minimum_size(client_area);
+			Sizef sizef;
+			sizef.width = sizei.width / get_pixel_ratio();
+			sizef.height = sizei.height / get_pixel_ratio();
+			return sizef;
+		}
 
-		/** Sets the display pixel ratio of this window.
-		 *  \param ratio The new display pixel ratio to use on this window.
-		 */
-		virtual void set_pixel_ratio(float ratio) = 0;
+		Sizef get_maximum_size(bool client_area) override
+		{
+			Size sizei = get_backing_maximum_size(client_area);
+			Sizef sizef;
+			sizef.width = sizei.width / get_pixel_ratio();
+			sizef.height = sizei.height / get_pixel_ratio();
+			return sizef;
+		}
 
-		/// Enables or disables input into this window.
-		virtual void set_enabled(bool enable) = 0;
+		Pointf client_to_screen(const Pointf &client)
+		{
+			Point clienti;
+			clienti.x = (int)std::round(client.x * get_pixel_ratio());
+			clienti.y = (int)std::round(client.y * get_pixel_ratio());
+			Point screeni = backing_client_to_screen(clienti);
+			Pointf screen;
+			screen.x = screeni.x / get_pixel_ratio();
+			screen.y = screeni.y / get_pixel_ratio();
+			return screen;
+		}
 
-		/// Minimizes the window.
-		virtual void minimize() = 0;
+		Pointf screen_to_client(const Pointf &screen)
+		{
+			Point screeni;
+			screeni.x = (int)std::round(screen.x * get_pixel_ratio());
+			screeni.y = (int)std::round(screen.y * get_pixel_ratio());
+			Point clienti = backing_screen_to_client(screeni);
+			Pointf client;
+			client.x = clienti.x / get_pixel_ratio();
+			client.y = clienti.y / get_pixel_ratio();
+			return client;
+		}
 
-		/// Restores the window.
-		virtual void restore() = 0;
+		void set_position(const Rectf &rect, bool client_area)
+		{
+			Rect recti;
+			recti.left = (int)std::round(rect.left * get_pixel_ratio());
+			recti.top = (int)std::round(rect.top * get_pixel_ratio());
+			recti.right = (int)std::round(rect.right * get_pixel_ratio());
+			recti.bottom = (int)std::round(rect.bottom * get_pixel_ratio());
+			set_backing_position(recti, client_area);
+		}
 
-		/// Maximizes the window.
-		virtual void maximize() = 0;
+		void set_position(float x, float y)
+		{
+			int xi = (int)std::round(x * get_pixel_ratio());
+			int yi = (int)std::round(y * get_pixel_ratio());
+			Rect geometry = get_backing_geometry();
+			set_backing_position(Rect(xi, yi, xi + geometry.get_width(), yi + geometry.get_height()), false);
+		}
 
-		/// Toggle fullscreen
-		/// Only Win32 implementation for now
-		virtual void toggle_fullscreen() = 0;
+		void set_size(float width, float height, bool client_area)
+		{
+			int widthi = (int)std::round(width * get_pixel_ratio());
+			int heighti = (int)std::round(height * get_pixel_ratio());
+			set_backing_size(widthi, heighti, client_area);
+		}
 
-		/// Displays the window in its current size and position.
-		virtual void show(bool activate) = 0;
+		void set_minimum_size(float width, float height, bool client_area)
+		{
+			int widthi = (int)std::round(width * get_pixel_ratio());
+			int heighti = (int)std::round(height * get_pixel_ratio());
+			set_backing_minimum_size(widthi, heighti, client_area);
+		}
 
-		/// Hides the window.
-		virtual void hide() = 0;
+		void set_maximum_size(float width, float height, bool client_area)
+		{
+			int widthi = (int)std::round(width * get_pixel_ratio());
+			int heighti = (int)std::round(height * get_pixel_ratio());
+			set_backing_maximum_size(widthi, heighti, client_area);
+		}
 
-		/// Raise window on top of other windows.
-		virtual void bring_to_front() = 0;
+		void enable_alpha_channel(const Rectf &blur_rect)
+		{
+			Rect blur_recti;
+			blur_recti.left = (int)std::round(blur_rect.left * get_pixel_ratio());
+			blur_recti.top = (int)std::round(blur_rect.top * get_pixel_ratio());
+			blur_recti.right = (int)std::round(blur_rect.right * get_pixel_ratio());
+			blur_recti.bottom = (int)std::round(blur_rect.bottom * get_pixel_ratio());
+			backing_enable_alpha_channel(blur_recti);
+		}
 
-		/// Flip the window display buffers.
-		virtual void flip(int interval) = 0;
+		void extend_frame_into_client_area(float left, float top, float right, float bottom)
+		{
+			int lefti = (int)std::round(left * get_pixel_ratio());
+			int topi = (int)std::round(top * get_pixel_ratio());
+			int righti = (int)std::round(right * get_pixel_ratio());
+			int bottomi = (int)std::round(bottom * get_pixel_ratio());
+			backing_extend_frame_into_client_area(lefti, topi, righti, bottomi);
+		}
 
-		/// Stores text in the clipboard.
-		virtual void set_clipboard_text(const std::string &text) = 0;
+		void flip(int interval) override
+		{
+			_sig_window_flip();
+			backing_flip(interval);
+		}
 
-		/// Stores an image in the clipboard.
-		virtual void set_clipboard_image(const PixelBufferPtr &buf) = 0;
+	private:
+		Signal<void()> _sig_lost_focus;
+		Signal<void()> _sig_got_focus;
+		Signal<void(float, float)> _sig_resize;
+		Signal<void()> _sig_paint;
+		Signal<void()> _sig_window_close;
+		Signal<void()> _sig_window_destroy;
+		Signal<void()> _sig_window_minimized;
+		Signal<void()> _sig_window_maximized;
+		Signal<void()> _sig_window_restored;
+		std::function<void(Rectf &)> _func_window_resize;
+		std::function<bool()> _func_minimize_clicked;
+		Signal<void()> _sig_window_moved;
+		Signal<void()> _sig_window_flip;
 
-		/// Sets the large icon used for this window.
-		virtual void set_large_icon(const PixelBufferPtr &image) = 0;
-
-		/// Sets the small icon used for this window.
-		virtual void set_small_icon(const PixelBufferPtr &image) = 0;
-
-		/** Enable alpha channel blending for this window.
-		 *
-		 *  \note This is only supported on Windows Vista and above. You can use
-		 *        layered windows to achieve the same effect on systems that do
-		 *        not support this.
-		 *
-		 *  \param blur_rect Window blur area. If its size is `0`, the area of
-		 *                   the entire window will be used.
-		 */
-		virtual void enable_alpha_channel(const Rect &blur_rect) = 0;
-
-		/** Extend the window frame into the client area.
-		 *  \note This is only applicable in Windows.
-		 */
-		virtual void extend_frame_into_client_area(int left, int top, int right, int bottom) = 0;
+#ifdef WIN32
+		std::function<bool(HWND, UINT, WPARAM, LPARAM)> _func_window_message;
+		Signal<void(HWND, UINT, WPARAM, LPARAM)> _sig_window_message;
+#endif
 	};
 }
