@@ -35,10 +35,14 @@ namespace uicore
 {
 	/// \brief Typed access to an uniform buffer
 	template<typename Type>
-	class UniformVector : public UniformBuffer
+	class UniformVector
 	{
 	public:
 		/// \brief Constructs a uniform vector
+		UniformVector()
+		{
+		}
+
 		UniformVector(const GraphicContextPtr &gc, int size, BufferUsage usage = usage_static_draw)
 			: _buffer(UniformBuffer::create(gc, size * sizeof(Type), usage))
 		{

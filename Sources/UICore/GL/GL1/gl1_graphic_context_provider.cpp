@@ -407,9 +407,9 @@ namespace uicore
 		return std::make_shared<TextureCubeArrayImpl<GL1TextureProvider>>(GL1TextureProvider::InitData(), width, height, array_size, texture_format, levels);
 	}
 
-	std::shared_ptr<PixelBuffer> create_pixel_buffer(const void *data, const Size &new_size, PixelBufferDirection direction, TextureFormat new_format, BufferUsage usage)
+	std::shared_ptr<TransferTexture> GL1GraphicContextProvider::create_transfer_texture(const void *data, const Size &new_size, PixelBufferDirection direction, TextureFormat new_format, BufferUsage usage)
 	{
-		throw Exception("Pixel Buffers Objects are not supported for OpenGL 1.3");
+		throw Exception("Transfer textures are not supported for OpenGL 1.3");
 	}
 
 	void GL1GraphicContextProvider::set_rasterizer_state(const RasterizerStatePtr &state)

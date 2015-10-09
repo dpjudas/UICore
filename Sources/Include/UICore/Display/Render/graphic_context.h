@@ -405,7 +405,7 @@ namespace uicore
 		void reset_texture(int unit_index) { set_texture(unit_index, nullptr); }
 
 		/// Remove all selected textures
-		void reset_textures(int start_index, size_t count) { for (int i = 0; i < (size_t)count; i++) set_texture(start_index + i, nullptr); }
+		void reset_textures(int start_index, size_t count) { for (int i = 0; i < (int)count; i++) set_texture(start_index + i, nullptr); }
 
 		/// Select texture image into index.
 		///
@@ -428,7 +428,7 @@ namespace uicore
 		void reset_image_texture(int unit_index) { set_image_texture(unit_index, nullptr); }
 
 		/// Remove all selected textures
-		void reset_image_textures(int start_index, size_t count) { for (int i = 0; i < (size_t)count; i++) set_image_texture(start_index + i, nullptr); }
+		void reset_image_textures(int start_index, size_t count) { for (int i = 0; i < (int)count; i++) set_image_texture(start_index + i, nullptr); }
 
 		/// Set active rasterizer state
 		virtual void set_rasterizer_state(const RasterizerStatePtr &state) = 0;

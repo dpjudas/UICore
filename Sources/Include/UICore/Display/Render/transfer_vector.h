@@ -34,7 +34,7 @@ namespace uicore
 {
 	/// \brief Typed access to a transfer buffer
 	template<typename Type>
-	class TransferVector : public TransferBuffer
+	class TransferVector
 	{
 	public:
 		/// \brief Constructs a transfer vector

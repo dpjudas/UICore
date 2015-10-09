@@ -101,9 +101,6 @@ namespace uicore
 	class DisplayWindow
 	{
 	public:
-		/// \brief Constructs a null instance.
-		DisplayWindow();
-
 		/// \brief Constructs a window.
 		///
 		/// \param title = Titlebar text.
