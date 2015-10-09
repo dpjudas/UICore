@@ -27,29 +27,39 @@
 **    Harry Storbacka
 */
 
-#pragma once
-
-
-#include "gl3_graphic_context_provider.h"
-#include "UICore/Display/Render/render_buffer.h"
-#include "UICore/GL/gl_share_list.h"
+#include "UICore/precomp.h"
+#include "gl_share_list.h"
 
 namespace uicore
 {
-	class GL3RenderBufferProvider : public RenderBuffer, GLSharedResource
+	void GLShareList::context_created(GraphicContextProvider *gc)
 	{
-	public:
-		GL3RenderBufferProvider(int width, int height, TextureFormat texture_format, int multisample_samples);
-		~GL3RenderBufferProvider();
+		contexts.push_back(gc);
+	}
 
-		GLuint get_handle();
+	void GLShareList::context_destroyed(GraphicContextProvider *gc)
+	{
+		bool last_context = contexts.front() == contexts.back();
+		if (last_context)
+		{
+			std::list<GLSharedResource *>::iterator it;
+			for (it = resources.begin(); it != resources.end(); ++it)
+				(*it)->dispose();
+		}
 
-		Size size() const override { return _size; }
+		contexts.erase(std::find(contexts.begin(), contexts.end(), gc));
+	}
 
-	private:
-		void on_dispose() override;
+	std::list<GLSharedResource *>::iterator GLShareList::resource_created(GLSharedResource *resource)
+	{
+		return resources.insert(resources.end(), resource);
+	}
 
-		GLuint handle = 0;
-		Size _size;
-	};
+	void GLShareList::resource_destroyed(std::list<GLSharedResource *>::iterator it)
+	{
+		resources.erase(it);
+	}
+
+	std::list<GraphicContextProvider *> GLShareList::contexts;
+	std::list<GLSharedResource *> GLShareList::resources;
 }

@@ -38,7 +38,7 @@
 #include "UICore/Display/display_target.h"
 #include "UICore/Display/TargetProviders/display_window_provider.h"
 #include "UICore/Display/Window/display_window.h"
-#include "UICore/Display/Render/shared_gc_data.h"
+#include "UICore/GL/gl_share_list.h"
 #include "UICore/GL/opengl.h"
 #include "UICore/GL/opengl_wrap.h"
 #include "UICore/GL/opengl_context_description.h"
@@ -637,19 +637,18 @@ namespace uicore
 	HGLRC OpenGLWindowProvider::get_share_context()
 	{
 		HGLRC share_context = 0;
-		std::unique_ptr<std::unique_lock<std::recursive_mutex>> mutex_section;
-		GraphicContextProvider* gc_providers = SharedGCData::get_provider(mutex_section);
-		if (gc_providers)
+		GraphicContextProvider* gc = GLShareList::any_context();
+		if (gc)
 		{
 			const DisplayWindowProvider *rwp = NULL;
 
-			GL3GraphicContextProvider *gl3_provider = dynamic_cast<GL3GraphicContextProvider*>(gc_providers);
+			GL3GraphicContextProvider *gl3_provider = dynamic_cast<GL3GraphicContextProvider*>(gc);
 			if (gl3_provider)
 				rwp = &gl3_provider->get_render_window();
 
 			if (!rwp)
 			{
-				GL1GraphicContextProvider *gl1_provider = dynamic_cast<GL1GraphicContextProvider*>(gc_providers);
+				GL1GraphicContextProvider *gl1_provider = dynamic_cast<GL1GraphicContextProvider*>(gc);
 				if (gl1_provider)
 					rwp = &gl1_provider->get_render_window();
 			}

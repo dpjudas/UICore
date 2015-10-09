@@ -84,7 +84,6 @@
 #include "Display/Render/render_batcher.h"
 #include "Display/Render/render_buffer.h"
 #include "Display/Render/shader_object.h"
-#include "Display/Render/shared_gc_data.h"
 #include "Display/Render/texture.h"
 #include "Display/Render/transfer_texture.h"
 #include "Display/Render/texture_1d.h"

@@ -35,16 +35,13 @@
 #include "UICore/Core/System/exception.h"
 #include "UICore/Core/Text/string_format.h"
 #include "UICore/Core/Text/text.h"
-#include "UICore/Display/Render/shared_gc_data.h"
 #include "gl3_graphic_context_provider.h"
 #include "gl3_uniform_buffer_provider.h"
 
 namespace uicore
 {
 	GL3ProgramObjectProvider::GL3ProgramObjectProvider()
-		: handle(0)
 	{
-		SharedGCData::add_disposable(this);
 		OpenGL::set_active();
 		handle = glCreateProgram();
 	}
@@ -52,7 +49,6 @@ namespace uicore
 	GL3ProgramObjectProvider::~GL3ProgramObjectProvider()
 	{
 		dispose();
-		SharedGCData::remove_disposable(this);
 	}
 
 	void GL3ProgramObjectProvider::on_dispose()
@@ -62,6 +58,7 @@ namespace uicore
 			if (OpenGL::set_active())
 			{
 				glDeleteProgram(handle);
+				handle = 0;
 			}
 		}
 	}

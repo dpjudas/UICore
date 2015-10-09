@@ -24,42 +24,46 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    Harry Storbacka
 **    Mark Page
 */
 
 #pragma once
 
-#include "UICore/Display/2D/canvas.h"
-#include "UICore/Display/Window/display_window.h"
+#include "UICore/Core/System/disposable_object.h"
+#include <memory>
+#include <list>
 
 namespace uicore
 {
-	class SharedGCData_Impl
+	class GraphicContextProvider;
+	class GLSharedResource;
+
+	class GLShareList
 	{
 	public:
-		SharedGCData_Impl();
-		~SharedGCData_Impl();
+		static void context_created(GraphicContextProvider *gc);
+		static void context_destroyed(GraphicContextProvider *gc);
 
-		void add_provider(GraphicContextProvider *provider);
-		void remove_provider(GraphicContextProvider *provider);
-		std::vector<GraphicContextProvider*> &get_gc_providers();
-		GraphicContextProvider *get_provider();
-
-		void dispose_objects();
-		void add_disposable(DisposableObject *disposable);
-		void remove_disposable(DisposableObject *disposable);
-
-		Canvas &get_resource_canvas();
-
-		int reference_count;
-		static std::recursive_mutex cl_sharedgc_mutex;
-		static SharedGCData *cl_sharedgc;
+		static GraphicContextProvider *any_context() { return !contexts.empty() ? contexts.front() : nullptr; }
+		static const std::list<GraphicContextProvider *> &all_contexts() { return contexts; }
 
 	private:
-		Signal<void()> sig_destruction_imminent;
+		static std::list<GLSharedResource *>::iterator resource_created(GLSharedResource *resource);
+		static void resource_destroyed(std::list<GLSharedResource *>::iterator it);
 
-		std::vector<GraphicContextProvider*> graphic_context_providers;
-		std::vector<DisposableObject*> disposable_objects;
+		static std::list<GraphicContextProvider *> contexts;
+		static std::list<GLSharedResource *> resources;
+
+		friend class GLSharedResource;
+	};
+
+	class GLSharedResource : public DisposableObject
+	{
+	public:
+		GLSharedResource() { shared_it = GLShareList::resource_created(this); }
+		virtual ~GLSharedResource() { GLShareList::resource_destroyed(shared_it); }
+
+	private:
+		std::list<GLSharedResource *>::iterator shared_it;
 	};
 }

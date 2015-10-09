@@ -31,6 +31,16 @@
 
 namespace uicore
 {
+	void D3DShareList::context_created(D3DGraphicContextProvider *gc)
+	{
+		contexts.push_back(gc);
+	}
+
+	void D3DShareList::context_destroyed(D3DGraphicContextProvider *gc)
+	{
+		contexts.erase(std::find(contexts.begin(), contexts.end(), gc));
+	}
+
 	void D3DShareList::device_destroyed(ID3D11Device *device)
 	{
 		std::list<D3DSharedResource *>::iterator it;
@@ -48,5 +58,6 @@ namespace uicore
 		resources.erase(it);
 	}
 
+	std::list<D3DGraphicContextProvider *> D3DShareList::contexts;
 	std::list<D3DSharedResource *> D3DShareList::resources;
 }

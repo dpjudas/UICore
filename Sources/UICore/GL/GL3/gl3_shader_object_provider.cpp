@@ -34,14 +34,11 @@
 #include "UICore/Core/System/exception.h"
 #include "UICore/Core/Text/text.h"
 #include "UICore/Core/Text/string_format.h"
-#include "UICore/Display/Render/shared_gc_data.h"
 
 namespace uicore
 {
 	GL3ShaderObjectProvider::GL3ShaderObjectProvider(ShaderType shader_type, const std::string &source)
 	{
-		SharedGCData::add_disposable(this);
-
 		OpenGL::set_active();
 
 		type = shader_type;
@@ -57,7 +54,6 @@ namespace uicore
 	GL3ShaderObjectProvider::~GL3ShaderObjectProvider()
 	{
 		dispose();
-		SharedGCData::remove_disposable(this);
 	}
 
 	void GL3ShaderObjectProvider::on_dispose()
@@ -67,6 +63,7 @@ namespace uicore
 			if (OpenGL::set_active())
 			{
 				glDeleteShader(handle);
+				handle = 0;
 			}
 		}
 	}

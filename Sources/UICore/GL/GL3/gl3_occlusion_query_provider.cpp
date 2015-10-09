@@ -29,7 +29,6 @@
 #include "UICore/precomp.h"
 #include "gl3_occlusion_query_provider.h"
 #include "UICore/GL/opengl_wrap.h"
-#include "UICore/Display/Render/shared_gc_data.h"
 #include "gl3_graphic_context_provider.h"
 
 namespace uicore
@@ -37,8 +36,6 @@ namespace uicore
 	GL3OcclusionQueryProvider::GL3OcclusionQueryProvider(GL3GraphicContextProvider *gc_provider)
 		: handle(0), gc_provider(gc_provider)
 	{
-		SharedGCData::add_disposable(this);
-
 		OpenGL::set_active(gc_provider);
 
 		if (handle)
@@ -53,7 +50,6 @@ namespace uicore
 	GL3OcclusionQueryProvider::~GL3OcclusionQueryProvider()
 	{
 		dispose();
-		SharedGCData::remove_disposable(this);
 	}
 
 	void GL3OcclusionQueryProvider::on_dispose()
@@ -63,6 +59,7 @@ namespace uicore
 			if (OpenGL::set_active())
 			{
 				glDeleteQueries(1, &handle);
+				handle = 0;
 			}
 		}
 	}

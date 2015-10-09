@@ -34,7 +34,6 @@
 #include "UICore/Display/Render/texture.h"
 #include "UICore/GL/opengl_wrap.h"
 #include "UICore/GL/opengl.h"
-#include "UICore/Display/Render/shared_gc_data.h"
 #include "gl1_frame_buffer_provider.h"
 #include "gl1_render_buffer_provider.h"
 #include "gl1_texture_provider.h"

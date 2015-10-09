@@ -49,7 +49,7 @@
 #include "UICore/Display/Render/primitives_array.h"
 #include "UICore/Display/Render/program_object.h"
 #include "UICore/Display/TargetProviders/display_window_provider.h"
-#include "UICore/Display/Render/shared_gc_data.h"
+#include "UICore/GL/gl_share_list.h"
 #include "UICore/GL/opengl.h"
 #include "UICore/GL/opengl_wrap.h"
 #include "UICore/Display/2D/image.h"
@@ -109,7 +109,7 @@ namespace uicore
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 
-		SharedGCData::add_provider(this);
+		GLShareList::context_created(this);
 	}
 
 	GL1GraphicContextProvider::~GL1GraphicContextProvider()
@@ -122,7 +122,7 @@ namespace uicore
 		while (!disposable_objects.empty())
 			disposable_objects.front()->dispose();
 
-		SharedGCData::remove_provider(this);
+		GLShareList::context_destroyed(this);
 		OpenGL::remove_active(this);
 	}
 

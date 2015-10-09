@@ -41,12 +41,13 @@
 #include "UICore/Display/TargetProviders/texture_provider.h"
 #include "UICore/Core/System/disposable_object.h"
 #include "UICore/GL/opengl.h"
+#include "UICore/GL/gl_share_list.h"
 
 namespace uicore
 {
 	class GL3GraphicContextProvider;
 
-	class GL3TextureProvider : public TextureObject, public DisposableObject
+	class GL3TextureProvider : public TextureObject, public GLSharedResource
 	{
 	public:
 		struct HandleInit

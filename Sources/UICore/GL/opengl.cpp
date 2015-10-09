@@ -37,11 +37,11 @@
 #include "UICore/Display/Render/graphic_context.h"
 #include "UICore/Display/Render/texture.h"
 #include "UICore/Display/TargetProviders/display_window_provider.h"
-#include "UICore/Display/Render/shared_gc_data.h"
 #include "UICore/Display/TargetProviders/graphic_context_provider.h"
 #include "GL3/gl3_graphic_context_provider.h"
 #include "GL3/gl3_texture_provider.h"
 #include <map>
+#include <mutex>
 
 #if defined(__IOS__)
 #include <OpenGLES/ES2/gl.h>
@@ -296,8 +296,7 @@ namespace uicore
 		if (cl_active_opengl_gc)	// If already active, we can exit now
 			return true;
 
-		std::unique_ptr<std::unique_lock<std::recursive_mutex>> mutex_section;
-		GraphicContextProvider* shared_provider = SharedGCData::get_provider(mutex_section);
+		GraphicContextProvider* shared_provider = GLShareList::any_context();
 		if (shared_provider)
 		{
 			OpenGLGraphicContextProvider *gc_provider = dynamic_cast<OpenGLGraphicContextProvider*>(shared_provider);

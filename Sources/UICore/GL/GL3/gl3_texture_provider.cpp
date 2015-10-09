@@ -32,7 +32,6 @@
 #include "gl3_graphic_context_provider.h"
 #include "UICore/Display/Image/pixel_buffer.h"
 #include "UICore/Display/Render/texture.h"
-#include "UICore/Display/Render/shared_gc_data.h"
 #include "UICore/Display/TargetProviders/texture_provider.h"
 #include "UICore/GL/opengl_wrap.h"
 #include "UICore/GL/opengl.h"
@@ -46,7 +45,6 @@ namespace uicore
 	{
 		if (init.orig_texture == nullptr)
 		{
-			SharedGCData::add_disposable(this);
 			TextureStateTracker state_tracker(texture_type, handle);
 			glGetIntegerv(GL_TEXTURE_WIDTH, &width);
 			glGetIntegerv(GL_TEXTURE_HEIGHT, &height);
@@ -181,8 +179,6 @@ namespace uicore
 			throw Exception("Unsupported texture type");
 		}
 
-		SharedGCData::add_disposable(this);
-
 		TextureStateTracker state_tracker(texture_type, 0);
 		glGenTextures(1, &handle);
 		glBindTexture(texture_type, handle);
@@ -198,7 +194,6 @@ namespace uicore
 	GL3TextureProvider::~GL3TextureProvider()
 	{
 		dispose();
-		SharedGCData::remove_disposable(this);
 	}
 
 	void GL3TextureProvider::on_dispose()
@@ -208,6 +203,7 @@ namespace uicore
 			if (OpenGL::set_active())
 			{
 				glDeleteTextures(1, &handle);
+				handle = 0;
 			}
 		}
 	}

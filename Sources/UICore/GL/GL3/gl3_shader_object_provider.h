@@ -33,13 +33,13 @@
 #include "UICore/Display/TargetProviders/shader_object_provider.h"
 #include "UICore/GL/opengl_wrap.h"
 #include "UICore/GL/opengl.h"
-#include "UICore/Core/System/disposable_object.h"
+#include "UICore/GL/gl_share_list.h"
 
 namespace uicore
 {
 	class GL3GraphicContextProvider;
 
-	class GL3ShaderObjectProvider : public ShaderObjectProvider, DisposableObject
+	class GL3ShaderObjectProvider : public ShaderObjectProvider, GLSharedResource
 	{
 	public:
 		GL3ShaderObjectProvider(ShaderType type, const std::string &source);

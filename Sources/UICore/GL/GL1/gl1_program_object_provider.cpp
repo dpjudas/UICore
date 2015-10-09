@@ -35,7 +35,6 @@
 #include "UICore/Core/System/exception.h"
 #include "UICore/Core/Text/string_format.h"
 #include "UICore/Core/Text/text.h"
-#include "UICore/Display/Render/shared_gc_data.h"
 #include "gl1_graphic_context_provider.h"
 
 namespace uicore

@@ -34,12 +34,13 @@
 #include "UICore/Display/TargetProviders/primitives_array_provider.h"
 #include "UICore/Core/System/disposable_object.h"
 #include "UICore/GL/opengl.h"
+#include "UICore/GL/gl_share_list.h"
 
 namespace uicore
 {
 	class GL1GraphicContextProvider;
 
-	class GL1TextureProvider : public TextureObject, public DisposableObject
+	class GL1TextureProvider : public TextureObject, GLSharedResource
 	{
 	public:
 		struct HandleInit {};

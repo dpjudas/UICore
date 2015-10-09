@@ -31,13 +31,13 @@
 
 #include "UICore/Display/Render/occlusion_query.h"
 #include "UICore/GL/opengl.h"
-#include "UICore/Core/System/disposable_object.h"
+#include "UICore/GL/gl_share_list.h"
 
 namespace uicore
 {
 	class GL3GraphicContextProvider;
 
-	class GL3OcclusionQueryProvider : public OcclusionQuery, DisposableObject
+	class GL3OcclusionQueryProvider : public OcclusionQuery, GLSharedResource
 	{
 	public:
 		GL3OcclusionQueryProvider(GL3GraphicContextProvider *gc_provider);

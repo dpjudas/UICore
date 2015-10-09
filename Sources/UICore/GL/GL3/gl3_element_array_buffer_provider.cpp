@@ -31,7 +31,6 @@
 #include "gl3_element_array_buffer_provider.h"
 #include "gl3_graphic_context_provider.h"
 #include "UICore/GL/opengl_wrap.h"
-#include "UICore/Display/Render/shared_gc_data.h"
 
 namespace uicore
 {

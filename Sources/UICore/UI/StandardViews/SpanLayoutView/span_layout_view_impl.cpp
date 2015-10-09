@@ -33,7 +33,6 @@
 #include "UICore/Display/2D/brush.h"
 #include "UICore/Display/Font/glyph_metrics.h"
 #include "UICore/Display/Font/font_metrics.h"
-#include "UICore/Display/Render/shared_gc_data.h"
 #include <algorithm>
 
 namespace uicore

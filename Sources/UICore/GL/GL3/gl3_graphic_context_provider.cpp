@@ -58,7 +58,7 @@
 #include "UICore/Display/Render/program_object.h"
 #include "UICore/Display/TargetProviders/display_window_provider.h"
 #include "UICore/Display/TargetProviders/texture_provider.h"
-#include "UICore/Display/Render/shared_gc_data.h"
+#include "UICore/GL/gl_share_list.h"
 #include "UICore/GL/opengl.h"
 #include "UICore/GL/opengl_wrap.h"
 #include "UICore/Display/2D/image.h"
@@ -92,7 +92,7 @@ namespace uicore
 
 		reset_program_object();
 
-		SharedGCData::add_provider(this);
+		GLShareList::context_created(this);
 	}
 
 	GL3GraphicContextProvider::~GL3GraphicContextProvider()
@@ -102,14 +102,9 @@ namespace uicore
 
 	void GL3GraphicContextProvider::create_standard_programs()
 	{
-		// Find an existing provider
-		std::unique_ptr<std::unique_lock<std::recursive_mutex>> mutex_section;
-		std::vector<GraphicContextProvider*> &gc_providers = SharedGCData::get_gc_providers(mutex_section);
-
-		unsigned int max = gc_providers.size();
-		for (unsigned int cnt = 0; cnt < max; cnt++)
+		for (GraphicContextProvider *gc : GLShareList::all_contexts())
 		{
-			GL3GraphicContextProvider* gc_provider = dynamic_cast<GL3GraphicContextProvider *>(gc_providers[cnt]);
+			GL3GraphicContextProvider* gc_provider = dynamic_cast<GL3GraphicContextProvider *>(gc);
 			if (gc_provider != this)
 			{
 				standard_programs = gc_provider->standard_programs;
@@ -120,6 +115,7 @@ namespace uicore
 		standard_programs = GL3StandardPrograms(this);
 
 	}
+
 	void GL3GraphicContextProvider::on_dispose()
 	{
 		while (!disposable_objects.empty())
@@ -127,11 +123,9 @@ namespace uicore
 
 		standard_programs = GL3StandardPrograms();
 
-		SharedGCData::remove_provider(this);
+		GLShareList::context_destroyed(this);
 		OpenGL::remove_active(this);
-
 	}
-
 
 	void GL3GraphicContextProvider::add_disposable(DisposableObject *disposable)
 	{

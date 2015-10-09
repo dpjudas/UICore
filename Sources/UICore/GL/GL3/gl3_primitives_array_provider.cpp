@@ -30,7 +30,6 @@
 #include "gl3_primitives_array_provider.h"
 #include "gl3_vertex_array_buffer_provider.h"
 #include "gl3_graphic_context_provider.h"
-#include "UICore/Display/Render/shared_gc_data.h"
 
 namespace uicore
 {

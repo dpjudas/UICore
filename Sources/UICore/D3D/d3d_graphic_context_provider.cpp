@@ -46,7 +46,6 @@
 #include "UICore/Display/Font/font.h"
 #include "UICore/Display/Font/font_metrics.h"
 #include "UICore/Display/Render/transfer_texture.h"
-#include "UICore/Display/Render/shared_gc_data.h"
 #include "UICore/Display/Window/display_window_description.h"
 #include "UICore/D3D/d3d_target.h"
 
@@ -88,12 +87,12 @@ namespace uicore
 
 		set_default_dsv();
 
-		SharedGCData::add_provider(this);
+		D3DShareList::context_created(this);
 	}
 
 	D3DGraphicContextProvider::~D3DGraphicContextProvider()
 	{
-		SharedGCData::remove_provider(this);
+		D3DShareList::context_destroyed(this);
 	}
 
 	void D3DGraphicContextProvider::begin_resize_swap_chain()

@@ -31,7 +31,6 @@
 #include "UICore/GL/opengl_wrap.h"
 #include "UICore/GL/opengl.h"
 #include "gl3_render_buffer_provider.h"
-#include "UICore/Display/Render/shared_gc_data.h"
 
 namespace uicore
 {
@@ -50,14 +49,11 @@ namespace uicore
 		glRenderbufferStorageMultisample(GL_RENDERBUFFER, multisample_samples, tf.pixel_format, width, height);
 
 		glBindRenderbuffer(GL_RENDERBUFFER, last_render_buffer);
-
-		SharedGCData::add_disposable(this);
 	}
 
 	GL3RenderBufferProvider::~GL3RenderBufferProvider()
 	{
 		dispose();
-		SharedGCData::remove_disposable(this);
 	}
 
 	void GL3RenderBufferProvider::on_dispose()
@@ -67,6 +63,7 @@ namespace uicore
 			if (OpenGL::set_active())
 			{
 				glDeleteRenderbuffers(1, &handle);
+				handle = 0;
 			}
 		}
 	}

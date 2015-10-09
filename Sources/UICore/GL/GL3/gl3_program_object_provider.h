@@ -33,13 +33,13 @@
 #include "UICore/GL/opengl_wrap.h"
 #include "UICore/GL/opengl.h"
 #include "UICore/Display/TargetProviders/program_object_provider.h"
-#include "UICore/Core/System/disposable_object.h"
+#include "UICore/GL/gl_share_list.h"
 
 namespace uicore
 {
 	class GL3GraphicContextProvider;
 
-	class GL3ProgramObjectProvider : public ProgramObjectProvider, DisposableObject
+	class GL3ProgramObjectProvider : public ProgramObjectProvider, GLSharedResource
 	{
 	public:
 		GL3ProgramObjectProvider();
@@ -113,7 +113,7 @@ namespace uicore
 	private:
 		void on_dispose() override;
 
-		GLuint handle;
+		GLuint handle = 0;
 		std::vector<ShaderObjectPtr> shaders;
 	};
 

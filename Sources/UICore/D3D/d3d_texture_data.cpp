@@ -29,7 +29,6 @@
 #include "UICore/precomp.h"
 #include "d3d_texture_data.h"
 #include "UICore/D3D/d3d_target.h"
-#include "UICore/Display/Render/shared_gc_data.h"
 #include "d3d_graphic_context_provider.h"
 #include "d3d_display_window_provider.h"
 
@@ -66,12 +65,8 @@ namespace uicore
 	{
 		// This code is used to ensure the texture is copied to another provider if the (single) owner is destroyed
 		std::unique_ptr<std::unique_lock<std::recursive_mutex>> mutex_section;
-		std::vector<GraphicContextProvider*> &gc_providers = SharedGCData::get_gc_providers(mutex_section);
-
-		unsigned int max = gc_providers.size();
-		for (unsigned int cnt = 0; cnt < max; cnt++)
+		for (auto gc_provider : D3DShareList::all_contexts())
 		{
-			D3DGraphicContextProvider* gc_provider = dynamic_cast<D3DGraphicContextProvider *>(gc_providers[cnt]);
 			if (gc_provider->get_window()->get_device() != not_this_device)
 			{
 				ComPtr<ID3D11Device> device = gc_provider->get_window()->get_device();

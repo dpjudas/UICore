@@ -36,7 +36,6 @@
 #include "UICore/GL/opengl.h"
 #include "UICore/Core/System/databuffer.h"
 #include "UICore/Core/Text/string_format.h"
-#include "UICore/Display/Render/shared_gc_data.h"
 #include "gl1_vertex_array_buffer_provider.h"
 
 #ifndef WIN32
@@ -48,7 +47,6 @@ namespace uicore
 	GL1TextureProvider::GL1TextureProvider(InitData, TextureDimensions texture_dimensions, int new_width, int new_height, int new_depth, int array_size, TextureFormat texture_format, int levels)
 	: width(0), height(0), depth(0), handle(0), texture_type(0)
 	{
-		SharedGCData::add_disposable(this);
 		switch (texture_dimensions)
 		{
 		case texture_1d:
@@ -235,7 +233,6 @@ namespace uicore
 	GL1TextureProvider::~GL1TextureProvider()
 	{
 		dispose();
-		SharedGCData::remove_disposable(this);
 	}
 
 	void GL1TextureProvider::on_dispose()
@@ -245,6 +242,7 @@ namespace uicore
 			if (OpenGL::set_active())
 			{
 				glDeleteTextures(1, &handle);
+				handle = 0;
 			}
 		}
 	}

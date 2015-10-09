@@ -32,14 +32,12 @@
 #include "gl3_graphic_context_provider.h"
 #include "gl3_transfer_buffer_provider.h"
 #include "UICore/GL/opengl_wrap.h"
-#include "UICore/Display/Render/shared_gc_data.h"
 
 namespace uicore
 {
 	GL3BufferObjectProvider::GL3BufferObjectProvider()
 		: handle(0), data_ptr(nullptr)
 	{
-		SharedGCData::add_disposable(this);
 		OpenGL::set_active();
 
 		glGenBuffers(1, &handle);
@@ -48,7 +46,6 @@ namespace uicore
 	GL3BufferObjectProvider::~GL3BufferObjectProvider()
 	{
 		dispose();
-		SharedGCData::remove_disposable(this);
 	}
 
 	void GL3BufferObjectProvider::on_dispose()

@@ -32,7 +32,7 @@
 #include "UICore/Display/Render/vertex_array_buffer.h"
 #include "UICore/Display/Render/graphic_context.h"
 #include "UICore/GL/opengl.h"
-#include "UICore/Core/System/disposable_object.h"
+#include "UICore/GL/gl_share_list.h"
 
 namespace uicore
 {
@@ -40,7 +40,7 @@ namespace uicore
 	class TransferBuffer;
 	class GL3GraphicContextProvider;
 
-	class GL3BufferObjectProvider : public DisposableObject
+	class GL3BufferObjectProvider : GLSharedResource
 	{
 	public:
 		GL3BufferObjectProvider();

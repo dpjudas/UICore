@@ -147,8 +147,6 @@ namespace uicore
 		/*
 		GraphicContextProvider()
 		{
-			SharedGCData::add_ref();
-
 			resize_slot = provider->sig_window_resized().connect(bind_member(this, &GraphicContext_Impl::on_window_resized));
 			set_viewport(-1, provider->get_display_window_size());
 
@@ -159,11 +157,6 @@ namespace uicore
 			reset_rasterizer_state();
 			reset_blend_state();
 			reset_depth_stencil_state();
-		}
-
-		~GraphicContextProvider()
-		{
-			SharedGCData::release_ref();
 		}
 
 		void on_window_resized(const Size &size)
