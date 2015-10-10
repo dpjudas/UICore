@@ -107,6 +107,12 @@ namespace uicore
 		void set_mag_filter(TextureFilter filter);
 		void set_max_anisotropy(float v);
 		void set_texture_compare(TextureCompareMode mode, CompareFunction func);
+
+		int width() const { return dimensions.x; }
+		int height() const { return dimensions.y; }
+		int depth() const { return dimensions.z; }
+		int array_size() const { return dimensions.w; }
+
 		std::shared_ptr<Texture> create_view(TextureDimensions texture_dimensions, TextureFormat texture_format, int min_level, int num_levels, int min_layer, int num_layers);
 
 	private:
@@ -114,10 +120,7 @@ namespace uicore
 
 		void on_dispose() override;
 
-		int width = 0;
-		int height = 0;
-		int depth = 0;
-		int array_size = 0;
+		Vec4i dimensions;
 
 		GLuint handle = 0;
 		GLuint texture_type = 0;

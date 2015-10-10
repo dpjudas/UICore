@@ -45,7 +45,7 @@
 namespace uicore
 {
 	GL1TextureProvider::GL1TextureProvider(InitData, TextureDimensions texture_dimensions, int new_width, int new_height, int new_depth, int array_size, TextureFormat texture_format, int levels)
-	: width(0), height(0), depth(0), handle(0), texture_type(0)
+	: dimensions(new_width, new_height, new_depth, array_size), handle(0), texture_type(0)
 	{
 		switch (texture_dimensions)
 		{
@@ -113,10 +113,6 @@ namespace uicore
 			}
 		}
 
-		width = new_width;
-		height = new_height;
-		depth = new_depth;
-
 #ifndef __ANDROID__
 		if (texture_type == GL_TEXTURE_1D)
 		{
@@ -130,7 +126,7 @@ namespace uicore
 				power_of_two_texture = false;
 			}
 
-			pot_ratio_width = (float)width / pot_width;
+			pot_ratio_width = (float)width() / pot_width;
 			glTexImage1D(
 				GL_TEXTURE_1D,			// target
 				0,						// level
@@ -154,8 +150,8 @@ namespace uicore
 			{
 				power_of_two_texture = false;
 			}
-			pot_ratio_width = (float)width / pot_width;
-			pot_ratio_height = (float)height / pot_height;
+			pot_ratio_width = (float)width() / pot_width;
+			pot_ratio_height = (float)height() / pot_height;
 
 			glTexImage2D(
 				GL_TEXTURE_2D,			// target
@@ -204,9 +200,9 @@ namespace uicore
 			pot_width = get_next_power_of_two(new_width);
 			pot_height = get_next_power_of_two(new_height);
 			pot_depth = get_next_power_of_two(new_depth);
-			pot_ratio_width = (float)width / pot_width;
-			pot_ratio_height = (float)height / pot_height;
-			pot_ratio_depth = (float)depth / pot_depth;
+			pot_ratio_width = (float)width() / pot_width;
+			pot_ratio_height = (float)height() / pot_height;
+			pot_ratio_depth = (float)depth() / pot_depth;
 			if ((pot_width == new_width) && (pot_height == new_height) && (pot_depth == new_depth))
 			{
 				power_of_two_texture = true;
@@ -270,7 +266,7 @@ namespace uicore
 			glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
 	#endif
 			glGetTexImage(texture_type, level, gl_format, gl_type, buffer->data());
-			return buffer->copy(Rect(0,0, width, height));
+			return buffer->copy(Rect(0,0, width(), height()));
 		}
 		else
 		{
@@ -282,7 +278,7 @@ namespace uicore
 			glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
 	#endif
 			glGetTexImage(texture_type, level, GL_RGBA, GL_UNSIGNED_BYTE, buffer->data());
-			return buffer->copy(Rect(0,0, width, height))->to_format(texture_format);
+			return buffer->copy(Rect(0,0, width(), height()))->to_format(texture_format);
 		}
 	}
 
@@ -368,10 +364,10 @@ namespace uicore
 
 			// Check extend the right edge
 			int right_edge = x + image->width();
-			if ( right_edge >= width )
+			if ( right_edge >= width() )
 			{
 				char *edge_data = image->data<char>();
-				edge_data += image->bytes_per_pixel() * (width-1);
+				edge_data += image->bytes_per_pixel() * (width()-1);
 
 				for(int edge_cnt = right_edge; edge_cnt < pot_width; edge_cnt++)
 				{
@@ -388,10 +384,10 @@ namespace uicore
 			}
 			// Check extend the bottom edge
 			int bottom_edge = y + image->height();
-			if ( bottom_edge >= height )
+			if ( bottom_edge >= height() )
 			{
 				char *edge_data = image->data<char>();
-				edge_data += image->pitch() * (height-1);
+				edge_data += image->pitch() * (height()-1);
 
 				for(int edge_cnt = bottom_edge; edge_cnt < pot_height; edge_cnt++)
 				{

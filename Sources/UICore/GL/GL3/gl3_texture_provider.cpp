@@ -46,12 +46,14 @@ namespace uicore
 		if (init.orig_texture == nullptr)
 		{
 			TextureStateTracker state_tracker(texture_type, handle);
-			glGetIntegerv(GL_TEXTURE_WIDTH, &width);
-			glGetIntegerv(GL_TEXTURE_HEIGHT, &height);
-			glGetIntegerv(GL_TEXTURE_DEPTH, &depth);
+			glGetIntegerv(GL_TEXTURE_WIDTH, &dimensions.x);
+			glGetIntegerv(GL_TEXTURE_HEIGHT, &dimensions.y);
+			glGetIntegerv(GL_TEXTURE_DEPTH, &dimensions.z);
 		}
 		else
 		{
+			dimensions = init.orig_texture->dimensions;
+
 			create_initial(init.texture_dimensions);
 
 			TextureFormat_GL tf = OpenGL::get_textureformat(init.texture_format);
@@ -66,7 +68,7 @@ namespace uicore
 	}
 
 	GL3TextureProvider::GL3TextureProvider(const InitData &init, TextureDimensions texture_dimensions, int new_width, int new_height, int new_depth, int new_array_size, TextureFormat texture_format, int levels)
-		: width(0), height(0), depth(0), handle(0), texture_type(0)
+		: dimensions(new_width, new_height, new_depth, new_array_size), handle(0), texture_type(0)
 	{
 		create_initial(texture_dimensions);
 
@@ -74,10 +76,6 @@ namespace uicore
 		if (!tf.valid)
 			throw Exception("Texture format not supported by OpenGL");
 
-		width = new_width;
-		height = new_height;
-		depth = new_depth;
-		array_size = new_array_size;
 		gl_internal_format = tf.internal_format;
 
 		TextureStateTracker state_tracker(texture_type, handle);
@@ -91,14 +89,14 @@ namespace uicore
 			do
 			{
 				levels++;
-			} while (max(width >> levels, 1) != 1 || max(height >> levels, 1) != 1);
+			} while (max(width() >> levels, 1) != 1 || max(height() >> levels, 1) != 1);
 		}
 
 		// Emulate glTexStorage behavior so we can support older versions of OpenGL
 		for (int level = 0; level < levels; level++)
 		{
-			int mip_width = max(width >> level, 1);
-			int mip_height = max(height >> level, 1);
+			int mip_width = max(width() >> level, 1);
+			int mip_height = max(height() >> level, 1);
 
 			if (texture_type == GL_TEXTURE_1D)
 			{
@@ -106,7 +104,7 @@ namespace uicore
 			}
 			else if (texture_type == GL_TEXTURE_1D_ARRAY)
 			{
-				glTexImage2D(GL_TEXTURE_1D_ARRAY, level, tf.internal_format, mip_width, array_size, 0, tf.pixel_format, tf.pixel_datatype, nullptr);
+				glTexImage2D(GL_TEXTURE_1D_ARRAY, level, tf.internal_format, mip_width, array_size(), 0, tf.pixel_format, tf.pixel_datatype, nullptr);
 			}
 			else if (texture_type == GL_TEXTURE_2D)
 			{
@@ -122,7 +120,7 @@ namespace uicore
 			}
 			else if (texture_type == GL_TEXTURE_2D_ARRAY)
 			{
-				glTexImage3D(GL_TEXTURE_2D_ARRAY, level, tf.internal_format, mip_width, mip_height, array_size, 0, tf.pixel_format, tf.pixel_datatype, nullptr);
+				glTexImage3D(GL_TEXTURE_2D_ARRAY, level, tf.internal_format, mip_width, mip_height, array_size(), 0, tf.pixel_format, tf.pixel_datatype, nullptr);
 			}
 			else if (texture_type == GL_TEXTURE_2D_MULTISAMPLE)
 			{
@@ -130,7 +128,7 @@ namespace uicore
 			}
 			else if (texture_type == GL_TEXTURE_2D_MULTISAMPLE_ARRAY)
 			{
-				glTexImage3DMultisample(GL_TEXTURE_2D_MULTISAMPLE_ARRAY, samples, tf.internal_format, mip_width, mip_height, array_size, fixed_sample_locations);
+				glTexImage3DMultisample(GL_TEXTURE_2D_MULTISAMPLE_ARRAY, samples, tf.internal_format, mip_width, mip_height, array_size(), fixed_sample_locations);
 			}
 			else if (texture_type == GL_TEXTURE_CUBE_MAP)
 			{
@@ -139,13 +137,12 @@ namespace uicore
 			}
 			else if (texture_type == GL_TEXTURE_CUBE_MAP_ARRAY)
 			{
-				array_size /= 6;
 				for (int i = 0; i < 6; i++)
-					glTexImage3D(OpenGL::to_cube_target(i), level, tf.internal_format, mip_width, mip_height, array_size, 0, tf.pixel_format, tf.pixel_datatype, nullptr);
+					glTexImage3D(OpenGL::to_cube_target(i), level, tf.internal_format, mip_width, mip_height, array_size(), 0, tf.pixel_format, tf.pixel_datatype, nullptr);
 			}
 			else
 			{
-				glTexImage3D(GL_TEXTURE_3D, level, tf.internal_format, mip_width, mip_height, depth, 0, tf.pixel_format, tf.pixel_datatype, nullptr);
+				glTexImage3D(GL_TEXTURE_3D, level, tf.internal_format, mip_width, mip_height, depth(), 0, tf.pixel_format, tf.pixel_datatype, nullptr);
 			}
 		}
 	}
@@ -224,7 +221,7 @@ namespace uicore
 		TextureFormat_GL tf = OpenGL::get_textureformat(texture_format);
 		if (tf.valid)
 		{
-			auto buffer = PixelBuffer::create(width, height, texture_format);
+			auto buffer = PixelBuffer::create(width(), height(), texture_format);
 			glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 			glPixelStorei(GL_UNPACK_ROW_LENGTH, buffer->pitch() / buffer->bytes_per_pixel());
 			glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
@@ -234,7 +231,7 @@ namespace uicore
 		}
 		else
 		{
-			auto buffer = PixelBuffer::create(width, height, tf_bgra8);
+			auto buffer = PixelBuffer::create(width(), height(), tf_bgra8);
 			glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 			glPixelStorei(GL_UNPACK_ROW_LENGTH, buffer->pitch() / buffer->bytes_per_pixel());
 			glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);

@@ -93,6 +93,8 @@ namespace uicore
 		reset_program_object();
 
 		GLShareList::context_created(this);
+
+		set_default_state();
 	}
 
 	GL3GraphicContextProvider::~GL3GraphicContextProvider()
@@ -456,6 +458,10 @@ namespace uicore
 				scissor_enabled = gl3_state->desc.get_enable_scissor();
 			}
 		}
+		else
+		{
+			set_rasterizer_state(default_rasterizer_state());
+		}
 	}
 
 	void GL3GraphicContextProvider::set_blend_state(const BlendStatePtr &state, const Colorf &blend_color, unsigned int sample_mask)
@@ -470,6 +476,10 @@ namespace uicore
 				selected_blend_state.apply();
 			}
 		}
+		else
+		{
+			set_blend_state(default_blend_state(), blend_color, sample_mask);
+		}
 	}
 
 	void GL3GraphicContextProvider::set_depth_stencil_state(const DepthStencilStatePtr &state, int stencil_ref)
@@ -483,6 +493,10 @@ namespace uicore
 				OpenGL::set_active(this);
 				selected_depth_stencil_state.apply();
 			}
+		}
+		else
+		{
+			set_depth_stencil_state(default_depth_stencil_state(), stencil_ref);
 		}
 	}
 

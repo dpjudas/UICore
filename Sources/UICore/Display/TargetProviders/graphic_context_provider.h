@@ -32,6 +32,9 @@
 #include "UICore/Display/Render/graphic_context.h"
 #include "UICore/Display/Render/primitives_array.h"
 #include "UICore/Display/Render/texture.h"
+#include "UICore/Display/Render/rasterizer_state_description.h"
+#include "UICore/Display/Render/blend_state_description.h"
+#include "UICore/Display/Render/depth_stencil_state_description.h"
 #include "UICore/Core/Math/mat4.h"
 #include "UICore/Core/Signals/signal.h"
 
@@ -144,34 +147,41 @@ namespace uicore
 			}
 		}
 
-		/*
-		GraphicContextProvider()
+		RasterizerStatePtr default_rasterizer_state()
 		{
-			resize_slot = provider->sig_window_resized().connect(bind_member(this, &GraphicContext_Impl::on_window_resized));
-			set_viewport(-1, provider->get_display_window_size());
-
-			default_rasterizer_state = impl->provider->create_rasterizer_state(RasterizerStateDescription());
-			default_blend_state = impl->provider->create_blend_state(BlendStateDescription());
-			default_depth_stencil_state = impl->provider->create_depth_stencil_state(DepthStencilStateDescription());
-
-			reset_rasterizer_state();
-			reset_blend_state();
-			reset_depth_stencil_state();
+			if (!_default_rasterizer_state)
+				_default_rasterizer_state = create_rasterizer_state(RasterizerStateDescription());
+			return _default_rasterizer_state;
 		}
 
-		void on_window_resized(const Size &size)
+		BlendStatePtr default_blend_state()
 		{
-			display_window_size = size;
-			if (!write_frame_buffer)
-				set_viewport(-1, get_size());
+			if (!_default_blend_state)
+				_default_blend_state = create_blend_state(BlendStateDescription());
+			return _default_blend_state;
 		}
 
-		Size display_window_size;
+		DepthStencilStatePtr default_depth_stencil_state()
+		{
+			if (!_default_depth_stencil_state)
+				_default_depth_stencil_state = create_depth_stencil_state(DepthStencilStateDescription());
+			return _default_depth_stencil_state;
+		}
+
+		void set_default_state()
+		{
+			set_rasterizer_state(default_rasterizer_state());
+			set_blend_state(default_blend_state(), Colorf::white, 0xffffffff);
+			set_depth_stencil_state(default_depth_stencil_state());
+			set_viewport(-1, display_window_size());
+			resize_slot = sig_window_resized().connect([this](const Size &window_size) { if (!write_frame_buffer()) set_viewport(-1, size()); });
+		}
+
+	private:
+		RasterizerStatePtr _default_rasterizer_state;
+		BlendStatePtr _default_blend_state;
+		DepthStencilStatePtr _default_depth_stencil_state;
+
 		Slot resize_slot;
-
-		RasterizerStatePtr default_rasterizer_state;
-		BlendStatePtr default_blend_state;
-		DepthStencilStatePtr default_depth_stencil_state;
-		*/
 	};
 }

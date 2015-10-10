@@ -110,6 +110,8 @@ namespace uicore
 		glLoadIdentity();
 
 		GLShareList::context_created(this);
+
+		set_default_state();
 	}
 
 	GL1GraphicContextProvider::~GL1GraphicContextProvider()
@@ -425,7 +427,10 @@ namespace uicore
 
 				scissor_enabled = gl1_state->desc.get_enable_scissor();
 			}
-
+		}
+		else
+		{
+			set_rasterizer_state(default_rasterizer_state());
 		}
 	}
 
@@ -441,6 +446,10 @@ namespace uicore
 				framebuffer_bound ? framebuffer_provider->set_state(selected_state.blend) : selected_state.blend.apply();
 			}
 		}
+		else
+		{
+			set_blend_state(default_blend_state(), blend_color, sample_mask);
+		}
 	}
 
 	void GL1GraphicContextProvider::set_depth_stencil_state(const DepthStencilStatePtr &state, int stencil_ref)
@@ -454,6 +463,10 @@ namespace uicore
 				set_active();
 				framebuffer_bound ? framebuffer_provider->set_state(selected_state.depth_stencil) : selected_state.depth_stencil.apply();
 			}
+		}
+		else
+		{
+			set_depth_stencil_state(default_depth_stencil_state(), stencil_ref);
 		}
 	}
 

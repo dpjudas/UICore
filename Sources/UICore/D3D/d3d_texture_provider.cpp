@@ -38,10 +38,8 @@
 namespace uicore
 {
 	D3DTextureProvider::D3DTextureProvider(const InitData &init, TextureDimensions texture_dimensions, int width, int height, int depth, int array_size, TextureFormat texture_format, int levels)
-	: data(new D3DTextureData(init.device, init.feature_level, texture_dimensions)), view_min_layer(-1)
+	: data(new D3DTextureData(init.device, init.feature_level, texture_dimensions)), view_min_layer(-1), dimensions(width, height, depth, array_size)
 	{
-		view_handles.push_back(std::shared_ptr<ViewHandles>(new ViewHandles(init.device)));
-
 		if (data->texture_dimensions == texture_1d || data->texture_dimensions == texture_1d_array)
 		{
 			create_1d(width, height, depth, array_size, texture_format, levels);
@@ -58,10 +56,12 @@ namespace uicore
 		{
 			throw Exception("Unknown texture dimensions type");
 		}
+
+		view_handles.push_back(std::shared_ptr<ViewHandles>(new ViewHandles(data->handles.front()->device)));
 	}
 
 	D3DTextureProvider::D3DTextureProvider(const HandleInit &init)
-	: data(init.orig_texture->data), view_min_layer(init.min_layer)
+	: data(init.orig_texture->data), view_min_layer(init.min_layer), dimensions(init.orig_texture->dimensions)
 	{
 		// To do: save and use all view parameters
 		view_handles.push_back(std::shared_ptr<ViewHandles>(new ViewHandles(data->handles.front()->device)));

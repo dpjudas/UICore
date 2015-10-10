@@ -125,6 +125,11 @@ namespace uicore
 		void set_max_anisotropy(float v);
 		void set_texture_compare(TextureCompareMode mode, CompareFunction func);
 
+		int width() const { return dimensions.x; }
+		int height() const { return dimensions.y; }
+		int depth() const { return dimensions.z; }
+		int array_size() const { return dimensions.w; }
+
 		std::shared_ptr<Texture> create_view(TextureDimensions texture_dimensions, TextureFormat texture_format, int min_level, int num_levels, int min_layer, int num_layers);
 
 		ComPtr<ID3D11RenderTargetView> create_rtv(const ComPtr<ID3D11Device> &device, int level, int slice, TextureSubtype subtype);
@@ -152,5 +157,6 @@ namespace uicore
 		mutable std::vector<std::shared_ptr<ViewHandles> > view_handles;
 
 		int view_min_layer;
+		Vec4i dimensions;
 	};
 }

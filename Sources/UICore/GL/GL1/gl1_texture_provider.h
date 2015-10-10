@@ -55,7 +55,7 @@ namespace uicore
 
 		bool is_power_of_two_texture() const { return power_of_two_texture; }
 
-		Size get_surface_size() const { return Size(width, height); }
+		Size get_surface_size() const { return Size(width(), height()); }
 		Size get_texture_size() const { return Size(pot_width, pot_height); }
 
 		/// \brief Get a OpenGL format out of a pixel format.
@@ -99,6 +99,11 @@ namespace uicore
 
 		void set_texture_compare(TextureCompareMode mode, CompareFunction func);
 
+		int width() const { return dimensions.x; }
+		int height() const { return dimensions.y; }
+		int depth() const { return dimensions.z; }
+		int array_size() const { return dimensions.w; }
+
 		std::shared_ptr<Texture> create_view(TextureDimensions texture_dimensions, TextureFormat texture_format, int min_level, int num_levels, int min_layer, int num_layers);
 
 		/// \brief Transform a non-power-of-two coordinate
@@ -116,7 +121,7 @@ namespace uicore
 		void set_texture_image3d(GLuint target, const PixelBufferPtr &image, int image_depth, int level);
 		int get_next_power_of_two(int value);
 
-		int width, height, depth;
+		Vec4i dimensions;
 		int pot_width, pot_height, pot_depth;
 		float pot_ratio_width, pot_ratio_height, pot_ratio_depth;
 		bool power_of_two_texture;

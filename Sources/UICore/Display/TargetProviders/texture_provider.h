@@ -77,14 +77,13 @@ namespace uicore
 		void set_max_anisotropy(float max_anisotropy) override { texture.set_max_anisotropy(max_anisotropy); }
 		void set_texture_compare(TextureCompareMode mode, CompareFunction func) override { _compare_mode = mode; _compare_function = func; texture.set_texture_compare(mode, func); }
 
-		int size() const override { return _width; }
+		int size() const override { return texture.width(); }
 		TextureWrapMode wrap_mode_s() const override { return _wrap_mode_s; }
 		void set_image(const GraphicContextPtr &context, const PixelBufferPtr &image, int level) override { texture.copy_from(context, 0, 0, 0, level, image, image->size()); }
 		void set_subimage(const GraphicContextPtr &context, int x, const PixelBufferPtr &image, const int src_x, const int src_width, int level) override { texture.copy_from(context, x, 0, 0, level, image, Rect(src_x, 0, src_x + src_width, 1)); }
 		void set_wrap_mode(TextureWrapMode wrap_s) override { _wrap_mode_s = wrap_s; texture.set_wrap_mode(wrap_s); }
 
 	private:
-		int _width = 0;
 		float _min_lod = 0.0f;
 		float _max_lod = 0.0f;
 		float _lod_bias = 0.0f;
@@ -127,16 +126,14 @@ namespace uicore
 		void set_max_anisotropy(float max_anisotropy) override { texture.set_max_anisotropy(max_anisotropy); }
 		void set_texture_compare(TextureCompareMode mode, CompareFunction func) override { _compare_mode = mode; _compare_function = func; texture.set_texture_compare(mode, func); }
 
-		int size() const override { return _width; }
-		int array_size() const override { return _array_size; }
+		int size() const override { return texture.width(); }
+		int array_size() const override { return texture.array_size(); }
 		TextureWrapMode wrap_mode_s() const override { return _wrap_mode_s; }
 		void set_image(const GraphicContextPtr &context, int array_index, const PixelBufferPtr &image, int level) override { texture.copy_from(context, 0, 0, array_index, level, image, image->size()); }
 		void set_subimage(const GraphicContextPtr &context, int array_index, int x, const PixelBufferPtr &image, const int src_x, const int src_width, int level) override { texture.copy_from(context, x, 0, array_index, level, image, Rect(src_x, 0, src_x + src_width, 1)); }
 		void set_wrap_mode(TextureWrapMode wrap_s) override { _wrap_mode_s = wrap_s; texture.set_wrap_mode(wrap_s); }
 
 	private:
-		int _width = 0;
-		int _array_size = 0;
 		float _min_lod = 0.0f;
 		float _max_lod = 0.0f;
 		float _lod_bias = 0.0f;
@@ -179,22 +176,20 @@ namespace uicore
 		void set_max_anisotropy(float max_anisotropy) override { texture.set_max_anisotropy(max_anisotropy); }
 		void set_texture_compare(TextureCompareMode mode, CompareFunction func) override { _compare_mode = mode; _compare_function = func; texture.set_texture_compare(mode, func); }
 
-		int width() const override { return _width; }
-		int height() const override { return _height; }
+		int width() const override { return texture.width(); }
+		int height() const override { return texture.height(); }
 		TextureWrapMode wrap_mode_s() const override { return _wrap_mode_s; }
 		TextureWrapMode wrap_mode_t() const override { return _wrap_mode_t; }
 		PixelBufferPtr pixeldata(const GraphicContextPtr &gc, int level = 0) const override { return texture.get_pixeldata(gc, tf_rgba8, level); }
 		PixelBufferPtr pixeldata(const GraphicContextPtr &gc, TextureFormat texture_format, int level = 0) const override { return texture.get_pixeldata(gc, texture_format, level); }
 		void set_image(const GraphicContextPtr &context, const PixelBufferPtr &image, int level) override { texture.copy_from(context, 0, 0, 0, level, image, image->size()); }
 		void set_subimage(const GraphicContextPtr &context, int x, int y, const PixelBufferPtr &image, const Rect &src_rect, int level) override { texture.copy_from(context, x, y, 0, level, image, src_rect); }
-		void copy_image_from(const GraphicContextPtr &context, int level, TextureFormat texture_format) override { texture.copy_image_from(0, 0, _width, _height, level, texture_format, static_cast<GraphicContextProvider*>(context.get())); }
+		void copy_image_from(const GraphicContextPtr &context, int level, TextureFormat texture_format) override { texture.copy_image_from(0, 0, width(), height(), level, texture_format, static_cast<GraphicContextProvider*>(context.get())); }
 		void copy_image_from(const GraphicContextPtr &context, int x, int y, int width, int height, int level, TextureFormat texture_format) override { texture.copy_image_from(x, y, width, height, level, texture_format, static_cast<GraphicContextProvider*>(context.get())); }
 		void copy_subimage_from(const GraphicContextPtr &context, int offset_x, int offset_y, int x, int y, int width, int height, int level) override { texture.copy_subimage_from(offset_x, offset_y, x, y, width, height, level, static_cast<GraphicContextProvider*>(context.get())); }
 		void set_wrap_mode(TextureWrapMode wrap_s, TextureWrapMode wrap_t) override { _wrap_mode_s = wrap_s; _wrap_mode_t = wrap_t; texture.set_wrap_mode(wrap_s, wrap_t); }
 
 	private:
-		int _width = 0;
-		int _height = 0;
 		float _min_lod = 0.0f;
 		float _max_lod = 0.0f;
 		float _lod_bias = 0.0f;
@@ -238,9 +233,9 @@ namespace uicore
 		void set_max_anisotropy(float max_anisotropy) override { texture.set_max_anisotropy(max_anisotropy); }
 		void set_texture_compare(TextureCompareMode mode, CompareFunction func) override { _compare_mode = mode; _compare_function = func; texture.set_texture_compare(mode, func); }
 
-		int width() const override { return _width; }
-		int height() const override { return _height; }
-		int array_size() const override { return _array_size; }
+		int width() const override { return texture.width(); }
+		int height() const override { return texture.height(); }
+		int array_size() const override { return texture.array_size(); }
 		TextureWrapMode wrap_mode_s() const override { return _wrap_mode_s; }
 		TextureWrapMode wrap_mode_t() const override { return _wrap_mode_t; }
 		void set_image(const GraphicContextPtr &context, int array_index, const PixelBufferPtr &image, int level) override { texture.copy_from(context, 0, 0, array_index, level, image, image->size()); }
@@ -250,9 +245,6 @@ namespace uicore
 		std::shared_ptr<Texture2D> create_2d_view(int array_index, TextureFormat texture_format, int min_level, int num_levels) override { return std::dynamic_pointer_cast<Texture2D>(texture.create_view(texture_2d, texture_format, min_level, num_levels, array_index, 1)); }
 
 	private:
-		int _width = 0;
-		int _height = 0;
-		int _array_size = 0;
 		float _min_lod = 0.0f;
 		float _max_lod = 0.0f;
 		float _lod_bias = 0.0f;
@@ -296,9 +288,9 @@ namespace uicore
 		void set_max_anisotropy(float max_anisotropy) override { texture.set_max_anisotropy(max_anisotropy); }
 		void set_texture_compare(TextureCompareMode mode, CompareFunction func) override { _compare_mode = mode; _compare_function = func; texture.set_texture_compare(mode, func); }
 
-		int width() const override { return _width; }
-		int height() const override { return _height; }
-		int depth() const override { return _depth; }
+		int width() const override { return texture.width(); }
+		int height() const override { return texture.height(); }
+		int depth() const override { return texture.depth(); }
 		TextureWrapMode wrap_mode_s() const override { return _wrap_mode_s; }
 		TextureWrapMode wrap_mode_t() const override { return _wrap_mode_t; }
 		TextureWrapMode wrap_mode_r() const override { return _wrap_mode_r; }
@@ -307,9 +299,6 @@ namespace uicore
 		void set_wrap_mode(TextureWrapMode wrap_s, TextureWrapMode wrap_t, TextureWrapMode wrap_r) override { _wrap_mode_s = wrap_s; _wrap_mode_t = wrap_t; _wrap_mode_r = wrap_r; texture.set_wrap_mode(wrap_s, wrap_t); texture.set_wrap_mode(wrap_s, wrap_t, wrap_r); }
 
 	private:
-		int _width = 0;
-		int _height = 0;
-		int _depth = 0;
 		float _min_lod = 0.0f;
 		float _max_lod = 0.0f;
 		float _lod_bias = 0.0f;
@@ -354,14 +343,12 @@ namespace uicore
 		void set_max_anisotropy(float max_anisotropy) override { texture.set_max_anisotropy(max_anisotropy); }
 		void set_texture_compare(TextureCompareMode mode, CompareFunction func) override { _compare_mode = mode; _compare_function = func; texture.set_texture_compare(mode, func); }
 
-		int width() const override { return _width; }
-		int height() const override { return _height; }
+		int width() const override { return texture.width(); }
+		int height() const override { return texture.height(); }
 		void set_image(const GraphicContextPtr &context, TextureCubeDirection cube_direction, const PixelBufferPtr &image, int level) override { texture.copy_from(context, 0, 0, static_cast<int>(cube_direction), level, image, image->size()); }
 		void set_subimage(const GraphicContextPtr &context, TextureCubeDirection cube_direction, int x, int y, const PixelBufferPtr &image, const Rect &src_rect, int level) override { texture.copy_from(context, x, y, static_cast<int>(cube_direction), level, image, src_rect); }
 
 	private:
-		int _width = 0;
-		int _height = 0;
 		float _min_lod = 0.0f;
 		float _max_lod = 0.0f;
 		float _lod_bias = 0.0f;
@@ -403,16 +390,13 @@ namespace uicore
 		void set_max_anisotropy(float max_anisotropy) override { texture.set_max_anisotropy(max_anisotropy); }
 		void set_texture_compare(TextureCompareMode mode, CompareFunction func) override { _compare_mode = mode; _compare_function = func; texture.set_texture_compare(mode, func); }
 
-		int width() const override { return _width; }
-		int height() const override { return _height; }
-		int array_size() const override { return _array_size; }
+		int width() const override { return texture.width(); }
+		int height() const override { return texture.height(); }
+		int array_size() const override { return texture.array_size(); }
 		void set_image(const GraphicContextPtr &context, int array_index, TextureCubeDirection cube_direction, const PixelBufferPtr &image, int level) override { texture.copy_from(context, 0, 0, array_index * 6 + static_cast<int>(cube_direction), level, image, image->size()); }
 		void set_subimage(const GraphicContextPtr &context, int array_index, TextureCubeDirection cube_direction, int x, int y, const PixelBufferPtr &image, const Rect &src_rect, int level) override { texture.copy_from(context, x, y, array_index * 6 + static_cast<int>(cube_direction), level, image, src_rect); }
 
 	private:
-		int _width = 0;
-		int _height = 0;
-		int _array_size = 0;
 		float _min_lod = 0.0f;
 		float _max_lod = 0.0f;
 		float _lod_bias = 0.0f;

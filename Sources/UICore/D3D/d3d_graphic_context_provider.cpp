@@ -57,10 +57,6 @@ namespace uicore
 		current_program_provider(0),
 		input_layout_set(false)
 	{
-		//	set_blend_color(Colorf::black);
-		//	set_blend_function(blend_one, blend_zero, blend_one, blend_zero);
-		//	enable_blending(false);
-
 		default_depth = display_desc.depth_size();
 
 		Size viewport_size = display_window_size();
@@ -88,6 +84,8 @@ namespace uicore
 		set_default_dsv();
 
 		D3DShareList::context_created(this);
+
+		set_default_state();
 	}
 
 	D3DGraphicContextProvider::~D3DGraphicContextProvider()
@@ -343,6 +341,10 @@ namespace uicore
 			D3DRasterizerState *d3d_state = static_cast<D3DRasterizerState*>(state.get());
 			window->get_device_context()->RSSetState(d3d_state->state);
 		}
+		else
+		{
+			set_rasterizer_state(default_rasterizer_state());
+		}
 	}
 
 	void D3DGraphicContextProvider::set_blend_state(const BlendStatePtr &state, const Colorf &blend_color, unsigned int sample_mask)
@@ -353,6 +355,10 @@ namespace uicore
 			FLOAT blend_factor[4] = { blend_color.r, blend_color.g, blend_color.b, blend_color.a };
 			window->get_device_context()->OMSetBlendState(d3d_state->state, blend_factor, sample_mask);
 		}
+		else
+		{
+			set_blend_state(default_blend_state(), blend_color, sample_mask);
+		}
 	}
 
 	void D3DGraphicContextProvider::set_depth_stencil_state(const DepthStencilStatePtr &state, int stencil_ref)
@@ -361,6 +367,10 @@ namespace uicore
 		{
 			D3DDepthStencilState *d3d_state = static_cast<D3DDepthStencilState*>(state.get());
 			window->get_device_context()->OMSetDepthStencilState(d3d_state->state, stencil_ref);
+		}
+		else
+		{
+			set_depth_stencil_state(default_depth_stencil_state(), stencil_ref);
 		}
 	}
 

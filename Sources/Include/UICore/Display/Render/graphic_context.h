@@ -55,7 +55,6 @@ namespace uicore
 	class GraphicContext_Impl;
 	class ProgramObject;
 	class Angle;
-	class RenderBatcher;
 	class FontProvider_Freetype;
 	class UniformBuffer;
 	class StorageBuffer;
