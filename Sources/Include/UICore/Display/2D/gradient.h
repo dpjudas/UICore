@@ -29,7 +29,7 @@
 
 #pragma once
 
-#include "color.h"
+#include "../../Core/Math/color.h"
 
 namespace uicore
 {

@@ -31,8 +31,8 @@
 #include "UICore/Display/Render/texture_impl.h"
 #include "UICore/Display/Render/graphic_context_impl.h"
 #include "UICore/Display/Image/pixel_buffer.h"
-#include "UICore/Display/2D/color.h"
 #include "UICore/Display/ImageFormats/image_file.h"
+#include "UICore/Core/Math/color.h"
 #include "UICore/Core/IOData/path_help.h"
 #include "UICore/Core/Text/string_format.h"
 

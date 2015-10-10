@@ -28,8 +28,8 @@
 
 #include "UICore/precomp.h"
 #include "UICore/Core/Math/cl_math.h"
-#include "UICore/Display/2D/color_hsv.h"
-#include "UICore/Display/2D/color.h"
+#include "UICore/Core/Math/color_hsv.h"
+#include "UICore/Core/Math/color.h"
 
 namespace uicore
 {

@@ -30,7 +30,7 @@
 
 #include <memory>
 #include "../../Core/Math/origin.h"
-#include "color.h"
+#include "../../Core/Math/color.h"
 #include "../Image/image_import_description.h"
 #include "UICore/Display/Render/texture.h"
 

@@ -29,7 +29,7 @@
 #include "UICore/precomp.h"
 #include "UICore/Core/System/exception.h"
 #include "UICore/Core/System/datetime.h"
-#include "UICore/Display/2D/color.h"
+#include "UICore/Core/Math/color.h"
 #include "UICore/Display/ImageFormats/png_output_description.h"
 
 namespace uicore

@@ -30,7 +30,7 @@
 
 #include "../View/view.h"
 #include "../../Display/Font/font.h"
-#include "../../Display/2D/color.h"
+#include "../../Core/Math/color.h"
 
 namespace uicore
 {

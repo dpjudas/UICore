@@ -34,7 +34,7 @@
 
 #include <memory>
 #include "../../Core/Math/vec3.h"
-#include "../2D/color.h"
+#include "../../Core/Math/color.h"
 #include "vertex_array_vector.h"
 
 namespace uicore

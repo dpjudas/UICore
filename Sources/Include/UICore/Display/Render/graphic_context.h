@@ -30,7 +30,7 @@
 
 #pragma once
 
-#include "../2D/color.h"
+#include "../../Core/Math/color.h"
 #include "../Image/texture_format.h"
 #include <memory>
 #include "../../Core/Math/mat4.h"

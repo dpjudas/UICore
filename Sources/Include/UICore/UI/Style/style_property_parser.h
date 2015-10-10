@@ -31,7 +31,7 @@
 #include <memory>
 #include <string>
 #include <vector>
-#include "../../Display/2D/color.h"
+#include "../../Core/Math/color.h"
 #include "style_get_value.h"
 #include "style_set_value.h"
 #include "style_set_image.h"

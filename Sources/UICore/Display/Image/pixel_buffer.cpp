@@ -30,7 +30,7 @@
 #include "UICore/precomp.h"
 #include "UICore/Display/Image/pixel_buffer.h"
 #include "UICore/Display/Image/pixel_converter.h"
-#include "UICore/Display/2D/color.h"
+#include "UICore/Core/Math/color.h"
 #include "UICore/Core/System/exception.h"
 #include "UICore/Core/IOData/path_help.h"
 #include "UICore/Display/ImageFormats/image_file.h"

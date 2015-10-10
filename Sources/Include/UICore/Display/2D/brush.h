@@ -30,7 +30,7 @@
 #pragma once
 
 #include "../../Core/Math/mat3.h"
-#include "../../Display/2D/color.h"
+#include "../../Core/Math/color.h"
 #include "image.h"
 #include <vector>
 

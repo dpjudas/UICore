@@ -29,7 +29,7 @@
 #pragma once
 
 #include <string>
-#include "../../Display/2D/color.h"
+#include "../../Core/Math/color.h"
 #include "style_value_type.h"
 #include "style_dimension.h"
 

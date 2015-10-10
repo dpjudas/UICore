@@ -28,7 +28,7 @@
 */
 
 #include "UICore/precomp.h"
-#include "UICore/Display/2D/color.h"
+#include "UICore/Core/Math/color.h"
 #include "UICore/Core/Text/string_format.h"
 #include "UICore/Core/Text/text.h"
 #include <map>

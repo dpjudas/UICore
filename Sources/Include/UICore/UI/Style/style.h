@@ -30,7 +30,7 @@
 
 #include "../../Core/Text/string_format.h"
 #include "../../Core/Math/cl_math.h"
-#include "../../Display/2D/color.h"
+#include "../../Core/Math/color.h"
 #include "style_get_value.h"
 #include <memory>
 

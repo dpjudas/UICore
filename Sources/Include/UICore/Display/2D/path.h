@@ -32,7 +32,7 @@
 #include <memory>
 #include "../../Core/Math/rect.h"
 #include "../../Core/Math/mat4.h"
-#include "../../Display/2D/color.h"
+#include "../../Core/Math/color.h"
 
 namespace uicore
 {
