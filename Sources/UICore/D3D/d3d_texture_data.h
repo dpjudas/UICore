@@ -29,7 +29,7 @@
 #pragma once
 
 #include "d3d_share_list.h"
-#include "UICore/Display/Render/texture_provider.h"
+#include "UICore/Display/Render/texture_impl.h"
 #include "UICore/Core/System/comptr.h"
 
 namespace uicore

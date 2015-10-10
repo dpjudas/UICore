@@ -28,7 +28,7 @@
 
 #pragma once
 
-#include "UICore/Display/Render/primitives_array_provider.h"
+#include "UICore/Display/Render/primitives_array_impl.h"
 #include "UICore/Core/System/comptr.h"
 #include <map>
 

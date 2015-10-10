@@ -28,7 +28,7 @@
 
 #pragma once
 
-#include "UICore/Display/Render/shader_object_provider.h"
+#include "UICore/Display/Render/shader_object_impl.h"
 #include "UICore/Core/System/comptr.h"
 #include "UICore/Core/System/databuffer.h"
 #include <map>

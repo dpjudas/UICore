@@ -32,7 +32,7 @@
 
 #include "UICore/GL/opengl_wrap.h"
 #include "UICore/GL/opengl.h"
-#include "UICore/Display/Render/program_object_provider.h"
+#include "UICore/Display/Render/program_object_impl.h"
 #include "UICore/GL/gl_share_list.h"
 
 namespace uicore

@@ -32,8 +32,8 @@
 
 #pragma once
 
-#include "UICore/Display/Render/graphic_context_provider.h"
-#include "UICore/Display/Render/primitives_array_provider.h"
+#include "UICore/Display/Render/graphic_context_impl.h"
+#include "UICore/Display/Render/primitives_array_impl.h"
 #include "UICore/Display/Render/program_object.h"
 #include "UICore/Display/Render/rasterizer_state_description.h"
 #include "UICore/Display/Render/blend_state_description.h"

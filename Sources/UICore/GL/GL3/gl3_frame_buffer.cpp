@@ -35,7 +35,7 @@
 #include "UICore/Display/Render/texture_2d_array.h"
 #include "UICore/Display/Render/texture_3d.h"
 #include "UICore/Display/Render/texture_cube.h"
-#include "UICore/Display/Render/texture_provider.h"
+#include "UICore/Display/Render/texture_impl.h"
 #include "UICore/Core/Text/string_format.h"
 #include "UICore/Display/Render/texture.h"
 #include "UICore/GL/opengl_wrap.h"

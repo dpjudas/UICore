@@ -31,7 +31,7 @@
 
 #include "UICore/GL/opengl_context_description.h"
 #include "UICore/Display/Render/rasterizer_state_description.h"
-#include "UICore/Display/Render/graphic_context_provider.h"
+#include "UICore/Display/Render/graphic_context_impl.h"
 #include <map>
 
 namespace uicore

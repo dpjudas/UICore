@@ -57,7 +57,7 @@
 #include "UICore/Display/Render/frame_buffer.h"
 #include "UICore/Display/Render/program_object.h"
 #include "UICore/Display/Window/display_window_provider.h"
-#include "UICore/Display/Render/texture_provider.h"
+#include "UICore/Display/Render/texture_impl.h"
 #include "UICore/GL/gl_share_list.h"
 #include "UICore/GL/opengl.h"
 #include "UICore/GL/opengl_wrap.h"

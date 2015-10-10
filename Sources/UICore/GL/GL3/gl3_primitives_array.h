@@ -30,7 +30,7 @@
 
 #include "UICore/GL/opengl_wrap.h"
 #include "UICore/GL/opengl.h"
-#include "UICore/Display/Render/primitives_array_provider.h"
+#include "UICore/Display/Render/primitives_array_impl.h"
 #include "UICore/Core/System/disposable_object.h"
 
 namespace uicore

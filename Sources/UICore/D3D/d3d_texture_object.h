@@ -28,7 +28,7 @@
 
 #pragma once
 
-#include "UICore/Display/Render/texture_provider.h"
+#include "UICore/Display/Render/texture_impl.h"
 #include "UICore/Display/Image/pixel_buffer.h"
 #include "d3d_share_list.h"
 #include "sampler_state.h"

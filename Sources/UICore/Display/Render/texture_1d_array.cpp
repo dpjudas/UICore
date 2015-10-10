@@ -28,7 +28,7 @@
 
 #include "UICore/precomp.h"
 #include "UICore/Display/Render/texture_1d_array.h"
-#include "UICore/Display/Render/graphic_context_provider.h"
+#include "UICore/Display/Render/graphic_context_impl.h"
 
 namespace uicore
 {

@@ -28,7 +28,7 @@
 
 #pragma once
 
-#include "UICore/Display/Render/graphic_context_provider.h"
+#include "UICore/Display/Render/graphic_context_impl.h"
 #include "UICore/Display/Render/blend_state_description.h"
 #include "UICore/Core/System/comptr.h"
 
