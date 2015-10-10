@@ -33,7 +33,6 @@
 #include "Display/display_target.h"
 #include "Display/screen_info.h"
 #include "Display/2D/canvas.h"
-#include "Display/2D/gradient.h"
 #include "Display/2D/image.h"
 #include "Display/2D/path.h"
 #include "Display/2D/pen.h"

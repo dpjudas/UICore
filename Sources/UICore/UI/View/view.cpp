@@ -38,6 +38,9 @@
 #include "UICore/UI/Events/resize_event.h"
 #include "UICore/UI/UIThread/ui_thread.h"
 #include "UICore/Display/2D/canvas.h"
+#include "UICore/Display/2D/path.h"
+#include "UICore/Display/2D/pen.h"
+#include "UICore/Display/2D/brush.h"
 #include "UICore/Core/Text/text.h"
 #include "view_impl.h"
 #include "vbox_layout.h"
@@ -765,9 +768,9 @@ namespace uicore
 			if (self->render_exception_encountered())
 			{
 				canvas.set_transform(old_transform * Mat4f::translate(translate.x, translate.y, 0));
-				canvas.fill_rect(0.0f, 0.0f, _geometry.content_width, _geometry.content_height, Colorf(1.0f, 0.2f, 0.2f, 0.5f));
-				canvas.draw_line(0.0f, 0.0f, _geometry.content_width, _geometry.content_height, Colorf::black);
-				canvas.draw_line(_geometry.content_width, 0.0f, 0.0f, _geometry.content_height, Colorf::black);
+				Path::rect(0.0f, 0.0f, _geometry.content_width, _geometry.content_height).fill(canvas, Colorf(1.0f, 0.2f, 0.2f, 0.5f));
+				Path::line(0.0f, 0.0f, _geometry.content_width, _geometry.content_height).stroke(canvas, Colorf::black);
+				Path::line(_geometry.content_width, 0.0f, 0.0f, _geometry.content_height).stroke(canvas, Colorf::black);
 			}
 		}
 

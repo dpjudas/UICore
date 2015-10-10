@@ -45,11 +45,6 @@ namespace uicore
 	class RenderBatcher;
 	class Colorf;
 	class Pointf;
-	class Gradient;
-	class LineSegment2f;
-	class LineSegment2;
-	class Trianglef;
-	class Triangle;
 	class DisplayWindow;
 	typedef std::shared_ptr<DisplayWindow> DisplayWindowPtr;
 	class DisplayWindowDescription;
@@ -151,9 +146,10 @@ namespace uicore
 		void set_cliprect(const Rectf &rect);
 
 		/// \brief Push current clipping rectangle to stack.
-		/** <p>If a rectangle is passed, it afterwards sets clipping
-			rectangle to the union of the current rectangle and the passed
-			rectangle.</p>*/
+		///
+		/// If a rectangle is passed, it afterwards sets clipping
+		/// rectangle to the union of the current rectangle and the passed
+		/// rectangle.
 		void push_cliprect(const Rectf &rect);
 
 		/// \brief Push cliprect
@@ -167,16 +163,6 @@ namespace uicore
 
 		/// \brief Clears the whole context using the specified color.
 		void clear(const Colorf &color = Colorf::black);
-
-		/// \brief Clear the stencil buffer
-		///
-		/// \param value value to clear to.
-		void clear_stencil(int value = 0);
-
-		/// \brief Clear the depth buffer
-		///
-		/// \param value: value to clear to. Range 0.0 - 1.0.
-		void clear_depth(float value = 0);
 
 		/// \brief Set active program object to the standard program specified.
 		void set_program_object(StandardProgram standard_program);
@@ -206,198 +192,6 @@ namespace uicore
 
 		/// \brief Flushes the render batcher currently active.
 		void flush();
-
-		/// \brief Draw a point.
-		void draw_point(float x1, float y1, const Colorf &color);
-
-		/// \brief Point
-		///
-		/// \param gc = Graphic Context
-		/// \param point = Pointf
-		/// \param color = Colorf
-		void draw_point(const Pointf &point, const Colorf &color);
-
-		/// \brief Draw a line.
-		void draw_line(float x1, float y1, float x2, float y2, const Colorf &color = Colorf::white);
-
-		/// \brief Line
-		///
-		/// \param gc = Graphic Context
-		/// \param start = Pointf
-		/// \param end = Pointf
-		/// \param color = Colorf
-		void draw_line(const Pointf &start, const Pointf &end, const Colorf &color = Colorf::white);
-
-		/// \brief Line
-		///
-		/// \param gc = Graphic Context
-		/// \param line_segment = The line
-		/// \param color = Colorf
-		void draw_line(const LineSegment2f &line_segment, const Colorf &color = Colorf::white);
-
-		/// \brief Lines
-		void draw_lines(const Vec2f *positions, int num_vertices, const Colorf &color = Colorf::white);
-
-		/// \brief Lines
-		void draw_lines(const Vec2f *line_positions, const Vec2f *texture_positions, int num_vertices, const Texture2DPtr &texture, const Colorf &line_color = Colorf::white);
-
-		/// \brief Line Strip
-		void draw_line_strip(const Vec2f *positions, int num_vertices, const Colorf &color = Colorf::white);
-
-		/// \brief Draw a box / rectangle.
-		void draw_box(float x1, float y1, float x2, float y2, const Colorf &color = Colorf::white);
-
-		/// \brief Box
-		///
-		/// \param gc = Graphic Context
-		/// \param start = Pointf
-		/// \param end = Pointf
-		/// \param color = Colorf
-		void draw_box(const Pointf &start, const Pointf &end, const Colorf &color = Colorf::white);
-
-		/// \brief Box
-		///
-		/// \param gc = Graphic Context
-		/// \param rect = Rectf
-		/// \param color = Colorf
-		void draw_box(const Rectf &rect, const Colorf &color);
-
-		/// \brief Draw a filled box / rectangle.
-		void fill_rect(float x1, float y1, float x2, float y2, const Colorf &color = Colorf::white);
-
-		/// \brief Fill
-		///
-		/// \param gc = Graphic Context
-		/// \param start = Pointf
-		/// \param end = Pointf
-		/// \param color = Colorf
-		void fill_rect(const Pointf &start, const Pointf &end, const Colorf &color = Colorf::white);
-
-		/// \brief Fill
-		///
-		/// \param gc = Graphic Context
-		/// \param rect = Rectf
-		/// \param color = Colorf
-		void fill_rect(const Rectf &rect, const Colorf &color);
-
-		/// \brief Gradient fill
-		///
-		/// \param gc = Graphic Context
-		/// \param x1 = value
-		/// \param y1 = value
-		/// \param x2 = value
-		/// \param y2 = value
-		/// \param color = Gradient
-		void fill_rect(float x1, float y1, float x2, float y2, const Gradient &color);
-
-		/// \brief Gradient fill
-		///
-		/// \param gc = Graphic Context
-		/// \param start = Pointf
-		/// \param end = Pointf
-		/// \param gradient = Gradient
-		void fill_rect(const Pointf &start, const Pointf &end, const Gradient &gradient);
-
-		/// \brief Gradient fill
-		///
-		/// \param gc = Graphic Context
-		/// \param rect = Rectf
-		/// \param gradient = Gradient
-		void fill_rect(const Rectf &rect, const Gradient &gradient);
-
-		/// \brief Draw a circle.
-		void fill_circle(float center_x, float center_y, float radius, const Colorf &color = Colorf::white);
-
-		/// \brief Circle
-		///
-		/// \param gc = Graphic Context
-		/// \param center = Pointf
-		/// \param radius = value
-		/// \param color = Colorf
-		void fill_circle(const Pointf &center, float radius, const Colorf &color = Colorf::white);
-
-		/// \brief Gradient circle
-		///
-		/// \param gc = Graphic Context
-		/// \param center = Pointf
-		/// \param radius = value
-		/// \param gradient = Gradient
-		void fill_circle(const Pointf &center, float radius, const Gradient &gradient);
-
-		/// \brief Gradient circle
-		///
-		/// \param gc = Graphic Context
-		/// \param center = Pointf
-		/// \param centergradient = Pointf
-		/// \param radius = value
-		/// \param gradient = Gradient
-		void fill_circle(const Pointf &center, const Pointf &centergradient, float radius, const Gradient &gradient);
-
-		/// \brief Draw a triangle.
-		void fill_triangle(const Pointf &a, const Pointf &b, const Pointf &c, const Colorf &color = Colorf::white);
-
-		/// \brief Draw a triangle.
-		void fill_triangle(const Trianglef &dest_triangle, const Colorf &color = Colorf::white);
-
-		/// \brief Draw triangles
-		void fill_triangles(const Vec2f *triangle_positions, int num_vertices, const Colorf &color = Colorf::white);
-
-		/// \brief Draw triangles
-		void fill_triangles(const Vec2f *triangle_positions, int num_vertices, const Gradient &gradient);
-
-		/// \brief Draw triangles
-		void fill_triangles(const Vec2f *triangle_positions, const Colorf *colors, int num_vertices);
-
-		/// \brief Draw triangles
-		void fill_triangles(const std::vector<Vec2f> &triangles, const Colorf *colors);
-
-		/// \brief Draw triangles
-		void fill_triangles(const std::vector<Vec2f> &triangles, const Colorf &color = Colorf::white);
-
-		/// \brief Draw triangles
-		void fill_triangles(const std::vector<Vec2f> &triangles, const Gradient &gradient);
-
-		/// \brief Draw triangles
-		void fill_triangles(const Vec2f *positions, const Vec2f *texture_positions, int num_vertices, const Texture2DPtr &texture, const Colorf &color = Colorf::white);
-
-		/// \brief Draw triangles
-		void fill_triangles(const Vec2f *positions, const Vec2f *texture_positions, int num_vertices, const Texture2DPtr &texture, const Colorf *colors);
-
-		/// \brief Draw triangles
-		void fill_triangles(const std::vector<Vec2f> &positions, const std::vector<Vec2f> &texture_positions, const Texture2DPtr &texture, const Colorf &color = Colorf::white);
-
-		/// \brief Draw triangles
-		void fill_triangles(const std::vector<Vec2f> &positions, const std::vector<Vec2f> &texture_positions, const Texture2DPtr &texture, const std::vector<Colorf> &colors);
-
-		/// \brief Draw triangles
-		void fill_triangles(const std::vector<Vec2f> &positions, const Texture2DPtr &texture, const Colorf &color = Colorf::white);
-
-		/// \brief Draw triangles
-		void fill_triangles(const std::vector<Vec2f> &positions, const Texture2DPtr &texture, const Rect &texture_rect, const Colorf &color = Colorf::white);
-
-		/// \brief Draw triangles
-		void fill_triangles(const Vec2f *triangle_positions, int num_vertices, const Texture2DPtr &texture, const Colorf &color = Colorf::white);
-
-		/// \brief Draw triangles
-		void fill_triangles(const Vec2f *triangle_positions, int num_vertices, const Texture2DPtr &texture, const Rect &texture_rect, const Colorf &color = Colorf::white);
-
-		/// \brief Draw triangles
-		void fill_triangles(const std::vector<Vec2f> &positions, const Texture2DPtr &texture, const Gradient &gradient);
-
-		/// \brief Draw triangles
-		void fill_triangles(const std::vector<Vec2f> &positions, const Texture2DPtr &texture, const Rect &texture_rect, const Gradient &gradient);
-
-		/// \brief Draw triangles
-		void fill_triangles(const Vec2f *triangle_positions, int num_vertices, const Texture2DPtr &texture, const Gradient &gradient);
-
-		/// \brief Draw triangles
-		void fill_triangles(const Vec2f *triangle_positions, int num_vertices, const Texture2DPtr &texture, const Rect &texture_rect, const Gradient &gradient);
-
-		/// \brief Draw a filled ellipse.
-		void fill_ellipse(const Pointf &center, float radius_x, float radius_y, const Colorf &color = Colorf::white);
-
-		/// \brief Draw a gradient filled ellipse.
-		void fill_ellipse(const Pointf &center, float radius_x, float radius_y, const Gradient &gradient);
 
 		/// \brief Snaps the point to the nearest pixel corner
 		Pointf grid_fit(const Pointf &pos);

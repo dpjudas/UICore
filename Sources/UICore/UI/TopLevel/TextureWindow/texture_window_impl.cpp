@@ -35,6 +35,8 @@
 #include "UICore/Display/Render/blend_state_description.h"
 #include "UICore/Display/Window/input_event.h"
 #include "UICore/Display/2D/canvas.h"
+#include "UICore/Display/2D/path.h"
+#include "UICore/Display/2D/brush.h"
 #include "texture_window_impl.h"
 
 namespace uicore
@@ -76,7 +78,7 @@ namespace uicore
 			if (clear_background_enable)
 			{
 				canvas.set_blend_state(opaque_blend);
-				canvas.fill_rect(canvas_rect, background_color);
+				Path::rect(canvas_rect).fill(canvas, background_color);
 				canvas.reset_blend_state();
 				//canvas.clear(background_color);	<--- On d3d, this clears the entire canvas - It does not recognise the cliprect
 			}
