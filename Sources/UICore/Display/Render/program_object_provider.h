@@ -36,7 +36,7 @@ namespace uicore
 {
 	class UniformBuffer;
 
-	class ProgramObjectProvider : public ProgramObject
+	class ProgramObjectImpl : public ProgramObject
 	{
 	public:
 		using ProgramObject::set_uniform_buffer_index;

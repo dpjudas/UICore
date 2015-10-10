@@ -39,7 +39,7 @@ namespace uicore
 {
 	class GL3GraphicContext;
 
-	class GL3ProgramObject : public ProgramObjectProvider, GLSharedResource
+	class GL3ProgramObject : public ProgramObjectImpl, GLSharedResource
 	{
 	public:
 		GL3ProgramObject();

@@ -52,17 +52,17 @@ namespace uicore
 				delete provider;
 		}
 
-		ShaderObjectProvider *provider;
+		ShaderObjectImpl *provider;
 	};
 
 	std::shared_ptr<ShaderObject> ShaderObject::create(const GraphicContextPtr &gc, ShaderType type, const std::string &source)
 	{
-		return static_cast<GraphicContextProvider*>(gc.get())->create_shader(type, source);
+		return static_cast<GraphicContextImpl*>(gc.get())->create_shader(type, source);
 	}
 
 	std::shared_ptr<ShaderObject> ShaderObject::create(const GraphicContextPtr &gc, ShaderType type, const void *bytecode, int bytecode_size)
 	{
-		return static_cast<GraphicContextProvider*>(gc.get())->create_shader(type, bytecode, bytecode_size);
+		return static_cast<GraphicContextImpl*>(gc.get())->create_shader(type, bytecode, bytecode_size);
 	}
 
 	std::shared_ptr<ShaderObject> ShaderObject::load(const GraphicContextPtr &gc, ShaderType shader_type, const std::string &filename)

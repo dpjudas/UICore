@@ -50,7 +50,7 @@
 namespace uicore
 {
 	class DisplayWindowProvider;
-	class ShaderObjectProvider;
+	class ShaderObjectImpl;
 	class FrameBufferProvider;
 	class RenderBufferProvider;
 	class GL3FrameBuffer;
@@ -59,7 +59,7 @@ namespace uicore
 	class OpenGLWindowProvider;
 	enum class ShaderType;
 
-	class GL3GraphicContext : public OpenGLGraphicContextProvider, public GraphicContextProvider, public DisposableObject
+	class GL3GraphicContext : public OpenGLContextProvider, public GraphicContextImpl, public DisposableObject
 	{
 	public:
 		/// \brief Creates a new OpenGL graphic context provider for a rendering window.

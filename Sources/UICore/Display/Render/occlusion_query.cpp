@@ -35,6 +35,6 @@ namespace uicore
 {
 	std::shared_ptr<OcclusionQuery> OcclusionQuery::create(const GraphicContextPtr &gc)
 	{
-		return static_cast<GraphicContextProvider*>(gc.get())->create_occlusion_query();
+		return static_cast<GraphicContextImpl*>(gc.get())->create_occlusion_query();
 	}
 }

@@ -45,7 +45,7 @@ namespace uicore
 {
 	class GLFunctions;
 	class GraphicContext;
-	class OpenGLGraphicContextProvider;
+	class OpenGLContextProvider;
 	class GL1GraphicContext;
 	class GL3GraphicContext;
 
@@ -90,7 +90,7 @@ namespace uicore
 		static void set_active(const GraphicContextPtr &gc);
 
 		/// \brief Sets the thread's OpenGL context to the one used by the graphic context.
-		static void set_active(const OpenGLGraphicContextProvider * const gc_provider);
+		static void set_active(const OpenGLContextProvider * const gc_provider);
 
 		/// \brief Sets the thread's OpenGL context to the first valid allocated one
 		///
@@ -135,8 +135,8 @@ namespace uicore
 	private:
 		/// \brief Remove the opengl bindings from the thread's OpenGL context
 		/// 
-		/// This should only be called by the OpenGLGraphicContextProvider destructor
-		static void remove_active(const OpenGLGraphicContextProvider * const gc_provider);
+		/// This should only be called by the OpenGLContextProvider destructor
+		static void remove_active(const OpenGLContextProvider * const gc_provider);
 
 		friend class GL1GraphicContext;
 		friend class GL3GraphicContext;

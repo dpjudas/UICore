@@ -104,7 +104,7 @@ namespace uicore
 
 	void GL3GraphicContext::create_standard_programs()
 	{
-		for (GraphicContextProvider *gc : GLShareList::all_contexts())
+		for (GraphicContextImpl *gc : GLShareList::all_contexts())
 		{
 			GL3GraphicContext* gc_provider = dynamic_cast<GL3GraphicContext *>(gc);
 			if (gc_provider != this)

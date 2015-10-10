@@ -51,7 +51,7 @@
 namespace uicore
 {
 	class DisplayWindowProvider;
-	class ShaderObjectProvider;
+	class ShaderObjectImpl;
 	class FrameBufferProvider;
 	class RenderBufferProvider;
 	class GL1TextureObject;
@@ -78,7 +78,7 @@ namespace uicore
 		OpenGLDepthStencilState depth_stencil;
 	};
 
-	class GL1GraphicContext : public OpenGLGraphicContextProvider, public GraphicContextProvider, public DisposableObject
+	class GL1GraphicContext : public OpenGLContextProvider, public GraphicContextImpl, public DisposableObject
 	{
 	public:
 		GL1GraphicContext(OpenGLWindowProvider * render_window);
@@ -187,7 +187,7 @@ namespace uicore
 	private:
 		void on_dispose() override;
 		void check_opengl_version();
-		void set_primitive_texture(int texture_index, PrimitivesArrayProvider::VertexData &array_texture, int offset, int num_vertices, int total_vertices);
+		void set_primitive_texture(int texture_index, PrimitivesArrayImpl::VertexData &array_texture, int offset, int num_vertices, int total_vertices);
 		void reset_primitive_texture(int texture_index);
 		void reset_primitive_texture_all();
 
@@ -202,10 +202,10 @@ namespace uicore
 		std::vector<GL1SelectedTexture> selected_textures;
 
 		bool primitives_array_texture_set;
-		PrimitivesArrayProvider::VertexData primitives_array_texture;
+		PrimitivesArrayImpl::VertexData primitives_array_texture;
 
 		bool primitives_array_texindex_set;
-		PrimitivesArrayProvider::VertexData primitives_array_texindex;
+		PrimitivesArrayImpl::VertexData primitives_array_texindex;
 
 		std::vector<float> transformed_coords;
 		std::vector<DisposableObject *> disposable_objects;

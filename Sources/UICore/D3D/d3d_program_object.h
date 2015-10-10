@@ -75,7 +75,7 @@ namespace uicore
 		int value;
 	};
 
-	class D3DProgramObject : public ProgramObjectProvider
+	class D3DProgramObject : public ProgramObjectImpl
 	{
 	public:
 		D3DProgramObject(const ComPtr<ID3D11Device> &device, const ComPtr<ID3D11DeviceContext> &device_context);

@@ -51,7 +51,7 @@ namespace uicore
 	class PrimitivesArray;
 	class Font;
 	class FontMetrics;
-	class GraphicContextProvider;
+	class GraphicContextImpl;
 	class GraphicContext_Impl;
 	class ProgramObject;
 	class Angle;

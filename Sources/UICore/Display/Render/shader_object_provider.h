@@ -34,7 +34,7 @@
 
 namespace uicore
 {
-	class ShaderObjectProvider : public ShaderObject
+	class ShaderObjectImpl : public ShaderObject
 	{
 	public:
 		void compile() override

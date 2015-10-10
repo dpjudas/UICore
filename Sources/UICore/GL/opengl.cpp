@@ -64,14 +64,14 @@
 namespace uicore
 {
 	cl_tls_variable GLFunctions *OpenGL::functions = nullptr;
-	cl_tls_variable const OpenGLGraphicContextProvider * cl_active_opengl_gc = nullptr;
+	cl_tls_variable const OpenGLContextProvider * cl_active_opengl_gc = nullptr;
 	static std::recursive_mutex cl_function_map_mutex;
 
 	// A fix for a compiler bug with compiler version 13.00.9466
 	#if _MSC_VER > 1300
-	typedef std::map<const OpenGLGraphicContextProvider * const, GLFunctions *> cl_function_map_type;
+	typedef std::map<const OpenGLContextProvider * const, GLFunctions *> cl_function_map_type;
 	#else
-	typedef std::map<const OpenGLGraphicContextProvider *, GLFunctions *> cl_function_map_type;
+	typedef std::map<const OpenGLContextProvider *, GLFunctions *> cl_function_map_type;
 	#endif
 
 	static cl_function_map_type cl_function_map;
@@ -296,10 +296,10 @@ namespace uicore
 		if (cl_active_opengl_gc)	// If already active, we can exit now
 			return true;
 
-		GraphicContextProvider* shared_provider = GLShareList::any_context();
+		GraphicContextImpl* shared_provider = GLShareList::any_context();
 		if (shared_provider)
 		{
-			OpenGLGraphicContextProvider *gc_provider = dynamic_cast<OpenGLGraphicContextProvider*>(shared_provider);
+			OpenGLContextProvider *gc_provider = dynamic_cast<OpenGLContextProvider*>(shared_provider);
 			if (gc_provider)
 			{
 				OpenGL::set_active(gc_provider);
@@ -310,7 +310,7 @@ namespace uicore
 		return false;
 	}
 
-	void OpenGL::set_active(const OpenGLGraphicContextProvider * const gc_provider)
+	void OpenGL::set_active(const OpenGLContextProvider * const gc_provider)
 	{
 		// Don't do anything if the supplied graphic context is already active.
 	//#ifndef __APPLE__ // temp hack to see if iOS changes the current context behind our back
@@ -363,7 +363,7 @@ namespace uicore
 		}
 	}
 
-	void OpenGL::remove_active(const OpenGLGraphicContextProvider * const gc_provider)
+	void OpenGL::remove_active(const OpenGLContextProvider * const gc_provider)
 	{
 		std::unique_lock<std::recursive_mutex> mutex_lock(cl_function_map_mutex);
 		cl_function_map_type::iterator it;

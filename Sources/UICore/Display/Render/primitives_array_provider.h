@@ -32,7 +32,7 @@
 
 namespace uicore
 {
-	class PrimitivesArrayProvider : public PrimitivesArray
+	class PrimitivesArrayImpl : public PrimitivesArray
 	{
 	public:
 		class VertexData

@@ -42,7 +42,7 @@ namespace uicore
 {
 	std::shared_ptr<ProgramObject> ProgramObject::create(const GraphicContextPtr &gc)
 	{
-		return static_cast<GraphicContextProvider*>(gc.get())->create_program();
+		return static_cast<GraphicContextImpl*>(gc.get())->create_program();
 	}
 
 	std::shared_ptr<ProgramObject> ProgramObject::load(const GraphicContextPtr &gc, const std::string &vertex_filename, const std::string &fragment_filename)

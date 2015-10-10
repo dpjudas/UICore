@@ -37,7 +37,7 @@ namespace uicore
 {
 	class GL3GraphicContext;
 
-	class GL3PrimitivesArray : public PrimitivesArrayProvider, DisposableObject
+	class GL3PrimitivesArray : public PrimitivesArrayImpl, DisposableObject
 	{
 	public:
 		GL3PrimitivesArray(GL3GraphicContext *gc_provider);

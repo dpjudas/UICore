@@ -867,7 +867,7 @@ namespace uicore
 		int height,
 		int level,
 		TextureFormat texture_format,
-		GraphicContextProvider *gc)
+		GraphicContextImpl *gc)
 	{
 		throw Exception("copy_image_from not supported yet by D3D target");
 	}
@@ -880,7 +880,7 @@ namespace uicore
 		int width,
 		int height,
 		int level,
-		GraphicContextProvider *gc)
+		GraphicContextImpl *gc)
 	{
 		throw Exception("copy_subimage_from not supported yet by D3D target");
 	}

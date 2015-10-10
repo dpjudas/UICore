@@ -36,6 +36,6 @@ namespace uicore
 {
 	std::shared_ptr<PrimitivesArray> PrimitivesArray::create(const GraphicContextPtr &gc)
 	{
-		return static_cast<GraphicContextProvider*>(gc.get())->create_primitives_array();
+		return static_cast<GraphicContextImpl*>(gc.get())->create_primitives_array();
 	}
 }

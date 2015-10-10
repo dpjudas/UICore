@@ -637,7 +637,7 @@ namespace uicore
 	HGLRC OpenGLWindowProvider::get_share_context()
 	{
 		HGLRC share_context = 0;
-		GraphicContextProvider* gc = GLShareList::any_context();
+		GraphicContextImpl* gc = GLShareList::any_context();
 		if (gc)
 		{
 			const DisplayWindowProvider *rwp = NULL;

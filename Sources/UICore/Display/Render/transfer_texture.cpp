@@ -36,11 +36,11 @@ namespace uicore
 {
 	std::shared_ptr<TransferTexture> TransferTexture::create(const GraphicContextPtr &gc, int width, int height, PixelBufferDirection direction, TextureFormat texture_format, const void *data, BufferUsage usage)
 	{
-		return static_cast<GraphicContextProvider*>(gc.get())->create_transfer_texture(data, Size(width, height), direction, texture_format, usage);
+		return static_cast<GraphicContextImpl*>(gc.get())->create_transfer_texture(data, Size(width, height), direction, texture_format, usage);
 	}
 
 	std::shared_ptr<TransferTexture> TransferTexture::create(const GraphicContextPtr &gc, const PixelBufferPtr &pbuff, PixelBufferDirection direction, BufferUsage usage)
 	{
-		return static_cast<GraphicContextProvider*>(gc.get())->create_transfer_texture(pbuff->data(), pbuff->size(), direction, pbuff->format(), usage);
+		return static_cast<GraphicContextImpl*>(gc.get())->create_transfer_texture(pbuff->data(), pbuff->size(), direction, pbuff->format(), usage);
 	}
 }

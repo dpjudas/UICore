@@ -417,7 +417,7 @@ namespace uicore
 		int height,
 		int level,
 		TextureFormat texture_format,
-		GraphicContextProvider *gc)
+		GraphicContextImpl *gc)
 	{
 		throw_if_disposed();
 		OpenGL::set_active(static_cast<GL1GraphicContext*>(gc));
@@ -444,7 +444,7 @@ namespace uicore
 		int width,
 		int height,
 		int level,
-		GraphicContextProvider *gc)
+		GraphicContextImpl *gc)
 	{
 		throw_if_disposed();
 		OpenGL::set_active(static_cast<GL1GraphicContext*>(gc));
@@ -550,7 +550,7 @@ namespace uicore
 		glTexParameteri(texture_type, GL_TEXTURE_COMPARE_FUNC, OpenGL::to_enum(func));	
 	}
 
-	void GL1TextureObject::transform_coordinate(const PrimitivesArrayProvider::VertexData &attribute, std::vector<float> &transformed_data, int vertex_offset, int num_vertices, int total_vertices)
+	void GL1TextureObject::transform_coordinate(const PrimitivesArrayImpl::VertexData &attribute, std::vector<float> &transformed_data, int vertex_offset, int num_vertices, int total_vertices)
 	{
 		if (attribute.type != type_float)
 		{

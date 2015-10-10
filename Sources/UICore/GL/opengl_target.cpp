@@ -74,7 +74,7 @@ namespace uicore
 
 	void OpenGLTarget::get_opengl_version(const GraphicContextPtr &gc, int &version_major, int &version_minor)
 	{
-		const OpenGLGraphicContextProvider *provider = dynamic_cast<const OpenGLGraphicContextProvider *>(gc.get());
+		const OpenGLContextProvider *provider = dynamic_cast<const OpenGLContextProvider *>(gc.get());
 		if (provider == nullptr)
 			throw Exception("Graphic Context is not from a GL target");
 		provider->get_opengl_version(version_major, version_minor);
@@ -82,7 +82,7 @@ namespace uicore
 
 	void OpenGLTarget::get_opengl_version(const GraphicContextPtr &gc, int &version_major, int &version_minor, int &version_release)
 	{
-		const OpenGLGraphicContextProvider *provider = dynamic_cast<const OpenGLGraphicContextProvider *>(gc.get());
+		const OpenGLContextProvider *provider = dynamic_cast<const OpenGLContextProvider *>(gc.get());
 		if (provider == nullptr)
 			throw Exception("Graphic Context is not from a GL target");
 		provider->get_opengl_version(version_major, version_minor, version_release);
@@ -90,7 +90,7 @@ namespace uicore
 
 	void OpenGLTarget::get_opengl_shading_language_version(const GraphicContextPtr &gc, int &version_major, int &version_minor)
 	{
-		const OpenGLGraphicContextProvider *provider = dynamic_cast<const OpenGLGraphicContextProvider *>(gc.get());
+		const OpenGLContextProvider *provider = dynamic_cast<const OpenGLContextProvider *>(gc.get());
 		if (provider == nullptr)
 			throw Exception("Graphic Context is not from a GL target");
 		provider->get_opengl_shading_language_version(version_major, version_minor);
@@ -123,7 +123,7 @@ namespace uicore
 
 	void OpenGLTarget::set_active_context(const GraphicContextPtr &gc)
 	{
-		const OpenGLGraphicContextProvider *provider = dynamic_cast<const OpenGLGraphicContextProvider *>(gc.get());
+		const OpenGLContextProvider *provider = dynamic_cast<const OpenGLContextProvider *>(gc.get());
 		if (provider == nullptr)
 			throw Exception("Graphic Context is not from a GL target");
 		OpenGL::set_active(provider);

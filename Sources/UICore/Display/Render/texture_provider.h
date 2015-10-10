@@ -184,9 +184,9 @@ namespace uicore
 		PixelBufferPtr pixeldata(const GraphicContextPtr &gc, TextureFormat texture_format, int level = 0) const override { return texture.get_pixeldata(gc, texture_format, level); }
 		void set_image(const GraphicContextPtr &context, const PixelBufferPtr &image, int level) override { texture.copy_from(context, 0, 0, 0, level, image, image->size()); }
 		void set_subimage(const GraphicContextPtr &context, int x, int y, const PixelBufferPtr &image, const Rect &src_rect, int level) override { texture.copy_from(context, x, y, 0, level, image, src_rect); }
-		void copy_image_from(const GraphicContextPtr &context, int level, TextureFormat texture_format) override { texture.copy_image_from(0, 0, width(), height(), level, texture_format, static_cast<GraphicContextProvider*>(context.get())); }
-		void copy_image_from(const GraphicContextPtr &context, int x, int y, int width, int height, int level, TextureFormat texture_format) override { texture.copy_image_from(x, y, width, height, level, texture_format, static_cast<GraphicContextProvider*>(context.get())); }
-		void copy_subimage_from(const GraphicContextPtr &context, int offset_x, int offset_y, int x, int y, int width, int height, int level) override { texture.copy_subimage_from(offset_x, offset_y, x, y, width, height, level, static_cast<GraphicContextProvider*>(context.get())); }
+		void copy_image_from(const GraphicContextPtr &context, int level, TextureFormat texture_format) override { texture.copy_image_from(0, 0, width(), height(), level, texture_format, static_cast<GraphicContextImpl*>(context.get())); }
+		void copy_image_from(const GraphicContextPtr &context, int x, int y, int width, int height, int level, TextureFormat texture_format) override { texture.copy_image_from(x, y, width, height, level, texture_format, static_cast<GraphicContextImpl*>(context.get())); }
+		void copy_subimage_from(const GraphicContextPtr &context, int offset_x, int offset_y, int x, int y, int width, int height, int level) override { texture.copy_subimage_from(offset_x, offset_y, x, y, width, height, level, static_cast<GraphicContextImpl*>(context.get())); }
 		void set_wrap_mode(TextureWrapMode wrap_s, TextureWrapMode wrap_t) override { _wrap_mode_s = wrap_s; _wrap_mode_t = wrap_t; texture.set_wrap_mode(wrap_s, wrap_t); }
 
 	private:

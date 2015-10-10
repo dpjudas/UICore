@@ -90,8 +90,8 @@ namespace uicore
 
 		void copy_from(const GraphicContextPtr &gc, int x, int y, int slice, int level, const PixelBufferPtr &src, const Rect &src_rect);
 
-		void copy_image_from(int x, int y, int width, int height, int level, TextureFormat texture_format, GraphicContextProvider *gc);
-		void copy_subimage_from(int offset_x, int offset_y, int x, int y, int width, int height, int level, GraphicContextProvider *gc);
+		void copy_image_from(int x, int y, int width, int height, int level, TextureFormat texture_format, GraphicContextImpl *gc);
+		void copy_subimage_from(int offset_x, int offset_y, int x, int y, int width, int height, int level, GraphicContextImpl *gc);
 
 		void set_min_lod(double min_lod);
 		void set_max_lod(double max_lod);

@@ -34,7 +34,7 @@ namespace uicore
 {
 	std::shared_ptr<TextureCube> TextureCube::create(const GraphicContextPtr &context, int width, int height, TextureFormat texture_format, int levels)
 	{
-		return static_cast<GraphicContextProvider*>(context.get())->create_texture_cube(width, height, texture_format, levels);
+		return static_cast<GraphicContextImpl*>(context.get())->create_texture_cube(width, height, texture_format, levels);
 	}
 
 	std::shared_ptr<TextureCube> TextureCube::create(const GraphicContextPtr &context, const Size &size, TextureFormat texture_format, int levels)

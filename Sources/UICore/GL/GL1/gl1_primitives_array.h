@@ -32,7 +32,7 @@
 
 namespace uicore
 {
-	class GL1PrimitivesArray : public PrimitivesArrayProvider
+	class GL1PrimitivesArray : public PrimitivesArrayImpl
 	{
 	public:
 		GL1PrimitivesArray();

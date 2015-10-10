@@ -36,7 +36,7 @@ namespace uicore
 {
 	class D3DProgramObject;
 
-	class D3DPrimitivesArray : public PrimitivesArrayProvider
+	class D3DPrimitivesArray : public PrimitivesArrayImpl
 	{
 	public:
 		D3DPrimitivesArray(const ComPtr<ID3D11Device> &device);

@@ -50,7 +50,7 @@ namespace uicore
 	class D3DElementArrayBuffer;
 	class DisplayWindowDescription;
 
-	class D3DGraphicContext : public GraphicContextProvider
+	class D3DGraphicContext : public GraphicContextImpl
 	{
 	public:
 		D3DGraphicContext(D3DDisplayWindow *window, const DisplayWindowDescription &display_desc);

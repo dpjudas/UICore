@@ -33,7 +33,7 @@
 
 namespace uicore
 {
-	class OpenGLGraphicContextProvider
+	class OpenGLContextProvider
 	{
 	public:
 		virtual void get_opengl_version(int &version_major, int &version_minor) const = 0;

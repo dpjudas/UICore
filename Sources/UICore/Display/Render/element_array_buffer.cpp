@@ -36,11 +36,11 @@ namespace uicore
 {
 	std::shared_ptr<ElementArrayBuffer> ElementArrayBuffer::create(const GraphicContextPtr &gc, int size, BufferUsage usage)
 	{
-		return static_cast<GraphicContextProvider*>(gc.get())->create_element_array_buffer(size, usage);
+		return static_cast<GraphicContextImpl*>(gc.get())->create_element_array_buffer(size, usage);
 	}
 
 	std::shared_ptr<ElementArrayBuffer> ElementArrayBuffer::create(const GraphicContextPtr &gc, const void *data, int size, BufferUsage usage)
 	{
-		return static_cast<GraphicContextProvider*>(gc.get())->create_element_array_buffer(data, size, usage);
+		return static_cast<GraphicContextImpl*>(gc.get())->create_element_array_buffer(data, size, usage);
 	}
 }

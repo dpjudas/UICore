@@ -90,7 +90,7 @@ namespace uicore
 			int height,
 			int level,
 			TextureFormat texture_format,
-			GraphicContextProvider *gc);
+			GraphicContextImpl *gc);
 
 		void copy_subimage_from(
 			int offset_x,
@@ -100,7 +100,7 @@ namespace uicore
 			int width,
 			int height,
 			int level,
-			GraphicContextProvider *gc);
+			GraphicContextImpl *gc);
 
 		void set_min_lod(double min_lod);
 		void set_max_lod(double max_lod);

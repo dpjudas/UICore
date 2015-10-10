@@ -77,7 +77,7 @@ namespace uicore
 		if (!gc->write_frame_buffer())	// No framebuffer attached to canvas
 		{
 			canvas_y_axis = y_axis_top_down;
-			sc.connect(static_cast<GraphicContextProvider*>(gc.get())->sig_window_resized(), bind_member(this, &Canvas_Impl::on_window_resized));
+			sc.connect(static_cast<GraphicContextImpl*>(gc.get())->sig_window_resized(), bind_member(this, &Canvas_Impl::on_window_resized));
 		}
 		else
 		{

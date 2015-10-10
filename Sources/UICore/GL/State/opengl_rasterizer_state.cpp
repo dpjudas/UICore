@@ -72,7 +72,7 @@ namespace uicore
 
 			desc.get_front_face() == face_counter_clockwise ? glFrontFace(GL_CCW) : glFrontFace(GL_CW);
 
-			// Note, enabled in GraphicContextProvider::set_scissor()
+			// Note, enabled in GraphicContextImpl::set_scissor()
 			if (!desc.get_enable_scissor())
 				glDisable(GL_SCISSOR_TEST);
 

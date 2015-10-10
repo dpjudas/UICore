@@ -32,12 +32,12 @@
 
 namespace uicore
 {
-	void GLShareList::context_created(GraphicContextProvider *gc)
+	void GLShareList::context_created(GraphicContextImpl *gc)
 	{
 		contexts.push_back(gc);
 	}
 
-	void GLShareList::context_destroyed(GraphicContextProvider *gc)
+	void GLShareList::context_destroyed(GraphicContextImpl *gc)
 	{
 		bool last_context = contexts.front() == contexts.back();
 		if (last_context)
@@ -60,6 +60,6 @@ namespace uicore
 		resources.erase(it);
 	}
 
-	std::list<GraphicContextProvider *> GLShareList::contexts;
+	std::list<GraphicContextImpl *> GLShareList::contexts;
 	std::list<GLSharedResource *> GLShareList::resources;
 }

@@ -360,7 +360,7 @@ namespace uicore
 		int height,
 		int level,
 		TextureFormat texture_format,
-		GraphicContextProvider *gc)
+		GraphicContextImpl *gc)
 	{
 		throw_if_disposed();
 		OpenGL::set_active(static_cast<GL3GraphicContext*>(gc));
@@ -387,7 +387,7 @@ namespace uicore
 		int width,
 		int height,
 		int level,
-		GraphicContextProvider *gc)
+		GraphicContextImpl *gc)
 	{
 		throw_if_disposed();
 		OpenGL::set_active(static_cast<GL3GraphicContext*>(gc));

@@ -37,7 +37,7 @@
 
 namespace uicore
 {
-	class D3DShaderObject : public ShaderObjectProvider
+	class D3DShaderObject : public ShaderObjectImpl
 	{
 	public:
 		D3DShaderObject(const ComPtr<ID3D11Device> &device, D3D_FEATURE_LEVEL feature_level, ShaderType type, const std::string &source);

@@ -36,7 +36,7 @@ namespace uicore
 	class GL1GraphicContext;
 	class OpenGLWindowProvider;
 
-	class PBuffer_GL1_Impl : public OpenGLGraphicContextProvider
+	class PBuffer_GL1_Impl : public OpenGLContextProvider
 	{
 	public:
 		PBuffer_GL1_Impl(GL1GraphicContext *gc_provider);

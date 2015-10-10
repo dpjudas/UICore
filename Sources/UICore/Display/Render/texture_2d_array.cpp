@@ -34,7 +34,7 @@ namespace uicore
 {
 	std::shared_ptr<Texture2DArray> Texture2DArray::create(const GraphicContextPtr &context, int width, int height, int array_size, TextureFormat texture_format, int levels)
 	{
-		return static_cast<GraphicContextProvider*>(context.get())->create_texture_2d_array(width, height, array_size, texture_format, levels);
+		return static_cast<GraphicContextImpl*>(context.get())->create_texture_2d_array(width, height, array_size, texture_format, levels);
 	}
 
 	std::shared_ptr<Texture2DArray> Texture2DArray::create(const GraphicContextPtr &context, const Size &size, int array_size, TextureFormat texture_format, int levels)

@@ -46,8 +46,8 @@ namespace uicore
 	class FontProvider;
 	class Font;
 	class OcclusionQuery;
-	class ProgramObjectProvider;
-	class ShaderObjectProvider;
+	class ProgramObjectImpl;
+	class ShaderObjectImpl;
 	class FrameBuffer;
 	class RenderBuffer;
 	class VertexArrayBufferProvider;
@@ -57,7 +57,7 @@ namespace uicore
 	class PixelBufferProvider;
 	class UniformBufferProvider;
 	class StorageBuffer;
-	class PrimitivesArrayProvider;
+	class PrimitivesArrayImpl;
 	class RasterizerStateDescription;
 	class BlendStateDescription;
 	class DepthStencilStateDescription;
@@ -65,7 +65,7 @@ namespace uicore
 	enum class ShaderType;
 	enum PixelBufferDirection;
 
-	class GraphicContextProvider : public GraphicContext
+	class GraphicContextImpl : public GraphicContext
 	{
 	public:
 		virtual std::shared_ptr<ProgramObject> create_program() = 0;

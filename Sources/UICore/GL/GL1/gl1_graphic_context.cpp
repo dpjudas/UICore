@@ -656,7 +656,7 @@ namespace uicore
 				if (!prim_array->attribute_set[attribute_index])
 					continue;
 
-				const PrimitivesArrayProvider::VertexData &attribute = prim_array->attributes[attribute_index];
+				const PrimitivesArrayImpl::VertexData &attribute = prim_array->attributes[attribute_index];
 
 				GL1VertexArrayBuffer *vertex_array_ptr = static_cast<GL1VertexArrayBuffer *>(attribute.array_provider);
 				if (!vertex_array_ptr)
@@ -970,7 +970,7 @@ namespace uicore
 		return *render_window;
 	}
 
-	void GL1GraphicContext::set_primitive_texture(int texture_index, PrimitivesArrayProvider::VertexData &array_texture, int offset, int num_vertices, int total_vertices)
+	void GL1GraphicContext::set_primitive_texture(int texture_index, PrimitivesArrayImpl::VertexData &array_texture, int offset, int num_vertices, int total_vertices)
 	{
 		GL1TextureObject *texture;
 		if ((texture_index < 0) || (texture_index >= max_texture_coords))

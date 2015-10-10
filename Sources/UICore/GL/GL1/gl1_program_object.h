@@ -40,7 +40,7 @@ namespace uicore
 {
 	class GL1GraphicContext;
 
-	class GL1ProgramObject : public ProgramObjectProvider, DisposableObject
+	class GL1ProgramObject : public ProgramObjectImpl, DisposableObject
 	{
 	public:
 		GL1ProgramObject(GL1GraphicContext *gc_provider);

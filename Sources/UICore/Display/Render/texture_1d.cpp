@@ -35,7 +35,7 @@ namespace uicore
 {
 	std::shared_ptr<Texture1D> Texture1D::create(const GraphicContextPtr &context, int size, TextureFormat texture_format, int levels)
 	{
-		return static_cast<GraphicContextProvider*>(context.get())->create_texture_1d(size, texture_format, levels);
+		return static_cast<GraphicContextImpl*>(context.get())->create_texture_1d(size, texture_format, levels);
 	}
 
 	std::shared_ptr<Texture1D> Texture1D::create(const GraphicContextPtr &context, const PixelBufferPtr &image, bool is_srgb)

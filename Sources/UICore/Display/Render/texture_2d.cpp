@@ -40,7 +40,7 @@ namespace uicore
 {
 	std::shared_ptr<Texture2D> Texture2D::create(const GraphicContextPtr &context, int width, int height, TextureFormat format, int levels)
 	{
-		return static_cast<GraphicContextProvider*>(context.get())->create_texture_2d(width, height, format, levels);
+		return static_cast<GraphicContextImpl*>(context.get())->create_texture_2d(width, height, format, levels);
 	}
 
 	std::shared_ptr<Texture2D> Texture2D::create(const GraphicContextPtr &context, const Size &size, TextureFormat texture_format, int levels)

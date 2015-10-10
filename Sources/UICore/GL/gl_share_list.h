@@ -35,23 +35,23 @@
 
 namespace uicore
 {
-	class GraphicContextProvider;
+	class GraphicContextImpl;
 	class GLSharedResource;
 
 	class GLShareList
 	{
 	public:
-		static void context_created(GraphicContextProvider *gc);
-		static void context_destroyed(GraphicContextProvider *gc);
+		static void context_created(GraphicContextImpl *gc);
+		static void context_destroyed(GraphicContextImpl *gc);
 
-		static GraphicContextProvider *any_context() { return !contexts.empty() ? contexts.front() : nullptr; }
-		static const std::list<GraphicContextProvider *> &all_contexts() { return contexts; }
+		static GraphicContextImpl *any_context() { return !contexts.empty() ? contexts.front() : nullptr; }
+		static const std::list<GraphicContextImpl *> &all_contexts() { return contexts; }
 
 	private:
 		static std::list<GLSharedResource *>::iterator resource_created(GLSharedResource *resource);
 		static void resource_destroyed(std::list<GLSharedResource *>::iterator it);
 
-		static std::list<GraphicContextProvider *> contexts;
+		static std::list<GraphicContextImpl *> contexts;
 		static std::list<GLSharedResource *> resources;
 
 		friend class GLSharedResource;

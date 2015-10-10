@@ -39,7 +39,7 @@ namespace uicore
 {
 	class GL3GraphicContext;
 
-	class GL3ShaderObject : public ShaderObjectProvider, GLSharedResource
+	class GL3ShaderObject : public ShaderObjectImpl, GLSharedResource
 	{
 	public:
 		GL3ShaderObject(ShaderType type, const std::string &source);
