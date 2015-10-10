@@ -33,7 +33,6 @@
 #include <memory>
 #include "../../Core/Math/rect.h"
 #include "texture_format.h"
-#include "buffer_usage.h"
 
 namespace uicore
 {
@@ -48,16 +47,6 @@ namespace uicore
 	typedef std::shared_ptr<GraphicContext> GraphicContextPtr;
 	class PixelConverter;
 	typedef std::shared_ptr<PixelConverter> PixelConverterPtr;
-
-	/// \brief Pixel buffer prefered direction
-	enum PixelBufferDirection
-	{
-		/// \brief Use of the pixel buffer is to send data to the gpu
-		data_to_gpu,
-
-		/// \brief Use of the pixel buffer is to retrieve data from the gpu
-		data_from_gpu
-	};
 
 	/// \brief Pixel data container.
 	class PixelBuffer
@@ -106,9 +95,6 @@ namespace uicore
 		/// \brief Returns a pointer to the beginning of the pixel buffer.
 		virtual void *data() = 0;
 		virtual const void *data() const = 0;
-
-		/// \brief Returns true if this pixel buffer is a GPU based one
-		virtual bool is_gpu() const = 0;
 
 		template<typename Type> Type *data() { return reinterpret_cast<Type*>(data()); }
 		template<typename Type> const Type *data() const { return reinterpret_cast<const Type*>(data()); }
@@ -185,17 +171,6 @@ namespace uicore
 
 		/// \brief Returns the pixel format
 		virtual TextureFormat format() const = 0;
-
-		/// \brief Maps buffer into system memory.
-		///
-		/// Locking before accessing data is only required for GPU based buffers.
-		virtual void lock(const GraphicContextPtr &gc, BufferAccess access) = 0;
-
-		/// \brief Unmaps buffer.
-		virtual void unlock() = 0;
-
-		/// \brief Uploads data to buffer.
-		virtual void upload_data(const GraphicContextPtr &gc, const Rect &dest_rect, const void *data) = 0;
 
 		/// \brief Copy source pixel buffer into this buffer, doing a format conversion if needed
 		///

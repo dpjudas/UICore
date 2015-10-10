@@ -29,7 +29,7 @@
 #pragma once
 
 #include <memory>
-#include "../Image/buffer_usage.h"
+#include "buffer_usage.h"
 
 namespace uicore
 {

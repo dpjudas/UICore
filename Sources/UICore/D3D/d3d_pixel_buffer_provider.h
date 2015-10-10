@@ -50,7 +50,6 @@ namespace uicore
 
 		int width() const override { return _size.width; }
 		int height() const override { return _size.height; }
-		bool is_gpu() const override { return true; }
 
 		TextureFormat format() const override { return texture_format; };
 

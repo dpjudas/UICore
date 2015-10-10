@@ -46,16 +46,10 @@ namespace uicore
 		int pitch() const override { return _width * bytes_per_pixel(texture_format); }
 		int width() const override { return _width; }
 		int height() const override { return _height; }
-		bool is_gpu() const override { return false; }
 		TextureFormat format() const override { return texture_format; };
 
 		float pixel_ratio() const override { return _pixel_ratio; }
 		void set_pixel_ratio(float ratio) override { _pixel_ratio = ratio; }
-
-		void lock(const GraphicContextPtr &gc, BufferAccess access) override { }
-		void unlock() override { }
-
-		void upload_data(const GraphicContextPtr &gc, const Rect &dest_rect, const void *data) override;
 
 	private:
 		bool delete_data = true;

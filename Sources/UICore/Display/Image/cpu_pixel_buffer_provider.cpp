@@ -70,19 +70,4 @@ namespace uicore
 		if (delete_data)
 			System::aligned_free(_data);
 	}
-
-	void CPUPixelBufferProvider::upload_data(const GraphicContextPtr &gc, const Rect &dest_rect, const void *data)
-	{
-		// Handle the simple base
-		if (dest_rect.left == 0 && dest_rect.get_width() == _width)
-		{
-			unsigned int data_size = PixelBuffer::data_size(Size(_width, dest_rect.get_height()), texture_format);
-			memcpy(_data, data, data_size);
-		}
-		else
-		{
-			// Need to upload in blocks here
-			throw Exception("CPUPixelBufferProvider::upload_data() Implement me for this situation");
-		}
-	}
 }
