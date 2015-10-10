@@ -173,8 +173,8 @@ namespace uicore
 			set_rasterizer_state(default_rasterizer_state());
 			set_blend_state(default_blend_state(), Colorf::white, 0xffffffff);
 			set_depth_stencil_state(default_depth_stencil_state());
-			set_viewport(-1, display_window_size());
-			resize_slot = sig_window_resized().connect([this](const Size &window_size) { if (!write_frame_buffer()) set_viewport(-1, size()); });
+			set_viewport(-1, display_window_size(), y_axis_top_down);
+			resize_slot = sig_window_resized().connect([this](const Size &window_size) { if (!write_frame_buffer()) set_viewport(-1, size(), y_axis_top_down); });
 		}
 
 	private:

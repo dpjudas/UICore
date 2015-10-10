@@ -30,7 +30,6 @@
 #include "UICore/Display/Font/font.h"
 #include "UICore/Display/Font/font_metrics.h"
 #include "UICore/Display/Font/font_description.h"
-#include "UICore/Display/TargetProviders/graphic_context_provider.h"
 #include "UICore/Core/Text/text.h"
 #include "UICore/Core/Text/string_format.h"
 #include "UICore/Core/Text/utf8_reader.h"

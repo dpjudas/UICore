@@ -28,9 +28,8 @@
 
 #include "UICore/precomp.h"
 #include "UICore/Display/Render/texture_2d.h"
-#include "UICore/Display/TargetProviders/texture_provider.h"
-#include "UICore/Display/TargetProviders/graphic_context_provider.h"
-#include "UICore/Display/Image/pixel_buffer.h"
+#include "UICore/Display/Render/texture_provider.h"
+#include "UICore/Display/Render/graphic_context_provider.h"
 #include "UICore/Display/Image/pixel_buffer.h"
 #include "UICore/Display/2D/color.h"
 #include "UICore/Display/ImageFormats/image_file.h"

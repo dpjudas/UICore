@@ -28,7 +28,7 @@
 
 #pragma once
 
-#include "UICore/Display/TargetProviders/texture_provider.h"
+#include "UICore/Display/Render/texture_provider.h"
 #include "UICore/Core/System/comptr.h"
 #include <map>
 

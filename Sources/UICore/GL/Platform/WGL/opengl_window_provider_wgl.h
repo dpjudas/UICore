@@ -30,7 +30,7 @@
 
 #pragma once
 
-#include "UICore/Display/TargetProviders/display_window_provider.h"
+#include "UICore/Display/Window/display_window_provider.h"
 #include "UICore/Display/Render/graphic_context.h"
 #include "UICore/Display/Window/input_device.h"
 #include "UICore/Display/Platform/Win32/win32_window.h"

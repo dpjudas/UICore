@@ -31,7 +31,7 @@
 
 #pragma once
 
-#include "UICore/Display/TargetProviders/graphic_context_provider.h"
+#include "UICore/Display/Render/graphic_context_provider.h"
 #include "UICore/GL/opengl.h"
 #include "UICore/Core/Math/mat4.h"
 #include "UICore/Core/Signals/signal.h"

@@ -35,7 +35,7 @@
 #include "UICore/Display/Window/display_window.h"
 #include "UICore/Display/Window/display_window_description.h"
 #include "UICore/Display/Window/input_device.h"
-#include "UICore/Display/TargetProviders/input_device_provider.h"
+#include "UICore/Display/Window/input_device_provider.h"
 #include "UICore/Core/Math/point.h"
 #include "UICore/Core/Math/rect.h"
 #include "UICore/Display/Image/pixel_buffer.h"

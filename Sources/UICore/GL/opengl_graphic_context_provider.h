@@ -28,7 +28,7 @@
 
 #pragma once
 
-#include "UICore/Display/TargetProviders/graphic_context_provider.h"
+#include "UICore/Display/Render/graphic_context_provider.h"
 #include "UICore/GL/opengl.h"
 
 namespace uicore

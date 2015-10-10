@@ -31,7 +31,7 @@
 #include "canvas_impl.h"
 #include "UICore/Display/2D/render_batcher.h"
 #include "UICore/Display/2D/gradient.h"
-#include "UICore/Display/TargetProviders/graphic_context_provider.h"
+#include "UICore/Display/Render/graphic_context_provider.h"
 
 namespace uicore
 {

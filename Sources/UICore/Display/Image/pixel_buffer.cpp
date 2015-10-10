@@ -34,7 +34,6 @@
 #include "UICore/Core/System/exception.h"
 #include "UICore/Core/IOData/path_help.h"
 #include "UICore/Display/ImageFormats/image_file.h"
-#include "UICore/Display/TargetProviders/pixel_buffer_provider.h"
 #include "UICore/Display/Render/transfer_texture.h"
 #include "UICore/Core/Text/string_format.h"
 #include "UICore/Core/Text/text.h"

@@ -29,7 +29,7 @@
 #include "UICore/precomp.h"
 #include "UICore/Display/Window/cursor.h"
 #include "UICore/Display/Window/display_window.h"
-#include "UICore/Display/TargetProviders/display_window_provider.h"
+#include "UICore/Display/Window/display_window_provider.h"
 
 namespace uicore
 {

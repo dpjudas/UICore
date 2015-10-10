@@ -41,7 +41,7 @@
 #include "UICore/Display/display_target.h"
 #include "UICore/Display/Window/display_window.h"
 #include "UICore/Display/Window/keys.h"
-#include "UICore/Display/TargetProviders/display_window_provider.h"
+#include "UICore/Display/Window/display_window_provider.h"
 #include "UICore/Display/Image/pixel_buffer.h"
 #include "UICore/Display/ImageFormats/png_format.h"
 #include "UICore/Display/screen_info.h"

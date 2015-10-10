@@ -33,7 +33,7 @@
 #include "UICore/Display/Window/display_window_description.h"
 #include "UICore/Display/Window/input_device.h"
 #include "UICore/Display/display_target.h"
-#include "UICore/Display/TargetProviders/display_target_provider.h"
+#include "UICore/Display/display_target_provider.h"
 
 namespace uicore
 {

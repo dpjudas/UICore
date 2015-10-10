@@ -28,7 +28,7 @@
 
 #pragma once
 
-#include "UICore/Display/TargetProviders/graphic_context_provider.h"
+#include "UICore/Display/Render/graphic_context_provider.h"
 #include "UICore/Display/Render/rasterizer_state_description.h"
 #include "UICore/Core/System/comptr.h"
 

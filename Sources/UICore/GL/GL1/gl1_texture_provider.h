@@ -29,9 +29,9 @@
 
 #pragma once
 
-#include "UICore/Display/TargetProviders/texture_provider.h"
-#include "UICore/Display/TargetProviders/graphic_context_provider.h"
-#include "UICore/Display/TargetProviders/primitives_array_provider.h"
+#include "UICore/Display/Render/texture_provider.h"
+#include "UICore/Display/Render/graphic_context_provider.h"
+#include "UICore/Display/Render/primitives_array_provider.h"
 #include "UICore/Core/System/disposable_object.h"
 #include "UICore/GL/opengl.h"
 #include "UICore/GL/gl_share_list.h"

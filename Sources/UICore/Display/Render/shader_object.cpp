@@ -34,8 +34,8 @@
 #include "UICore/Core/Text/text.h"
 #include "UICore/Core/IOData/iodevice.h"
 #include "UICore/Display/Render/shader_object.h"
-#include "UICore/Display/TargetProviders/shader_object_provider.h"
-#include "UICore/Display/TargetProviders/graphic_context_provider.h"
+#include "UICore/Display/Render/shader_object_provider.h"
+#include "UICore/Display/Render/graphic_context_provider.h"
 
 namespace uicore
 {

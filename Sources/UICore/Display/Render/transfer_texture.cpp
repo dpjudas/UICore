@@ -30,8 +30,7 @@
 #include "UICore/precomp.h"
 #include "UICore/Display/Render/transfer_texture.h"
 #include "UICore/Display/Render/graphic_context.h"
-#include "UICore/Display/TargetProviders/graphic_context_provider.h"
-#include "UICore/Display/TargetProviders/pixel_buffer_provider.h"
+#include "UICore/Display/Render/graphic_context_provider.h"
 
 namespace uicore
 {

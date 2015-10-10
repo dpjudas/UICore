@@ -28,8 +28,7 @@
 
 #pragma once
 
-#include "UICore/Display/TargetProviders/graphic_context_provider.h"
-#include "UICore/Display/Font/font.h"
+#include "UICore/Display/Render/graphic_context_provider.h"
 #include "UICore/Display/Render/blend_state_description.h"
 #include "UICore/Display/Render/depth_stencil_state_description.h"
 #include "UICore/Display/Render/graphic_context.h"

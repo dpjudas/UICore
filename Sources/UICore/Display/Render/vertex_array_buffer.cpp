@@ -29,7 +29,7 @@
 #include "UICore/precomp.h"
 #include "UICore/Display/Render/vertex_array_buffer.h"
 #include "UICore/Display/Render/graphic_context.h"
-#include "UICore/Display/TargetProviders/graphic_context_provider.h"
+#include "UICore/Display/Render/graphic_context_provider.h"
 #include "UICore/Core/System/exception.h"
 
 namespace uicore

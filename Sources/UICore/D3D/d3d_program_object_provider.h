@@ -29,7 +29,7 @@
 
 #pragma once
 
-#include "UICore/Display/TargetProviders/program_object_provider.h"
+#include "UICore/Display/Render/program_object_provider.h"
 #include "UICore/Display/Render/shader_object.h"
 #include "UICore/Display/Render/uniform_buffer.h"
 #include "UICore/Core/Math/vec4.h"

@@ -30,7 +30,7 @@
 #pragma once
 
 
-#include "UICore/Display/TargetProviders/shader_object_provider.h"
+#include "UICore/Display/Render/shader_object_provider.h"
 #include "UICore/GL/opengl_wrap.h"
 #include "UICore/GL/opengl.h"
 #include "UICore/GL/gl_share_list.h"

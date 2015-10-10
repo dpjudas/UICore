@@ -38,7 +38,7 @@
 #include "UICore/Display/Render/texture_3d.h"
 #include "UICore/Display/Render/texture_cube.h"
 #include "UICore/Display/Render/texture_cube_array.h"
-#include "UICore/Display/TargetProviders/texture_provider.h"
+#include "UICore/Display/Render/texture_provider.h"
 #include "UICore/Core/System/disposable_object.h"
 #include "UICore/GL/opengl.h"
 #include "UICore/GL/gl_share_list.h"

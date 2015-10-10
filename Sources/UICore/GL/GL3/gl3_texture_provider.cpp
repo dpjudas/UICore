@@ -32,7 +32,7 @@
 #include "gl3_graphic_context_provider.h"
 #include "UICore/Display/Image/pixel_buffer.h"
 #include "UICore/Display/Render/texture.h"
-#include "UICore/Display/TargetProviders/texture_provider.h"
+#include "UICore/Display/Render/texture_provider.h"
 #include "UICore/GL/opengl_wrap.h"
 #include "UICore/GL/opengl.h"
 #include "UICore/Core/System/databuffer.h"

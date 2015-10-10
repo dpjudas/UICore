@@ -30,7 +30,7 @@
 
 #pragma once
 
-#include "UICore/Display/TargetProviders/display_target_provider.h"
+#include "UICore/Display/display_target_provider.h"
 #include "UICore/GL/opengl_context_description.h"
 
 namespace uicore

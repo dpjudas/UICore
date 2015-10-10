@@ -36,7 +36,7 @@
 #include "UICore/Core/Text/string_format.h"
 #include "UICore/Display/Window/display_window_description.h"
 #include "UICore/Display/display_target.h"
-#include "UICore/Display/TargetProviders/display_window_provider.h"
+#include "UICore/Display/Window/display_window_provider.h"
 #include "UICore/Display/Window/display_window.h"
 #include "UICore/GL/gl_share_list.h"
 #include "UICore/GL/opengl.h"
