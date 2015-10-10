@@ -31,9 +31,9 @@
 
 #include "UICore/Display/Render/texture.h"
 #include "UICore/Display/Render/graphic_context.h"
-#include "UICore/Display/Render/render_batcher.h"
 #include "UICore/Display/Render/texture_2d.h"
 #include "UICore/Display/Render/transfer_texture.h"
+#include "UICore/Display/2D/render_batcher.h"
 
 namespace uicore
 {

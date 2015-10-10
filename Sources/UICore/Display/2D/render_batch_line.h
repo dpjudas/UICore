@@ -28,7 +28,7 @@
 
 #pragma once
 
-#include "UICore/Display/Render/render_batcher.h"
+#include "UICore/Display/2D/render_batcher.h"
 #include "UICore/Display/Render/texture.h"
 #include "UICore/Display/Render/graphic_context.h"
 #include "render_batch_buffer.h"

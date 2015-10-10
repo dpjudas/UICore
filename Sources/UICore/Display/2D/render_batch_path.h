@@ -31,12 +31,12 @@
 
 #include "UICore/Display/Render/texture.h"
 #include "UICore/Display/Render/graphic_context.h"
-#include "UICore/Display/Render/render_batcher.h"
 #include "UICore/Display/Render/texture_2d.h"
-#include "render_batch_buffer.h"
+#include "UICore/Display/2D/render_batcher.h"
 #include "UICore/Display/2D/pen.h"
 #include "UICore/Display/2D/path.h"
 #include "UICore/Display/2D/brush.h"
+#include "render_batch_buffer.h"
 #include "path_fill_renderer.h"
 #include "path_stroke_renderer.h"
 
