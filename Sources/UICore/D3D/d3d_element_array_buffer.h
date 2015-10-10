@@ -33,12 +33,12 @@
 
 namespace uicore
 {
-	class D3DElementArrayBufferProvider : public ElementArrayBuffer
+	class D3DElementArrayBuffer : public ElementArrayBuffer
 	{
 	public:
-		D3DElementArrayBufferProvider(const ComPtr<ID3D11Device> &device, int size, BufferUsage usage);
-		D3DElementArrayBufferProvider(const ComPtr<ID3D11Device> &device, const void *data, int size, BufferUsage usage);
-		~D3DElementArrayBufferProvider();
+		D3DElementArrayBuffer(const ComPtr<ID3D11Device> &device, int size, BufferUsage usage);
+		D3DElementArrayBuffer(const ComPtr<ID3D11Device> &device, const void *data, int size, BufferUsage usage);
+		~D3DElementArrayBuffer();
 
 		ComPtr<ID3D11Buffer> &get_buffer(const ComPtr<ID3D11Device> &device);
 

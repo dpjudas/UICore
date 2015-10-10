@@ -40,14 +40,14 @@
 
 namespace uicore
 {
-	std::recursive_mutex D3DDisplayWindowProvider::d3d11_mutex;
-	HMODULE D3DDisplayWindowProvider::d3d11_dll = 0;
-	D3DDisplayWindowProvider::FuncD3D11CreateDeviceAndSwapChain D3DDisplayWindowProvider::d3d11_createdeviceandswapchain = 0;
+	std::recursive_mutex D3DDisplayWindow::d3d11_mutex;
+	HMODULE D3DDisplayWindow::d3d11_dll = 0;
+	D3DDisplayWindow::FuncD3D11CreateDeviceAndSwapChain D3DDisplayWindow::d3d11_createdeviceandswapchain = 0;
 
-	D3DDisplayWindowProvider::D3DDisplayWindowProvider(const DisplayWindowDescription &description)
+	D3DDisplayWindow::D3DDisplayWindow(const DisplayWindowDescription &description)
 	{
 		window.set_allow_drop_shadow(true);
-		window.func_on_resized() = bind_member(this, &D3DDisplayWindowProvider::on_window_resized);
+		window.func_on_resized() = bind_member(this, &D3DDisplayWindow::on_window_resized);
 
 		window.create(this, description);
 
@@ -144,217 +144,217 @@ namespace uicore
 			}
 		}
 
-		_gc = std::make_shared<D3DGraphicContextProvider>(this, description);
+		_gc = std::make_shared<D3DGraphicContext>(this, description);
 
 		if (description.is_fullscreen())
 			swap_chain->SetFullscreenState(TRUE, 0);
 
-		D3DGraphicContextProvider *d3d_gc = static_cast<D3DGraphicContextProvider*>(_gc.get());
+		D3DGraphicContext *d3d_gc = static_cast<D3DGraphicContext*>(_gc.get());
 		d3d_gc->standard_programs = StandardPrograms(_gc);
 	}
 
-	D3DDisplayWindowProvider::~D3DDisplayWindowProvider()
+	D3DDisplayWindow::~D3DDisplayWindow()
 	{
 		if (device)
 			D3DShareList::device_destroyed(device);
 	}
 
-	Rect D3DDisplayWindowProvider::backing_geometry() const
+	Rect D3DDisplayWindow::backing_geometry() const
 	{
 		return window.get_geometry();
 	}
 
-	Rect D3DDisplayWindowProvider::backing_viewport() const
+	Rect D3DDisplayWindow::backing_viewport() const
 	{
 		return window.get_viewport();
 	}
 
-	float D3DDisplayWindowProvider::pixel_ratio() const
+	float D3DDisplayWindow::pixel_ratio() const
 	{
 		return window.get_pixel_ratio();
 	}
 
-	bool D3DDisplayWindowProvider::has_focus() const
+	bool D3DDisplayWindow::has_focus() const
 	{
 		return window.has_focus();
 	}
 
-	bool D3DDisplayWindowProvider::is_minimized() const
+	bool D3DDisplayWindow::is_minimized() const
 	{
 		return window.is_minimized();
 	}
 
-	bool D3DDisplayWindowProvider::is_maximized() const
+	bool D3DDisplayWindow::is_maximized() const
 	{
 		return window.is_maximized();
 	}
 
-	bool D3DDisplayWindowProvider::is_visible() const
+	bool D3DDisplayWindow::is_visible() const
 	{
 		return window.is_visible();
 	}
 
-	const GraphicContextPtr &D3DDisplayWindowProvider::gc() const
+	const GraphicContextPtr &D3DDisplayWindow::gc() const
 	{
 		return _gc;
 	}
 
-	DisplayWindowHandle D3DDisplayWindowProvider::handle() const
+	DisplayWindowHandle D3DDisplayWindow::handle() const
 	{
 		DisplayWindowHandle handle;
 		handle.hwnd = window.get_hwnd();
 		return handle;
 	}
 
-	bool D3DDisplayWindowProvider::is_clipboard_text_available() const
+	bool D3DDisplayWindow::is_clipboard_text_available() const
 	{
 		return window.is_clipboard_text_available();
 	}
 
-	bool D3DDisplayWindowProvider::is_clipboard_image_available() const
+	bool D3DDisplayWindow::is_clipboard_image_available() const
 	{
 		return window.is_clipboard_image_available();
 	}
 
-	Size D3DDisplayWindowProvider::backing_minimum_size(bool client_area) const
+	Size D3DDisplayWindow::backing_minimum_size(bool client_area) const
 	{
 		return window.get_minimum_size(client_area);
 	}
 
-	Size D3DDisplayWindowProvider::backing_maximum_size(bool client_area/*=false*/) const
+	Size D3DDisplayWindow::backing_maximum_size(bool client_area/*=false*/) const
 	{
 		return window.get_maximum_size(client_area);
 	}
 
-	std::string D3DDisplayWindowProvider::title() const
+	std::string D3DDisplayWindow::title() const
 	{
 		return window.get_title();
 	}
 
-	Point D3DDisplayWindowProvider::backing_client_to_screen(const Point &client)
+	Point D3DDisplayWindow::backing_client_to_screen(const Point &client)
 	{
 		return window.client_to_screen(client);
 	}
 
-	Point D3DDisplayWindowProvider::backing_screen_to_client(const Point &screen)
+	Point D3DDisplayWindow::backing_screen_to_client(const Point &screen)
 	{
 		return window.screen_to_client(screen);
 	}
 
-	void D3DDisplayWindowProvider::capture_mouse(bool capture)
+	void D3DDisplayWindow::capture_mouse(bool capture)
 	{
 		window.capture_mouse(capture);
 	}
 
-	void D3DDisplayWindowProvider::show_system_cursor()
+	void D3DDisplayWindow::show_system_cursor()
 	{
 		window.show_system_cursor();
 	}
 
-	CursorPtr D3DDisplayWindowProvider::create_cursor(const CursorDescription &cursor_description)
+	CursorPtr D3DDisplayWindow::create_cursor(const CursorDescription &cursor_description)
 	{
 		return std::make_shared<CursorProvider_Win32>(cursor_description);
 	}
 
-	void D3DDisplayWindowProvider::set_cursor(const CursorPtr &cursor)
+	void D3DDisplayWindow::set_cursor(const CursorPtr &cursor)
 	{
 		window.set_cursor(static_cast<CursorProvider_Win32 *>(cursor.get()));
 	}
 
-	void D3DDisplayWindowProvider::set_cursor(StandardCursor type)
+	void D3DDisplayWindow::set_cursor(StandardCursor type)
 	{
 		window.set_cursor(type);
 	}
 
-	void D3DDisplayWindowProvider::set_cursor_handle(HCURSOR cursor)
+	void D3DDisplayWindow::set_cursor_handle(HCURSOR cursor)
 	{
 		window.set_cursor_handle(cursor);
 	}
 
-	void D3DDisplayWindowProvider::hide_system_cursor()
+	void D3DDisplayWindow::hide_system_cursor()
 	{
 		window.hide_system_cursor();
 	}
 
-	void D3DDisplayWindowProvider::set_title(const std::string &new_title)
+	void D3DDisplayWindow::set_title(const std::string &new_title)
 	{
 		window.set_title(new_title);
 	}
 
-	void D3DDisplayWindowProvider::set_backing_position(const Rect &pos, bool client_area)
+	void D3DDisplayWindow::set_backing_position(const Rect &pos, bool client_area)
 	{
 		window.set_position(pos, client_area);
 	}
 
-	void D3DDisplayWindowProvider::set_backing_size(int width, int height, bool client_area)
+	void D3DDisplayWindow::set_backing_size(int width, int height, bool client_area)
 	{
 		window.set_size(width, height, client_area);
 	}
 
-	void D3DDisplayWindowProvider::set_backing_minimum_size(int width, int height, bool client_area)
+	void D3DDisplayWindow::set_backing_minimum_size(int width, int height, bool client_area)
 	{
 		window.set_minimum_size(width, height, client_area);
 	}
 
-	void D3DDisplayWindowProvider::set_backing_maximum_size(int width, int height, bool client_area)
+	void D3DDisplayWindow::set_backing_maximum_size(int width, int height, bool client_area)
 	{
 		window.set_maximum_size(width, height, client_area);
 	}
 
-	void D3DDisplayWindowProvider::set_enabled(bool enable)
+	void D3DDisplayWindow::set_enabled(bool enable)
 	{
 		window.set_enabled(enable);
 	}
 
-	void D3DDisplayWindowProvider::minimize()
+	void D3DDisplayWindow::minimize()
 	{
 		window.minimize();
 	}
 
-	void D3DDisplayWindowProvider::restore()
+	void D3DDisplayWindow::restore()
 	{
 		window.restore();
 	}
 
-	void D3DDisplayWindowProvider::maximize()
+	void D3DDisplayWindow::maximize()
 	{
 		window.maximize();
 	}
 
-	void D3DDisplayWindowProvider::toggle_fullscreen()
+	void D3DDisplayWindow::toggle_fullscreen()
 	{
 		window.toggle_fullscreen();
 	}
 
 
-	void D3DDisplayWindowProvider::show(bool activate)
+	void D3DDisplayWindow::show(bool activate)
 	{
 		window.show(activate);
 	}
 
-	void D3DDisplayWindowProvider::hide()
+	void D3DDisplayWindow::hide()
 	{
 		window.hide();
 	}
 
-	void D3DDisplayWindowProvider::bring_to_front()
+	void D3DDisplayWindow::bring_to_front()
 	{
 		window.bring_to_front();
 	}
 
-	void D3DDisplayWindowProvider::backing_flip(int interval)
+	void D3DDisplayWindow::backing_flip(int interval)
 	{
 		if (use_fake_front_buffer)
 			device_context->CopyResource(fake_front_buffer, back_buffer);
 
-		//D3DGraphicContextProvider *gc_provider = static_cast<D3DGraphicContextProvider*>(gc.get());
+		//D3DGraphicContext *gc_provider = static_cast<D3DGraphicContext*>(gc.get());
 		if (interval != -1)
 			current_interval_setting = interval;
 		swap_chain->Present(current_interval_setting, 0);
 		log_debug_messages();
 	}
 
-	void D3DDisplayWindowProvider::update(const Rect &rect)
+	void D3DDisplayWindow::update(const Rect &rect)
 	{
 		if (use_fake_front_buffer)
 		{
@@ -372,52 +372,52 @@ namespace uicore
 		}
 	}
 
-	void D3DDisplayWindowProvider::set_clipboard_text(const std::string &text)
+	void D3DDisplayWindow::set_clipboard_text(const std::string &text)
 	{
 		window.set_clipboard_text(text);
 	}
 
-	void D3DDisplayWindowProvider::set_clipboard_image(const PixelBufferPtr &buf)
+	void D3DDisplayWindow::set_clipboard_image(const PixelBufferPtr &buf)
 	{
 		window.set_clipboard_image(buf);
 	}
 
-	std::string D3DDisplayWindowProvider::clipboard_text() const
+	std::string D3DDisplayWindow::clipboard_text() const
 	{
 		return window.get_clipboard_text();
 	}
 
-	PixelBufferPtr D3DDisplayWindowProvider::clipboard_image() const
+	PixelBufferPtr D3DDisplayWindow::clipboard_image() const
 	{
 		return window.get_clipboard_image();
 	}
 
-	void D3DDisplayWindowProvider::request_repaint()
+	void D3DDisplayWindow::request_repaint()
 	{
 		window.request_repaint();
 	}
 
-	void D3DDisplayWindowProvider::set_large_icon(const PixelBufferPtr &image)
+	void D3DDisplayWindow::set_large_icon(const PixelBufferPtr &image)
 	{
 		window.set_large_icon(image);
 	}
 
-	void D3DDisplayWindowProvider::set_small_icon(const PixelBufferPtr &image)
+	void D3DDisplayWindow::set_small_icon(const PixelBufferPtr &image)
 	{
 		window.set_small_icon(image);
 	}
 
-	void D3DDisplayWindowProvider::backing_enable_alpha_channel(const Rect &blur_rect)
+	void D3DDisplayWindow::backing_enable_alpha_channel(const Rect &blur_rect)
 	{
 		window.enable_alpha_channel(blur_rect);
 	}
 
-	void D3DDisplayWindowProvider::backing_extend_frame_into_client_area(int left, int top, int right, int bottom)
+	void D3DDisplayWindow::backing_extend_frame_into_client_area(int left, int top, int right, int bottom)
 	{
 		window.extend_frame_into_client_area(left, top, right, bottom);
 	}
 
-	void D3DDisplayWindowProvider::validate_context()
+	void D3DDisplayWindow::validate_context()
 	{
 		if (debug)
 		{
@@ -429,7 +429,7 @@ namespace uicore
 		}
 	}
 
-	void D3DDisplayWindowProvider::create_swap_chain_buffers()
+	void D3DDisplayWindow::create_swap_chain_buffers()
 	{
 		release_swap_chain_buffers();
 
@@ -452,16 +452,16 @@ namespace uicore
 		D3DTarget::throw_if_failed("Unable to create back buffer render target view", result);
 	}
 
-	void D3DDisplayWindowProvider::release_swap_chain_buffers()
+	void D3DDisplayWindow::release_swap_chain_buffers()
 	{
 		back_buffer_rtv.clear();
 		fake_front_buffer.clear();
 		back_buffer.clear();
 	}
 
-	void D3DDisplayWindowProvider::on_window_resized()
+	void D3DDisplayWindow::on_window_resized()
 	{
-		D3DGraphicContextProvider *gc_provider = static_cast<D3DGraphicContextProvider*>(_gc.get());
+		D3DGraphicContext *gc_provider = static_cast<D3DGraphicContext*>(_gc.get());
 
 		if (gc_provider)
 		{
@@ -478,7 +478,7 @@ namespace uicore
 		}
 	}
 
-	void D3DDisplayWindowProvider::log_debug_messages()
+	void D3DDisplayWindow::log_debug_messages()
 	{
 		if (info_queue)
 		{

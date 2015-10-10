@@ -33,12 +33,12 @@
 
 namespace uicore
 {
-	class D3DStorageBufferProvider : public StorageBuffer
+	class D3DStorageBuffer : public StorageBuffer
 	{
 	public:
-		D3DStorageBufferProvider(const ComPtr<ID3D11Device> &device, int size, int stride, BufferUsage usage);
-		D3DStorageBufferProvider(const ComPtr<ID3D11Device> &device, const void *data, int size, int stride, BufferUsage usage);
-		~D3DStorageBufferProvider();
+		D3DStorageBuffer(const ComPtr<ID3D11Device> &device, int size, int stride, BufferUsage usage);
+		D3DStorageBuffer(const ComPtr<ID3D11Device> &device, const void *data, int size, int stride, BufferUsage usage);
+		~D3DStorageBuffer();
 
 		ComPtr<ID3D11Buffer> &get_buffer(const ComPtr<ID3D11Device> &device);
 		ComPtr<ID3D11UnorderedAccessView> &get_uav(const ComPtr<ID3D11Device> &device);

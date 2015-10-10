@@ -37,16 +37,16 @@
 
 namespace uicore
 {
-	D3DFrameBufferProvider::D3DFrameBufferProvider(const ComPtr<ID3D11Device> &device)
+	D3DFrameBuffer::D3DFrameBuffer(const ComPtr<ID3D11Device> &device)
 		: device(device), bind_target(framebuffer_draw)
 	{
 	}
 
-	D3DFrameBufferProvider::~D3DFrameBufferProvider()
+	D3DFrameBuffer::~D3DFrameBuffer()
 	{
 	}
 
-	Size D3DFrameBufferProvider::get_size() const
+	Size D3DFrameBuffer::get_size() const
 	{
 		Size size;
 		for (size_t i = 0; i < color_buffers.size(); i++)
@@ -63,12 +63,12 @@ namespace uicore
 		return size;
 	}
 
-	FrameBufferBindTarget D3DFrameBufferProvider::get_bind_target() const
+	FrameBufferBindTarget D3DFrameBuffer::get_bind_target() const
 	{
 		return bind_target;
 	}
 
-	std::vector<ID3D11RenderTargetView*> D3DFrameBufferProvider::get_views(ID3D11DepthStencilView *&out_dsv)
+	std::vector<ID3D11RenderTargetView*> D3DFrameBuffer::get_views(ID3D11DepthStencilView *&out_dsv)
 	{
 		std::vector<ID3D11RenderTargetView*> views;
 		for (size_t i = 0; i < color_buffers.size(); i++)
@@ -99,119 +99,119 @@ namespace uicore
 		return views;
 	}
 
-	void D3DFrameBufferProvider::attach_color(int attachment_index, const RenderBufferPtr &render_buffer)
+	void D3DFrameBuffer::attach_color(int attachment_index, const RenderBufferPtr &render_buffer)
 	{
 		color_buffers.resize(max((size_t)attachment_index + 1, color_buffers.size()));
 		color_buffers[attachment_index] = AttachedBuffer(render_buffer);
 	}
 
-	void D3DFrameBufferProvider::attach_color(int attachment_index, const Texture1DPtr &texture, int level)
+	void D3DFrameBuffer::attach_color(int attachment_index, const Texture1DPtr &texture, int level)
 	{
 		color_buffers.resize(max((size_t)attachment_index + 1, color_buffers.size()));
 		color_buffers[attachment_index] = AttachedBuffer(texture, level);
 	}
 
-	void D3DFrameBufferProvider::attach_color(int attachment_index, const Texture1DArrayPtr &texture, int array_index, int level)
+	void D3DFrameBuffer::attach_color(int attachment_index, const Texture1DArrayPtr &texture, int array_index, int level)
 	{
 		color_buffers.resize(max((size_t)attachment_index + 1, color_buffers.size()));
 		color_buffers[attachment_index] = AttachedBuffer(texture, level, array_index);
 	}
 
-	void D3DFrameBufferProvider::attach_color(int attachment_index, const Texture2DPtr &texture, int level)
+	void D3DFrameBuffer::attach_color(int attachment_index, const Texture2DPtr &texture, int level)
 	{
 		color_buffers.resize(max((size_t)attachment_index + 1, color_buffers.size()));
 		color_buffers[attachment_index] = AttachedBuffer(texture, level);
 	}
 
-	void D3DFrameBufferProvider::attach_color(int attachment_index, const Texture2DArrayPtr &texture, int array_index, int level)
+	void D3DFrameBuffer::attach_color(int attachment_index, const Texture2DArrayPtr &texture, int array_index, int level)
 	{
 		color_buffers.resize(max((size_t)attachment_index + 1, color_buffers.size()));
 		color_buffers[attachment_index] = AttachedBuffer(texture, level, array_index);
 	}
 
-	void D3DFrameBufferProvider::attach_color(int attachment_index, const Texture3DPtr &texture, int depth, int level)
+	void D3DFrameBuffer::attach_color(int attachment_index, const Texture3DPtr &texture, int depth, int level)
 	{
 		color_buffers.resize(max((size_t)attachment_index + 1, color_buffers.size()));
 		color_buffers[attachment_index] = AttachedBuffer(texture, level, depth);
 	}
 
-	void D3DFrameBufferProvider::attach_color(int attachment_index, const TextureCubePtr &texture, TextureSubtype subtype, int level)
+	void D3DFrameBuffer::attach_color(int attachment_index, const TextureCubePtr &texture, TextureSubtype subtype, int level)
 	{
 		color_buffers.resize(max((size_t)attachment_index + 1, color_buffers.size()));
 		color_buffers[attachment_index] = AttachedBuffer(texture, level, 0, subtype);
 	}
 
-	void D3DFrameBufferProvider::detach_color(int attachment_index)
+	void D3DFrameBuffer::detach_color(int attachment_index)
 	{
 		color_buffers.resize(max((size_t)attachment_index + 1, color_buffers.size()));
 		color_buffers[attachment_index] = AttachedBuffer();
 	}
 
-	void D3DFrameBufferProvider::attach_stencil(const RenderBufferPtr &render_buffer)
+	void D3DFrameBuffer::attach_stencil(const RenderBufferPtr &render_buffer)
 	{
 		stencil_buffer = AttachedBuffer(render_buffer);
 	}
 
-	void D3DFrameBufferProvider::attach_stencil(const Texture2DPtr &texture, int level)
+	void D3DFrameBuffer::attach_stencil(const Texture2DPtr &texture, int level)
 	{
 		stencil_buffer = AttachedBuffer(texture, level);
 	}
 
-	void D3DFrameBufferProvider::attach_stencil(const TextureCubePtr &texture, TextureSubtype subtype, int level)
+	void D3DFrameBuffer::attach_stencil(const TextureCubePtr &texture, TextureSubtype subtype, int level)
 	{
 		stencil_buffer = AttachedBuffer(texture, level, 0, subtype);
 	}
 
-	void D3DFrameBufferProvider::detach_stencil()
+	void D3DFrameBuffer::detach_stencil()
 	{
 		stencil_buffer = AttachedBuffer();
 	}
 
-	void D3DFrameBufferProvider::attach_depth(const RenderBufferPtr &render_buffer)
+	void D3DFrameBuffer::attach_depth(const RenderBufferPtr &render_buffer)
 	{
 		depth_buffer = AttachedBuffer(render_buffer);
 	}
 
-	void D3DFrameBufferProvider::attach_depth(const Texture2DPtr &texture, int level)
+	void D3DFrameBuffer::attach_depth(const Texture2DPtr &texture, int level)
 	{
 		depth_buffer = AttachedBuffer(texture, level);
 	}
 
-	void D3DFrameBufferProvider::attach_depth(const TextureCubePtr &texture, TextureSubtype subtype, int level)
+	void D3DFrameBuffer::attach_depth(const TextureCubePtr &texture, TextureSubtype subtype, int level)
 	{
 		depth_buffer = AttachedBuffer(texture, level, 0, subtype);
 	}
 
-	void D3DFrameBufferProvider::detach_depth()
+	void D3DFrameBuffer::detach_depth()
 	{
 		depth_buffer = AttachedBuffer();
 	}
 
-	void D3DFrameBufferProvider::attach_depth_stencil(const RenderBufferPtr &render_buffer)
+	void D3DFrameBuffer::attach_depth_stencil(const RenderBufferPtr &render_buffer)
 	{
 		depth_buffer = AttachedBuffer(render_buffer);
 		stencil_buffer = AttachedBuffer(render_buffer);
 	}
 
-	void D3DFrameBufferProvider::attach_depth_stencil(const Texture2DPtr &texture, int level)
+	void D3DFrameBuffer::attach_depth_stencil(const Texture2DPtr &texture, int level)
 	{
 		depth_buffer = AttachedBuffer(texture, level);
 		stencil_buffer = AttachedBuffer(texture, level);
 	}
 
-	void D3DFrameBufferProvider::attach_depth_stencil(const TextureCubePtr &texture, TextureSubtype subtype, int level)
+	void D3DFrameBuffer::attach_depth_stencil(const TextureCubePtr &texture, TextureSubtype subtype, int level)
 	{
 		depth_buffer = AttachedBuffer(texture, level, 0, subtype);
 		stencil_buffer = AttachedBuffer(texture, level, 0, subtype);
 	}
 
-	void D3DFrameBufferProvider::detach_depth_stencil()
+	void D3DFrameBuffer::detach_depth_stencil()
 	{
 		depth_buffer = AttachedBuffer();
 		stencil_buffer = AttachedBuffer();
 	}
 
-	void D3DFrameBufferProvider::set_bind_target(FrameBufferBindTarget target)
+	void D3DFrameBuffer::set_bind_target(FrameBufferBindTarget target)
 	{
 		bind_target = target;
 	}

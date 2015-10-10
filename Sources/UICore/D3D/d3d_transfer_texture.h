@@ -34,13 +34,13 @@
 
 namespace uicore
 {
-	class D3DGraphicContextProvider;
+	class D3DGraphicContext;
 
-	class D3DPixelBufferProvider : public TransferTexture, D3DSharedResource
+	class D3DTransferTexture : public TransferTexture, D3DSharedResource
 	{
 	public:
-		D3DPixelBufferProvider(const ComPtr<ID3D11Device> &device, const void *data, const Size &new_size, PixelBufferDirection direction, TextureFormat new_format, BufferUsage usage);
-		~D3DPixelBufferProvider();
+		D3DTransferTexture(const ComPtr<ID3D11Device> &device, const void *data, const Size &new_size, PixelBufferDirection direction, TextureFormat new_format, BufferUsage usage);
+		~D3DTransferTexture();
 
 		void *data() override;
 		const void *data() const override;
@@ -77,7 +77,7 @@ namespace uicore
 
 		std::vector<std::shared_ptr<DeviceHandles> > handles;
 		D3D11_MAPPED_SUBRESOURCE map_data;
-		D3DGraphicContextProvider *map_gc_provider = nullptr;
+		D3DGraphicContext *map_gc_provider = nullptr;
 
 		Size _size;
 		TextureFormat texture_format;

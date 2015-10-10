@@ -34,11 +34,11 @@
 
 namespace uicore
 {
-	class D3DRenderBufferProvider : public RenderBuffer
+	class D3DRenderBuffer : public RenderBuffer
 	{
 	public:
-		D3DRenderBufferProvider(const ComPtr<ID3D11Device> &device, int width, int height, TextureFormat texture_format, int multisample_samples);
-		~D3DRenderBufferProvider();
+		D3DRenderBuffer(const ComPtr<ID3D11Device> &device, int width, int height, TextureFormat texture_format, int multisample_samples);
+		~D3DRenderBuffer();
 
 		ComPtr<ID3D11Texture2D> &get_texture(const ComPtr<ID3D11Device> &device);
 		ComPtr<ID3D11RenderTargetView> create_rtv(const ComPtr<ID3D11Device> &device);

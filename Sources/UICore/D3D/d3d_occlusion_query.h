@@ -32,11 +32,11 @@
 
 namespace uicore
 {
-	class D3DOcclusionQueryProvider : public OcclusionQuery
+	class D3DOcclusionQuery : public OcclusionQuery
 	{
 	public:
-		D3DOcclusionQueryProvider();
-		~D3DOcclusionQueryProvider();
+		D3DOcclusionQuery();
+		~D3DOcclusionQuery();
 
 		bool is_result_ready() const override;
 		int result() const override;

@@ -35,8 +35,8 @@
 
 namespace uicore
 {
-	class D3DGraphicContextProvider;
-	class D3DProgramObjectProvider;
+	class D3DGraphicContext;
+	class D3DProgramObject;
 
 	template<typename Type>
 	class D3DUnit
@@ -64,25 +64,25 @@ namespace uicore
 	class D3DUnitMap
 	{
 	public:
-		void bind_program(D3DGraphicContextProvider *gc, D3DProgramObjectProvider *program);
-		void unbind_program(D3DGraphicContextProvider *gc, D3DProgramObjectProvider *program);
-		void set_sampler(D3DGraphicContextProvider *gc, int index, const TexturePtr &texture);
-		void set_texture(D3DGraphicContextProvider *gc, int index, const TexturePtr &texture);
-		void set_image(D3DGraphicContextProvider *gc, int index, const TexturePtr &texture);
-		void set_uniform_buffer(D3DGraphicContextProvider *gc, int index, const UniformBufferPtr &buffer);
-		void set_storage_buffer(D3DGraphicContextProvider *gc, int index, const StorageBufferPtr &buffer);
+		void bind_program(D3DGraphicContext *gc, D3DProgramObject *program);
+		void unbind_program(D3DGraphicContext *gc, D3DProgramObject *program);
+		void set_sampler(D3DGraphicContext *gc, int index, const TexturePtr &texture);
+		void set_texture(D3DGraphicContext *gc, int index, const TexturePtr &texture);
+		void set_image(D3DGraphicContext *gc, int index, const TexturePtr &texture);
+		void set_uniform_buffer(D3DGraphicContext *gc, int index, const UniformBufferPtr &buffer);
+		void set_storage_buffer(D3DGraphicContext *gc, int index, const StorageBufferPtr &buffer);
 
 	private:
-		void bind_sampler(D3DGraphicContextProvider *gc, int index);
-		void bind_texture(D3DGraphicContextProvider *gc, int index);
-		void bind_image(D3DGraphicContextProvider *gc, int index);
-		void bind_uniform_buffer(D3DGraphicContextProvider *gc, int index);
-		void bind_storage_buffer(D3DGraphicContextProvider *gc, int index);
-		void unbind_sampler(D3DGraphicContextProvider *gc, int index);
-		void unbind_texture(D3DGraphicContextProvider *gc, int index);
-		void unbind_image(D3DGraphicContextProvider *gc, int index);
-		void unbind_uniform_buffer(D3DGraphicContextProvider *gc, int index);
-		void unbind_storage_buffer(D3DGraphicContextProvider *gc, int index);
+		void bind_sampler(D3DGraphicContext *gc, int index);
+		void bind_texture(D3DGraphicContext *gc, int index);
+		void bind_image(D3DGraphicContext *gc, int index);
+		void bind_uniform_buffer(D3DGraphicContext *gc, int index);
+		void bind_storage_buffer(D3DGraphicContext *gc, int index);
+		void unbind_sampler(D3DGraphicContext *gc, int index);
+		void unbind_texture(D3DGraphicContext *gc, int index);
+		void unbind_image(D3DGraphicContext *gc, int index);
+		void unbind_uniform_buffer(D3DGraphicContext *gc, int index);
+		void unbind_storage_buffer(D3DGraphicContext *gc, int index);
 		/*
 			struct ShaderResourceBinding
 			{

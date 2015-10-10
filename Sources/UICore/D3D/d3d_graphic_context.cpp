@@ -31,7 +31,7 @@
 #include "d3d_display_window.h"
 #include "d3d_texture_object.h"
 #include "d3d_element_array_buffer.h"
-#include "d3d_pixel_buffer.h"
+#include "d3d_transfer_texture.h"
 #include "d3d_frame_buffer.h"
 #include "d3d_occlusion_query.h"
 #include "d3d_program_object.h"
@@ -49,7 +49,7 @@
 
 namespace uicore
 {
-	D3DGraphicContextProvider::D3DGraphicContextProvider(D3DDisplayWindowProvider *window, const DisplayWindowDescription &display_desc)
+	D3DGraphicContext::D3DGraphicContext(D3DDisplayWindow *window, const DisplayWindowDescription &display_desc)
 		: window(window),
 		current_prim_array_provider(0),
 		current_program_provider(0),
@@ -86,12 +86,12 @@ namespace uicore
 		set_default_state();
 	}
 
-	D3DGraphicContextProvider::~D3DGraphicContextProvider()
+	D3DGraphicContext::~D3DGraphicContext()
 	{
 		D3DShareList::context_destroyed(this);
 	}
 
-	void D3DGraphicContextProvider::begin_resize_swap_chain()
+	void D3DGraphicContext::begin_resize_swap_chain()
 	{
 		window->get_device_context()->OMSetRenderTargets(0, 0, 0);
 		window->get_device_context()->Flush();
@@ -100,7 +100,7 @@ namespace uicore
 		default_depth_render_buffer.reset();
 	}
 
-	void D3DGraphicContextProvider::end_resize_swap_chain()
+	void D3DGraphicContext::end_resize_swap_chain()
 	{
 		Size viewport_size = display_window_size();
 		viewports[0].Width = viewport_size.width;
@@ -112,17 +112,17 @@ namespace uicore
 		set_default_dsv();
 	}
 
-	void D3DGraphicContextProvider::flush()
+	void D3DGraphicContext::flush()
 	{
 		window->get_device_context()->Flush();
 	}
 
-	int D3DGraphicContextProvider::max_attributes()
+	int D3DGraphicContext::max_attributes()
 	{
 		return 16; // To do: this is the D3D10 limit - is it still the same for D3D11?
 	}
 
-	Size D3DGraphicContextProvider::max_texture_size() const
+	Size D3DGraphicContext::max_texture_size() const
 	{
 		switch (window->get_feature_level())
 		{
@@ -136,21 +136,21 @@ namespace uicore
 		}
 	}
 
-	Size D3DGraphicContextProvider::display_window_size() const
+	Size D3DGraphicContext::display_window_size() const
 	{
 		return window->backing_viewport().get_size();
 	}
 
-	float D3DGraphicContextProvider::pixel_ratio() const
+	float D3DGraphicContext::pixel_ratio() const
 	{
 		return window->pixel_ratio();
 	}
 
-	std::shared_ptr<PixelBuffer> D3DGraphicContextProvider::pixeldata(const Rect& rect, TextureFormat texture_format, bool clamp) const
+	std::shared_ptr<PixelBuffer> D3DGraphicContext::pixeldata(const Rect& rect, TextureFormat texture_format, bool clamp) const
 	{
 		// To do: fetch format from window->get_back_buffer()->GetDesc(&desc)
 		// To do: window->get_back_buffer() is only correct when no frame buffer is bound
-		auto pixels = std::make_shared<D3DPixelBufferProvider>(window->get_device(), nullptr, rect.get_size(), data_from_gpu, texture_format, usage_stream_copy);
+		auto pixels = std::make_shared<D3DTransferTexture>(window->get_device(), nullptr, rect.get_size(), data_from_gpu, texture_format, usage_stream_copy);
 		D3D11_BOX box;
 		box.left = rect.left;
 		box.top = rect.top;
@@ -162,7 +162,7 @@ namespace uicore
 		return pixels;
 	}
 
-	std::shared_ptr<RasterizerState> D3DGraphicContextProvider::create_rasterizer_state(const RasterizerStateDescription &desc)
+	std::shared_ptr<RasterizerState> D3DGraphicContext::create_rasterizer_state(const RasterizerStateDescription &desc)
 	{
 		auto it = rasterizer_states.find(desc);
 		if (it != rasterizer_states.end())
@@ -177,7 +177,7 @@ namespace uicore
 		}
 	}
 
-	std::shared_ptr<BlendState> D3DGraphicContextProvider::create_blend_state(const BlendStateDescription &desc)
+	std::shared_ptr<BlendState> D3DGraphicContext::create_blend_state(const BlendStateDescription &desc)
 	{
 		auto it = blend_states.find(desc);
 		if (it != blend_states.end())
@@ -192,7 +192,7 @@ namespace uicore
 		}
 	}
 
-	std::shared_ptr<DepthStencilState> D3DGraphicContextProvider::create_depth_stencil_state(const DepthStencilStateDescription &desc)
+	std::shared_ptr<DepthStencilState> D3DGraphicContext::create_depth_stencil_state(const DepthStencilStateDescription &desc)
 	{
 		auto it = depth_stencil_states.find(desc);
 		if (it != depth_stencil_states.end())
@@ -207,132 +207,132 @@ namespace uicore
 		}
 	}
 
-	std::shared_ptr<ShaderObject> D3DGraphicContextProvider::create_shader(ShaderType type, const std::string &source)
+	std::shared_ptr<ShaderObject> D3DGraphicContext::create_shader(ShaderType type, const std::string &source)
 	{
-		return std::make_shared<D3DShaderObjectProvider>(window->get_device(), window->get_feature_level(), type, source);
+		return std::make_shared<D3DShaderObject>(window->get_device(), window->get_feature_level(), type, source);
 	}
 
-	std::shared_ptr<ShaderObject> D3DGraphicContextProvider::create_shader(ShaderType type, const void *bytecode, int bytecode_size)
+	std::shared_ptr<ShaderObject> D3DGraphicContext::create_shader(ShaderType type, const void *bytecode, int bytecode_size)
 	{
-		return std::make_shared<D3DShaderObjectProvider>(window->get_device(), window->get_feature_level(), type, bytecode, bytecode_size);
+		return std::make_shared<D3DShaderObject>(window->get_device(), window->get_feature_level(), type, bytecode, bytecode_size);
 	}
 
-	std::shared_ptr<ProgramObject> D3DGraphicContextProvider::create_program()
+	std::shared_ptr<ProgramObject> D3DGraphicContext::create_program()
 	{
-		return std::make_shared<D3DProgramObjectProvider>(window->get_device(), window->get_device_context());
+		return std::make_shared<D3DProgramObject>(window->get_device(), window->get_device_context());
 	}
 
-	std::shared_ptr<OcclusionQuery> D3DGraphicContextProvider::create_occlusion_query()
+	std::shared_ptr<OcclusionQuery> D3DGraphicContext::create_occlusion_query()
 	{
-		return std::make_shared<D3DOcclusionQueryProvider>();
+		return std::make_shared<D3DOcclusionQuery>();
 	}
 
-	std::shared_ptr<FrameBuffer> D3DGraphicContextProvider::create_frame_buffer()
+	std::shared_ptr<FrameBuffer> D3DGraphicContext::create_frame_buffer()
 	{
-		return std::make_shared<D3DFrameBufferProvider>(window->get_device());
+		return std::make_shared<D3DFrameBuffer>(window->get_device());
 	}
 
-	std::shared_ptr<RenderBuffer> D3DGraphicContextProvider::create_render_buffer(int width, int height, TextureFormat texture_format, int multisample_samples)
+	std::shared_ptr<RenderBuffer> D3DGraphicContext::create_render_buffer(int width, int height, TextureFormat texture_format, int multisample_samples)
 	{
-		return std::make_shared<D3DRenderBufferProvider>(window->get_device(), width, height, texture_format, multisample_samples);
+		return std::make_shared<D3DRenderBuffer>(window->get_device(), width, height, texture_format, multisample_samples);
 	}
 
-	std::shared_ptr<StorageBuffer> D3DGraphicContextProvider::create_storage_buffer(int size, int stride, BufferUsage usage)
+	std::shared_ptr<StorageBuffer> D3DGraphicContext::create_storage_buffer(int size, int stride, BufferUsage usage)
 	{
-		return std::make_shared<D3DStorageBufferProvider>(window->get_device(), size, stride, usage);
+		return std::make_shared<D3DStorageBuffer>(window->get_device(), size, stride, usage);
 	}
 
-	std::shared_ptr<StorageBuffer> D3DGraphicContextProvider::create_storage_buffer(const void *data, int size, int stride, BufferUsage usage)
+	std::shared_ptr<StorageBuffer> D3DGraphicContext::create_storage_buffer(const void *data, int size, int stride, BufferUsage usage)
 	{
-		return std::make_shared<D3DStorageBufferProvider>(window->get_device(), data, size, stride, usage);
+		return std::make_shared<D3DStorageBuffer>(window->get_device(), data, size, stride, usage);
 	}
 
-	std::shared_ptr<ElementArrayBuffer> D3DGraphicContextProvider::create_element_array_buffer(int size, BufferUsage usage)
+	std::shared_ptr<ElementArrayBuffer> D3DGraphicContext::create_element_array_buffer(int size, BufferUsage usage)
 	{
-		return std::make_shared<D3DElementArrayBufferProvider>(window->get_device(), size, usage);
+		return std::make_shared<D3DElementArrayBuffer>(window->get_device(), size, usage);
 	}
 
-	std::shared_ptr<ElementArrayBuffer> D3DGraphicContextProvider::create_element_array_buffer(const void *data, int size, BufferUsage usage)
+	std::shared_ptr<ElementArrayBuffer> D3DGraphicContext::create_element_array_buffer(const void *data, int size, BufferUsage usage)
 	{
-		return std::make_shared<D3DElementArrayBufferProvider>(window->get_device(), data, size, usage);
+		return std::make_shared<D3DElementArrayBuffer>(window->get_device(), data, size, usage);
 	}
 
-	std::shared_ptr<VertexArrayBuffer> D3DGraphicContextProvider::create_vertex_array_buffer(int size, BufferUsage usage)
+	std::shared_ptr<VertexArrayBuffer> D3DGraphicContext::create_vertex_array_buffer(int size, BufferUsage usage)
 	{
-		return std::make_shared<D3DVertexArrayBufferProvider>(window->get_device(), size, usage);
+		return std::make_shared<D3DVertexArrayBuffer>(window->get_device(), size, usage);
 	}
 
-	std::shared_ptr<VertexArrayBuffer> D3DGraphicContextProvider::create_vertex_array_buffer(const void *data, int size, BufferUsage usage)
+	std::shared_ptr<VertexArrayBuffer> D3DGraphicContext::create_vertex_array_buffer(const void *data, int size, BufferUsage usage)
 	{
-		return std::make_shared<D3DVertexArrayBufferProvider>(window->get_device(), data, size, usage);
+		return std::make_shared<D3DVertexArrayBuffer>(window->get_device(), data, size, usage);
 	}
 
-	std::shared_ptr<UniformBuffer> D3DGraphicContextProvider::create_uniform_buffer(int size, BufferUsage usage)
+	std::shared_ptr<UniformBuffer> D3DGraphicContext::create_uniform_buffer(int size, BufferUsage usage)
 	{
-		return std::make_shared<D3DUniformBufferProvider>(window->get_device(), size, usage);
+		return std::make_shared<D3DUniformBuffer>(window->get_device(), size, usage);
 	}
 
-	std::shared_ptr<UniformBuffer> D3DGraphicContextProvider::create_uniform_buffer(const void *data, int size, BufferUsage usage)
+	std::shared_ptr<UniformBuffer> D3DGraphicContext::create_uniform_buffer(const void *data, int size, BufferUsage usage)
 	{
-		return std::make_shared<D3DUniformBufferProvider>(window->get_device(), data, size, usage);
+		return std::make_shared<D3DUniformBuffer>(window->get_device(), data, size, usage);
 	}
 
-	std::shared_ptr<TransferBuffer> D3DGraphicContextProvider::create_transfer_buffer(int size, BufferUsage usage)
+	std::shared_ptr<TransferBuffer> D3DGraphicContext::create_transfer_buffer(int size, BufferUsage usage)
 	{
-		return std::make_shared<D3DTransferBufferProvider>(window->get_device(), size, usage);
+		return std::make_shared<D3DTransferBuffer>(window->get_device(), size, usage);
 	}
 
-	std::shared_ptr<TransferBuffer> D3DGraphicContextProvider::create_transfer_buffer(const void *data, int size, BufferUsage usage)
+	std::shared_ptr<TransferBuffer> D3DGraphicContext::create_transfer_buffer(const void *data, int size, BufferUsage usage)
 	{
-		return std::make_shared<D3DTransferBufferProvider>(window->get_device(), data, size, usage);
+		return std::make_shared<D3DTransferBuffer>(window->get_device(), data, size, usage);
 	}
 
-	std::shared_ptr<PrimitivesArray> D3DGraphicContextProvider::create_primitives_array()
+	std::shared_ptr<PrimitivesArray> D3DGraphicContext::create_primitives_array()
 	{
-		return std::make_shared<D3DPrimitivesArrayProvider>(window->get_device());
+		return std::make_shared<D3DPrimitivesArray>(window->get_device());
 	}
 
-	std::shared_ptr<Texture1D> D3DGraphicContextProvider::create_texture_1d(int width, TextureFormat texture_format, int levels)
+	std::shared_ptr<Texture1D> D3DGraphicContext::create_texture_1d(int width, TextureFormat texture_format, int levels)
 	{
-		return std::make_shared<Texture1DImpl<D3DTextureProvider>>(D3DTextureProvider::InitData(window->get_device(), window->get_feature_level()), width, texture_format, levels);
+		return std::make_shared<Texture1DImpl<D3DTextureObject>>(D3DTextureObject::InitData(window->get_device(), window->get_feature_level()), width, texture_format, levels);
 	}
 
-	std::shared_ptr<Texture1DArray> D3DGraphicContextProvider::create_texture_1d_array(int width, int array_size, TextureFormat texture_format, int levels)
+	std::shared_ptr<Texture1DArray> D3DGraphicContext::create_texture_1d_array(int width, int array_size, TextureFormat texture_format, int levels)
 	{
-		return std::make_shared<Texture1DArrayImpl<D3DTextureProvider>>(D3DTextureProvider::InitData(window->get_device(), window->get_feature_level()), width, array_size, texture_format, levels);
+		return std::make_shared<Texture1DArrayImpl<D3DTextureObject>>(D3DTextureObject::InitData(window->get_device(), window->get_feature_level()), width, array_size, texture_format, levels);
 	}
 
-	std::shared_ptr<Texture2D> D3DGraphicContextProvider::create_texture_2d(int width, int height, TextureFormat texture_format, int levels)
+	std::shared_ptr<Texture2D> D3DGraphicContext::create_texture_2d(int width, int height, TextureFormat texture_format, int levels)
 	{
-		return std::make_shared<Texture2DImpl<D3DTextureProvider>>(D3DTextureProvider::InitData(window->get_device(), window->get_feature_level()), width, height, texture_format, levels);
+		return std::make_shared<Texture2DImpl<D3DTextureObject>>(D3DTextureObject::InitData(window->get_device(), window->get_feature_level()), width, height, texture_format, levels);
 	}
 
-	std::shared_ptr<Texture2DArray> D3DGraphicContextProvider::create_texture_2d_array(int width, int height, int array_size, TextureFormat texture_format, int levels)
+	std::shared_ptr<Texture2DArray> D3DGraphicContext::create_texture_2d_array(int width, int height, int array_size, TextureFormat texture_format, int levels)
 	{
-		return std::make_shared<Texture2DArrayImpl<D3DTextureProvider>>(D3DTextureProvider::InitData(window->get_device(), window->get_feature_level()), width, height, array_size, texture_format, levels);
+		return std::make_shared<Texture2DArrayImpl<D3DTextureObject>>(D3DTextureObject::InitData(window->get_device(), window->get_feature_level()), width, height, array_size, texture_format, levels);
 	}
 
-	std::shared_ptr<Texture3D> D3DGraphicContextProvider::create_texture_3d(int width, int height, int depth, TextureFormat texture_format, int levels)
+	std::shared_ptr<Texture3D> D3DGraphicContext::create_texture_3d(int width, int height, int depth, TextureFormat texture_format, int levels)
 	{
-		return std::make_shared<Texture3DImpl<D3DTextureProvider>>(D3DTextureProvider::InitData(window->get_device(), window->get_feature_level()), width, height, depth, texture_format, levels);
+		return std::make_shared<Texture3DImpl<D3DTextureObject>>(D3DTextureObject::InitData(window->get_device(), window->get_feature_level()), width, height, depth, texture_format, levels);
 	}
 
-	std::shared_ptr<TextureCube> D3DGraphicContextProvider::create_texture_cube(int width, int height, TextureFormat texture_format, int levels)
+	std::shared_ptr<TextureCube> D3DGraphicContext::create_texture_cube(int width, int height, TextureFormat texture_format, int levels)
 	{
-		return std::make_shared<TextureCubeImpl<D3DTextureProvider>>(D3DTextureProvider::InitData(window->get_device(), window->get_feature_level()), width, height, texture_format, levels);
+		return std::make_shared<TextureCubeImpl<D3DTextureObject>>(D3DTextureObject::InitData(window->get_device(), window->get_feature_level()), width, height, texture_format, levels);
 	}
 
-	std::shared_ptr<TextureCubeArray> D3DGraphicContextProvider::create_texture_cube_array(int width, int height, int array_size, TextureFormat texture_format, int levels)
+	std::shared_ptr<TextureCubeArray> D3DGraphicContext::create_texture_cube_array(int width, int height, int array_size, TextureFormat texture_format, int levels)
 	{
-		return std::make_shared<TextureCubeArrayImpl<D3DTextureProvider>>(D3DTextureProvider::InitData(window->get_device(), window->get_feature_level()), width, height, array_size, texture_format, levels);
+		return std::make_shared<TextureCubeArrayImpl<D3DTextureObject>>(D3DTextureObject::InitData(window->get_device(), window->get_feature_level()), width, height, array_size, texture_format, levels);
 	}
 
-	std::shared_ptr<TransferTexture> D3DGraphicContextProvider::create_transfer_texture(const void *data, const Size &size, PixelBufferDirection direction, TextureFormat format, BufferUsage usage)
+	std::shared_ptr<TransferTexture> D3DGraphicContext::create_transfer_texture(const void *data, const Size &size, PixelBufferDirection direction, TextureFormat format, BufferUsage usage)
 	{
-		return std::make_shared<D3DPixelBufferProvider>(window->get_device(), data, size, direction, format, usage);
+		return std::make_shared<D3DTransferTexture>(window->get_device(), data, size, direction, format, usage);
 	}
 
-	void D3DGraphicContextProvider::set_rasterizer_state(const RasterizerStatePtr &state)
+	void D3DGraphicContext::set_rasterizer_state(const RasterizerStatePtr &state)
 	{
 		if (state)
 		{
@@ -345,7 +345,7 @@ namespace uicore
 		}
 	}
 
-	void D3DGraphicContextProvider::set_blend_state(const BlendStatePtr &state, const Colorf &blend_color, unsigned int sample_mask)
+	void D3DGraphicContext::set_blend_state(const BlendStatePtr &state, const Colorf &blend_color, unsigned int sample_mask)
 	{
 		if (state)
 		{
@@ -359,7 +359,7 @@ namespace uicore
 		}
 	}
 
-	void D3DGraphicContextProvider::set_depth_stencil_state(const DepthStencilStatePtr &state, int stencil_ref)
+	void D3DGraphicContext::set_depth_stencil_state(const DepthStencilStatePtr &state, int stencil_ref)
 	{
 		if (state)
 		{
@@ -372,19 +372,19 @@ namespace uicore
 		}
 	}
 
-	void D3DGraphicContextProvider::set_program_object(StandardProgram standard_program)
+	void D3DGraphicContext::set_program_object(StandardProgram standard_program)
 	{
 		ProgramObjectPtr program = standard_programs.get_program_object(standard_program);
 		set_program_object(program);
 	}
 
-	void D3DGraphicContextProvider::set_program_object(const ProgramObjectPtr &program)
+	void D3DGraphicContext::set_program_object(const ProgramObjectPtr &program)
 	{
 		_program_object = program;
 
 		if (program)
 		{
-			D3DProgramObjectProvider *new_program_provider = static_cast<D3DProgramObjectProvider *>(program.get());
+			D3DProgramObject *new_program_provider = static_cast<D3DProgramObject *>(program.get());
 			if (new_program_provider == current_program_provider)
 				return;
 
@@ -397,7 +397,7 @@ namespace uicore
 
 			for (int j = 0; j < (int)ShaderType::num_types; j++)
 			{
-				D3DShaderObjectProvider *shader_provider = current_program_provider->get_shader_provider((ShaderType)j);
+				D3DShaderObject *shader_provider = current_program_provider->get_shader_provider((ShaderType)j);
 				if (shader_provider)
 				{
 					switch ((ShaderType)j)
@@ -455,43 +455,43 @@ namespace uicore
 		}
 	}
 
-	void D3DGraphicContextProvider::set_uniform_buffer(int index, const UniformBufferPtr &buffer)
+	void D3DGraphicContext::set_uniform_buffer(int index, const UniformBufferPtr &buffer)
 	{
 		unit_map.set_uniform_buffer(this, index, buffer);
 	}
 
-	void D3DGraphicContextProvider::set_storage_buffer(int index, const StorageBufferPtr &buffer)
+	void D3DGraphicContext::set_storage_buffer(int index, const StorageBufferPtr &buffer)
 	{
 		unit_map.set_storage_buffer(this, index, buffer);
 	}
 
-	void D3DGraphicContextProvider::set_texture(int unit_index, const TexturePtr &texture)
+	void D3DGraphicContext::set_texture(int unit_index, const TexturePtr &texture)
 	{
 		unit_map.set_texture(this, unit_index, texture);
 	}
 
-	void D3DGraphicContextProvider::set_image_texture(int unit_index, const TexturePtr &texture)
+	void D3DGraphicContext::set_image_texture(int unit_index, const TexturePtr &texture)
 	{
 		unit_map.set_image(this, unit_index, texture);
 	}
 
-	bool D3DGraphicContextProvider::is_frame_buffer_owner(const FrameBufferPtr &fb)
+	bool D3DGraphicContext::is_frame_buffer_owner(const FrameBufferPtr &fb)
 	{
-		D3DFrameBufferProvider *fb_provider = static_cast<D3DFrameBufferProvider *>(fb.get());
+		D3DFrameBuffer *fb_provider = static_cast<D3DFrameBuffer *>(fb.get());
 		if (fb_provider)
 			return fb_provider->get_device() == window->get_device();
 		else
 			return false;
 	}
 
-	void D3DGraphicContextProvider::set_frame_buffer(const FrameBufferPtr &write_buffer, const FrameBufferPtr &read_buffer)
+	void D3DGraphicContext::set_frame_buffer(const FrameBufferPtr &write_buffer, const FrameBufferPtr &read_buffer)
 	{
 		_write_frame_buffer = write_buffer;
 		_read_frame_buffer = read_buffer;
 
 		if (write_buffer && read_buffer)
 		{
-			D3DFrameBufferProvider *fb_provider = static_cast<D3DFrameBufferProvider *>(write_buffer.get());
+			D3DFrameBuffer *fb_provider = static_cast<D3DFrameBuffer *>(write_buffer.get());
 			ID3D11DepthStencilView *dsv = 0;
 			std::vector<ID3D11RenderTargetView *> rtvs = fb_provider->get_views(dsv);
 			window->get_device_context()->OMSetRenderTargets(rtvs.size(), (!rtvs.empty()) ? &rtvs[0] : 0, dsv);
@@ -502,21 +502,21 @@ namespace uicore
 		}
 	}
 
-	void D3DGraphicContextProvider::set_draw_buffer(DrawBuffer buffer)
+	void D3DGraphicContext::set_draw_buffer(DrawBuffer buffer)
 	{
 		// To do: what does this map to in D3D?
 	}
 
-	bool D3DGraphicContextProvider::is_primitives_array_owner(const PrimitivesArrayPtr &primitives_array)
+	bool D3DGraphicContext::is_primitives_array_owner(const PrimitivesArrayPtr &primitives_array)
 	{
-		D3DPrimitivesArrayProvider *array_provider = static_cast<D3DPrimitivesArrayProvider *>(primitives_array.get());
+		D3DPrimitivesArray *array_provider = static_cast<D3DPrimitivesArray *>(primitives_array.get());
 		if (array_provider)
 			return array_provider->get_device() == window->get_device();
 		else
 			return false;
 	}
 
-	void D3DGraphicContextProvider::apply_input_layout()
+	void D3DGraphicContext::apply_input_layout()
 	{
 		if (!input_layout_set)
 		{
@@ -525,7 +525,7 @@ namespace uicore
 		}
 	}
 
-	void D3DGraphicContextProvider::clear_input_layout()
+	void D3DGraphicContext::clear_input_layout()
 	{
 		if (input_layout_set)
 		{
@@ -534,14 +534,14 @@ namespace uicore
 		}
 	}
 
-	void D3DGraphicContextProvider::draw_primitives(PrimitivesType type, int num_vertices, const PrimitivesArrayPtr &primitives_array)
+	void D3DGraphicContext::draw_primitives(PrimitivesType type, int num_vertices, const PrimitivesArrayPtr &primitives_array)
 	{
 		set_primitives_array(primitives_array);
 		draw_primitives_array(type, 0, num_vertices);
 		reset_primitives_array();
 	}
 
-	void D3DGraphicContextProvider::set_primitives_array(const PrimitivesArrayPtr &primitives_array)
+	void D3DGraphicContext::set_primitives_array(const PrimitivesArrayPtr &primitives_array)
 	{
 		clear_input_layout();
 		if (current_prim_array_provider)
@@ -560,7 +560,7 @@ namespace uicore
 
 		if (primitives_array)
 		{
-			current_prim_array_provider = static_cast<D3DPrimitivesArrayProvider *>(primitives_array.get());
+			current_prim_array_provider = static_cast<D3DPrimitivesArray *>(primitives_array.get());
 			std::vector<ID3D11Buffer*> buffers;
 			std::vector<UINT> strides, offsets;
 			current_prim_array_provider->get_vertex_buffers(buffers, strides, offsets);
@@ -569,7 +569,7 @@ namespace uicore
 		}
 	}
 
-	void D3DGraphicContextProvider::draw_primitives_array(PrimitivesType type, int offset, int num_vertices)
+	void D3DGraphicContext::draw_primitives_array(PrimitivesType type, int offset, int num_vertices)
 	{
 		apply_input_layout();
 		window->get_device_context()->IASetPrimitiveTopology(to_d3d_primitive_topology(type));
@@ -577,7 +577,7 @@ namespace uicore
 		window->get_device_context()->Draw(num_vertices, offset);
 	}
 
-	void D3DGraphicContextProvider::draw_primitives_array_instanced(PrimitivesType type, int offset, int num_vertices, int instance_count)
+	void D3DGraphicContext::draw_primitives_array_instanced(PrimitivesType type, int offset, int num_vertices, int instance_count)
 	{
 		apply_input_layout();
 		window->get_device_context()->IASetPrimitiveTopology(to_d3d_primitive_topology(type));
@@ -585,11 +585,11 @@ namespace uicore
 		window->get_device_context()->DrawInstanced(num_vertices, instance_count, offset, 0);
 	}
 
-	void D3DGraphicContextProvider::set_primitives_elements(const ElementArrayBufferPtr &array_provider)
+	void D3DGraphicContext::set_primitives_elements(const ElementArrayBufferPtr &array_provider)
 	{
 		if (array_provider)
 		{
-			current_element_array_provider = static_cast<D3DElementArrayBufferProvider*>(array_provider.get());
+			current_element_array_provider = static_cast<D3DElementArrayBuffer*>(array_provider.get());
 		}
 		else
 		{
@@ -598,7 +598,7 @@ namespace uicore
 		}
 	}
 
-	void D3DGraphicContextProvider::draw_primitives_elements(PrimitivesType type, int count, VertexAttributeDataType indices_type, size_t offset)
+	void D3DGraphicContext::draw_primitives_elements(PrimitivesType type, int count, VertexAttributeDataType indices_type, size_t offset)
 	{
 		apply_input_layout();
 		window->get_device_context()->IASetPrimitiveTopology(to_d3d_primitive_topology(type));
@@ -607,7 +607,7 @@ namespace uicore
 		window->get_device_context()->DrawIndexed(count, to_d3d_index_location(indices_type, offset), 0);
 	}
 
-	void D3DGraphicContextProvider::draw_primitives_elements_instanced(PrimitivesType type, int count, VertexAttributeDataType indices_type, size_t offset, int instance_count)
+	void D3DGraphicContext::draw_primitives_elements_instanced(PrimitivesType type, int count, VertexAttributeDataType indices_type, size_t offset, int instance_count)
 	{
 		apply_input_layout();
 		window->get_device_context()->IASetPrimitiveTopology(to_d3d_primitive_topology(type));
@@ -616,7 +616,7 @@ namespace uicore
 		window->get_device_context()->DrawIndexedInstanced(count, instance_count, to_d3d_index_location(indices_type, offset), 0, 0);
 	}
 
-	void D3DGraphicContextProvider::draw_primitives_elements(PrimitivesType type, int count, const ElementArrayBufferPtr &array_provider, VertexAttributeDataType indices_type, size_t offset)
+	void D3DGraphicContext::draw_primitives_elements(PrimitivesType type, int count, const ElementArrayBufferPtr &array_provider, VertexAttributeDataType indices_type, size_t offset)
 	{
 		set_primitives_elements(array_provider);
 		apply_input_layout();
@@ -627,7 +627,7 @@ namespace uicore
 		reset_primitives_elements();
 	}
 
-	void D3DGraphicContextProvider::draw_primitives_elements_instanced(PrimitivesType type, int count, const ElementArrayBufferPtr &array_provider, VertexAttributeDataType indices_type, size_t offset, int instance_count)
+	void D3DGraphicContext::draw_primitives_elements_instanced(PrimitivesType type, int count, const ElementArrayBufferPtr &array_provider, VertexAttributeDataType indices_type, size_t offset, int instance_count)
 	{
 		set_primitives_elements(array_provider);
 		apply_input_layout();
@@ -638,7 +638,7 @@ namespace uicore
 		reset_primitives_elements();
 	}
 
-	void D3DGraphicContextProvider::set_scissor(const Rect &rect)
+	void D3DGraphicContext::set_scissor(const Rect &rect)
 	{
 		for (int i = 0; i < D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT; i++)
 		{
@@ -650,19 +650,19 @@ namespace uicore
 		window->get_device_context()->RSSetScissorRects(D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT, scissor_rects);
 	}
 
-	void D3DGraphicContextProvider::reset_scissor()
+	void D3DGraphicContext::reset_scissor()
 	{
 		set_scissor(Rect(0, 0, 0x7FFFFFFF, 0x7FFFFFFF));
 		// The below does not work, why?
 		//window->get_device_context()->RSSetScissorRects(0, 0);
 	}
 
-	void D3DGraphicContextProvider::dispatch(int x, int y, int z)
+	void D3DGraphicContext::dispatch(int x, int y, int z)
 	{
 		window->get_device_context()->Dispatch(x, y, z);
 	}
 
-	void D3DGraphicContextProvider::clear(const Colorf &color)
+	void D3DGraphicContext::clear(const Colorf &color)
 	{
 		ID3D11RenderTargetView *views[D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT];
 		window->get_device_context()->OMGetRenderTargets(D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT, views, 0);
@@ -678,7 +678,7 @@ namespace uicore
 		}
 	}
 
-	void D3DGraphicContextProvider::clear_depth(float value)
+	void D3DGraphicContext::clear_depth(float value)
 	{
 		ID3D11DepthStencilView *dsv = 0;
 		window->get_device_context()->OMGetRenderTargets(0, 0, &dsv);
@@ -689,7 +689,7 @@ namespace uicore
 		}
 	}
 
-	void D3DGraphicContextProvider::clear_stencil(int value)
+	void D3DGraphicContext::clear_stencil(int value)
 	{
 		ID3D11DepthStencilView *dsv = 0;
 		window->get_device_context()->OMGetRenderTargets(0, 0, &dsv);
@@ -700,7 +700,7 @@ namespace uicore
 		}
 	}
 
-	void D3DGraphicContextProvider::set_viewport(const Rectf &viewport)
+	void D3DGraphicContext::set_viewport(const Rectf &viewport)
 	{
 		for (int i = 0; i < D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT; i++)
 		{
@@ -712,7 +712,7 @@ namespace uicore
 		window->get_device_context()->RSSetViewports(D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT, viewports);
 	}
 
-	void D3DGraphicContextProvider::set_viewport(int index, const Rectf &viewport)
+	void D3DGraphicContext::set_viewport(int index, const Rectf &viewport)
 	{
 		if (index >= 0 && index < D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT)
 		{
@@ -724,7 +724,7 @@ namespace uicore
 		}
 	}
 
-	void D3DGraphicContextProvider::set_depth_range(int index, float n, float f)
+	void D3DGraphicContext::set_depth_range(int index, float n, float f)
 	{
 		if (index >= 0 && index < D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT)
 		{
@@ -743,13 +743,13 @@ namespace uicore
 		}
 	}
 
-	void D3DGraphicContextProvider::on_window_resized()
+	void D3DGraphicContext::on_window_resized()
 	{
 		Size new_size = window->backing_viewport().get_size();
 		window_resized_signal(new_size);
 	}
 
-	int D3DGraphicContextProvider::major_version() const
+	int D3DGraphicContext::major_version() const
 	{
 		switch (window->get_feature_level())
 		{
@@ -764,7 +764,7 @@ namespace uicore
 		}
 	}
 
-	int D3DGraphicContextProvider::minor_version() const
+	int D3DGraphicContext::minor_version() const
 	{
 		switch (window->get_feature_level())
 		{
@@ -779,7 +779,7 @@ namespace uicore
 		}
 	}
 
-	bool D3DGraphicContextProvider::has_compute_shader_support() const
+	bool D3DGraphicContext::has_compute_shader_support() const
 	{
 		switch (window->get_feature_level())
 		{
@@ -801,7 +801,7 @@ namespace uicore
 		return options.ComputeShaders_Plus_RawAndStructuredBuffers_Via_Shader_4_x != FALSE;
 	}
 
-	D3D11_PRIMITIVE_TOPOLOGY D3DGraphicContextProvider::to_d3d_primitive_topology(PrimitivesType type)
+	D3D11_PRIMITIVE_TOPOLOGY D3DGraphicContext::to_d3d_primitive_topology(PrimitivesType type)
 	{
 		switch (type)
 		{
@@ -816,7 +816,7 @@ namespace uicore
 		throw Exception("Unsupported primitives type");
 	}
 
-	DXGI_FORMAT D3DGraphicContextProvider::to_d3d_format(VertexAttributeDataType indices_type)
+	DXGI_FORMAT D3DGraphicContext::to_d3d_format(VertexAttributeDataType indices_type)
 	{
 		switch (indices_type)
 		{
@@ -831,7 +831,7 @@ namespace uicore
 		throw Exception("Unsupported index type");
 	}
 
-	UINT D3DGraphicContextProvider::to_d3d_index_location(VertexAttributeDataType indices_type, size_t offset)
+	UINT D3DGraphicContext::to_d3d_index_location(VertexAttributeDataType indices_type, size_t offset)
 	{
 		int index_data_bytesize = 4;
 		switch (indices_type)
@@ -857,7 +857,7 @@ namespace uicore
 		return offset / index_data_bytesize;
 	}
 
-	void D3DGraphicContextProvider::set_default_dsv()
+	void D3DGraphicContext::set_default_dsv()
 	{
 		if (default_depth != 0 && !default_depth_render_buffer)
 		{
@@ -869,7 +869,7 @@ namespace uicore
 
 			Size viewport_size = display_window_size();
 
-			default_depth_render_buffer = std::make_shared<D3DRenderBufferProvider>(window->get_device(), viewport_size.width, viewport_size.height, texture_format, 1);
+			default_depth_render_buffer = std::make_shared<D3DRenderBuffer>(window->get_device(), viewport_size.width, viewport_size.height, texture_format, 1);
 			default_dsv = default_depth_render_buffer->create_dsv(window->get_device());
 		}
 

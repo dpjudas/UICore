@@ -34,16 +34,16 @@
 
 namespace uicore
 {
-	D3DPrimitivesArrayProvider::D3DPrimitivesArrayProvider(const ComPtr<ID3D11Device> &device)
+	D3DPrimitivesArray::D3DPrimitivesArray(const ComPtr<ID3D11Device> &device)
 		: device(device)
 	{
 	}
 
-	D3DPrimitivesArrayProvider::~D3DPrimitivesArrayProvider()
+	D3DPrimitivesArray::~D3DPrimitivesArray()
 	{
 	}
 
-	void D3DPrimitivesArrayProvider::get_vertex_buffers(std::vector<ID3D11Buffer *> &out_buffers, std::vector<UINT> &out_strides, std::vector<UINT> &out_offsets)
+	void D3DPrimitivesArray::get_vertex_buffers(std::vector<ID3D11Buffer *> &out_buffers, std::vector<UINT> &out_strides, std::vector<UINT> &out_offsets)
 	{
 		out_buffers.clear();
 		out_strides.clear();
@@ -53,7 +53,7 @@ namespace uicore
 		{
 			if (attributes_set[i])
 			{
-				D3DVertexArrayBufferProvider *array_provider = static_cast<D3DVertexArrayBufferProvider*>(attributes_data[i].array_provider);
+				D3DVertexArrayBuffer *array_provider = static_cast<D3DVertexArrayBuffer*>(attributes_data[i].array_provider);
 				out_buffers.push_back(array_provider->get_buffer(device));
 				int stride = attributes_data[i].stride;
 				// Stride is not optional in D3D
@@ -91,7 +91,7 @@ namespace uicore
 		}
 	}
 
-	size_t D3DPrimitivesArrayProvider::get_vertex_buffers_range() const
+	size_t D3DPrimitivesArray::get_vertex_buffers_range() const
 	{
 		size_t count = 0;
 		for (size_t i = 0; i < attributes_data.size(); i++)
@@ -100,7 +100,7 @@ namespace uicore
 		return count;
 	}
 
-	void D3DPrimitivesArrayProvider::set_attribute(int index, const VertexData &data, bool normalize)
+	void D3DPrimitivesArray::set_attribute(int index, const VertexData &data, bool normalize)
 	{
 		// To do: create some kind of reference count for data.array_provider so the object stays valid until primitives array is destroyed.
 
@@ -117,7 +117,7 @@ namespace uicore
 		attributes_set[index] = true;
 	}
 
-	ID3D11InputLayout *D3DPrimitivesArrayProvider::get_input_layout(D3DProgramObjectProvider *program)
+	ID3D11InputLayout *D3DPrimitivesArray::get_input_layout(D3DProgramObject *program)
 	{
 		std::map<void *, ComPtr<ID3D11InputLayout> >::iterator it = input_layouts.find(program);
 		if (it != input_layouts.end())
@@ -132,12 +132,12 @@ namespace uicore
 		}
 	}
 
-	ComPtr<ID3D11InputLayout> D3DPrimitivesArrayProvider::create_input_layout(D3DProgramObjectProvider *program)
+	ComPtr<ID3D11InputLayout> D3DPrimitivesArray::create_input_layout(D3DProgramObject *program)
 	{
 		DataBufferPtr shader_bytecode = program->get_shader_bytecode(ShaderType::vertex);
 
 		std::vector<D3D11_INPUT_ELEMENT_DESC> elements;
-		for (std::map<int, D3DProgramObjectProvider::AttributeBinding>::iterator it = program->attribute_bindings.begin(); it != program->attribute_bindings.end(); ++it)
+		for (std::map<int, D3DProgramObject::AttributeBinding>::iterator it = program->attribute_bindings.begin(); it != program->attribute_bindings.end(); ++it)
 		{
 			int attrib_location = it->first;
 			if (attrib_location < (int)attributes_data.size() && attributes_set[attrib_location])
@@ -160,7 +160,7 @@ namespace uicore
 		return input_layout;
 	}
 
-	DXGI_FORMAT D3DPrimitivesArrayProvider::to_d3d_format(const VertexData &data, bool normalize)
+	DXGI_FORMAT D3DPrimitivesArray::to_d3d_format(const VertexData &data, bool normalize)
 	{
 		switch (data.size)
 		{

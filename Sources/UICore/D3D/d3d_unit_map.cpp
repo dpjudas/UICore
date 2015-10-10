@@ -37,7 +37,7 @@
 
 namespace uicore
 {
-	void D3DUnitMap::bind_program(D3DGraphicContextProvider *gc, D3DProgramObjectProvider *program)
+	void D3DUnitMap::bind_program(D3DGraphicContext *gc, D3DProgramObject *program)
 	{
 		for (size_t i = 0; i < program->uniforms.size(); i++)
 		{
@@ -89,7 +89,7 @@ namespace uicore
 		}
 	}
 
-	void D3DUnitMap::unbind_program(D3DGraphicContextProvider *gc, D3DProgramObjectProvider *program)
+	void D3DUnitMap::unbind_program(D3DGraphicContext *gc, D3DProgramObject *program)
 	{
 		for (size_t i = 0; i < program->uniforms.size(); i++)
 		{
@@ -131,7 +131,7 @@ namespace uicore
 		}
 	}
 
-	void D3DUnitMap::set_sampler(D3DGraphicContextProvider *gc, int index, const TexturePtr &texture)
+	void D3DUnitMap::set_sampler(D3DGraphicContext *gc, int index, const TexturePtr &texture)
 	{
 		if (sampler_units.size() < index + 1)
 			sampler_units.resize(index + 1);
@@ -139,7 +139,7 @@ namespace uicore
 		bind_sampler(gc, index);
 	}
 
-	void D3DUnitMap::set_texture(D3DGraphicContextProvider *gc, int index, const TexturePtr &texture)
+	void D3DUnitMap::set_texture(D3DGraphicContext *gc, int index, const TexturePtr &texture)
 	{
 		if (texture_units.size() < index + 1)
 			texture_units.resize(index + 1);
@@ -149,7 +149,7 @@ namespace uicore
 		set_sampler(gc, index, texture);
 	}
 
-	void D3DUnitMap::set_image(D3DGraphicContextProvider *gc, int index, const TexturePtr &texture)
+	void D3DUnitMap::set_image(D3DGraphicContext *gc, int index, const TexturePtr &texture)
 	{
 		if (image_units.size() < index + 1)
 			image_units.resize(index + 1);
@@ -157,7 +157,7 @@ namespace uicore
 		bind_image(gc, index);
 	}
 
-	void D3DUnitMap::set_uniform_buffer(D3DGraphicContextProvider *gc, int index, const UniformBufferPtr &buffer)
+	void D3DUnitMap::set_uniform_buffer(D3DGraphicContext *gc, int index, const UniformBufferPtr &buffer)
 	{
 		if (uniform_units.size() < index + 1)
 			uniform_units.resize(index + 1);
@@ -165,7 +165,7 @@ namespace uicore
 		bind_uniform_buffer(gc, index);
 	}
 
-	void D3DUnitMap::set_storage_buffer(D3DGraphicContextProvider *gc, int index, const StorageBufferPtr &buffer)
+	void D3DUnitMap::set_storage_buffer(D3DGraphicContext *gc, int index, const StorageBufferPtr &buffer)
 	{
 		if (storage_units.size() < index + 1)
 			storage_units.resize(index + 1);
@@ -173,7 +173,7 @@ namespace uicore
 		bind_storage_buffer(gc, index);
 	}
 
-	void D3DUnitMap::bind_sampler(D3DGraphicContextProvider *gc, int index)
+	void D3DUnitMap::bind_sampler(D3DGraphicContext *gc, int index)
 	{
 		if (sampler_units.size() > index)
 		{
@@ -183,7 +183,7 @@ namespace uicore
 				{
 					ID3D11SamplerState *sampler_state = 0;
 					if (sampler_units[index].object)
-						sampler_state = static_cast<D3DTextureProvider *>(sampler_units[index].object->texture_object())->get_sampler_state(gc->get_window()->get_device());
+						sampler_state = static_cast<D3DTextureObject *>(sampler_units[index].object->texture_object())->get_sampler_state(gc->get_window()->get_device());
 					switch (j)
 					{
 					case ShaderType::vertex:
@@ -210,7 +210,7 @@ namespace uicore
 		}
 	}
 
-	void D3DUnitMap::bind_texture(D3DGraphicContextProvider *gc, int index)
+	void D3DUnitMap::bind_texture(D3DGraphicContext *gc, int index)
 	{
 		if (texture_units.size() > index)
 		{
@@ -220,7 +220,7 @@ namespace uicore
 				{
 					ID3D11ShaderResourceView *srv = 0;
 					if (texture_units[index].object)
-						srv = static_cast<D3DTextureProvider *>(texture_units[index].object->texture_object())->get_srv(gc->get_window()->get_device());
+						srv = static_cast<D3DTextureObject *>(texture_units[index].object->texture_object())->get_srv(gc->get_window()->get_device());
 					switch (j)
 					{
 					case ShaderType::vertex:
@@ -247,7 +247,7 @@ namespace uicore
 		}
 	}
 
-	void D3DUnitMap::bind_image(D3DGraphicContextProvider *gc, int index)
+	void D3DUnitMap::bind_image(D3DGraphicContext *gc, int index)
 	{
 		if (image_units.size() > index)
 		{
@@ -257,13 +257,13 @@ namespace uicore
 				ID3D11UnorderedAccessView *uav = 0;
 				UINT uav_initial_count_value = 0;
 				if (image_units[index].object)
-					uav = static_cast<D3DTextureProvider*>(image_units[index].object->texture_object())->get_uav(gc->get_window()->get_device());
+					uav = static_cast<D3DTextureObject*>(image_units[index].object->texture_object())->get_uav(gc->get_window()->get_device());
 				gc->get_window()->get_device_context()->CSSetUnorderedAccessViews(image_units[index].shader_index[(int)ShaderType::compute], 1, &uav, &uav_initial_count_value);
 			}
 		}
 	}
 
-	void D3DUnitMap::bind_uniform_buffer(D3DGraphicContextProvider *gc, int index)
+	void D3DUnitMap::bind_uniform_buffer(D3DGraphicContext *gc, int index)
 	{
 		if (uniform_units.size() > index)
 		{
@@ -273,7 +273,7 @@ namespace uicore
 				{
 					ID3D11Buffer *d3d_buffer = 0;
 					if (uniform_units[index].object)
-						d3d_buffer = static_cast<D3DUniformBufferProvider*>(uniform_units[index].object.get())->get_buffer(gc->get_window()->get_device());
+						d3d_buffer = static_cast<D3DUniformBuffer*>(uniform_units[index].object.get())->get_buffer(gc->get_window()->get_device());
 					switch (j)
 					{
 					case ShaderType::vertex:
@@ -300,7 +300,7 @@ namespace uicore
 		}
 	}
 
-	void D3DUnitMap::bind_storage_buffer(D3DGraphicContextProvider *gc, int index)
+	void D3DUnitMap::bind_storage_buffer(D3DGraphicContext *gc, int index)
 	{
 		if (storage_units.size() > index)
 		{
@@ -310,7 +310,7 @@ namespace uicore
 				{
 					ID3D11ShaderResourceView *srv = 0;
 					if (storage_units[index].object)
-						srv = static_cast<D3DStorageBufferProvider*>(storage_units[index].object.get())->get_srv(gc->get_window()->get_device());
+						srv = static_cast<D3DStorageBuffer*>(storage_units[index].object.get())->get_srv(gc->get_window()->get_device());
 					switch (j)
 					{
 					case ShaderType::vertex:
@@ -340,13 +340,13 @@ namespace uicore
 				ID3D11UnorderedAccessView *uav = 0;
 				UINT uav_initial_count = 0;
 				if (storage_units[index].object)
-					uav = static_cast<D3DStorageBufferProvider*>(storage_units[index].object.get())->get_uav(gc->get_window()->get_device());
+					uav = static_cast<D3DStorageBuffer*>(storage_units[index].object.get())->get_uav(gc->get_window()->get_device());
 				gc->get_window()->get_device_context()->CSSetUnorderedAccessViews(storage_units[index].shader_uav_index[(int)ShaderType::compute], 1, &uav, &uav_initial_count);
 			}
 		}
 	}
 
-	void D3DUnitMap::unbind_sampler(D3DGraphicContextProvider *gc, int index)
+	void D3DUnitMap::unbind_sampler(D3DGraphicContext *gc, int index)
 	{
 		if (sampler_units.size() > index)
 		{
@@ -382,7 +382,7 @@ namespace uicore
 		}
 	}
 
-	void D3DUnitMap::unbind_texture(D3DGraphicContextProvider *gc, int index)
+	void D3DUnitMap::unbind_texture(D3DGraphicContext *gc, int index)
 	{
 		if (texture_units.size() > index)
 		{
@@ -418,7 +418,7 @@ namespace uicore
 		}
 	}
 
-	void D3DUnitMap::unbind_image(D3DGraphicContextProvider *gc, int index)
+	void D3DUnitMap::unbind_image(D3DGraphicContext *gc, int index)
 	{
 		if (image_units.size() > index)
 		{
@@ -429,7 +429,7 @@ namespace uicore
 		}
 	}
 
-	void D3DUnitMap::unbind_uniform_buffer(D3DGraphicContextProvider *gc, int index)
+	void D3DUnitMap::unbind_uniform_buffer(D3DGraphicContext *gc, int index)
 	{
 		if (uniform_units.size() > index)
 		{
@@ -464,7 +464,7 @@ namespace uicore
 		}
 	}
 
-	void D3DUnitMap::unbind_storage_buffer(D3DGraphicContextProvider *gc, int index)
+	void D3DUnitMap::unbind_storage_buffer(D3DGraphicContext *gc, int index)
 	{
 		if (storage_units.size() > index)
 		{

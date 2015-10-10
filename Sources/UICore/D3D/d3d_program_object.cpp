@@ -35,31 +35,31 @@
 
 namespace uicore
 {
-	D3DProgramObjectProvider::D3DProgramObjectProvider(const ComPtr<ID3D11Device> &device, const ComPtr<ID3D11DeviceContext> &device_context)
+	D3DProgramObject::D3DProgramObject(const ComPtr<ID3D11Device> &device, const ComPtr<ID3D11DeviceContext> &device_context)
 		: device(device), device_context(device_context)
 	{
 	}
 
-	D3DProgramObjectProvider::~D3DProgramObjectProvider()
+	D3DProgramObject::~D3DProgramObject()
 	{
 	}
 
-	std::string D3DProgramObjectProvider::get_info_log() const
+	std::string D3DProgramObject::get_info_log() const
 	{
 		return std::string();
 	}
 
-	std::vector<ShaderObjectPtr> D3DProgramObjectProvider::get_shaders() const
+	std::vector<ShaderObjectPtr> D3DProgramObject::get_shaders() const
 	{
 		return std::vector<ShaderObjectPtr>();
 	}
 
-	int D3DProgramObjectProvider::get_attribute_location(const std::string &name) const
+	int D3DProgramObject::get_attribute_location(const std::string &name) const
 	{
 		return -1;
 	}
 
-	int D3DProgramObjectProvider::get_uniform_location(const std::string &name) const
+	int D3DProgramObject::get_uniform_location(const std::string &name) const
 	{
 		std::map<std::string, int>::const_iterator it = uniform_names.find(name);
 		if (it != uniform_names.end())
@@ -68,12 +68,12 @@ namespace uicore
 			return -1;
 	}
 
-	int D3DProgramObjectProvider::get_uniform_buffer_size(int block_index) const
+	int D3DProgramObject::get_uniform_buffer_size(int block_index) const
 	{
 		return 0;
 	}
 
-	int D3DProgramObjectProvider::get_uniform_buffer_index(const std::string &block_name) const
+	int D3DProgramObject::get_uniform_buffer_index(const std::string &block_name) const
 	{
 		std::map<std::string, int>::const_iterator it = uniform_block_names.find(block_name);
 		if (it != uniform_block_names.end())
@@ -82,7 +82,7 @@ namespace uicore
 			return -1;
 	}
 
-	int D3DProgramObjectProvider::get_storage_buffer_index(const std::string &block_name) const
+	int D3DProgramObject::get_storage_buffer_index(const std::string &block_name) const
 	{
 		std::map<std::string, int>::const_iterator it = storage_block_names.find(block_name);
 		if (it != storage_block_names.end())
@@ -91,30 +91,30 @@ namespace uicore
 			return -1;
 	}
 
-	DataBufferPtr &D3DProgramObjectProvider::get_shader_bytecode(ShaderType shader_type)
+	DataBufferPtr &D3DProgramObject::get_shader_bytecode(ShaderType shader_type)
 	{
 		return get_shader_provider(shader_type)->bytecode;
 	}
 
-	D3DShaderObjectProvider *D3DProgramObjectProvider::get_shader_provider(ShaderType shader_type)
+	D3DShaderObject *D3DProgramObject::get_shader_provider(ShaderType shader_type)
 	{
 		if (shaders[(int)shader_type])
-			return static_cast<D3DShaderObjectProvider*>(shaders[(int)shader_type].get());
+			return static_cast<D3DShaderObject*>(shaders[(int)shader_type].get());
 		else
 			return 0;
 	}
 
-	void D3DProgramObjectProvider::attach(const ShaderObjectPtr &obj)
+	void D3DProgramObject::attach(const ShaderObjectPtr &obj)
 	{
 		shaders[(int)obj->shader_type()] = obj;
 	}
 
-	void D3DProgramObjectProvider::detach(const ShaderObjectPtr &obj)
+	void D3DProgramObject::detach(const ShaderObjectPtr &obj)
 	{
 		shaders[(int)obj->shader_type()].reset();
 	}
 
-	void D3DProgramObjectProvider::bind_attribute_location(int index, const std::string &name)
+	void D3DProgramObject::bind_attribute_location(int index, const std::string &name)
 	{
 		// Numbers at the end of a semantic name in HLSL maps to the semantic index.
 		if (!name.empty() && name[name.length() - 1] >= '0' && name[name.length() - 1] <= '9')
@@ -133,18 +133,18 @@ namespace uicore
 		}
 	}
 
-	void D3DProgramObjectProvider::bind_frag_data_location(int color_number, const std::string &name)
+	void D3DProgramObject::bind_frag_data_location(int color_number, const std::string &name)
 	{
 		// This isn't relevant for Direct3D.  The output semantic names (SV_TargetN) have hardcoded locations in HLSL.
 	}
 
-	bool D3DProgramObjectProvider::try_link()
+	bool D3DProgramObject::try_link()
 	{
 		for (int j = 0; j < (int)ShaderType::num_types; j++)
 		{
 			if (shaders[j])
 			{
-				D3DShaderObjectProvider *shader_provider = static_cast<D3DShaderObjectProvider*>(shaders[j].get());
+				D3DShaderObject *shader_provider = static_cast<D3DShaderObject*>(shaders[j].get());
 
 				std::map<std::string, int>::iterator it, it2;
 				for (it = shader_provider->sampler_locations.begin(); it != shader_provider->sampler_locations.end(); ++it)
@@ -217,12 +217,12 @@ namespace uicore
 		return true;
 	}
 
-	bool D3DProgramObjectProvider::validate()
+	bool D3DProgramObject::validate()
 	{
 		return true;
 	}
 
-	void D3DProgramObjectProvider::set_uniform1i(int location, int v1)
+	void D3DProgramObject::set_uniform1i(int location, int v1)
 	{
 		if (location >= 0 && location <= (int)uniforms.size())
 		{
@@ -231,47 +231,47 @@ namespace uicore
 		}
 	}
 
-	void D3DProgramObjectProvider::set_uniform2i(int location, int v1, int v2)
+	void D3DProgramObject::set_uniform2i(int location, int v1, int v2)
 	{
 	}
 
-	void D3DProgramObjectProvider::set_uniform3i(int location, int v1, int v2, int v3)
+	void D3DProgramObject::set_uniform3i(int location, int v1, int v2, int v3)
 	{
 	}
 
-	void D3DProgramObjectProvider::set_uniform4i(int location, int v1, int v2, int v3, int v4)
+	void D3DProgramObject::set_uniform4i(int location, int v1, int v2, int v3, int v4)
 	{
 	}
 
-	void D3DProgramObjectProvider::set_uniformiv(int location, int size, int count, const int *data)
+	void D3DProgramObject::set_uniformiv(int location, int size, int count, const int *data)
 	{
 	}
 
-	void D3DProgramObjectProvider::set_uniform1f(int location, float v1)
+	void D3DProgramObject::set_uniform1f(int location, float v1)
 	{
 	}
 
-	void D3DProgramObjectProvider::set_uniform2f(int location, float v1, float v2)
+	void D3DProgramObject::set_uniform2f(int location, float v1, float v2)
 	{
 	}
 
-	void D3DProgramObjectProvider::set_uniform3f(int location, float v1, float v2, float v3)
+	void D3DProgramObject::set_uniform3f(int location, float v1, float v2, float v3)
 	{
 	}
 
-	void D3DProgramObjectProvider::set_uniform4f(int location, float v1, float v2, float v3, float v4)
+	void D3DProgramObject::set_uniform4f(int location, float v1, float v2, float v3, float v4)
 	{
 	}
 
-	void D3DProgramObjectProvider::set_uniformfv(int location, int size, int count, const float *data)
+	void D3DProgramObject::set_uniformfv(int location, int size, int count, const float *data)
 	{
 	}
 
-	void D3DProgramObjectProvider::set_uniform_matrix(int location, int size, int count, bool transpose, const float *data)
+	void D3DProgramObject::set_uniform_matrix(int location, int size, int count, bool transpose, const float *data)
 	{
 	}
 
-	void D3DProgramObjectProvider::set_uniform_buffer_index(int block_index, int bind_index)
+	void D3DProgramObject::set_uniform_buffer_index(int block_index, int bind_index)
 	{
 		if (block_index >= 0 && block_index <= (int)uniform_blocks.size())
 		{
@@ -280,7 +280,7 @@ namespace uicore
 		}
 	}
 
-	void D3DProgramObjectProvider::set_storage_buffer_index(int buffer_index, int bind_unit_index)
+	void D3DProgramObject::set_storage_buffer_index(int buffer_index, int bind_unit_index)
 	{
 		if (buffer_index >= 0 && buffer_index <= (int)storage_blocks.size())
 		{

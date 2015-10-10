@@ -40,8 +40,8 @@
 
 namespace uicore
 {
-	class D3DShaderObjectProvider;
-	class D3DUniformBufferProvider;
+	class D3DShaderObject;
+	class D3DUniformBuffer;
 
 	class D3DUniform
 	{
@@ -75,11 +75,11 @@ namespace uicore
 		int value;
 	};
 
-	class D3DProgramObjectProvider : public ProgramObjectProvider
+	class D3DProgramObject : public ProgramObjectProvider
 	{
 	public:
-		D3DProgramObjectProvider(const ComPtr<ID3D11Device> &device, const ComPtr<ID3D11DeviceContext> &device_context);
-		~D3DProgramObjectProvider();
+		D3DProgramObject(const ComPtr<ID3D11Device> &device, const ComPtr<ID3D11DeviceContext> &device_context);
+		~D3DProgramObject();
 
 		std::string get_info_log() const override;
 		std::vector<ShaderObjectPtr> get_shaders() const override;
@@ -91,7 +91,7 @@ namespace uicore
 		int get_storage_buffer_index(const std::string &name) const override;
 
 		DataBufferPtr &get_shader_bytecode(ShaderType shader_type);
-		D3DShaderObjectProvider *get_shader_provider(ShaderType shader_type);
+		D3DShaderObject *get_shader_provider(ShaderType shader_type);
 
 		struct AttributeBinding
 		{

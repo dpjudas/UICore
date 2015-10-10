@@ -33,7 +33,7 @@
 
 namespace uicore
 {
-	D3DRenderBufferProvider::D3DRenderBufferProvider(const ComPtr<ID3D11Device> &device, int width, int height, TextureFormat texture_format, int multisample_samples)
+	D3DRenderBuffer::D3DRenderBuffer(const ComPtr<ID3D11Device> &device, int width, int height, TextureFormat texture_format, int multisample_samples)
 	{
 		_size = { width, height };
 		handles.push_back(std::shared_ptr<DeviceHandles>(new DeviceHandles(device)));
@@ -43,13 +43,13 @@ namespace uicore
 		texture_desc.Height = height;
 		texture_desc.MipLevels = 1;
 		texture_desc.ArraySize = 1;
-		texture_desc.Format = D3DTextureProvider::to_d3d_format(texture_format);
+		texture_desc.Format = D3DTextureObject::to_d3d_format(texture_format);
 		texture_desc.SampleDesc.Count = multisample_samples;
 		texture_desc.SampleDesc.Quality = 0;
 		texture_desc.Usage = D3D11_USAGE_DEFAULT;
 		texture_desc.CPUAccessFlags = 0;
 		texture_desc.MiscFlags = D3D11_RESOURCE_MISC_SHARED;
-		if (D3DTextureProvider::is_stencil_or_depth_format(texture_format))
+		if (D3DTextureObject::is_stencil_or_depth_format(texture_format))
 			texture_desc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
 		else
 			texture_desc.BindFlags = D3D11_BIND_RENDER_TARGET;
@@ -58,11 +58,11 @@ namespace uicore
 		D3DTarget::throw_if_failed("ID3D11Device.CreateTexture2D failed", result);
 	}
 
-	D3DRenderBufferProvider::~D3DRenderBufferProvider()
+	D3DRenderBuffer::~D3DRenderBuffer()
 	{
 	}
 
-	ComPtr<ID3D11Texture2D> &D3DRenderBufferProvider::get_texture(const ComPtr<ID3D11Device> &device)
+	ComPtr<ID3D11Texture2D> &D3DRenderBuffer::get_texture(const ComPtr<ID3D11Device> &device)
 	{
 		if (device)
 			return get_handles(device).texture;
@@ -70,7 +70,7 @@ namespace uicore
 			return handles.front()->texture;
 	}
 
-	ComPtr<ID3D11RenderTargetView> D3DRenderBufferProvider::create_rtv(const ComPtr<ID3D11Device> &device)
+	ComPtr<ID3D11RenderTargetView> D3DRenderBuffer::create_rtv(const ComPtr<ID3D11Device> &device)
 	{
 		D3D11_RENDER_TARGET_VIEW_DESC rtv_desc;
 		rtv_desc.Format = DXGI_FORMAT_UNKNOWN;
@@ -83,7 +83,7 @@ namespace uicore
 		return rtv;
 	}
 
-	ComPtr<ID3D11DepthStencilView> D3DRenderBufferProvider::create_dsv(const ComPtr<ID3D11Device> &device)
+	ComPtr<ID3D11DepthStencilView> D3DRenderBuffer::create_dsv(const ComPtr<ID3D11Device> &device)
 	{
 		D3D11_DEPTH_STENCIL_VIEW_DESC dsv_desc;
 		dsv_desc.Format = DXGI_FORMAT_UNKNOWN;
@@ -97,7 +97,7 @@ namespace uicore
 		return dsv;
 	}
 
-	void D3DRenderBufferProvider::device_destroyed(ID3D11Device *device)
+	void D3DRenderBuffer::device_destroyed(ID3D11Device *device)
 	{
 		for (size_t i = 0; i < handles.size(); i++)
 		{
@@ -109,7 +109,7 @@ namespace uicore
 		}
 	}
 
-	D3DRenderBufferProvider::DeviceHandles &D3DRenderBufferProvider::get_handles(const ComPtr<ID3D11Device> &device)
+	D3DRenderBuffer::DeviceHandles &D3DRenderBuffer::get_handles(const ComPtr<ID3D11Device> &device)
 	{
 		for (size_t i = 0; i < handles.size(); i++)
 			if (handles[i]->device == device)

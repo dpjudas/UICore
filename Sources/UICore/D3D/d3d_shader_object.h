@@ -37,12 +37,12 @@
 
 namespace uicore
 {
-	class D3DShaderObjectProvider : public ShaderObjectProvider
+	class D3DShaderObject : public ShaderObjectProvider
 	{
 	public:
-		D3DShaderObjectProvider(const ComPtr<ID3D11Device> &device, D3D_FEATURE_LEVEL feature_level, ShaderType type, const std::string &source);
-		D3DShaderObjectProvider(const ComPtr<ID3D11Device> &device, D3D_FEATURE_LEVEL feature_level, ShaderType type, const void *bytecode, int bytecode_size);
-		~D3DShaderObjectProvider();
+		D3DShaderObject(const ComPtr<ID3D11Device> &device, D3D_FEATURE_LEVEL feature_level, ShaderType type, const std::string &source);
+		D3DShaderObject(const ComPtr<ID3D11Device> &device, D3D_FEATURE_LEVEL feature_level, ShaderType type, const void *bytecode, int bytecode_size);
+		~D3DShaderObject();
 
 		ShaderType shader_type() const override { return type; }
 		std::string info_log() const override { return info_log_text; }

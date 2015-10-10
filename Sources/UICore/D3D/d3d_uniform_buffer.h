@@ -33,12 +33,12 @@
 
 namespace uicore
 {
-	class D3DUniformBufferProvider : public UniformBuffer
+	class D3DUniformBuffer : public UniformBuffer
 	{
 	public:
-		D3DUniformBufferProvider(const ComPtr<ID3D11Device> &device, int size, BufferUsage usage);
-		D3DUniformBufferProvider(const ComPtr<ID3D11Device> &device, const void *data, int size, BufferUsage usage);
-		~D3DUniformBufferProvider();
+		D3DUniformBuffer(const ComPtr<ID3D11Device> &device, int size, BufferUsage usage);
+		D3DUniformBuffer(const ComPtr<ID3D11Device> &device, const void *data, int size, BufferUsage usage);
+		~D3DUniformBuffer();
 
 		ComPtr<ID3D11Buffer> &get_buffer(const ComPtr<ID3D11Device> &device);
 

@@ -33,24 +33,24 @@
 
 namespace uicore
 {
-	class D3DGraphicContextProvider;
+	class D3DGraphicContext;
 	class D3DSharedResource;
 
 	class D3DShareList
 	{
 	public:
-		static void context_created(D3DGraphicContextProvider *gc);
-		static void context_destroyed(D3DGraphicContextProvider *gc);
+		static void context_created(D3DGraphicContext *gc);
+		static void context_destroyed(D3DGraphicContext *gc);
 
 		static void device_destroyed(ID3D11Device *device);
 
-		static const std::list<D3DGraphicContextProvider *> &all_contexts() { return contexts; }
+		static const std::list<D3DGraphicContext *> &all_contexts() { return contexts; }
 
 		static std::list<D3DSharedResource *>::iterator resource_created(D3DSharedResource *resource);
 		static void resource_destroyed(std::list<D3DSharedResource *>::iterator it);
 
 	private:
-		static std::list<D3DGraphicContextProvider *> contexts;
+		static std::list<D3DGraphicContext *> contexts;
 		static std::list<D3DSharedResource *> resources;
 	};
 

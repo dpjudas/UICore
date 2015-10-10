@@ -35,12 +35,12 @@
 
 namespace uicore
 {
-	class D3DVertexArrayBufferProvider : public VertexArrayBuffer, D3DSharedResource
+	class D3DVertexArrayBuffer : public VertexArrayBuffer, D3DSharedResource
 	{
 	public:
-		D3DVertexArrayBufferProvider(const ComPtr<ID3D11Device> &device, int size, BufferUsage usage);
-		D3DVertexArrayBufferProvider(const ComPtr<ID3D11Device> &device, const void *data, int size, BufferUsage usage);
-		~D3DVertexArrayBufferProvider();
+		D3DVertexArrayBuffer(const ComPtr<ID3D11Device> &device, int size, BufferUsage usage);
+		D3DVertexArrayBuffer(const ComPtr<ID3D11Device> &device, const void *data, int size, BufferUsage usage);
+		~D3DVertexArrayBuffer();
 
 		ComPtr<ID3D11Buffer> &get_buffer(const ComPtr<ID3D11Device> &device);
 

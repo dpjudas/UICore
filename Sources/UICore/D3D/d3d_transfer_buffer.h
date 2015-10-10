@@ -33,12 +33,12 @@
 
 namespace uicore
 {
-	class D3DTransferBufferProvider : public TransferBuffer
+	class D3DTransferBuffer : public TransferBuffer
 	{
 	public:
-		D3DTransferBufferProvider(const ComPtr<ID3D11Device> &device, int size, BufferUsage usage);
-		D3DTransferBufferProvider(const ComPtr<ID3D11Device> &device, const void *data, int size, BufferUsage usage);
-		~D3DTransferBufferProvider();
+		D3DTransferBuffer(const ComPtr<ID3D11Device> &device, int size, BufferUsage usage);
+		D3DTransferBuffer(const ComPtr<ID3D11Device> &device, const void *data, int size, BufferUsage usage);
+		~D3DTransferBuffer();
 
 		void *data() override;
 		ComPtr<ID3D11Buffer> &get_buffer(const ComPtr<ID3D11Device> &device);

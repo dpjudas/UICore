@@ -36,11 +36,11 @@
 
 namespace uicore
 {
-	class D3DFrameBufferProvider : public FrameBuffer
+	class D3DFrameBuffer : public FrameBuffer
 	{
 	public:
-		D3DFrameBufferProvider(const ComPtr<ID3D11Device> &device);
-		~D3DFrameBufferProvider();
+		D3DFrameBuffer(const ComPtr<ID3D11Device> &device);
+		~D3DFrameBuffer();
 
 		Size get_size() const override;
 		FrameBufferBindTarget get_bind_target() const override;
@@ -81,8 +81,8 @@ namespace uicore
 			AttachedBuffer(RenderBufferPtr render_buffer) : render_buffer(render_buffer), level(0), slice(0), subtype() { }
 			AttachedBuffer(TexturePtr texture, int level = 0, int slice = 0, TextureSubtype subtype = TextureSubtype()) : texture(texture), level(level), slice(slice), subtype(subtype) { }
 
-			D3DRenderBufferProvider *get_render_buffer_provider() const { return static_cast<D3DRenderBufferProvider*>(render_buffer.get()); }
-			D3DTextureProvider *get_texture_provider() const { return static_cast<D3DTextureProvider*>(texture->texture_object()); }
+			D3DRenderBuffer *get_render_buffer_provider() const { return static_cast<D3DRenderBuffer*>(render_buffer.get()); }
+			D3DTextureObject *get_texture_provider() const { return static_cast<D3DTextureObject*>(texture->texture_object()); }
 
 			RenderBufferPtr render_buffer;
 			TexturePtr texture;

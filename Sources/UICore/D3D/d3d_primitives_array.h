@@ -34,13 +34,13 @@
 
 namespace uicore
 {
-	class D3DProgramObjectProvider;
+	class D3DProgramObject;
 
-	class D3DPrimitivesArrayProvider : public PrimitivesArrayProvider
+	class D3DPrimitivesArray : public PrimitivesArrayProvider
 	{
 	public:
-		D3DPrimitivesArrayProvider(const ComPtr<ID3D11Device> &device);
-		~D3DPrimitivesArrayProvider();
+		D3DPrimitivesArray(const ComPtr<ID3D11Device> &device);
+		~D3DPrimitivesArray();
 
 		ComPtr<ID3D11Device> &get_device() { return device; }
 		void get_vertex_buffers(std::vector<ID3D11Buffer *> &out_buffers, std::vector<UINT> &out_strides, std::vector<UINT> &out_offsets);
@@ -48,10 +48,10 @@ namespace uicore
 
 		void set_attribute(int index, const VertexData &data, bool normalize);
 
-		ID3D11InputLayout *get_input_layout(D3DProgramObjectProvider *program);
+		ID3D11InputLayout *get_input_layout(D3DProgramObject *program);
 
 	private:
-		ComPtr<ID3D11InputLayout> create_input_layout(D3DProgramObjectProvider *program);
+		ComPtr<ID3D11InputLayout> create_input_layout(D3DProgramObject *program);
 		static DXGI_FORMAT to_d3d_format(const VertexData &data, bool normalize);
 
 		ComPtr<ID3D11Device> device;

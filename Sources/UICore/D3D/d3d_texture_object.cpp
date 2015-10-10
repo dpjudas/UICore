@@ -28,7 +28,7 @@
 
 #include "UICore/precomp.h"
 #include "d3d_texture_object.h"
-#include "d3d_pixel_buffer.h"
+#include "d3d_transfer_texture.h"
 #include "d3d_graphic_context.h"
 #include "d3d_display_window.h"
 #include "UICore/Display/Image/pixel_buffer.h"
@@ -37,7 +37,7 @@
 
 namespace uicore
 {
-	D3DTextureProvider::D3DTextureProvider(const InitData &init, TextureDimensions texture_dimensions, int width, int height, int depth, int array_size, TextureFormat texture_format, int levels)
+	D3DTextureObject::D3DTextureObject(const InitData &init, TextureDimensions texture_dimensions, int width, int height, int depth, int array_size, TextureFormat texture_format, int levels)
 	: data(new D3DTextureData(init.device, init.feature_level, texture_dimensions)), view_min_layer(-1), dimensions(width, height, depth, array_size)
 	{
 		if (data->texture_dimensions == texture_1d || data->texture_dimensions == texture_1d_array)
@@ -60,23 +60,23 @@ namespace uicore
 		view_handles.push_back(std::shared_ptr<ViewHandles>(new ViewHandles(data->handles.front()->device)));
 	}
 
-	D3DTextureProvider::D3DTextureProvider(const HandleInit &init)
+	D3DTextureObject::D3DTextureObject(const HandleInit &init)
 	: data(init.orig_texture->data), view_min_layer(init.min_layer), dimensions(init.orig_texture->dimensions)
 	{
 		// To do: save and use all view parameters
 		view_handles.push_back(std::shared_ptr<ViewHandles>(new ViewHandles(data->handles.front()->device)));
 	}
 
-	D3DTextureProvider::~D3DTextureProvider()
+	D3DTextureObject::~D3DTextureObject()
 	{
 	}
 
-	ComPtr<ID3D11SamplerState> &D3DTextureProvider::get_sampler_state(const ComPtr<ID3D11Device> &device)
+	ComPtr<ID3D11SamplerState> &D3DTextureObject::get_sampler_state(const ComPtr<ID3D11Device> &device)
 	{
 		return get_view_handles(device).sampler_state.get_sampler_state();
 	}
 
-	ID3D11Texture1D *D3DTextureProvider::get_texture_1d(const ComPtr<ID3D11Device> &device)
+	ID3D11Texture1D *D3DTextureObject::get_texture_1d(const ComPtr<ID3D11Device> &device)
 	{
 		if (device)
 			return data->get_handles(device).get_texture_1d();
@@ -84,7 +84,7 @@ namespace uicore
 			return data->handles.front()->get_texture_1d();
 	}
 
-	ID3D11Texture2D *D3DTextureProvider::get_texture_2d(const ComPtr<ID3D11Device> &device)
+	ID3D11Texture2D *D3DTextureObject::get_texture_2d(const ComPtr<ID3D11Device> &device)
 	{
 		if (device)
 			return data->get_handles(device).get_texture_2d();
@@ -92,7 +92,7 @@ namespace uicore
 			return data->handles.front()->get_texture_2d();
 	}
 
-	ID3D11Texture3D *D3DTextureProvider::get_texture_3d(const ComPtr<ID3D11Device> &device)
+	ID3D11Texture3D *D3DTextureObject::get_texture_3d(const ComPtr<ID3D11Device> &device)
 	{
 		if (device)
 			return data->get_handles(device).get_texture_3d();
@@ -100,7 +100,7 @@ namespace uicore
 			return data->handles.front()->get_texture_3d();
 	}
 
-	ComPtr<ID3D11ShaderResourceView> &D3DTextureProvider::get_srv(const ComPtr<ID3D11Device> &device)
+	ComPtr<ID3D11ShaderResourceView> &D3DTextureObject::get_srv(const ComPtr<ID3D11Device> &device)
 	{
 		D3DTextureData::DeviceHandles &data_handles = data->get_handles(device);
 		ViewHandles &handles = get_view_handles(device);
@@ -289,7 +289,7 @@ namespace uicore
 		}
 	}
 
-	ComPtr<ID3D11UnorderedAccessView> &D3DTextureProvider::get_uav(const ComPtr<ID3D11Device> &device)
+	ComPtr<ID3D11UnorderedAccessView> &D3DTextureObject::get_uav(const ComPtr<ID3D11Device> &device)
 	{
 		D3DTextureData::DeviceHandles &data_handles = data->get_handles(device);
 		ViewHandles &handles = get_view_handles(device);
@@ -364,7 +364,7 @@ namespace uicore
 		return handles.uav;
 	}
 
-	ComPtr<ID3D11RenderTargetView> D3DTextureProvider::create_rtv(const ComPtr<ID3D11Device> &device, int level, int slice, TextureSubtype subtype)
+	ComPtr<ID3D11RenderTargetView> D3DTextureObject::create_rtv(const ComPtr<ID3D11Device> &device, int level, int slice, TextureSubtype subtype)
 	{
 		D3DTextureData::DeviceHandles &data_handles = data->get_handles(device);
 
@@ -454,7 +454,7 @@ namespace uicore
 		return rtv;
 	}
 
-	ComPtr<ID3D11DepthStencilView> D3DTextureProvider::create_dsv(const ComPtr<ID3D11Device> &device, int level, int slice, TextureSubtype subtype)
+	ComPtr<ID3D11DepthStencilView> D3DTextureObject::create_dsv(const ComPtr<ID3D11Device> &device, int level, int slice, TextureSubtype subtype)
 	{
 		D3DTextureData::DeviceHandles &data_handles = data->get_handles(device);
 		D3D11_DEPTH_STENCIL_VIEW_DESC dsv_desc;
@@ -525,30 +525,30 @@ namespace uicore
 		return dsv;
 	}
 
-	std::shared_ptr<Texture> D3DTextureProvider::create_view(TextureDimensions texture_dimensions, TextureFormat texture_format, int min_level, int num_levels, int min_layer, int num_layers)
+	std::shared_ptr<Texture> D3DTextureObject::create_view(TextureDimensions texture_dimensions, TextureFormat texture_format, int min_level, int num_levels, int min_layer, int num_layers)
 	{
 		switch (data->texture_dimensions)
 		{
 		case texture_1d:
-			return std::make_shared<Texture1DImpl<D3DTextureProvider>>(HandleInit(this, texture_dimensions, texture_format, min_level, num_levels, min_layer, num_layers));
+			return std::make_shared<Texture1DImpl<D3DTextureObject>>(HandleInit(this, texture_dimensions, texture_format, min_level, num_levels, min_layer, num_layers));
 		case texture_1d_array:
-			return std::make_shared<Texture1DArrayImpl<D3DTextureProvider>>(HandleInit(this, texture_dimensions, texture_format, min_level, num_levels, min_layer, num_layers));
+			return std::make_shared<Texture1DArrayImpl<D3DTextureObject>>(HandleInit(this, texture_dimensions, texture_format, min_level, num_levels, min_layer, num_layers));
 		case texture_2d:
-			return std::make_shared<Texture2DImpl<D3DTextureProvider>>(HandleInit(this, texture_dimensions, texture_format, min_level, num_levels, min_layer, num_layers));
+			return std::make_shared<Texture2DImpl<D3DTextureObject>>(HandleInit(this, texture_dimensions, texture_format, min_level, num_levels, min_layer, num_layers));
 		case texture_2d_array:
-			return std::make_shared<Texture2DArrayImpl<D3DTextureProvider>>(HandleInit(this, texture_dimensions, texture_format, min_level, num_levels, min_layer, num_layers));
+			return std::make_shared<Texture2DArrayImpl<D3DTextureObject>>(HandleInit(this, texture_dimensions, texture_format, min_level, num_levels, min_layer, num_layers));
 		case texture_3d:
-			return std::make_shared<Texture3DImpl<D3DTextureProvider>>(HandleInit(this, texture_dimensions, texture_format, min_level, num_levels, min_layer, num_layers));
+			return std::make_shared<Texture3DImpl<D3DTextureObject>>(HandleInit(this, texture_dimensions, texture_format, min_level, num_levels, min_layer, num_layers));
 		case texture_cube:
-			return std::make_shared<TextureCubeImpl<D3DTextureProvider>>(HandleInit(this, texture_dimensions, texture_format, min_level, num_levels, min_layer, num_layers));
+			return std::make_shared<TextureCubeImpl<D3DTextureObject>>(HandleInit(this, texture_dimensions, texture_format, min_level, num_levels, min_layer, num_layers));
 		case texture_cube_array:
-			return std::make_shared<TextureCubeArrayImpl<D3DTextureProvider>>(HandleInit(this, texture_dimensions, texture_format, min_level, num_levels, min_layer, num_layers));
+			return std::make_shared<TextureCubeArrayImpl<D3DTextureObject>>(HandleInit(this, texture_dimensions, texture_format, min_level, num_levels, min_layer, num_layers));
 		default:
 			throw Exception("Unknown texture dimension enumeration value");
 		}
 	}
 
-	void D3DTextureProvider::generate_mipmap()
+	void D3DTextureObject::generate_mipmap()
 	{
 		// To do: maybe change function to take a gc parameter to make it clear which context the operation should be executed on
 
@@ -557,7 +557,7 @@ namespace uicore
 		device_context->GenerateMips(get_srv(view_handles.front()->device));
 	}
 
-	void D3DTextureProvider::create_1d(int width, int height, int depth, int array_size, TextureFormat texture_format, int levels)
+	void D3DTextureObject::create_1d(int width, int height, int depth, int array_size, TextureFormat texture_format, int levels)
 	{
 		D3D11_TEXTURE1D_DESC texture_desc;
 		texture_desc.Width = width;
@@ -596,7 +596,7 @@ namespace uicore
 		D3DTarget::throw_if_failed("ID3D11Device.CreateTexture1D failed", result);
 	}
 
-	void D3DTextureProvider::create_2d(int width, int height, int depth, int array_size, TextureFormat texture_format, int levels)
+	void D3DTextureObject::create_2d(int width, int height, int depth, int array_size, TextureFormat texture_format, int levels)
 	{
 		D3D11_TEXTURE2D_DESC texture_desc;
 		texture_desc.Width = width;
@@ -659,7 +659,7 @@ namespace uicore
 		D3DTarget::throw_if_failed("ID3D11Device.CreateTexture2D failed", result);
 	}
 
-	void D3DTextureProvider::create_3d(int width, int height, int depth, int array_size, TextureFormat texture_format, int levels)
+	void D3DTextureObject::create_3d(int width, int height, int depth, int array_size, TextureFormat texture_format, int levels)
 	{
 		D3D11_TEXTURE3D_DESC texture_desc;
 		texture_desc.Width = width;
@@ -698,9 +698,9 @@ namespace uicore
 		D3DTarget::throw_if_failed("ID3D11Device.CreateTexture3D failed", result);
 	}
 
-	PixelBufferPtr D3DTextureProvider::get_pixeldata(const GraphicContextPtr &gc, TextureFormat texture_format, int level) const
+	PixelBufferPtr D3DTextureObject::get_pixeldata(const GraphicContextPtr &gc, TextureFormat texture_format, int level) const
 	{
-		D3DGraphicContextProvider *gc_provider = static_cast<D3DGraphicContextProvider*>(gc.get());
+		D3DGraphicContext *gc_provider = static_cast<D3DGraphicContext*>(gc.get());
 		D3DTextureData::DeviceHandles &data_handles = data->get_handles(gc_provider->get_window()->get_device());
 
 		int width;
@@ -736,7 +736,7 @@ namespace uicore
 		}
 
 		auto pixels = TransferTexture::create(gc, width, height, data_from_gpu, from_d3d_format(format));
-		D3DPixelBufferProvider *pb_provider = static_cast<D3DPixelBufferProvider *>(pixels.get());
+		D3DTransferTexture *pb_provider = static_cast<D3DTransferTexture *>(pixels.get());
 		D3D11_BOX box;
 		box.left = 0;
 		box.top = 0;
@@ -748,9 +748,9 @@ namespace uicore
 		return pixels;
 	}
 
-	void D3DTextureProvider::copy_from(const GraphicContextPtr &gc, int x, int y, int slice, int level, const PixelBufferPtr &source_image, const Rect &src_rect)
+	void D3DTextureObject::copy_from(const GraphicContextPtr &gc, int x, int y, int slice, int level, const PixelBufferPtr &source_image, const Rect &src_rect)
 	{
-		D3DGraphicContextProvider *gc_provider = static_cast<D3DGraphicContextProvider*>(gc.get());
+		D3DGraphicContext *gc_provider = static_cast<D3DGraphicContext*>(gc.get());
 		D3DTextureData::DeviceHandles &data_handles = data->get_handles(gc_provider->get_window()->get_device());
 
 		ComPtr<ID3D11DeviceContext> device_context;
@@ -799,7 +799,7 @@ namespace uicore
 
 		int dest_subresource = D3D11CalcSubresource(level, array_slice, mip_levels);
 
-		D3DPixelBufferProvider *pb_provider = dynamic_cast<D3DPixelBufferProvider*>(source_image.get());
+		D3DTransferTexture *pb_provider = dynamic_cast<D3DTransferTexture*>(source_image.get());
 		if (pb_provider)
 		{
 			int src_subresource = D3D11CalcSubresource(0, 0, 1);
@@ -860,7 +860,7 @@ namespace uicore
 		}
 	}
 
-	void D3DTextureProvider::copy_image_from(
+	void D3DTextureObject::copy_image_from(
 		int x,
 		int y,
 		int width,
@@ -872,7 +872,7 @@ namespace uicore
 		throw Exception("copy_image_from not supported yet by D3D target");
 	}
 
-	void D3DTextureProvider::copy_subimage_from(
+	void D3DTextureObject::copy_subimage_from(
 		int offset_x,
 		int offset_y,
 		int x,
@@ -885,33 +885,33 @@ namespace uicore
 		throw Exception("copy_subimage_from not supported yet by D3D target");
 	}
 
-	void D3DTextureProvider::set_min_lod(double min_lod)
+	void D3DTextureObject::set_min_lod(double min_lod)
 	{
 		for (size_t i = 0; i < view_handles.size(); i++)
 			view_handles[i]->sampler_state.set_min_lod(min_lod);
 	}
 
-	void D3DTextureProvider::set_max_lod(double max_lod)
+	void D3DTextureObject::set_max_lod(double max_lod)
 	{
 		for (size_t i = 0; i < view_handles.size(); i++)
 			view_handles[i]->sampler_state.set_max_lod(max_lod);
 	}
 
-	void D3DTextureProvider::set_lod_bias(double lod_bias)
+	void D3DTextureObject::set_lod_bias(double lod_bias)
 	{
 		for (size_t i = 0; i < view_handles.size(); i++)
 			view_handles[i]->sampler_state.set_lod_bias(lod_bias);
 	}
 
-	void D3DTextureProvider::set_base_level(int base_level)
+	void D3DTextureObject::set_base_level(int base_level)
 	{
 	}
 
-	void D3DTextureProvider::set_max_level(int max_level)
+	void D3DTextureObject::set_max_level(int max_level)
 	{
 	}
 
-	void D3DTextureProvider::set_wrap_mode(
+	void D3DTextureObject::set_wrap_mode(
 		TextureWrapMode wrap_s,
 		TextureWrapMode wrap_t,
 		TextureWrapMode wrap_r)
@@ -920,7 +920,7 @@ namespace uicore
 			view_handles[i]->sampler_state.set_wrap_mode(wrap_s, wrap_t, wrap_r);
 	}
 
-	void D3DTextureProvider::set_wrap_mode(
+	void D3DTextureObject::set_wrap_mode(
 		TextureWrapMode wrap_s,
 		TextureWrapMode wrap_t)
 	{
@@ -928,38 +928,38 @@ namespace uicore
 			view_handles[i]->sampler_state.set_wrap_mode(wrap_s, wrap_t);
 	}
 
-	void D3DTextureProvider::set_wrap_mode(
+	void D3DTextureObject::set_wrap_mode(
 		TextureWrapMode wrap_s)
 	{
 		for (size_t i = 0; i < view_handles.size(); i++)
 			view_handles[i]->sampler_state.set_wrap_mode(wrap_s);
 	}
 
-	void D3DTextureProvider::set_min_filter(TextureFilter filter)
+	void D3DTextureObject::set_min_filter(TextureFilter filter)
 	{
 		for (size_t i = 0; i < view_handles.size(); i++)
 			view_handles[i]->sampler_state.set_min_filter(filter);
 	}
 
-	void D3DTextureProvider::set_mag_filter(TextureFilter filter)
+	void D3DTextureObject::set_mag_filter(TextureFilter filter)
 	{
 		for (size_t i = 0; i < view_handles.size(); i++)
 			view_handles[i]->sampler_state.set_mag_filter(filter);
 	}
 
-	void D3DTextureProvider::set_max_anisotropy(float v)
+	void D3DTextureObject::set_max_anisotropy(float v)
 	{
 		for (size_t i = 0; i < view_handles.size(); i++)
 			view_handles[i]->sampler_state.set_max_anisotropy(v);
 	}
 
-	void D3DTextureProvider::set_texture_compare(TextureCompareMode mode, CompareFunction func)
+	void D3DTextureObject::set_texture_compare(TextureCompareMode mode, CompareFunction func)
 	{
 		for (size_t i = 0; i < view_handles.size(); i++)
 			view_handles[i]->sampler_state.set_texture_compare(mode, func);
 	}
 
-	void D3DTextureProvider::device_destroyed(ID3D11Device *device)
+	void D3DTextureObject::device_destroyed(ID3D11Device *device)
 	{
 		for (size_t i = 0; i < view_handles.size(); i++)
 		{
@@ -971,7 +971,7 @@ namespace uicore
 		}
 	}
 
-	D3DTextureProvider::ViewHandles &D3DTextureProvider::get_view_handles(const ComPtr<ID3D11Device> &device) const
+	D3DTextureObject::ViewHandles &D3DTextureObject::get_view_handles(const ComPtr<ID3D11Device> &device) const
 	{
 		for (size_t i = 0; i < view_handles.size(); i++)
 			if (view_handles[i]->device == device)
@@ -981,7 +981,7 @@ namespace uicore
 		return *view_handles.back();
 	}
 
-	bool D3DTextureProvider::is_stencil_or_depth_format(TextureFormat format)
+	bool D3DTextureObject::is_stencil_or_depth_format(TextureFormat format)
 	{
 		switch (format)
 		{
@@ -1000,7 +1000,7 @@ namespace uicore
 		return false;
 	}
 
-	DXGI_FORMAT D3DTextureProvider::to_d3d_format(TextureFormat format)
+	DXGI_FORMAT D3DTextureObject::to_d3d_format(TextureFormat format)
 	{
 		switch (format)
 		{
@@ -1100,7 +1100,7 @@ namespace uicore
 		throw Exception("Unsupported format");
 	}
 
-	TextureFormat D3DTextureProvider::from_d3d_format(DXGI_FORMAT d3d_format)
+	TextureFormat D3DTextureObject::from_d3d_format(DXGI_FORMAT d3d_format)
 	{
 		switch (d3d_format)
 		{
@@ -1208,7 +1208,7 @@ namespace uicore
 		throw Exception("Unsupported format");
 	}
 
-	int D3DTextureProvider::get_bytes_per_pixel(DXGI_FORMAT d3d_format)
+	int D3DTextureObject::get_bytes_per_pixel(DXGI_FORMAT d3d_format)
 	{
 		switch (d3d_format)
 		{

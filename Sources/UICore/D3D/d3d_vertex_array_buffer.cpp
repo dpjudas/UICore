@@ -35,7 +35,7 @@
 
 namespace uicore
 {
-	D3DVertexArrayBufferProvider::D3DVertexArrayBufferProvider(const ComPtr<ID3D11Device> &device, int new_size, BufferUsage usage)
+	D3DVertexArrayBuffer::D3DVertexArrayBuffer(const ComPtr<ID3D11Device> &device, int new_size, BufferUsage usage)
 	{
 		handles.push_back(std::shared_ptr<DeviceHandles>(new DeviceHandles(device)));
 
@@ -52,7 +52,7 @@ namespace uicore
 		D3DTarget::throw_if_failed("Unable to create vertex array buffer", result);
 	}
 
-	D3DVertexArrayBufferProvider::D3DVertexArrayBufferProvider(const ComPtr<ID3D11Device> &device, const void *init_data, int new_size, BufferUsage usage)
+	D3DVertexArrayBuffer::D3DVertexArrayBuffer(const ComPtr<ID3D11Device> &device, const void *init_data, int new_size, BufferUsage usage)
 	{
 		handles.push_back(std::shared_ptr<DeviceHandles>(new DeviceHandles(device)));
 
@@ -74,11 +74,11 @@ namespace uicore
 		D3DTarget::throw_if_failed("Unable to create vertex array buffer", result);
 	}
 
-	D3DVertexArrayBufferProvider::~D3DVertexArrayBufferProvider()
+	D3DVertexArrayBuffer::~D3DVertexArrayBuffer()
 	{
 	}
 
-	ComPtr<ID3D11Buffer> &D3DVertexArrayBufferProvider::get_buffer(const ComPtr<ID3D11Device> &device)
+	ComPtr<ID3D11Buffer> &D3DVertexArrayBuffer::get_buffer(const ComPtr<ID3D11Device> &device)
 	{
 		if (device)
 			return get_handles(device).buffer;
@@ -86,12 +86,12 @@ namespace uicore
 			return handles.front()->buffer;
 	}
 
-	void D3DVertexArrayBufferProvider::upload_data(const GraphicContextPtr &gc, int offset, const void *data, int data_size)
+	void D3DVertexArrayBuffer::upload_data(const GraphicContextPtr &gc, int offset, const void *data, int data_size)
 	{
 		if ((offset < 0) || (data_size < 0) || ((data_size + offset) > size))
 			throw Exception("Vertex array buffer, invalid size");
 
-		const ComPtr<ID3D11Device> &device = static_cast<D3DGraphicContextProvider*>(gc.get())->get_window()->get_device();
+		const ComPtr<ID3D11Device> &device = static_cast<D3DGraphicContext*>(gc.get())->get_window()->get_device();
 		ComPtr<ID3D11DeviceContext> device_context;
 		device->GetImmediateContext(device_context.output_variable());
 
@@ -106,11 +106,11 @@ namespace uicore
 		device_context->UpdateSubresource(get_handles(device).buffer, 0, &box, data, 0, 0);
 	}
 
-	void D3DVertexArrayBufferProvider::copy_from(const GraphicContextPtr &gc, const TransferBufferPtr &buffer, int dest_pos, int src_pos, int copy_size)
+	void D3DVertexArrayBuffer::copy_from(const GraphicContextPtr &gc, const TransferBufferPtr &buffer, int dest_pos, int src_pos, int copy_size)
 	{
-		const ComPtr<ID3D11Device> &device = static_cast<D3DGraphicContextProvider*>(gc.get())->get_window()->get_device();
-		ComPtr<ID3D11Buffer> &transfer_buffer = static_cast<D3DTransferBufferProvider*>(buffer.get())->get_buffer(device);
-		int transfer_buffer_size = static_cast<D3DTransferBufferProvider*>(buffer.get())->get_size();
+		const ComPtr<ID3D11Device> &device = static_cast<D3DGraphicContext*>(gc.get())->get_window()->get_device();
+		ComPtr<ID3D11Buffer> &transfer_buffer = static_cast<D3DTransferBuffer*>(buffer.get())->get_buffer(device);
+		int transfer_buffer_size = static_cast<D3DTransferBuffer*>(buffer.get())->get_size();
 
 		if (copy_size == -1)
 			copy_size = transfer_buffer_size;
@@ -131,11 +131,11 @@ namespace uicore
 		device_context->CopySubresourceRegion(get_handles(device).buffer, 0, dest_pos, 0, 0, transfer_buffer, 0, &box);
 	}
 
-	void D3DVertexArrayBufferProvider::copy_to(const GraphicContextPtr &gc, const TransferBufferPtr &buffer, int dest_pos, int src_pos, int copy_size)
+	void D3DVertexArrayBuffer::copy_to(const GraphicContextPtr &gc, const TransferBufferPtr &buffer, int dest_pos, int src_pos, int copy_size)
 	{
-		const ComPtr<ID3D11Device> &device = static_cast<D3DGraphicContextProvider*>(gc.get())->get_window()->get_device();
-		ComPtr<ID3D11Buffer> &transfer_buffer = static_cast<D3DTransferBufferProvider*>(buffer.get())->get_buffer(device);
-		int transfer_buffer_size = static_cast<D3DTransferBufferProvider*>(buffer.get())->get_size();
+		const ComPtr<ID3D11Device> &device = static_cast<D3DGraphicContext*>(gc.get())->get_window()->get_device();
+		ComPtr<ID3D11Buffer> &transfer_buffer = static_cast<D3DTransferBuffer*>(buffer.get())->get_buffer(device);
+		int transfer_buffer_size = static_cast<D3DTransferBuffer*>(buffer.get())->get_size();
 
 		if (copy_size == -1)
 			copy_size = transfer_buffer_size;
@@ -156,7 +156,7 @@ namespace uicore
 		device_context->CopySubresourceRegion(transfer_buffer, 0, src_pos, 0, 0, get_handles(device).buffer, 0, &box);
 	}
 
-	void D3DVertexArrayBufferProvider::device_destroyed(ID3D11Device *device)
+	void D3DVertexArrayBuffer::device_destroyed(ID3D11Device *device)
 	{
 		for (size_t i = 0; i < handles.size(); i++)
 		{
@@ -168,7 +168,7 @@ namespace uicore
 		}
 	}
 
-	D3DVertexArrayBufferProvider::DeviceHandles &D3DVertexArrayBufferProvider::get_handles(const ComPtr<ID3D11Device> &device)
+	D3DVertexArrayBuffer::DeviceHandles &D3DVertexArrayBuffer::get_handles(const ComPtr<ID3D11Device> &device)
 	{
 		for (size_t i = 0; i < handles.size(); i++)
 			if (handles[i]->device == device)
@@ -191,7 +191,7 @@ namespace uicore
 		return *handles.back();
 	}
 
-	D3D11_MAP D3DVertexArrayBufferProvider::to_d3d_map_type(BufferAccess access)
+	D3D11_MAP D3DVertexArrayBuffer::to_d3d_map_type(BufferAccess access)
 	{
 		switch (access)
 		{

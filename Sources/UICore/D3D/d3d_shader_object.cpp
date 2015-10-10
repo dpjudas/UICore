@@ -57,7 +57,7 @@ namespace uicore
 		std::vector<D3D11_SHADER_INPUT_BIND_DESC> binding;
 	};
 
-	D3DShaderObjectProvider::D3DShaderObjectProvider(const ComPtr<ID3D11Device> &device, D3D_FEATURE_LEVEL feature_level, ShaderType new_type, const std::string &init_source)
+	D3DShaderObject::D3DShaderObject(const ComPtr<ID3D11Device> &device, D3D_FEATURE_LEVEL feature_level, ShaderType new_type, const std::string &init_source)
 		: device(device), feature_level(feature_level)
 	{
 		source = init_source;
@@ -65,18 +65,18 @@ namespace uicore
 		type = new_type;
 	}
 
-	D3DShaderObjectProvider::D3DShaderObjectProvider(const ComPtr<ID3D11Device> &device, D3D_FEATURE_LEVEL feature_level, ShaderType new_type, const void *init_bytecode, int bytecode_size)
+	D3DShaderObject::D3DShaderObject(const ComPtr<ID3D11Device> &device, D3D_FEATURE_LEVEL feature_level, ShaderType new_type, const void *init_bytecode, int bytecode_size)
 		: device(device), feature_level(feature_level)
 	{
 		bytecode = DataBuffer::create(init_bytecode, bytecode_size);
 		type = new_type;
 	}
 
-	D3DShaderObjectProvider::~D3DShaderObjectProvider()
+	D3DShaderObject::~D3DShaderObject()
 	{
 	}
 
-	bool D3DShaderObjectProvider::try_compile()
+	bool D3DShaderObject::try_compile()
 	{
 		shader.clear();
 		info_log_text.clear();
@@ -131,12 +131,12 @@ namespace uicore
 		}
 	}
 
-	std::recursive_mutex D3DShaderObjectProvider::d3dcompiler_mutex;
-	HMODULE D3DShaderObjectProvider::d3dcompiler_dll = 0;
-	D3DShaderObjectProvider::FuncD3DCompile D3DShaderObjectProvider::d3dcompile = 0;
-	D3DShaderObjectProvider::FuncD3DReflect D3DShaderObjectProvider::d3dreflect = 0;
+	std::recursive_mutex D3DShaderObject::d3dcompiler_mutex;
+	HMODULE D3DShaderObject::d3dcompiler_dll = 0;
+	D3DShaderObject::FuncD3DCompile D3DShaderObject::d3dcompile = 0;
+	D3DShaderObject::FuncD3DReflect D3DShaderObject::d3dreflect = 0;
 
-	void D3DShaderObjectProvider::load_compiler_dll()
+	void D3DShaderObject::load_compiler_dll()
 	{
 		std::unique_lock<std::recursive_mutex> mutex_lock(d3dcompiler_mutex);
 		if (d3dcompiler_dll == 0)
@@ -166,7 +166,7 @@ namespace uicore
 		}
 	}
 
-	void D3DShaderObjectProvider::create_shader()
+	void D3DShaderObject::create_shader()
 	{
 		switch (type)
 		{
@@ -223,7 +223,7 @@ namespace uicore
 		}
 	}
 
-	void D3DShaderObjectProvider::find_locations()
+	void D3DShaderObject::find_locations()
 	{
 		sampler_locations.clear();
 		texture_locations.clear();
@@ -259,7 +259,7 @@ namespace uicore
 
 	}
 
-	void D3DShaderObjectProvider::set_binding(D3D11_SHADER_INPUT_BIND_DESC &binding)
+	void D3DShaderObject::set_binding(D3D11_SHADER_INPUT_BIND_DESC &binding)
 	{
 		switch (binding.Type)
 		{
@@ -298,7 +298,7 @@ namespace uicore
 		}
 	}
 
-	std::string D3DShaderObjectProvider::get_shader_model() const
+	std::string D3DShaderObject::get_shader_model() const
 	{
 		int major = 5;
 		int minor = 0;

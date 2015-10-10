@@ -27,7 +27,7 @@
 */
 
 #include "UICore/precomp.h"
-#include "d3d_pixel_buffer.h"
+#include "d3d_transfer_texture.h"
 #include "d3d_texture_object.h"
 #include "d3d_graphic_context.h"
 #include "d3d_display_window.h"
@@ -35,7 +35,7 @@
 
 namespace uicore
 {
-	D3DPixelBufferProvider::D3DPixelBufferProvider(const ComPtr<ID3D11Device> &device, const void *data, const Size &new_size, PixelBufferDirection direction, TextureFormat format, BufferUsage usage)
+	D3DTransferTexture::D3DTransferTexture(const ComPtr<ID3D11Device> &device, const void *data, const Size &new_size, PixelBufferDirection direction, TextureFormat format, BufferUsage usage)
 	{
 		handles.push_back(std::shared_ptr<DeviceHandles>(new DeviceHandles(device)));
 		map_data.pData = 0;
@@ -53,7 +53,7 @@ namespace uicore
 		texture_desc.Height = _size.height;
 		texture_desc.MipLevels = 1;
 		texture_desc.ArraySize = 1;
-		texture_desc.Format = D3DTextureProvider::to_d3d_format(format);
+		texture_desc.Format = D3DTextureObject::to_d3d_format(format);
 		texture_desc.SampleDesc.Count = 1;
 		texture_desc.SampleDesc.Quality = 0;
 		texture_desc.Usage = D3D11_USAGE_STAGING;
@@ -73,19 +73,11 @@ namespace uicore
 		D3DTarget::throw_if_failed("ID3D11Device.CreateTexture2D failed", result);
 	}
 
-	D3DPixelBufferProvider::~D3DPixelBufferProvider()
+	D3DTransferTexture::~D3DTransferTexture()
 	{
 	}
 
-	void *D3DPixelBufferProvider::data()
-	{
-		if (!data_locked)
-			throw Exception("lock() not called before get_data()");
-
-		return map_data.pData;
-	}
-
-	const void *D3DPixelBufferProvider::data() const
+	void *D3DTransferTexture::data()
 	{
 		if (!data_locked)
 			throw Exception("lock() not called before get_data()");
@@ -93,7 +85,15 @@ namespace uicore
 		return map_data.pData;
 	}
 
-	ComPtr<ID3D11Texture2D> &D3DPixelBufferProvider::get_texture_2d(const ComPtr<ID3D11Device> &device)
+	const void *D3DTransferTexture::data() const
+	{
+		if (!data_locked)
+			throw Exception("lock() not called before get_data()");
+
+		return map_data.pData;
+	}
+
+	ComPtr<ID3D11Texture2D> &D3DTransferTexture::get_texture_2d(const ComPtr<ID3D11Device> &device)
 	{
 		if (device)
 			return get_handles(device).texture;
@@ -101,7 +101,7 @@ namespace uicore
 			return handles.front()->texture;
 	}
 
-	int D3DPixelBufferProvider::pitch() const
+	int D3DTransferTexture::pitch() const
 	{
 		if (!data_locked)
 			throw Exception("lock() not called before get_pitch()");
@@ -109,9 +109,9 @@ namespace uicore
 		return map_data.RowPitch;
 	}
 
-	void D3DPixelBufferProvider::lock(const GraphicContextPtr &gc, BufferAccess access)
+	void D3DTransferTexture::lock(const GraphicContextPtr &gc, BufferAccess access)
 	{
-		map_gc_provider = static_cast<D3DGraphicContextProvider *>(gc.get());
+		map_gc_provider = static_cast<D3DGraphicContext *>(gc.get());
 		DeviceHandles &handle = get_handles(map_gc_provider->get_window()->get_device());
 
 		HRESULT result = map_gc_provider->get_window()->get_device_context()->Map(handle.texture, 0, to_d3d_map_type(access), 0, &map_data);
@@ -120,7 +120,7 @@ namespace uicore
 		data_locked = true;
 	}
 
-	void D3DPixelBufferProvider::unlock()
+	void D3DTransferTexture::unlock()
 	{
 		map_gc_provider->get_window()->get_device_context()->Unmap(get_handles(map_gc_provider->get_window()->get_device()).texture, 0);
 		map_gc_provider = 0;
@@ -130,9 +130,9 @@ namespace uicore
 		data_locked = false;
 	}
 
-	void D3DPixelBufferProvider::upload_data(const GraphicContextPtr &gc, const Rect &dest_rect, const void *data)
+	void D3DTransferTexture::upload_data(const GraphicContextPtr &gc, const Rect &dest_rect, const void *data)
 	{
-		D3DGraphicContextProvider *gc_provider = static_cast<D3DGraphicContextProvider *>(gc.get());
+		D3DGraphicContext *gc_provider = static_cast<D3DGraphicContext *>(gc.get());
 		DeviceHandles &handle = get_handles(gc_provider->get_window()->get_device());
 
 		D3D11_BOX box;
@@ -145,12 +145,12 @@ namespace uicore
 
 		D3D11_TEXTURE2D_DESC texture_desc;
 		handle.texture->GetDesc(&texture_desc);
-		int pitch = D3DTextureProvider::get_bytes_per_pixel(texture_desc.Format) * texture_desc.Width;
+		int pitch = D3DTextureObject::get_bytes_per_pixel(texture_desc.Format) * texture_desc.Width;
 
 		gc_provider->get_window()->get_device_context()->UpdateSubresource(handle.texture, 0, &box, data, pitch, pitch * dest_rect.get_height());
 	}
 
-	void D3DPixelBufferProvider::device_destroyed(ID3D11Device *device)
+	void D3DTransferTexture::device_destroyed(ID3D11Device *device)
 	{
 		for (size_t i = 0; i < handles.size(); i++)
 		{
@@ -162,7 +162,7 @@ namespace uicore
 		}
 	}
 
-	D3DPixelBufferProvider::DeviceHandles &D3DPixelBufferProvider::get_handles(const ComPtr<ID3D11Device> &device)
+	D3DTransferTexture::DeviceHandles &D3DTransferTexture::get_handles(const ComPtr<ID3D11Device> &device)
 	{
 		for (size_t i = 0; i < handles.size(); i++)
 			if (handles[i]->device == device)
@@ -185,7 +185,7 @@ namespace uicore
 		return *handles.back();
 	}
 
-	D3D11_MAP D3DPixelBufferProvider::to_d3d_map_type(BufferAccess access)
+	D3D11_MAP D3DTransferTexture::to_d3d_map_type(BufferAccess access)
 	{
 		switch (access)
 		{
@@ -201,7 +201,7 @@ namespace uicore
 		throw Exception("Unsupported access type");
 	}
 
-	UINT D3DPixelBufferProvider::to_d3d_cpu_access(PixelBufferDirection direction)
+	UINT D3DTransferTexture::to_d3d_cpu_access(PixelBufferDirection direction)
 	{
 		switch (direction)
 		{

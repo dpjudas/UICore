@@ -36,11 +36,11 @@
 
 namespace uicore
 {
-	class D3DDisplayWindowProvider : public DisplayWindowProvider
+	class D3DDisplayWindow : public DisplayWindowProvider
 	{
 	public:
-		D3DDisplayWindowProvider(const DisplayWindowDescription &description);
-		~D3DDisplayWindowProvider();
+		D3DDisplayWindow(const DisplayWindowDescription &description);
+		~D3DDisplayWindow();
 
 		Rect backing_geometry() const override;
 		Rect backing_viewport() const override;

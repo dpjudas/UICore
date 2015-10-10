@@ -34,7 +34,7 @@
 
 namespace uicore
 {
-	D3DTransferBufferProvider::D3DTransferBufferProvider(const ComPtr<ID3D11Device> &device, int new_size, BufferUsage usage)
+	D3DTransferBuffer::D3DTransferBuffer(const ComPtr<ID3D11Device> &device, int new_size, BufferUsage usage)
 	{
 		handles.push_back(std::shared_ptr<DeviceHandles>(new DeviceHandles(device)));
 		map_data.pData = 0;
@@ -63,7 +63,7 @@ namespace uicore
 		D3DTarget::throw_if_failed("Unable to create transfer buffer", result);
 	}
 
-	D3DTransferBufferProvider::D3DTransferBufferProvider(const ComPtr<ID3D11Device> &device, const void *data, int new_size, BufferUsage usage)
+	D3DTransferBuffer::D3DTransferBuffer(const ComPtr<ID3D11Device> &device, const void *data, int new_size, BufferUsage usage)
 	{
 		handles.push_back(std::shared_ptr<DeviceHandles>(new DeviceHandles(device)));
 		map_data.pData = 0;
@@ -97,16 +97,16 @@ namespace uicore
 		D3DTarget::throw_if_failed("Unable to create transfer buffer", result);
 	}
 
-	D3DTransferBufferProvider::~D3DTransferBufferProvider()
+	D3DTransferBuffer::~D3DTransferBuffer()
 	{
 	}
 
-	void *D3DTransferBufferProvider::data()
+	void *D3DTransferBuffer::data()
 	{
 		return map_data.pData;
 	}
 
-	ComPtr<ID3D11Buffer> &D3DTransferBufferProvider::get_buffer(const ComPtr<ID3D11Device> &device)
+	ComPtr<ID3D11Buffer> &D3DTransferBuffer::get_buffer(const ComPtr<ID3D11Device> &device)
 	{
 		if (device)
 			return get_handles(device).buffer;
@@ -114,9 +114,9 @@ namespace uicore
 			return handles.front()->buffer;
 	}
 
-	void D3DTransferBufferProvider::lock(const GraphicContextPtr &gc, BufferAccess access)
+	void D3DTransferBuffer::lock(const GraphicContextPtr &gc, BufferAccess access)
 	{
-		map_device = static_cast<D3DGraphicContextProvider*>(gc.get())->get_window()->get_device();
+		map_device = static_cast<D3DGraphicContext*>(gc.get())->get_window()->get_device();
 
 		ComPtr<ID3D11DeviceContext> context;
 		map_device->GetImmediateContext(context.output_variable());
@@ -125,7 +125,7 @@ namespace uicore
 		D3DTarget::throw_if_failed("ID3D11DeviceContext.Map failed", result);
 	}
 
-	void D3DTransferBufferProvider::unlock()
+	void D3DTransferBuffer::unlock()
 	{
 		ComPtr<ID3D11DeviceContext> context;
 		map_device->GetImmediateContext(context.output_variable());
@@ -137,7 +137,7 @@ namespace uicore
 		map_data.DepthPitch = 0;
 	}
 
-	void D3DTransferBufferProvider::upload_data(const GraphicContextPtr &gc, int offset, const void *input, int input_size)
+	void D3DTransferBuffer::upload_data(const GraphicContextPtr &gc, int offset, const void *input, int input_size)
 	{
 		D3D11_BUFFER_DESC desc;
 		handles.front()->buffer->GetDesc(&desc);
@@ -150,7 +150,7 @@ namespace uicore
 
 	}
 
-	void D3DTransferBufferProvider::device_destroyed(ID3D11Device *device)
+	void D3DTransferBuffer::device_destroyed(ID3D11Device *device)
 	{
 		for (size_t i = 0; i < handles.size(); i++)
 		{
@@ -162,7 +162,7 @@ namespace uicore
 		}
 	}
 
-	D3DTransferBufferProvider::DeviceHandles &D3DTransferBufferProvider::get_handles(const ComPtr<ID3D11Device> &device)
+	D3DTransferBuffer::DeviceHandles &D3DTransferBuffer::get_handles(const ComPtr<ID3D11Device> &device)
 	{
 		for (size_t i = 0; i < handles.size(); i++)
 			if (handles[i]->device == device)
@@ -185,7 +185,7 @@ namespace uicore
 		return *handles.back();
 	}
 
-	D3D11_MAP D3DTransferBufferProvider::to_d3d_map_type(BufferAccess access)
+	D3D11_MAP D3DTransferBuffer::to_d3d_map_type(BufferAccess access)
 	{
 		switch (access)
 		{

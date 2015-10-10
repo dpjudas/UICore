@@ -31,29 +31,29 @@
 
 namespace uicore
 {
-	D3DOcclusionQueryProvider::D3DOcclusionQueryProvider()
+	D3DOcclusionQuery::D3DOcclusionQuery()
 	{
 	}
 
-	D3DOcclusionQueryProvider::~D3DOcclusionQueryProvider()
+	D3DOcclusionQuery::~D3DOcclusionQuery()
 	{
 	}
 
-	bool D3DOcclusionQueryProvider::is_result_ready() const
+	bool D3DOcclusionQuery::is_result_ready() const
 	{
 		return false;
 	}
 
-	int D3DOcclusionQueryProvider::result() const
+	int D3DOcclusionQuery::result() const
 	{
 		return 0;
 	}
 
-	void D3DOcclusionQueryProvider::begin()
+	void D3DOcclusionQuery::begin()
 	{
 	}
 
-	void D3DOcclusionQueryProvider::end()
+	void D3DOcclusionQuery::end()
 	{
 	}
 }

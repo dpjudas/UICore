@@ -44,24 +44,24 @@
 
 namespace uicore
 {
-	class D3DDisplayWindowProvider;
-	class D3DProgramObjectProvider;
-	class D3DPrimitivesArrayProvider;
-	class D3DElementArrayBufferProvider;
+	class D3DDisplayWindow;
+	class D3DProgramObject;
+	class D3DPrimitivesArray;
+	class D3DElementArrayBuffer;
 	class DisplayWindowDescription;
 
-	class D3DGraphicContextProvider : public GraphicContextProvider
+	class D3DGraphicContext : public GraphicContextProvider
 	{
 	public:
-		D3DGraphicContextProvider(D3DDisplayWindowProvider *window, const DisplayWindowDescription &display_desc);
-		~D3DGraphicContextProvider();
+		D3DGraphicContext(D3DDisplayWindow *window, const DisplayWindowDescription &display_desc);
+		~D3DGraphicContext();
 
 		int max_attributes() override;
 		Size max_texture_size() const override;
 		Size display_window_size() const override;
 		float pixel_ratio() const override;
 
-		D3DDisplayWindowProvider *get_window() const { return window; }
+		D3DDisplayWindow *get_window() const { return window; }
 
 		Signal<void(const Size &)> &sig_window_resized() override { return window_resized_signal; }
 
@@ -158,10 +158,10 @@ namespace uicore
 		void apply_input_layout();
 		void clear_input_layout();
 
-		D3DDisplayWindowProvider *window;
-		D3DPrimitivesArrayProvider *current_prim_array_provider;
-		D3DProgramObjectProvider *current_program_provider;
-		D3DElementArrayBufferProvider *current_element_array_provider;
+		D3DDisplayWindow *window;
+		D3DPrimitivesArray *current_prim_array_provider;
+		D3DProgramObject *current_program_provider;
+		D3DElementArrayBuffer *current_element_array_provider;
 		D3D11_VIEWPORT viewports[D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT];
 		D3D11_RECT scissor_rects[D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT];
 		bool input_layout_set;
@@ -174,7 +174,7 @@ namespace uicore
 		std::map<BlendStateDescription, std::shared_ptr<BlendState> > blend_states;
 		std::map<DepthStencilStateDescription, std::shared_ptr<DepthStencilState> > depth_stencil_states;
 
-		std::shared_ptr<D3DRenderBufferProvider> default_depth_render_buffer;
+		std::shared_ptr<D3DRenderBuffer> default_depth_render_buffer;
 		ComPtr<ID3D11DepthStencilView> default_dsv;
 		int default_depth;
 
