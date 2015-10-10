@@ -51,26 +51,11 @@ namespace uicore
 	Canvas::Canvas(const DisplayWindowPtr &window) : impl(std::make_shared<Canvas_Impl>())
 	{
 		impl->init(window);
-		set_map_mode(map_2d_upper_left);
-	}
-
-	Canvas::Canvas(Canvas &canvas, const FrameBufferPtr &framebuffer) : impl(std::make_shared<Canvas_Impl>())
-	{
-		impl->init(canvas.impl.get(), framebuffer);
-		set_map_mode(map_2d_upper_left);
+		impl->set_map_mode(map_2d_upper_left);
 	}
 
 	Canvas::~Canvas()
 	{
-	}
-
-	Canvas Canvas::create()
-	{
-		Canvas copy_canvas;
-		copy_canvas.impl = std::shared_ptr<Canvas_Impl>(new Canvas_Impl);
-		copy_canvas.impl->init(impl.get());
-		copy_canvas.set_map_mode(map_2d_upper_left);
-		return copy_canvas;
 	}
 
 	void Canvas::throw_if_null() const
@@ -195,23 +180,6 @@ namespace uicore
 	{
 		flush();
 		get_gc()->set_program_object(standard_program);
-	}
-
-	void Canvas::set_map_mode(MapMode mode)
-	{
-		flush();
-		impl->set_map_mode(mode);
-	}
-
-	void Canvas::set_viewport(const Rectf &viewport)
-	{
-		flush();
-		impl->set_viewport(viewport);
-	}
-
-	void Canvas::set_projection(const Mat4f &matrix)
-	{
-		impl->set_user_projection(matrix);
 	}
 
 	void Canvas::set_batcher(RenderBatcher *batcher)

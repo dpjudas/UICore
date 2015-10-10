@@ -38,7 +38,6 @@ namespace uicore
 	class Canvas_Impl;
 	class GraphicContext;
 	class PrimitivesArray;
-	class Sprite_Impl;
 	class Image;
 	class GlyphCache;
 	class Draw;
@@ -52,14 +51,6 @@ namespace uicore
 	class Pen;
 	class Brush;
 
-	/// \brief Mapping modes.
-	enum MapMode
-	{
-		map_2d_upper_left,
-		map_2d_lower_left,
-		map_user_projection
-	};
-
 	/// \brief 2D Graphics Canvas
 	class Canvas
 	{
@@ -67,16 +58,10 @@ namespace uicore
 		/// \brief Constructs a null instance.
 		Canvas();
 
-		/// \brief Constructs a Canvas based on a framebuffer.  (based on the copy of the canvas)
-		Canvas(Canvas &canvas, const FrameBufferPtr &framebuffer);
-
 		/// \brief Constructs a Canvas
 		explicit Canvas(const DisplayWindowPtr &window);
 
 		~Canvas();
-
-		/// \brief Create a copy of a canvas
-		Canvas create();
 
 		/// \brief Returns true if this object is invalid.
 		bool is_null() const { return !impl; }
@@ -167,17 +152,6 @@ namespace uicore
 		/// \brief Set active program object to the standard program specified.
 		void set_program_object(StandardProgram standard_program);
 
-		/// \brief Set the projection mapping mode.
-		void set_map_mode(MapMode mode);
-
-		/// Set the viewport to be used in user projection map mode.
-		///
-		/// \param viewport = The viewport to set
-		void set_viewport(const Rectf &viewport);
-
-		/// \brief Set the projection matrix to be used in user projection map mode.
-		void set_projection(const Mat4f &matrix);
-
 		/// \brief Specifies which render batcher is to be currently active
 		///
 		/// If the render batcher is already active, nothing happens. If a different render batcher
@@ -199,7 +173,6 @@ namespace uicore
 	private:
 		std::shared_ptr<Canvas_Impl> impl;
 
-		friend class Sprite_Impl;
 		friend class Image;
 		friend class Font_Impl;
 		friend class Font_DrawSubPixel;

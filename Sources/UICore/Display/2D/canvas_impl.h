@@ -44,6 +44,13 @@ namespace uicore
 	class RenderBatcher;
 	class RenderBatchTriangle;
 
+	enum MapMode
+	{
+		map_2d_upper_left,
+		map_2d_lower_left,
+		map_user_projection
+	};
+
 	class Canvas_Impl
 	{
 	public:
