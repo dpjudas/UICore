@@ -37,16 +37,16 @@
 
 namespace uicore
 {
-	class GL3FrameBufferProvider : public FrameBuffer, DisposableObject
+	class GL3FrameBuffer : public FrameBuffer, DisposableObject
 	{
 	public:
-		GL3FrameBufferProvider(GL3GraphicContextProvider *gc_provider);
-		~GL3FrameBufferProvider();
+		GL3FrameBuffer(GL3GraphicContext *gc_provider);
+		~GL3FrameBuffer();
 
 		GLuint get_handle();
 		Size get_size() const override;
 		FrameBufferBindTarget get_bind_target() const override;
-		GL3GraphicContextProvider *get_gc_provider() { return gc_provider; }
+		GL3GraphicContext *get_gc_provider() { return gc_provider; }
 
 		void attach_color(int attachment_index, const RenderBufferPtr &render_buffer) override;
 		void attach_color(int attachment_index, const Texture1DPtr &texture, int level) override;
@@ -104,13 +104,13 @@ namespace uicore
 		GLuint handle = 0;
 		FrameBufferBindTarget bind_target = framebuffer_draw;
 
-		GL3GraphicContextProvider *gc_provider;
+		GL3GraphicContext *gc_provider;
 	};
 
 	class FrameBufferStateTracker
 	{
 	public:
-		FrameBufferStateTracker(FrameBufferBindTarget target, GLuint handle, GL3GraphicContextProvider *gc_provider);
+		FrameBufferStateTracker(FrameBufferBindTarget target, GLuint handle, GL3GraphicContext *gc_provider);
 		~FrameBufferStateTracker();
 
 	private:

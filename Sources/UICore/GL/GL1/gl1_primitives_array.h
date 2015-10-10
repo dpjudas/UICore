@@ -32,11 +32,11 @@
 
 namespace uicore
 {
-	class GL1PrimitivesArrayProvider : public PrimitivesArrayProvider
+	class GL1PrimitivesArray : public PrimitivesArrayProvider
 	{
 	public:
-		GL1PrimitivesArrayProvider();
-		~GL1PrimitivesArrayProvider();
+		GL1PrimitivesArray();
+		~GL1PrimitivesArray();
 
 		std::vector<VertexData> attributes;
 		std::vector<bool> normalize_attributes;

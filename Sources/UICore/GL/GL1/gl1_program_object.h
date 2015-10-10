@@ -38,13 +38,13 @@
 
 namespace uicore
 {
-	class GL1GraphicContextProvider;
+	class GL1GraphicContext;
 
-	class GL1ProgramObjectProvider : public ProgramObjectProvider, DisposableObject
+	class GL1ProgramObject : public ProgramObjectProvider, DisposableObject
 	{
 	public:
-		GL1ProgramObjectProvider(GL1GraphicContextProvider *gc_provider);
-		virtual ~GL1ProgramObjectProvider();
+		GL1ProgramObject(GL1GraphicContext *gc_provider);
+		virtual ~GL1ProgramObject();
 
 		/// \brief Returns the OpenGL program object handle.
 		unsigned int get_handle() const;
@@ -119,8 +119,8 @@ namespace uicore
 		Mat4f modelview_matrix;
 		Mat4f projection_matrix;
 
-		GL1GraphicContextProvider *gc_provider;
+		GL1GraphicContext *gc_provider;
 
-		friend class GL1GraphicContextProvider;
+		friend class GL1GraphicContext;
 	};
 }

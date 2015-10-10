@@ -37,7 +37,7 @@
 
 namespace uicore
 {
-	GL3ShaderObjectProvider::GL3ShaderObjectProvider(ShaderType shader_type, const std::string &source)
+	GL3ShaderObject::GL3ShaderObject(ShaderType shader_type, const std::string &source)
 	{
 		OpenGL::set_active();
 
@@ -51,12 +51,12 @@ namespace uicore
 		glShaderSource(handle, 1, sources, source_lengths);
 	}
 
-	GL3ShaderObjectProvider::~GL3ShaderObjectProvider()
+	GL3ShaderObject::~GL3ShaderObject()
 	{
 		dispose();
 	}
 
-	void GL3ShaderObjectProvider::on_dispose()
+	void GL3ShaderObject::on_dispose()
 	{
 		if (handle)
 		{
@@ -68,12 +68,12 @@ namespace uicore
 		}
 	}
 
-	unsigned int GL3ShaderObjectProvider::get_handle() const
+	unsigned int GL3ShaderObject::get_handle() const
 	{
 		return (unsigned int)handle;
 	}
 
-	bool GL3ShaderObjectProvider::get_compile_status() const
+	bool GL3ShaderObject::get_compile_status() const
 	{
 		OpenGL::set_active();
 		GLint status = 0;
@@ -81,12 +81,12 @@ namespace uicore
 		return (status != GL_FALSE);
 	}
 
-	ShaderType GL3ShaderObjectProvider::shader_type() const
+	ShaderType GL3ShaderObject::shader_type() const
 	{
 		return type;
 	}
 
-	std::string GL3ShaderObjectProvider::info_log() const
+	std::string GL3ShaderObject::info_log() const
 	{
 		OpenGL::set_active();
 		std::string result;
@@ -106,7 +106,7 @@ namespace uicore
 		return result;
 	}
 
-	std::string GL3ShaderObjectProvider::shader_source() const
+	std::string GL3ShaderObject::shader_source() const
 	{
 		OpenGL::set_active();
 		std::string result;
@@ -126,14 +126,14 @@ namespace uicore
 		return result;
 	}
 
-	bool GL3ShaderObjectProvider::try_compile()
+	bool GL3ShaderObject::try_compile()
 	{
 		OpenGL::set_active();
 		glCompileShader(handle);
 		return get_compile_status();
 	}
 
-	GLenum GL3ShaderObjectProvider::shadertype_to_opengl(ShaderType type)
+	GLenum GL3ShaderObject::shadertype_to_opengl(ShaderType type)
 	{
 		switch (type)
 		{
@@ -150,7 +150,7 @@ namespace uicore
 		case ShaderType::compute:
 			return GL_COMPUTE_SHADER;
 		default:
-			throw Exception(string_format("GL3ShaderObjectProvider: Unknown shader type: %1", (int)type));
+			throw Exception(string_format("GL3ShaderObject: Unknown shader type: %1", (int)type));
 		}
 	}
 }

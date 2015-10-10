@@ -32,25 +32,25 @@
 
 namespace uicore
 {
-	GL1TransferBufferProvider::GL1TransferBufferProvider(int new_size, BufferUsage usage)
+	GL1TransferBuffer::GL1TransferBuffer(int new_size, BufferUsage usage)
 	{
 		data_ptr = new char[new_size];
 		size = new_size;
 	}
 
-	GL1TransferBufferProvider::GL1TransferBufferProvider(const void *init_data, int new_size, BufferUsage usage)
+	GL1TransferBuffer::GL1TransferBuffer(const void *init_data, int new_size, BufferUsage usage)
 	{
 		data_ptr = new char[new_size];
 		size = new_size;
 		memcpy(data_ptr, init_data, size);
 	}
 
-	GL1TransferBufferProvider::~GL1TransferBufferProvider()
+	GL1TransferBuffer::~GL1TransferBuffer()
 	{
 		delete[] data_ptr;
 	}
 
-	void GL1TransferBufferProvider::upload_data(const GraphicContextPtr &gc, int offset, const void *data, int size)
+	void GL1TransferBuffer::upload_data(const GraphicContextPtr &gc, int offset, const void *data, int size)
 	{
 		if ((size < 0) || (offset < 0) || ((size + offset) > this->size))
 			throw Exception("Transfer buffer, invalid size");

@@ -45,15 +45,15 @@
 
 namespace uicore
 {
-	class GL3GraphicContextProvider;
+	class GL3GraphicContext;
 
-	class GL3TextureProvider : public TextureObject, public GLSharedResource
+	class GL3TextureObject : public TextureObject, public GLSharedResource
 	{
 	public:
 		struct HandleInit
 		{
 			HandleInit(GLuint texture_type, GLuint handle) : texture_type(texture_type), handle(handle) { }
-			HandleInit(GL3TextureProvider *orig_texture, TextureDimensions texture_dimensions, TextureFormat texture_format, int min_level, int num_levels, int min_layer, int num_layers)
+			HandleInit(GL3TextureObject *orig_texture, TextureDimensions texture_dimensions, TextureFormat texture_format, int min_level, int num_levels, int min_layer, int num_layers)
 				: orig_texture(orig_texture), texture_dimensions(texture_dimensions), texture_format(texture_format), min_level(min_level), num_levels(num_levels), min_layer(min_layer), num_layers(num_layers)
 			{
 			}
@@ -63,7 +63,7 @@ namespace uicore
 			GLuint handle = 0;
 
 			// Texture view initialization
-			GL3TextureProvider *orig_texture = nullptr;
+			GL3TextureObject *orig_texture = nullptr;
 			TextureDimensions texture_dimensions = texture_1d;
 			TextureFormat texture_format = tf_rgba8;
 			int min_level = 0;
@@ -76,9 +76,9 @@ namespace uicore
 		{
 		};
 
-		GL3TextureProvider(const InitData &init, TextureDimensions texture_dimensions, int width, int height, int depth, int array_size, TextureFormat texture_format, int levels);
-		GL3TextureProvider(const HandleInit &init);
-		~GL3TextureProvider();
+		GL3TextureObject(const InitData &init, TextureDimensions texture_dimensions, int width, int height, int depth, int array_size, TextureFormat texture_format, int levels);
+		GL3TextureObject(const HandleInit &init);
+		~GL3TextureObject();
 
 		GLuint get_handle() const { return handle; }
 		GLuint get_texture_type() const { return texture_type; }

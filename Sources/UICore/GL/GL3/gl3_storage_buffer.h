@@ -36,13 +36,13 @@
 
 namespace uicore
 {
-	class GL3GraphicContextProvider;
+	class GL3GraphicContext;
 
-	class GL3StorageBufferProvider : public StorageBuffer
+	class GL3StorageBuffer : public StorageBuffer
 	{
 	public:
-		GL3StorageBufferProvider(int size, int stride, BufferUsage usage);
-		GL3StorageBufferProvider(const void *data, int size, int stride, BufferUsage usage);
+		GL3StorageBuffer(int size, int stride, BufferUsage usage);
+		GL3StorageBuffer(const void *data, int size, int stride, BufferUsage usage);
 
 		GLuint get_handle() const { return buffer.get_handle(); }
 
@@ -51,6 +51,6 @@ namespace uicore
 		void copy_to(const GraphicContextPtr &gc, const TransferBufferPtr &transfer_buffer, int dest_pos, int src_pos, int size) override { buffer.copy_to(gc, transfer_buffer, dest_pos, src_pos, size); }
 
 	private:
-		GL3BufferObjectProvider buffer;
+		GL3BufferObject buffer;
 	};
 }

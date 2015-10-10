@@ -35,30 +35,30 @@
 
 namespace uicore
 {
-	class GL3GraphicContextProvider;
+	class GL3GraphicContext;
 
-	class GL3PrimitivesArrayProvider : public PrimitivesArrayProvider, DisposableObject
+	class GL3PrimitivesArray : public PrimitivesArrayProvider, DisposableObject
 	{
 	public:
-		GL3PrimitivesArrayProvider(GL3GraphicContextProvider *gc_provider);
-		~GL3PrimitivesArrayProvider();
+		GL3PrimitivesArray(GL3GraphicContext *gc_provider);
+		~GL3PrimitivesArray();
 
 		GLuint handle;
 
-		GL3GraphicContextProvider *get_gc_provider() { return gc_provider; }
+		GL3GraphicContext *get_gc_provider() { return gc_provider; }
 
 		void set_attribute(int index, const VertexData &data, bool normalize) override;
 
 	private:
 		void on_dispose() override;
 
-		GL3GraphicContextProvider *gc_provider;
+		GL3GraphicContext *gc_provider;
 	};
 
 	class PrimitivesArrayStateTracker
 	{
 	public:
-		PrimitivesArrayStateTracker(GL3GraphicContextProvider *gc_provider, GLuint handle);
+		PrimitivesArrayStateTracker(GL3GraphicContext *gc_provider, GLuint handle);
 		~PrimitivesArrayStateTracker();
 
 	private:

@@ -34,12 +34,12 @@
 
 namespace uicore
 {
-	class GL1UniformBufferProvider : public UniformBuffer
+	class GL1UniformBuffer : public UniformBuffer
 	{
 	public:
-		GL1UniformBufferProvider(int size, BufferUsage usage);
-		GL1UniformBufferProvider(const void *data, int size, BufferUsage usage);
-		~GL1UniformBufferProvider();
+		GL1UniformBuffer(int size, BufferUsage usage);
+		GL1UniformBuffer(const void *data, int size, BufferUsage usage);
+		~GL1UniformBuffer();
 
 		void *get_data() const { return data; }
 

@@ -32,12 +32,12 @@
 
 namespace uicore
 {
-	class GL1VertexArrayBufferProvider : public VertexArrayBuffer
+	class GL1VertexArrayBuffer : public VertexArrayBuffer
 	{
 	public:
-		GL1VertexArrayBufferProvider(int size, BufferUsage usage);
-		GL1VertexArrayBufferProvider(const void *data, int size, BufferUsage usage);
-		~GL1VertexArrayBufferProvider();
+		GL1VertexArrayBuffer(int size, BufferUsage usage);
+		GL1VertexArrayBuffer(const void *data, int size, BufferUsage usage);
+		~GL1VertexArrayBuffer();
 
 		void *get_data() const { return data; }
 

@@ -44,7 +44,7 @@
 
 namespace uicore
 {
-	GL1TextureProvider::GL1TextureProvider(InitData, TextureDimensions texture_dimensions, int new_width, int new_height, int new_depth, int array_size, TextureFormat texture_format, int levels)
+	GL1TextureObject::GL1TextureObject(InitData, TextureDimensions texture_dimensions, int new_width, int new_height, int new_depth, int array_size, TextureFormat texture_format, int levels)
 	: dimensions(new_width, new_height, new_depth, array_size), handle(0), texture_type(0)
 	{
 		switch (texture_dimensions)
@@ -226,12 +226,12 @@ namespace uicore
 		}
 	}
 
-	GL1TextureProvider::~GL1TextureProvider()
+	GL1TextureObject::~GL1TextureObject()
 	{
 		dispose();
 	}
 
-	void GL1TextureProvider::on_dispose()
+	void GL1TextureObject::on_dispose()
 	{
 		if (handle)
 		{
@@ -243,11 +243,11 @@ namespace uicore
 		}
 	}
 
-	void GL1TextureProvider::generate_mipmap()
+	void GL1TextureObject::generate_mipmap()
 	{
 	}
 
-	PixelBufferPtr GL1TextureProvider::get_pixeldata(const GraphicContextPtr &gc, TextureFormat texture_format, int level) const
+	PixelBufferPtr GL1TextureObject::get_pixeldata(const GraphicContextPtr &gc, TextureFormat texture_format, int level) const
 	{
 		throw_if_disposed();
 
@@ -282,7 +282,7 @@ namespace uicore
 		}
 	}
 
-	void GL1TextureProvider::copy_from(const GraphicContextPtr &gc, int x, int y, int slice, int level, const PixelBufferPtr &ximage, const Rect &src_rect)
+	void GL1TextureObject::copy_from(const GraphicContextPtr &gc, int x, int y, int slice, int level, const PixelBufferPtr &ximage, const Rect &src_rect)
 	{
 		OpenGL::set_active(gc);
 
@@ -410,7 +410,7 @@ namespace uicore
 	#endif
 	}
 
-	void GL1TextureProvider::copy_image_from(
+	void GL1TextureObject::copy_image_from(
 		int x,
 		int y,
 		int width,
@@ -420,7 +420,7 @@ namespace uicore
 		GraphicContextProvider *gc)
 	{
 		throw_if_disposed();
-		OpenGL::set_active(static_cast<GL1GraphicContextProvider*>(gc));
+		OpenGL::set_active(static_cast<GL1GraphicContext*>(gc));
 		GL1TextureStateTracker state_tracker(texture_type, handle);
 
 		GLint gl_internal_format;
@@ -436,7 +436,7 @@ namespace uicore
 			0);
 	}
 
-	void GL1TextureProvider::copy_subimage_from(
+	void GL1TextureObject::copy_subimage_from(
 		int offset_x,
 		int offset_y,
 		int x,
@@ -447,7 +447,7 @@ namespace uicore
 		GraphicContextProvider *gc)
 	{
 		throw_if_disposed();
-		OpenGL::set_active(static_cast<GL1GraphicContextProvider*>(gc));
+		OpenGL::set_active(static_cast<GL1GraphicContext*>(gc));
 		GL1TextureStateTracker state_tracker(texture_type, handle);
 
 		glCopyTexSubImage2D( 
@@ -459,42 +459,42 @@ namespace uicore
 			width, height );
 	}
 
-	void GL1TextureProvider::set_min_lod(double min_lod)
+	void GL1TextureObject::set_min_lod(double min_lod)
 	{
 		throw_if_disposed();
 		GL1TextureStateTracker state_tracker(texture_type, handle);
 		glTexParameterf(texture_type, GL_TEXTURE_MIN_LOD, (GLfloat)min_lod);
 	}
 
-	void GL1TextureProvider::set_max_lod(double max_lod)
+	void GL1TextureObject::set_max_lod(double max_lod)
 	{
 		throw_if_disposed();
 		GL1TextureStateTracker state_tracker(texture_type, handle);
 		glTexParameterf(texture_type, GL_TEXTURE_MAX_LOD, (GLfloat)max_lod);
 	}
 
-	void GL1TextureProvider::set_lod_bias(double lod_bias)
+	void GL1TextureObject::set_lod_bias(double lod_bias)
 	{
 		throw_if_disposed();
 		GL1TextureStateTracker state_tracker(texture_type, handle);
 		glTexParameterf(texture_type, GL_TEXTURE_LOD_BIAS, (GLfloat)lod_bias);
 	}
 
-	void GL1TextureProvider::set_base_level(int base_level)
+	void GL1TextureObject::set_base_level(int base_level)
 	{
 		throw_if_disposed();
 		GL1TextureStateTracker state_tracker(texture_type, handle);
 		glTexParameteri(texture_type, GL_TEXTURE_BASE_LEVEL, base_level);
 	}
 
-	void GL1TextureProvider::set_max_level(int max_level)
+	void GL1TextureObject::set_max_level(int max_level)
 	{
 		throw_if_disposed();
 		GL1TextureStateTracker state_tracker(texture_type, handle);
 		glTexParameteri(texture_type, GL_TEXTURE_MAX_LEVEL, max_level);
 	}
 
-	void GL1TextureProvider::set_wrap_mode(
+	void GL1TextureObject::set_wrap_mode(
 		TextureWrapMode wrap_s,
 		TextureWrapMode wrap_t,
 		TextureWrapMode wrap_r)
@@ -506,7 +506,7 @@ namespace uicore
 		glTexParameteri(texture_type, GL_TEXTURE_WRAP_R, OpenGL::to_enum(wrap_r));
 	}
 
-	void GL1TextureProvider::set_wrap_mode(
+	void GL1TextureObject::set_wrap_mode(
 		TextureWrapMode wrap_s,
 		TextureWrapMode wrap_t)
 	{
@@ -516,7 +516,7 @@ namespace uicore
 		glTexParameteri(texture_type, GL_TEXTURE_WRAP_T, OpenGL::to_enum(wrap_t));
 	}
 
-	void GL1TextureProvider::set_wrap_mode(
+	void GL1TextureObject::set_wrap_mode(
 		TextureWrapMode wrap_s)
 	{
 		throw_if_disposed();
@@ -524,25 +524,25 @@ namespace uicore
 		glTexParameteri(texture_type, GL_TEXTURE_WRAP_S, OpenGL::to_enum(wrap_s));
 	}
 
-	void GL1TextureProvider::set_min_filter(TextureFilter filter)
+	void GL1TextureObject::set_min_filter(TextureFilter filter)
 	{
 		throw_if_disposed();
 		GL1TextureStateTracker state_tracker(texture_type, handle);
 		glTexParameteri(texture_type, GL_TEXTURE_MIN_FILTER, OpenGL::to_enum(filter));
 	}
 
-	void GL1TextureProvider::set_mag_filter(TextureFilter filter)
+	void GL1TextureObject::set_mag_filter(TextureFilter filter)
 	{
 		throw_if_disposed();
 		GL1TextureStateTracker state_tracker(texture_type, handle);
 		glTexParameteri(texture_type, GL_TEXTURE_MAG_FILTER, OpenGL::to_enum(filter));
 	}
 
-	void GL1TextureProvider::set_max_anisotropy(float v)
+	void GL1TextureObject::set_max_anisotropy(float v)
 	{
 	}
 
-	void GL1TextureProvider::set_texture_compare(TextureCompareMode mode, CompareFunction func)
+	void GL1TextureObject::set_texture_compare(TextureCompareMode mode, CompareFunction func)
 	{
 		throw_if_disposed();
 		GL1TextureStateTracker state_tracker(texture_type, handle);
@@ -550,7 +550,7 @@ namespace uicore
 		glTexParameteri(texture_type, GL_TEXTURE_COMPARE_FUNC, OpenGL::to_enum(func));	
 	}
 
-	void GL1TextureProvider::transform_coordinate(const PrimitivesArrayProvider::VertexData &attribute, std::vector<float> &transformed_data, int vertex_offset, int num_vertices, int total_vertices)
+	void GL1TextureObject::transform_coordinate(const PrimitivesArrayProvider::VertexData &attribute, std::vector<float> &transformed_data, int vertex_offset, int num_vertices, int total_vertices)
 	{
 		if (attribute.type != type_float)
 		{
@@ -575,7 +575,7 @@ namespace uicore
 
 		int source_position = vertex_offset * stride_float;
 
-		GL1VertexArrayBufferProvider *vertex_array_ptr = static_cast<GL1VertexArrayBufferProvider *>(attribute.array_provider);
+		GL1VertexArrayBuffer *vertex_array_ptr = static_cast<GL1VertexArrayBuffer *>(attribute.array_provider);
 		if (!vertex_array_ptr)
 			throw Exception("Invalid BindBuffer Provider");
 
@@ -612,12 +612,12 @@ namespace uicore
 		}
 	}
 
-	std::shared_ptr<Texture> GL1TextureProvider::create_view(TextureDimensions texture_dimensions, TextureFormat texture_format, int min_level, int num_levels, int min_layer, int num_layers)
+	std::shared_ptr<Texture> GL1TextureObject::create_view(TextureDimensions texture_dimensions, TextureFormat texture_format, int min_level, int num_levels, int min_layer, int num_layers)
 	{
 		throw Exception("OpenGL 1 does not support texture views");
 	}
 
-	void GL1TextureProvider::set_texture_image2d(GLuint target, const PixelBufferPtr &image, int level)
+	void GL1TextureObject::set_texture_image2d(GLuint target, const PixelBufferPtr &image, int level)
 	{
 		throw_if_disposed();
 		GL1TextureStateTracker state_tracker(texture_type, handle);
@@ -727,7 +727,7 @@ namespace uicore
 		}
 	}
 
-	void GL1TextureProvider::set_texture_image3d(GLuint target, const PixelBufferPtr &image, int image_depth, int level)
+	void GL1TextureObject::set_texture_image3d(GLuint target, const PixelBufferPtr &image, int image_depth, int level)
 	{
 		throw_if_disposed();
 		GL1TextureStateTracker state_tracker(texture_type, handle);
@@ -908,7 +908,7 @@ namespace uicore
 	#endif
 	}
 
-	int GL1TextureProvider::get_next_power_of_two(int value)
+	int GL1TextureObject::get_next_power_of_two(int value)
 	{
 		for (int pot_count = 1; pot_count < 32768; pot_count += pot_count)
 		{
@@ -918,7 +918,7 @@ namespace uicore
 		return 32768;
 	}
 
-	void GL1TextureProvider::to_opengl_textureformat(TextureFormat format, GLint &gl_internal_format, GLenum &gl_pixel_format)
+	void GL1TextureObject::to_opengl_textureformat(TextureFormat format, GLint &gl_internal_format, GLenum &gl_pixel_format)
 	{
 		switch (format)
 		{
@@ -1027,7 +1027,7 @@ namespace uicore
 		}
 	}
 
-	bool GL1TextureProvider::to_opengl_pixelformat(TextureFormat texture_format, GLenum &format, GLenum &type)
+	bool GL1TextureObject::to_opengl_pixelformat(TextureFormat texture_format, GLenum &format, GLenum &type)
 	{
 		bool valid = false;
 
@@ -1300,7 +1300,7 @@ namespace uicore
 		return valid;
 	}
 
-	bool GL1TextureProvider::to_opengl_pixelformat(const PixelBufferPtr &pbuffer, GLenum &format, GLenum &type)
+	bool GL1TextureObject::to_opengl_pixelformat(const PixelBufferPtr &pbuffer, GLenum &format, GLenum &type)
 	{
 		return to_opengl_pixelformat(pbuffer->format(), format, type);
 	}

@@ -36,13 +36,13 @@
 
 namespace uicore
 {
-	class GL3GraphicContextProvider;
+	class GL3GraphicContext;
 
-	class GL3VertexArrayBufferProvider : public VertexArrayBuffer
+	class GL3VertexArrayBuffer : public VertexArrayBuffer
 	{
 	public:
-		GL3VertexArrayBufferProvider(int size, BufferUsage usage);
-		GL3VertexArrayBufferProvider(const void *data, int size, BufferUsage usage);
+		GL3VertexArrayBuffer(int size, BufferUsage usage);
+		GL3VertexArrayBuffer(const void *data, int size, BufferUsage usage);
 
 		GLuint get_handle() const { return buffer.get_handle(); }
 
@@ -51,6 +51,6 @@ namespace uicore
 		void copy_to(const GraphicContextPtr &gc, const TransferBufferPtr &transfer_buffer, int dest_pos, int src_pos, int size) override { buffer.copy_to(gc, transfer_buffer, dest_pos, src_pos, size); }
 
 	private:
-		GL3BufferObjectProvider buffer;
+		GL3BufferObject buffer;
 	};
 }

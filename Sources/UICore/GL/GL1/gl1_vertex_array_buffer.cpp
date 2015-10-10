@@ -32,7 +32,7 @@
 
 namespace uicore
 {
-	GL1VertexArrayBufferProvider::GL1VertexArrayBufferProvider(int new_size, BufferUsage usage)
+	GL1VertexArrayBuffer::GL1VertexArrayBuffer(int new_size, BufferUsage usage)
 	{
 		delete[] data;
 		data = nullptr;
@@ -41,7 +41,7 @@ namespace uicore
 		size = new_size;
 	}
 
-	GL1VertexArrayBufferProvider::GL1VertexArrayBufferProvider(const void *init_data, int new_size, BufferUsage usage)
+	GL1VertexArrayBuffer::GL1VertexArrayBuffer(const void *init_data, int new_size, BufferUsage usage)
 	{
 		delete[] data;
 		data = nullptr;
@@ -51,12 +51,12 @@ namespace uicore
 		memcpy(data, init_data, size);
 	}
 
-	GL1VertexArrayBufferProvider::~GL1VertexArrayBufferProvider()
+	GL1VertexArrayBuffer::~GL1VertexArrayBuffer()
 	{
 		delete[] data;
 	}
 
-	void GL1VertexArrayBufferProvider::upload_data(const GraphicContextPtr &gc, int offset, const void *new_data, int new_size)
+	void GL1VertexArrayBuffer::upload_data(const GraphicContextPtr &gc, int offset, const void *new_data, int new_size)
 	{
 		if ((offset < 0) || (new_size < 0) || ((new_size + offset) > size))
 			throw Exception("Vertex array buffer, invalid size");
@@ -64,14 +64,14 @@ namespace uicore
 		memcpy(data + offset, new_data, new_size);
 	}
 
-	void GL1VertexArrayBufferProvider::copy_from(const GraphicContextPtr &gc, const TransferBufferPtr &buffer, int dest_pos, int src_pos, int size)
+	void GL1VertexArrayBuffer::copy_from(const GraphicContextPtr &gc, const TransferBufferPtr &buffer, int dest_pos, int src_pos, int size)
 	{
 		buffer->lock(gc, access_read_only);
 		memcpy(this->data + dest_pos, (char *)buffer->data() + src_pos, size);
 		buffer->unlock();
 	}
 
-	void GL1VertexArrayBufferProvider::copy_to(const GraphicContextPtr &gc, const TransferBufferPtr &buffer, int dest_pos, int src_pos, int size)
+	void GL1VertexArrayBuffer::copy_to(const GraphicContextPtr &gc, const TransferBufferPtr &buffer, int dest_pos, int src_pos, int size)
 	{
 		buffer->upload_data(gc, dest_pos, this->data + src_pos, size);
 	}

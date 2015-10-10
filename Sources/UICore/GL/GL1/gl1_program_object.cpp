@@ -39,77 +39,77 @@
 
 namespace uicore
 {
-	GL1ProgramObjectProvider::GL1ProgramObjectProvider(GL1GraphicContextProvider *gc_provider) : gc_provider(gc_provider)
+	GL1ProgramObject::GL1ProgramObject(GL1GraphicContext *gc_provider) : gc_provider(gc_provider)
 	{
 	}
 
-	GL1ProgramObjectProvider::~GL1ProgramObjectProvider()
+	GL1ProgramObject::~GL1ProgramObject()
 	{
 	}
 
-	void GL1ProgramObjectProvider::on_dispose()
+	void GL1ProgramObject::on_dispose()
 	{
 
 	}
 
-	unsigned int GL1ProgramObjectProvider::get_handle() const
+	unsigned int GL1ProgramObject::get_handle() const
 	{
 		return 0;
 	}
 
-	bool GL1ProgramObjectProvider::get_link_status() const
+	bool GL1ProgramObject::get_link_status() const
 	{
 		return false;
 	}
 
-	bool GL1ProgramObjectProvider::get_validate_status() const
+	bool GL1ProgramObject::get_validate_status() const
 	{
 		return false;
 
 	}
 
-	std::vector<ShaderObjectPtr> GL1ProgramObjectProvider::get_shaders() const
+	std::vector<ShaderObjectPtr> GL1ProgramObject::get_shaders() const
 	{
 		return shaders;
 	}
 
-	std::string GL1ProgramObjectProvider::get_info_log() const
+	std::string GL1ProgramObject::get_info_log() const
 	{
 		return std::string("Not implemented");
 	}
 
-	int GL1ProgramObjectProvider::get_uniform_location(const std::string &name) const
+	int GL1ProgramObject::get_uniform_location(const std::string &name) const
 	{
 		return -1;
 	}
 
-	int GL1ProgramObjectProvider::get_attribute_location(const std::string &name) const
+	int GL1ProgramObject::get_attribute_location(const std::string &name) const
 	{
 		return -1;
 	}
 
-	int GL1ProgramObjectProvider::get_uniform_buffer_size(int block_index) const
+	int GL1ProgramObject::get_uniform_buffer_size(int block_index) const
 	{
 		return 0;
 	}
 
-	int GL1ProgramObjectProvider::get_uniform_buffer_index(const std::string &block_name) const
+	int GL1ProgramObject::get_uniform_buffer_index(const std::string &block_name) const
 	{
 		return -1;
 	}
 
-	int GL1ProgramObjectProvider::get_storage_buffer_index(const std::string &name) const
+	int GL1ProgramObject::get_storage_buffer_index(const std::string &name) const
 	{
 		return -1;
 	}
 
-	void GL1ProgramObjectProvider::attach(const ShaderObjectPtr &obj)
+	void GL1ProgramObject::attach(const ShaderObjectPtr &obj)
 	{
 		throw_if_disposed();
 		shaders.push_back(obj);
 	}
 
-	void GL1ProgramObjectProvider::detach(const ShaderObjectPtr &obj)
+	void GL1ProgramObject::detach(const ShaderObjectPtr &obj)
 	{
 		throw_if_disposed();
 		for (std::vector<ShaderObject>::size_type i = 0; i < shaders.size(); i++)
@@ -122,74 +122,74 @@ namespace uicore
 		}
 	}
 
-	void GL1ProgramObjectProvider::bind_attribute_location(int index, const std::string &name)
+	void GL1ProgramObject::bind_attribute_location(int index, const std::string &name)
 	{
 	}
 
-	void GL1ProgramObjectProvider::bind_frag_data_location(int color_number, const std::string &name)
+	void GL1ProgramObject::bind_frag_data_location(int color_number, const std::string &name)
 	{
 	}
 
-	bool GL1ProgramObjectProvider::try_link()
-	{
-		return true;
-	}
-
-	bool GL1ProgramObjectProvider::validate()
+	bool GL1ProgramObject::try_link()
 	{
 		return true;
 	}
 
-	void GL1ProgramObjectProvider::set_uniform1i(int location, int p1)
+	bool GL1ProgramObject::validate()
+	{
+		return true;
+	}
+
+	void GL1ProgramObject::set_uniform1i(int location, int p1)
 	{
 	}
 
 
-	void GL1ProgramObjectProvider::set_uniform2i(int location, int v1, int v2)
+	void GL1ProgramObject::set_uniform2i(int location, int v1, int v2)
 	{
 	}
 
-	void GL1ProgramObjectProvider::set_uniform3i(int location, int v1, int v2, int v3)
+	void GL1ProgramObject::set_uniform3i(int location, int v1, int v2, int v3)
 	{
 	}
 
-	void GL1ProgramObjectProvider::set_uniform4i(int location, int v1, int v2, int v3, int v4)
+	void GL1ProgramObject::set_uniform4i(int location, int v1, int v2, int v3, int v4)
 	{
 	}
 
-	void GL1ProgramObjectProvider::set_uniformiv(int location, int size, int count, const int *data)
+	void GL1ProgramObject::set_uniformiv(int location, int size, int count, const int *data)
 	{
 	}
 
-	void GL1ProgramObjectProvider::set_uniform1f(int location, float v1)
+	void GL1ProgramObject::set_uniform1f(int location, float v1)
 	{
 	}
 
-	void GL1ProgramObjectProvider::set_uniform2f(int location, float v1, float v2)
+	void GL1ProgramObject::set_uniform2f(int location, float v1, float v2)
 	{
 	}
 
-	void GL1ProgramObjectProvider::set_uniform3f(int location, float v1, float v2, float v3)
+	void GL1ProgramObject::set_uniform3f(int location, float v1, float v2, float v3)
 	{
 	}
 
-	void GL1ProgramObjectProvider::set_uniform4f(int location, float v1, float v2, float v3, float v4)
+	void GL1ProgramObject::set_uniform4f(int location, float v1, float v2, float v3, float v4)
 	{
 	}
 
-	void GL1ProgramObjectProvider::set_uniformfv(int location, int size, int count, const float *data)
+	void GL1ProgramObject::set_uniformfv(int location, int size, int count, const float *data)
 	{
 	}
 
-	void GL1ProgramObjectProvider::set_uniform_matrix(int location, int size, int count, bool transpose, const float *data)
+	void GL1ProgramObject::set_uniform_matrix(int location, int size, int count, bool transpose, const float *data)
 	{
 	}
 
-	void GL1ProgramObjectProvider::set_uniform_buffer_index(int block_index, int bind_index)
+	void GL1ProgramObject::set_uniform_buffer_index(int block_index, int bind_index)
 	{
 	}
 
-	void GL1ProgramObjectProvider::set_storage_buffer_index(int buffer_index, int bind_unit_index)
+	void GL1ProgramObject::set_storage_buffer_index(int buffer_index, int bind_unit_index)
 	{
 	}
 }

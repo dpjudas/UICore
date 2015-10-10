@@ -33,7 +33,7 @@
 
 namespace uicore
 {
-	GL3OcclusionQueryProvider::GL3OcclusionQueryProvider(GL3GraphicContextProvider *gc_provider)
+	GL3OcclusionQuery::GL3OcclusionQuery(GL3GraphicContext *gc_provider)
 		: handle(0), gc_provider(gc_provider)
 	{
 		OpenGL::set_active(gc_provider);
@@ -47,12 +47,12 @@ namespace uicore
 		glGenQueries(1, &handle);
 	}
 
-	GL3OcclusionQueryProvider::~GL3OcclusionQueryProvider()
+	GL3OcclusionQuery::~GL3OcclusionQuery()
 	{
 		dispose();
 	}
 
-	void GL3OcclusionQueryProvider::on_dispose()
+	void GL3OcclusionQuery::on_dispose()
 	{
 		if (handle)
 		{
@@ -64,7 +64,7 @@ namespace uicore
 		}
 	}
 
-	bool GL3OcclusionQueryProvider::is_result_ready() const
+	bool GL3OcclusionQuery::is_result_ready() const
 	{
 		OpenGL::set_active(gc_provider);
 		int available;
@@ -72,7 +72,7 @@ namespace uicore
 		return (available != 0);
 	}
 
-	int GL3OcclusionQueryProvider::result() const
+	int GL3OcclusionQuery::result() const
 	{
 		OpenGL::set_active(gc_provider);
 		GLint result;
@@ -80,13 +80,13 @@ namespace uicore
 		return result;
 	}
 
-	void GL3OcclusionQueryProvider::begin()
+	void GL3OcclusionQuery::begin()
 	{
 		OpenGL::set_active(gc_provider);
 		glBeginQuery(GL_SAMPLES_PASSED, handle);
 	}
 
-	void GL3OcclusionQueryProvider::end()
+	void GL3OcclusionQuery::end()
 	{
 		OpenGL::set_active(gc_provider);
 		glEndQuery(GL_SAMPLES_PASSED);

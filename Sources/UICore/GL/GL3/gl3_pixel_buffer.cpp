@@ -34,7 +34,7 @@
 
 namespace uicore
 {
-	GL3PixelBufferProvider::GL3PixelBufferProvider(const void *data, const Size &new_size, PixelBufferDirection direction, TextureFormat new_format, BufferUsage usage)
+	GL3TransferTexture::GL3TransferTexture(const void *data, const Size &new_size, PixelBufferDirection direction, TextureFormat new_format, BufferUsage usage)
 	{
 		data_locked = false;
 		texture_format = new_format;
@@ -58,11 +58,11 @@ namespace uicore
 		buffer.create(data, total_size, usage, selected_binding, selected_target);
 	}
 
-	GL3PixelBufferProvider::~GL3PixelBufferProvider()
+	GL3TransferTexture::~GL3TransferTexture()
 	{
 	}
 
-	void GL3PixelBufferProvider::upload_data(const GraphicContextPtr &gc, const Rect &dest_rect, const void *data)
+	void GL3TransferTexture::upload_data(const GraphicContextPtr &gc, const Rect &dest_rect, const void *data)
 	{
 		// Handle the simple base
 		if (dest_rect.left == 0 && dest_rect.get_width() == _size.width)
@@ -74,11 +74,11 @@ namespace uicore
 		else
 		{
 			// Need to upload in blocks here
-			throw Exception("GL3PixelBufferProvider::upload_data() Implement me for this situation");
+			throw Exception("GL3TransferTexture::upload_data() Implement me for this situation");
 		}
 	}
 
-	void *GL3PixelBufferProvider::data()
+	void *GL3TransferTexture::data()
 	{
 		if (!data_locked)
 			throw Exception("lock() not called before get_data()");
@@ -86,7 +86,7 @@ namespace uicore
 		return buffer.get_data();
 	}
 
-	const void *GL3PixelBufferProvider::data() const
+	const void *GL3TransferTexture::data() const
 	{
 		if (!data_locked)
 			throw Exception("lock() not called before get_data()");

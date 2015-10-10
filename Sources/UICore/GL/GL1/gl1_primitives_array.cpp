@@ -31,15 +31,15 @@
 
 namespace uicore
 {
-	GL1PrimitivesArrayProvider::GL1PrimitivesArrayProvider()
+	GL1PrimitivesArray::GL1PrimitivesArray()
 	{
 	}
 
-	GL1PrimitivesArrayProvider::~GL1PrimitivesArrayProvider()
+	GL1PrimitivesArray::~GL1PrimitivesArray()
 	{
 	}
 
-	void GL1PrimitivesArrayProvider::set_attribute(int index, const VertexData &data, bool normalize)
+	void GL1PrimitivesArray::set_attribute(int index, const VertexData &data, bool normalize)
 	{
 		if ((int)attributes.size() <= index)
 		{

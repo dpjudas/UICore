@@ -34,12 +34,12 @@
 
 namespace uicore
 {
-	GL3ElementArrayBufferProvider::GL3ElementArrayBufferProvider(int size, BufferUsage usage)
+	GL3ElementArrayBuffer::GL3ElementArrayBuffer(int size, BufferUsage usage)
 	{
 		buffer.create(nullptr, size, usage, GL_ELEMENT_ARRAY_BUFFER_BINDING, GL_ELEMENT_ARRAY_BUFFER);
 	}
 
-	GL3ElementArrayBufferProvider::GL3ElementArrayBufferProvider(const void *data, int size, BufferUsage usage)
+	GL3ElementArrayBuffer::GL3ElementArrayBuffer(const void *data, int size, BufferUsage usage)
 	{
 		buffer.create(data, size, usage, GL_ELEMENT_ARRAY_BUFFER_BINDING, GL_ELEMENT_ARRAY_BUFFER);
 	}

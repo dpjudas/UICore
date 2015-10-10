@@ -34,12 +34,12 @@
 
 namespace uicore
 {
-	class GL1TransferBufferProvider : public TransferBuffer
+	class GL1TransferBuffer : public TransferBuffer
 	{
 	public:
-		GL1TransferBufferProvider(int size, BufferUsage usage);
-		GL1TransferBufferProvider(const void *data, int size, BufferUsage usage);
-		~GL1TransferBufferProvider();
+		GL1TransferBuffer(int size, BufferUsage usage);
+		GL1TransferBuffer(const void *data, int size, BufferUsage usage);
+		~GL1TransferBuffer();
 
 		void *data() override { return data_ptr; }
 

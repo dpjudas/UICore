@@ -53,18 +53,18 @@ namespace uicore
 	class ShaderObjectProvider;
 	class FrameBufferProvider;
 	class RenderBufferProvider;
-	class GL3FrameBufferProvider;
+	class GL3FrameBuffer;
 	class DisposableObject;
 	class OpenGLContextDescription;
 	class OpenGLWindowProvider;
 	enum class ShaderType;
 
-	class GL3GraphicContextProvider : public OpenGLGraphicContextProvider, public GraphicContextProvider, public DisposableObject
+	class GL3GraphicContext : public OpenGLGraphicContextProvider, public GraphicContextProvider, public DisposableObject
 	{
 	public:
 		/// \brief Creates a new OpenGL graphic context provider for a rendering window.
-		GL3GraphicContextProvider(const OpenGLWindowProvider * const render_window);
-		~GL3GraphicContextProvider();
+		GL3GraphicContext(const OpenGLWindowProvider * const render_window);
+		~GL3GraphicContext();
 
 		int max_attributes() override;
 		Size max_texture_size() const override;

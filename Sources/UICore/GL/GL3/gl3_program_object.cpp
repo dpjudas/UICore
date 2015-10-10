@@ -40,18 +40,18 @@
 
 namespace uicore
 {
-	GL3ProgramObjectProvider::GL3ProgramObjectProvider()
+	GL3ProgramObject::GL3ProgramObject()
 	{
 		OpenGL::set_active();
 		handle = glCreateProgram();
 	}
 
-	GL3ProgramObjectProvider::~GL3ProgramObjectProvider()
+	GL3ProgramObject::~GL3ProgramObject()
 	{
 		dispose();
 	}
 
-	void GL3ProgramObjectProvider::on_dispose()
+	void GL3ProgramObject::on_dispose()
 	{
 		if (handle)
 		{
@@ -63,13 +63,13 @@ namespace uicore
 		}
 	}
 
-	unsigned int GL3ProgramObjectProvider::get_handle() const
+	unsigned int GL3ProgramObject::get_handle() const
 	{
 		throw_if_disposed();
 		return handle;
 	}
 
-	bool GL3ProgramObjectProvider::get_link_status() const
+	bool GL3ProgramObject::get_link_status() const
 	{
 		throw_if_disposed();
 		OpenGL::set_active();
@@ -78,7 +78,7 @@ namespace uicore
 		return (status != GL_FALSE);
 	}
 
-	bool GL3ProgramObjectProvider::get_validate_status() const
+	bool GL3ProgramObject::get_validate_status() const
 	{
 		throw_if_disposed();
 		OpenGL::set_active();
@@ -87,13 +87,13 @@ namespace uicore
 		return (status != GL_FALSE);
 	}
 
-	std::vector<ShaderObjectPtr> GL3ProgramObjectProvider::get_shaders() const
+	std::vector<ShaderObjectPtr> GL3ProgramObject::get_shaders() const
 	{
 		throw_if_disposed();
 		return shaders;
 	}
 
-	std::string GL3ProgramObjectProvider::get_info_log() const
+	std::string GL3ProgramObject::get_info_log() const
 	{
 		throw_if_disposed();
 		OpenGL::set_active();
@@ -114,21 +114,21 @@ namespace uicore
 		return result;
 	}
 
-	int GL3ProgramObjectProvider::get_uniform_location(const std::string &name) const
+	int GL3ProgramObject::get_uniform_location(const std::string &name) const
 	{
 		throw_if_disposed();
 		OpenGL::set_active();
 		return glGetUniformLocation(handle, name.c_str());
 	}
 
-	int GL3ProgramObjectProvider::get_attribute_location(const std::string &name) const
+	int GL3ProgramObject::get_attribute_location(const std::string &name) const
 	{
 		throw_if_disposed();
 		OpenGL::set_active();
 		return glGetAttribLocation(handle, name.c_str());
 	}
 
-	int GL3ProgramObjectProvider::get_uniform_buffer_size(int block_index) const
+	int GL3ProgramObject::get_uniform_buffer_size(int block_index) const
 	{
 		throw_if_disposed();
 		OpenGL::set_active();
@@ -142,7 +142,7 @@ namespace uicore
 		return uniformBlockSize;
 	}
 
-	int GL3ProgramObjectProvider::get_uniform_buffer_index(const std::string &block_name) const
+	int GL3ProgramObject::get_uniform_buffer_index(const std::string &block_name) const
 	{
 		throw_if_disposed();
 		OpenGL::set_active();
@@ -153,7 +153,7 @@ namespace uicore
 		return glGetUniformBlockIndex(handle, block_name.c_str());
 	}
 
-	int GL3ProgramObjectProvider::get_storage_buffer_index(const std::string &name) const
+	int GL3ProgramObject::get_storage_buffer_index(const std::string &name) const
 	{
 		throw_if_disposed();
 		OpenGL::set_active();
@@ -164,15 +164,15 @@ namespace uicore
 		return glGetProgramResourceIndex(handle, GL_SHADER_STORAGE_BLOCK, name.c_str());
 	}
 
-	void GL3ProgramObjectProvider::attach(const ShaderObjectPtr &obj)
+	void GL3ProgramObject::attach(const ShaderObjectPtr &obj)
 	{
 		throw_if_disposed();
 		shaders.push_back(obj);
 		OpenGL::set_active();
-		glAttachShader(handle, (GLuint)static_cast<GL3ShaderObjectProvider*>(obj.get())->get_handle());
+		glAttachShader(handle, (GLuint)static_cast<GL3ShaderObject*>(obj.get())->get_handle());
 	}
 
-	void GL3ProgramObjectProvider::detach(const ShaderObjectPtr &obj)
+	void GL3ProgramObject::detach(const ShaderObjectPtr &obj)
 	{
 		throw_if_disposed();
 		for (std::vector<ShaderObject>::size_type i = 0; i < shaders.size(); i++)
@@ -184,24 +184,24 @@ namespace uicore
 			}
 		}
 		OpenGL::set_active();
-		glDetachShader(handle, (GLuint)static_cast<GL3ShaderObjectProvider*>(obj.get())->get_handle());
+		glDetachShader(handle, (GLuint)static_cast<GL3ShaderObject*>(obj.get())->get_handle());
 	}
 
-	void GL3ProgramObjectProvider::bind_attribute_location(int index, const std::string &name)
+	void GL3ProgramObject::bind_attribute_location(int index, const std::string &name)
 	{
 		throw_if_disposed();
 		OpenGL::set_active();
 		glBindAttribLocation(handle, index, name.c_str());
 	}
 
-	void GL3ProgramObjectProvider::bind_frag_data_location(int color_number, const std::string &name)
+	void GL3ProgramObject::bind_frag_data_location(int color_number, const std::string &name)
 	{
 		throw_if_disposed();
 		OpenGL::set_active();
 		glBindFragDataLocation(handle, color_number, name.c_str());
 	}
 
-	bool GL3ProgramObjectProvider::try_link()
+	bool GL3ProgramObject::try_link()
 	{
 		throw_if_disposed();
 		OpenGL::set_active();
@@ -209,7 +209,7 @@ namespace uicore
 		return get_link_status();
 	}
 
-	bool GL3ProgramObjectProvider::validate()
+	bool GL3ProgramObject::validate()
 	{
 		throw_if_disposed();
 		OpenGL::set_active();
@@ -217,7 +217,7 @@ namespace uicore
 		return get_validate_status();
 	}
 
-	void GL3ProgramObjectProvider::set_uniform1i(int location, int p1)
+	void GL3ProgramObject::set_uniform1i(int location, int p1)
 	{
 		throw_if_disposed();
 		if (location >= 0)
@@ -227,7 +227,7 @@ namespace uicore
 		}
 	}
 
-	void GL3ProgramObjectProvider::set_uniform2i(int location, int v1, int v2)
+	void GL3ProgramObject::set_uniform2i(int location, int v1, int v2)
 	{
 		throw_if_disposed();
 		if (location >= 0)
@@ -237,7 +237,7 @@ namespace uicore
 		}
 	}
 
-	void GL3ProgramObjectProvider::set_uniform3i(int location, int v1, int v2, int v3)
+	void GL3ProgramObject::set_uniform3i(int location, int v1, int v2, int v3)
 	{
 		throw_if_disposed();
 		if (location >= 0)
@@ -247,7 +247,7 @@ namespace uicore
 		}
 	}
 
-	void GL3ProgramObjectProvider::set_uniform4i(int location, int v1, int v2, int v3, int v4)
+	void GL3ProgramObject::set_uniform4i(int location, int v1, int v2, int v3, int v4)
 	{
 		throw_if_disposed();
 		if (location >= 0)
@@ -257,7 +257,7 @@ namespace uicore
 		}
 	}
 
-	void GL3ProgramObjectProvider::set_uniformiv(int location, int size, int count, const int *data)
+	void GL3ProgramObject::set_uniformiv(int location, int size, int count, const int *data)
 	{
 		throw_if_disposed();
 		if (location >= 0)
@@ -270,7 +270,7 @@ namespace uicore
 		}
 	}
 
-	void GL3ProgramObjectProvider::set_uniform1f(int location, float v1)
+	void GL3ProgramObject::set_uniform1f(int location, float v1)
 	{
 		throw_if_disposed();
 		if (location >= 0)
@@ -280,7 +280,7 @@ namespace uicore
 		}
 	}
 
-	void GL3ProgramObjectProvider::set_uniform2f(int location, float v1, float v2)
+	void GL3ProgramObject::set_uniform2f(int location, float v1, float v2)
 	{
 		throw_if_disposed();
 		if (location >= 0)
@@ -290,7 +290,7 @@ namespace uicore
 		}
 	}
 
-	void GL3ProgramObjectProvider::set_uniform3f(int location, float v1, float v2, float v3)
+	void GL3ProgramObject::set_uniform3f(int location, float v1, float v2, float v3)
 	{
 		throw_if_disposed();
 		if (location >= 0)
@@ -300,7 +300,7 @@ namespace uicore
 		}
 	}
 
-	void GL3ProgramObjectProvider::set_uniform4f(int location, float v1, float v2, float v3, float v4)
+	void GL3ProgramObject::set_uniform4f(int location, float v1, float v2, float v3, float v4)
 	{
 		throw_if_disposed();
 		if (location >= 0)
@@ -310,7 +310,7 @@ namespace uicore
 		}
 	}
 
-	void GL3ProgramObjectProvider::set_uniformfv(int location, int size, int count, const float *data)
+	void GL3ProgramObject::set_uniformfv(int location, int size, int count, const float *data)
 	{
 		throw_if_disposed();
 		if (location >= 0)
@@ -323,7 +323,7 @@ namespace uicore
 		}
 	}
 
-	void GL3ProgramObjectProvider::set_uniform_matrix(int location, int size, int count, bool transpose, const float *data)
+	void GL3ProgramObject::set_uniform_matrix(int location, int size, int count, bool transpose, const float *data)
 	{
 		throw_if_disposed();
 		if (location >= 0)
@@ -335,7 +335,7 @@ namespace uicore
 		}
 	}
 
-	void GL3ProgramObjectProvider::set_uniform_buffer_index(int block_index, int bind_index)
+	void GL3ProgramObject::set_uniform_buffer_index(int block_index, int bind_index)
 	{
 		throw_if_disposed();
 		if (block_index == -1)
@@ -343,7 +343,7 @@ namespace uicore
 		glUniformBlockBinding(handle, block_index, bind_index);
 	}
 
-	void GL3ProgramObjectProvider::set_storage_buffer_index(int buffer_index, int bind_unit_index)
+	void GL3ProgramObject::set_storage_buffer_index(int buffer_index, int bind_unit_index)
 	{
 		throw_if_disposed();
 		if (buffer_index == -1)

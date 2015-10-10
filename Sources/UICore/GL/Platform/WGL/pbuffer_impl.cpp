@@ -35,7 +35,7 @@
 
 namespace uicore
 {
-	PBuffer_GL1_Impl::PBuffer_GL1_Impl(GL1GraphicContextProvider *gc_provider) : gc_provider(gc_provider), pbuffer(0), pbuffer_context(0), pbuffer_dc(0)
+	PBuffer_GL1_Impl::PBuffer_GL1_Impl(GL1GraphicContext *gc_provider) : gc_provider(gc_provider), pbuffer(0), pbuffer_context(0), pbuffer_dc(0)
 	{
 		if (!gc_provider)
 			throw Exception("Unexpected provider");

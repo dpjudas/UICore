@@ -1471,6 +1471,6 @@ namespace uicore
 
 	GLuint OpenGL::get_texture_handle(const TexturePtr &texture)
 	{
-		return static_cast<GL3TextureProvider*>(texture->texture_object())->get_handle();
+		return static_cast<GL3TextureObject*>(texture->texture_object())->get_handle();
 	}
 }

@@ -34,16 +34,16 @@
 
 namespace uicore
 {
-	GL1RenderBufferProvider::GL1RenderBufferProvider(GL1GraphicContextProvider *gc_provider, int width, int height, TextureFormat texture_format, int multisample_samples) : _size({ width, height })
+	GL1RenderBuffer::GL1RenderBuffer(GL1GraphicContext *gc_provider, int width, int height, TextureFormat texture_format, int multisample_samples) : _size({ width, height })
 	{
 		throw Exception("GL1RenderBuffer is not supported");
 	}
 
-	GL1RenderBufferProvider::~GL1RenderBufferProvider()
+	GL1RenderBuffer::~GL1RenderBuffer()
 	{
 	}
 
-	GLuint GL1RenderBufferProvider::get_handle()
+	GLuint GL1RenderBuffer::get_handle()
 	{
 		return 0;
 	}

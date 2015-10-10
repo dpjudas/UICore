@@ -34,12 +34,12 @@
 
 namespace uicore
 {
-	GL3StorageBufferProvider::GL3StorageBufferProvider(int size, int stride, BufferUsage usage)
+	GL3StorageBuffer::GL3StorageBuffer(int size, int stride, BufferUsage usage)
 	{
 		buffer.create(nullptr, size, usage, GL_UNIFORM_BUFFER_BINDING, GL_UNIFORM_BUFFER);
 	}
 
-	GL3StorageBufferProvider::GL3StorageBufferProvider(const void *data, int size, int stride, BufferUsage usage)
+	GL3StorageBuffer::GL3StorageBuffer(const void *data, int size, int stride, BufferUsage usage)
 	{
 		buffer.create(data, size, usage, GL_UNIFORM_BUFFER_BINDING, GL_UNIFORM_BUFFER);
 	}

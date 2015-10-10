@@ -491,7 +491,7 @@ namespace uicore
 	{
 	}
 
-	GL3StandardPrograms::GL3StandardPrograms(GL3GraphicContextProvider *provider) : impl(std::make_shared<GL3StandardPrograms_Impl>())
+	GL3StandardPrograms::GL3StandardPrograms(GL3GraphicContext *provider) : impl(std::make_shared<GL3StandardPrograms_Impl>())
 	{
 		bool use_glsl_150 = false;
 		int glsl_version_major;

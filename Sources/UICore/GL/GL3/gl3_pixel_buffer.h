@@ -37,13 +37,13 @@
 
 namespace uicore
 {
-	class GL3GraphicContextProvider;
+	class GL3GraphicContext;
 
-	class GL3PixelBufferProvider : public TransferTexture
+	class GL3TransferTexture : public TransferTexture
 	{
 	public:
-		GL3PixelBufferProvider(const void *data, const Size &new_size, PixelBufferDirection direction, TextureFormat new_format, BufferUsage usage);
-		~GL3PixelBufferProvider();
+		GL3TransferTexture(const void *data, const Size &new_size, PixelBufferDirection direction, TextureFormat new_format, BufferUsage usage);
+		~GL3TransferTexture();
 
 		void *data() override;
 		const void *data() const override;
@@ -65,7 +65,7 @@ namespace uicore
 		void upload_data(const GraphicContextPtr &gc, const Rect &dest_rect, const void *data) override;
 
 	private:
-		GL3BufferObjectProvider buffer;
+		GL3BufferObject buffer;
 		Size _size;
 		TextureFormat texture_format;
 		int _pitch;

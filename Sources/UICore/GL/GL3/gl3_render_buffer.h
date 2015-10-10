@@ -36,11 +36,11 @@
 
 namespace uicore
 {
-	class GL3RenderBufferProvider : public RenderBuffer, GLSharedResource
+	class GL3RenderBuffer : public RenderBuffer, GLSharedResource
 	{
 	public:
-		GL3RenderBufferProvider(int width, int height, TextureFormat texture_format, int multisample_samples);
-		~GL3RenderBufferProvider();
+		GL3RenderBuffer(int width, int height, TextureFormat texture_format, int multisample_samples);
+		~GL3RenderBuffer();
 
 		GLuint get_handle();
 

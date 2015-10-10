@@ -37,13 +37,13 @@
 
 namespace uicore
 {
-	class GL3GraphicContextProvider;
+	class GL3GraphicContext;
 
-	class GL3ShaderObjectProvider : public ShaderObjectProvider, GLSharedResource
+	class GL3ShaderObject : public ShaderObjectProvider, GLSharedResource
 	{
 	public:
-		GL3ShaderObjectProvider(ShaderType type, const std::string &source);
-		virtual ~GL3ShaderObjectProvider();
+		GL3ShaderObject(ShaderType type, const std::string &source);
+		virtual ~GL3ShaderObject();
 
 		unsigned int get_handle() const;
 		bool get_compile_status() const;

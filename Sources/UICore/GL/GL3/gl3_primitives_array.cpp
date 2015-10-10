@@ -33,7 +33,7 @@
 
 namespace uicore
 {
-	GL3PrimitivesArrayProvider::GL3PrimitivesArrayProvider(GL3GraphicContextProvider *gc_provider)
+	GL3PrimitivesArray::GL3PrimitivesArray(GL3GraphicContext *gc_provider)
 		: handle(0), gc_provider(gc_provider)
 	{
 		gc_provider->add_disposable(this);
@@ -41,16 +41,16 @@ namespace uicore
 		glGenVertexArrays(1, &handle);
 	}
 
-	GL3PrimitivesArrayProvider::~GL3PrimitivesArrayProvider()
+	GL3PrimitivesArray::~GL3PrimitivesArray()
 	{
 		dispose();
 	}
 
-	void GL3PrimitivesArrayProvider::set_attribute(int attrib_index, const VertexData &attribute, bool normalize)
+	void GL3PrimitivesArray::set_attribute(int attrib_index, const VertexData &attribute, bool normalize)
 	{
 		PrimitivesArrayStateTracker tracker(gc_provider, handle);
 
-		glBindBuffer(GL_ARRAY_BUFFER, static_cast<GL3VertexArrayBufferProvider *>(attribute.array_provider)->get_handle());
+		glBindBuffer(GL_ARRAY_BUFFER, static_cast<GL3VertexArrayBuffer *>(attribute.array_provider)->get_handle());
 		glEnableVertexAttribArray(attrib_index);
 
 		if (attribute.type == type_float)
@@ -65,7 +65,7 @@ namespace uicore
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 
-	void GL3PrimitivesArrayProvider::on_dispose()
+	void GL3PrimitivesArray::on_dispose()
 	{
 		if (handle)
 		{
@@ -75,7 +75,7 @@ namespace uicore
 		gc_provider->remove_disposable(this);
 	}
 
-	PrimitivesArrayStateTracker::PrimitivesArrayStateTracker(GL3GraphicContextProvider *gc_provider, GLuint handle) : vao_set(false)
+	PrimitivesArrayStateTracker::PrimitivesArrayStateTracker(GL3GraphicContext *gc_provider, GLuint handle) : vao_set(false)
 	{
 		OpenGL::set_active(gc_provider);
 

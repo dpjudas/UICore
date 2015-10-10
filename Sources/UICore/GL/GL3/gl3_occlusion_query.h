@@ -35,13 +35,13 @@
 
 namespace uicore
 {
-	class GL3GraphicContextProvider;
+	class GL3GraphicContext;
 
-	class GL3OcclusionQueryProvider : public OcclusionQuery, GLSharedResource
+	class GL3OcclusionQuery : public OcclusionQuery, GLSharedResource
 	{
 	public:
-		GL3OcclusionQueryProvider(GL3GraphicContextProvider *gc_provider);
-		~GL3OcclusionQueryProvider();
+		GL3OcclusionQuery(GL3GraphicContext *gc_provider);
+		~GL3OcclusionQuery();
 
 		int result() const override;
 		bool is_result_ready() const override;
@@ -55,6 +55,6 @@ namespace uicore
 		/// \brief OpenGL occlusion query handle.
 		GLuint handle;
 
-		GL3GraphicContextProvider *gc_provider;
+		GL3GraphicContext *gc_provider;
 	};
 }

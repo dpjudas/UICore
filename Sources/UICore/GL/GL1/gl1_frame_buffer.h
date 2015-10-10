@@ -40,11 +40,11 @@
 
 namespace uicore
 {
-	class GL1FrameBufferProvider : public FrameBuffer, DisposableObject
+	class GL1FrameBuffer : public FrameBuffer, DisposableObject
 	{
 	public:
-		GL1FrameBufferProvider(GL1GraphicContextProvider *gc_provider);
-		~GL1FrameBufferProvider();
+		GL1FrameBuffer(GL1GraphicContext *gc_provider);
+		~GL1FrameBuffer();
 
 		Size get_size() const override;
 		FrameBufferBindTarget get_bind_target() const override;
@@ -102,10 +102,10 @@ namespace uicore
 
 		PBuffer_GL1 pbuffer;
 		Texture2DPtr selected_surface;
-		GL1TextureProvider *selected_texture_provider;
+		GL1TextureObject *selected_texture_provider;
 
 		GL1State selected_state;
 
-		GL1GraphicContextProvider *gc_provider;
+		GL1GraphicContext *gc_provider;
 	};
 }

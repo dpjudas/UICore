@@ -34,12 +34,12 @@
 
 namespace uicore
 {
-	GL3TransferBufferProvider::GL3TransferBufferProvider(int size, BufferUsage usage)
+	GL3TransferBuffer::GL3TransferBuffer(int size, BufferUsage usage)
 	{
 		buffer.create(nullptr, size, usage, 0, GL_COPY_WRITE_BUFFER);
 	}
 
-	GL3TransferBufferProvider::GL3TransferBufferProvider(const void *data, int size, BufferUsage usage)
+	GL3TransferBuffer::GL3TransferBuffer(const void *data, int size, BufferUsage usage)
 	{
 		buffer.create(data, size, usage, 0, GL_COPY_WRITE_BUFFER);
 	}

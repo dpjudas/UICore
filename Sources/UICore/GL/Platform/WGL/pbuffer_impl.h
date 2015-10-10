@@ -33,13 +33,13 @@
 
 namespace uicore
 {
-	class GL1GraphicContextProvider;
+	class GL1GraphicContext;
 	class OpenGLWindowProvider;
 
 	class PBuffer_GL1_Impl : public OpenGLGraphicContextProvider
 	{
 	public:
-		PBuffer_GL1_Impl(GL1GraphicContextProvider *gc_provider);
+		PBuffer_GL1_Impl(GL1GraphicContext *gc_provider);
 		~PBuffer_GL1_Impl();
 
 		void make_current() const;
@@ -53,7 +53,7 @@ namespace uicore
 	private:
 		void reset();
 
-		GL1GraphicContextProvider *gc_provider;
+		GL1GraphicContext *gc_provider;
 		GLFunctions::HPBUFFERARB pbuffer;
 		HGLRC pbuffer_context;
 		HDC pbuffer_dc;

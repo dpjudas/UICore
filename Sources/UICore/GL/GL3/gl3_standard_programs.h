@@ -42,13 +42,13 @@
 namespace uicore
 {
 	class GL3StandardPrograms_Impl;
-	class GL3GraphicContextProvider;
+	class GL3GraphicContext;
 
 	class GL3StandardPrograms
 	{
 	public:
 		GL3StandardPrograms();
-		GL3StandardPrograms(GL3GraphicContextProvider *provider);
+		GL3StandardPrograms(GL3GraphicContext *provider);
 		~GL3StandardPrograms();
 
 		ProgramObjectPtr get_program_object(StandardProgram standard_program) const;

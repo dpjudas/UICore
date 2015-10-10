@@ -34,13 +34,13 @@ namespace uicore
 {
 	class PBuffer_GL1_Impl;
 	class OpenGLWindowProvider;
-	class GL1GraphicContextProvider;
+	class GL1GraphicContext;
 
 	class PBuffer_GL1
 	{
 	public:
 		PBuffer_GL1();
-		PBuffer_GL1(GL1GraphicContextProvider *gc_provider);
+		PBuffer_GL1(GL1GraphicContext *gc_provider);
 		~PBuffer_GL1();
 
 		/// \brief Returns true if this object is invalid.

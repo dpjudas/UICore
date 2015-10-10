@@ -34,7 +34,7 @@
 
 namespace uicore
 {
-	GL3RenderBufferProvider::GL3RenderBufferProvider(int width, int height, TextureFormat texture_format, int multisample_samples) : _size({width, height})
+	GL3RenderBuffer::GL3RenderBuffer(int width, int height, TextureFormat texture_format, int multisample_samples) : _size({width, height})
 	{
 		OpenGL::set_active();
 		GLuint last_render_buffer = 0;
@@ -51,12 +51,12 @@ namespace uicore
 		glBindRenderbuffer(GL_RENDERBUFFER, last_render_buffer);
 	}
 
-	GL3RenderBufferProvider::~GL3RenderBufferProvider()
+	GL3RenderBuffer::~GL3RenderBuffer()
 	{
 		dispose();
 	}
 
-	void GL3RenderBufferProvider::on_dispose()
+	void GL3RenderBuffer::on_dispose()
 	{
 		if (handle)
 		{
@@ -68,7 +68,7 @@ namespace uicore
 		}
 	}
 
-	GLuint GL3RenderBufferProvider::get_handle()
+	GLuint GL3RenderBuffer::get_handle()
 	{
 		return handle;
 	}

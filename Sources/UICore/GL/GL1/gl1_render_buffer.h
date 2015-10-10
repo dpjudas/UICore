@@ -35,11 +35,11 @@
 
 namespace uicore
 {
-	class GL1RenderBufferProvider : public RenderBuffer
+	class GL1RenderBuffer : public RenderBuffer
 	{
 	public:
-		GL1RenderBufferProvider(GL1GraphicContextProvider *gc_provider, int width, int height, TextureFormat texture_format, int multisample_samples);
-		~GL1RenderBufferProvider();
+		GL1RenderBuffer(GL1GraphicContext *gc_provider, int width, int height, TextureFormat texture_format, int multisample_samples);
+		~GL1RenderBuffer();
 
 		Size size() const override  { return _size; }
 

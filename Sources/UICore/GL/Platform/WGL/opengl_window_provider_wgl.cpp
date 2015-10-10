@@ -172,12 +172,12 @@ namespace uicore
 			if (use_gl3)
 			{
 				using_gl3 = true;
-				_gc = std::make_shared<GL3GraphicContextProvider>(this);
+				_gc = std::make_shared<GL3GraphicContext>(this);
 			}
 			else
 			{
 				using_gl3 = false;
-				_gc = std::make_shared<GL1GraphicContextProvider>(this);
+				_gc = std::make_shared<GL1GraphicContext>(this);
 			}
 		}
 
@@ -195,13 +195,13 @@ namespace uicore
 			{
 				if (using_gl3)
 				{
-					GL3GraphicContextProvider *gl_provider = dynamic_cast<GL3GraphicContextProvider*>(_gc.get());
+					GL3GraphicContext *gl_provider = dynamic_cast<GL3GraphicContext*>(_gc.get());
 					if (gl_provider)
 						gl_provider->dispose();
 				}
 				else
 				{
-					GL1GraphicContextProvider *gl_provider = dynamic_cast<GL1GraphicContextProvider*>(_gc.get());
+					GL1GraphicContext *gl_provider = dynamic_cast<GL1GraphicContext*>(_gc.get());
 					if (gl_provider)
 						gl_provider->dispose();
 				}
@@ -370,13 +370,13 @@ namespace uicore
 
 		if (using_gl3)
 		{
-			GL3GraphicContextProvider *gl_provider = dynamic_cast<GL3GraphicContextProvider*>(_gc.get());
+			GL3GraphicContext *gl_provider = dynamic_cast<GL3GraphicContext*>(_gc.get());
 			if (gl_provider)
 				gl_provider->on_window_resized();
 		}
 		else
 		{
-			GL1GraphicContextProvider *gl_provider = dynamic_cast<GL1GraphicContextProvider*>(_gc.get());
+			GL1GraphicContext *gl_provider = dynamic_cast<GL1GraphicContext*>(_gc.get());
 			if (gl_provider)
 				gl_provider->on_window_resized();
 		}
@@ -642,13 +642,13 @@ namespace uicore
 		{
 			const DisplayWindowProvider *rwp = NULL;
 
-			GL3GraphicContextProvider *gl3_provider = dynamic_cast<GL3GraphicContextProvider*>(gc);
+			GL3GraphicContext *gl3_provider = dynamic_cast<GL3GraphicContext*>(gc);
 			if (gl3_provider)
 				rwp = &gl3_provider->get_render_window();
 
 			if (!rwp)
 			{
-				GL1GraphicContextProvider *gl1_provider = dynamic_cast<GL1GraphicContextProvider*>(gc);
+				GL1GraphicContext *gl1_provider = dynamic_cast<GL1GraphicContext*>(gc);
 				if (gl1_provider)
 					rwp = &gl1_provider->get_render_window();
 			}

@@ -38,13 +38,13 @@ namespace uicore
 {
 	class GraphicContext;
 	class TransferBuffer;
-	class GL3GraphicContextProvider;
+	class GL3GraphicContext;
 
-	class GL3BufferObjectProvider : GLSharedResource
+	class GL3BufferObject : GLSharedResource
 	{
 	public:
-		GL3BufferObjectProvider();
-		~GL3BufferObjectProvider();
+		GL3BufferObject();
+		~GL3BufferObject();
 		void create(const void *data, int size, BufferUsage usage, GLenum new_binding, GLenum new_target);
 
 		void *get_data();

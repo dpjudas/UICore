@@ -82,7 +82,7 @@
 
 namespace uicore
 {
-	GL3GraphicContextProvider::GL3GraphicContextProvider(const OpenGLWindowProvider * const render_window)
+	GL3GraphicContext::GL3GraphicContext(const OpenGLWindowProvider * const render_window)
 		: render_window(render_window), framebuffer_bound(false), opengl_version_major(0), shader_version_major(0), scissor_enabled(false)
 	{
 		check_opengl_version();
@@ -97,16 +97,16 @@ namespace uicore
 		set_default_state();
 	}
 
-	GL3GraphicContextProvider::~GL3GraphicContextProvider()
+	GL3GraphicContext::~GL3GraphicContext()
 	{
 		dispose();
 	}
 
-	void GL3GraphicContextProvider::create_standard_programs()
+	void GL3GraphicContext::create_standard_programs()
 	{
 		for (GraphicContextProvider *gc : GLShareList::all_contexts())
 		{
-			GL3GraphicContextProvider* gc_provider = dynamic_cast<GL3GraphicContextProvider *>(gc);
+			GL3GraphicContext* gc_provider = dynamic_cast<GL3GraphicContext *>(gc);
 			if (gc_provider != this)
 			{
 				standard_programs = gc_provider->standard_programs;
@@ -118,7 +118,7 @@ namespace uicore
 
 	}
 
-	void GL3GraphicContextProvider::on_dispose()
+	void GL3GraphicContext::on_dispose()
 	{
 		while (!disposable_objects.empty())
 			disposable_objects.front()->dispose();
@@ -129,12 +129,12 @@ namespace uicore
 		OpenGL::remove_active(this);
 	}
 
-	void GL3GraphicContextProvider::add_disposable(DisposableObject *disposable)
+	void GL3GraphicContext::add_disposable(DisposableObject *disposable)
 	{
 		disposable_objects.push_back(disposable);
 	}
 
-	void GL3GraphicContextProvider::remove_disposable(DisposableObject *disposable)
+	void GL3GraphicContext::remove_disposable(DisposableObject *disposable)
 	{
 		for (size_t i = 0; i < disposable_objects.size(); i++)
 		{
@@ -146,12 +146,12 @@ namespace uicore
 		}
 	}
 
-	ProcAddress *GL3GraphicContextProvider::get_proc_address(const std::string& function_name) const
+	ProcAddress *GL3GraphicContext::get_proc_address(const std::string& function_name) const
 	{
 		return render_window->get_proc_address(function_name);
 	}
 
-	void GL3GraphicContextProvider::check_opengl_version()
+	void GL3GraphicContext::check_opengl_version()
 	{
 		int version_major = 0;
 		int version_minor = 0;
@@ -161,7 +161,7 @@ namespace uicore
 			throw Exception(string_format("This application requires OpenGL 3.0 or above. Your hardware only supports OpenGL %1.%2. Try updating your drivers, or upgrade to a newer graphics card.", version_major, version_minor));
 	}
 
-	void GL3GraphicContextProvider::get_opengl_version(int &version_major, int &version_minor) const
+	void GL3GraphicContext::get_opengl_version(int &version_major, int &version_minor) const
 	{
 		if (!opengl_version_major)	// Is not cached
 		{
@@ -199,7 +199,7 @@ namespace uicore
 		version_minor = opengl_version_minor;
 	}
 
-	void GL3GraphicContextProvider::calculate_shading_language_version()
+	void GL3GraphicContext::calculate_shading_language_version()
 	{
 		// See http://www.opengl.org/wiki/Detecting_the_Shader_Model
 		shader_version_major = 0;
@@ -247,7 +247,7 @@ namespace uicore
 		}
 	}
 
-	int GL3GraphicContextProvider::max_attributes()
+	int GL3GraphicContext::max_attributes()
 	{
 		OpenGL::set_active(this);
 		GLint max_attributes = 0;
@@ -257,7 +257,7 @@ namespace uicore
 		return max_attributes;
 	}
 
-	Size GL3GraphicContextProvider::max_texture_size() const
+	Size GL3GraphicContext::max_texture_size() const
 	{
 		OpenGL::set_active(this);
 		GLint max_size = 0;
@@ -265,22 +265,22 @@ namespace uicore
 		return Size(max_size, max_size);
 	}
 
-	Size GL3GraphicContextProvider::display_window_size() const
+	Size GL3GraphicContext::display_window_size() const
 	{
 		return render_window->backing_viewport().get_size();
 	}
 
-	float GL3GraphicContextProvider::pixel_ratio() const
+	float GL3GraphicContext::pixel_ratio() const
 	{
 		return render_window->pixel_ratio();
 	}
 
-	std::shared_ptr<RenderBuffer> GL3GraphicContextProvider::create_render_buffer(int width, int height, TextureFormat texture_format, int multisample_samples)
+	std::shared_ptr<RenderBuffer> GL3GraphicContext::create_render_buffer(int width, int height, TextureFormat texture_format, int multisample_samples)
 	{
-		return std::make_shared<GL3RenderBufferProvider>(width, height, texture_format, multisample_samples);
+		return std::make_shared<GL3RenderBuffer>(width, height, texture_format, multisample_samples);
 	}
 
-	std::shared_ptr<RasterizerState> GL3GraphicContextProvider::create_rasterizer_state(const RasterizerStateDescription &desc)
+	std::shared_ptr<RasterizerState> GL3GraphicContext::create_rasterizer_state(const RasterizerStateDescription &desc)
 	{
 		auto it = rasterizer_states.find(desc);
 		if (it != rasterizer_states.end())
@@ -295,7 +295,7 @@ namespace uicore
 		}
 	}
 
-	std::shared_ptr<BlendState> GL3GraphicContextProvider::create_blend_state(const BlendStateDescription &desc)
+	std::shared_ptr<BlendState> GL3GraphicContext::create_blend_state(const BlendStateDescription &desc)
 	{
 		auto it = blend_states.find(desc);
 		if (it != blend_states.end())
@@ -310,7 +310,7 @@ namespace uicore
 		}
 	}
 
-	std::shared_ptr<DepthStencilState> GL3GraphicContextProvider::create_depth_stencil_state(const DepthStencilStateDescription &desc)
+	std::shared_ptr<DepthStencilState> GL3GraphicContext::create_depth_stencil_state(const DepthStencilStateDescription &desc)
 	{
 		auto it = depth_stencil_states.find(desc);
 		if (it != depth_stencil_states.end())
@@ -325,127 +325,127 @@ namespace uicore
 		}
 	}
 
-	std::shared_ptr<ShaderObject> GL3GraphicContextProvider::create_shader(ShaderType type, const std::string &source)
+	std::shared_ptr<ShaderObject> GL3GraphicContext::create_shader(ShaderType type, const std::string &source)
 	{
-		return std::make_shared<GL3ShaderObjectProvider>(type, source);
+		return std::make_shared<GL3ShaderObject>(type, source);
 	}
 
-	std::shared_ptr<ShaderObject> GL3GraphicContextProvider::create_shader(ShaderType type, const void *bytecode, int bytecode_size)
+	std::shared_ptr<ShaderObject> GL3GraphicContext::create_shader(ShaderType type, const void *bytecode, int bytecode_size)
 	{
 		throw Exception("Shader Objects with bytecode are not supported for OpenGL");
 	}
 
-	std::shared_ptr<ProgramObject> GL3GraphicContextProvider::create_program()
+	std::shared_ptr<ProgramObject> GL3GraphicContext::create_program()
 	{
-		return std::make_shared<GL3ProgramObjectProvider>();
+		return std::make_shared<GL3ProgramObject>();
 	}
 
-	std::shared_ptr<OcclusionQuery> GL3GraphicContextProvider::create_occlusion_query()
+	std::shared_ptr<OcclusionQuery> GL3GraphicContext::create_occlusion_query()
 	{
-		return std::make_shared<GL3OcclusionQueryProvider>(this);
+		return std::make_shared<GL3OcclusionQuery>(this);
 	}
 
-	std::shared_ptr<FrameBuffer> GL3GraphicContextProvider::create_frame_buffer()
+	std::shared_ptr<FrameBuffer> GL3GraphicContext::create_frame_buffer()
 	{
-		return std::make_shared<GL3FrameBufferProvider>(this);
+		return std::make_shared<GL3FrameBuffer>(this);
 	}
 
-	std::shared_ptr<StorageBuffer> GL3GraphicContextProvider::create_storage_buffer(int size, int stride, BufferUsage usage)
+	std::shared_ptr<StorageBuffer> GL3GraphicContext::create_storage_buffer(int size, int stride, BufferUsage usage)
 	{
-		return std::make_shared<GL3StorageBufferProvider>(size, stride, usage);
+		return std::make_shared<GL3StorageBuffer>(size, stride, usage);
 	}
 
-	std::shared_ptr<StorageBuffer> GL3GraphicContextProvider::create_storage_buffer(const void *data, int size, int stride, BufferUsage usage)
+	std::shared_ptr<StorageBuffer> GL3GraphicContext::create_storage_buffer(const void *data, int size, int stride, BufferUsage usage)
 	{
-		return std::make_shared<GL3StorageBufferProvider>(data, size, stride, usage);
+		return std::make_shared<GL3StorageBuffer>(data, size, stride, usage);
 	}
 
-	std::shared_ptr<ElementArrayBuffer> GL3GraphicContextProvider::create_element_array_buffer(int size, BufferUsage usage)
+	std::shared_ptr<ElementArrayBuffer> GL3GraphicContext::create_element_array_buffer(int size, BufferUsage usage)
 	{
-		return std::make_shared<GL3ElementArrayBufferProvider>(size, usage);
+		return std::make_shared<GL3ElementArrayBuffer>(size, usage);
 	}
 
-	std::shared_ptr<ElementArrayBuffer> GL3GraphicContextProvider::create_element_array_buffer(const void *data, int size, BufferUsage usage)
+	std::shared_ptr<ElementArrayBuffer> GL3GraphicContext::create_element_array_buffer(const void *data, int size, BufferUsage usage)
 	{
-		return std::make_shared<GL3ElementArrayBufferProvider>(data, size, usage);
+		return std::make_shared<GL3ElementArrayBuffer>(data, size, usage);
 	}
 
-	std::shared_ptr<VertexArrayBuffer> GL3GraphicContextProvider::create_vertex_array_buffer(int size, BufferUsage usage)
+	std::shared_ptr<VertexArrayBuffer> GL3GraphicContext::create_vertex_array_buffer(int size, BufferUsage usage)
 	{
-		return std::make_shared<GL3VertexArrayBufferProvider>(size, usage);
+		return std::make_shared<GL3VertexArrayBuffer>(size, usage);
 	}
 
-	std::shared_ptr<VertexArrayBuffer> GL3GraphicContextProvider::create_vertex_array_buffer(const void *data, int size, BufferUsage usage)
+	std::shared_ptr<VertexArrayBuffer> GL3GraphicContext::create_vertex_array_buffer(const void *data, int size, BufferUsage usage)
 	{
-		return std::make_shared<GL3VertexArrayBufferProvider>(data, size, usage);
+		return std::make_shared<GL3VertexArrayBuffer>(data, size, usage);
 	}
 
-	std::shared_ptr<UniformBuffer> GL3GraphicContextProvider::create_uniform_buffer(int size, BufferUsage usage)
+	std::shared_ptr<UniformBuffer> GL3GraphicContext::create_uniform_buffer(int size, BufferUsage usage)
 	{
-		return std::make_shared<GL3UniformBufferProvider>(size, usage);
+		return std::make_shared<GL3UniformBuffer>(size, usage);
 	}
 
-	std::shared_ptr<UniformBuffer> GL3GraphicContextProvider::create_uniform_buffer(const void *data, int size, BufferUsage usage)
+	std::shared_ptr<UniformBuffer> GL3GraphicContext::create_uniform_buffer(const void *data, int size, BufferUsage usage)
 	{
-		return std::make_shared<GL3UniformBufferProvider>(data, size, usage);
+		return std::make_shared<GL3UniformBuffer>(data, size, usage);
 	}
 
-	std::shared_ptr<TransferBuffer> GL3GraphicContextProvider::create_transfer_buffer(int size, BufferUsage usage)
+	std::shared_ptr<TransferBuffer> GL3GraphicContext::create_transfer_buffer(int size, BufferUsage usage)
 	{
-		return std::make_shared<GL3TransferBufferProvider>(size, usage);
+		return std::make_shared<GL3TransferBuffer>(size, usage);
 	}
 
-	std::shared_ptr<TransferBuffer> GL3GraphicContextProvider::create_transfer_buffer(const void *data, int size, BufferUsage usage)
+	std::shared_ptr<TransferBuffer> GL3GraphicContext::create_transfer_buffer(const void *data, int size, BufferUsage usage)
 	{
-		return std::make_shared<GL3TransferBufferProvider>(data, size, usage);
+		return std::make_shared<GL3TransferBuffer>(data, size, usage);
 	}
 
-	std::shared_ptr<PrimitivesArray> GL3GraphicContextProvider::create_primitives_array()
+	std::shared_ptr<PrimitivesArray> GL3GraphicContext::create_primitives_array()
 	{
-		return std::make_shared<GL3PrimitivesArrayProvider>(this);
+		return std::make_shared<GL3PrimitivesArray>(this);
 	}
 
-	std::shared_ptr<Texture1D> GL3GraphicContextProvider::create_texture_1d(int width, TextureFormat texture_format, int levels)
+	std::shared_ptr<Texture1D> GL3GraphicContext::create_texture_1d(int width, TextureFormat texture_format, int levels)
 	{
-		return std::make_shared<Texture1DImpl<GL3TextureProvider>>(GL3TextureProvider::InitData(), width, texture_format, levels);
+		return std::make_shared<Texture1DImpl<GL3TextureObject>>(GL3TextureObject::InitData(), width, texture_format, levels);
 	}
 
-	std::shared_ptr<Texture1DArray> GL3GraphicContextProvider::create_texture_1d_array(int width, int array_size, TextureFormat texture_format, int levels)
+	std::shared_ptr<Texture1DArray> GL3GraphicContext::create_texture_1d_array(int width, int array_size, TextureFormat texture_format, int levels)
 	{
-		return std::make_shared<Texture1DArrayImpl<GL3TextureProvider>>(GL3TextureProvider::InitData(), width, array_size, texture_format, levels);
+		return std::make_shared<Texture1DArrayImpl<GL3TextureObject>>(GL3TextureObject::InitData(), width, array_size, texture_format, levels);
 	}
 
-	std::shared_ptr<Texture2D> GL3GraphicContextProvider::create_texture_2d(int width, int height, TextureFormat texture_format, int levels)
+	std::shared_ptr<Texture2D> GL3GraphicContext::create_texture_2d(int width, int height, TextureFormat texture_format, int levels)
 	{
-		return std::make_shared<Texture2DImpl<GL3TextureProvider>>(GL3TextureProvider::InitData(), width, height, texture_format, levels);
+		return std::make_shared<Texture2DImpl<GL3TextureObject>>(GL3TextureObject::InitData(), width, height, texture_format, levels);
 	}
 
-	std::shared_ptr<Texture2DArray> GL3GraphicContextProvider::create_texture_2d_array(int width, int height, int array_size, TextureFormat texture_format, int levels)
+	std::shared_ptr<Texture2DArray> GL3GraphicContext::create_texture_2d_array(int width, int height, int array_size, TextureFormat texture_format, int levels)
 	{
-		return std::make_shared<Texture2DArrayImpl<GL3TextureProvider>>(GL3TextureProvider::InitData(), width, height, array_size, texture_format, levels);
+		return std::make_shared<Texture2DArrayImpl<GL3TextureObject>>(GL3TextureObject::InitData(), width, height, array_size, texture_format, levels);
 	}
 
-	std::shared_ptr<Texture3D> GL3GraphicContextProvider::create_texture_3d(int width, int height, int depth, TextureFormat texture_format, int levels)
+	std::shared_ptr<Texture3D> GL3GraphicContext::create_texture_3d(int width, int height, int depth, TextureFormat texture_format, int levels)
 	{
-		return std::make_shared<Texture3DImpl<GL3TextureProvider>>(GL3TextureProvider::InitData(), width, height, depth, texture_format, levels);
+		return std::make_shared<Texture3DImpl<GL3TextureObject>>(GL3TextureObject::InitData(), width, height, depth, texture_format, levels);
 	}
 
-	std::shared_ptr<TextureCube> GL3GraphicContextProvider::create_texture_cube(int width, int height, TextureFormat texture_format, int levels)
+	std::shared_ptr<TextureCube> GL3GraphicContext::create_texture_cube(int width, int height, TextureFormat texture_format, int levels)
 	{
-		return std::make_shared<TextureCubeImpl<GL3TextureProvider>>(GL3TextureProvider::InitData(), width, height, texture_format, levels);
+		return std::make_shared<TextureCubeImpl<GL3TextureObject>>(GL3TextureObject::InitData(), width, height, texture_format, levels);
 	}
 
-	std::shared_ptr<TextureCubeArray> GL3GraphicContextProvider::create_texture_cube_array(int width, int height, int array_size, TextureFormat texture_format, int levels)
+	std::shared_ptr<TextureCubeArray> GL3GraphicContext::create_texture_cube_array(int width, int height, int array_size, TextureFormat texture_format, int levels)
 	{
-		return std::make_shared<TextureCubeArrayImpl<GL3TextureProvider>>(GL3TextureProvider::InitData(), width, height, array_size, texture_format, levels);
+		return std::make_shared<TextureCubeArrayImpl<GL3TextureObject>>(GL3TextureObject::InitData(), width, height, array_size, texture_format, levels);
 	}
 
-	std::shared_ptr<TransferTexture> GL3GraphicContextProvider::create_transfer_texture(const void *data, const Size &size, PixelBufferDirection direction, TextureFormat format, BufferUsage usage)
+	std::shared_ptr<TransferTexture> GL3GraphicContext::create_transfer_texture(const void *data, const Size &size, PixelBufferDirection direction, TextureFormat format, BufferUsage usage)
 	{
-		return std::make_shared<GL3PixelBufferProvider>(data, size, direction, format, usage);
+		return std::make_shared<GL3TransferTexture>(data, size, direction, format, usage);
 	}
 
-	void GL3GraphicContextProvider::set_rasterizer_state(const RasterizerStatePtr &state)
+	void GL3GraphicContext::set_rasterizer_state(const RasterizerStatePtr &state)
 	{
 		if (state)
 		{
@@ -464,7 +464,7 @@ namespace uicore
 		}
 	}
 
-	void GL3GraphicContextProvider::set_blend_state(const BlendStatePtr &state, const Colorf &blend_color, unsigned int sample_mask)
+	void GL3GraphicContext::set_blend_state(const BlendStatePtr &state, const Colorf &blend_color, unsigned int sample_mask)
 	{
 		if (state)
 		{
@@ -482,7 +482,7 @@ namespace uicore
 		}
 	}
 
-	void GL3GraphicContextProvider::set_depth_stencil_state(const DepthStencilStatePtr &state, int stencil_ref)
+	void GL3GraphicContext::set_depth_stencil_state(const DepthStencilStatePtr &state, int stencil_ref)
 	{
 		if (state)
 		{
@@ -500,7 +500,7 @@ namespace uicore
 		}
 	}
 
-	std::shared_ptr<PixelBuffer> GL3GraphicContextProvider::pixeldata(const Rect& rect, TextureFormat texture_format, bool clamp) const
+	std::shared_ptr<PixelBuffer> GL3GraphicContext::pixeldata(const Rect& rect, TextureFormat texture_format, bool clamp) const
 	{
 		TextureFormat_GL tf = OpenGL::get_textureformat(texture_format);
 		if (!tf.valid)
@@ -526,12 +526,12 @@ namespace uicore
 		return pbuf;
 	}
 
-	void GL3GraphicContextProvider::set_uniform_buffer(int index, const UniformBufferPtr &buffer)
+	void GL3GraphicContext::set_uniform_buffer(int index, const UniformBufferPtr &buffer)
 	{
 		if (buffer)
 		{
 			OpenGL::set_active(this);
-			glBindBufferBase(GL_UNIFORM_BUFFER, index, static_cast<GL3UniformBufferProvider*>(buffer.get())->get_handle());
+			glBindBufferBase(GL_UNIFORM_BUFFER, index, static_cast<GL3UniformBuffer*>(buffer.get())->get_handle());
 		}
 		else
 		{
@@ -540,12 +540,12 @@ namespace uicore
 		}
 	}
 
-	void GL3GraphicContextProvider::set_storage_buffer(int index, const StorageBufferPtr &buffer)
+	void GL3GraphicContext::set_storage_buffer(int index, const StorageBufferPtr &buffer)
 	{
 		if (buffer)
 		{
 			OpenGL::set_active(this);
-			glBindBufferBase(GL_SHADER_STORAGE_BUFFER, index, static_cast<GL3StorageBufferProvider*>(buffer.get())->get_handle());
+			glBindBufferBase(GL_SHADER_STORAGE_BUFFER, index, static_cast<GL3StorageBuffer*>(buffer.get())->get_handle());
 		}
 		else
 		{
@@ -554,7 +554,7 @@ namespace uicore
 		}
 	}
 
-	void GL3GraphicContextProvider::set_texture(int unit_index, const TexturePtr &texture)
+	void GL3GraphicContext::set_texture(int unit_index, const TexturePtr &texture)
 	{
 		if (texture)
 		{
@@ -571,7 +571,7 @@ namespace uicore
 
 			if (texture)
 			{
-				GL3TextureProvider *provider = static_cast<GL3TextureProvider*>(texture->texture_object());
+				GL3TextureObject *provider = static_cast<GL3TextureObject*>(texture->texture_object());
 				glBindTexture(provider->get_texture_type(), provider->get_handle());
 			}
 		}
@@ -592,12 +592,12 @@ namespace uicore
 		}
 	}
 
-	void GL3GraphicContextProvider::set_image_texture(int unit_index, const TexturePtr &texture)
+	void GL3GraphicContext::set_image_texture(int unit_index, const TexturePtr &texture)
 	{
 		if (texture)
 		{
 			OpenGL::set_active(this);
-			GL3TextureProvider *provider = static_cast<GL3TextureProvider*>(texture->texture_object());
+			GL3TextureObject *provider = static_cast<GL3TextureObject*>(texture->texture_object());
 			glBindImageTexture(unit_index, provider->get_handle(), 0, GL_FALSE, 0, GL_READ_WRITE, provider->get_internal_format());
 		}
 		else
@@ -607,24 +607,24 @@ namespace uicore
 		}
 	}
 
-	bool GL3GraphicContextProvider::is_frame_buffer_owner(const FrameBufferPtr &fb)
+	bool GL3GraphicContext::is_frame_buffer_owner(const FrameBufferPtr &fb)
 	{
-		GL3FrameBufferProvider *fb_provider = dynamic_cast<GL3FrameBufferProvider *>(fb.get());
+		GL3FrameBuffer *fb_provider = dynamic_cast<GL3FrameBuffer *>(fb.get());
 		if (fb_provider)
 			return fb_provider->get_gc_provider() == this;
 		else
 			return false;
 	}
 
-	void GL3GraphicContextProvider::set_frame_buffer(const FrameBufferPtr &draw_buffer, const FrameBufferPtr &read_buffer)
+	void GL3GraphicContext::set_frame_buffer(const FrameBufferPtr &draw_buffer, const FrameBufferPtr &read_buffer)
 	{
 		_write_frame_buffer = draw_buffer;
 		_read_frame_buffer = read_buffer;
 
 		if (draw_buffer && read_buffer)
 		{
-			GL3FrameBufferProvider *draw_buffer_provider = dynamic_cast<GL3FrameBufferProvider *>(draw_buffer.get());
-			GL3FrameBufferProvider *read_buffer_provider = dynamic_cast<GL3FrameBufferProvider *>(read_buffer.get());
+			GL3FrameBuffer *draw_buffer_provider = dynamic_cast<GL3FrameBuffer *>(draw_buffer.get());
+			GL3FrameBuffer *read_buffer_provider = dynamic_cast<GL3FrameBuffer *>(read_buffer.get());
 
 			if (draw_buffer_provider->get_gc_provider() != this || read_buffer_provider->get_gc_provider() != this)
 				throw Exception("FrameBuffer objects cannot be shared between multiple GraphicContext objects");
@@ -665,12 +665,12 @@ namespace uicore
 		}
 	}
 
-	void GL3GraphicContextProvider::set_program_object(StandardProgram standard_program)
+	void GL3GraphicContext::set_program_object(StandardProgram standard_program)
 	{
 		set_program_object(standard_programs.get_program_object(standard_program));
 	}
 
-	void GL3GraphicContextProvider::set_program_object(const ProgramObjectPtr &program)
+	void GL3GraphicContext::set_program_object(const ProgramObjectPtr &program)
 	{
 		_program_object = program;
 
@@ -680,7 +680,7 @@ namespace uicore
 
 		if (program)
 		{
-			glUseProgram(static_cast<GL3ProgramObjectProvider*>(program.get())->get_handle());
+			glUseProgram(static_cast<GL3ProgramObject*>(program.get())->get_handle());
 		}
 		else
 		{
@@ -688,27 +688,27 @@ namespace uicore
 		}
 	}
 
-	bool GL3GraphicContextProvider::is_primitives_array_owner(const PrimitivesArrayPtr &prim_array)
+	bool GL3GraphicContext::is_primitives_array_owner(const PrimitivesArrayPtr &prim_array)
 	{
-		GL3PrimitivesArrayProvider *prim_array_provider = dynamic_cast<GL3PrimitivesArrayProvider *>(prim_array.get());
+		GL3PrimitivesArray *prim_array_provider = dynamic_cast<GL3PrimitivesArray *>(prim_array.get());
 		if (prim_array_provider)
 			return prim_array_provider->get_gc_provider() == this;
 		else
 			return false;
 	}
 
-	void GL3GraphicContextProvider::draw_primitives(PrimitivesType type, int num_vertices, const PrimitivesArrayPtr &primitives_array)
+	void GL3GraphicContext::draw_primitives(PrimitivesType type, int num_vertices, const PrimitivesArrayPtr &primitives_array)
 	{
 		set_primitives_array(primitives_array);
 		draw_primitives_array(type, 0, num_vertices);
 		reset_primitives_array();
 	}
 
-	void GL3GraphicContextProvider::set_primitives_array(const PrimitivesArrayPtr &primitives_array)
+	void GL3GraphicContext::set_primitives_array(const PrimitivesArrayPtr &primitives_array)
 	{
 		if (primitives_array)
 		{
-			GL3PrimitivesArrayProvider *prim_array = static_cast<GL3PrimitivesArrayProvider *>(primitives_array.get());
+			GL3PrimitivesArray *prim_array = static_cast<GL3PrimitivesArray *>(primitives_array.get());
 
 			OpenGL::set_active(this);
 			glBindVertexArray(prim_array->handle);
@@ -720,24 +720,24 @@ namespace uicore
 		}
 	}
 
-	void GL3GraphicContextProvider::draw_primitives_array(PrimitivesType type, int offset, int num_vertices)
+	void GL3GraphicContext::draw_primitives_array(PrimitivesType type, int offset, int num_vertices)
 	{
 		OpenGL::set_active(this);
 		glDrawArrays(OpenGL::to_enum(type), offset, num_vertices);
 	}
 
-	void GL3GraphicContextProvider::draw_primitives_array_instanced(PrimitivesType type, int offset, int num_vertices, int instance_count)
+	void GL3GraphicContext::draw_primitives_array_instanced(PrimitivesType type, int offset, int num_vertices, int instance_count)
 	{
 		OpenGL::set_active(this);
 		glDrawArraysInstanced(OpenGL::to_enum(type), offset, num_vertices, instance_count);
 	}
 
-	void GL3GraphicContextProvider::set_primitives_elements(const ElementArrayBufferPtr &array_provider)
+	void GL3GraphicContext::set_primitives_elements(const ElementArrayBufferPtr &array_provider)
 	{
 		if (array_provider)
 		{
 			OpenGL::set_active(this);
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, static_cast<GL3ElementArrayBufferProvider *>(array_provider.get())->get_handle());
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, static_cast<GL3ElementArrayBuffer *>(array_provider.get())->get_handle());
 		}
 		else
 		{
@@ -746,19 +746,19 @@ namespace uicore
 		}
 	}
 
-	void GL3GraphicContextProvider::draw_primitives_elements(PrimitivesType type, int count, VertexAttributeDataType indices_type, size_t offset)
+	void GL3GraphicContext::draw_primitives_elements(PrimitivesType type, int count, VertexAttributeDataType indices_type, size_t offset)
 	{
 		OpenGL::set_active(this);
 		glDrawElements(OpenGL::to_enum(type), count, OpenGL::to_enum(indices_type), (const GLvoid*)offset);
 	}
 
-	void GL3GraphicContextProvider::draw_primitives_elements_instanced(PrimitivesType type, int count, VertexAttributeDataType indices_type, size_t offset, int instance_count)
+	void GL3GraphicContext::draw_primitives_elements_instanced(PrimitivesType type, int count, VertexAttributeDataType indices_type, size_t offset, int instance_count)
 	{
 		OpenGL::set_active(this);
 		glDrawElementsInstanced(OpenGL::to_enum(type), count, OpenGL::to_enum(indices_type), (const GLvoid*)offset, instance_count);
 	}
 
-	void GL3GraphicContextProvider::draw_primitives_elements(
+	void GL3GraphicContext::draw_primitives_elements(
 		PrimitivesType type,
 		int count,
 		const ElementArrayBufferPtr &array_provider,
@@ -766,12 +766,12 @@ namespace uicore
 		size_t offset)
 	{
 		OpenGL::set_active(this);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, static_cast<GL3ElementArrayBufferProvider *>(array_provider.get())->get_handle());
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, static_cast<GL3ElementArrayBuffer *>(array_provider.get())->get_handle());
 		glDrawElements(OpenGL::to_enum(type), count, OpenGL::to_enum(indices_type), reinterpret_cast<void*>(offset));
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	}
 
-	void GL3GraphicContextProvider::draw_primitives_elements_instanced(
+	void GL3GraphicContext::draw_primitives_elements_instanced(
 		PrimitivesType type,
 		int count,
 		const ElementArrayBufferPtr &array_provider,
@@ -780,12 +780,12 @@ namespace uicore
 		int instance_count)
 	{
 		OpenGL::set_active(this);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, static_cast<GL3ElementArrayBufferProvider *>(array_provider.get())->get_handle());
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, static_cast<GL3ElementArrayBuffer *>(array_provider.get())->get_handle());
 		glDrawElementsInstanced(OpenGL::to_enum(type), count, OpenGL::to_enum(indices_type), reinterpret_cast<void*>(offset), instance_count);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	}
 
-	void GL3GraphicContextProvider::set_scissor(const Rect &rect)
+	void GL3GraphicContext::set_scissor(const Rect &rect)
 	{
 		OpenGL::set_active(this);
 
@@ -800,19 +800,19 @@ namespace uicore
 			rect.get_height());
 	}
 
-	void GL3GraphicContextProvider::reset_scissor()
+	void GL3GraphicContext::reset_scissor()
 	{
 		OpenGL::set_active(this);
 		glDisable(GL_SCISSOR_TEST);
 	}
 
-	void GL3GraphicContextProvider::dispatch(int x, int y, int z)
+	void GL3GraphicContext::dispatch(int x, int y, int z)
 	{
 		OpenGL::set_active(this);
 		glDispatchCompute(x, y, z);
 	}
 
-	void GL3GraphicContextProvider::clear(const Colorf &color)
+	void GL3GraphicContext::clear(const Colorf &color)
 	{
 		OpenGL::set_active(this);
 		glClearColor(
@@ -823,14 +823,14 @@ namespace uicore
 		glClear(GL_COLOR_BUFFER_BIT);
 	}
 
-	void GL3GraphicContextProvider::clear_stencil(int value)
+	void GL3GraphicContext::clear_stencil(int value)
 	{
 		OpenGL::set_active(this);
 		glClearStencil(value);
 		glClear(GL_STENCIL_BUFFER_BIT);
 	}
 
-	void GL3GraphicContextProvider::clear_depth(float value)
+	void GL3GraphicContext::clear_depth(float value)
 	{
 		OpenGL::set_active(this);
 		if (glClearDepth)
@@ -840,12 +840,12 @@ namespace uicore
 		glClear(GL_DEPTH_BUFFER_BIT);
 	}
 
-	void GL3GraphicContextProvider::on_window_resized()
+	void GL3GraphicContext::on_window_resized()
 	{
 		window_resized_signal(render_window->backing_viewport().get_size());
 	}
 
-	void GL3GraphicContextProvider::set_viewport(const Rectf &viewport)
+	void GL3GraphicContext::set_viewport(const Rectf &viewport)
 	{
 		OpenGL::set_active(this);
 		glViewport(
@@ -855,7 +855,7 @@ namespace uicore
 			GLsizei(viewport.bottom - viewport.top));
 	}
 
-	void GL3GraphicContextProvider::set_viewport(int index, const Rectf &viewport)
+	void GL3GraphicContext::set_viewport(int index, const Rectf &viewport)
 	{
 		if (glViewportIndexedf)
 		{
@@ -873,7 +873,7 @@ namespace uicore
 		}
 	}
 
-	void GL3GraphicContextProvider::set_depth_range(int viewport, float n, float f)
+	void GL3GraphicContext::set_depth_range(int viewport, float n, float f)
 	{
 		if (viewport == -1)
 		{
@@ -887,7 +887,7 @@ namespace uicore
 		}
 	}
 
-	void GL3GraphicContextProvider::set_draw_buffer(DrawBuffer buffer)
+	void GL3GraphicContext::set_draw_buffer(DrawBuffer buffer)
 	{
 		OpenGL::set_active(this);
 
@@ -902,18 +902,18 @@ namespace uicore
 
 	}
 
-	void GL3GraphicContextProvider::make_current() const
+	void GL3GraphicContext::make_current() const
 	{
 		render_window->make_current();
 	}
 
-	void GL3GraphicContextProvider::flush()
+	void GL3GraphicContext::flush()
 	{
 		OpenGL::set_active(this);
 		glFlush();
 	}
 
-	const DisplayWindowProvider & GL3GraphicContextProvider::get_render_window() const
+	const DisplayWindowProvider & GL3GraphicContext::get_render_window() const
 	{
 		return *render_window;
 	}

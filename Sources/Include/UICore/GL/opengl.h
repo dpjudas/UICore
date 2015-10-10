@@ -46,8 +46,8 @@ namespace uicore
 	class GLFunctions;
 	class GraphicContext;
 	class OpenGLGraphicContextProvider;
-	class GL1GraphicContextProvider;
-	class GL3GraphicContextProvider;
+	class GL1GraphicContext;
+	class GL3GraphicContext;
 
 	enum TextureFormat;
 
@@ -138,8 +138,8 @@ namespace uicore
 		/// This should only be called by the OpenGLGraphicContextProvider destructor
 		static void remove_active(const OpenGLGraphicContextProvider * const gc_provider);
 
-		friend class GL1GraphicContextProvider;
-		friend class GL3GraphicContextProvider;
+		friend class GL1GraphicContext;
+		friend class GL3GraphicContext;
 		friend class PBuffer_GL1_Impl;
 	};
 }

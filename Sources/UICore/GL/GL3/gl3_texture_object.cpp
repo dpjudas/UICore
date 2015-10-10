@@ -40,7 +40,7 @@
 
 namespace uicore
 {
-	GL3TextureProvider::GL3TextureProvider(const HandleInit &init)
+	GL3TextureObject::GL3TextureObject(const HandleInit &init)
 		: handle(init.handle), texture_type(init.texture_type)
 	{
 		if (init.orig_texture == nullptr)
@@ -67,7 +67,7 @@ namespace uicore
 		}
 	}
 
-	GL3TextureProvider::GL3TextureProvider(const InitData &init, TextureDimensions texture_dimensions, int new_width, int new_height, int new_depth, int new_array_size, TextureFormat texture_format, int levels)
+	GL3TextureObject::GL3TextureObject(const InitData &init, TextureDimensions texture_dimensions, int new_width, int new_height, int new_depth, int new_array_size, TextureFormat texture_format, int levels)
 		: dimensions(new_width, new_height, new_depth, new_array_size), handle(0), texture_type(0)
 	{
 		create_initial(texture_dimensions);
@@ -147,7 +147,7 @@ namespace uicore
 		}
 	}
 
-	void GL3TextureProvider::create_initial(TextureDimensions texture_dimensions)
+	void GL3TextureObject::create_initial(TextureDimensions texture_dimensions)
 	{
 		switch (texture_dimensions)
 		{
@@ -188,12 +188,12 @@ namespace uicore
 			glTexParameteri(texture_type, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 	}
 
-	GL3TextureProvider::~GL3TextureProvider()
+	GL3TextureObject::~GL3TextureObject()
 	{
 		dispose();
 	}
 
-	void GL3TextureProvider::on_dispose()
+	void GL3TextureObject::on_dispose()
 	{
 		if (handle)
 		{
@@ -205,14 +205,14 @@ namespace uicore
 		}
 	}
 
-	void GL3TextureProvider::generate_mipmap()
+	void GL3TextureObject::generate_mipmap()
 	{
 		throw_if_disposed();
 		TextureStateTracker state_tracker(texture_type, handle);
 		glGenerateMipmap(texture_type);
 	}
 
-	PixelBufferPtr GL3TextureProvider::get_pixeldata(const GraphicContextPtr &gc, TextureFormat texture_format, int level) const
+	PixelBufferPtr GL3TextureObject::get_pixeldata(const GraphicContextPtr &gc, TextureFormat texture_format, int level) const
 	{
 		throw_if_disposed();
 
@@ -241,7 +241,7 @@ namespace uicore
 		}
 	}
 
-	void GL3TextureProvider::copy_from(const GraphicContextPtr &gc, int x, int y, int slice, int level, const PixelBufferPtr &src, const Rect &src_rect)
+	void GL3TextureObject::copy_from(const GraphicContextPtr &gc, int x, int y, int slice, int level, const PixelBufferPtr &src, const Rect &src_rect)
 	{
 		throw_if_disposed();
 		if (src_rect.left < 0 || src_rect.top < 0 || src_rect.right > src->width() || src_rect.bottom > src->height())
@@ -265,9 +265,9 @@ namespace uicore
 		TextureStateTracker state_tracker(texture_type, handle);
 
 		const unsigned char *data = nullptr;
-		GL3PixelBufferProvider *buffer_provider = nullptr;
+		GL3TransferTexture *buffer_provider = nullptr;
 		GLint last_buffer = 0;
-		buffer_provider = dynamic_cast<GL3PixelBufferProvider*>(src_converted.get());
+		buffer_provider = dynamic_cast<GL3TransferTexture*>(src_converted.get());
 		if (buffer_provider)
 		{
 			glGetIntegerv(GL_PIXEL_UNPACK_BUFFER_BINDING, &last_buffer);
@@ -353,7 +353,7 @@ namespace uicore
 			glBindBuffer(GL_PIXEL_UNPACK_BUFFER, last_buffer);
 	}
 
-	void GL3TextureProvider::copy_image_from(
+	void GL3TextureObject::copy_image_from(
 		int x,
 		int y,
 		int width,
@@ -363,7 +363,7 @@ namespace uicore
 		GraphicContextProvider *gc)
 	{
 		throw_if_disposed();
-		OpenGL::set_active(static_cast<GL3GraphicContextProvider*>(gc));
+		OpenGL::set_active(static_cast<GL3GraphicContext*>(gc));
 		TextureStateTracker state_tracker(texture_type, handle);
 
 		TextureFormat_GL tf = OpenGL::get_textureformat(texture_format);
@@ -379,7 +379,7 @@ namespace uicore
 			0);
 	}
 
-	void GL3TextureProvider::copy_subimage_from(
+	void GL3TextureObject::copy_subimage_from(
 		int offset_x,
 		int offset_y,
 		int x,
@@ -390,7 +390,7 @@ namespace uicore
 		GraphicContextProvider *gc)
 	{
 		throw_if_disposed();
-		OpenGL::set_active(static_cast<GL3GraphicContextProvider*>(gc));
+		OpenGL::set_active(static_cast<GL3GraphicContext*>(gc));
 		TextureStateTracker state_tracker(texture_type, handle);
 
 		glCopyTexSubImage2D(
@@ -402,42 +402,42 @@ namespace uicore
 			width, height);
 	}
 
-	void GL3TextureProvider::set_min_lod(double min_lod)
+	void GL3TextureObject::set_min_lod(double min_lod)
 	{
 		throw_if_disposed();
 		TextureStateTracker state_tracker(texture_type, handle);
 		glTexParameterf(texture_type, GL_TEXTURE_MIN_LOD, (GLfloat)min_lod);
 	}
 
-	void GL3TextureProvider::set_max_lod(double max_lod)
+	void GL3TextureObject::set_max_lod(double max_lod)
 	{
 		throw_if_disposed();
 		TextureStateTracker state_tracker(texture_type, handle);
 		glTexParameterf(texture_type, GL_TEXTURE_MAX_LOD, (GLfloat)max_lod);
 	}
 
-	void GL3TextureProvider::set_lod_bias(double lod_bias)
+	void GL3TextureObject::set_lod_bias(double lod_bias)
 	{
 		throw_if_disposed();
 		TextureStateTracker state_tracker(texture_type, handle);
 		glTexParameterf(texture_type, GL_TEXTURE_LOD_BIAS, (GLfloat)lod_bias);
 	}
 
-	void GL3TextureProvider::set_base_level(int base_level)
+	void GL3TextureObject::set_base_level(int base_level)
 	{
 		throw_if_disposed();
 		TextureStateTracker state_tracker(texture_type, handle);
 		glTexParameteri(texture_type, GL_TEXTURE_BASE_LEVEL, base_level);
 	}
 
-	void GL3TextureProvider::set_max_level(int max_level)
+	void GL3TextureObject::set_max_level(int max_level)
 	{
 		throw_if_disposed();
 		TextureStateTracker state_tracker(texture_type, handle);
 		glTexParameteri(texture_type, GL_TEXTURE_MAX_LEVEL, max_level);
 	}
 
-	void GL3TextureProvider::set_wrap_mode(
+	void GL3TextureObject::set_wrap_mode(
 		TextureWrapMode wrap_s,
 		TextureWrapMode wrap_t,
 		TextureWrapMode wrap_r)
@@ -451,7 +451,7 @@ namespace uicore
 			glTexParameteri(texture_type, GL_TEXTURE_WRAP_R, OpenGL::to_enum(wrap_r));
 	}
 
-	void GL3TextureProvider::set_wrap_mode(
+	void GL3TextureObject::set_wrap_mode(
 		TextureWrapMode wrap_s,
 		TextureWrapMode wrap_t)
 	{
@@ -461,7 +461,7 @@ namespace uicore
 		glTexParameteri(texture_type, GL_TEXTURE_WRAP_T, OpenGL::to_enum(wrap_t));
 	}
 
-	void GL3TextureProvider::set_wrap_mode(
+	void GL3TextureObject::set_wrap_mode(
 		TextureWrapMode wrap_s)
 	{
 		throw_if_disposed();
@@ -469,14 +469,14 @@ namespace uicore
 		glTexParameteri(texture_type, GL_TEXTURE_WRAP_S, OpenGL::to_enum(wrap_s));
 	}
 
-	void GL3TextureProvider::set_min_filter(TextureFilter filter)
+	void GL3TextureObject::set_min_filter(TextureFilter filter)
 	{
 		throw_if_disposed();
 		TextureStateTracker state_tracker(texture_type, handle);
 		glTexParameteri(texture_type, GL_TEXTURE_MIN_FILTER, OpenGL::to_enum(filter));
 	}
 
-	void GL3TextureProvider::set_mag_filter(TextureFilter filter)
+	void GL3TextureObject::set_mag_filter(TextureFilter filter)
 	{
 		throw_if_disposed();
 		TextureStateTracker state_tracker(texture_type, handle);
@@ -488,14 +488,14 @@ namespace uicore
 		glTexParameteri(texture_type, GL_TEXTURE_MAG_FILTER, OpenGL::to_enum(filter));
 	}
 
-	void GL3TextureProvider::set_max_anisotropy(float v)
+	void GL3TextureObject::set_max_anisotropy(float v)
 	{
 		throw_if_disposed();
 		TextureStateTracker state_tracker(texture_type, handle);
 		glTexParameterf(texture_type, GL_TEXTURE_MAX_ANISOTROPY_EXT, v);
 	}
 
-	void GL3TextureProvider::set_texture_compare(TextureCompareMode mode, CompareFunction func)
+	void GL3TextureObject::set_texture_compare(TextureCompareMode mode, CompareFunction func)
 	{
 		throw_if_disposed();
 		TextureStateTracker state_tracker(texture_type, handle);
@@ -503,24 +503,24 @@ namespace uicore
 		glTexParameteri(texture_type, GL_TEXTURE_COMPARE_FUNC, OpenGL::to_enum(func));
 	}
 
-	std::shared_ptr<Texture> GL3TextureProvider::create_view(TextureDimensions texture_dimensions, TextureFormat texture_format, int min_level, int num_levels, int min_layer, int num_layers)
+	std::shared_ptr<Texture> GL3TextureObject::create_view(TextureDimensions texture_dimensions, TextureFormat texture_format, int min_level, int num_levels, int min_layer, int num_layers)
 	{
 		switch (texture_dimensions)
 		{
 		case texture_1d:
-			return std::make_shared<Texture1DImpl<GL3TextureProvider>>(HandleInit(this, texture_dimensions, texture_format, min_level, num_levels, min_layer, num_layers));
+			return std::make_shared<Texture1DImpl<GL3TextureObject>>(HandleInit(this, texture_dimensions, texture_format, min_level, num_levels, min_layer, num_layers));
 		case texture_1d_array:
-			return std::make_shared<Texture1DArrayImpl<GL3TextureProvider>>(HandleInit(this, texture_dimensions, texture_format, min_level, num_levels, min_layer, num_layers));
+			return std::make_shared<Texture1DArrayImpl<GL3TextureObject>>(HandleInit(this, texture_dimensions, texture_format, min_level, num_levels, min_layer, num_layers));
 		case texture_2d:
-			return std::make_shared<Texture2DImpl<GL3TextureProvider>>(HandleInit(this, texture_dimensions, texture_format, min_level, num_levels, min_layer, num_layers));
+			return std::make_shared<Texture2DImpl<GL3TextureObject>>(HandleInit(this, texture_dimensions, texture_format, min_level, num_levels, min_layer, num_layers));
 		case texture_2d_array:
-			return std::make_shared<Texture2DArrayImpl<GL3TextureProvider>>(HandleInit(this, texture_dimensions, texture_format, min_level, num_levels, min_layer, num_layers));
+			return std::make_shared<Texture2DArrayImpl<GL3TextureObject>>(HandleInit(this, texture_dimensions, texture_format, min_level, num_levels, min_layer, num_layers));
 		case texture_3d:
-			return std::make_shared<Texture3DImpl<GL3TextureProvider>>(HandleInit(this, texture_dimensions, texture_format, min_level, num_levels, min_layer, num_layers));
+			return std::make_shared<Texture3DImpl<GL3TextureObject>>(HandleInit(this, texture_dimensions, texture_format, min_level, num_levels, min_layer, num_layers));
 		case texture_cube:
-			return std::make_shared<TextureCubeImpl<GL3TextureProvider>>(HandleInit(this, texture_dimensions, texture_format, min_level, num_levels, min_layer, num_layers));
+			return std::make_shared<TextureCubeImpl<GL3TextureObject>>(HandleInit(this, texture_dimensions, texture_format, min_level, num_levels, min_layer, num_layers));
 		case texture_cube_array:
-			return std::make_shared<TextureCubeArrayImpl<GL3TextureProvider>>(HandleInit(this, texture_dimensions, texture_format, min_level, num_levels, min_layer, num_layers));
+			return std::make_shared<TextureCubeArrayImpl<GL3TextureObject>>(HandleInit(this, texture_dimensions, texture_format, min_level, num_levels, min_layer, num_layers));
 		default:
 			throw Exception("Unsupported texture type");
 		}

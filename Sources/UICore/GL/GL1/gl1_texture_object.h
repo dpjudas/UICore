@@ -38,17 +38,17 @@
 
 namespace uicore
 {
-	class GL1GraphicContextProvider;
+	class GL1GraphicContext;
 
-	class GL1TextureProvider : public TextureObject, GLSharedResource
+	class GL1TextureObject : public TextureObject, GLSharedResource
 	{
 	public:
 		struct HandleInit {};
 		struct InitData {};
 
-		GL1TextureProvider(HandleInit) {}
-		GL1TextureProvider(InitData, TextureDimensions texture_dimensions, int width, int height, int depth, int array_size, TextureFormat texture_format, int levels);
-		~GL1TextureProvider();
+		GL1TextureObject(HandleInit) {}
+		GL1TextureObject(InitData, TextureDimensions texture_dimensions, int width, int height, int depth, int array_size, TextureFormat texture_format, int levels);
+		~GL1TextureObject();
 
 		GLuint get_handle() const { return handle; }
 		GLuint get_texture_type() const { return texture_type; }

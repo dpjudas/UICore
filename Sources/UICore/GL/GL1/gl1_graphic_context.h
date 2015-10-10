@@ -54,11 +54,11 @@ namespace uicore
 	class ShaderObjectProvider;
 	class FrameBufferProvider;
 	class RenderBufferProvider;
-	class GL1TextureProvider;
-	class GL1FrameBufferProvider;
+	class GL1TextureObject;
+	class GL1FrameBuffer;
 	class GL1SelectedTexture;
 	class DisposableObject;
-	class GL1ProgramObjectProvider;
+	class GL1ProgramObject;
 	class OpenGLWindowProvider;
 	enum class ShaderType;
 
@@ -78,11 +78,11 @@ namespace uicore
 		OpenGLDepthStencilState depth_stencil;
 	};
 
-	class GL1GraphicContextProvider : public OpenGLGraphicContextProvider, public GraphicContextProvider, public DisposableObject
+	class GL1GraphicContext : public OpenGLGraphicContextProvider, public GraphicContextProvider, public DisposableObject
 	{
 	public:
-		GL1GraphicContextProvider(OpenGLWindowProvider * render_window);
-		~GL1GraphicContextProvider();
+		GL1GraphicContext(OpenGLWindowProvider * render_window);
+		~GL1GraphicContext();
 
 		int max_attributes() override;
 		Size max_texture_size() const override;
@@ -222,7 +222,7 @@ namespace uicore
 
 		GL1State selected_state;
 
-		GL1FrameBufferProvider *framebuffer_provider;	// Only valid when framebuffer_bound == true
+		GL1FrameBuffer *framebuffer_provider;	// Only valid when framebuffer_bound == true
 		bool framebuffer_bound;
 
 		FrameBufferPtr _read_frame_buffer;

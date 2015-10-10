@@ -37,13 +37,13 @@
 
 namespace uicore
 {
-	class GL3GraphicContextProvider;
+	class GL3GraphicContext;
 
-	class GL3ProgramObjectProvider : public ProgramObjectProvider, GLSharedResource
+	class GL3ProgramObject : public ProgramObjectProvider, GLSharedResource
 	{
 	public:
-		GL3ProgramObjectProvider();
-		virtual ~GL3ProgramObjectProvider();
+		GL3ProgramObject();
+		virtual ~GL3ProgramObject();
 
 		/// \brief Returns the OpenGL program object handle.
 		unsigned int get_handle() const;
