@@ -36,7 +36,7 @@
 #include "UICore/GL/opengl_wrap.h"
 #include "UICore/GL/opengl.h"
 #include "UICore/Core/System/databuffer.h"
-#include "gl3_pixel_buffer.h"
+#include "gl3_transfer_texture.h"
 
 namespace uicore
 {

@@ -28,7 +28,7 @@
 */
 
 #include "UICore/precomp.h"
-#include "gl3_pixel_buffer.h"
+#include "gl3_transfer_texture.h"
 #include "gl3_graphic_context.h"
 #include "UICore/GL/opengl_wrap.h"
 

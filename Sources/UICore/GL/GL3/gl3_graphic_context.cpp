@@ -44,7 +44,7 @@
 #include "gl3_storage_buffer.h"
 #include "gl3_element_array_buffer.h"
 #include "gl3_transfer_buffer.h"
-#include "gl3_pixel_buffer.h"
+#include "gl3_transfer_texture.h"
 #include "gl3_primitives_array.h"
 #include "UICore/Core/System/databuffer.h"
 #include "UICore/Core/Math/cl_math.h"
