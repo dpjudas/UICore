@@ -33,14 +33,14 @@
 #include "UICore/Display/Render/depth_stencil_state_description.h"
 #include "UICore/Display/Render/graphic_context.h"
 #include "UICore/Display/Render/program_object.h"
-#include "d3d_rasterizer_state_provider.h"
-#include "d3d_blend_state_provider.h"
-#include "d3d_depth_stencil_state_provider.h"
+#include "d3d_rasterizer_state.h"
+#include "d3d_blend_state.h"
+#include "d3d_depth_stencil_state.h"
 #include "standard_programs.h"
 #include "d3d_unit_map.h"
 #include <map>
 #include <memory>
-#include "d3d_render_buffer_provider.h"
+#include "d3d_render_buffer.h"
 
 namespace uicore
 {

@@ -31,8 +31,8 @@
 #include "UICore/Display/Render/frame_buffer.h"
 #include "UICore/Display/Render/render_buffer.h"
 #include "UICore/Display/Render/texture_2d.h"
-#include "d3d_render_buffer_provider.h"
-#include "d3d_texture_provider.h"
+#include "d3d_render_buffer.h"
+#include "d3d_texture_object.h"
 
 namespace uicore
 {

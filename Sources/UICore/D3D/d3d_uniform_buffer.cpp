@@ -27,15 +27,15 @@
 */
 
 #include "UICore/precomp.h"
-#include "d3d_vertex_array_buffer_provider.h"
-#include "d3d_graphic_context_provider.h"
-#include "d3d_display_window_provider.h"
-#include "d3d_transfer_buffer_provider.h"
+#include "d3d_uniform_buffer.h"
+#include "d3d_graphic_context.h"
+#include "d3d_display_window.h"
+#include "d3d_transfer_buffer.h"
 #include "UICore/D3D/d3d_target.h"
 
 namespace uicore
 {
-	D3DVertexArrayBufferProvider::D3DVertexArrayBufferProvider(const ComPtr<ID3D11Device> &device, int new_size, BufferUsage usage)
+	D3DUniformBufferProvider::D3DUniformBufferProvider(const ComPtr<ID3D11Device> &device, int new_size, BufferUsage usage)
 	{
 		handles.push_back(std::shared_ptr<DeviceHandles>(new DeviceHandles(device)));
 
@@ -44,41 +44,41 @@ namespace uicore
 		D3D11_BUFFER_DESC desc;
 		desc.ByteWidth = new_size;
 		desc.Usage = D3D11_USAGE_DEFAULT;
-		desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+		desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 		desc.CPUAccessFlags = 0;
 		desc.MiscFlags = D3D11_RESOURCE_MISC_SHARED;
 		desc.StructureByteStride = 0;
 		HRESULT result = handles.front()->device->CreateBuffer(&desc, 0, handles.front()->buffer.output_variable());
-		D3DTarget::throw_if_failed("Unable to create vertex array buffer", result);
+		D3DTarget::throw_if_failed("Unable to create program uniform block", result);
 	}
 
-	D3DVertexArrayBufferProvider::D3DVertexArrayBufferProvider(const ComPtr<ID3D11Device> &device, const void *init_data, int new_size, BufferUsage usage)
+	D3DUniformBufferProvider::D3DUniformBufferProvider(const ComPtr<ID3D11Device> &device, const void *data, int new_size, BufferUsage usage)
 	{
 		handles.push_back(std::shared_ptr<DeviceHandles>(new DeviceHandles(device)));
 
 		size = new_size;
 
 		D3D11_SUBRESOURCE_DATA resource_data;
-		resource_data.pSysMem = init_data;
+		resource_data.pSysMem = data;
 		resource_data.SysMemPitch = 0;
 		resource_data.SysMemSlicePitch = 0;
 
 		D3D11_BUFFER_DESC desc;
 		desc.ByteWidth = new_size;
 		desc.Usage = D3D11_USAGE_DEFAULT;
-		desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+		desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 		desc.CPUAccessFlags = 0;
 		desc.MiscFlags = D3D11_RESOURCE_MISC_SHARED;
 		desc.StructureByteStride = 0;
 		HRESULT result = handles.front()->device->CreateBuffer(&desc, &resource_data, handles.front()->buffer.output_variable());
-		D3DTarget::throw_if_failed("Unable to create vertex array buffer", result);
+		D3DTarget::throw_if_failed("Unable to create program uniform block", result);
 	}
 
-	D3DVertexArrayBufferProvider::~D3DVertexArrayBufferProvider()
+	D3DUniformBufferProvider::~D3DUniformBufferProvider()
 	{
 	}
 
-	ComPtr<ID3D11Buffer> &D3DVertexArrayBufferProvider::get_buffer(const ComPtr<ID3D11Device> &device)
+	ComPtr<ID3D11Buffer> &D3DUniformBufferProvider::get_buffer(const ComPtr<ID3D11Device> &device)
 	{
 		if (device)
 			return get_handles(device).buffer;
@@ -86,27 +86,18 @@ namespace uicore
 			return handles.front()->buffer;
 	}
 
-	void D3DVertexArrayBufferProvider::upload_data(const GraphicContextPtr &gc, int offset, const void *data, int data_size)
+	void D3DUniformBufferProvider::upload_data(const GraphicContextPtr &gc, const void *data, int data_size)
 	{
-		if ((offset < 0) || (data_size < 0) || ((data_size + offset) > size))
-			throw Exception("Vertex array buffer, invalid size");
+		if (data_size != size)
+			throw Exception("Upload data size does not match vertex array buffer");
 
 		const ComPtr<ID3D11Device> &device = static_cast<D3DGraphicContextProvider*>(gc.get())->get_window()->get_device();
 		ComPtr<ID3D11DeviceContext> device_context;
 		device->GetImmediateContext(device_context.output_variable());
-
-		D3D11_BOX box;
-		box.left = offset;
-		box.right = offset + data_size;
-		box.top = 0;
-		box.bottom = 1;
-		box.front = 0;
-		box.back = 1;
-
-		device_context->UpdateSubresource(get_handles(device).buffer, 0, &box, data, 0, 0);
+		device_context->UpdateSubresource(get_handles(device).buffer, 0, 0, data, 0, 0);
 	}
 
-	void D3DVertexArrayBufferProvider::copy_from(const GraphicContextPtr &gc, const TransferBufferPtr &buffer, int dest_pos, int src_pos, int copy_size)
+	void D3DUniformBufferProvider::copy_from(const GraphicContextPtr &gc, const TransferBufferPtr &buffer, int dest_pos, int src_pos, int copy_size)
 	{
 		const ComPtr<ID3D11Device> &device = static_cast<D3DGraphicContextProvider*>(gc.get())->get_window()->get_device();
 		ComPtr<ID3D11Buffer> &transfer_buffer = static_cast<D3DTransferBufferProvider*>(buffer.get())->get_buffer(device);
@@ -131,7 +122,7 @@ namespace uicore
 		device_context->CopySubresourceRegion(get_handles(device).buffer, 0, dest_pos, 0, 0, transfer_buffer, 0, &box);
 	}
 
-	void D3DVertexArrayBufferProvider::copy_to(const GraphicContextPtr &gc, const TransferBufferPtr &buffer, int dest_pos, int src_pos, int copy_size)
+	void D3DUniformBufferProvider::copy_to(const GraphicContextPtr  &gc, const TransferBufferPtr &buffer, int dest_pos, int src_pos, int copy_size)
 	{
 		const ComPtr<ID3D11Device> &device = static_cast<D3DGraphicContextProvider*>(gc.get())->get_window()->get_device();
 		ComPtr<ID3D11Buffer> &transfer_buffer = static_cast<D3DTransferBufferProvider*>(buffer.get())->get_buffer(device);
@@ -156,7 +147,7 @@ namespace uicore
 		device_context->CopySubresourceRegion(transfer_buffer, 0, src_pos, 0, 0, get_handles(device).buffer, 0, &box);
 	}
 
-	void D3DVertexArrayBufferProvider::device_destroyed(ID3D11Device *device)
+	void D3DUniformBufferProvider::device_destroyed(ID3D11Device *device)
 	{
 		for (size_t i = 0; i < handles.size(); i++)
 		{
@@ -168,7 +159,7 @@ namespace uicore
 		}
 	}
 
-	D3DVertexArrayBufferProvider::DeviceHandles &D3DVertexArrayBufferProvider::get_handles(const ComPtr<ID3D11Device> &device)
+	D3DUniformBufferProvider::DeviceHandles &D3DUniformBufferProvider::get_handles(const ComPtr<ID3D11Device> &device)
 	{
 		for (size_t i = 0; i < handles.size(); i++)
 			if (handles[i]->device == device)
@@ -191,7 +182,7 @@ namespace uicore
 		return *handles.back();
 	}
 
-	D3D11_MAP D3DVertexArrayBufferProvider::to_d3d_map_type(BufferAccess access)
+	D3D11_MAP D3DUniformBufferProvider::to_d3d_map_type(BufferAccess access)
 	{
 		switch (access)
 		{

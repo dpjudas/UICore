@@ -27,7 +27,7 @@
 */
 
 #include "UICore/precomp.h"
-#include "d3d_occlusion_query_provider.h"
+#include "d3d_occlusion_query.h"
 
 namespace uicore
 {

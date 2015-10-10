@@ -31,7 +31,7 @@
 #include "UICore/Display/Render/texture.h"
 #include "UICore/Display/Render/uniform_buffer.h"
 #include "UICore/Display/Render/storage_buffer.h"
-#include "d3d_program_object_provider.h"
+#include "d3d_program_object.h"
 
 namespace uicore
 {

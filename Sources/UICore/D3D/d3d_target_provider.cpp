@@ -28,7 +28,7 @@
 
 #include "UICore/precomp.h"
 #include "d3d_target_provider.h"
-#include "d3d_display_window_provider.h"
+#include "d3d_display_window.h"
 
 namespace uicore
 {

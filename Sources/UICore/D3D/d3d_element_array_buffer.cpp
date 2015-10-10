@@ -27,10 +27,10 @@
 */
 
 #include "UICore/precomp.h"
-#include "d3d_element_array_buffer_provider.h"
-#include "d3d_graphic_context_provider.h"
-#include "d3d_display_window_provider.h"
-#include "d3d_transfer_buffer_provider.h"
+#include "d3d_element_array_buffer.h"
+#include "d3d_graphic_context.h"
+#include "d3d_display_window.h"
+#include "d3d_transfer_buffer.h"
 #include "UICore/D3D/d3d_target.h"
 
 namespace uicore

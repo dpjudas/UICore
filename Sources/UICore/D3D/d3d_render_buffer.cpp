@@ -27,8 +27,8 @@
 */
 
 #include "UICore/precomp.h"
-#include "d3d_render_buffer_provider.h"
-#include "d3d_texture_provider.h"
+#include "d3d_render_buffer.h"
+#include "d3d_texture_object.h"
 #include "UICore/D3D/d3d_target.h"
 
 namespace uicore

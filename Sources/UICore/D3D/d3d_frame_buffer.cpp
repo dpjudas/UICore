@@ -27,7 +27,7 @@
 */
 
 #include "UICore/precomp.h"
-#include "d3d_frame_buffer_provider.h"
+#include "d3d_frame_buffer.h"
 #include "UICore/Display/Render/texture_1d.h"
 #include "UICore/Display/Render/texture_1d_array.h"
 #include "UICore/Display/Render/texture_2d.h"

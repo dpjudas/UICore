@@ -28,12 +28,12 @@
 
 #include "UICore/precomp.h"
 #include "d3d_unit_map.h"
-#include "d3d_graphic_context_provider.h"
-#include "d3d_program_object_provider.h"
-#include "d3d_uniform_buffer_provider.h"
-#include "d3d_storage_buffer_provider.h"
-#include "d3d_display_window_provider.h"
-#include "d3d_texture_provider.h"
+#include "d3d_graphic_context.h"
+#include "d3d_program_object.h"
+#include "d3d_uniform_buffer.h"
+#include "d3d_storage_buffer.h"
+#include "d3d_display_window.h"
+#include "d3d_texture_object.h"
 
 namespace uicore
 {

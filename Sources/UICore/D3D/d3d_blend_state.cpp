@@ -27,7 +27,7 @@
 */
 
 #include "UICore/precomp.h"
-#include "d3d_blend_state_provider.h"
+#include "d3d_blend_state.h"
 #include "UICore/D3D/d3d_target.h"
 
 namespace uicore

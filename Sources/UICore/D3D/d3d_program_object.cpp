@@ -27,9 +27,9 @@
 */
 
 #include "UICore/precomp.h"
-#include "d3d_program_object_provider.h"
-#include "d3d_shader_object_provider.h"
-#include "d3d_uniform_buffer_provider.h"
+#include "d3d_program_object.h"
+#include "d3d_shader_object.h"
+#include "d3d_uniform_buffer.h"
 #include "UICore/Display/Render/shader_object.h"
 #include "UICore/Core/Text/text.h"
 

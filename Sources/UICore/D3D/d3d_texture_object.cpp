@@ -27,10 +27,10 @@
 */
 
 #include "UICore/precomp.h"
-#include "d3d_texture_provider.h"
-#include "d3d_pixel_buffer_provider.h"
-#include "d3d_graphic_context_provider.h"
-#include "d3d_display_window_provider.h"
+#include "d3d_texture_object.h"
+#include "d3d_pixel_buffer.h"
+#include "d3d_graphic_context.h"
+#include "d3d_display_window.h"
 #include "UICore/Display/Image/pixel_buffer.h"
 #include "UICore/Display/Render/transfer_texture.h"
 #include "UICore/D3D/d3d_target.h"

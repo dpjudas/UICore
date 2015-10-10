@@ -28,9 +28,9 @@
 */
 
 #include "UICore/precomp.h"
-#include "d3d_display_window_provider.h"
+#include "d3d_display_window.h"
 #include "d3d_target_provider.h"
-#include "d3d_graphic_context_provider.h"
+#include "d3d_graphic_context.h"
 #include "UICore/Core/Math/rect.h"
 #include "UICore/Display/Render/graphic_context.h"
 #include "UICore/Display/Window/display_window_description.h"

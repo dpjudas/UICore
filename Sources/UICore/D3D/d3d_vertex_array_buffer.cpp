@@ -27,15 +27,15 @@
 */
 
 #include "UICore/precomp.h"
-#include "d3d_storage_buffer_provider.h"
-#include "d3d_graphic_context_provider.h"
-#include "d3d_display_window_provider.h"
-#include "d3d_transfer_buffer_provider.h"
+#include "d3d_vertex_array_buffer.h"
+#include "d3d_graphic_context.h"
+#include "d3d_display_window.h"
+#include "d3d_transfer_buffer.h"
 #include "UICore/D3D/d3d_target.h"
 
 namespace uicore
 {
-	D3DStorageBufferProvider::D3DStorageBufferProvider(const ComPtr<ID3D11Device> &device, int new_size, int new_stride, BufferUsage usage) : size(0)
+	D3DVertexArrayBufferProvider::D3DVertexArrayBufferProvider(const ComPtr<ID3D11Device> &device, int new_size, BufferUsage usage)
 	{
 		handles.push_back(std::shared_ptr<DeviceHandles>(new DeviceHandles(device)));
 
@@ -44,43 +44,41 @@ namespace uicore
 		D3D11_BUFFER_DESC desc;
 		desc.ByteWidth = new_size;
 		desc.Usage = D3D11_USAGE_DEFAULT;
-		desc.BindFlags = D3D11_BIND_UNORDERED_ACCESS | D3D11_BIND_SHADER_RESOURCE;
+		desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 		desc.CPUAccessFlags = 0;
-		desc.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED | D3D11_RESOURCE_MISC_SHARED;
-		desc.StructureByteStride = new_stride;
-
+		desc.MiscFlags = D3D11_RESOURCE_MISC_SHARED;
+		desc.StructureByteStride = 0;
 		HRESULT result = handles.front()->device->CreateBuffer(&desc, 0, handles.front()->buffer.output_variable());
-		D3DTarget::throw_if_failed("Unable to create program storage block", result);
+		D3DTarget::throw_if_failed("Unable to create vertex array buffer", result);
 	}
 
-	D3DStorageBufferProvider::D3DStorageBufferProvider(const ComPtr<ID3D11Device> &device, const void *data, int new_size, int new_stride, BufferUsage usage) : size(0)
+	D3DVertexArrayBufferProvider::D3DVertexArrayBufferProvider(const ComPtr<ID3D11Device> &device, const void *init_data, int new_size, BufferUsage usage)
 	{
 		handles.push_back(std::shared_ptr<DeviceHandles>(new DeviceHandles(device)));
 
 		size = new_size;
 
 		D3D11_SUBRESOURCE_DATA resource_data;
-		resource_data.pSysMem = data;
+		resource_data.pSysMem = init_data;
 		resource_data.SysMemPitch = 0;
 		resource_data.SysMemSlicePitch = 0;
 
 		D3D11_BUFFER_DESC desc;
 		desc.ByteWidth = new_size;
 		desc.Usage = D3D11_USAGE_DEFAULT;
-		desc.BindFlags = D3D11_BIND_UNORDERED_ACCESS | D3D11_BIND_SHADER_RESOURCE;
+		desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 		desc.CPUAccessFlags = 0;
-		desc.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED | D3D11_RESOURCE_MISC_SHARED;
-		desc.StructureByteStride = new_stride;
-
+		desc.MiscFlags = D3D11_RESOURCE_MISC_SHARED;
+		desc.StructureByteStride = 0;
 		HRESULT result = handles.front()->device->CreateBuffer(&desc, &resource_data, handles.front()->buffer.output_variable());
-		D3DTarget::throw_if_failed("Unable to create program storage block", result);
+		D3DTarget::throw_if_failed("Unable to create vertex array buffer", result);
 	}
 
-	D3DStorageBufferProvider::~D3DStorageBufferProvider()
+	D3DVertexArrayBufferProvider::~D3DVertexArrayBufferProvider()
 	{
 	}
 
-	ComPtr<ID3D11Buffer> &D3DStorageBufferProvider::get_buffer(const ComPtr<ID3D11Device> &device)
+	ComPtr<ID3D11Buffer> &D3DVertexArrayBufferProvider::get_buffer(const ComPtr<ID3D11Device> &device)
 	{
 		if (device)
 			return get_handles(device).buffer;
@@ -88,50 +86,27 @@ namespace uicore
 			return handles.front()->buffer;
 	}
 
-	ComPtr<ID3D11ShaderResourceView> &D3DStorageBufferProvider::get_srv(const ComPtr<ID3D11Device> &device)
+	void D3DVertexArrayBufferProvider::upload_data(const GraphicContextPtr &gc, int offset, const void *data, int data_size)
 	{
-		DeviceHandles &handles = get_handles(device);
-
-		if (!handles.srv)
-		{
-			D3D11_BUFFER_DESC buffer_desc;
-			handles.buffer->GetDesc(&buffer_desc);
-
-			D3D11_SHADER_RESOURCE_VIEW_DESC srv_desc;
-			srv_desc.Format = DXGI_FORMAT_UNKNOWN;
-			srv_desc.ViewDimension = D3D11_SRV_DIMENSION_BUFFER;
-			srv_desc.Buffer.ElementOffset = 0;
-			srv_desc.Buffer.ElementWidth = buffer_desc.ByteWidth / buffer_desc.StructureByteStride;
-
-			HRESULT result = device->CreateShaderResourceView(handles.buffer, &srv_desc, handles.srv.output_variable());
-			D3DTarget::throw_if_failed("ID3D11Device.CreateShaderResourceView failed", result);
-		}
-		return handles.srv;
-	}
-
-	ComPtr<ID3D11UnorderedAccessView> &D3DStorageBufferProvider::get_uav(const ComPtr<ID3D11Device> &device)
-	{
-		DeviceHandles &handles = get_handles(device);
-		if (!handles.uav)
-		{
-			HRESULT result = device->CreateUnorderedAccessView(handles.buffer, 0, handles.uav.output_variable());
-			D3DTarget::throw_if_failed("ID3D11Device.CreateUnorderedAccessView failed", result);
-		}
-		return handles.uav;
-	}
-
-	void D3DStorageBufferProvider::upload_data(const GraphicContextPtr &gc, const void *data, int data_size)
-	{
-		if (data_size != size)
-			throw Exception("Upload data size does not match vertex array buffer");
+		if ((offset < 0) || (data_size < 0) || ((data_size + offset) > size))
+			throw Exception("Vertex array buffer, invalid size");
 
 		const ComPtr<ID3D11Device> &device = static_cast<D3DGraphicContextProvider*>(gc.get())->get_window()->get_device();
 		ComPtr<ID3D11DeviceContext> device_context;
 		device->GetImmediateContext(device_context.output_variable());
-		device_context->UpdateSubresource(get_handles(device).buffer, 0, 0, data, 0, 0);
+
+		D3D11_BOX box;
+		box.left = offset;
+		box.right = offset + data_size;
+		box.top = 0;
+		box.bottom = 1;
+		box.front = 0;
+		box.back = 1;
+
+		device_context->UpdateSubresource(get_handles(device).buffer, 0, &box, data, 0, 0);
 	}
 
-	void D3DStorageBufferProvider::copy_from(const GraphicContextPtr &gc, const TransferBufferPtr &buffer, int dest_pos, int src_pos, int copy_size)
+	void D3DVertexArrayBufferProvider::copy_from(const GraphicContextPtr &gc, const TransferBufferPtr &buffer, int dest_pos, int src_pos, int copy_size)
 	{
 		const ComPtr<ID3D11Device> &device = static_cast<D3DGraphicContextProvider*>(gc.get())->get_window()->get_device();
 		ComPtr<ID3D11Buffer> &transfer_buffer = static_cast<D3DTransferBufferProvider*>(buffer.get())->get_buffer(device);
@@ -156,7 +131,7 @@ namespace uicore
 		device_context->CopySubresourceRegion(get_handles(device).buffer, 0, dest_pos, 0, 0, transfer_buffer, 0, &box);
 	}
 
-	void D3DStorageBufferProvider::copy_to(const GraphicContextPtr &gc, const TransferBufferPtr &buffer, int dest_pos, int src_pos, int copy_size)
+	void D3DVertexArrayBufferProvider::copy_to(const GraphicContextPtr &gc, const TransferBufferPtr &buffer, int dest_pos, int src_pos, int copy_size)
 	{
 		const ComPtr<ID3D11Device> &device = static_cast<D3DGraphicContextProvider*>(gc.get())->get_window()->get_device();
 		ComPtr<ID3D11Buffer> &transfer_buffer = static_cast<D3DTransferBufferProvider*>(buffer.get())->get_buffer(device);
@@ -181,7 +156,7 @@ namespace uicore
 		device_context->CopySubresourceRegion(transfer_buffer, 0, src_pos, 0, 0, get_handles(device).buffer, 0, &box);
 	}
 
-	void D3DStorageBufferProvider::device_destroyed(ID3D11Device *device)
+	void D3DVertexArrayBufferProvider::device_destroyed(ID3D11Device *device)
 	{
 		for (size_t i = 0; i < handles.size(); i++)
 		{
@@ -193,7 +168,7 @@ namespace uicore
 		}
 	}
 
-	D3DStorageBufferProvider::DeviceHandles &D3DStorageBufferProvider::get_handles(const ComPtr<ID3D11Device> &device)
+	D3DVertexArrayBufferProvider::DeviceHandles &D3DVertexArrayBufferProvider::get_handles(const ComPtr<ID3D11Device> &device)
 	{
 		for (size_t i = 0; i < handles.size(); i++)
 			if (handles[i]->device == device)
@@ -216,7 +191,7 @@ namespace uicore
 		return *handles.back();
 	}
 
-	D3D11_MAP D3DStorageBufferProvider::to_d3d_map_type(BufferAccess access)
+	D3D11_MAP D3DVertexArrayBufferProvider::to_d3d_map_type(BufferAccess access)
 	{
 		switch (access)
 		{
