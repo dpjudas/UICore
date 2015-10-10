@@ -23,58 +23,24 @@
 **
 **  File Author(s):
 **
+**    Magnus Norddahl
 **    Mark Page
 */
 
 #include "UICore/precomp.h"
-
-#ifdef WIN32
-#include "../Platform/WGL/pbuffer_impl.h"
-#elif defined(__ANDROID__)
-#include "../Platform/Android/pbuffer_impl.h"
-#elif __APPLE__
-#include "../Platform/AGL/pbuffer_impl.h"
-#else
-#include "../Platform/GLX/pbuffer_impl.h"
-#endif
-#include "pbuffer.h"
-
-#include "gl1_graphic_context.h"
+#include "gl3_storage_buffer.h"
+#include "gl3_graphic_context.h"
+#include "UICore/GL/opengl_wrap.h"
 
 namespace uicore
 {
-	PBuffer_GL1::PBuffer_GL1()
+	GL3StorageBufferProvider::GL3StorageBufferProvider(int size, int stride, BufferUsage usage)
 	{
+		buffer.create(nullptr, size, usage, GL_UNIFORM_BUFFER_BINDING, GL_UNIFORM_BUFFER);
 	}
 
-	PBuffer_GL1::PBuffer_GL1(GL1GraphicContextProvider *gc_provider) : impl(std::make_shared<PBuffer_GL1_Impl>(gc_provider))
+	GL3StorageBufferProvider::GL3StorageBufferProvider(const void *data, int size, int stride, BufferUsage usage)
 	{
-	}
-
-	PBuffer_GL1::~PBuffer_GL1()
-	{
-	}
-
-	void PBuffer_GL1::create(OpenGLWindowProvider &window_provider, Size &size)
-	{
-		impl->create(window_provider, size);
-		set_active();
-
-		glEnable(GL_POINT_SPRITE);
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
-		glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();
-	}
-
-	void PBuffer_GL1::set_active()
-	{
-		OpenGL::set_active(impl.get());
-	}
-
-	void PBuffer_GL1::throw_if_null() const
-	{
-		if (!impl)
-			throw Exception("is null");
+		buffer.create(data, size, usage, GL_UNIFORM_BUFFER_BINDING, GL_UNIFORM_BUFFER);
 	}
 }

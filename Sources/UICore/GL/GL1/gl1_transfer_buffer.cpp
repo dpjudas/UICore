@@ -23,58 +23,38 @@
 **
 **  File Author(s):
 **
+**    Magnus Norddahl
 **    Mark Page
 */
 
 #include "UICore/precomp.h"
-
-#ifdef WIN32
-#include "../Platform/WGL/pbuffer_impl.h"
-#elif defined(__ANDROID__)
-#include "../Platform/Android/pbuffer_impl.h"
-#elif __APPLE__
-#include "../Platform/AGL/pbuffer_impl.h"
-#else
-#include "../Platform/GLX/pbuffer_impl.h"
-#endif
-#include "pbuffer.h"
-
-#include "gl1_graphic_context.h"
+#include "gl1_transfer_buffer.h"
 
 namespace uicore
 {
-	PBuffer_GL1::PBuffer_GL1()
+	GL1TransferBufferProvider::GL1TransferBufferProvider(int new_size, BufferUsage usage)
 	{
+		data_ptr = new char[new_size];
+		size = new_size;
 	}
 
-	PBuffer_GL1::PBuffer_GL1(GL1GraphicContextProvider *gc_provider) : impl(std::make_shared<PBuffer_GL1_Impl>(gc_provider))
+	GL1TransferBufferProvider::GL1TransferBufferProvider(const void *init_data, int new_size, BufferUsage usage)
 	{
+		data_ptr = new char[new_size];
+		size = new_size;
+		memcpy(data_ptr, init_data, size);
 	}
 
-	PBuffer_GL1::~PBuffer_GL1()
+	GL1TransferBufferProvider::~GL1TransferBufferProvider()
 	{
+		delete[] data_ptr;
 	}
 
-	void PBuffer_GL1::create(OpenGLWindowProvider &window_provider, Size &size)
+	void GL1TransferBufferProvider::upload_data(const GraphicContextPtr &gc, int offset, const void *data, int size)
 	{
-		impl->create(window_provider, size);
-		set_active();
+		if ((size < 0) || (offset < 0) || ((size + offset) > this->size))
+			throw Exception("Transfer buffer, invalid size");
 
-		glEnable(GL_POINT_SPRITE);
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
-		glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();
-	}
-
-	void PBuffer_GL1::set_active()
-	{
-		OpenGL::set_active(impl.get());
-	}
-
-	void PBuffer_GL1::throw_if_null() const
-	{
-		if (!impl)
-			throw Exception("is null");
+		memcpy(data_ptr + offset, data, size);
 	}
 }

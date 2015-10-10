@@ -29,10 +29,10 @@
 
 #include "UICore/precomp.h"
 #include "gl3_standard_programs.h"
-#include "gl3_program_object_provider.h"
-#include "gl3_shader_object_provider.h"
-#include "gl3_render_buffer_provider.h"
-#include "gl3_vertex_array_buffer_provider.h"
+#include "gl3_program_object.h"
+#include "gl3_shader_object.h"
+#include "gl3_render_buffer.h"
+#include "gl3_vertex_array_buffer.h"
 #include "UICore/Display/2D/render_batch_triangle.h"
 
 namespace uicore

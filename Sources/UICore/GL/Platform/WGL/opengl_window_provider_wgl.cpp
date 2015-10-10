@@ -45,8 +45,8 @@
 #include "UICore/Display/Platform/Win32/cursor_provider_win32.h"
 #include "UICore/Display/Platform/Win32/dwm_functions.h"
 #include "../../opengl_context_description_impl.h"
-#include "../../GL3/gl3_graphic_context_provider.h"
-#include "../../GL1/gl1_graphic_context_provider.h"
+#include "../../GL3/gl3_graphic_context.h"
+#include "../../GL1/gl1_graphic_context.h"
 #include "opengl_creation_helper.h"
 #include <commctrl.h>
 

@@ -34,7 +34,7 @@
 #include "UICore/Core/Text/text.h"
 #include "opengl_graphic_context_provider.h"
 #include "opengl_target_provider.h"
-#include "GL3/gl3_graphic_context_provider.h"
+#include "GL3/gl3_graphic_context.h"
 #include "setup_gl_impl.h"
 #include "setup_gl.h"
 

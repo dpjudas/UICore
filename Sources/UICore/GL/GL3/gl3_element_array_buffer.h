@@ -23,58 +23,34 @@
 **
 **  File Author(s):
 **
+**    Magnus Norddahl
 **    Mark Page
 */
 
-#include "UICore/precomp.h"
+#pragma once
 
-#ifdef WIN32
-#include "../Platform/WGL/pbuffer_impl.h"
-#elif defined(__ANDROID__)
-#include "../Platform/Android/pbuffer_impl.h"
-#elif __APPLE__
-#include "../Platform/AGL/pbuffer_impl.h"
-#else
-#include "../Platform/GLX/pbuffer_impl.h"
-#endif
-#include "pbuffer.h"
-
-#include "gl1_graphic_context.h"
+#include "UICore/Display/Render/element_array_buffer.h"
+#include "UICore/GL/opengl.h"
+#include "UICore/Core/System/disposable_object.h"
+#include "gl3_buffer_object.h"
 
 namespace uicore
 {
-	PBuffer_GL1::PBuffer_GL1()
-	{
-	}
+	class GL3GraphicContextProvider;
 
-	PBuffer_GL1::PBuffer_GL1(GL1GraphicContextProvider *gc_provider) : impl(std::make_shared<PBuffer_GL1_Impl>(gc_provider))
+	class GL3ElementArrayBufferProvider : public ElementArrayBuffer
 	{
-	}
+	public:
+		GL3ElementArrayBufferProvider(int size, BufferUsage usage);
+		GL3ElementArrayBufferProvider(const void *data, int size, BufferUsage usage);
 
-	PBuffer_GL1::~PBuffer_GL1()
-	{
-	}
+		GLuint get_handle() const { return buffer.get_handle(); }
 
-	void PBuffer_GL1::create(OpenGLWindowProvider &window_provider, Size &size)
-	{
-		impl->create(window_provider, size);
-		set_active();
+		void upload_data(const GraphicContextPtr &gc, const void *data, int size) override { buffer.upload_data(gc, data, size); }
+		void copy_from(const GraphicContextPtr &gc, const TransferBufferPtr &transfer_buffer, int dest_pos, int src_pos, int size) override { buffer.copy_from(gc, transfer_buffer, dest_pos, src_pos, size); }
+		void copy_to(const GraphicContextPtr &gc, const TransferBufferPtr &transfer_buffer, int dest_pos, int src_pos, int size) override { buffer.copy_to(gc, transfer_buffer, dest_pos, src_pos, size); }
 
-		glEnable(GL_POINT_SPRITE);
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
-		glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();
-	}
-
-	void PBuffer_GL1::set_active()
-	{
-		OpenGL::set_active(impl.get());
-	}
-
-	void PBuffer_GL1::throw_if_null() const
-	{
-		if (!impl)
-			throw Exception("is null");
-	}
+	private:
+		GL3BufferObjectProvider buffer;
+	};
 }

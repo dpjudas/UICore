@@ -23,58 +23,32 @@
 **
 **  File Author(s):
 **
-**    Mark Page
+**    Magnus Norddahl
 */
 
 #include "UICore/precomp.h"
-
-#ifdef WIN32
-#include "../Platform/WGL/pbuffer_impl.h"
-#elif defined(__ANDROID__)
-#include "../Platform/Android/pbuffer_impl.h"
-#elif __APPLE__
-#include "../Platform/AGL/pbuffer_impl.h"
-#else
-#include "../Platform/GLX/pbuffer_impl.h"
-#endif
-#include "pbuffer.h"
-
-#include "gl1_graphic_context.h"
+#include "gl1_primitives_array.h"
 
 namespace uicore
 {
-	PBuffer_GL1::PBuffer_GL1()
+	GL1PrimitivesArrayProvider::GL1PrimitivesArrayProvider()
 	{
 	}
 
-	PBuffer_GL1::PBuffer_GL1(GL1GraphicContextProvider *gc_provider) : impl(std::make_shared<PBuffer_GL1_Impl>(gc_provider))
+	GL1PrimitivesArrayProvider::~GL1PrimitivesArrayProvider()
 	{
 	}
 
-	PBuffer_GL1::~PBuffer_GL1()
+	void GL1PrimitivesArrayProvider::set_attribute(int index, const VertexData &data, bool normalize)
 	{
-	}
-
-	void PBuffer_GL1::create(OpenGLWindowProvider &window_provider, Size &size)
-	{
-		impl->create(window_provider, size);
-		set_active();
-
-		glEnable(GL_POINT_SPRITE);
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
-		glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();
-	}
-
-	void PBuffer_GL1::set_active()
-	{
-		OpenGL::set_active(impl.get());
-	}
-
-	void PBuffer_GL1::throw_if_null() const
-	{
-		if (!impl)
-			throw Exception("is null");
+		if ((int)attributes.size() <= index)
+		{
+			attributes.resize(index + 1);
+			normalize_attributes.resize(index + 1);
+			attribute_set.resize(index + 1);
+		}
+		attributes[index] = data;
+		normalize_attributes[index] = normalize;
+		attribute_set[index] = true;
 	}
 }

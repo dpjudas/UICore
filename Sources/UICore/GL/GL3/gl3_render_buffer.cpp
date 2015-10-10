@@ -23,58 +23,53 @@
 **
 **  File Author(s):
 **
-**    Mark Page
+**    Magnus Norddahl
+**    Harry Storbacka
 */
 
 #include "UICore/precomp.h"
-
-#ifdef WIN32
-#include "../Platform/WGL/pbuffer_impl.h"
-#elif defined(__ANDROID__)
-#include "../Platform/Android/pbuffer_impl.h"
-#elif __APPLE__
-#include "../Platform/AGL/pbuffer_impl.h"
-#else
-#include "../Platform/GLX/pbuffer_impl.h"
-#endif
-#include "pbuffer.h"
-
-#include "gl1_graphic_context.h"
+#include "UICore/GL/opengl_wrap.h"
+#include "UICore/GL/opengl.h"
+#include "gl3_render_buffer.h"
 
 namespace uicore
 {
-	PBuffer_GL1::PBuffer_GL1()
+	GL3RenderBufferProvider::GL3RenderBufferProvider(int width, int height, TextureFormat texture_format, int multisample_samples) : _size({width, height})
 	{
+		OpenGL::set_active();
+		GLuint last_render_buffer = 0;
+		glGetIntegerv(GL_RENDERBUFFER_BINDING, (GLint *)&last_render_buffer);
+
+		TextureFormat_GL tf = OpenGL::get_textureformat(texture_format);
+		if (!tf.valid)
+			throw Exception("Texture format not supported by OpenGL");
+
+		glGenRenderbuffers(1, &handle);
+		glBindRenderbuffer(GL_RENDERBUFFER, handle);
+		glRenderbufferStorageMultisample(GL_RENDERBUFFER, multisample_samples, tf.pixel_format, width, height);
+
+		glBindRenderbuffer(GL_RENDERBUFFER, last_render_buffer);
 	}
 
-	PBuffer_GL1::PBuffer_GL1(GL1GraphicContextProvider *gc_provider) : impl(std::make_shared<PBuffer_GL1_Impl>(gc_provider))
+	GL3RenderBufferProvider::~GL3RenderBufferProvider()
 	{
+		dispose();
 	}
 
-	PBuffer_GL1::~PBuffer_GL1()
+	void GL3RenderBufferProvider::on_dispose()
 	{
+		if (handle)
+		{
+			if (OpenGL::set_active())
+			{
+				glDeleteRenderbuffers(1, &handle);
+				handle = 0;
+			}
+		}
 	}
 
-	void PBuffer_GL1::create(OpenGLWindowProvider &window_provider, Size &size)
+	GLuint GL3RenderBufferProvider::get_handle()
 	{
-		impl->create(window_provider, size);
-		set_active();
-
-		glEnable(GL_POINT_SPRITE);
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
-		glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();
-	}
-
-	void PBuffer_GL1::set_active()
-	{
-		OpenGL::set_active(impl.get());
-	}
-
-	void PBuffer_GL1::throw_if_null() const
-	{
-		if (!impl)
-			throw Exception("is null");
+		return handle;
 	}
 }

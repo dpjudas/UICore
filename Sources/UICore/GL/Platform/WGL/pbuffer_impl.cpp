@@ -30,7 +30,7 @@
 #include "UICore/GL/opengl_wrap.h"
 #include "UICore/GL/opengl.h"
 #include "pbuffer_impl.h"
-#include "../../GL1/gl1_graphic_context_provider.h"
+#include "../../GL1/gl1_graphic_context.h"
 #include "opengl_window_provider_wgl.h"
 
 namespace uicore

@@ -23,58 +23,28 @@
 **
 **  File Author(s):
 **
-**    Mark Page
+**    Magnus Norddahl
+**    Harry Storbacka
 */
 
 #include "UICore/precomp.h"
-
-#ifdef WIN32
-#include "../Platform/WGL/pbuffer_impl.h"
-#elif defined(__ANDROID__)
-#include "../Platform/Android/pbuffer_impl.h"
-#elif __APPLE__
-#include "../Platform/AGL/pbuffer_impl.h"
-#else
-#include "../Platform/GLX/pbuffer_impl.h"
-#endif
-#include "pbuffer.h"
-
-#include "gl1_graphic_context.h"
+#include "UICore/GL/opengl_wrap.h"
+#include "UICore/GL/opengl.h"
+#include "gl1_render_buffer.h"
 
 namespace uicore
 {
-	PBuffer_GL1::PBuffer_GL1()
+	GL1RenderBufferProvider::GL1RenderBufferProvider(GL1GraphicContextProvider *gc_provider, int width, int height, TextureFormat texture_format, int multisample_samples) : _size({ width, height })
+	{
+		throw Exception("GL1RenderBuffer is not supported");
+	}
+
+	GL1RenderBufferProvider::~GL1RenderBufferProvider()
 	{
 	}
 
-	PBuffer_GL1::PBuffer_GL1(GL1GraphicContextProvider *gc_provider) : impl(std::make_shared<PBuffer_GL1_Impl>(gc_provider))
+	GLuint GL1RenderBufferProvider::get_handle()
 	{
-	}
-
-	PBuffer_GL1::~PBuffer_GL1()
-	{
-	}
-
-	void PBuffer_GL1::create(OpenGLWindowProvider &window_provider, Size &size)
-	{
-		impl->create(window_provider, size);
-		set_active();
-
-		glEnable(GL_POINT_SPRITE);
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
-		glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();
-	}
-
-	void PBuffer_GL1::set_active()
-	{
-		OpenGL::set_active(impl.get());
-	}
-
-	void PBuffer_GL1::throw_if_null() const
-	{
-		if (!impl)
-			throw Exception("is null");
+		return 0;
 	}
 }

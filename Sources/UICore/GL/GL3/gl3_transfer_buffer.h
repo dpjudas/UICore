@@ -23,58 +23,35 @@
 **
 **  File Author(s):
 **
+**    Magnus Norddahl
 **    Mark Page
 */
 
-#include "UICore/precomp.h"
+#pragma once
 
-#ifdef WIN32
-#include "../Platform/WGL/pbuffer_impl.h"
-#elif defined(__ANDROID__)
-#include "../Platform/Android/pbuffer_impl.h"
-#elif __APPLE__
-#include "../Platform/AGL/pbuffer_impl.h"
-#else
-#include "../Platform/GLX/pbuffer_impl.h"
-#endif
-#include "pbuffer.h"
-
-#include "gl1_graphic_context.h"
+#include "UICore/Display/Render/transfer_buffer.h"
+#include "UICore/GL/opengl.h"
+#include "UICore/Core/System/disposable_object.h"
+#include "gl3_buffer_object.h"
 
 namespace uicore
 {
-	PBuffer_GL1::PBuffer_GL1()
-	{
-	}
+	class GL3GraphicContextProvider;
 
-	PBuffer_GL1::PBuffer_GL1(GL1GraphicContextProvider *gc_provider) : impl(std::make_shared<PBuffer_GL1_Impl>(gc_provider))
+	class GL3TransferBufferProvider : public TransferBuffer
 	{
-	}
+	public:
+		GL3TransferBufferProvider(int size, BufferUsage usage);
+		GL3TransferBufferProvider(const void *data, int size, BufferUsage usage);
 
-	PBuffer_GL1::~PBuffer_GL1()
-	{
-	}
+		void *data() override { return buffer.get_data(); }
+		GLuint get_handle() const { return buffer.get_handle(); }
 
-	void PBuffer_GL1::create(OpenGLWindowProvider &window_provider, Size &size)
-	{
-		impl->create(window_provider, size);
-		set_active();
+		void lock(const GraphicContextPtr &gc, BufferAccess access) override { buffer.lock(gc, access); }
+		void unlock() override { buffer.unlock(); }
+		void upload_data(const GraphicContextPtr &gc, int offset, const void *data, int size) override { buffer.upload_data(gc, offset, data, size); }
 
-		glEnable(GL_POINT_SPRITE);
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
-		glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();
-	}
-
-	void PBuffer_GL1::set_active()
-	{
-		OpenGL::set_active(impl.get());
-	}
-
-	void PBuffer_GL1::throw_if_null() const
-	{
-		if (!impl)
-			throw Exception("is null");
-	}
+	private:
+		GL3BufferObjectProvider buffer;
+	};
 }

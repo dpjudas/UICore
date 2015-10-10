@@ -38,8 +38,8 @@
 #include "UICore/Display/Render/texture.h"
 #include "UICore/Display/Window/display_window_provider.h"
 #include "UICore/Display/Render/graphic_context_provider.h"
-#include "GL3/gl3_graphic_context_provider.h"
-#include "GL3/gl3_texture_provider.h"
+#include "GL3/gl3_graphic_context.h"
+#include "GL3/gl3_texture_object.h"
 #include <map>
 #include <mutex>
 
