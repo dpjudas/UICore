@@ -32,11 +32,14 @@
 
 namespace uicore
 {
+	class IODevice;
+	typedef std::shared_ptr<IODevice> IODevicePtr;
+
 	/// \brief Image format that can load Direct3D texture (.dds) files.
 	class DDSFormat
 	{
 	public:
 		static PixelBufferSetPtr load(const std::string &filename);
-		static PixelBufferSetPtr load(IODevice &file);
+		static PixelBufferSetPtr load(const IODevicePtr &file);
 	};
 }

@@ -34,13 +34,13 @@
 
 namespace uicore
 {
-	PixelBufferPtr PNGLoader::load(IODevice &iodevice, bool srgb)
+	PixelBufferPtr PNGLoader::load(const IODevicePtr &iodevice, bool srgb)
 	{
 		PNGLoader loader(iodevice, srgb);
 		return loader.image;
 	}
 
-	PNGLoader::PNGLoader(IODevice &iodevice, bool force_srgb)
+	PNGLoader::PNGLoader(const IODevicePtr &iodevice, bool force_srgb)
 		: file(iodevice), force_srgb(force_srgb), scanline(nullptr), prev_scanline(nullptr), scanline_4ub(nullptr), scanline_4us(nullptr), palette(nullptr)
 	{
 		read_magic();
@@ -64,14 +64,14 @@ namespace uicore
 	{
 		unsigned char png_magic[8] = { 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A };
 		unsigned char file_magic[8];
-		file.read(file_magic, 8);
+		file->read(file_magic, 8);
 		if (memcmp(png_magic, file_magic, 8) != 0)
 			throw Exception("Invalid PNG image file");
 	}
 
 	void PNGLoader::read_chunks()
 	{
-		file.set_big_endian_mode();
+		file->set_big_endian_mode();
 
 		std::map<std::string, DataBufferPtr> chunks;
 
@@ -80,15 +80,15 @@ namespace uicore
 
 		while (true)
 		{
-			unsigned int length = file.read_uint32();
+			unsigned int length = file->read_uint32();
 			char name[5];
 			name[4] = 0;
-			file.read(name, 4);
+			file->read(name, 4);
 
 			auto data = DataBuffer::create(length);
-			file.read(data->data(), data->size());
+			file->read(data->data(), data->size());
 
-			unsigned int crc32 = file.read_uint32();
+			unsigned int crc32 = file->read_uint32();
 
 			unsigned int compare_crc32 = PNGCRC32::crc(name, data->data(), data->size());
 			if (crc32 != compare_crc32)

@@ -36,40 +36,40 @@
 
 namespace uicore
 {
-	JPEGFileReader::JPEGFileReader(IODevice &iodevice)
+	JPEGFileReader::JPEGFileReader(const IODevicePtr &iodevice)
 		: iodevice(iodevice)
 	{
-		iodevice.set_big_endian_mode();
+		iodevice->set_big_endian_mode();
 	}
 
 	JPEGMarker JPEGFileReader::read_marker()
 	{
-		uint8_t b1 = iodevice.read_uint8();
+		uint8_t b1 = iodevice->read_uint8();
 		if (b1 != 0xff)
 			throw Exception("Invalid JPEG file");
-		return (JPEGMarker)iodevice.read_uint8();
+		return (JPEGMarker)iodevice->read_uint8();
 	}
 
 	void JPEGFileReader::skip_unknown()
 	{
-		uint16_t size = iodevice.read_uint16();
-		iodevice.seek_from_current(size - 2);
+		uint16_t size = iodevice->read_uint16();
+		iodevice->seek_from_current(size - 2);
 	}
 
 	bool JPEGFileReader::try_read_app0_jfif()
 	{
-		uint16_t size = iodevice.read_uint16();
+		uint16_t size = iodevice->read_uint16();
 		if (size < 7)
 		{
-			iodevice.seek_from_current(size - 2);
+			iodevice->seek_from_current(size - 2);
 			return false;
 		}
 
 		char magic[5];
-		iodevice.read(magic, 5);
+		iodevice->read(magic, 5);
 		bool is_jfif = (memcmp(magic, "JFIF", 5) == 0);
 
-		iodevice.seek_from_current(size - 7);
+		iodevice->seek_from_current(size - 7);
 
 		return is_jfif;
 	}
@@ -88,26 +88,26 @@ namespace uicore
 			*/
 
 		out_transform = 1;
-		uint16_t size = iodevice.read_uint16();
+		uint16_t size = iodevice->read_uint16();
 		if (size != 2 + 5 + 2 + 2 + 2 + 1)
 		{
-			iodevice.seek_from_current(size - 2);
+			iodevice->seek_from_current(size - 2);
 			return false;
 		}
 
 		char magic[5];
-		iodevice.read(magic, 5);
+		iodevice->read(magic, 5);
 		bool is_app14_adobe = (memcmp(magic, "Adobe", 5) == 0);
 		if (!is_app14_adobe)
 		{
-			iodevice.seek_from_current(size - 7);
+			iodevice->seek_from_current(size - 7);
 			return false;
 		}
 
-		iodevice.read_uint16();
-		iodevice.read_uint16();
-		iodevice.read_uint16();
-		out_transform = iodevice.read_uint8();
+		iodevice->read_uint16();
+		iodevice->read_uint16();
+		iodevice->read_uint16();
+		out_transform = iodevice->read_uint8();
 		return true;
 	}
 
@@ -115,17 +115,17 @@ namespace uicore
 	{
 		JPEGStartOfFrame header;
 
-		uint16_t size = iodevice.read_uint16();
+		uint16_t size = iodevice->read_uint16();
 		if (size < 8)
 			throw Exception("Invalid JPEG file");
 
-		header.sample_precision = iodevice.read_uint8();
+		header.sample_precision = iodevice->read_uint8();
 		if (header.sample_precision != 8 && header.sample_precision != 16)
 			throw Exception("Invalid JPEG file");
 
-		header.height = iodevice.read_uint16();
-		header.width = iodevice.read_uint16();
-		uint8_t num_components = iodevice.read_uint8();
+		header.height = iodevice->read_uint16();
+		header.width = iodevice->read_uint16();
+		uint8_t num_components = iodevice->read_uint8();
 		if (num_components == 0 || num_components > 4) // To do: Only do this check for progressive; sequential allows up to 255 components
 			throw Exception("Invalid JPEG file");
 
@@ -135,11 +135,11 @@ namespace uicore
 		for (int i = 0; i < num_components; i++)
 		{
 			JPEGStartOfFrameComponent c;
-			c.id = iodevice.read_uint8();
-			uint8_t sampling_factor = iodevice.read_uint8();
+			c.id = iodevice->read_uint8();
+			uint8_t sampling_factor = iodevice->read_uint8();
 			c.horz_sampling_factor = (sampling_factor & 0xf0) >> 4;
 			c.vert_sampling_factor = (sampling_factor & 0x0f);
-			c.quantization_table_selector = iodevice.read_uint8();
+			c.quantization_table_selector = iodevice->read_uint8();
 
 			if (c.horz_sampling_factor == 0 || c.horz_sampling_factor > 4 ||
 				c.vert_sampling_factor == 0 || c.horz_sampling_factor == 0 ||
@@ -158,7 +158,7 @@ namespace uicore
 	{
 		JPEGDefineQuantizationTable tables;
 
-		uint16_t size = iodevice.read_uint16();
+		uint16_t size = iodevice->read_uint16();
 		if (size < 3)
 			throw Exception("Invalid JPEG file");
 
@@ -166,7 +166,7 @@ namespace uicore
 		while (p < size)
 		{
 			JPEGQuantizationTable table;
-			uint8_t v = iodevice.read_uint8();
+			uint8_t v = iodevice->read_uint8();
 			uint8_t precision = (v & 0xf0) >> 4;
 			table.table_index = (v & 0x0f);
 
@@ -179,7 +179,7 @@ namespace uicore
 					throw Exception("Invalid JPEG file");
 
 				uint8_t values[64];
-				iodevice.read(values, 64);
+				iodevice->read(values, 64);
 				for (int i = 0; i < 64; i++)
 					table.values[i] = values[i];
 
@@ -190,7 +190,7 @@ namespace uicore
 				if (size < p + 1 + 64 * 2)
 					throw Exception("Invalid JPEG file");
 				for (int i = 0; i < 64; i++)
-					table.values[i] = iodevice.read_uint16();
+					table.values[i] = iodevice->read_uint16();
 
 				p += 1 + 64 * 2;
 			}
@@ -205,7 +205,7 @@ namespace uicore
 	{
 		JPEGDefineHuffmanTable tables;
 
-		uint16_t size = iodevice.read_uint16();
+		uint16_t size = iodevice->read_uint16();
 		if (size < 2 + 17)
 			throw Exception("Invalid JPEG file");
 
@@ -217,7 +217,7 @@ namespace uicore
 			if (size < p + 17)
 				throw Exception("Invalid JPEG file");
 
-			uint8_t v = iodevice.read_uint8();
+			uint8_t v = iodevice->read_uint8();
 			uint8_t table_class = (v & 0xf0) >> 4;
 			if (table_class > 1)
 				throw Exception("Invalid JPEG file");
@@ -226,13 +226,13 @@ namespace uicore
 			if (table.table_index > 3)
 				throw Exception("Invalid JPEG file");
 
-			iodevice.read(table.bits, 16);
+			iodevice->read(table.bits, 16);
 			int bindings = 0;
 			for (int i = 0; i < 16; i++)
 				bindings += table.bits[i];
 			table.values.resize(bindings);
 			if (bindings > 0)
-				iodevice.read(&table.values[0], bindings);
+				iodevice->read(&table.values[0], bindings);
 
 			if (size < p + 17 + bindings)
 				throw Exception("Invalid JPEG file");
@@ -249,10 +249,10 @@ namespace uicore
 	JPEGDefineRestartInterval JPEGFileReader::read_dri()
 	{
 		JPEGDefineRestartInterval interval = 0;
-		uint16_t size = iodevice.read_uint16();
+		uint16_t size = iodevice->read_uint16();
 		if (size != 4)
 			throw Exception("Invalid JPEG file");
-		interval = iodevice.read_uint16();
+		interval = iodevice->read_uint16();
 		return interval;
 	}
 
@@ -260,11 +260,11 @@ namespace uicore
 	{
 		JPEGStartOfScan header;
 
-		uint16_t size = iodevice.read_uint16();
+		uint16_t size = iodevice->read_uint16();
 		if (size < 6)
 			throw Exception("Invalid JPEG file");
 
-		uint8_t num_components = iodevice.read_uint8();
+		uint8_t num_components = iodevice->read_uint8();
 		if (num_components == 0 || num_components > 4)
 			throw Exception("Invalid JPEG file");
 
@@ -274,8 +274,8 @@ namespace uicore
 		for (int i = 0; i < num_components; i++)
 		{
 			JPEGStartOfScanComponent c;
-			c.component_selector = iodevice.read_uint8();
-			uint8_t table_selector = iodevice.read_uint8();
+			c.component_selector = iodevice->read_uint8();
+			uint8_t table_selector = iodevice->read_uint8();
 			c.dc_table_selector = (table_selector & 0xf0) >> 4;
 			c.ac_table_selector = (table_selector & 0x0f);
 
@@ -285,10 +285,10 @@ namespace uicore
 			header.components.push_back(c);
 		}
 
-		header.start_dct_coefficient = iodevice.read_uint8();
-		header.end_dct_coefficient = iodevice.read_uint8();
+		header.start_dct_coefficient = iodevice->read_uint8();
+		header.end_dct_coefficient = iodevice->read_uint8();
 
-		uint8_t ahal = iodevice.read_uint8();
+		uint8_t ahal = iodevice->read_uint8();
 		header.preceding_point_transform = (ahal & 0xf0) >> 4;
 		header.point_transform = (ahal & 0x0f);
 
@@ -303,16 +303,16 @@ namespace uicore
 	JPEGDefineNumberOfLines JPEGFileReader::read_dnl()
 	{
 		JPEGDefineNumberOfLines lines = 0;
-		uint16_t size = iodevice.read_uint16();
+		uint16_t size = iodevice->read_uint16();
 		if (size != 4)
 			throw Exception("Invalid JPEG file");
-		lines = iodevice.read_uint16();
+		lines = iodevice->read_uint16();
 		return lines;
 	}
 
 	std::string JPEGFileReader::read_comment()
 	{
-		uint16_t size = iodevice.read_uint16();
+		uint16_t size = iodevice->read_uint16();
 		if (size < 2)
 			throw Exception("Invalid JPEG file");
 
@@ -322,7 +322,7 @@ namespace uicore
 		text.resize(size + 1, ' ');
 		text[size] = 0;
 
-		iodevice.read(text.data(), size);
+		iodevice->read(text.data(), size);
 		return &text[0];
 	}
 
@@ -334,8 +334,8 @@ namespace uicore
 
 		uint8_t *data = reinterpret_cast<uint8_t*>(d);
 
-		int start = iodevice.position();
-		int len = iodevice.try_read(data, size);
+		int start = iodevice->position();
+		int len = iodevice->try_read(data, size);
 		if (len == 0)
 			return 0;
 
@@ -350,7 +350,7 @@ namespace uicore
 			}
 			else if (data[i] == 0xff)
 			{
-				iodevice.seek(start + i);
+				iodevice->seek(start + i);
 				break;
 			}
 			else

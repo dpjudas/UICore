@@ -45,7 +45,7 @@ namespace uicore
 	class JPEGLoader
 	{
 	public:
-		static PixelBufferPtr load(IODevice &iodevice, bool srgb);
+		static PixelBufferPtr load(const IODevicePtr &iodevice, bool srgb);
 
 	private:
 		enum ColorSpace
@@ -57,7 +57,7 @@ namespace uicore
 			colorspace_grayscale
 		};
 
-		JPEGLoader(IODevice &iodevice);
+		JPEGLoader(const IODevicePtr &iodevice);
 
 		void process_app0(JPEGFileReader &reader);
 		void process_app14(JPEGFileReader &reader);

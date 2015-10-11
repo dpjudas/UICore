@@ -58,7 +58,7 @@ namespace uicore
 		return texture;
 	}
 
-	std::shared_ptr<Texture2D> Texture2D::create(const GraphicContextPtr &context, IODevice &file, const std::string &image_type, const ImageImportDescription &import_desc)
+	std::shared_ptr<Texture2D> Texture2D::create(const GraphicContextPtr &context, const IODevicePtr &file, const std::string &image_type, const ImageImportDescription &import_desc)
 	{
 		PixelBufferPtr pb = ImageFile::load(file, image_type);
 		pb = import_desc.process(pb);

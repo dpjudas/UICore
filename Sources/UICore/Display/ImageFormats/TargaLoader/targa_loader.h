@@ -38,10 +38,10 @@ namespace uicore
 	class TargaLoader
 	{
 	public:
-		static PixelBufferPtr load(IODevice &iodevice, bool srgb);
+		static PixelBufferPtr load(const IODevicePtr &iodevice, bool srgb);
 
 	private:
-		TargaLoader(IODevice &iodevice, bool srgb);
+		TargaLoader(const IODevicePtr &iodevice, bool srgb);
 		void read_header();
 		void read_image_id();
 		void read_color_map();
@@ -52,7 +52,7 @@ namespace uicore
 		void decode_true_color();
 		void decode_grayscale();
 
-		IODevice &file;
+		IODevicePtr file;
 		bool srgb;
 
 		unsigned char id_length;

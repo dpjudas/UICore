@@ -32,13 +32,13 @@
 
 namespace uicore
 {
-	void PNGWriter::save(IODevice &iodevice, PixelBufferPtr image)
+	void PNGWriter::save(const IODevicePtr &iodevice, PixelBufferPtr image)
 	{
 		PNGWriter writer(iodevice, image);
 		writer.save();
 	}
 	
-	PNGWriter::PNGWriter(IODevice &iodevice, PixelBufferPtr src_image) : device(iodevice)
+	PNGWriter::PNGWriter(const IODevicePtr &iodevice, PixelBufferPtr src_image) : device(iodevice)
 	{
 		// This writer only supports RGBA format
 		if (src_image->bytes_per_pixel() < 8)
@@ -58,7 +58,7 @@ namespace uicore
 	void PNGWriter::write_magic()
 	{
 		unsigned char png_magic[8] = { 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A };
-		device.write(png_magic, 8);
+		device->write(png_magic, 8);
 	}
 	
 	void PNGWriter::write_headers()
@@ -171,11 +171,11 @@ namespace uicore
 		size_data[1] = (size >> 16) & 0xff;
 		size_data[2] = (size >> 8) & 0xff;
 		size_data[3] = size & 0xff;
-		device.write(size_data, 4);
+		device->write(size_data, 4);
 
-		device.write(name, 4);
+		device->write(name, 4);
 
-		device.write(data, size);
+		device->write(data, size);
 		unsigned int crc32 = PNGCRC32::crc(name, data, size);
 
 		unsigned char crc32_data[4];
@@ -183,6 +183,6 @@ namespace uicore
 		crc32_data[1] = (crc32 >> 16) & 0xff;
 		crc32_data[2] = (crc32 >> 8) & 0xff;
 		crc32_data[3] = crc32 & 0xff;
-		device.write(crc32_data, 4);
+		device->write(crc32_data, 4);
 	}
 }

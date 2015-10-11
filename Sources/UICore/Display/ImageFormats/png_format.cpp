@@ -44,10 +44,10 @@ namespace uicore
 	PixelBufferPtr PNGFormat::load(const std::string &filename, bool srgb)
 	{
 		auto file = File::open_existing(filename);
-		return PNGLoader::load(*file, srgb);
+		return PNGLoader::load(file, srgb);
 	}
 
-	PixelBufferPtr PNGFormat::load(IODevice &file, bool srgb)
+	PixelBufferPtr PNGFormat::load(const IODevicePtr &file, bool srgb)
 	{
 		return PNGLoader::load(file, srgb);
 	}
@@ -55,10 +55,10 @@ namespace uicore
 	void PNGFormat::save(PixelBufferPtr buffer, const std::string &filename)
 	{
 		auto file = File::create_always(filename);
-		save(buffer, *file);
+		save(buffer, file);
 	}
 
-	void PNGFormat::save(PixelBufferPtr buffer, IODevice &iodev)
+	void PNGFormat::save(PixelBufferPtr buffer, const IODevicePtr &iodev)
 	{
 		PNGWriter::save(iodev, buffer);
 		/*

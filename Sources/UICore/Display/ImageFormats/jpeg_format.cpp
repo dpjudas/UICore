@@ -43,10 +43,10 @@ namespace uicore
 	PixelBufferPtr JPEGFormat::load(const std::string &filename, bool srgb)
 	{
 		auto file = File::open_existing(filename);
-		return JPEGLoader::load(*file, srgb);
+		return JPEGLoader::load(file, srgb);
 	}
 
-	PixelBufferPtr JPEGFormat::load(IODevice &file, bool srgb)
+	PixelBufferPtr JPEGFormat::load(const IODevicePtr &file, bool srgb)
 	{
 		return JPEGLoader::load(file, srgb);
 	}
@@ -54,10 +54,10 @@ namespace uicore
 	void JPEGFormat::save(PixelBufferPtr buffer, const std::string &filename, int quality)
 	{
 		auto file = File::create_always(filename);
-		return JPEGFormat::save(buffer, *file, quality);
+		return JPEGFormat::save(buffer, file, quality);
 	}
 
-	void JPEGFormat::save(PixelBufferPtr buffer, IODevice &file, int quality)
+	void JPEGFormat::save(PixelBufferPtr buffer, const IODevicePtr &file, int quality)
 	{
 		if (buffer->format() != tf_rgb8)
 		{
@@ -75,6 +75,6 @@ namespace uicore
 		if (!result)
 			throw Exception("Unable to compress JPEG image");
 
-		file.write(output->data(), size);
+		file->write(output->data(), size);
 	}
 }

@@ -79,7 +79,7 @@ namespace uicore
 		add_frame(image);
 	}
 
-	void CursorDescription::add_frame(IODevice &file, const std::string &image_type, const ImageImportDescription &import_desc)
+	void CursorDescription::add_frame(const IODevicePtr &file, const std::string &image_type, const ImageImportDescription &import_desc)
 	{
 		PixelBufferPtr image = ImageFile::load(file, image_type);
 		image = import_desc.process(image);

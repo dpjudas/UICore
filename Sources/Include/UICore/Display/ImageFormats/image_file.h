@@ -34,6 +34,7 @@
 namespace uicore
 {
 	class IODevice;
+	typedef std::shared_ptr<IODevice> IODevicePtr;
 	class PixelBuffer;
 	typedef std::shared_ptr<PixelBuffer> PixelBufferPtr;
 	class ImageFileType;
@@ -45,9 +46,9 @@ namespace uicore
 		static PixelBufferPtr try_load(const std::string &filename, const std::string &type = std::string(), std::string *out_failure_reason = nullptr, bool srgb = false);
 
 		static PixelBufferPtr load(const std::string &filename, const std::string &type = std::string(), bool srgb = false);
-		static PixelBufferPtr load(IODevice &file, const std::string &type, bool srgb = false);
+		static PixelBufferPtr load(const IODevicePtr &file, const std::string &type, bool srgb = false);
 
 		static void save(PixelBufferPtr buffer, const std::string &filename, const std::string &type = std::string());
-		static void save(PixelBufferPtr buffer, IODevice &file, const std::string &type);
+		static void save(PixelBufferPtr buffer, const IODevicePtr &file, const std::string &type);
 	};
 }

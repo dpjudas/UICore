@@ -37,6 +37,7 @@
 namespace uicore
 {
 	class IODevice;
+	typedef std::shared_ptr<IODevice> IODevicePtr;
 
 	/// \brief Shader Type
 	enum class ShaderType : int
@@ -60,11 +61,11 @@ namespace uicore
 
 		/// \brief Load
 		static std::shared_ptr<ShaderObject> load(const GraphicContextPtr &gc, ShaderType type, const std::string &fullname);
-		static std::shared_ptr<ShaderObject> load(const GraphicContextPtr &gc, ShaderType type, IODevice &file);
+		static std::shared_ptr<ShaderObject> load(const GraphicContextPtr &gc, ShaderType type, const IODevicePtr &file);
 
 		/// \brief Load and compile
 		static std::shared_ptr<ShaderObject> load_and_compile(const GraphicContextPtr &gc, ShaderType type, const std::string &filename);
-		static std::shared_ptr<ShaderObject> load_and_compile(const GraphicContextPtr &gc, ShaderType type, IODevice &file);
+		static std::shared_ptr<ShaderObject> load_and_compile(const GraphicContextPtr &gc, ShaderType type, const IODevicePtr &file);
 
 		/// \brief Gets the shader type
 		virtual ShaderType shader_type() const = 0;

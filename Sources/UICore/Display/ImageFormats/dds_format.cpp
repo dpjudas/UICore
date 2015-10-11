@@ -40,10 +40,10 @@ namespace uicore
 	PixelBufferSetPtr DDSFormat::load(const std::string &filename)
 	{
 		auto file = File::open_existing(filename);
-		return load(*file);
+		return load(file);
 	}
 
-	PixelBufferSetPtr DDSFormat::load(IODevice &file)
+	PixelBufferSetPtr DDSFormat::load(const IODevicePtr &file)
 	{
 #define fourccvalue(a,b,c,d) ((static_cast<unsigned int>(a)) | (static_cast<unsigned int>(b) << 8) | (static_cast<unsigned int>(c) << 16) | (static_cast<unsigned int>(d) << 24))
 #define isbitmask(r,g,b,a) (format_red_bit_mask == (r) && format_green_bit_mask == (g) && format_blue_bit_mask == (b) && format_alpha_bit_mask == (a))
@@ -94,38 +94,38 @@ namespace uicore
 		const int DDS_D3DFMT_A32B32G32R32F = 116;
 
 
-		unsigned int magic = file.read_uint32();
+		unsigned int magic = file->read_uint32();
 		if (magic != fourccvalue('D', 'D', 'S', ' '))
 			throw Exception("Not a DDS file");
 
-		unsigned int size = file.read_uint32();
+		unsigned int size = file->read_uint32();
 		if (size != (23 + 8) * 4)
 			throw Exception("Unsupported DDS file version");
-		unsigned int header_flags = file.read_uint32();
-		unsigned int height = file.read_uint32();
-		unsigned int width = file.read_uint32();
-		unsigned int pitch_or_linear_size = file.read_uint32();
-		unsigned int depth = file.read_uint32(); // Only used if DDS_FLAGS_VOLUME is set
-		unsigned int mipmap_count = file.read_uint32();
+		unsigned int header_flags = file->read_uint32();
+		unsigned int height = file->read_uint32();
+		unsigned int width = file->read_uint32();
+		unsigned int pitch_or_linear_size = file->read_uint32();
+		unsigned int depth = file->read_uint32(); // Only used if DDS_FLAGS_VOLUME is set
+		unsigned int mipmap_count = file->read_uint32();
 		unsigned int reserved1[11];
-		file.read(reserved1, 11 * sizeof(unsigned int));
+		file->read(reserved1, 11 * sizeof(unsigned int));
 
-		unsigned int format_size = file.read_uint32();
+		unsigned int format_size = file->read_uint32();
 		if (format_size != 8 * 4)
 			throw Exception("Unsupported DDS pixel format version");
-		unsigned int format_flags = file.read_uint32();
-		unsigned int format_fourcc = file.read_uint32();
-		unsigned int format_rgb_bit_count = file.read_uint32();
-		unsigned int format_red_bit_mask = file.read_uint32();
-		unsigned int format_green_bit_mask = file.read_uint32();
-		unsigned int format_blue_bit_mask = file.read_uint32();
-		unsigned int format_alpha_bit_mask = file.read_uint32();
+		unsigned int format_flags = file->read_uint32();
+		unsigned int format_fourcc = file->read_uint32();
+		unsigned int format_rgb_bit_count = file->read_uint32();
+		unsigned int format_red_bit_mask = file->read_uint32();
+		unsigned int format_green_bit_mask = file->read_uint32();
+		unsigned int format_blue_bit_mask = file->read_uint32();
+		unsigned int format_alpha_bit_mask = file->read_uint32();
 
-		unsigned int surface_flags = file.read_uint32();
-		unsigned int cubemap_flags = file.read_uint32();
+		unsigned int surface_flags = file->read_uint32();
+		unsigned int cubemap_flags = file->read_uint32();
 
 		unsigned int reserved2[3];
-		file.read(reserved2, 3 * sizeof(unsigned int));
+		file->read(reserved2, 3 * sizeof(unsigned int));
 
 		bool dx10_extension = (format_flags & DDS_FOURCC) && format_fourcc == fourccvalue('D', 'X', '1', '0');
 		unsigned int dx10_dxgi_format = 0;
@@ -135,11 +135,11 @@ namespace uicore
 		unsigned int dx10_reserved = 0;
 		if (dx10_extension)
 		{
-			dx10_dxgi_format = file.read_uint32();
-			dx10_resource_dimension = file.read_uint8(); // type is D3D11_RESOURCE_DIMENSION, is this an uint or a byte?
-			dx10_misc_flag = file.read_uint32();
-			dx10_array_size = file.read_uint32();
-			dx10_reserved = file.read_uint32();
+			dx10_dxgi_format = file->read_uint32();
+			dx10_resource_dimension = file->read_uint8(); // type is D3D11_RESOURCE_DIMENSION, is this an uint or a byte?
+			dx10_misc_flag = file->read_uint32();
+			dx10_array_size = file->read_uint32();
+			dx10_reserved = file->read_uint32();
 		}
 
 		if ((header_flags & DDS_HEADER_FLAGS_TEXTURE) != DDS_HEADER_FLAGS_TEXTURE)
@@ -308,11 +308,11 @@ namespace uicore
 				{
 					int blocks_width = (mip_width + 3) / 4;
 					int blocks_height = (mip_height + 3) / 4;
-					file.read(buffer->data(), bytes_per_block * blocks_width * blocks_height);
+					file->read(buffer->data(), bytes_per_block * blocks_width * blocks_height);
 				}
 				else
 				{
-					file.read(buffer->data(), bytes_per_pixel * mip_width * mip_height);
+					file->read(buffer->data(), bytes_per_pixel * mip_width * mip_height);
 				}
 
 				if (texture_format != original_format)

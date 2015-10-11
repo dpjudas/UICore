@@ -37,8 +37,9 @@ namespace uicore
 	{
 	public:
 		static PixelBufferPtr load(const std::string &filename, bool srgb = false);
-		static PixelBufferPtr load(IODevice &file, bool srgb = false);
+		static PixelBufferPtr load(const IODevicePtr &file, bool srgb = false);
+
 		static void save(PixelBufferPtr buffer, const std::string &filename);
-		static void save(PixelBufferPtr buffer, IODevice &file);
+		static void save(PixelBufferPtr buffer, const IODevicePtr &file);
 	};
 }

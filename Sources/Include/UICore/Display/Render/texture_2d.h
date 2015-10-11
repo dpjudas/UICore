@@ -51,7 +51,7 @@ namespace uicore
 		static std::shared_ptr<Texture2D> create(const GraphicContextPtr &context, const Size &size, TextureFormat texture_format = tf_rgba8, int levels = 1);
 
 		static std::shared_ptr<Texture2D> create(const GraphicContextPtr &context, const std::string &filename, const ImageImportDescription &import_desc = {});
-		static std::shared_ptr<Texture2D> create(const GraphicContextPtr &context, IODevice &file, const std::string &image_type, const ImageImportDescription &import_desc = {});
+		static std::shared_ptr<Texture2D> create(const GraphicContextPtr &context, const IODevicePtr &file, const std::string &image_type, const ImageImportDescription &import_desc = {});
 
 		static std::shared_ptr<Texture2D> create(const GraphicContextPtr &context, const PixelBufferPtr &image, bool is_srgb = false);
 		static std::shared_ptr<Texture2D> create(const GraphicContextPtr &context, const PixelBufferPtr &image, const Rect &src_rect, bool is_srgb = false);

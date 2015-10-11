@@ -75,7 +75,7 @@ namespace uicore
 		return factory->load(filename, srgb);
 	}
 
-	PixelBufferPtr ImageFile::load(IODevice &file, const std::string &type, bool srgb)
+	PixelBufferPtr ImageFile::load(const IODevicePtr &file, const std::string &type, bool srgb)
 	{
 		SetupDisplay::start();
 		auto &types = *SetupDisplay::get_image_provider_factory_types();
@@ -89,10 +89,10 @@ namespace uicore
 	{
 		SetupDisplay::start();
 		auto file = File::open_existing(filename);
-		return ImageFile::save(buffer, *file, type);
+		return ImageFile::save(buffer, file, type);
 	}
 
-	void ImageFile::save(PixelBufferPtr buffer, IODevice &file, const std::string &type)
+	void ImageFile::save(PixelBufferPtr buffer, const IODevicePtr &file, const std::string &type)
 	{
 		SetupDisplay::start();
 

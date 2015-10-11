@@ -47,7 +47,7 @@ namespace uicore
 			return ProviderClass::load(filename, srgb);
 		}
 
-		virtual PixelBufferPtr load(IODevice &file, bool srgb) override
+		virtual PixelBufferPtr load(const IODevicePtr &file, bool srgb) override
 		{
 			return ProviderClass::load(file, srgb);
 		}
@@ -57,7 +57,7 @@ namespace uicore
 			ProviderClass::save(buffer, filename);
 		}
 
-		virtual void save(PixelBufferPtr buffer, IODevice &file) override
+		virtual void save(PixelBufferPtr buffer, const IODevicePtr &file) override
 		{
 			ProviderClass::save(buffer, file);
 		}

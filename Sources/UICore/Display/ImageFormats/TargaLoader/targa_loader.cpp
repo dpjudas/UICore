@@ -31,13 +31,13 @@
 
 namespace uicore
 {
-	PixelBufferPtr TargaLoader::load(IODevice &iodevice, bool srgb)
+	PixelBufferPtr TargaLoader::load(const IODevicePtr &iodevice, bool srgb)
 	{
 		TargaLoader loader(iodevice, srgb);
 		return loader.image;
 	}
 
-	TargaLoader::TargaLoader(IODevice &iodevice, bool srgb)
+	TargaLoader::TargaLoader(const IODevicePtr &iodevice, bool srgb)
 		: file(iodevice), srgb(srgb)
 	{
 		read_header();
@@ -50,20 +50,20 @@ namespace uicore
 
 	void TargaLoader::read_header()
 	{
-		id_length = file.read_uint8();
-		colormap_type = file.read_uint8();
-		image_type = file.read_uint8();
+		id_length = file->read_uint8();
+		colormap_type = file->read_uint8();
+		image_type = file->read_uint8();
 
-		colormap_orig = file.read_uint16();
-		colormap_length = file.read_uint16();
-		colormap_entry_size = file.read_uint8();
+		colormap_orig = file->read_uint16();
+		colormap_length = file->read_uint16();
+		colormap_entry_size = file->read_uint8();
 
-		image_x_orig = file.read_int16();
-		image_y_orig = file.read_int16();
-		image_width = file.read_uint16();
-		image_height = file.read_uint16();
-		image_pixel_size = file.read_uint8();
-		image_descriptor = file.read_uint8();
+		image_x_orig = file->read_int16();
+		image_y_orig = file->read_int16();
+		image_width = file->read_uint16();
+		image_height = file->read_uint16();
+		image_pixel_size = file->read_uint8();
+		image_descriptor = file->read_uint8();
 
 		if (colormap_type > 1)
 			throw Exception("Invalid or unsupported targa image file");
@@ -85,13 +85,13 @@ namespace uicore
 	void TargaLoader::read_image_id()
 	{
 		image_id = DataBuffer::create(id_length);
-		file.read(image_id->data(), image_id->size());
+		file->read(image_id->data(), image_id->size());
 	}
 
 	void TargaLoader::read_color_map()
 	{
 		colormap_data = DataBuffer::create(bytes_per_colormap_entry * colormap_length);
-		file.read(colormap_data->data(), colormap_data->size());
+		file->read(colormap_data->data(), colormap_data->size());
 	}
 
 	void TargaLoader::read_image_data()
@@ -100,8 +100,8 @@ namespace uicore
 
 		if (image_type == 9 || image_type == 10 || image_type == 11) // RLE compressed
 		{
-			auto rle_data = DataBuffer::create(file.size() - file.position());
-			file.read(rle_data->data(), rle_data->size());
+			auto rle_data = DataBuffer::create(file->size() - file->position());
+			file->read(rle_data->data(), rle_data->size());
 
 			unsigned char *input = reinterpret_cast<unsigned char*>(rle_data->data());
 			unsigned char *output = reinterpret_cast<unsigned char*>(image_data->data());
@@ -142,7 +142,7 @@ namespace uicore
 		}
 		else
 		{
-			file.read(image_data->data(), image_data->size());
+			file->read(image_data->data(), image_data->size());
 		}
 	}
 

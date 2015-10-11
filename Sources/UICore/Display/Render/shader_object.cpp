@@ -70,11 +70,11 @@ namespace uicore
 		return create(gc, shader_type, File::read_all_text(filename));
 	}
 
-	std::shared_ptr<ShaderObject> ShaderObject::load(const GraphicContextPtr &gc, ShaderType shader_type, IODevice &file)
+	std::shared_ptr<ShaderObject> ShaderObject::load(const GraphicContextPtr &gc, ShaderType shader_type, const IODevicePtr &file)
 	{
-		int size = file.size();
+		int size = file->size();
 		std::string source(size, 0);
-		file.read(&source[0], size);
+		file->read(&source[0], size);
 
 		return create(gc, shader_type, source);
 	}
@@ -89,7 +89,7 @@ namespace uicore
 		return shader_object;
 	}
 
-	std::shared_ptr<ShaderObject> ShaderObject::load_and_compile(const GraphicContextPtr &gc, ShaderType shader_type, IODevice &file)
+	std::shared_ptr<ShaderObject> ShaderObject::load_and_compile(const GraphicContextPtr &gc, ShaderType shader_type, const IODevicePtr &file)
 	{
 		auto shader_object = ShaderObject::load(gc, shader_type, file);
 

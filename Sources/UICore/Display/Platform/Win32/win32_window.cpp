@@ -1080,7 +1080,7 @@ namespace uicore
 	{
 		auto png_data_buf = DataBuffer::create(1024*8);
 		auto iodev_mem = MemoryDevice::open(png_data_buf);
-		PNGFormat::save(image, *iodev_mem);
+		PNGFormat::save(image, iodev_mem);
 		DataBufferPtr png_data = iodev_mem->buffer();
 
 		unsigned int length = png_data->size();
@@ -1469,7 +1469,7 @@ namespace uicore
 	{
 		auto data_buffer = DataBuffer::create(data, size);
 		auto iodev = MemoryDevice::open(data_buffer);
-		return PNGFormat::load(*iodev);
+		return PNGFormat::load(iodev);
 	}
 
 	void Win32Window::register_clipboard_formats()

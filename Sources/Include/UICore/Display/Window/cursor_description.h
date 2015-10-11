@@ -105,7 +105,7 @@ namespace uicore
 		///
 		/// \param file = IODevice
 		/// \param image_type = String
-		void add_frame(IODevice &file, const std::string &image_type, const ImageImportDescription &import_desc = ImageImportDescription());
+		void add_frame(const IODevicePtr &file, const std::string &image_type, const ImageImportDescription &import_desc = ImageImportDescription());
 
 		/// \brief Adds images formed in a grid.
 		/** <p>This function will cut out a grid of frames from one image.</p>

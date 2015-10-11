@@ -39,10 +39,10 @@ namespace uicore
 	PixelBufferPtr TargaFormat::load(const std::string &filename, bool srgb)
 	{
 		auto file = File::open_existing(filename);
-		return TargaLoader::load(*file, srgb);
+		return TargaLoader::load(file, srgb);
 	}
 
-	PixelBufferPtr TargaFormat::load(IODevice &file, bool srgb)
+	PixelBufferPtr TargaFormat::load(const IODevicePtr &file, bool srgb)
 	{
 		return TargaLoader::load(file, srgb);
 	}
@@ -52,7 +52,7 @@ namespace uicore
 		throw Exception("TargaFormat doesn't support saving");
 	}
 
-	void TargaFormat::save(PixelBufferPtr buffer, IODevice &file)
+	void TargaFormat::save(PixelBufferPtr buffer, const IODevicePtr &file)
 	{
 		throw Exception("TargaFormat doesn't support saving");
 	}

@@ -37,10 +37,10 @@ namespace uicore
 	class PNGWriter
 	{
 	public:
-		static void save(IODevice &iodevice, PixelBufferPtr image);
+		static void save(const IODevicePtr &iodevice, PixelBufferPtr image);
 		
 	private:
-		PNGWriter(IODevice &iodevice, PixelBufferPtr image);
+		PNGWriter(const IODevicePtr &iodevice, PixelBufferPtr image);
 		void save();
 
 		void write_magic();
@@ -49,7 +49,7 @@ namespace uicore
 		
 		void write_chunk(const char name[4], const void *data, int size);
 		
-		IODevice &device;
+		IODevicePtr device;
 		PixelBufferPtr image;
 	};
 	
