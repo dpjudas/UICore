@@ -25,7 +25,7 @@ namespace uicore
 
 #if defined(WIN32)
 
-	class UDPSocketImpl : public SocketHandle
+	class UDPSocketImpl : public UDPSocket, SocketHandle
 	{
 	public:
 		UDPSocketImpl()
@@ -33,6 +33,10 @@ namespace uicore
 			handle = socket(AF_INET, SOCK_DGRAM, 0);
 			if (handle == INVALID_SOCKET)
 				throw Exception("Unable to create socket handle");
+
+			int result = WSAEventSelect(handle, wait_handle, FD_READ);
+			if (result == SOCKET_ERROR)
+				throw Exception("WSAEventSelect failed");
 		}
 
 		UDPSocketImpl(SOCKET init_handle)
@@ -41,39 +45,35 @@ namespace uicore
 			if (handle == INVALID_SOCKET)
 				throw Exception("Invalid socket handle");
 		}
+
+		SocketHandle *get_socket_handle() override { return this; }
+
+		void bind(const SocketName &endpoint) override;
+		void send(const void *data, int size, const SocketName &endpoint) override;
+		int read(void *data, int size, SocketName &endpoint) override;
+		void close() override { SocketHandle::close(); }
 	};
 
-	UDPSocket::UDPSocket() : impl(new UDPSocketImpl())
+	std::shared_ptr<UDPSocket> UDPSocket::create()
 	{
-		int result = WSAEventSelect(impl->handle, impl->wait_handle, FD_READ);
-		if (result == SOCKET_ERROR)
-			throw Exception("WSAEventSelect failed");
+		return std::make_shared<UDPSocketImpl>();
 	}
 
-	UDPSocket::~UDPSocket()
-	{
-	}
-
-	SocketHandle *UDPSocket::get_socket_handle()
-	{
-		return impl.get();
-	}
-
-	void UDPSocket::bind(const SocketName &endpoint)
+	void UDPSocketImpl::bind(const SocketName &endpoint)
 	{
 		sockaddr_in addr;
 		endpoint.to_sockaddr(AF_INET, (sockaddr *)&addr, sizeof(sockaddr_in));
-		int result = ::bind(impl->handle, (const sockaddr *)&addr, sizeof(sockaddr_in));
+		int result = ::bind(handle, (const sockaddr *)&addr, sizeof(sockaddr_in));
 		if (result == SOCKET_ERROR)
 			throw Exception("Could not bind socket to end point");
 	}
 
-	void UDPSocket::send(const void *data, int size, const SocketName &endpoint)
+	void UDPSocketImpl::send(const void *data, int size, const SocketName &endpoint)
 	{
 		sockaddr_in addr;
 		endpoint.to_sockaddr(AF_INET, (sockaddr *)&addr, sizeof(sockaddr_in));
 
-		int result = sendto(impl->handle, static_cast<const char*>(data), size, 0, (const sockaddr *)&addr, sizeof(sockaddr_in));
+		int result = sendto(handle, static_cast<const char*>(data), size, 0, (const sockaddr *)&addr, sizeof(sockaddr_in));
 		if (result == SOCKET_ERROR)
 		{
 			int last_error = WSAGetLastError();
@@ -84,12 +84,12 @@ namespace uicore
 		}
 	}
 
-	int UDPSocket::read(void *data, int size, SocketName &endpoint)
+	int UDPSocketImpl::read(void *data, int size, SocketName &endpoint)
 	{
 		sockaddr_in addr;
 		int addr_len = sizeof(sockaddr_in);
 
-		int result = recvfrom(impl->handle, static_cast<char*>(data), size, 0, (sockaddr *)&addr, &addr_len);
+		int result = recvfrom(handle, static_cast<char*>(data), size, 0, (sockaddr *)&addr, &addr_len);
 		if (result == SOCKET_ERROR)
 		{
 			int last_error = WSAGetLastError();
@@ -110,28 +110,24 @@ namespace uicore
 		return result;
 	}
 
-	void UDPSocket::close()
-	{
-		impl->close();
-	}
-
 #else
 
-	class UDPSocketImpl : public SocketHandle
+	class UDPSocketImpl : public UDPSocket, SocketHandle
 	{
 	public:
 		UDPSocketImpl()
-			: handle(-1)
 		{
 			SetupNetwork::start();
 
 			handle = socket(AF_INET, SOCK_DGRAM, 0);
 			if (handle == -1)
 				throw Exception("Unable to create socket handle");
+
+			int nonblocking = 1;
+			ioctl(impl->handle, FIONBIO, &nonblocking);
 		}
 
-		UDPSocketImpl(int handle)
-			: handle(handle)
+		UDPSocketImpl(int handle) : handle(handle)
 		{
 		}
 
@@ -140,7 +136,13 @@ namespace uicore
 			close();
 		}
 
-		void close()
+		SocketHandle *get_socket_handle() override { return this; }
+
+		void bind(const SocketName &endpoint) override;
+		void send(const void *data, int size, const SocketName &endpoint) override;
+		int read(void *data, int size, SocketName &endpoint) override;
+
+		void close() override
 		{
 			if (handle != -1)
 			{
@@ -159,47 +161,37 @@ namespace uicore
 		{
 		}
 
-		int handle;
+		int handle = -1;
 	};
 
-	UDPSocket::UDPSocket() : impl(new UDPSocketImpl())
+	std::shared_ptr<UDPSocket> UDPSocket::create()
 	{
-		int nonblocking = 1;
-		ioctl(impl->handle, FIONBIO, &nonblocking);
+		return std::make_shared<UDPSocketImpl>();
 	}
 
-	UDPSocket::~UDPSocket()
-	{
-	}
-
-	SocketHandle *UDPSocket::get_socket_handle()
-	{
-		return impl.get();
-	}
-
-	void UDPSocket::bind(const SocketName &endpoint)
+	void UDPSocketImpl::bind(const SocketName &endpoint)
 	{
 		sockaddr_in addr;
 		endpoint.to_sockaddr(AF_INET, (sockaddr *)&addr, sizeof(sockaddr_in));
-		int result = ::bind(impl->handle, (const sockaddr *)&addr, sizeof(sockaddr_in));
+		int result = ::bind(handle, (const sockaddr *)&addr, sizeof(sockaddr_in));
 		if (result == -1)
 			throw Exception("Could not bind socket to end point");
 	}
 
-	void UDPSocket::send(const void *data, int size, const SocketName &endpoint)
+	void UDPSocketImpl::send(const void *data, int size, const SocketName &endpoint)
 	{
 		sockaddr_in addr;
 		endpoint.to_sockaddr(AF_INET, (sockaddr *)&addr, sizeof(sockaddr_in));
 
-		sendto(impl->handle, static_cast<const char*>(data), size, 0, (const sockaddr *)&addr, sizeof(sockaddr_in));
+		sendto(handle, static_cast<const char*>(data), size, 0, (const sockaddr *)&addr, sizeof(sockaddr_in));
 	}
 
-	int UDPSocket::read(void *data, int size, SocketName &endpoint)
+	int UDPSocketImpl::read(void *data, int size, SocketName &endpoint)
 	{
 		sockaddr_in addr;
 		socklen_t addr_len = sizeof(sockaddr_in);
 
-		int result = recvfrom(impl->handle, static_cast<char*>(data), size, 0, (sockaddr *)&addr, &addr_len);
+		int result = recvfrom(handle, static_cast<char*>(data), size, 0, (sockaddr *)&addr, &addr_len);
 		if (result == -1)
 		{
 			if (errno == EWOULDBLOCK || errno == EMSGSIZE || errno == ECONNRESET || errno == ENETRESET)

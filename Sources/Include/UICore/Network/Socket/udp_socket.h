@@ -8,34 +8,27 @@
 namespace uicore
 {
 	class SocketName;
-	class UDPSocketImpl;
 
 	/// \brief UDP/IP socket class
 	class UDPSocket : public NetworkEvent
 	{
 	public:
 		/// \brief Create socket object
-		UDPSocket();
-
-		~UDPSocket();
+		static std::shared_ptr<UDPSocket> create();
 
 		/// \brief Close connection
-		void close();
+		virtual void close() = 0;
 
 		/// \brief Bind socket to end point
-		void bind(const SocketName &endpoint);
+		virtual void bind(const SocketName &endpoint) = 0;
 
 		/// \brief Send UDP packet to end point
-		void send(const void *data, int size, const SocketName &endpoint);
+		virtual void send(const void *data, int size, const SocketName &endpoint) = 0;
 
 		/// \brief Read receved UDP packet
 		/// \return Bytes read or 0 if no packet was available
-		int read(void *data, int size, SocketName &endpoint);
-
-	protected:
-		SocketHandle *get_socket_handle() override;
-
-	private:
-		std::shared_ptr<UDPSocketImpl> impl;
+		virtual int read(void *data, int size, SocketName &endpoint) = 0;
 	};
+
+	typedef std::shared_ptr<UDPSocket> UDPSocketPtr;
 }
