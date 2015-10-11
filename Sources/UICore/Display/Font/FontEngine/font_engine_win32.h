@@ -50,7 +50,7 @@ namespace uicore
 		FontPixelBuffer get_font_glyph_standard(int glyph, bool anti_alias);
 		FontPixelBuffer get_font_glyph_subpixel(int glyph);
 		const FontDescription &get_desc() const override { return font_description; }
-		void load_glyph_path(unsigned int glyph_index, Path &out_path, GlyphMetrics &out_metrics) override;
+		void load_glyph_path(unsigned int glyph_index, const PathPtr &out_path, GlyphMetrics &out_metrics) override;
 		FontHandle *get_handle() override;
 
 	private:

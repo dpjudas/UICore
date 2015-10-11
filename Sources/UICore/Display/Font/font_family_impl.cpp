@@ -65,7 +65,7 @@ namespace uicore
 		bool is_automatic_recreation_allowed() const override { return false; }
 		const FontMetrics &get_metrics() const override { return font_metrics; }
 		FontPixelBuffer get_font_glyph(int glyph) override { return FontPixelBuffer(); }
-		void load_glyph_path(unsigned int glyph_index, Path &out_path, GlyphMetrics &out_metrics) override {}
+		void load_glyph_path(unsigned int glyph_index, const PathPtr &out_path, GlyphMetrics &out_metrics) override {}
 		const FontDescription &get_desc() const override { return font_description; }
 
 	private:

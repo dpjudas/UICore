@@ -69,7 +69,7 @@ namespace uicore
 
 		void draw_text(const CanvasPtr &canvas, const Pointf &position, const std::string &text, const Colorf &color);
 
-		void get_glyph_path(const CanvasPtr &canvas, unsigned int glyph_index, Path &out_path, GlyphMetrics &out_metrics);
+		void get_glyph_path(const CanvasPtr &canvas, unsigned int glyph_index, const PathPtr &out_path, GlyphMetrics &out_metrics);
 
 		void set_height(float value);
 		void set_weight(FontWeight value);

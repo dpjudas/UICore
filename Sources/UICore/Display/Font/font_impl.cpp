@@ -237,7 +237,7 @@ namespace uicore
 		return selected_metrics;
 	}
 
-	void Font_Impl::get_glyph_path(const CanvasPtr &canvas, unsigned int glyph_index, Path &out_path, GlyphMetrics &out_metrics)
+	void Font_Impl::get_glyph_path(const CanvasPtr &canvas, unsigned int glyph_index, const PathPtr &out_path, GlyphMetrics &out_metrics)
 	{
 		select_font_family(canvas);
 		return font_engine->load_glyph_path(glyph_index, out_path, out_metrics);

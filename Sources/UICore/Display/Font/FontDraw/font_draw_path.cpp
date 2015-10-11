@@ -83,7 +83,7 @@ namespace uicore
 			Font_PathGlyph *gptr = path_cache->get_glyph(canvas, font_engine, glyph);
 			if (gptr)
 			{
-				gptr->path.fill(canvas, brush);
+				gptr->path->fill(canvas, brush);
 				offset_x += gptr->metrics.advance.width * scaled_height;
 				offset_y += gptr->metrics.advance.height * scaled_height;
 			}

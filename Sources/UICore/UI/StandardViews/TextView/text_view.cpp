@@ -281,7 +281,7 @@ namespace uicore
 			if (!txt_selected.empty())
 			{
 				Rectf selection_rect = Rectf(advance_before - impl->scroll_pos.x, top_y + line_start_y, advance_before + advance_selected - impl->scroll_pos.x, bottom_y + line_start_y);
-				Path::rect(selection_rect).fill(canvas, focus_view() == this ? Brush::solid_rgb8(51, 153, 255) : Brush::solid_rgb8(200, 200, 200));
+				Path::rect(selection_rect)->fill(canvas, focus_view() == this ? Brush::solid_rgb8(51, 153, 255) : Brush::solid_rgb8(200, 200, 200));
 			}
 
 			font.draw_text(canvas, -impl->scroll_pos.x, baseline + line_start_y, txt_before, color);
@@ -294,7 +294,7 @@ namespace uicore
 		if (impl->cursor_blink_visible)
 		{
 			auto cursor_pos = canvas->grid_fit({ cursor_advance - impl->scroll_pos.x, top_y - impl->scroll_pos.y + font_metrics.get_line_height() * impl->cursor_pos.y });
-			Path::rect(cursor_pos.x, cursor_pos.y, 1.0f, bottom_y - top_y).fill(canvas, Brush(color));
+			Path::rect(cursor_pos.x, cursor_pos.y, 1.0f, bottom_y - top_y)->fill(canvas, Brush(color));
 		}
 
 		if (impl->text_lines.size() == 1 && impl->text_lines.front().empty())

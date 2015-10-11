@@ -51,36 +51,36 @@ namespace uicore
 		Rectf box = geometry().content_box().get_size();
 		box.shrink(4.0f, 6.0f);
 
-		Path path;
-		path.set_fill_mode(PathFillMode::alternate);
+		auto path = Path::create();
+		path->set_fill_mode(PathFillMode::alternate);
 		switch (direction)
 		{
 		case ScrollBarButtonDirection::left:
-			path.move_to(box.right, box.top);
-			path.line_to(box.right, box.bottom);
-			path.line_to(box.left, box.top + box.get_height() * 0.5f);
-			path.close();
+			path->move_to(box.right, box.top);
+			path->line_to(box.right, box.bottom);
+			path->line_to(box.left, box.top + box.get_height() * 0.5f);
+			path->close();
 			break;
 		case ScrollBarButtonDirection::right:
-			path.move_to(box.left, box.top);
-			path.line_to(box.left, box.bottom);
-			path.line_to(box.right, box.top + box.get_height() * 0.5f);
-			path.close();
+			path->move_to(box.left, box.top);
+			path->line_to(box.left, box.bottom);
+			path->line_to(box.right, box.top + box.get_height() * 0.5f);
+			path->close();
 			break;
 		case ScrollBarButtonDirection::up:
-			path.move_to(box.left, box.bottom);
-			path.line_to(box.right, box.bottom);
-			path.line_to(box.left + box.get_width() * 0.5f, box.top);
-			path.close();
+			path->move_to(box.left, box.bottom);
+			path->line_to(box.right, box.bottom);
+			path->line_to(box.left + box.get_width() * 0.5f, box.top);
+			path->close();
 			break;
 		case ScrollBarButtonDirection::down:
-			path.move_to(box.left, box.top);
-			path.line_to(box.right, box.top);
-			path.line_to(box.left + box.get_width() * 0.5f, box.bottom);
-			path.close();
+			path->move_to(box.left, box.top);
+			path->line_to(box.right, box.top);
+			path->line_to(box.left + box.get_width() * 0.5f, box.bottom);
+			path->close();
 			break;
 		}
-		path.fill(canvas, Colorf(134, 137, 153));
+		path->fill(canvas, Colorf(134, 137, 153));
 	}
 
 	void ScrollBarButtonView::set_direction(ScrollBarButtonDirection new_dir)

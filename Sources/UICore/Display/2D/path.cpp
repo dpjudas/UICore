@@ -30,63 +30,20 @@
 #include "UICore/precomp.h"
 #include "UICore/Display/2D/path.h"
 #include "path_impl.h"
-#include "../Font/font_impl.h"
 #include "canvas_impl.h"
 #include "render_batch_path.h"
+#include "../Font/font_impl.h"
 
 namespace uicore
 {
-	Path::Path() : impl(new PathImpl)
+	std::shared_ptr<Path> Path::create()
 	{
-		impl->subpaths.resize(1);
+		return std::make_shared<PathImpl>();
 	}
 
-	void Path::set_fill_mode(PathFillMode fill_mode)
+	std::shared_ptr<Path> Path::glyph(const CanvasPtr &canvas, Font &font, unsigned int glyph, GlyphMetrics &out_metrics)
 	{
-		impl->fill_mode = fill_mode;
-	}
-
-	void Path::move_to(const Pointf &point)
-	{
-		if (!impl->subpaths.back().commands.empty())
-			impl->subpaths.push_back(CanvasSubpath());
-
-		impl->subpaths.back().points.front() = point;
-	}
-
-	void Path::line_to(const Pointf &point)
-	{
-		impl->subpaths.back().points.push_back(point);
-		impl->subpaths.back().commands.push_back(PathCommand::line);
-	}
-
-	void Path::bezier_to(const Pointf &control, const Pointf &point)
-	{
-		impl->subpaths.back().points.push_back(control);
-		impl->subpaths.back().points.push_back(point);
-		impl->subpaths.back().commands.push_back(PathCommand::quadradic);
-	}
-
-	void Path::bezier_to(const Pointf &control1, const Pointf &control2, const Pointf &point)
-	{
-		impl->subpaths.back().points.push_back(control1);
-		impl->subpaths.back().points.push_back(control2);
-		impl->subpaths.back().points.push_back(point);
-		impl->subpaths.back().commands.push_back(PathCommand::cubic);
-	}
-
-	void Path::close()
-	{
-		if (!impl->subpaths.back().commands.empty())
-		{
-			impl->subpaths.back().closed = true;
-			impl->subpaths.push_back(CanvasSubpath());
-		}
-	}
-
-	Path Path::glyph(const CanvasPtr &canvas, Font &font, unsigned int glyph, GlyphMetrics &out_metrics)
-	{
-		Path path;
+		auto path = Path::create();
 		if (font.impl)
 		{
 			font.impl->get_glyph_path(canvas, glyph, path, out_metrics);
@@ -94,29 +51,66 @@ namespace uicore
 		return path;
 	}
 
-	Path Path::rect(const Rectf &box)
+	PathImpl::PathImpl()
 	{
-		Path path;
-		path.move_to(box.get_top_left());
-		path.line_to(Pointf(box.get_top_right()));
-		path.line_to(Pointf(box.get_bottom_right()));
-		path.line_to(Pointf(box.get_bottom_left()));
-		path.close();
-		return path;
+		_subpaths.resize(1);
 	}
 
-	Path Path::line(const Pointf &start, const Pointf &end)
+	void PathImpl::move_to(const Pointf &point)
 	{
-		Path path;
-		path.move_to(start);
-		path.line_to(end);
-		return path;
+		if (!_subpaths.back().commands.empty())
+			_subpaths.push_back(PathSubpath());
+
+		_subpaths.back().points.front() = point;
 	}
 
-	Path Path::ellipse(const Pointf &center, const Sizef &radius)
+	void PathImpl::line_to(const Pointf &point)
 	{
-		Path path;
+		_subpaths.back().points.push_back(point);
+		_subpaths.back().commands.push_back(PathCommand::line);
+	}
 
+	void PathImpl::bezier_to(const Pointf &control, const Pointf &point)
+	{
+		_subpaths.back().points.push_back(control);
+		_subpaths.back().points.push_back(point);
+		_subpaths.back().commands.push_back(PathCommand::quadradic);
+	}
+
+	void PathImpl::bezier_to(const Pointf &control1, const Pointf &control2, const Pointf &point)
+	{
+		_subpaths.back().points.push_back(control1);
+		_subpaths.back().points.push_back(control2);
+		_subpaths.back().points.push_back(point);
+		_subpaths.back().commands.push_back(PathCommand::cubic);
+	}
+
+	void PathImpl::close()
+	{
+		if (!_subpaths.back().commands.empty())
+		{
+			_subpaths.back().closed = true;
+			_subpaths.push_back(PathSubpath());
+		}
+	}
+
+	void PathImpl::add_rect(const Rectf &box)
+	{
+		move_to(box.get_top_left());
+		line_to(Pointf(box.get_top_right()));
+		line_to(Pointf(box.get_bottom_right()));
+		line_to(Pointf(box.get_bottom_left()));
+		close();
+	}
+
+	void PathImpl::add_line(const Pointf &start, const Pointf &end)
+	{
+		move_to(start);
+		line_to(end);
+	}
+
+	void PathImpl::add_ellipse(const Pointf &center, const Sizef &radius)
+	{
 		uicore::Sizef diameter = radius * 2.0f;
 
 		float x = center.x - radius.width;
@@ -130,19 +124,15 @@ namespace uicore
 		float x_middle = x + diameter.width / 2;
 		float y_middle = y + diameter.height / 2;
 
-		path.move_to(x, y_middle);
-		path.bezier_to(Pointf(x, y_middle - control_vert), Pointf(x_middle - control_horiz, y), Pointf(x_middle, y));
-		path.bezier_to(Pointf(x_middle + control_horiz, y), Pointf(x_end, y_middle - control_vert), Pointf(x_end, y_middle));
-		path.bezier_to(Pointf(x_end, y_middle + control_vert), Pointf(x_middle + control_horiz, y_end), Pointf(x_middle, y_end));
-		path.bezier_to(Pointf(x_middle - control_horiz, y_end), Pointf(x, y_middle + control_vert), Pointf(x, y_middle));
-
-		return path;
+		move_to(x, y_middle);
+		bezier_to(Pointf(x, y_middle - control_vert), Pointf(x_middle - control_horiz, y), Pointf(x_middle, y));
+		bezier_to(Pointf(x_middle + control_horiz, y), Pointf(x_end, y_middle - control_vert), Pointf(x_end, y_middle));
+		bezier_to(Pointf(x_end, y_middle + control_vert), Pointf(x_middle + control_horiz, y_end), Pointf(x_middle, y_end));
+		bezier_to(Pointf(x_middle - control_horiz, y_end), Pointf(x, y_middle + control_vert), Pointf(x, y_middle));
 	}
 
-	Path Path::rect(const Rectf &box, const uicore::Sizef &corner)
+	void PathImpl::add_rect(const Rectf &box, const uicore::Sizef &corner)
 	{
-		Path path;
-
 		float x = box.left;
 		float y = box.top;
 
@@ -156,31 +146,31 @@ namespace uicore
 		float x_middle_b = box.right - corner.width;
 		float y_middle_b = box.bottom - corner.height;
 
-		path.move_to( x, y_middle_a);
+		move_to(x, y_middle_a);
 
-		path.bezier_to(Pointf(x, y_middle_a - control_vert), Pointf(x_middle_a - control_horiz, y), Pointf(x_middle_a, y));
-		path.line_to(Pointf(x_middle_b, y));
-		path.bezier_to(Pointf(x_middle_b + control_horiz, y), Pointf(box.right, y_middle_a - control_vert), Pointf(box.right, y_middle_a));
-		path.line_to(Pointf(box.right, y_middle_b));
-		path.bezier_to(Pointf(box.right, y_middle_b + control_vert), Pointf(x_middle_b + control_horiz, box.bottom), Pointf(x_middle_b, box.bottom));
-		path.line_to(Pointf(x_middle_a, box.bottom));
-		path.bezier_to(Pointf(x_middle_a - control_horiz, box.bottom), Pointf(x, y_middle_b + control_vert), Pointf(x, y_middle_b));
-		path.close();
-
-		return path;
+		bezier_to(Pointf(x, y_middle_a - control_vert), Pointf(x_middle_a - control_horiz, y), Pointf(x_middle_a, y));
+		line_to(Pointf(x_middle_b, y));
+		bezier_to(Pointf(x_middle_b + control_horiz, y), Pointf(box.right, y_middle_a - control_vert), Pointf(box.right, y_middle_a));
+		line_to(Pointf(box.right, y_middle_b));
+		bezier_to(Pointf(box.right, y_middle_b + control_vert), Pointf(x_middle_b + control_horiz, box.bottom), Pointf(x_middle_b, box.bottom));
+		line_to(Pointf(x_middle_a, box.bottom));
+		bezier_to(Pointf(x_middle_a - control_horiz, box.bottom), Pointf(x, y_middle_b + control_vert), Pointf(x, y_middle_b));
+		close();
 	}
-	void Path::operator += (const Path& path)
+
+	void PathImpl::add(const std::shared_ptr<Path> &path)
 	{
-		if (!path.impl->subpaths.empty())
+		PathImpl *other = static_cast<PathImpl*>(path.get());
+		if (other != this && !other->_subpaths.empty())
 		{
-			impl->subpaths.reserve(impl->subpaths.size() + path.impl->subpaths.size());
-			impl->subpaths.insert(impl->subpaths.end(), path.impl->subpaths.begin(), path.impl->subpaths.end());
+			_subpaths.reserve(_subpaths.size() + other->_subpaths.size());
+			_subpaths.insert(_subpaths.end(), other->_subpaths.begin(), other->_subpaths.end());
 		}
 	}
 
-	Path &Path::transform_self(const Mat3f &transform)
+	void PathImpl::apply_transform(const Mat3f &transform)
 	{
-		for (auto & elem : impl->subpaths)
+		for (auto & elem : _subpaths)
 		{
 			std::vector<Pointf> &points = elem.points;
 			for (auto & point : points)
@@ -188,35 +178,26 @@ namespace uicore
 				point = transform * point;
 			}
 		}
-		return *this;
-	}
-	Path Path::clone() const
-	{
-		Path path;
-		*path.impl = *impl;
-		return path;
 	}
 
-	Path operator + (const Path& v1, const Path& v2)
+	std::shared_ptr<Path> PathImpl::clone() const
 	{
-		Path path = v1.clone();
-		path += v2;
-		return path;
+		return std::make_shared<PathImpl>(*this);
 	}
 
-	void Path::stroke(const CanvasPtr &canvas, const Pen &pen)
+	void PathImpl::stroke(const CanvasPtr &canvas, const Pen &pen)
 	{
 		RenderBatchPath *batcher = static_cast<CanvasImpl*>(canvas.get())->batcher.get_path_batcher();
 		batcher->stroke(canvas, *this, pen);
 	}
 
-	void Path::fill(const CanvasPtr &canvas, const Brush &brush)
+	void PathImpl::fill(const CanvasPtr &canvas, const Brush &brush)
 	{
 		RenderBatchPath *batcher = static_cast<CanvasImpl*>(canvas.get())->batcher.get_path_batcher();
 		batcher->fill(canvas, *this, brush);
 	}
 
-	void Path::fill_and_stroke(const CanvasPtr &canvas, const Pen &pen, const Brush &brush)
+	void PathImpl::fill_and_stroke(const CanvasPtr &canvas, const Pen &pen, const Brush &brush)
 	{
 		RenderBatchPath *batcher = static_cast<CanvasImpl*>(canvas.get())->batcher.get_path_batcher();
 		batcher->fill(canvas, *this, brush);

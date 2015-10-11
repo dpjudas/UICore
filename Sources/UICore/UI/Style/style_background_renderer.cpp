@@ -59,8 +59,8 @@ namespace uicore
 
 			// To do: take get_layer_clip(num_layers - 1) into account
 
-			Path background_area = get_border_area_path(border_points);
-			background_area.fill(canvas, Brush(bg_color.color()));
+			PathPtr background_area = get_border_area_path(border_points);
+			background_area->fill(canvas, Brush(bg_color.color()));
 		}
 
 		for (int index = num_layers - 1; index >= 0; index--)
@@ -245,7 +245,7 @@ namespace uicore
 		if (gradient_length <= 0.0f)
 			return;
 
-		Path border_area_path = get_border_area_path(get_border_points());
+		PathPtr border_area_path = get_border_area_path(get_border_points());
 
 		float last_position = 0.0f;
 		for (int stop_index = 0; stop_index < num_stops; stop_index++)
@@ -277,7 +277,7 @@ namespace uicore
 			brush.stops.push_back(BrushGradientStop(prop_color.color(), position));
 		}
 
-		border_area_path.fill(canvas, brush);
+		border_area_path->fill(canvas, brush);
 	}
 
 	void StyleBackgroundRenderer::render_background_radial_gradient(int index)
@@ -309,8 +309,8 @@ namespace uicore
 			{
 				auto border_points = get_border_points();
 				auto padding_points = get_padding_points(border_points);
-				Path border_path = get_border_stroke_path(border_points, padding_points);
-				border_path.fill(canvas, Brush(color));
+				PathPtr border_path = get_border_stroke_path(border_points, padding_points);
+				border_path->fill(canvas, Brush(color));
 			}
 		}
 	}
@@ -607,141 +607,141 @@ namespace uicore
 		return padding_points;
 	}
 
-	Path StyleBackgroundRenderer::get_border_area_path(const std::array<Pointf, 2 * 4> &border_points)
+	PathPtr StyleBackgroundRenderer::get_border_area_path(const std::array<Pointf, 2 * 4> &border_points)
 	{
 		float kappa = 0.552228474f;
 
 		// Border area path (to be used for filling)
 
-		Path border_area_path;
+		auto border_area_path = Path::create();
 
-		border_area_path.move_to(border_points[0]);
-		border_area_path.line_to(border_points[1]);
+		border_area_path->move_to(border_points[0]);
+		border_area_path->line_to(border_points[1]);
 		if (border_points[1] != border_points[2])
 		{
-			border_area_path.bezier_to(
+			border_area_path->bezier_to(
 				Pointf(mix(border_points[1].x, border_points[2].x, kappa), border_points[1].y),
 				Pointf(border_points[2].x, mix(border_points[1].y, border_points[2].y, kappa)),
 				border_points[2]);
 		}
 
-		border_area_path.line_to(border_points[3]);
+		border_area_path->line_to(border_points[3]);
 		if (border_points[3] != border_points[4])
 		{
-			border_area_path.bezier_to(
+			border_area_path->bezier_to(
 				Pointf(border_points[3].x, mix(border_points[3].y, border_points[4].y, kappa)),
 				Pointf(mix(border_points[3].x, border_points[4].x, kappa), border_points[4].y),
 				border_points[4]);
 		}
 
-		border_area_path.line_to(border_points[5]);
+		border_area_path->line_to(border_points[5]);
 		if (border_points[5] != border_points[6])
 		{
-			border_area_path.bezier_to(
+			border_area_path->bezier_to(
 				Pointf(mix(border_points[5].x, border_points[6].x, kappa), border_points[5].y),
 				Pointf(border_points[6].x, mix(border_points[5].y, border_points[6].y, kappa)),
 				border_points[6]);
 		}
 
-		border_area_path.line_to(border_points[7]);
+		border_area_path->line_to(border_points[7]);
 		if (border_points[7] != border_points[0])
 		{
-			border_area_path.bezier_to(
+			border_area_path->bezier_to(
 				Pointf(border_points[7].x, mix(border_points[7].y, border_points[0].y, kappa)),
 				Pointf(mix(border_points[7].x, border_points[0].x, kappa), border_points[0].y),
 				border_points[0]);
 		}
 
-		border_area_path.close();
+		border_area_path->close();
 
 		return border_area_path;
 	}
 
-	Path StyleBackgroundRenderer::get_border_stroke_path(const std::array<Pointf, 2 * 4> &border_points, const std::array<Pointf, 2 * 4> &padding_points)
+	PathPtr StyleBackgroundRenderer::get_border_stroke_path(const std::array<Pointf, 2 * 4> &border_points, const std::array<Pointf, 2 * 4> &padding_points)
 	{
 		// Border path (the path defining the actual border)
 
 		float kappa = 0.552228474f;
 
-		Path border_path;
+		auto border_path = Path::create();
 
-		border_path.move_to(border_points[0]);
-		border_path.line_to(border_points[1]);
+		border_path->move_to(border_points[0]);
+		border_path->line_to(border_points[1]);
 		if (border_points[1] != border_points[2])
 		{
-			border_path.bezier_to(
+			border_path->bezier_to(
 				Pointf(mix(border_points[1].x, border_points[2].x, kappa), border_points[1].y),
 				Pointf(border_points[2].x, mix(border_points[1].y, border_points[2].y, kappa)),
 				border_points[2]);
 		}
 
-		border_path.line_to(border_points[3]);
+		border_path->line_to(border_points[3]);
 		if (border_points[3] != border_points[4])
 		{
-			border_path.bezier_to(
+			border_path->bezier_to(
 				Pointf(border_points[3].x, mix(border_points[3].y, border_points[4].y, kappa)),
 				Pointf(mix(border_points[3].x, border_points[4].x, kappa), border_points[4].y),
 				border_points[4]);
 		}
 
-		border_path.line_to(border_points[5]);
+		border_path->line_to(border_points[5]);
 		if (border_points[5] != border_points[6])
 		{
-			border_path.bezier_to(
+			border_path->bezier_to(
 				Pointf(mix(border_points[5].x, border_points[6].x, kappa), border_points[5].y),
 				Pointf(border_points[6].x, mix(border_points[5].y, border_points[6].y, kappa)),
 				border_points[6]);
 		}
 
-		border_path.line_to(border_points[7]);
+		border_path->line_to(border_points[7]);
 		if (border_points[7] != border_points[0])
 		{
-			border_path.bezier_to(
+			border_path->bezier_to(
 				Pointf(border_points[7].x, mix(border_points[7].y, border_points[0].y, kappa)),
 				Pointf(mix(border_points[7].x, border_points[0].x, kappa), border_points[0].y),
 				border_points[0]);
 		}
 
-		border_path.close();
+		border_path->close();
 
-		border_path.move_to(padding_points[0]);
-		border_path.line_to(padding_points[1]);
+		border_path->move_to(padding_points[0]);
+		border_path->line_to(padding_points[1]);
 		if (padding_points[1] != padding_points[2])
 		{
-			border_path.bezier_to(
+			border_path->bezier_to(
 				Pointf(mix(padding_points[1].x, padding_points[2].x, kappa), padding_points[1].y),
 				Pointf(padding_points[2].x, mix(padding_points[1].y, padding_points[2].y, kappa)),
 				padding_points[2]);
 		}
 
-		border_path.line_to(padding_points[3]);
+		border_path->line_to(padding_points[3]);
 		if (padding_points[3] != padding_points[4])
 		{
-			border_path.bezier_to(
+			border_path->bezier_to(
 				Pointf(padding_points[3].x, mix(padding_points[3].y, padding_points[4].y, kappa)),
 				Pointf(mix(padding_points[3].x, padding_points[4].x, kappa), padding_points[4].y),
 				padding_points[4]);
 		}
 
-		border_path.line_to(padding_points[5]);
+		border_path->line_to(padding_points[5]);
 		if (padding_points[5] != padding_points[6])
 		{
-			border_path.bezier_to(
+			border_path->bezier_to(
 				Pointf(mix(padding_points[5].x, padding_points[6].x, kappa), padding_points[5].y),
 				Pointf(padding_points[6].x, mix(padding_points[5].y, padding_points[6].y, kappa)),
 				padding_points[6]);
 		}
 
-		border_path.line_to(padding_points[7]);
+		border_path->line_to(padding_points[7]);
 		if (padding_points[7] != padding_points[0])
 		{
-			border_path.bezier_to(
+			border_path->bezier_to(
 				Pointf(padding_points[7].x, mix(padding_points[7].y, padding_points[0].y, kappa)),
 				Pointf(mix(padding_points[7].x, padding_points[0].x, kappa), padding_points[0].y),
 				padding_points[0]);
 		}
 
-		border_path.close();
+		border_path->close();
 
 		return border_path;
 	}
@@ -794,61 +794,61 @@ namespace uicore
 
 			if (shadow_blur_radius != 0.0f)
 			{
-				Path top_left;
-				top_left.move_to(Pointf(border_box.left - shadow_blur_radius, border_box.top - shadow_blur_radius));
-				top_left.line_to(Pointf(border_points[0].x, border_points[0].y - shadow_blur_radius));
-				top_left.line_to(border_points[0]);
+				auto top_left = Path::create();
+				top_left->move_to(Pointf(border_box.left - shadow_blur_radius, border_box.top - shadow_blur_radius));
+				top_left->line_to(Pointf(border_points[0].x, border_points[0].y - shadow_blur_radius));
+				top_left->line_to(border_points[0]);
 				if (border_points[7] != border_points[0])
 				{
-					top_left.bezier_to(
+					top_left->bezier_to(
 						Pointf(border_points[0].x, mix(border_points[0].y, border_points[7].y, kappa)),
 						Pointf(mix(border_points[0].x, border_points[7].x, kappa), border_points[7].y),
 						border_points[7]);
 				}
-				top_left.line_to(Pointf(border_points[7].x - shadow_blur_radius, border_points[7].y));
-				top_left.close();
+				top_left->line_to(Pointf(border_points[7].x - shadow_blur_radius, border_points[7].y));
+				top_left->close();
 
-				Path top_right;
-				top_right.move_to(Pointf(border_points[1].x, border_points[1].y - shadow_blur_radius));
-				top_right.line_to(Pointf(border_box.right + shadow_blur_radius, border_box.top - shadow_blur_radius));
-				top_right.line_to(Pointf(border_points[2].x + shadow_blur_radius, border_points[2].y));
-				top_right.line_to(border_points[2]);
+				auto top_right = Path::create();
+				top_right->move_to(Pointf(border_points[1].x, border_points[1].y - shadow_blur_radius));
+				top_right->line_to(Pointf(border_box.right + shadow_blur_radius, border_box.top - shadow_blur_radius));
+				top_right->line_to(Pointf(border_points[2].x + shadow_blur_radius, border_points[2].y));
+				top_right->line_to(border_points[2]);
 				if (border_points[1] != border_points[2])
 				{
-					top_right.bezier_to(
+					top_right->bezier_to(
 						Pointf(border_points[2].x, mix(border_points[2].y, border_points[1].y, kappa)),
 						Pointf(mix(border_points[2].x, border_points[1].x, kappa), border_points[1].y),
 						border_points[1]);
 				}
-				top_right.close();
+				top_right->close();
 
-				Path bottom_right;
-				bottom_right.move_to(Pointf(border_box.right + shadow_blur_radius, border_box.bottom + shadow_blur_radius));
-				bottom_right.line_to(Pointf(border_points[4].x, border_points[4].y + shadow_blur_radius));
-				bottom_right.line_to(border_points[4]);
+				auto bottom_right = Path::create();
+				bottom_right->move_to(Pointf(border_box.right + shadow_blur_radius, border_box.bottom + shadow_blur_radius));
+				bottom_right->line_to(Pointf(border_points[4].x, border_points[4].y + shadow_blur_radius));
+				bottom_right->line_to(border_points[4]);
 				if (border_points[4] != border_points[3])
 				{
-					bottom_right.bezier_to(
+					bottom_right->bezier_to(
 						Pointf(border_points[4].x, mix(border_points[4].y, border_points[3].y, kappa)),
 						Pointf(mix(border_points[4].x, border_points[3].x, kappa), border_points[3].y),
 						border_points[3]);
 				}
-				bottom_right.line_to(Pointf(border_points[3].x + shadow_blur_radius, border_points[3].y));
-				bottom_right.close();
+				bottom_right->line_to(Pointf(border_points[3].x + shadow_blur_radius, border_points[3].y));
+				bottom_right->close();
 
-				Path bottom_left;
-				bottom_left.move_to(Pointf(border_box.left - shadow_blur_radius, border_box.bottom + shadow_blur_radius));
-				bottom_left.line_to(Pointf(border_points[6].x - shadow_blur_radius, border_points[6].y));
-				bottom_left.line_to(border_points[6]);
+				auto bottom_left = Path::create();
+				bottom_left->move_to(Pointf(border_box.left - shadow_blur_radius, border_box.bottom + shadow_blur_radius));
+				bottom_left->line_to(Pointf(border_points[6].x - shadow_blur_radius, border_points[6].y));
+				bottom_left->line_to(border_points[6]);
 				if (border_points[6] != border_points[5])
 				{
-					bottom_left.bezier_to(
+					bottom_left->bezier_to(
 						Pointf(border_points[6].x, mix(border_points[6].y, border_points[5].y, kappa)),
 						Pointf(mix(border_points[6].x, border_points[5].x, kappa), border_points[5].y),
 						border_points[5]);
 				}
-				bottom_left.line_to(Pointf(border_points[5].x, border_points[5].y + shadow_blur_radius));
-				bottom_left.close();
+				bottom_left->line_to(Pointf(border_points[5].x, border_points[5].y + shadow_blur_radius));
+				bottom_left->close();
 
 				Brush brush_top_left;
 				brush_top_left.type = BrushType::radial;
@@ -878,58 +878,58 @@ namespace uicore
 				brush_bottom_left.center_point = Pointf(border_box.left + bottom_left_x, border_box.bottom - bottom_left_y);
 				brush_bottom_left.stops = shadow_blur_stops(shadow_color, shadow_blur_radius, bottom_left_x / brush_bottom_left.radius_x);
 
-				top_left.fill(canvas, brush_top_left);
-				top_right.fill(canvas, brush_top_right);
-				bottom_right.fill(canvas, brush_bottom_right);
-				bottom_left.fill(canvas, brush_bottom_left);
+				top_left->fill(canvas, brush_top_left);
+				top_right->fill(canvas, brush_top_right);
+				bottom_right->fill(canvas, brush_bottom_right);
+				bottom_left->fill(canvas, brush_bottom_left);
 
 				Brush brush_linear;
 				brush_linear.type = BrushType::linear;
 				brush_linear.stops = shadow_blur_stops(shadow_color, shadow_blur_radius, 0.0f);
 
-				Path top;
-				top.move_to(Pointf(border_points[0].x, border_points[0].y - shadow_blur_radius));
-				top.line_to(Pointf(border_points[1].x, border_points[1].y - shadow_blur_radius));
-				top.line_to(border_points[1]);
-				top.line_to(border_points[0]);
-				top.close();
+				auto top = Path::create();
+				top->move_to(Pointf(border_points[0].x, border_points[0].y - shadow_blur_radius));
+				top->line_to(Pointf(border_points[1].x, border_points[1].y - shadow_blur_radius));
+				top->line_to(border_points[1]);
+				top->line_to(border_points[0]);
+				top->close();
 
-				Path right;
-				right.move_to(Pointf(border_points[2].x + shadow_blur_radius, border_points[2].y));
-				right.line_to(Pointf(border_points[3].x + shadow_blur_radius, border_points[3].y));
-				right.line_to(border_points[3]);
-				right.line_to(border_points[2]);
-				right.close();
+				auto right = Path::create();
+				right->move_to(Pointf(border_points[2].x + shadow_blur_radius, border_points[2].y));
+				right->line_to(Pointf(border_points[3].x + shadow_blur_radius, border_points[3].y));
+				right->line_to(border_points[3]);
+				right->line_to(border_points[2]);
+				right->close();
 
-				Path bottom;
-				bottom.move_to(Pointf(border_points[4].x, border_points[4].y + shadow_blur_radius));
-				bottom.line_to(Pointf(border_points[5].x, border_points[5].y + shadow_blur_radius));
-				bottom.line_to(border_points[5]);
-				bottom.line_to(border_points[4]);
-				bottom.close();
+				auto bottom = Path::create();
+				bottom->move_to(Pointf(border_points[4].x, border_points[4].y + shadow_blur_radius));
+				bottom->line_to(Pointf(border_points[5].x, border_points[5].y + shadow_blur_radius));
+				bottom->line_to(border_points[5]);
+				bottom->line_to(border_points[4]);
+				bottom->close();
 
-				Path left;
-				left.move_to(Pointf(border_points[6].x - shadow_blur_radius, border_points[6].y));
-				left.line_to(Pointf(border_points[7].x - shadow_blur_radius, border_points[7].y));
-				left.line_to(border_points[7]);
-				left.line_to(border_points[6]);
-				left.close();
+				auto left = Path::create();
+				left->move_to(Pointf(border_points[6].x - shadow_blur_radius, border_points[6].y));
+				left->line_to(Pointf(border_points[7].x - shadow_blur_radius, border_points[7].y));
+				left->line_to(border_points[7]);
+				left->line_to(border_points[6]);
+				left->close();
 
 				brush_linear.start_point = border_points[0];
 				brush_linear.end_point = Pointf(border_points[0].x, border_points[0].y - shadow_blur_radius);
-				top.fill(canvas, brush_linear);
+				top->fill(canvas, brush_linear);
 
 				brush_linear.start_point = border_points[2];
 				brush_linear.end_point = Pointf(border_points[2].x + shadow_blur_radius, border_points[2].y);
-				right.fill(canvas, brush_linear);
+				right->fill(canvas, brush_linear);
 
 				brush_linear.start_point = border_points[4];
 				brush_linear.end_point = Pointf(border_points[4].x, border_points[4].y + shadow_blur_radius);
-				bottom.fill(canvas, brush_linear);
+				bottom->fill(canvas, brush_linear);
 
 				brush_linear.start_point = border_points[6];
 				brush_linear.end_point = Pointf(border_points[6].x - shadow_blur_radius, border_points[6].y);
-				left.fill(canvas, brush_linear);
+				left->fill(canvas, brush_linear);
 			}
 		}
 	}

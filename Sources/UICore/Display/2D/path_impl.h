@@ -39,20 +39,48 @@ namespace uicore
 		cubic
 	};
 
-	class CanvasSubpath
+	class PathSubpath
 	{
 	public:
-		CanvasSubpath() : points(1) { }
+		PathSubpath() : points(1) { }
 
 		std::vector<Pointf> points;
 		std::vector<PathCommand> commands;
 		bool closed = false;
 	};
 
-	class PathImpl
+	class PathImpl : public Path
 	{
 	public:
-		PathFillMode fill_mode = PathFillMode::alternate;
-		std::vector<CanvasSubpath> subpaths;
+		PathImpl();
+		PathImpl(const PathImpl &other) { *this = other; }
+
+		using Path::move_to;
+
+		PathFillMode fill_mode() const override { return _fill_mode; }
+		void set_fill_mode(PathFillMode fill_mode) override { _fill_mode = fill_mode; }
+
+		void move_to(const Pointf &point) override;
+		void line_to(const Pointf &point) override;
+		void bezier_to(const Pointf &control, const Pointf &point) override;
+		void bezier_to(const Pointf &control1, const Pointf &control2, const Pointf &point) override;
+		void close() override;
+
+		void add(const std::shared_ptr<Path> &path) override;
+		void add_line(const Pointf &start, const Pointf &end) override;
+		void add_rect(const Rectf &box) override;
+		void add_rect(const Rectf &box, const uicore::Sizef &corner) override;
+		void add_ellipse(const Pointf &center, const Sizef &radius) override;
+
+		void apply_transform(const Mat3f &transform) override;
+
+		void stroke(const CanvasPtr &canvas, const Pen &pen) override;
+		void fill(const CanvasPtr &canvas, const Brush &brush) override;
+		void fill_and_stroke(const CanvasPtr &canvas, const Pen &pen, const Brush &brush) override;
+
+		std::shared_ptr<Path> clone() const override;
+
+		PathFillMode _fill_mode = PathFillMode::alternate;
+		std::vector<PathSubpath> _subpaths;
 	};
 }

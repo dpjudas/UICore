@@ -38,6 +38,7 @@ namespace uicore
 	class Image;
 	typedef std::shared_ptr<Image> ImagePtr;
 	class Path;
+	typedef std::shared_ptr<Path> PathPtr;
 	class Colorf;
 	class Pointf;
 	class Rectf;
@@ -85,8 +86,8 @@ namespace uicore
 		std::array<Pointf, 2 * 4> get_border_points();
 		std::array<Pointf, 2 * 4> get_padding_points(const std::array<Pointf, 2 * 4> &border_points);
 
-		static Path get_border_area_path(const std::array<Pointf, 2 * 4> &border_points);
-		static Path get_border_stroke_path(const std::array<Pointf, 2 * 4> &border_points, const std::array<Pointf, 2 * 4> &padding_points);
+		static PathPtr get_border_area_path(const std::array<Pointf, 2 * 4> &border_points);
+		static PathPtr get_border_stroke_path(const std::array<Pointf, 2 * 4> &border_points, const std::array<Pointf, 2 * 4> &padding_points);
 
 		static std::vector<BrushGradientStop> shadow_blur_stops(const Colorf &shadow_color, float shadow_blur_radius, float start_t);
 		static float mix(float a, float b, float t);

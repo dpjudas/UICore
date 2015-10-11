@@ -78,7 +78,7 @@ namespace uicore
 			if (clear_background_enable)
 			{
 				canvas->set_blend_state(opaque_blend);
-				Path::rect(canvas_rect).fill(canvas, background_color);
+				Path::rect(canvas_rect)->fill(canvas, background_color);
 				canvas->set_blend_state(nullptr);
 				//canvas->clear(background_color);	<--- On d3d, this clears the entire canvas - It does not recognise the cliprect
 			}

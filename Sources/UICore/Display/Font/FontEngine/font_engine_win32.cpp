@@ -441,9 +441,9 @@ namespace uicore
 		return charset;
 	}
 
-	void FontEngine_Win32::load_glyph_path(unsigned int glyph_index, Path &path, GlyphMetrics &out_metrics)
+	void FontEngine_Win32::load_glyph_path(unsigned int glyph_index, const PathPtr &path, GlyphMetrics &out_metrics)
 	{
-		path.set_fill_mode(PathFillMode::winding);
+		path->set_fill_mode(PathFillMode::winding);
 
 		GLYPHMETRICS glyph_metrics = { 0 };
 		MAT2 matrix = { 0 };
@@ -498,7 +498,7 @@ namespace uicore
 			if (polygon_header->dwType != TT_POLYGON_TYPE)
 				throw Exception("invalid polygon type");
 
-			path.move_to(to_point(polygon_header->pfxStart));
+			path->move_to(to_point(polygon_header->pfxStart));
 
 			int curve_bytes = polygon_header->cb - sizeof(TTPOLYGONHEADER);
 			if (curve_bytes < 0)
@@ -527,7 +527,7 @@ namespace uicore
 					for (int i = 0; i < poly_curve->cpfx; i++)
 					{
 						next_point = to_point(poly_curve->apfx[i]);
-						path.line_to(next_point);
+						path->line_to(next_point);
 					}
 				}
 				else if (poly_curve->wType == TT_PRIM_QSPLINE)
@@ -546,7 +546,7 @@ namespace uicore
 							next_point = Pointf((this_point.x + next_point.x) / 2.0f, (this_point.y + next_point.y) / 2.0f);
 						}
 
-						path.bezier_to(this_point, next_point);
+						path->bezier_to(this_point, next_point);
 					}
 				}
 				else
@@ -554,7 +554,7 @@ namespace uicore
 
 				poly_curve = next_poly_curve;
 			}
-			path.close();
+			path->close();
 		}
 		out_metrics.advance.width = glyph_metrics.gmCellIncX / pixel_ratio;
 		out_metrics.advance.height = glyph_metrics.gmCellIncY / pixel_ratio;

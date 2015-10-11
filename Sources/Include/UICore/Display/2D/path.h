@@ -53,65 +53,62 @@ namespace uicore
 	class Path
 	{
 	public:
-		Path();
+		static std::shared_ptr<Path> create();
 
-		void set_fill_mode(PathFillMode fill_mode);
+		static std::shared_ptr<Path> line(const Pointf &start, const Pointf &end) { auto path = create(); path->add_line(start, end); return path; }
+		static std::shared_ptr<Path> line(float x1, float y1, float x2, float y2) { return Path::line(Pointf(x1, y1), Pointf(x2, y2)); }
 
-		void move_to(const Pointf &point);
-		void move_to(float x, float y) { move_to(Pointf(x, y)); }
-		void line_to(const Pointf &point);
-		void line_to(float x, float y) { line_to(Pointf(x, y)); }
-		void bezier_to(const Pointf &control, const Pointf &point);
-		void bezier_to(const Pointf &control1, const Pointf &control2, const Pointf &point);
-		void close();
+		static std::shared_ptr<Path> rect(const Rectf &box) { auto path = create(); path->add_rect(box); return path; }
+		static std::shared_ptr<Path> rect(float x, float y, float width, float height) { return Path::rect(Rectf(x, y, Sizef(width, height))); }
+		static std::shared_ptr<Path> rect(const Rectf &box, const uicore::Sizef &corner) { auto path = create(); path->add_rect(box, corner); return path; }
 
-		/// \brief Strokes a path
-		void stroke(const CanvasPtr &canvas, const Pen &pen);
-
-		/// \brief Fills a path
-		void fill(const CanvasPtr &canvas, const Brush &brush);
-
-		/// \brief First fills a path, then strokes on top
-		void fill_and_stroke(const CanvasPtr &canvas, const Pen &pen, const Brush &brush);
-
-		// \brief Copy the entire description (not just the implementation)
-		Path clone() const;
-
-		static Path rect(const Rectf &box);
-		static Path rect(float x, float y, float width, float height) { return Path::rect(Rectf(x, y, Sizef(width, height))); }
-		static Path line(const Pointf &start, const Pointf &end);
-		static Path line(float x1, float y1, float x2, float y2) { return Path::line(Pointf(x1, y1), Pointf(x2, y2)); }
-
-		static Path rect(const Rectf &box, const uicore::Sizef &corner);
-
-		static Path circle(float center_x, float center_y, float radius) { return Path::ellipse(Pointf(center_x, center_y), Sizef(radius, radius)); }
-		static Path ellipse(float center_x, float center_y, float radius_x, float radius_y) { return Path::ellipse(Pointf(center_x, center_y), Sizef(radius_x, radius_y)); }
-		static Path circle(const Pointf &center, float radius) { return Path::ellipse(center, Sizef(radius, radius)); }
-		static Path ellipse(const Pointf &center, const Sizef &radius);
+		static std::shared_ptr<Path> circle(float center_x, float center_y, float radius) { return Path::ellipse(Pointf(center_x, center_y), Sizef(radius, radius)); }
+		static std::shared_ptr<Path> ellipse(float center_x, float center_y, float radius_x, float radius_y) { return Path::ellipse(Pointf(center_x, center_y), Sizef(radius_x, radius_y)); }
+		static std::shared_ptr<Path> circle(const Pointf &center, float radius) { return Path::ellipse(center, Sizef(radius, radius)); }
+		static std::shared_ptr<Path> ellipse(const Pointf &center, const Sizef &radius) { auto path = create(); path->add_ellipse(center, radius); return path; }
 
 		// This function is to assist in debugging, it has not been decided if it will be removed. Don't use at the moment.
-		static Path glyph(const CanvasPtr &canvas, Font &font, unsigned int glyph, GlyphMetrics &out_metrics);
+		static std::shared_ptr<Path> glyph(const CanvasPtr &canvas, Font &font, unsigned int glyph, GlyphMetrics &out_metrics);
 
-		std::shared_ptr<PathImpl> get_impl() const { return impl; }
+		virtual PathFillMode fill_mode() const = 0;
+		virtual void set_fill_mode(PathFillMode fill_mode) = 0;
 
-		/// \brief += operator to concatenate a path onto this path.
-		///
-		/// Useful when manually building complex paths from primitives
-		void operator += (const Path& path);
+		virtual void move_to(const Pointf &point) = 0;
+		void move_to(float x, float y) { move_to(Pointf(x, y)); }
+		virtual void line_to(const Pointf &point) = 0;
+		void line_to(float x, float y) { line_to(Pointf(x, y)); }
+		virtual void bezier_to(const Pointf &control, const Pointf &point) = 0;
+		virtual void bezier_to(const Pointf &control1, const Pointf &control2, const Pointf &point) = 0;
+		virtual void close() = 0;
 
-		/// \brief Transform this path
-		///
-		/// Useful when manually building complex paths from primitives
-		///
-		/// \param transform = Transform matrix
-		///
-		/// \return reference to this object
-		Path &transform_self(const Mat3f &transform);
+		/// \brief Add all subpaths in path to this path
+		virtual void add(const std::shared_ptr<Path> &path) = 0;
 
-	private:
-		std::shared_ptr<PathImpl> impl;
-		friend class CanvasImpl;
+		virtual void add_line(const Pointf &start, const Pointf &end) = 0;
+		void add_line(float x1, float y1, float x2, float y2) { return add_line(Pointf(x1, y1), Pointf(x2, y2)); }
+
+		virtual void add_rect(const Rectf &box) = 0;
+		void add_rect(float x, float y, float width, float height) { add_rect(Rectf(x, y, Sizef(width, height))); }
+		virtual void add_rect(const Rectf &box, const uicore::Sizef &corner) = 0;
+
+		void add_circle(float center_x, float center_y, float radius) { add_ellipse(Pointf(center_x, center_y), Sizef(radius, radius)); }
+		void add_ellipse(float center_x, float center_y, float radius_x, float radius_y) { add_ellipse(Pointf(center_x, center_y), Sizef(radius_x, radius_y)); }
+		void add_circle(const Pointf &center, float radius) { add_ellipse(center, Sizef(radius, radius)); }
+		virtual void add_ellipse(const Pointf &center, const Sizef &radius) = 0;
+
+		/// \brief Apply a transformation matrix on all points in this path
+		virtual void apply_transform(const Mat3f &transform) = 0;
+
+		/// \brief Strokes a path
+		virtual void stroke(const CanvasPtr &canvas, const Pen &pen) = 0;
+
+		/// \brief Fills a path
+		virtual void fill(const CanvasPtr &canvas, const Brush &brush) = 0;
+
+		/// \brief First fills a path, then strokes on top
+		virtual void fill_and_stroke(const CanvasPtr &canvas, const Pen &pen, const Brush &brush) = 0;
+
+		// \brief Make a copy of the path
+		virtual std::shared_ptr<Path> clone() const = 0;
 	};
-	/// \brief + operator.
-	Path operator + (const Path& v1, const Path& v2);
 }

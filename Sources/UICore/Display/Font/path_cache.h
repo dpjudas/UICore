@@ -44,6 +44,7 @@ namespace uicore
 	class TextureGroupImage;
 	class FontPixelBuffer;
 	class Path;
+	typedef std::shared_ptr<Path> PathPtr;
 	class RenderBatchTriangle;
 
 	class Font_PathGlyph
@@ -54,7 +55,7 @@ namespace uicore
 		/// \brief Glyph this buffer refers to.
 		unsigned int glyph;
 
-		Path path;
+		PathPtr path;
 		GlyphMetrics metrics;
 	};
 

@@ -368,7 +368,7 @@ namespace uicore
 		if (!txt_selected.empty())
 		{
 			Rectf selection_rect = Rectf(advance_before - impl->scroll_pos, top_y, advance_before + advance_selected - impl->scroll_pos, bottom_y);
-			Path::rect(selection_rect).fill(canvas, focus_view() == this ? Brush::solid_rgb8(51, 153, 255) : Brush::solid_rgb8(200, 200, 200));
+			Path::rect(selection_rect)->fill(canvas, focus_view() == this ? Brush::solid_rgb8(51, 153, 255) : Brush::solid_rgb8(200, 200, 200));
 		}
 
 		Colorf color = style_cascade().computed_value("color").color();
@@ -379,7 +379,7 @@ namespace uicore
 		if (impl->cursor_blink_visible)
 		{
 			auto cursor_pos = canvas->grid_fit({ cursor_advance - impl->scroll_pos, top_y });
-			Path::rect(cursor_pos.x, cursor_pos.y, 1.0f, bottom_y - top_y).fill(canvas, Brush(color));
+			Path::rect(cursor_pos.x, cursor_pos.y, 1.0f, bottom_y - top_y)->fill(canvas, Brush(color));
 		}
 
 		if (impl->text.empty())

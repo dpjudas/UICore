@@ -49,17 +49,17 @@ namespace uicore
 			modelview_matrix.matrix[0 * 4 + 1] * point.x + modelview_matrix.matrix[1 * 4 + 1] * point.y + modelview_matrix.matrix[3 * 4 + 1]);
 	}
 
-	void RenderBatchPath::fill(const CanvasPtr &canvas, const Path &path, const Brush &brush)
+	void RenderBatchPath::fill(const CanvasPtr &canvas, const PathImpl &path, const Brush &brush)
 	{
 		static_cast<CanvasImpl*>(canvas.get())->set_batcher(this);
 
 		fill_renderer.set_size(canvas, canvas->gc()->width(), canvas->gc()->height());
 		fill_renderer.clear();
 		render(path, &fill_renderer);
-		fill_renderer.fill(canvas, path.get_impl()->fill_mode, brush, modelview_matrix);
+		fill_renderer.fill(canvas, path.fill_mode(), brush, modelview_matrix);
 	}
 
-	void RenderBatchPath::stroke(const CanvasPtr &canvas, const Path &path, const Pen &pen)
+	void RenderBatchPath::stroke(const CanvasPtr &canvas, const PathImpl &path, const Pen &pen)
 	{
 		static_cast<CanvasImpl*>(canvas.get())->set_batcher(this);
 
@@ -79,9 +79,9 @@ namespace uicore
 		modelview_matrix = Mat4f::scale(pixel_ratio, pixel_ratio, 1.0f) * new_modelview;
 	}
 
-	void RenderBatchPath::render(const Path &path, PathRenderer *path_renderer)
+	void RenderBatchPath::render(const PathImpl &path, PathRenderer *path_renderer)
 	{
-		for (const auto &subpath : path.get_impl()->subpaths)
+		for (const auto &subpath : path._subpaths)
 		{
 			uicore::Pointf start_point = to_position(subpath.points[0]);
 			path_renderer->begin(start_point.x, start_point.y);
