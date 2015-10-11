@@ -74,11 +74,11 @@ namespace uicore
 		int get_subtexture_count() const;
 		int get_subtexture_count(unsigned int texture_index) const;
 		void insert_texture(const Texture2DPtr &texture, const Rect &texture_rect);
-		void remove(Subtexture &subtexture);
+		void remove(const TextureGroupImage &subtexture);
 
 		std::vector<Texture2DPtr> get_textures() const;
 
-		Subtexture add_new_node(const GraphicContextPtr &context, const Size &texture_size);
+		TextureGroupImage add_new_node(const GraphicContextPtr &context, const Size &texture_size);
 
 		std::vector<RootNode *> root_nodes;
 

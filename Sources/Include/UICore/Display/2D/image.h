@@ -41,7 +41,7 @@ namespace uicore
 	class Rectf;
 	class Texture2D;
 	typedef std::shared_ptr<Texture2D> Texture2DPtr;
-	class Subtexture;
+	class TextureGroupImage;
 	class PixelBuffer;
 	class Canvas;
 	typedef std::shared_ptr<Canvas> CanvasPtr;
@@ -53,7 +53,7 @@ namespace uicore
 	public:
 		/// \brief Constructs an image
 		static std::shared_ptr<Image> create(Texture2DPtr texture, const Rect &rect, float pixel_ratio = 1.0f);
-		static std::shared_ptr<Image> create(Subtexture &sub_texture, float pixel_ratio = 1.0f);
+		static std::shared_ptr<Image> create(TextureGroupImage &sub_texture, float pixel_ratio = 1.0f);
 		static std::shared_ptr<Image> create(const CanvasPtr &canvas, const PixelBufferPtr &pixelbuffer, const Rect &rect, float pixel_ratio = 1.0f);
 		static std::shared_ptr<Image> create(const CanvasPtr &canvas, const std::string &filename, const ImageImportDescription &import_desc = ImageImportDescription(), float pixel_ratio = 1.0f);
 
@@ -70,7 +70,7 @@ namespace uicore
 		virtual void get_alignment(Origin &origin, float &x, float &y) const = 0;
 
 		/// \brief Return the texture of the image
-		virtual Subtexture texture() const = 0;
+		virtual TextureGroupImage texture() const = 0;
 
 		/// \brief Return the size of the image.
 		virtual Sizef size() const = 0;

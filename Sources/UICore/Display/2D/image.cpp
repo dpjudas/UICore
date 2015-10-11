@@ -30,7 +30,7 @@
 #include "UICore/Core/IOData/path_help.h"
 #include "UICore/Display/2D/image.h"
 #include "UICore/Display/2D/canvas.h"
-#include "UICore/Display/2D/subtexture.h"
+#include "UICore/Display/2D/texture_group.h"
 #include "UICore/Display/Render/graphic_context.h"
 #include "UICore/Display/Render/texture_2d.h"
 #include "UICore/Core/Text/text.h"
@@ -46,14 +46,14 @@ namespace uicore
 		ImageImpl(const ImageImpl &other) { *this = other; }
 		ImageImpl(const CanvasPtr &canvas, const PixelBufferPtr &pb, const Rect &rect, float _pixel_ratio);
 		ImageImpl(Texture2DPtr texture, const Rect &rect, float _pixel_ratio);
-		ImageImpl(Subtexture &sub_texture, float _pixel_ratio);
+		ImageImpl(TextureGroupImage &sub_texture, float _pixel_ratio);
 		ImageImpl(const CanvasPtr &canvas, const std::string &filename, const ImageImportDescription &import_desc, float _pixel_ratio);
 
 		float scale_x() const override { return _scale_x; }
 		float scale_y() const override { return _scale_y; }
 		Colorf color() const override { return _color; }
 		void get_alignment(Origin &origin, float &x, float &y) const override;
-		Subtexture texture() const override;
+		TextureGroupImage texture() const override;
 		Sizef size() const override;
 		float width() const override;
 		float height() const override;
@@ -102,10 +102,10 @@ namespace uicore
 		_pixel_ratio = pixel_ratio;
 	}
 
-	ImageImpl::ImageImpl(Subtexture &sub_texture, float pixel_ratio)
+	ImageImpl::ImageImpl(TextureGroupImage &sub_texture, float pixel_ratio)
 	{
-		_texture = sub_texture.get_texture();
-		_texture_rect = sub_texture.get_geometry();
+		_texture = sub_texture.texture();
+		_texture_rect = sub_texture.geometry();
 		_pixel_ratio = pixel_ratio;
 	}
 
@@ -121,9 +121,9 @@ namespace uicore
 		return std::make_shared<ImageImpl>(*this);
 	}
 
-	Subtexture ImageImpl::texture() const
+	TextureGroupImage ImageImpl::texture() const
 	{
-		return Subtexture(_texture, _texture_rect);
+		return TextureGroupImage(_texture, _texture_rect);
 	}
 
 	void ImageImpl::get_alignment(Origin &origin, float &x, float &y) const

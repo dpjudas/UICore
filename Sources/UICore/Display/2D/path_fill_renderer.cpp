@@ -30,7 +30,7 @@
 #include "UICore/precomp.h"
 #include "path_fill_renderer.h"
 #include "UICore/Display/Render/texture_1d.h"
-#include "UICore/Display/2D/subtexture.h"
+#include "UICore/Display/2D/texture_group.h"
 #include "UICore/Core/System/system.h"
 #include <algorithm>
 
@@ -705,11 +705,11 @@ namespace uicore
 
 	int PathInstanceBuffer::store_image(const CanvasPtr &canvas, const Brush &brush, const Mat4f &transform)
 	{
-		Subtexture subtexture = brush.image->texture();
-		if (subtexture.is_null())
+		TextureGroupImage subtexture = brush.image->texture();
+		if (!subtexture)
 			throw Exception("BrushType::image used without a valid texture");
 
-		if (current_texture && subtexture.get_texture() != current_texture)
+		if (current_texture && subtexture.texture() != current_texture)
 			return 0;		// Change in texture, must flush now
 
 		int instance_position = next_position(6);
@@ -718,14 +718,14 @@ namespace uicore
 		int position = instance_position;
 
 
-		current_texture = subtexture.get_texture();
+		current_texture = subtexture.texture();
 		if (!current_texture)
 			throw Exception("BrushType::image used without a valid texture");
 
 		Mat3f inv_brush_transform = Mat3f::inverse(brush.transform);
 		Mat4f inv_transform = Mat4f::inverse(transform);
 
-		Rectf src = subtexture.get_geometry();
+		Rectf src = subtexture.geometry();
 
 		Vec4f brush_data1(src.left, src.top, src.right, src.bottom);
 		Vec4f brush_data2(current_texture->width(), current_texture->height(), 0, 0);

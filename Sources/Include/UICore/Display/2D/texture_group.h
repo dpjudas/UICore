@@ -30,6 +30,7 @@
 #pragma once
 
 #include <memory>
+#include "../../Core/Math/rect.h"
 
 namespace uicore
 {
@@ -37,12 +38,28 @@ namespace uicore
 	class Rect;
 	class Texture2D;
 	typedef std::shared_ptr<Texture2D> Texture2DPtr;
-	class Subtexture;
 	class TextureGroup_Impl;
 	class GraphicContext;
 	typedef std::shared_ptr<GraphicContext> GraphicContextPtr;
 
-	/// \brief Texture grouping class.
+	/// \brief Image position in a TextureGroup
+	class TextureGroupImage
+	{
+	public:
+		TextureGroupImage() { }
+		TextureGroupImage(const Texture2DPtr &texture, const Rect &geometry) : _texture(texture), _geometry(geometry) { }
+
+		explicit operator bool() { return (bool)texture(); }
+
+		const Texture2DPtr &texture() const { return _texture; }
+		const Rect &geometry() const { return _geometry; }
+
+	private:
+		Texture2DPtr _texture;
+		Rect _geometry;
+	};
+
+	/// \brief Dynamic atlas texture class
 	class TextureGroup
 	{
 	public:
@@ -86,14 +103,14 @@ namespace uicore
 		std::vector<Texture2DPtr> get_textures() const;
 
 		/// \brief Allocate space for another sub texture.
-		Subtexture add(const GraphicContextPtr &context, const Size &size);
+		TextureGroupImage add(const GraphicContextPtr &context, const Size &size);
 
 		/// \brief Deallocate space, from a previously allocated texture
 		///
 		/// Warning - It is advised to set TextureAllocationPolicy to search_previous_textures
 		/// if using this function.  Also be aware of texture fragmentation.
 		/// Empty textures are not removed.
-		void remove(Subtexture &subtexture);
+		void remove(const TextureGroupImage &subtexture);
 
 		/// \brief Set the texture allocation policy.
 		void set_texture_allocation_policy(TextureAllocationPolicy policy);
@@ -102,7 +119,7 @@ namespace uicore
 		///
 		/// \param texture = Texture to insert
 		/// \param texture_rect = Free space within the texture that the texture group can use
-		void insert_texture(Texture2DPtr &texture, const Rect &texture_rect);
+		void insert_texture(const Texture2DPtr &texture, const Rect &texture_rect);
 
 	private:
 		std::shared_ptr<TextureGroup_Impl> impl;

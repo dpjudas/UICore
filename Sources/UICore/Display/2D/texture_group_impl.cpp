@@ -27,7 +27,7 @@
 */
 
 #include "UICore/precomp.h"
-#include "UICore/Display/2D/subtexture.h"
+#include "UICore/Display/2D/texture_group.h"
 #include "UICore/Core/Math/point.h"
 #include "UICore/Core/Math/rect.h"
 #include "texture_group_impl.h"
@@ -86,7 +86,7 @@ namespace uicore
 		return textures;
 	}
 
-	Subtexture TextureGroup_Impl::add_new_node(const GraphicContextPtr &context, const Size &texture_size)
+	TextureGroupImage TextureGroup_Impl::add_new_node(const GraphicContextPtr &context, const Size &texture_size)
 	{
 		// Try inserting in current active texture
 		Node *node;
@@ -135,7 +135,7 @@ namespace uicore
 
 		next_id++;
 
-		return Subtexture(active_root->texture, node->image_rect);
+		return TextureGroupImage(active_root->texture, node->image_rect);
 	}
 
 	TextureGroup_Impl::RootNode *TextureGroup_Impl::add_new_root(const GraphicContextPtr &context, const Size &texture_size)
@@ -163,12 +163,12 @@ namespace uicore
 		root_nodes.push_back(active_root);
 	}
 
-	void TextureGroup_Impl::remove(Subtexture &subtexture)
+	void TextureGroup_Impl::remove(const TextureGroupImage &subtexture)
 	{
 		// Find the texture
 		Node *node = nullptr;
-		Texture2DPtr texture = subtexture.get_texture();
-		Rect rect = subtexture.get_geometry();
+		Texture2DPtr texture = subtexture.texture();
+		Rect rect = subtexture.geometry();
 
 		std::vector<RootNode *>::size_type index, size;
 		size = root_nodes.size();
@@ -201,7 +201,7 @@ namespace uicore
 		}
 		else
 		{
-			throw Exception("Cannot find the Subtexture in the TextureGroup");
+			throw Exception("Cannot find the TextureGroupImage in the TextureGroup");
 		}
 	}
 

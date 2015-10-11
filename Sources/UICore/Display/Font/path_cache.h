@@ -41,7 +41,7 @@ namespace uicore
 	class Colorf;
 	class TextureGroup;
 	class FontEngine;
-	class Subtexture;
+	class TextureGroupImage;
 	class FontPixelBuffer;
 	class Path;
 	class RenderBatchTriangle;

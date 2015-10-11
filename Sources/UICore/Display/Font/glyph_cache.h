@@ -33,7 +33,6 @@
 #include "UICore/Display/Font/font_metrics.h"
 #include "UICore/Display/Render/texture.h"
 #include "UICore/Display/2D/texture_group.h"
-#include "UICore/Display/2D/subtexture.h"
 #include "UICore/Display/Render/texture_2d.h"
 #include <list>
 #include <map>
@@ -44,7 +43,7 @@ namespace uicore
 	class TextureGroup;
 	class FontEngine;
 	class Font_TextureGlyph;
-	class Subtexture;
+	class TextureGroupImage;
 	class FontPixelBuffer;
 	class Path;
 	class RenderBatchTriangle;
@@ -89,7 +88,7 @@ namespace uicore
 
 		GlyphMetrics get_metrics(FontEngine *font_engine, const CanvasPtr &canvas, unsigned int glyph);
 
-		void insert_glyph(const CanvasPtr &canvas, unsigned int glyph, Subtexture &sub_texture, const Pointf &offset, const Sizef &size, const GlyphMetrics &glyph_metrics);
+		void insert_glyph(const CanvasPtr &canvas, unsigned int glyph, TextureGroupImage &sub_texture, const Pointf &offset, const Sizef &size, const GlyphMetrics &glyph_metrics);
 		void insert_glyph(const CanvasPtr &canvas, FontPixelBuffer &pb);
 
 		void set_texture_group(TextureGroup &new_texture_group);

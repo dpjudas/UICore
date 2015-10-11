@@ -28,7 +28,6 @@
 
 #include "UICore/precomp.h"
 #include "UICore/Display/2D/texture_group.h"
-#include "UICore/Display/2D/subtexture.h"
 #include "texture_group_impl.h"
 
 namespace uicore
@@ -83,12 +82,12 @@ namespace uicore
 		return impl->get_textures();
 	}
 
-	Subtexture TextureGroup::add(const GraphicContextPtr &context, const Size &size)
+	TextureGroupImage TextureGroup::add(const GraphicContextPtr &context, const Size &size)
 	{
 		return impl->add_new_node(context, size);
 	}
 
-	void TextureGroup::remove(Subtexture &subtexture)
+	void TextureGroup::remove(const TextureGroupImage &subtexture)
 	{
 		impl->remove(subtexture);
 	}
@@ -98,7 +97,7 @@ namespace uicore
 		impl->texture_allocation_policy = policy;
 	}
 
-	void TextureGroup::insert_texture(Texture2DPtr &texture, const Rect &texture_rect)
+	void TextureGroup::insert_texture(const Texture2DPtr &texture, const Rect &texture_rect)
 	{
 		impl->insert_texture(texture, texture_rect);
 	}

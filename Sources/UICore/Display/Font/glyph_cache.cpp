@@ -31,9 +31,7 @@
 #include "glyph_cache.h"
 #include "FontEngine/font_engine.h"
 #include "UICore/Display/Image/pixel_buffer.h"
-#include "UICore/Display/2D/subtexture.h"
 #include "UICore/Display/2D/texture_group.h"
-#include "UICore/Display/2D/subtexture.h"
 #include "UICore/Display/2D/canvas.h"
 #include "UICore/Display/Render/texture.h"
 #include "UICore/Display/Font/font_metrics.h"
@@ -108,17 +106,17 @@ namespace uicore
 		{
 			PixelBufferPtr buffer_with_border = PixelBuffer::add_border(pb.buffer, glyph_border_size, pb.buffer_rect);
 			GraphicContextPtr gc = canvas->gc();
-			Subtexture sub_texture = texture_group.add(gc, buffer_with_border->size());
-			font_glyph->texture = sub_texture.get_texture();
-			font_glyph->geometry = Rect(sub_texture.get_geometry().left + glyph_border_size, sub_texture.get_geometry().top + glyph_border_size, pb.buffer_rect.get_size());
+			TextureGroupImage sub_texture = texture_group.add(gc, buffer_with_border->size());
+			font_glyph->texture = sub_texture.texture();
+			font_glyph->geometry = Rect(sub_texture.geometry().left + glyph_border_size, sub_texture.geometry().top + glyph_border_size, pb.buffer_rect.get_size());
 			font_glyph->size = pb.size;
-			sub_texture.get_texture()->set_subimage(gc, sub_texture.get_geometry().left, sub_texture.get_geometry().top, buffer_with_border, buffer_with_border->size());
+			sub_texture.texture()->set_subimage(gc, sub_texture.geometry().left, sub_texture.geometry().top, buffer_with_border, buffer_with_border->size());
 		}
 
 		glyph_list.push_back(std::move(font_glyph));
 	}
 
-	void GlyphCache::insert_glyph(const CanvasPtr &canvas, unsigned int glyph, Subtexture &sub_texture, const Pointf &offset, const Sizef &size, const GlyphMetrics &glyph_metrics)
+	void GlyphCache::insert_glyph(const CanvasPtr &canvas, unsigned int glyph, TextureGroupImage &sub_texture, const Pointf &offset, const Sizef &size, const GlyphMetrics &glyph_metrics)
 	{
 		auto font_glyph = std::unique_ptr<Font_TextureGlyph>(new Font_TextureGlyph());
 
@@ -127,10 +125,10 @@ namespace uicore
 		font_glyph->metrics = glyph_metrics;
 		font_glyph->size = size;
 
-		if ((sub_texture.get_geometry().get_width() > 0) && (sub_texture.get_geometry().get_height() > 0))
+		if ((sub_texture.geometry().get_width() > 0) && (sub_texture.geometry().get_height() > 0))
 		{
-			font_glyph->texture = sub_texture.get_texture();
-			font_glyph->geometry = sub_texture.get_geometry();
+			font_glyph->texture = sub_texture.texture();
+			font_glyph->geometry = sub_texture.geometry();
 		}
 
 		glyph_list.push_back(std::move(font_glyph));

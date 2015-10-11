@@ -37,7 +37,6 @@
 #include "Display/2D/path.h"
 #include "Display/2D/pen.h"
 #include "Display/2D/brush.h"
-#include "Display/2D/subtexture.h"
 #include "Display/2D/texture_group.h"
 #include "Display/2D/span_layout.h"
 #include "Display/System/run_loop.h"
