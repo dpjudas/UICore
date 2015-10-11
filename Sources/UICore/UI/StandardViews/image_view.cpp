@@ -100,14 +100,14 @@ namespace uicore
 	{
 		impl->get_images(canvas);
 
-		if (!impl->canvas_image.is_null() && impl->canvas_image.get_width() != 0.0f && impl->canvas_image.get_height() != 0.0f)
+		if (!impl->canvas_image.is_null() && impl->canvas_image.width() != 0.0f && impl->canvas_image.height() != 0.0f)
 		{
-			float scale_x = geometry().content_width / impl->canvas_image.get_width();
-			float scale_y = geometry().content_height / impl->canvas_image.get_height();
+			float scale_x = geometry().content_width / impl->canvas_image.width();
+			float scale_y = geometry().content_height / impl->canvas_image.height();
 			float scale = std::min(scale_x, scale_y);
 
-			float width = impl->canvas_image.get_width() * scale;
-			float height = impl->canvas_image.get_width() * scale;
+			float width = impl->canvas_image.width() * scale;
+			float height = impl->canvas_image.width() * scale;
 
 			impl->canvas_image.draw(canvas, Rectf::xywh((geometry().content_width - width) * 0.5f, (geometry().content_height - height) * 0.5f, width, height));
 		}
@@ -118,7 +118,7 @@ namespace uicore
 		impl->get_images(canvas);
 
 		if (!impl->canvas_image.is_null())
-			return impl->canvas_image.get_width();
+			return impl->canvas_image.width();
 		else
 			return 0.0f;
 	}
@@ -127,8 +127,8 @@ namespace uicore
 	{
 		impl->get_images(canvas);
 
-		if (!impl->canvas_image.is_null() && impl->canvas_image.get_width() != 0)
-			return impl->canvas_image.get_height() * width / impl->canvas_image.get_width();
+		if (!impl->canvas_image.is_null() && impl->canvas_image.width() != 0)
+			return impl->canvas_image.height() * width / impl->canvas_image.width();
 		else
 			return 0.0f;
 	}

@@ -149,7 +149,7 @@ namespace uicore
 		return copy;
 	}
 
-	Subtexture Image::get_texture() const
+	Subtexture Image::texture() const
 	{
 		return Subtexture(impl->texture, impl->texture_rect);
 	}
@@ -160,22 +160,17 @@ namespace uicore
 			throw Exception("Image is null");
 	}
 
-	float Image::get_scale_x() const
+	float Image::scale_x() const
 	{
 		return impl->scale_x;
 	}
 
-	float Image::get_scale_y() const
+	float Image::scale_y() const
 	{
 		return impl->scale_y;
 	}
 
-	float Image::get_alpha() const
-	{
-		return impl->color.a;
-	}
-
-	Colorf Image::get_color() const
+	Colorf Image::color() const
 	{
 		return impl->color;
 	}
@@ -187,7 +182,7 @@ namespace uicore
 		y = impl->translation_hotspot.y;
 	}
 
-	float Image::get_width() const
+	float Image::width() const
 	{
 		if (impl->pixel_ratio != 0.0f)
 			return impl->texture_rect.get_width() / impl->pixel_ratio;
@@ -195,7 +190,7 @@ namespace uicore
 			return impl->texture_rect.get_width();
 	}
 
-	float Image::get_height() const
+	float Image::height() const
 	{
 		if (impl->pixel_ratio != 0.0f)
 			return impl->texture_rect.get_height() / impl->pixel_ratio;
@@ -203,16 +198,16 @@ namespace uicore
 			return impl->texture_rect.get_height();
 	}
 
-	Sizef Image::get_size() const
+	Sizef Image::size() const
 	{
-		return Sizef(get_width(), get_height());
+		return Sizef(width(), height());
 	}
 
 	void Image::draw(const CanvasPtr &canvas, float x, float y) const
 	{
 		Rectf dest(
 			x + impl->translated_hotspot.x, y + impl->translated_hotspot.y,
-			Sizef(get_width() * impl->scale_x, get_height() * impl->scale_y));
+			Sizef(width() * impl->scale_x, height() * impl->scale_y));
 
 		RenderBatchTriangle *batcher = static_cast<CanvasImpl*>(canvas.get())->batcher.get_triangle_batcher();
 		batcher->draw_image(canvas, impl->texture_rect, dest, impl->color, impl->texture);
@@ -271,11 +266,6 @@ namespace uicore
 		impl->scale_x = x;
 		impl->scale_y = y;
 		impl->calc_hotspot();
-	}
-
-	void Image::set_alpha(float alpha)
-	{
-		impl->color.a = alpha;
 	}
 
 	void Image::set_color(const Colorf &color)

@@ -539,7 +539,7 @@ namespace uicore
 		LineSegment segment;
 		if (objects[current_line.object_index].type == object_image)
 		{
-			size = objects[current_line.object_index].image.get_size();
+			size = objects[current_line.object_index].image.size();
 			segment.type = object_image;
 			segment.image = objects[current_line.object_index].image;
 		}
@@ -573,7 +573,7 @@ namespace uicore
 		floatbox.component = objects[current_line.object_index].component;
 		floatbox.id = objects[current_line.object_index].id;
 		if (objects[current_line.object_index].type == object_image)
-			floatbox.rect = Rect(Point(0, current_line.y_position), Size(floatbox.image.get_size()));
+			floatbox.rect = Rect(Point(0, current_line.y_position), Size(floatbox.image.size()));
 		else if (objects[current_line.object_index].type == object_component)
 			floatbox.rect = Rect(Point(0, current_line.y_position), Size(floatbox.component->get_size()));
 

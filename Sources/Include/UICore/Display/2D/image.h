@@ -90,35 +90,28 @@ namespace uicore
 		void throw_if_null() const;
 
 		/// \brief Returns x scale.
-		/** <p> 1.0f is normal scale, 2.0f is twice the size, etc. </p>*/
-		float get_scale_x() const;
+		float scale_x() const;
 
 		/// \brief Returns y scale.
-		/** <p> 1.0f is normal scale, 2.0f is twice the size, etc. </p>*/
-		float get_scale_y() const;
-
-		/// \brief Returns current alpha.
-		/** <p> Alpha 0.0f is full transparency, and 1.0f is full visibility (solid). </p>*/
-		float get_alpha() const;
+		float scale_y() const;
 
 		/// \brief Returns current color.
-		/** <p> Alpha 0.0f is full transparency, and 1.0f is full visibility (solid). </p>*/
-		Colorf get_color() const;
+		Colorf color() const;
 
 		/// \brief Returns translation hot-spot.
 		void get_alignment(Origin &origin, float &x, float &y) const;
 
 		/// \brief Return the texture of the image
-		Subtexture get_texture() const;
+		Subtexture texture() const;
 
 		/// \brief Return the size of the image.
-		Sizef get_size() const;
+		Sizef size() const;
 
 		/// \brief Return the width of the image.
-		float get_width() const;
+		float width() const;
 
 		/// \brief Return the height of the image.
-		float get_height() const;
+		float height() const;
 
 		/// \brief Equality operator
 		bool operator==(const Image &other) const
@@ -186,21 +179,11 @@ namespace uicore
 			const CanvasPtr &canvas,
 			const Quadf &dest) const;
 
-		/// \brief Set scale for x and y directions individually.
-		/** <p> 1.0f is normal scale, 2.0f is twice the size, etc. </p>*/
+		/// \brief Set scale factors
 		void set_scale(float x, float y);
 
-		/// \brief Sets transparency.
-		/** <p> Alpha 0.0f is full transparency, and 1.0f is full visibility (solid). </p>*/
-		void set_alpha(float alpha);
-
 		/// \brief Sets the color.
-		/** <p> Alpha 0.0f is full transparency, and 1.0f is full visibility (solid). </p>*/
 		void set_color(const Colorf &color);
-
-		/// \brief Set color
-		///
-		/// \param c = Color
 		void set_color(const Color& c) { Colorf color; color.r = c.get_red() / 255.0f; color.g = c.get_green() / 255.0f; color.b = c.get_blue() / 255.0f; color.a = c.get_alpha() / 255.0f; set_color(color); }
 
 		/// \brief Sets translation hotspot.

@@ -389,21 +389,21 @@ namespace uicore
 		
 		if (size_x.is_keyword("contain"))
 		{
-			if (origin_box.get_height()*image.get_width() / image.get_height() <= origin_box.get_width())
-				size = Sizef(origin_box.get_height()*image.get_width() / image.get_height(), origin_box.get_height());
+			if (origin_box.get_height()*image.width() / image.height() <= origin_box.get_width())
+				size = Sizef(origin_box.get_height()*image.width() / image.height(), origin_box.get_height());
 			else
-				size = Sizef(origin_box.get_width(), origin_box.get_width()*image.get_height() / image.get_width());
+				size = Sizef(origin_box.get_width(), origin_box.get_width()*image.height() / image.width());
 		}
 		else if (size_x.is_keyword("cover"))
 		{
-			if (origin_box.get_height()*image.get_width() / image.get_height() >= origin_box.get_width())
-				size = Sizef(origin_box.get_height()*image.get_width() / image.get_height(), origin_box.get_height());
+			if (origin_box.get_height()*image.width() / image.height() >= origin_box.get_width())
+				size = Sizef(origin_box.get_height()*image.width() / image.height(), origin_box.get_height());
 			else
-				size = Sizef(origin_box.get_width(), origin_box.get_width()*image.get_height() / image.get_width());
+				size = Sizef(origin_box.get_width(), origin_box.get_width()*image.height() / image.width());
 		}
 		else
 		{
-			float width = image.get_width();
+			float width = image.width();
 			if (size_x.is_length())
 			{
 				width = size_x.number();
@@ -413,7 +413,7 @@ namespace uicore
 				width = size_x.number() * width / 100.0f;
 			}
 
-			float height = image.get_height();
+			float height = image.height();
 			if (size_y.is_length())
 			{
 				height = size_y.number();
@@ -443,11 +443,11 @@ namespace uicore
 
 		if (repeat_x.is_keyword("round") && size_y.is_keyword("auto"))
 		{
-			size.height = size.width*image.get_height() / image.get_width();
+			size.height = size.width*image.height() / image.width();
 		}
 		else if (repeat_y.is_keyword("round") && size_x.is_keyword("auto"))
 		{
-			size.width = size.height*image.get_width() / image.get_height();
+			size.width = size.height*image.width() / image.height();
 		}
 
 		return size;
