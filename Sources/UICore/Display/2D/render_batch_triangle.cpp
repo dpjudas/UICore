@@ -29,6 +29,7 @@
 
 #include "UICore/precomp.h"
 #include "render_batch_triangle.h"
+#include "canvas_impl.h"
 #include "UICore/Display/Render/blend_state_description.h"
 #include "UICore/Display/2D/canvas.h"
 #include "UICore/Core/Math/quad.h"
@@ -274,7 +275,7 @@ namespace uicore
 			num_current_textures = 1;
 			tex_sizes[texindex] = Sizef((float)current_textures[texindex]->width(), (float)current_textures[texindex]->height());
 		}
-		canvas->set_batcher(this);
+		static_cast<CanvasImpl*>(canvas.get())->set_batcher(this);
 		return texindex;
 	}
 
@@ -288,7 +289,7 @@ namespace uicore
 
 		if (position == 0 || position + 6 > max_vertices)
 			canvas->flush();
-		canvas->set_batcher(this);
+		static_cast<CanvasImpl*>(canvas.get())->set_batcher(this);
 		return RenderBatchTriangle::max_textures;
 	}
 
@@ -306,7 +307,7 @@ namespace uicore
 		if (num_vertices > max_vertices)
 			throw Exception("Too many vertices for RenderBatchTriangle");
 
-		canvas->set_batcher(this);
+		static_cast<CanvasImpl*>(canvas.get())->set_batcher(this);
 		return RenderBatchTriangle::max_textures;
 	}
 

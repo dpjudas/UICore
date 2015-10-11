@@ -28,8 +28,8 @@
 
 #pragma once
 
-#include "../../Core/Math/mat4.h"
-#include "../Render/graphic_context.h"
+#include "UICore/Core/Math/mat4.h"
+#include "UICore/Display/Render/graphic_context.h"
 
 namespace uicore
 {

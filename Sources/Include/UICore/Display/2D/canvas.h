@@ -48,7 +48,6 @@ namespace uicore
 	class Path;
 	class Pen;
 	class Brush;
-	class RenderBatcher;
 
 	/// \brief 2D Graphics Canvas
 	class Canvas
@@ -110,12 +109,6 @@ namespace uicore
 
 		/// \brief Set active program object to the standard program specified.
 		virtual void set_program_object(StandardProgram standard_program) = 0;
-
-		/// \brief Specifies which render batcher is to be currently active
-		///
-		/// If the render batcher is already active, nothing happens. If a different render batcher
-		/// is currently active, it is flushed before the new batcher is made active.
-		virtual void set_batcher(RenderBatcher *batcher) = 0;
 
 		/// \brief Sets the transform matrix to a new matrix.
 		virtual void set_transform(const Mat4f &matrix) = 0;

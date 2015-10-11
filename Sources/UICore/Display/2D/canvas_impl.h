@@ -63,7 +63,6 @@ namespace uicore
 		void clear(const Colorf &color) override;
 
 		void flush() override;
-		void set_batcher(RenderBatcher *batcher) override;
 
 		Rectf clip() const override
 		{
@@ -107,6 +106,8 @@ namespace uicore
 			Vec4f object_pos = inverse_transform() * world_pos;
 			return Pointf(object_pos.x, object_pos.y);
 		}
+
+		void set_batcher(RenderBatcher *batcher);
 
 		void set_map_mode(MapMode map_mode);
 		void update_viewport_size();

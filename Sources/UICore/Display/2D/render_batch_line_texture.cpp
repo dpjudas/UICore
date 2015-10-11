@@ -28,6 +28,7 @@
 
 #include "UICore/precomp.h"
 #include "render_batch_line_texture.h"
+#include "canvas_impl.h"
 #include "UICore/Display/Render/blend_state_description.h"
 #include "UICore/Display/2D/canvas.h"
 
@@ -89,7 +90,7 @@ namespace uicore
 
 		current_texture = texture;
 
-		canvas->set_batcher(this);
+		static_cast<CanvasImpl*>(canvas.get())->set_batcher(this);
 	}
 
 	void RenderBatchLineTexture::flush(const GraphicContextPtr &gc)

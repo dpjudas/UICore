@@ -29,6 +29,7 @@
 
 #include "UICore/precomp.h"
 #include "render_batch_path.h"
+#include "canvas_impl.h"
 #include "UICore/Display/Render/blend_state_description.h"
 #include "UICore/Display/2D/canvas.h"
 #include "UICore/Core/Math/quad.h"
@@ -50,7 +51,7 @@ namespace uicore
 
 	void RenderBatchPath::fill(const CanvasPtr &canvas, const Path &path, const Brush &brush)
 	{
-		canvas->set_batcher(this);
+		static_cast<CanvasImpl*>(canvas.get())->set_batcher(this);
 
 		fill_renderer.set_size(canvas, canvas->gc()->width(), canvas->gc()->height());
 		fill_renderer.clear();
@@ -60,7 +61,7 @@ namespace uicore
 
 	void RenderBatchPath::stroke(const CanvasPtr &canvas, const Path &path, const Pen &pen)
 	{
-		canvas->set_batcher(this);
+		static_cast<CanvasImpl*>(canvas.get())->set_batcher(this);
 
 		stroke_renderer.set_pen(canvas, pen);
 		render(path, &stroke_renderer);

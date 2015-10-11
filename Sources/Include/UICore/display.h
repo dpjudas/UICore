@@ -40,7 +40,6 @@
 #include "Display/2D/subtexture.h"
 #include "Display/2D/texture_group.h"
 #include "Display/2D/span_layout.h"
-#include "Display/2D/render_batcher.h"
 #include "Display/System/run_loop.h"
 #include "Display/System/timer.h"
 #include "Display/System/detect_hang.h"
