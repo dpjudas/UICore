@@ -66,7 +66,7 @@ namespace uicore
 	class ViewImpl
 	{
 	public:
-		void render(View *self, Canvas &canvas, ViewRenderLayer layer);
+		void render(View *self, const CanvasPtr &canvas, ViewRenderLayer layer);
 		void process_event(View *self, EventUI *e, bool use_capture);
 		void update_style_cascade() const;
 

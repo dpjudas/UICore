@@ -34,14 +34,15 @@
 namespace uicore
 {
 	class Canvas;
+	typedef std::shared_ptr<Canvas> CanvasPtr;
 	class Image;
 
 	class ImageSource
 	{
 	public:
-		virtual Image get_image(Canvas &canvas) = 0;
+		virtual Image get_image(const CanvasPtr &canvas) = 0;
 		static std::shared_ptr<ImageSource> from_resource(const std::string &resource_name);
-		static std::shared_ptr<ImageSource> from_callback(const std::function<Image(Canvas &)> &get_image_callback);
+		static std::shared_ptr<ImageSource> from_callback(const std::function<Image(const CanvasPtr &)> &get_image_callback);
 		static std::shared_ptr<ImageSource> from_image(const Image &image);
 
 	protected:

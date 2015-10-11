@@ -39,7 +39,7 @@
 
 namespace uicore
 {
-	TextureWindow::TextureWindow(Canvas &canvas) : impl(std::make_shared<TextureWindow_Impl>(this, canvas))
+	TextureWindow::TextureWindow(const CanvasPtr &canvas) : impl(std::make_shared<TextureWindow_Impl>(this, canvas))
 	{
 	}
 
@@ -58,7 +58,7 @@ namespace uicore
 		impl->clear_background_enable = enable;
 	}
 
-	Canvas TextureWindow::get_canvas() const
+	CanvasPtr TextureWindow::get_canvas() const
 	{
 		return impl->canvas;
 	}

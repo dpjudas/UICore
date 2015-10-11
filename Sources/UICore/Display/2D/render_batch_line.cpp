@@ -48,7 +48,7 @@ namespace uicore
 			modelview_projection_matrix.matrix[0 * 4 + 3] * x + modelview_projection_matrix.matrix[1 * 4 + 3] * y + modelview_projection_matrix.matrix[3 * 4 + 3]);
 	}
 
-	void RenderBatchLine::draw_lines(Canvas &canvas, const Vec2f *line_positions, const Vec4f &line_color, int num_vertices)
+	void RenderBatchLine::draw_lines(const CanvasPtr &canvas, const Vec2f *line_positions, const Vec4f &line_color, int num_vertices)
 	{
 		if (num_vertices < 2)
 		{
@@ -68,7 +68,7 @@ namespace uicore
 		}
 	}
 
-	void RenderBatchLine::draw_line_strip(Canvas &canvas, const Vec2f *line_positions, const Vec4f &line_color, int num_vertices)
+	void RenderBatchLine::draw_line_strip(const CanvasPtr &canvas, const Vec2f *line_positions, const Vec4f &line_color, int num_vertices)
 	{
 		if (num_vertices < 2)
 		{
@@ -96,15 +96,15 @@ namespace uicore
 		}
 	}
 
-	void RenderBatchLine::set_batcher_active(Canvas &canvas, int num_vertices)
+	void RenderBatchLine::set_batcher_active(const CanvasPtr &canvas, int num_vertices)
 	{
 		if (position + num_vertices > max_vertices)
-			canvas.flush();
+			canvas->flush();
 
 		if (num_vertices > max_vertices)
 			throw Exception("Too many vertices for RenderBatchLine");
 
-		canvas.set_batcher(this);
+		canvas->set_batcher(this);
 	}
 
 	void RenderBatchLine::flush(const GraphicContextPtr &gc)

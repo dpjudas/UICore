@@ -85,12 +85,12 @@ namespace uicore
 		virtual ~GlyphCache();
 
 		/// \brief Get a glyph. Returns NULL if the glyph was not found
-		Font_TextureGlyph *get_glyph(Canvas &canvas, FontEngine *font_engine, unsigned int glyph);
+		Font_TextureGlyph *get_glyph(const CanvasPtr &canvas, FontEngine *font_engine, unsigned int glyph);
 
-		GlyphMetrics get_metrics(FontEngine *font_engine, Canvas &canvas, unsigned int glyph);
+		GlyphMetrics get_metrics(FontEngine *font_engine, const CanvasPtr &canvas, unsigned int glyph);
 
-		void insert_glyph(Canvas &canvas, unsigned int glyph, Subtexture &sub_texture, const Pointf &offset, const Sizef &size, const GlyphMetrics &glyph_metrics);
-		void insert_glyph(Canvas &canvas, FontPixelBuffer &pb);
+		void insert_glyph(const CanvasPtr &canvas, unsigned int glyph, Subtexture &sub_texture, const Pointf &offset, const Sizef &size, const GlyphMetrics &glyph_metrics);
+		void insert_glyph(const CanvasPtr &canvas, FontPixelBuffer &pb);
 
 		void set_texture_group(TextureGroup &new_texture_group);
 

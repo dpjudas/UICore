@@ -35,10 +35,10 @@ namespace uicore
 	class VBoxLayout
 	{
 	public:
-		static float get_preferred_width(Canvas &canvas, View *view);
-		static float get_preferred_height(Canvas &canvas, View *view, float width);
-		static float get_first_baseline_offset(Canvas &canvas, View *view, float width);
-		static float get_last_baseline_offset(Canvas &canvas, View *view, float width);
-		static void layout_subviews(Canvas &canvas, View *view);
+		static float get_preferred_width(const CanvasPtr &canvas, View *view);
+		static float get_preferred_height(const CanvasPtr &canvas, View *view, float width);
+		static float get_first_baseline_offset(const CanvasPtr &canvas, View *view, float width);
+		static float get_last_baseline_offset(const CanvasPtr &canvas, View *view, float width);
+		static void layout_subviews(const CanvasPtr &canvas, View *view);
 	};
 }

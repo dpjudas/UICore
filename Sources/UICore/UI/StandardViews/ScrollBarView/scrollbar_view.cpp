@@ -266,7 +266,7 @@ namespace uicore
 		impl->update_pos(this, new_pos, impl->min_pos, impl->max_pos);
 	}
 
-	void ScrollBarView::layout_subviews(Canvas &canvas)
+	void ScrollBarView::layout_subviews(const CanvasPtr &canvas)
 	{
 		View::layout_subviews(canvas);
 

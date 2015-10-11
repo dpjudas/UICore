@@ -49,13 +49,13 @@ namespace uicore
 	public:
 		RenderBatchPath(const GraphicContextPtr &gc, RenderBatchBuffer *batch_buffer);
 
-		void fill(Canvas &canvas, const Path &path, const Brush &brush);
-		void stroke(Canvas &canvas, const Path &path, const Pen &pen);
+		void fill(const CanvasPtr &canvas, const Path &path, const Brush &brush);
+		void stroke(const CanvasPtr &canvas, const Path &path, const Pen &pen);
 
 	private:
 		void render(const Path &path, PathRenderer *renderer);
 
-		int set_batcher_active(Canvas &canvas);
+		int set_batcher_active(const CanvasPtr &canvas);
 		void flush(const GraphicContextPtr &gc) override;
 		void matrix_changed(const Mat4f &modelview, const Mat4f &projection, TextureImageYAxis image_yaxis, float pixel_ratio) override;
 

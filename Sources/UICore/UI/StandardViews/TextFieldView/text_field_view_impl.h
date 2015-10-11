@@ -182,6 +182,6 @@ namespace uicore
 
 		bool input_mask_accepts_input(const std::string &str) const;
 		unsigned int get_character_index(int mouse_x_wincoords);
-		Size get_visual_text_size(Canvas &canvas, int pos, int npos);
+		Size get_visual_text_size(const CanvasPtr &canvas, int pos, int npos);
 	};
 }

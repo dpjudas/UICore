@@ -119,7 +119,7 @@ namespace uicore
 		UIThreadImpl::instance()->resource_path = path;
 	}
 
-	Image UIThread::image(Canvas &canvas, const std::string &name)
+	Image UIThread::image(const CanvasPtr &canvas, const std::string &name)
 	{
 		auto &images = UIThreadImpl::instance()->images;
 		if (images.find(name) == images.end())

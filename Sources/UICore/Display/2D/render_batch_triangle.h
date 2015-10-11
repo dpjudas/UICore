@@ -40,20 +40,22 @@ namespace uicore
 	struct Surface_DrawParams1;
 	class RenderBatchBuffer;
 	class Quadf;
+	class Canvas;
+	typedef std::shared_ptr<Canvas> CanvasPtr;
 
 	class RenderBatchTriangle : public RenderBatcher
 	{
 	public:
 		RenderBatchTriangle(const GraphicContextPtr &gc, RenderBatchBuffer *batch_buffer);
-		void draw_sprite(Canvas &canvas, const Pointf texture_position[4], const Pointf dest_position[4], const Texture2DPtr &texture, const Colorf &color);
-		void draw_image(Canvas &canvas, const Rectf &src, const Rectf &dest, const Colorf &color, const Texture2DPtr &texture);
-		void draw_image(Canvas &canvas, const Rectf &src, const Quadf &dest, const Colorf &color, const Texture2DPtr &texture);
-		void draw_glyph_subpixel(Canvas &canvas, const Rectf &src, const Rectf &dest, const Colorf &color, const Texture2DPtr &texture);
-		void fill_triangle(Canvas &canvas, const Vec2f *triangle_positions, const Vec4f *triangle_colors, int num_vertices);
-		void fill_triangle(Canvas &canvas, const Vec2f *triangle_positions, const Colorf &color, int num_vertices);
-		void fill_triangles(Canvas &canvas, const Vec2f *positions, const Vec2f *texture_positions, int num_vertices, const Texture2DPtr &texture, const Colorf &color);
-		void fill_triangles(Canvas &canvas, const Vec2f *positions, const Vec2f *texture_positions, int num_vertices, const Texture2DPtr &texture, const Colorf *colors);
-		void fill(Canvas &canvas, float x1, float y1, float x2, float y2, const Colorf &color);
+		void draw_sprite(const CanvasPtr &canvas, const Pointf texture_position[4], const Pointf dest_position[4], const Texture2DPtr &texture, const Colorf &color);
+		void draw_image(const CanvasPtr &canvas, const Rectf &src, const Rectf &dest, const Colorf &color, const Texture2DPtr &texture);
+		void draw_image(const CanvasPtr &canvas, const Rectf &src, const Quadf &dest, const Colorf &color, const Texture2DPtr &texture);
+		void draw_glyph_subpixel(const CanvasPtr &canvas, const Rectf &src, const Rectf &dest, const Colorf &color, const Texture2DPtr &texture);
+		void fill_triangle(const CanvasPtr &canvas, const Vec2f *triangle_positions, const Vec4f *triangle_colors, int num_vertices);
+		void fill_triangle(const CanvasPtr &canvas, const Vec2f *triangle_positions, const Colorf &color, int num_vertices);
+		void fill_triangles(const CanvasPtr &canvas, const Vec2f *positions, const Vec2f *texture_positions, int num_vertices, const Texture2DPtr &texture, const Colorf &color);
+		void fill_triangles(const CanvasPtr &canvas, const Vec2f *positions, const Vec2f *texture_positions, int num_vertices, const Texture2DPtr &texture, const Colorf *colors);
+		void fill(const CanvasPtr &canvas, float x1, float y1, float x2, float y2, const Colorf &color);
 
 	public:
 		static int max_textures;	// For use by the GL1 target, so it can reduce the number of textures
@@ -67,9 +69,9 @@ namespace uicore
 			int texindex;
 		};
 
-		int set_batcher_active(Canvas &canvas, const Texture2DPtr &texture, bool glyph_program = false, const Colorf &constant_color = Colorf::black);
-		int set_batcher_active(Canvas &canvas);
-		int set_batcher_active(Canvas &canvas, int num_vertices);
+		int set_batcher_active(const CanvasPtr &canvas, const Texture2DPtr &texture, bool glyph_program = false, const Colorf &constant_color = Colorf::black);
+		int set_batcher_active(const CanvasPtr &canvas);
+		int set_batcher_active(const CanvasPtr &canvas, int num_vertices);
 		void flush(const GraphicContextPtr &gc) override;
 		void matrix_changed(const Mat4f &modelview, const Mat4f &projection, TextureImageYAxis image_yaxis, float pixel_ratio) override;
 

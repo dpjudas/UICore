@@ -36,7 +36,7 @@ namespace uicore
 	{
 	}
 
-	void PathStrokeRenderer::set_pen(Canvas &canvas, const Pen &pen)
+	void PathStrokeRenderer::set_pen(const CanvasPtr &canvas, const Pen &pen)
 	{
 	}
 

@@ -169,13 +169,13 @@ namespace uicore
 		}
 	}
 
-	void StyleCascade::render_background(Canvas &canvas, const ViewGeometry &geometry) const
+	void StyleCascade::render_background(const CanvasPtr &canvas, const ViewGeometry &geometry) const
 	{
 		StyleBackgroundRenderer renderer(canvas, geometry, *this);
 		renderer.render_background();
 	}
 
-	void StyleCascade::render_border(Canvas &canvas, const ViewGeometry &geometry) const
+	void StyleCascade::render_border(const CanvasPtr &canvas, const ViewGeometry &geometry) const
 	{
 		StyleBackgroundRenderer renderer(canvas, geometry, *this);
 		renderer.render_border();

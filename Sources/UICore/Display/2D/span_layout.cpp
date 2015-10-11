@@ -67,22 +67,22 @@ namespace uicore
 		impl->add_component(component, baseline_offset, id);
 	}
 
-	void SpanLayout::layout(Canvas &canvas, int max_width)
+	void SpanLayout::layout(const CanvasPtr &canvas, int max_width)
 	{
 		impl->layout(canvas, max_width);
 	}
 
-	SpanLayout::HitTestResult SpanLayout::hit_test(Canvas &canvas, const Point &pos)
+	SpanLayout::HitTestResult SpanLayout::hit_test(const CanvasPtr &canvas, const Point &pos)
 	{
 		return impl->hit_test(canvas, pos);
 	}
 
-	void SpanLayout::draw_layout(Canvas &canvas)
+	void SpanLayout::draw_layout(const CanvasPtr &canvas)
 	{
 		impl->draw_layout(canvas);
 	}
 
-	void SpanLayout::draw_layout_ellipsis(Canvas &canvas, const Rect &content_rect)
+	void SpanLayout::draw_layout_ellipsis(const CanvasPtr &canvas, const Rect &content_rect)
 	{
 		impl->draw_layout_ellipsis(canvas, content_rect);
 	}
@@ -112,7 +112,7 @@ namespace uicore
 		impl->set_align(align);
 	}
 
-	Size SpanLayout::find_preferred_size(Canvas &canvas)
+	Size SpanLayout::find_preferred_size(const CanvasPtr &canvas)
 	{
 		return impl->find_preferred_size(canvas);
 	}

@@ -43,6 +43,7 @@ namespace uicore
 	class Image;
 	class SpanComponent;
 	class Canvas;
+	typedef std::shared_ptr<Canvas> CanvasPtr;
 
 	/// \brief Span Align
 	enum class SpanAlign
@@ -109,7 +110,7 @@ namespace uicore
 		///
 		/// \param canvas = Canvas
 		/// \param max_width = value
-		void layout(Canvas &canvas, int max_width);
+		void layout(const CanvasPtr &canvas, int max_width);
 
 		/// \brief Set position
 		///
@@ -137,18 +138,18 @@ namespace uicore
 		/// \param pos = Point
 		///
 		/// \return Hit Test Result
-		HitTestResult hit_test(Canvas &canvas, const Point &pos);
+		HitTestResult hit_test(const CanvasPtr &canvas, const Point &pos);
 
 		/// \brief Draw layout
 		///
 		/// \param canvas = Canvas
-		void draw_layout(Canvas &canvas);
+		void draw_layout(const CanvasPtr &canvas);
 
 		/// \brief Draw layout generating ellipsis for clipped text
 		///
 		/// \param canvas = Canvas
 		/// \param content_rect = Clipping rectangle
-		void draw_layout_ellipsis(Canvas &canvas, const Rect &content_rect);
+		void draw_layout_ellipsis(const CanvasPtr &canvas, const Rect &content_rect);
 
 		/// \brief Set component geometry
 		void set_component_geometry();
@@ -158,7 +159,7 @@ namespace uicore
 		/// \param canvas = Canvas
 		///
 		/// \return Size
-		Size find_preferred_size(Canvas &canvas);
+		Size find_preferred_size(const CanvasPtr &canvas);
 
 		/// \brief Set selection range
 		///

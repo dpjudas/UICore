@@ -46,7 +46,7 @@ namespace uicore
 		Image canvas_image;
 		Image canvas_highlighted_image;
 
-		void get_images(Canvas &canvas)
+		void get_images(const CanvasPtr &canvas)
 		{
 			if (canvas_image.is_null() && image)
 				canvas_image = image->get_image(canvas);
@@ -96,7 +96,7 @@ namespace uicore
 		set_highlighted_image(ImageSource::from_image(image));
 	}
 
-	void ImageView::render_content(Canvas &canvas)
+	void ImageView::render_content(const CanvasPtr &canvas)
 	{
 		impl->get_images(canvas);
 
@@ -113,7 +113,7 @@ namespace uicore
 		}
 	}
 
-	float ImageView::calculate_preferred_width(Canvas &canvas)
+	float ImageView::calculate_preferred_width(const CanvasPtr &canvas)
 	{
 		impl->get_images(canvas);
 
@@ -123,7 +123,7 @@ namespace uicore
 			return 0.0f;
 	}
 
-	float ImageView::calculate_preferred_height(Canvas &canvas, float width)
+	float ImageView::calculate_preferred_height(const CanvasPtr &canvas, float width)
 	{
 		impl->get_images(canvas);
 
@@ -133,12 +133,12 @@ namespace uicore
 			return 0.0f;
 	}
 
-	float ImageView::calculate_first_baseline_offset(Canvas &canvas, float width)
+	float ImageView::calculate_first_baseline_offset(const CanvasPtr &canvas, float width)
 	{
 		return get_preferred_height(canvas, width);
 	}
 
-	float ImageView::calculate_last_baseline_offset(Canvas &canvas, float width)
+	float ImageView::calculate_last_baseline_offset(const CanvasPtr &canvas, float width)
 	{
 		return get_first_baseline_offset(canvas, width);
 	}

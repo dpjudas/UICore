@@ -104,11 +104,11 @@ namespace uicore
 	{
 	}
 
-	Image::Image(Canvas &canvas, const PixelBufferPtr &pb, const Rect &rect, float pixel_ratio)
+	Image::Image(const CanvasPtr &canvas, const PixelBufferPtr &pb, const Rect &rect, float pixel_ratio)
 		: impl(std::make_shared<Image_Impl>())
 	{
-		impl->texture = Texture2D::create(canvas.gc(), pb->width(), pb->height(), pb->format());
-		impl->texture->set_subimage(canvas.gc(), 0, 0, pb, rect);
+		impl->texture = Texture2D::create(canvas->gc(), pb->width(), pb->height(), pb->format());
+		impl->texture->set_subimage(canvas->gc(), 0, 0, pb, rect);
 		impl->texture_rect = Rect(0, 0, pb->width(), pb->height());
 		impl->pixel_ratio = pixel_ratio;
 	}
@@ -129,10 +129,10 @@ namespace uicore
 		impl->pixel_ratio = pixel_ratio;
 	}
 
-	Image::Image(Canvas &canvas, const std::string &filename, const ImageImportDescription &import_desc, float pixel_ratio)
+	Image::Image(const CanvasPtr &canvas, const std::string &filename, const ImageImportDescription &import_desc, float pixel_ratio)
 		: impl(std::make_shared<Image_Impl>())
 	{
-		impl->texture = Texture2D::create(canvas.gc(), filename, import_desc);
+		impl->texture = Texture2D::create(canvas->gc(), filename, import_desc);
 		impl->texture_rect = impl->texture->size();
 		impl->pixel_ratio = pixel_ratio;
 	}
@@ -208,17 +208,17 @@ namespace uicore
 		return Sizef(get_width(), get_height());
 	}
 
-	void Image::draw(Canvas &canvas, float x, float y) const
+	void Image::draw(const CanvasPtr &canvas, float x, float y) const
 	{
 		Rectf dest(
 			x + impl->translated_hotspot.x, y + impl->translated_hotspot.y,
 			Sizef(get_width() * impl->scale_x, get_height() * impl->scale_y));
 
-		RenderBatchTriangle *batcher = canvas.impl->batcher.get_triangle_batcher();
+		RenderBatchTriangle *batcher = static_cast<CanvasImpl*>(canvas.get())->batcher.get_triangle_batcher();
 		batcher->draw_image(canvas, impl->texture_rect, dest, impl->color, impl->texture);
 	}
 
-	void Image::draw(Canvas &canvas, const Rectf &src, const Rectf &dest) const
+	void Image::draw(const CanvasPtr &canvas, const Rectf &src, const Rectf &dest) const
 	{
 		Rectf new_src = src;
 		new_src.translate(impl->texture_rect.left, impl->texture_rect.top);
@@ -226,20 +226,20 @@ namespace uicore
 		Rectf new_dest = dest;
 		new_dest.translate(impl->translated_hotspot);
 
-		RenderBatchTriangle *batcher = canvas.impl->batcher.get_triangle_batcher();
+		RenderBatchTriangle *batcher = static_cast<CanvasImpl*>(canvas.get())->batcher.get_triangle_batcher();
 		batcher->draw_image(canvas, new_src, new_dest, impl->color, impl->texture);
 	}
 
-	void Image::draw(Canvas &canvas, const Rectf &dest) const
+	void Image::draw(const CanvasPtr &canvas, const Rectf &dest) const
 	{
 		Rectf new_dest = dest;
 		new_dest.translate(impl->translated_hotspot);
 
-		RenderBatchTriangle *batcher = canvas.impl->batcher.get_triangle_batcher();
+		RenderBatchTriangle *batcher = static_cast<CanvasImpl*>(canvas.get())->batcher.get_triangle_batcher();
 		batcher->draw_image(canvas, impl->texture_rect, new_dest, impl->color, impl->texture);
 	}
 
-	void Image::draw(Canvas &canvas, const Rectf &src, const Quadf &dest) const
+	void Image::draw(const CanvasPtr &canvas, const Rectf &src, const Quadf &dest) const
 	{
 		Rectf new_src = src;
 		new_src.translate(impl->texture_rect.left, impl->texture_rect.top);
@@ -250,11 +250,11 @@ namespace uicore
 		new_dest.r += impl->translated_hotspot;
 		new_dest.s += impl->translated_hotspot;
 
-		RenderBatchTriangle *batcher = canvas.impl->batcher.get_triangle_batcher();
+		RenderBatchTriangle *batcher = static_cast<CanvasImpl*>(canvas.get())->batcher.get_triangle_batcher();
 		batcher->draw_image(canvas, new_src, new_dest, impl->color, impl->texture);
 	}
 
-	void Image::draw(Canvas &canvas, const Quadf &dest) const
+	void Image::draw(const CanvasPtr &canvas, const Quadf &dest) const
 	{
 		Quadf new_dest = dest;
 		new_dest.p += impl->translated_hotspot;
@@ -262,7 +262,7 @@ namespace uicore
 		new_dest.r += impl->translated_hotspot;
 		new_dest.s += impl->translated_hotspot;
 
-		RenderBatchTriangle *batcher = canvas.impl->batcher.get_triangle_batcher();
+		RenderBatchTriangle *batcher = static_cast<CanvasImpl*>(canvas.get())->batcher.get_triangle_batcher();
 		batcher->draw_image(canvas, impl->texture_rect, new_dest, impl->color, impl->texture);
 	}
 
@@ -304,8 +304,8 @@ namespace uicore
 		impl->texture->set_min_filter(linear_filter ? filter_linear : filter_nearest);
 	}
 
-	void Image::set_subimage(Canvas &canvas, int x, int y, const PixelBufferPtr &image, const Rect &src_rect, int level)
+	void Image::set_subimage(const CanvasPtr &canvas, int x, int y, const PixelBufferPtr &image, const Rect &src_rect, int level)
 	{
-		impl->texture->set_subimage(canvas.gc(), x, y, image, src_rect, level);
+		impl->texture->set_subimage(canvas->gc(), x, y, image, src_rect, level);
 	}
 }

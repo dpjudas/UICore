@@ -42,12 +42,12 @@
 namespace uicore
 {
 
-	TextureWindow_Impl::TextureWindow_Impl(TextureWindow *view, Canvas &canvas) : window_view(view), canvas(canvas)
+	TextureWindow_Impl::TextureWindow_Impl(TextureWindow *view, const CanvasPtr &canvas) : window_view(view), canvas(canvas)
 	{
-		canvas_rect = canvas.size();
+		canvas_rect = canvas->size();
 		BlendStateDescription blend_desc;
 		blend_desc.enable_blending(false);
-		opaque_blend = canvas.gc()->create_blend_state(blend_desc);
+		opaque_blend = canvas->gc()->create_blend_state(blend_desc);
 	}
 
 	void TextureWindow_Impl::set_window(const DisplayWindowPtr &window, bool enable_automatic_events, const Mat4f &new_transform_mouse_matrix)
@@ -73,19 +73,19 @@ namespace uicore
 	{
 		if (needs_render || always_render)
 		{
-			canvas.set_cliprect(canvas_rect);
+			canvas->set_clip(canvas_rect);
 
 			if (clear_background_enable)
 			{
-				canvas.set_blend_state(opaque_blend);
+				canvas->set_blend_state(opaque_blend);
 				Path::rect(canvas_rect).fill(canvas, background_color);
-				canvas.reset_blend_state();
-				//canvas.clear(background_color);	<--- On d3d, this clears the entire canvas - It does not recognise the cliprect
+				canvas->set_blend_state(nullptr);
+				//canvas->clear(background_color);	<--- On d3d, this clears the entire canvas - It does not recognise the cliprect
 			}
 
 			needs_render = false;
 			window_view->render(canvas, canvas_rect);
-			canvas.reset_cliprect();
+			canvas->reset_clip();
 		}
 	}
 	

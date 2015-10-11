@@ -46,6 +46,7 @@ namespace uicore
 	class Subtexture;
 	class PixelBuffer;
 	class Canvas;
+	typedef std::shared_ptr<Canvas> CanvasPtr;
 	class Quadf;
 
 	/// \brief Image class.
@@ -71,14 +72,14 @@ namespace uicore
 		/// \param canvas = Canvas
 		/// \param pixelbuffer = Pixelbuffer to get image data from
 		/// \param rect = pixelbuffer rect
-		Image(Canvas &canvas, const PixelBufferPtr &pixelbuffer, const Rect &rect, float pixel_ratio = 1.0f);
+		Image(const CanvasPtr &canvas, const PixelBufferPtr &pixelbuffer, const Rect &rect, float pixel_ratio = 1.0f);
 
 		/// \brief Constructs a Image
 		///
 		/// \param canvas = Canvas
 		/// \param filename Filename of image to load
 		/// \param import_desc = Image Import Description
-		Image(Canvas &canvas, const std::string &filename, const ImageImportDescription &import_desc = ImageImportDescription(), float pixel_ratio = 1.0f);
+		Image(const CanvasPtr &canvas, const std::string &filename, const ImageImportDescription &import_desc = ImageImportDescription(), float pixel_ratio = 1.0f);
 
 		virtual ~Image();
 
@@ -145,7 +146,7 @@ namespace uicore
 		/// \param x, y Anchor position of where to render image. Actual rendering position depends on the anchor and the alignment mode.
 		/// \param gc Graphic context on which to render upon.
 		void draw(
-			Canvas &canvas,
+			const CanvasPtr &canvas,
 			float x,
 			float y) const;
 
@@ -155,7 +156,7 @@ namespace uicore
 		/// \param src Source rectangle to draw. Use this is draw only part of the image.
 		/// \param dest Rectangle to draw image in.
 		void draw(
-			Canvas &canvas,
+			const CanvasPtr &canvas,
 			const Rectf &src,
 			const Rectf &dest) const;
 
@@ -164,7 +165,7 @@ namespace uicore
 		/// \param gc Graphic context on which to render upon.
 		/// \param dest Rectangle to draw image in.
 		void draw(
-			Canvas &canvas,
+			const CanvasPtr &canvas,
 			const Rectf &dest) const;
 
 		/// \brief Draw image on graphic context.
@@ -173,7 +174,7 @@ namespace uicore
 		/// \param src Source rectangle to draw. Use this is draw only part of the image.
 		/// \param dest Quad to draw image in.
 		void draw(
-			Canvas &canvas,
+			const CanvasPtr &canvas,
 			const Rectf &src,
 			const Quadf &dest) const;
 
@@ -182,7 +183,7 @@ namespace uicore
 		/// \param gc Graphic context on which to render upon.
 		/// \param dest Quad to draw image in.
 		void draw(
-			Canvas &canvas,
+			const CanvasPtr &canvas,
 			const Quadf &dest) const;
 
 		/// \brief Set scale for x and y directions individually.
@@ -221,7 +222,7 @@ namespace uicore
 		*  \param image   Image to upload.
 		*  \param level   Mipmap level-of-detail number.
 		*/
-		void set_subimage(Canvas &canvas, int x, int y, const PixelBufferPtr &image, const Rect &src_rect, int level = 0);
+		void set_subimage(const CanvasPtr &canvas, int x, int y, const PixelBufferPtr &image, const Rect &src_rect, int level = 0);
 
 	private:
 		std::shared_ptr<Image_Impl> impl;

@@ -88,12 +88,12 @@ namespace uicore
 		impl->remove_subview(view);
 	}
 
-	void SpanLayoutView::render_content(Canvas &canvas)
+	void SpanLayoutView::render_content(const CanvasPtr &canvas)
 	{
 		return impl->render_content(canvas, geometry().content_width);
 	}
 
-	float SpanLayoutView::calculate_preferred_width(Canvas &canvas)
+	float SpanLayoutView::calculate_preferred_width(const CanvasPtr &canvas)
 	{
 		if (style_cascade().computed_value("width").is_keyword("auto"))
 			return impl->get_preferred_width(canvas);
@@ -101,7 +101,7 @@ namespace uicore
 			return style_cascade().computed_value("width").number();
 	}
 
-	float SpanLayoutView::calculate_preferred_height(Canvas &canvas, float width)
+	float SpanLayoutView::calculate_preferred_height(const CanvasPtr &canvas, float width)
 	{
 		if (style_cascade().computed_value("height").is_keyword("auto"))
 			return impl->get_preferred_height(canvas, width);
@@ -109,17 +109,17 @@ namespace uicore
 			return style_cascade().computed_value("height").number();
 	}
 
-	float SpanLayoutView::calculate_first_baseline_offset(Canvas &canvas, float width)
+	float SpanLayoutView::calculate_first_baseline_offset(const CanvasPtr &canvas, float width)
 	{
 		return impl->get_first_baseline_offset(canvas, width);
 	}
 
-	float SpanLayoutView::calculate_last_baseline_offset(Canvas &canvas, float width)
+	float SpanLayoutView::calculate_last_baseline_offset(const CanvasPtr &canvas, float width)
 	{
 		return impl->get_last_baseline_offset(canvas, width);
 	}
 
-	void SpanLayoutView::layout_subviews(Canvas &canvas)
+	void SpanLayoutView::layout_subviews(const CanvasPtr &canvas)
 	{
 		View::layout_subviews(canvas);
 		impl->layout_views(canvas, geometry().content_width);

@@ -84,7 +84,7 @@ namespace uicore
 		}
 	}
 
-	Path Path::glyph(Canvas &canvas, Font &font, unsigned int glyph, GlyphMetrics &out_metrics)
+	Path Path::glyph(const CanvasPtr &canvas, Font &font, unsigned int glyph, GlyphMetrics &out_metrics)
 	{
 		Path path;
 		if (font.impl)
@@ -204,21 +204,21 @@ namespace uicore
 		return path;
 	}
 
-	void Path::stroke(Canvas &canvas, const Pen &pen)
+	void Path::stroke(const CanvasPtr &canvas, const Pen &pen)
 	{
-		RenderBatchPath *batcher = canvas.impl->batcher.get_path_batcher();
+		RenderBatchPath *batcher = static_cast<CanvasImpl*>(canvas.get())->batcher.get_path_batcher();
 		batcher->stroke(canvas, *this, pen);
 	}
 
-	void Path::fill(Canvas &canvas, const Brush &brush)
+	void Path::fill(const CanvasPtr &canvas, const Brush &brush)
 	{
-		RenderBatchPath *batcher = canvas.impl->batcher.get_path_batcher();
+		RenderBatchPath *batcher = static_cast<CanvasImpl*>(canvas.get())->batcher.get_path_batcher();
 		batcher->fill(canvas, *this, brush);
 	}
 
-	void Path::fill_and_stroke(Canvas &canvas, const Pen &pen, const Brush &brush)
+	void Path::fill_and_stroke(const CanvasPtr &canvas, const Pen &pen, const Brush &brush)
 	{
-		RenderBatchPath *batcher = canvas.impl->batcher.get_path_batcher();
+		RenderBatchPath *batcher = static_cast<CanvasImpl*>(canvas.get())->batcher.get_path_batcher();
 		batcher->fill(canvas, *this, brush);
 		batcher->stroke(canvas, *this, pen);
 	}

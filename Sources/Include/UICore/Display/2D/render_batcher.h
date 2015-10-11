@@ -35,6 +35,7 @@ namespace uicore
 {
 	class GraphicContext;
 	class Canvas;
+	typedef std::shared_ptr<Canvas> CanvasPtr;
 	enum TextureImageYAxis;
 
 	/// \brief Render batching abstraction

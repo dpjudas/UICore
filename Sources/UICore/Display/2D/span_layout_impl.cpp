@@ -83,7 +83,7 @@ namespace uicore
 		return segment_rects;
 	}
 
-	void SpanLayout_Impl::draw_layout(Canvas &canvas)
+	void SpanLayout_Impl::draw_layout(const CanvasPtr &canvas)
 	{
 		int x = position.x;
 		int y = position.y;
@@ -125,7 +125,7 @@ namespace uicore
 		}
 	}
 
-	void SpanLayout_Impl::draw_layout_ellipsis(Canvas &canvas, const Rect &content_rect)
+	void SpanLayout_Impl::draw_layout_ellipsis(const CanvasPtr &canvas, const Rect &content_rect)
 	{
 		is_ellipsis_draw = true;
 		ellipsis_content_rect = content_rect;
@@ -141,12 +141,12 @@ namespace uicore
 		}
 	}
 
-	void SpanLayout_Impl::draw_layout_image(Canvas &canvas, Line &line, LineSegment &segment, int x, int y)
+	void SpanLayout_Impl::draw_layout_image(const CanvasPtr &canvas, Line &line, LineSegment &segment, int x, int y)
 	{
 		segment.image.draw(canvas, x + segment.x_position, y + line.ascender - segment.ascender);
 	}
 
-	void SpanLayout_Impl::draw_layout_text(Canvas &canvas, Line &line, LineSegment &segment, int x, int y)
+	void SpanLayout_Impl::draw_layout_text(const CanvasPtr &canvas, Line &line, LineSegment &segment, int x, int y)
 	{
 		std::string segment_text = text.substr(segment.start, segment.end - segment.start);
 
@@ -206,7 +206,7 @@ namespace uicore
 		}
 	}
 
-	SpanLayout::HitTestResult SpanLayout_Impl::hit_test(Canvas &canvas, const Point &pos)
+	SpanLayout::HitTestResult SpanLayout_Impl::hit_test(const CanvasPtr &canvas, const Point &pos)
 	{
 		SpanLayout::HitTestResult result;
 
@@ -356,7 +356,7 @@ namespace uicore
 		text += "*";
 	}
 
-	void SpanLayout_Impl::layout(Canvas &canvas, int max_width)
+	void SpanLayout_Impl::layout(const CanvasPtr &canvas, int max_width)
 	{
 		layout_lines(canvas, max_width);
 
@@ -370,7 +370,7 @@ namespace uicore
 		}
 	}
 
-	SpanLayout_Impl::TextSizeResult SpanLayout_Impl::find_text_size(Canvas &canvas, const TextBlock &block, unsigned int object_index)
+	SpanLayout_Impl::TextSizeResult SpanLayout_Impl::find_text_size(const CanvasPtr &canvas, const TextBlock &block, unsigned int object_index)
 	{
 		Font font = objects[object_index].font;
 		if (layout_cache.object_index != object_index)
@@ -502,7 +502,7 @@ namespace uicore
 		alignment = align;
 	}
 
-	void SpanLayout_Impl::layout_lines(Canvas &canvas, int max_width)
+	void SpanLayout_Impl::layout_lines(const CanvasPtr &canvas, int max_width)
 	{
 		lines.clear();
 		if (objects.empty())
@@ -645,7 +645,7 @@ namespace uicore
 		return true;
 	}
 
-	void SpanLayout_Impl::layout_text(Canvas &canvas, std::vector<TextBlock> blocks, std::vector<TextBlock>::size_type block_index, CurrentLine &current_line, int max_width)
+	void SpanLayout_Impl::layout_text(const CanvasPtr &canvas, std::vector<TextBlock> blocks, std::vector<TextBlock>::size_type block_index, CurrentLine &current_line, int max_width)
 	{
 		TextSizeResult text_size_result = find_text_size(canvas, blocks[block_index], current_line.object_index);
 		current_line.object_index += text_size_result.objects_traversed;
@@ -808,7 +808,7 @@ namespace uicore
 		}
 	}
 
-	Size SpanLayout_Impl::find_preferred_size(Canvas &canvas)
+	Size SpanLayout_Impl::find_preferred_size(const CanvasPtr &canvas)
 	{
 		layout_lines(canvas, 0x70000000); // Feed it with a very long length so it ends up on one line
 		return get_rect().get_size();

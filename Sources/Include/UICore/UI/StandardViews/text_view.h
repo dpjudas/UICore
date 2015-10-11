@@ -76,11 +76,11 @@ namespace uicore
 		Signal<void(KeyEvent &)> &sig_enter_pressed();
 
 	protected:
-		void render_content(Canvas &canvas) override;
-		float calculate_preferred_width(Canvas &canvas) override;
-		float calculate_preferred_height(Canvas &canvas, float width) override;
-		float calculate_first_baseline_offset(Canvas &canvas, float width) override;
-		float calculate_last_baseline_offset(Canvas &canvas, float width) override;
+		void render_content(const CanvasPtr &canvas) override;
+		float calculate_preferred_width(const CanvasPtr &canvas) override;
+		float calculate_preferred_height(const CanvasPtr &canvas, float width) override;
+		float calculate_first_baseline_offset(const CanvasPtr &canvas, float width) override;
+		float calculate_last_baseline_offset(const CanvasPtr &canvas, float width) override;
 
 	private:
 		std::unique_ptr<TextViewImpl> impl;

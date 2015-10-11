@@ -73,7 +73,7 @@ namespace uicore
 
 		Signal<void()> &sig_scroll();
 
-		void layout_subviews(Canvas &canvas) override;
+		void layout_subviews(const CanvasPtr &canvas) override;
 
 	private:
 		std::shared_ptr<ScrollBarViewImpl> impl;

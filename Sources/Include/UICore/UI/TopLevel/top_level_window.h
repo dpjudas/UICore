@@ -61,7 +61,7 @@ namespace uicore
 		void hide();
 
 		DisplayWindowPtr get_display_window() override;
-		Canvas get_canvas() const override;
+		CanvasPtr get_canvas() const override;
 
 	protected:
 		void set_needs_render() override;

@@ -50,17 +50,17 @@ namespace uicore
 		font_engine = engine;
 	}
 
-	GlyphMetrics Font_DrawSubPixel::get_metrics(Canvas &canvas, unsigned int glyph)
+	GlyphMetrics Font_DrawSubPixel::get_metrics(const CanvasPtr &canvas, unsigned int glyph)
 	{
 		return glyph_cache->get_metrics(font_engine, canvas, glyph);
 	}
 
-	void Font_DrawSubPixel::draw_text(Canvas &canvas, const Pointf &position, const std::string &text, const Colorf &color, float line_spacing)
+	void Font_DrawSubPixel::draw_text(const CanvasPtr &canvas, const Pointf &position, const std::string &text, const Colorf &color, float line_spacing)
 	{
 		float offset_x = 0;
 		float offset_y = 0;
 		UTF8_Reader reader(text.data(), text.length());
-		RenderBatchTriangle *batcher = canvas.impl->batcher.get_triangle_batcher();
+		RenderBatchTriangle *batcher = static_cast<CanvasImpl*>(canvas.get())->batcher.get_triangle_batcher();
 
 		while (!reader.is_end())
 		{
@@ -81,7 +81,7 @@ namespace uicore
 				{
 					float xp = offset_x + position.x + gptr->offset.x;
 					float yp = offset_y + position.y + gptr->offset.y;
-					Pointf pos = canvas.grid_fit(Pointf(xp, yp));
+					Pointf pos = canvas->grid_fit(Pointf(xp, yp));
 
 					Rectf dest_size(pos, gptr->size);
 					batcher->draw_glyph_subpixel(canvas, gptr->geometry, dest_size, color, gptr->texture);

@@ -34,39 +34,14 @@
 
 namespace uicore
 {
-	Canvas_Impl::Canvas_Impl() : canvas_map_mode(map_user_projection)
-	{
-	}
-
-	void Canvas_Impl::init(Canvas_Impl *canvas)
-	{
-		current_window = canvas->current_window;
-		batcher = canvas->batcher;		// Share the batcher resources
-		setup(canvas->gc());
-	}
-
-	void Canvas_Impl::init(Canvas_Impl *canvas, const FrameBufferPtr &framebuffer)
-	{
-		GraphicContextPtr gc = canvas->gc();
-		gc->set_frame_buffer(framebuffer);
-		gc->set_viewport(gc->size(), y_axis_top_down);
-		batcher = canvas->batcher;		// Share the batcher resources
-		setup(gc);
-	}
-
-	void Canvas_Impl::init(const DisplayWindowPtr &window)
+	CanvasImpl::CanvasImpl(const DisplayWindowPtr &window)
 	{
 		current_window = window;
-		setup(window->gc());
-	}
-
-	void Canvas_Impl::setup(const GraphicContextPtr &new_gc)
-	{
-		_gc = new_gc;
+		_gc = window->gc();
 
 		if (current_window)
 		{
-			sc.connect(current_window->sig_window_flip(), bind_member(this, &Canvas_Impl::on_window_flip));
+			sc.connect(current_window->sig_window_flip(), bind_member(this, &CanvasImpl::on_window_flip));
 		}
 
 		gc_clip_z_range = _gc->clip_z_range();
@@ -76,7 +51,7 @@ namespace uicore
 		if (!_gc->write_frame_buffer())	// No framebuffer attached to canvas
 		{
 			canvas_y_axis = y_axis_top_down;
-			sc.connect(static_cast<GraphicContextImpl*>(_gc.get())->sig_window_resized(), bind_member(this, &Canvas_Impl::on_window_resized));
+			sc.connect(static_cast<GraphicContextImpl*>(_gc.get())->sig_window_resized(), bind_member(this, &CanvasImpl::on_window_resized));
 		}
 		else
 		{
@@ -97,31 +72,26 @@ namespace uicore
 			batcher = CanvasBatcher(_gc);
 		}
 
+		calculate_map_mode_matrices();
 	}
 
-	Canvas_Impl::~Canvas_Impl()
-	{
-		if (_gc)
-			flush();
-	}
-
-	void Canvas_Impl::flush()
+	void CanvasImpl::flush()
 	{
 		batcher.flush();
 	}
 
-	void Canvas_Impl::update_batcher_matrix()
+	void CanvasImpl::update_batcher_matrix()
 	{
 		batcher.update_batcher_matrix(_gc, canvas_transform, canvas_projection, canvas_y_axis);
 	}
 
-	void Canvas_Impl::set_batcher(Canvas &canvas, RenderBatcher *new_batcher)
+	void CanvasImpl::set_batcher(RenderBatcher *new_batcher)
 	{
-		if (batcher.set_batcher(canvas.gc(), new_batcher))
+		if (batcher.set_batcher(gc(), new_batcher))
 			update_batcher_matrix();
 	}
 
-	void Canvas_Impl::calculate_map_mode_matrices()
+	void CanvasImpl::calculate_map_mode_matrices()
 	{
 		Mat4f matrix;
 		Mat4f pixel_scaling_matrix = Mat4f::scale(_gc->pixel_ratio(), _gc->pixel_ratio(), 1.0f);
@@ -136,9 +106,6 @@ namespace uicore
 		case map_2d_lower_left:
 			matrix = Mat4f::ortho_2d(viewport_rect.left, viewport_rect.right, viewport_rect.top, viewport_rect.bottom, handed_right, gc_clip_z_range) * pixel_scaling_matrix;
 			break;
-		case map_user_projection:
-			matrix = pixel_scaling_matrix * user_projection;
-			break;
 		}
 
 		if (matrix != canvas_projection)
@@ -148,30 +115,29 @@ namespace uicore
 		}
 	}
 
-	MapMode Canvas_Impl::top_down_map_mode() const
+	MapMode CanvasImpl::top_down_map_mode() const
 	{
 		switch (canvas_map_mode)
 		{
 		default:
 		case map_2d_upper_left: return map_2d_lower_left;
 		case map_2d_lower_left: return map_2d_upper_left;
-		case map_user_projection: return map_user_projection;
 		}
 	}
 
-	void Canvas_Impl::set_transform(const Mat4f &matrix)
+	void CanvasImpl::set_transform(const Mat4f &matrix)
 	{
 		canvas_transform = matrix;
 		canvas_inverse_transform_set = false;
 		update_batcher_matrix();
 	}
 
-	const Mat4f &Canvas_Impl::transform() const
+	const Mat4f &CanvasImpl::transform() const
 	{
 		return canvas_transform;
 	}
 
-	const Mat4f &Canvas_Impl::inverse_transform() const
+	const Mat4f &CanvasImpl::inverse_transform() const
 	{
 		if (!canvas_inverse_transform_set)
 		{
@@ -181,24 +147,18 @@ namespace uicore
 		return canvas_inverse_transform;
 	}
 
-	const Mat4f &Canvas_Impl::projection() const
+	const Mat4f &CanvasImpl::projection() const
 	{
 		return canvas_projection;
 	}
 
-	void Canvas_Impl::set_map_mode(MapMode map_mode)
+	void CanvasImpl::set_map_mode(MapMode map_mode)
 	{
 		canvas_map_mode = map_mode;
 		calculate_map_mode_matrices();
 	}
 
-	void Canvas_Impl::set_user_projection(const Mat4f &projection)
-	{
-		user_projection = projection;
-		calculate_map_mode_matrices();
-	}
-
-	void Canvas_Impl::update_viewport_size()
+	void CanvasImpl::update_viewport_size()
 	{
 		Rectf size(gc()->size());
 		if (size != viewport_rect)
@@ -208,24 +168,24 @@ namespace uicore
 		}
 	}
 
-	void Canvas_Impl::set_viewport(const Rectf &viewport)
+	void CanvasImpl::set_viewport(const Rectf &viewport)
 	{
 		viewport_rect = viewport * (1.0f * gc()->pixel_ratio());
 		calculate_map_mode_matrices();
 		gc()->set_viewport(viewport_rect, y_axis_top_down);
 	}
 
-	void Canvas_Impl::clear(const Colorf &color)
+	void CanvasImpl::clear(const Colorf &color)
 	{
 		gc()->clear(color);
 	}
 
-	void Canvas_Impl::on_window_resized(const Size &size)
+	void CanvasImpl::on_window_resized(const Size &size)
 	{
 		update_viewport_size();
 	}
 
-	void Canvas_Impl::write_cliprect(const Rectf &rect)
+	void CanvasImpl::write_clip(const Rectf &rect)
 	{
 		if ((rect.left > rect.right) || (rect.top > rect.bottom))
 			throw Exception("Invalid cliprect");
@@ -241,17 +201,21 @@ namespace uicore
 		gc()->set_scissor(recti, canvas_y_axis ? y_axis_top_down : y_axis_bottom_up);
 	}
 
-	void Canvas_Impl::set_cliprect(const Rectf &rect)
+	void CanvasImpl::set_clip(const Rectf &rect)
 	{
+		flush();
+
 		if (!cliprects.empty())
 			cliprects.back() = rect;
 		else
 			cliprects.push_back(rect);
-		write_cliprect(rect);
+		write_clip(rect);
 	}
 
-	void Canvas_Impl::push_cliprect(const Rectf &rect)
+	void CanvasImpl::push_clip(const Rectf &rect)
 	{
+		flush();
+
 		if (!cliprects.empty())
 		{
 			Rectf r = cliprects.back();
@@ -263,11 +227,13 @@ namespace uicore
 			cliprects.push_back(rect);
 		}
 
-		write_cliprect(cliprects.back());
+		write_clip(cliprects.back());
 	}
 
-	void Canvas_Impl::push_cliprect()
+	void CanvasImpl::push_clip()
 	{
+		flush();
+
 		if (cliprects.empty())
 		{
 			cliprects.push_back(gc()->size());
@@ -276,29 +242,36 @@ namespace uicore
 		{
 			cliprects.push_back(cliprects.back());
 		}
-		write_cliprect(cliprects.back());
+
+		write_clip(cliprects.back());
 	}
 
-	void Canvas_Impl::pop_cliprect()
+	void CanvasImpl::pop_clip()
 	{
-		if (cliprects.empty())
-			throw Exception("GraphicContext::pop_cliprect - popped too many times!");
+		if (!cliprects.empty())
+		{
+			flush();
 
-		cliprects.pop_back();
+			cliprects.pop_back();
 
-		if (cliprects.empty())
-			reset_cliprect();
-		else
-			write_cliprect(cliprects.back());
+			if (cliprects.empty())
+				reset_clip();
+			else
+				write_clip(cliprects.back());
+		}
 	}
 
-	void Canvas_Impl::reset_cliprect()
+	void CanvasImpl::reset_clip()
 	{
-		cliprects.clear();
-		gc()->reset_scissor();
+		if (!cliprects.empty())
+		{
+			flush();
+			cliprects.clear();
+			gc()->reset_scissor();
+		}
 	}
 
-	void Canvas_Impl::texture_coords(const Vec2f *triangles, int num_vertex, const Texture2DPtr &texture, const Rect &texture_rect, std::vector<Vec2f> &out_texture_positions)
+	void CanvasImpl::texture_coords(const Vec2f *triangles, int num_vertex, const Texture2DPtr &texture, const Rect &texture_rect, std::vector<Vec2f> &out_texture_positions)
 	{
 		out_texture_positions.clear();
 		out_texture_positions.reserve(num_vertex);
@@ -332,7 +305,7 @@ namespace uicore
 		}
 	}
 
-	Rectf Canvas_Impl::triangles_bounding_box(const Vec2f *triangles, int num_vertex)
+	Rectf CanvasImpl::triangles_bounding_box(const Vec2f *triangles, int num_vertex)
 	{
 		Rectf bounding_box;
 		if (num_vertex)
@@ -349,7 +322,7 @@ namespace uicore
 		return bounding_box;
 	}
 
-	void Canvas_Impl::on_window_flip()
+	void CanvasImpl::on_window_flip()
 	{
 		flush();
 	}

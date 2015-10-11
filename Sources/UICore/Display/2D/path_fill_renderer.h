@@ -83,7 +83,7 @@ namespace uicore
 	{
 	public:
 		void reset(const GraphicContextPtr &gc, Vec4f *buffer, int max_entries);
-		int push(Canvas &canvas, const Brush &brush, const Mat4f &transform);
+		int push(const CanvasPtr &canvas, const Brush &brush, const Mat4f &transform);
 
 		Vec4f *get_buffer() const { return buffer; }
 		int get_position() const { return end_position; }
@@ -95,10 +95,10 @@ namespace uicore
 
 		int next_position(int size);
 
-		int store_solid(Canvas &canvas, const Brush &brush, const Mat4f &transform);
-		int store_linear(Canvas &canvas, const Brush &brush, const Mat4f &transform);
-		int store_radial(Canvas &canvas, const Brush &brush, const Mat4f &transform);
-		int store_image(Canvas &canvas, const Brush &brush, const Mat4f &transform);
+		int store_solid(const CanvasPtr &canvas, const Brush &brush, const Mat4f &transform);
+		int store_linear(const CanvasPtr &canvas, const Brush &brush, const Mat4f &transform);
+		int store_radial(const CanvasPtr &canvas, const Brush &brush, const Mat4f &transform);
+		int store_image(const CanvasPtr &canvas, const Brush &brush, const Mat4f &transform);
 
 		Vec4f *buffer = nullptr;
 		int max_entries = 0;
@@ -198,13 +198,13 @@ namespace uicore
 	public:
 		PathFillRenderer(const GraphicContextPtr &gc, RenderBatchBuffer *batch_buffer);
 
-		void set_size(Canvas &canvas, int width, int height);
+		void set_size(const CanvasPtr &canvas, int width, int height);
 		void clear();
 
 		void line(float x, float y) override;
 		void end(bool close) override;
 
-		void fill(Canvas &canvas, PathFillMode mode, const Brush &brush, const Mat4f &transform);
+		void fill(const CanvasPtr &canvas, PathFillMode mode, const Brush &brush, const Mat4f &transform);
 		void flush(const GraphicContextPtr &gc);
 
 		void set_yaxis(TextureImageYAxis yaxis) { image_yaxis = yaxis; }
@@ -214,7 +214,7 @@ namespace uicore
 	private:
 		void insert_sorted(PathScanline &scanline, const PathScanlineEdge &edge);
 
-		void initialise_buffers(Canvas &canvas);
+		void initialise_buffers(const CanvasPtr &canvas);
 
 		TextureImageYAxis image_yaxis = y_axis_top_down;
 

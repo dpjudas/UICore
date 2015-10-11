@@ -94,7 +94,7 @@ namespace uicore
 		}
 	}
 
-	void SpanLayoutViewImpl::render_content(Canvas &canvas, float width)
+	void SpanLayoutViewImpl::render_content(const CanvasPtr &canvas, float width)
 	{
 		float y = 0.0f;
 		size_t obj_start = 0;
@@ -146,7 +146,7 @@ namespace uicore
 		}
 	}
 
-	void SpanLayoutViewImpl::layout_views(Canvas &canvas, float width)
+	void SpanLayoutViewImpl::layout_views(const CanvasPtr &canvas, float width)
 	{
 		float y = 0.0f;
 		size_t obj_start = 0;
@@ -225,7 +225,7 @@ namespace uicore
 		}
 	}
 
-	float SpanLayoutViewImpl::get_preferred_width(Canvas &canvas)
+	float SpanLayoutViewImpl::get_preferred_width(const CanvasPtr &canvas)
 	{
 		float x = 0.0f;
 		for (SpanObject &object : objects)
@@ -243,7 +243,7 @@ namespace uicore
 		return x;
 	}
 
-	float SpanLayoutViewImpl::get_preferred_height(Canvas &canvas, float width)
+	float SpanLayoutViewImpl::get_preferred_height(const CanvasPtr &canvas, float width)
 	{
 		float y = 0.0f;
 		size_t obj_start = 0;
@@ -259,12 +259,12 @@ namespace uicore
 		return y;
 	}
 
-	float SpanLayoutViewImpl::get_first_baseline_offset(Canvas &canvas, float width)
+	float SpanLayoutViewImpl::get_first_baseline_offset(const CanvasPtr &canvas, float width)
 	{
 		return find_line_metrics(canvas, 0, 0, width).ascent;
 	}
 
-	float SpanLayoutViewImpl::get_last_baseline_offset(Canvas &canvas, float width)
+	float SpanLayoutViewImpl::get_last_baseline_offset(const CanvasPtr &canvas, float width)
 	{
 		float y = 0.0f;
 		size_t obj_start = 0;
@@ -282,7 +282,7 @@ namespace uicore
 		}
 	}
 
-	SpanLineMetrics SpanLayoutViewImpl::find_line_metrics(Canvas &canvas, size_t obj_start, size_t text_start, float width)
+	SpanLineMetrics SpanLayoutViewImpl::find_line_metrics(const CanvasPtr &canvas, size_t obj_start, size_t text_start, float width)
 	{
 		float line_ascent = 0.0f;
 		float line_descent = 0.0f;

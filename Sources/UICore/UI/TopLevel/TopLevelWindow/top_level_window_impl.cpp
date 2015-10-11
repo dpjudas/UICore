@@ -40,7 +40,7 @@ namespace uicore
 {
 	TopLevelWindow_Impl::TopLevelWindow_Impl(TopLevelWindow *view, const DisplayWindowDescription &desc) : window_view(view), window(DisplayWindow::create(desc))
 	{
-		canvas = Canvas(window);
+		canvas = Canvas::create(window);
 
 		slots.connect(window->sig_lost_focus(), uicore::bind_member(this, &TopLevelWindow_Impl::on_lost_focus));
 		slots.connect(window->sig_got_focus(), uicore::bind_member(this, &TopLevelWindow_Impl::on_got_focus));
@@ -74,9 +74,9 @@ namespace uicore
 
 	void TopLevelWindow_Impl::on_paint()
 	{
-		canvas.clear(uicore::Colorf::transparent);
+		canvas->clear(uicore::Colorf::transparent);
 		window_view->render(canvas, window->viewport());
-		canvas.flush();
+		canvas->flush();
 		window->flip();
 	}
 

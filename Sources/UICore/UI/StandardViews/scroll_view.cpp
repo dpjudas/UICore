@@ -37,7 +37,7 @@ namespace uicore
 	class ScrollViewContentContainer : public View
 	{
 	public:
-		void layout_subviews(Canvas &canvas) override
+		void layout_subviews(const CanvasPtr &canvas) override
 		{
 			for (auto &view : subviews())
 			{
@@ -165,7 +165,7 @@ namespace uicore
 		impl->content->set_view_transform(Mat4f::translate(-offset.x, -offset.y, 0.0f));
 	}
 	
-	void ScrollView::layout_subviews(Canvas &canvas)
+	void ScrollView::layout_subviews(const CanvasPtr &canvas)
 	{
 		bool x_scroll_needed = false;
 		bool y_scroll_needed = false;
@@ -221,7 +221,7 @@ namespace uicore
 		impl->content_container->layout_subviews(canvas);
 	}
 	
-	float ScrollView::calculate_preferred_width(Canvas &canvas)
+	float ScrollView::calculate_preferred_width(const CanvasPtr &canvas)
 	{
 		if (style_cascade().computed_value("width").is_length())
 			return style_cascade().computed_value("width").number();
@@ -232,7 +232,7 @@ namespace uicore
 		return width;
 	}
 	
-	float ScrollView::calculate_preferred_height(Canvas &canvas, float width)
+	float ScrollView::calculate_preferred_height(const CanvasPtr &canvas, float width)
 	{
 		if (style_cascade().computed_value("height").is_length())
 			return style_cascade().computed_value("height").number();
@@ -243,12 +243,12 @@ namespace uicore
 		return height;
 	}
 	
-	float ScrollView::calculate_first_baseline_offset(Canvas &canvas, float width)
+	float ScrollView::calculate_first_baseline_offset(const CanvasPtr &canvas, float width)
 	{
 		return impl->content_container->get_first_baseline_offset(canvas, width);
 	}
 	
-	float ScrollView::calculate_last_baseline_offset(Canvas &canvas, float width)
+	float ScrollView::calculate_last_baseline_offset(const CanvasPtr &canvas, float width)
 	{
 		return impl->content_container->get_last_baseline_offset(canvas, width);
 	}

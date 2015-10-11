@@ -40,7 +40,7 @@ namespace uicore
 	class TextureWindow : public ViewTree
 	{
 	public:
-		TextureWindow(Canvas &canvas);
+		TextureWindow(const CanvasPtr &canvas);
 
 		/// \brief Set position and size within the canvas
 		///
@@ -58,7 +58,7 @@ namespace uicore
 
 		void update();
 
-		/// \brief Set the window that will contain this canvas.
+		/// \brief Set the window that will contain this canvas->
 		///
 		/// This is used to set the mouse cursor and send events
 		///
@@ -79,7 +79,7 @@ namespace uicore
 		void on_mouse_move(const uicore::InputEvent &);
 
 		DisplayWindowPtr get_display_window() override;
-		Canvas get_canvas() const override;
+		CanvasPtr get_canvas() const override;
 
 	protected:
 		void set_needs_render() override;

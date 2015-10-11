@@ -56,7 +56,7 @@ namespace uicore
 	{
 	}
 
-	Font_TextureGlyph *GlyphCache::get_glyph(Canvas &canvas, FontEngine *font_engine, unsigned int glyph)
+	Font_TextureGlyph *GlyphCache::get_glyph(const CanvasPtr &canvas, FontEngine *font_engine, unsigned int glyph)
 	{
 		auto size = glyph_list.size();
 		for (int cnt = 0; cnt < size; cnt++)
@@ -86,7 +86,7 @@ namespace uicore
 		texture_group = new_texture_group;
 	}
 
-	GlyphMetrics GlyphCache::get_metrics(FontEngine *font_engine, Canvas &canvas, unsigned int glyph)
+	GlyphMetrics GlyphCache::get_metrics(FontEngine *font_engine, const CanvasPtr &canvas, unsigned int glyph)
 	{
 		Font_TextureGlyph *gptr = get_glyph(canvas, font_engine, glyph);
 		if (gptr)
@@ -96,7 +96,7 @@ namespace uicore
 		return GlyphMetrics();
 	}
 
-	void GlyphCache::insert_glyph(Canvas &canvas, FontPixelBuffer &pb)
+	void GlyphCache::insert_glyph(const CanvasPtr &canvas, FontPixelBuffer &pb)
 	{
 		auto font_glyph = std::unique_ptr<Font_TextureGlyph>(new Font_TextureGlyph());
 
@@ -107,7 +107,7 @@ namespace uicore
 		if (!pb.empty_buffer)
 		{
 			PixelBufferPtr buffer_with_border = PixelBuffer::add_border(pb.buffer, glyph_border_size, pb.buffer_rect);
-			GraphicContextPtr gc = canvas.gc();
+			GraphicContextPtr gc = canvas->gc();
 			Subtexture sub_texture = texture_group.add(gc, buffer_with_border->size());
 			font_glyph->texture = sub_texture.get_texture();
 			font_glyph->geometry = Rect(sub_texture.get_geometry().left + glyph_border_size, sub_texture.get_geometry().top + glyph_border_size, pb.buffer_rect.get_size());
@@ -118,7 +118,7 @@ namespace uicore
 		glyph_list.push_back(std::move(font_glyph));
 	}
 
-	void GlyphCache::insert_glyph(Canvas &canvas, unsigned int glyph, Subtexture &sub_texture, const Pointf &offset, const Sizef &size, const GlyphMetrics &glyph_metrics)
+	void GlyphCache::insert_glyph(const CanvasPtr &canvas, unsigned int glyph, Subtexture &sub_texture, const Pointf &offset, const Sizef &size, const GlyphMetrics &glyph_metrics)
 	{
 		auto font_glyph = std::unique_ptr<Font_TextureGlyph>(new Font_TextureGlyph());
 

@@ -47,40 +47,69 @@ namespace uicore
 	enum MapMode
 	{
 		map_2d_upper_left,
-		map_2d_lower_left,
-		map_user_projection
+		map_2d_lower_left
 	};
 
-	class Canvas_Impl
+	class CanvasImpl : public Canvas
 	{
 	public:
-		Canvas_Impl();
-		~Canvas_Impl();
+		CanvasImpl(const DisplayWindowPtr &window);
 
-		void init(Canvas_Impl *canvas);
-		void init(Canvas_Impl *canvas, const FrameBufferPtr &framebuffer);
-		void init(const DisplayWindowPtr &window);
+		void clear(const Colorf &color) override;
 
-		void clear(const Colorf &color);
+		void flush() override;
+		void set_batcher(RenderBatcher *batcher) override;
 
-		void flush();
-		void set_batcher(Canvas &canvas, RenderBatcher *batcher);
+		Rectf clip() const override
+		{
+			if (!cliprects.empty())
+				return cliprects.back();
+			else
+				return Rectf(0, 0, width(), height());
+		}
 
-		void set_cliprect(const Rectf &rect);
-		void push_cliprect(const Rectf &rect);
-		void push_cliprect();
-		void pop_cliprect();
-		void reset_cliprect();
+		void set_clip(const Rectf &rect) override;
+		void push_clip(const Rectf &rect)  override;
+		void push_clip() override;
+		void pop_clip() override;
+		void reset_clip() override;
 
-		const GraphicContextPtr &gc() const { return _gc; }
+		const GraphicContextPtr &gc() const override { return _gc; }
 
-		void set_transform(const Mat4f &matrix);
-		const Mat4f &transform() const;
-		const Mat4f &inverse_transform() const;
-		const Mat4f &projection() const;
+		void set_transform(const Mat4f &matrix) override;
+		const Mat4f &transform() const override;
+		const Mat4f &inverse_transform() const override;
+		const Mat4f &projection() const override;
+
+		void set_program_object(StandardProgram standard_program) override
+		{
+			flush();
+			gc()->set_program_object(standard_program);
+		}
+
+		void set_rasterizer_state(const RasterizerStatePtr &state) override
+		{
+			flush();
+			gc()->set_rasterizer_state(state);
+		}
+
+		void set_blend_state(const BlendStatePtr &state, const Colorf &blend_color, unsigned int sample_mask) override
+		{
+			flush();
+			gc()->set_blend_state(state, blend_color, sample_mask);
+		}
+
+		Pointf grid_fit(const Pointf &pos) override
+		{
+			float pixel_ratio = gc()->pixel_ratio();
+			Vec4f world_pos = transform() * Vec4f(pos.x, pos.y, 0.0f, 1.0f);
+			world_pos.x = std::round(world_pos.x * pixel_ratio) / pixel_ratio;
+			world_pos.y = std::round(world_pos.y * pixel_ratio) / pixel_ratio;
+			Vec4f object_pos = inverse_transform() * world_pos;
+			return Pointf(object_pos.x, object_pos.y);
+		}
 
 		void set_map_mode(MapMode map_mode);
-		void set_user_projection(const Mat4f &projection);
 		void update_viewport_size();
 		void set_viewport(const Rectf &viewport);
 
@@ -91,12 +120,11 @@ namespace uicore
 		CanvasBatcher batcher;
 
 	private:
-		void setup(const GraphicContextPtr &new_gc);
 		void calculate_map_mode_matrices();
 		MapMode top_down_map_mode() const;
 		void on_window_resized(const Size &size);
 		void update_batcher_matrix();
-		void write_cliprect(const Rectf &rect);
+		void write_clip(const Rectf &rect);
 		void on_window_flip();
 
 		GraphicContextPtr _gc;
@@ -106,14 +134,13 @@ namespace uicore
 		mutable bool canvas_inverse_transform_set = false;
 		mutable Mat4f canvas_inverse_transform;
 		Mat4f canvas_projection;
-		MapMode canvas_map_mode;
+		MapMode canvas_map_mode = map_2d_upper_left;
 		Rectf viewport_rect;
 
 		DisplayWindowPtr current_window;
 
 		TextureImageYAxis canvas_y_axis;
 
-		Mat4f user_projection;
 		ClipZRange gc_clip_z_range;
 	};
 }

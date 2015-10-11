@@ -113,21 +113,21 @@ namespace uicore
 			impl->set_scalable(height_threshold);
 	}
 
-	GlyphMetrics Font::get_metrics(Canvas &canvas, unsigned int glyph)
+	GlyphMetrics Font::get_metrics(const CanvasPtr &canvas, unsigned int glyph)
 	{
 		if (impl)
 			return impl->get_metrics(canvas, glyph);
 		return GlyphMetrics();
 	}
 
-	GlyphMetrics Font::measure_text(Canvas &canvas, const std::string &string)
+	GlyphMetrics Font::measure_text(const CanvasPtr &canvas, const std::string &string)
 	{
 		if (impl)
 			return impl->measure_text(canvas, string);
 		return GlyphMetrics();
 	}
 
-	size_t Font::clip_from_left(Canvas &canvas, const std::string &text, float width)
+	size_t Font::clip_from_left(const CanvasPtr &canvas, const std::string &text, float width)
 	{
 		float x = 0.0f;
 		UTF8_Reader reader(text.data(), text.length());
@@ -146,7 +146,7 @@ namespace uicore
 		return text.size();
 	}
 
-	size_t Font::clip_from_right(Canvas &canvas, const std::string &text, float width)
+	size_t Font::clip_from_right(const CanvasPtr &canvas, const std::string &text, float width)
 	{
 		float x = 0.0f;
 		UTF8_Reader reader(text.data(), text.length());
@@ -170,7 +170,7 @@ namespace uicore
 		return 0;
 	}
 
-	void Font::draw_text(Canvas &canvas, const Pointf &position, const std::string &text, const Colorf &color)
+	void Font::draw_text(const CanvasPtr &canvas, const Pointf &position, const std::string &text, const Colorf &color)
 	{
 		if (impl)
 		{
@@ -178,7 +178,7 @@ namespace uicore
 		}
 	}
 
-	std::string Font::get_clipped_text(Canvas &canvas, const Sizef &box_size, const std::string &text, const std::string &ellipsis_text)
+	std::string Font::get_clipped_text(const CanvasPtr &canvas, const Sizef &box_size, const std::string &text, const std::string &ellipsis_text)
 	{
 		std::string out_string;
 		out_string.reserve(text.length());
@@ -246,28 +246,28 @@ namespace uicore
 		return out_string;
 	}
 
-	FontMetrics Font::get_font_metrics(Canvas &canvas)
+	FontMetrics Font::get_font_metrics(const CanvasPtr &canvas)
 	{
 		if (impl)
 			return impl->get_font_metrics(canvas);
 		return FontMetrics();
 	}
 
-	int Font::get_character_index(Canvas &canvas, const std::string &text, const Pointf &point)
+	int Font::get_character_index(const CanvasPtr &canvas, const std::string &text, const Pointf &point)
 	{
 		if (impl)
 			return impl->get_character_index(canvas, text, point);
 		return 0;
 	}
 
-	std::vector<Rectf> Font::get_character_indices(Canvas &canvas, const std::string &text)
+	std::vector<Rectf> Font::get_character_indices(const CanvasPtr &canvas, const std::string &text)
 	{
 		if (impl)
 			return impl->get_character_indices(canvas, text);
 		return std::vector<Rectf>();
 	}
 
-	FontHandle *Font::get_handle(Canvas &canvas)
+	FontHandle *Font::get_handle(const CanvasPtr &canvas)
 	{
 		if (impl)
 			return impl->get_handle(canvas);

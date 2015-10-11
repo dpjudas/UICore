@@ -102,16 +102,16 @@ namespace uicore
 		void add_image(const Image &image, int baseline_offset, int id = -1);
 		void add_component(SpanComponent *component, int baseline_offset = 0, int id = -1);
 
-		void layout(Canvas &canvasc, int max_width);
-		SpanLayout::HitTestResult hit_test(Canvas &canvas, const Point &pos);
-		void draw_layout(Canvas &canvas);
-		void draw_layout_ellipsis(Canvas &canvas, const Rect &content_rect);
+		void layout(const CanvasPtr &canvasc, int max_width);
+		SpanLayout::HitTestResult hit_test(const CanvasPtr &canvas, const Point &pos);
+		void draw_layout(const CanvasPtr &canvas);
+		void draw_layout_ellipsis(const CanvasPtr &canvas, const Rect &content_rect);
 		void set_position(const Point &pos) { position = pos; }
 		Rect get_rect() const;
 		std::vector<Rect> get_rect_by_id(int id) const;
 		void set_align(SpanAlign align);
 
-		Size find_preferred_size(Canvas &canvas);
+		Size find_preferred_size(const CanvasPtr &canvas);
 
 		void set_selection_range(std::string::size_type start, std::string::size_type end);
 		void set_selection_colors(const Colorf &foreground, const Colorf &background);
@@ -232,10 +232,10 @@ namespace uicore
 			int id = 1;
 		};
 
-		TextSizeResult find_text_size(Canvas &canvas, const TextBlock &block, unsigned int object_index);
+		TextSizeResult find_text_size(const CanvasPtr &canvas, const TextBlock &block, unsigned int object_index);
 		std::vector<TextBlock> find_text_blocks();
-		void layout_lines(Canvas &canvas, int max_width);
-		void layout_text(Canvas &canvas, std::vector<TextBlock> blocks, std::vector<TextBlock>::size_type block_index, CurrentLine &current_line, int max_width);
+		void layout_lines(const CanvasPtr &canvas, int max_width);
+		void layout_text(const CanvasPtr &canvas, std::vector<TextBlock> blocks, std::vector<TextBlock>::size_type block_index, CurrentLine &current_line, int max_width);
 		void layout_block(CurrentLine &current_line, int max_width, std::vector<TextBlock> &blocks, std::vector<TextBlock>::size_type block_index);
 		void layout_float_block(CurrentLine &current_line, int max_width);
 		void layout_inline_block(CurrentLine &current_line, int max_width, std::vector<TextBlock> &blocks, std::vector<TextBlock>::size_type block_index);
@@ -254,8 +254,8 @@ namespace uicore
 		void align_justify(int max_width);
 		void align_center(int max_width);
 		void align_right(int max_width);
-		void draw_layout_image(Canvas &canvas, Line &line, LineSegment &segment, int x, int y);
-		void draw_layout_text(Canvas &canvas, Line &line, LineSegment &segment, int x, int y);
+		void draw_layout_image(const CanvasPtr &canvas, Line &line, LineSegment &segment, int x, int y);
+		void draw_layout_text(const CanvasPtr &canvas, Line &line, LineSegment &segment, int x, int y);
 		std::string::size_type sel_start, sel_end;
 		Colorf sel_foreground, sel_background;
 

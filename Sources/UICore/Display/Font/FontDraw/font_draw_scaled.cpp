@@ -51,19 +51,19 @@ namespace uicore
 		scaled_height = new_scaled_height;
 	}
 
-	GlyphMetrics Font_DrawScaled::get_metrics(Canvas &canvas, unsigned int glyph)
+	GlyphMetrics Font_DrawScaled::get_metrics(const CanvasPtr &canvas, unsigned int glyph)
 	{
 		return glyph_cache->get_metrics(font_engine, canvas, glyph);
 	}
 
-	void Font_DrawScaled::draw_text(Canvas &canvas, const Pointf &position, const std::string &text, const Colorf &color, float line_spacing)
+	void Font_DrawScaled::draw_text(const CanvasPtr &canvas, const Pointf &position, const std::string &text, const Colorf &color, float line_spacing)
 	{
 		float offset_x = 0;
 		float offset_y = 0;
 		UTF8_Reader reader(text.data(), text.length());
-		RenderBatchTriangle *batcher = canvas.impl->batcher.get_triangle_batcher();
+		RenderBatchTriangle *batcher = static_cast<CanvasImpl*>(canvas.get())->batcher.get_triangle_batcher();
 
-		const Mat4f original_transform = canvas.transform();
+		const Mat4f original_transform = canvas->transform();
 		uicore::Mat4f scale_matrix = uicore::Mat4f::scale(scaled_height, scaled_height, scaled_height);
 		Sizef advance;
 
@@ -79,7 +79,7 @@ namespace uicore
 				continue;
 			}
 
-			canvas.set_transform(original_transform * Mat4f::translate(position.x + offset_x, position.y + offset_y, 0) * scale_matrix);
+			canvas->set_transform(original_transform * Mat4f::translate(position.x + offset_x, position.y + offset_y, 0) * scale_matrix);
 			Font_TextureGlyph *gptr = glyph_cache->get_glyph(canvas, font_engine, glyph);
 			if (gptr)
 			{
@@ -95,6 +95,6 @@ namespace uicore
 				offset_y += gptr->metrics.advance.height * scaled_height;
 			}
 		}
-		canvas.set_transform(original_transform);
+		canvas->set_transform(original_transform);
 	}
 }

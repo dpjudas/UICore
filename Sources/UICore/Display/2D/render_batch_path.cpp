@@ -48,19 +48,19 @@ namespace uicore
 			modelview_matrix.matrix[0 * 4 + 1] * point.x + modelview_matrix.matrix[1 * 4 + 1] * point.y + modelview_matrix.matrix[3 * 4 + 1]);
 	}
 
-	void RenderBatchPath::fill(Canvas &canvas, const Path &path, const Brush &brush)
+	void RenderBatchPath::fill(const CanvasPtr &canvas, const Path &path, const Brush &brush)
 	{
-		canvas.set_batcher(this);
+		canvas->set_batcher(this);
 
-		fill_renderer.set_size(canvas, canvas.gc()->width(), canvas.gc()->height());
+		fill_renderer.set_size(canvas, canvas->gc()->width(), canvas->gc()->height());
 		fill_renderer.clear();
 		render(path, &fill_renderer);
 		fill_renderer.fill(canvas, path.get_impl()->fill_mode, brush, modelview_matrix);
 	}
 
-	void RenderBatchPath::stroke(Canvas &canvas, const Path &path, const Pen &pen)
+	void RenderBatchPath::stroke(const CanvasPtr &canvas, const Path &path, const Pen &pen)
 	{
-		canvas.set_batcher(this);
+		canvas->set_batcher(this);
 
 		stroke_renderer.set_pen(canvas, pen);
 		render(path, &stroke_renderer);

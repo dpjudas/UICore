@@ -38,14 +38,14 @@ namespace uicore
 	class TextureWindow_Impl
 	{
 	public:
-		TextureWindow_Impl(TextureWindow *view, Canvas &canvas);
+		TextureWindow_Impl(TextureWindow *view, const CanvasPtr &canvas);
 
 		void set_window(const DisplayWindowPtr &window, bool enable_automatic_events, const Mat4f &new_transform_mouse_matrix);
 
 		void update();
 
 		TextureWindow *window_view;
-		Canvas canvas;
+		CanvasPtr canvas;
 
 		bool needs_render = false;
 		Rectf canvas_rect;

@@ -40,6 +40,7 @@ namespace uicore
 	class FontProvider;
 	class FontFamily;
 	class Canvas;
+	typedef std::shared_ptr<Canvas> CanvasPtr;
 	class Font_Impl;
 	class GlyphMetrics;
 
@@ -102,28 +103,28 @@ namespace uicore
 		/// \param position = Dest position
 		/// \param text = The text to draw
 		/// \param color = The text color
-		void draw_text(Canvas &canvas, const Pointf &position, const std::string &text, const Colorf &color = Colorf::white);
-		void draw_text(Canvas &canvas, float xpos, float ypos, const std::string &text, const Colorf &color = Colorf::white) { draw_text(canvas, Pointf(xpos, ypos), text, color); }
+		void draw_text(const CanvasPtr &canvas, const Pointf &position, const std::string &text, const Colorf &color = Colorf::white);
+		void draw_text(const CanvasPtr &canvas, float xpos, float ypos, const std::string &text, const Colorf &color = Colorf::white) { draw_text(canvas, Pointf(xpos, ypos), text, color); }
 
 		/// \brief Gets the glyph metrics
 		///
 		/// \param glyph = The glyph to get
 		/// \return The glyph metrics
-		GlyphMetrics get_metrics(Canvas &canvas, unsigned int glyph);
+		GlyphMetrics get_metrics(const CanvasPtr &canvas, unsigned int glyph);
 
 		/// \brief Measure text size
 		///
 		/// \param string = The text to use
 		/// \return The metrics
-		GlyphMetrics measure_text(Canvas &canvas, const std::string &string);
+		GlyphMetrics measure_text(const CanvasPtr &canvas, const std::string &string);
 
 		/// \brief Retrieves font metrics description for the selected font.
-		FontMetrics get_font_metrics(Canvas &canvas);
+		FontMetrics get_font_metrics(const CanvasPtr &canvas);
 
 		/// \brief Retrieves clipped version of the text that will fit into a box
 		///
 		/// \return The string
-		std::string get_clipped_text(Canvas &canvas, const Sizef &box_size, const std::string &text, const std::string &ellipsis_text = "...");
+		std::string get_clipped_text(const CanvasPtr &canvas, const Sizef &box_size, const std::string &text, const std::string &ellipsis_text = "...");
 
 		/// \brief Get the character index at a specified point
 		///
@@ -131,25 +132,25 @@ namespace uicore
 		/// \param text = The string
 		/// \param point = The point
 		/// \return The character index. -1 = Not at specified point
-		int get_character_index(Canvas &canvas, const std::string &text, const Pointf &point);
+		int get_character_index(const CanvasPtr &canvas, const std::string &text, const Pointf &point);
 
 		/// \brief Get the rectangles of each glyph in a string of text
 		///
 		/// \return A list of Rects for every glyph
-		std::vector<Rectf> get_character_indices(Canvas &canvas, const std::string &text);
+		std::vector<Rectf> get_character_indices(const CanvasPtr &canvas, const std::string &text);
 
 		// Finds the offset for the last visible character when clipping the head
-		size_t clip_from_left(Canvas &canvas, const std::string &text, float width);
+		size_t clip_from_left(const CanvasPtr &canvas, const std::string &text, float width);
 
 		// Finds the offset for the first visible character when clipping the tail
-		size_t clip_from_right(Canvas &canvas, const std::string &text, float width);
+		size_t clip_from_right(const CanvasPtr &canvas, const std::string &text, float width);
 
 		/// \brief Get the font handle interface
 		///
 		/// For example, use auto handle = dynamic_cast<FontHandle_Win32>(font.get_handle()); if (handle) {...} to obtain a specific interface
 		///
 		/// \return The font handle interface
-		FontHandle *get_handle(Canvas &canvas);
+		FontHandle *get_handle(const CanvasPtr &canvas);
 
 	private:
 		std::shared_ptr<Font_Impl> impl;

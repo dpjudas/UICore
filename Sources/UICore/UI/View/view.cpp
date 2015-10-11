@@ -207,13 +207,13 @@ namespace uicore
 			set_needs_render();
 	}
 
-	Canvas View::get_canvas() const
+	CanvasPtr View::get_canvas() const
 	{
 		const ViewTree *tree = view_tree();
 		if (tree)
 			return tree->get_canvas();
 		else
-			return Canvas();
+			return nullptr;
 	}
 
 	void View::set_needs_render()
@@ -276,7 +276,7 @@ namespace uicore
 		}
 	}
 
-	float View::get_preferred_width(Canvas &canvas)
+	float View::get_preferred_width(const CanvasPtr &canvas)
 	{
 		if (!impl->layout_cache.preferred_width_calculated)
 		{
@@ -286,7 +286,7 @@ namespace uicore
 		return impl->layout_cache.preferred_width;
 	}
 
-	float View::get_preferred_height(Canvas &canvas, float width)
+	float View::get_preferred_height(const CanvasPtr &canvas, float width)
 	{
 		auto it = impl->layout_cache.preferred_height.find(width);
 		if (it != impl->layout_cache.preferred_height.end())
@@ -297,7 +297,7 @@ namespace uicore
 		return height;
 	}
 
-	float View::get_first_baseline_offset(Canvas &canvas, float width)
+	float View::get_first_baseline_offset(const CanvasPtr &canvas, float width)
 	{
 		auto it = impl->layout_cache.first_baseline_offset.find(width);
 		if (it != impl->layout_cache.first_baseline_offset.end())
@@ -308,7 +308,7 @@ namespace uicore
 		return baseline_offset;
 	}
 
-	float View::get_last_baseline_offset(Canvas &canvas, float width)
+	float View::get_last_baseline_offset(const CanvasPtr &canvas, float width)
 	{
 		auto it = impl->layout_cache.last_baseline_offset.find(width);
 		if (it != impl->layout_cache.last_baseline_offset.end())
@@ -319,7 +319,7 @@ namespace uicore
 		return baseline_offset;
 	}
 
-	float View::calculate_preferred_width(Canvas &canvas)
+	float View::calculate_preferred_width(const CanvasPtr &canvas)
 	{
 		if (style_cascade().computed_value("layout").is_keyword("flex") && style_cascade().computed_value("flex-direction").is_keyword("column"))
 			return VBoxLayout::get_preferred_width(canvas, this);
@@ -331,7 +331,7 @@ namespace uicore
 			return style_cascade().computed_value("width").number();
 	}
 
-	float View::calculate_preferred_height(Canvas &canvas, float width)
+	float View::calculate_preferred_height(const CanvasPtr &canvas, float width)
 	{
 		if (style_cascade().computed_value("layout").is_keyword("flex") && style_cascade().computed_value("flex-direction").is_keyword("column"))
 			return VBoxLayout::get_preferred_height(canvas, this, width);
@@ -343,7 +343,7 @@ namespace uicore
 			return style_cascade().computed_value("height").number();
 	}
 
-	float View::calculate_first_baseline_offset(Canvas &canvas, float width)
+	float View::calculate_first_baseline_offset(const CanvasPtr &canvas, float width)
 	{
 		if (style_cascade().computed_value("layout").is_keyword("flex") && style_cascade().computed_value("flex-direction").is_keyword("column"))
 			return VBoxLayout::get_first_baseline_offset(canvas, this, width);
@@ -353,7 +353,7 @@ namespace uicore
 			return 0.0f;
 	}
 
-	float View::calculate_last_baseline_offset(Canvas &canvas, float width)
+	float View::calculate_last_baseline_offset(const CanvasPtr &canvas, float width)
 	{
 		if (style_cascade().computed_value("layout").is_keyword("flex") && style_cascade().computed_value("flex-direction").is_keyword("column"))
 			return VBoxLayout::get_last_baseline_offset(canvas, this, width);
@@ -363,7 +363,7 @@ namespace uicore
 			return 0.0f;
 	}
 
-	void View::layout_subviews(Canvas &canvas)
+	void View::layout_subviews(const CanvasPtr &canvas)
 	{
 		if (style_cascade().computed_value("layout").is_keyword("flex") && style_cascade().computed_value("flex-direction").is_keyword("column"))
 			VBoxLayout::layout_subviews(canvas, this);
@@ -729,25 +729,25 @@ namespace uicore
 
 	/////////////////////////////////////////////////////////////////////////
 
-	void ViewImpl::render(View *self, Canvas &canvas, ViewRenderLayer layer)
+	void ViewImpl::render(View *self, const CanvasPtr &canvas, ViewRenderLayer layer)
 	{
 		if (layer == ViewRenderLayer::background)
 			style_cascade.render_background(canvas, _geometry);
 		else if (layer == ViewRenderLayer::border)
 			style_cascade.render_border(canvas, _geometry);
 
-		Mat4f old_transform = canvas.transform();
+		Mat4f old_transform = canvas->transform();
 		Pointf translate = _geometry.content_pos();
-		canvas.set_transform(old_transform * Mat4f::translate(translate.x, translate.y, 0) * view_transform);
+		canvas->set_transform(old_transform * Mat4f::translate(translate.x, translate.y, 0) * view_transform);
 
 		bool clipped = content_clipped;
 		if (clipped)
 		{
 			// Seems canvas cliprects are always in absolute coordinates - should this be changed?
 			// Note: this code isn't correct for rotated transforms (plus canvas cliprect can only clip AABB)
-			Vec4f tl_point = canvas.transform() * Vec4f(0.0f, 0.0f, 0.0f, 1.0f);
-			Vec4f br_point = canvas.transform() * Vec4f(_geometry.content_width, _geometry.content_height, 0.0f, 1.0f);
-			canvas.push_cliprect(Rectf(std::min(tl_point.x, br_point.x), std::min(tl_point.y, br_point.y), std::max(tl_point.x, br_point.x), std::max(tl_point.y, br_point.y)));
+			Vec4f tl_point = canvas->transform() * Vec4f(0.0f, 0.0f, 0.0f, 1.0f);
+			Vec4f br_point = canvas->transform() * Vec4f(_geometry.content_width, _geometry.content_height, 0.0f, 1.0f);
+			canvas->push_clip(Rectf(std::min(tl_point.x, br_point.x), std::min(tl_point.y, br_point.y), std::max(tl_point.x, br_point.x), std::max(tl_point.y, br_point.y)));
 		}
 
 		if (layer == ViewRenderLayer::content)
@@ -767,22 +767,22 @@ namespace uicore
 
 			if (self->render_exception_encountered())
 			{
-				canvas.set_transform(old_transform * Mat4f::translate(translate.x, translate.y, 0));
+				canvas->set_transform(old_transform * Mat4f::translate(translate.x, translate.y, 0));
 				Path::rect(0.0f, 0.0f, _geometry.content_width, _geometry.content_height).fill(canvas, Colorf(1.0f, 0.2f, 0.2f, 0.5f));
 				Path::line(0.0f, 0.0f, _geometry.content_width, _geometry.content_height).stroke(canvas, Colorf::black);
 				Path::line(_geometry.content_width, 0.0f, 0.0f, _geometry.content_height).stroke(canvas, Colorf::black);
 			}
 		}
 
-		Rectf clip_box = canvas.cliprect();
+		Rectf clip_box = canvas->clip();
 		for (std::shared_ptr<View> &view : _subviews)
 		{
 			if (!view->hidden())
 			{
 				// Note: this code isn't correct for rotated transforms (plus canvas cliprect can only clip AABB)
 				Rect border_box = view->geometry().border_box();
-				Vec4f tl_point = canvas.transform() * Vec4f(border_box.left, border_box.top, 0.0f, 1.0f);
-				Vec4f br_point = canvas.transform() * Vec4f(border_box.right, border_box.bottom, 0.0f, 1.0f);
+				Vec4f tl_point = canvas->transform() * Vec4f(border_box.left, border_box.top, 0.0f, 1.0f);
+				Vec4f br_point = canvas->transform() * Vec4f(border_box.right, border_box.bottom, 0.0f, 1.0f);
 				Rectf transformed_border_box(std::min(tl_point.x, br_point.x), std::min(tl_point.y, br_point.y), std::max(tl_point.x, br_point.x), std::max(tl_point.y, br_point.y));
 				if (clip_box.is_overlapped(transformed_border_box))
 				{
@@ -792,9 +792,9 @@ namespace uicore
 		}
 
 		if (clipped)
-			canvas.pop_cliprect();
+			canvas->pop_clip();
 
-		canvas.set_transform(old_transform);
+		canvas->set_transform(old_transform);
 	}
 
 	void ViewImpl::update_style_cascade() const

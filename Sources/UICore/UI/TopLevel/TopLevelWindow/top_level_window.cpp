@@ -93,7 +93,7 @@ namespace uicore
 		impl->window->hide();
 	}
 
-	Canvas TopLevelWindow::get_canvas() const
+	CanvasPtr TopLevelWindow::get_canvas() const
 	{
 		return impl->canvas;
 	}

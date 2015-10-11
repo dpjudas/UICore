@@ -58,28 +58,28 @@ namespace uicore
 		Font_Impl(FontFamily &new_font_family, const FontDescription &description);
 		~Font_Impl();
 
-		const FontMetrics &get_font_metrics(Canvas &canvas);
+		const FontMetrics &get_font_metrics(const CanvasPtr &canvas);
 
-		int get_character_index(Canvas &canvas, const std::string &text, const Pointf &point);
-		std::vector<Rectf> get_character_indices(Canvas &canvas, const std::string &text);
+		int get_character_index(const CanvasPtr &canvas, const std::string &text, const Pointf &point);
+		std::vector<Rectf> get_character_indices(const CanvasPtr &canvas, const std::string &text);
 
-		GlyphMetrics get_metrics(Canvas &canvas, unsigned int glyph);
+		GlyphMetrics get_metrics(const CanvasPtr &canvas, unsigned int glyph);
 
-		GlyphMetrics measure_text(Canvas &canvas, const std::string &string);
+		GlyphMetrics measure_text(const CanvasPtr &canvas, const std::string &string);
 
-		void draw_text(Canvas &canvas, const Pointf &position, const std::string &text, const Colorf &color);
+		void draw_text(const CanvasPtr &canvas, const Pointf &position, const std::string &text, const Colorf &color);
 
-		void get_glyph_path(Canvas &canvas, unsigned int glyph_index, Path &out_path, GlyphMetrics &out_metrics);
+		void get_glyph_path(const CanvasPtr &canvas, unsigned int glyph_index, Path &out_path, GlyphMetrics &out_metrics);
 
 		void set_height(float value);
 		void set_weight(FontWeight value);
 		void set_line_height(float height);
 		void set_style(FontStyle setting);
 		void set_scalable(float height_threshold);
-		FontHandle *get_handle(Canvas &canvas);
+		FontHandle *get_handle(const CanvasPtr &canvas);
 
 	private:
-		void select_font_family(Canvas &canvas);
+		void select_font_family(const CanvasPtr &canvas);
 
 		FontDescription selected_description;
 		float selected_line_height = 0.0f;

@@ -54,9 +54,9 @@ namespace uicore
 		selected_line_height = description.get_line_height();
 	}
 
-	void Font_Impl::select_font_family(Canvas &canvas)
+	void Font_Impl::select_font_family(const CanvasPtr &canvas)
 	{
-		float pixel_ratio = canvas.gc()->pixel_ratio();
+		float pixel_ratio = canvas->gc()->pixel_ratio();
 		if (pixel_ratio == 0.0f)
 			pixel_ratio = 1.0f;
 
@@ -133,7 +133,7 @@ namespace uicore
 	{
 	}
 
-	int Font_Impl::get_character_index(Canvas &canvas, const std::string &text, const Pointf &point)
+	int Font_Impl::get_character_index(const CanvasPtr &canvas, const std::string &text, const Pointf &point)
 	{
 		select_font_family(canvas);
 
@@ -185,7 +185,7 @@ namespace uicore
 		return -1;	// Not found
 	}
 
-	std::vector<Rectf> Font_Impl::get_character_indices(Canvas &canvas, const std::string &text)
+	std::vector<Rectf> Font_Impl::get_character_indices(const CanvasPtr &canvas, const std::string &text)
 	{
 		select_font_family(canvas);
 		std::vector<Rectf> index_store;
@@ -231,19 +231,19 @@ namespace uicore
 		return index_store;
 	}
 
-	const FontMetrics &Font_Impl::get_font_metrics(Canvas &canvas)
+	const FontMetrics &Font_Impl::get_font_metrics(const CanvasPtr &canvas)
 	{
 		select_font_family(canvas);
 		return selected_metrics;
 	}
 
-	void Font_Impl::get_glyph_path(Canvas &canvas, unsigned int glyph_index, Path &out_path, GlyphMetrics &out_metrics)
+	void Font_Impl::get_glyph_path(const CanvasPtr &canvas, unsigned int glyph_index, Path &out_path, GlyphMetrics &out_metrics)
 	{
 		select_font_family(canvas);
 		return font_engine->load_glyph_path(glyph_index, out_path, out_metrics);
 	}
 
-	FontHandle *Font_Impl::get_handle(Canvas &canvas)
+	FontHandle *Font_Impl::get_handle(const CanvasPtr &canvas)
 	{
 		select_font_family(canvas);
 		if (font_engine)
@@ -251,16 +251,16 @@ namespace uicore
 		return nullptr;
 	}
 
-	void Font_Impl::draw_text(Canvas &canvas, const Pointf &position, const std::string &text, const Colorf &color)
+	void Font_Impl::draw_text(const CanvasPtr &canvas, const Pointf &position, const std::string &text, const Colorf &color)
 	{
 		select_font_family(canvas);
 
 		float line_spacing = std::round(selected_line_height); // TBD: do we want to round this?
-		Pointf pos = canvas.grid_fit(position);
+		Pointf pos = canvas->grid_fit(position);
 		font_draw->draw_text(canvas, pos, text, color, line_spacing);
 	}
 
-	GlyphMetrics Font_Impl::get_metrics(Canvas &canvas, unsigned int glyph)
+	GlyphMetrics Font_Impl::get_metrics(const CanvasPtr &canvas, unsigned int glyph)
 	{
 		select_font_family(canvas);
 		GlyphMetrics metrics = font_draw->get_metrics(canvas, glyph);
@@ -271,7 +271,7 @@ namespace uicore
 	}
 
 
-	GlyphMetrics Font_Impl::measure_text(Canvas &canvas, const std::string &string)
+	GlyphMetrics Font_Impl::measure_text(const CanvasPtr &canvas, const std::string &string)
 	{
 		select_font_family(canvas);
 		GlyphMetrics total_metrics;

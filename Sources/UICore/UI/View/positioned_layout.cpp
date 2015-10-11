@@ -32,7 +32,7 @@
 
 namespace uicore
 {
-	void PositionedLayout::layout_subviews(Canvas &canvas, View *view)
+	void PositionedLayout::layout_subviews(const CanvasPtr &canvas, View *view)
 	{
 		for (const std::shared_ptr<View> &subview : view->subviews())
 		{
@@ -76,7 +76,7 @@ namespace uicore
 		}
 	}
 
-	ViewGeometry PositionedLayout::get_geometry(Canvas &canvas, View *view, const Rectf &containing_box)
+	ViewGeometry PositionedLayout::get_geometry(const CanvasPtr &canvas, View *view, const Rectf &containing_box)
 	{
 		float x = 0.0f;
 		float width = 0.0f;
@@ -149,7 +149,7 @@ namespace uicore
 		return ViewGeometry::from_content_box(view->style_cascade(), Rectf::xywh(x, y, width, height));
 	}
 
-	void PositionedLayout::layout_from_containing_box(Canvas &canvas, View *view, const Rectf &containing_box)
+	void PositionedLayout::layout_from_containing_box(const CanvasPtr &canvas, View *view, const Rectf &containing_box)
 	{
 		view->set_geometry(get_geometry(canvas, view, containing_box));
 		view->layout_subviews(canvas);

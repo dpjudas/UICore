@@ -29,10 +29,12 @@
 #pragma once
 
 #include <array>
+#include <memory>
 
 namespace uicore
 {
 	class Canvas;
+	typedef std::shared_ptr<Canvas> CanvasPtr;
 	class Image;
 	class Path;
 	class Colorf;
@@ -47,7 +49,7 @@ namespace uicore
 	class StyleBackgroundRenderer
 	{
 	public:
-		StyleBackgroundRenderer(Canvas &canvas, const ViewGeometry &geometry, const StyleCascade &style);
+		StyleBackgroundRenderer(const CanvasPtr &canvas, const ViewGeometry &geometry, const StyleCascade &style);
 		void render_background();
 		void render_border();
 
@@ -88,7 +90,7 @@ namespace uicore
 		static std::vector<BrushGradientStop> shadow_blur_stops(const Colorf &shadow_color, float shadow_blur_radius, float start_t);
 		static float mix(float a, float b, float t);
 
-		Canvas &canvas;
+		const CanvasPtr &canvas;
 		const ViewGeometry &geometry;
 		const StyleCascade &style;
 

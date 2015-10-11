@@ -179,7 +179,7 @@ namespace uicore
 		impl->_lock_to_ticks = lock;
 	}
 
-	void SliderView::layout_subviews(Canvas &canvas)
+	void SliderView::layout_subviews(const CanvasPtr &canvas)
 	{
 		View::layout_subviews(canvas);
 

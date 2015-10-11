@@ -28,9 +28,12 @@
 
 #pragma once
 
+#include <memory>
+
 namespace uicore
 {
 	class Canvas;
+	typedef std::shared_ptr<Canvas> CanvasPtr;
 	class Image;
 	class Colorf;
 	class Rectf;
@@ -41,7 +44,7 @@ namespace uicore
 	class StyleBorderImageRenderer
 	{
 	public:
-		StyleBorderImageRenderer(Canvas &canvas, const ViewGeometry &geometry, const StyleCascade &style);
+		StyleBorderImageRenderer(const CanvasPtr &canvas, const ViewGeometry &geometry, const StyleCascade &style);
 		void render();
 
 	private:
@@ -66,7 +69,7 @@ namespace uicore
 		int get_top_slice_value(int image_height) const;
 		int get_bottom_slice_value(int image_height) const;
 
-		Canvas &canvas;
+		const CanvasPtr &canvas;
 		const ViewGeometry &geometry;
 		const StyleCascade &style;
 	};

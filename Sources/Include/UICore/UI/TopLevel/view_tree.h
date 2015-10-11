@@ -54,7 +54,7 @@ namespace uicore
 		virtual DisplayWindowPtr get_display_window() = 0;
 
 		/// Gets the current canvas used to render
-		virtual Canvas get_canvas() const = 0;
+		virtual CanvasPtr get_canvas() const = 0;
 
 		/// Retrieves the root of the view tree
 		const std::shared_ptr<View> &root_view() const;
@@ -86,7 +86,7 @@ namespace uicore
 		void set_focus_view(View *view);
 
 		/// Renders view into the specified canvas
-		void render(Canvas &canvas, const Rectf &margin_box);
+		void render(const CanvasPtr &canvas, const Rectf &margin_box);
 
 		/// Dispatch activation change event to all views
 		void dispatch_activation_change(ActivationChangeType type);

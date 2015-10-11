@@ -45,7 +45,7 @@ namespace uicore
 	public:
 		ScrollBarButtonView(bool render_button_arrows);
 
-		void render_content(Canvas &canvas) override;
+		void render_content(const CanvasPtr &canvas) override;
 		void set_direction(ScrollBarButtonDirection new_dir);
 
 	private:

@@ -45,7 +45,7 @@ namespace uicore
 		static std::string resource_path();
 		static void set_resource_path(const std::string &path);
 
-		static Image image(Canvas &canvas, const std::string &name);
+		static Image image(const CanvasPtr &canvas, const std::string &name);
 		static Font font(const std::string &family, const FontDescription &desc);
 
 		static void set_exception_handler(const std::function<void(const std::exception_ptr &)> &exception_handler);

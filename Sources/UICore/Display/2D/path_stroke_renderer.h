@@ -42,7 +42,7 @@ namespace uicore
 	public:
 		PathStrokeRenderer(const GraphicContextPtr &gc);
 
-		void set_pen(Canvas &canvas, const Pen &pen);
+		void set_pen(const CanvasPtr &canvas, const Pen &pen);
 		void line(float x, float y) override;
 		void end(bool close) override;
 	};

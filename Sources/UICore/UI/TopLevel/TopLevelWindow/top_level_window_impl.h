@@ -42,7 +42,7 @@ namespace uicore
 
 		TopLevelWindow *window_view;
 		DisplayWindowPtr window;
-		Canvas canvas;
+		CanvasPtr canvas;
 		SlotContainer slots;
 
 		std::shared_ptr<View> captured_view;

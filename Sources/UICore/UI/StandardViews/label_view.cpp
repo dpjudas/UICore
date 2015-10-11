@@ -62,7 +62,7 @@ namespace uicore
 	{
 	}
 
-	void LabelView::layout_subviews(Canvas &canvas)
+	void LabelView::layout_subviews(const CanvasPtr &canvas)
 	{
 		View::layout_subviews(canvas);
 		impl->font = style_cascade().get_font();	// Reset the font on new layout
@@ -100,7 +100,7 @@ namespace uicore
 		set_needs_layout();
 	}
 
-	void LabelView::render_content(Canvas &canvas)
+	void LabelView::render_content(const CanvasPtr &canvas)
 	{
 		Font font = impl->get_font(this);
 		FontMetrics font_metrics = font.get_font_metrics(canvas);
@@ -158,7 +158,7 @@ namespace uicore
 		}
 	}
 
-	float LabelView::calculate_preferred_width(Canvas &canvas)
+	float LabelView::calculate_preferred_width(const CanvasPtr &canvas)
 	{
 		if (style_cascade().computed_value("width").is_keyword("auto"))
 		{
@@ -169,7 +169,7 @@ namespace uicore
 			return style_cascade().computed_value("width").number();
 	}
 
-	float LabelView::calculate_preferred_height(Canvas &canvas, float width)
+	float LabelView::calculate_preferred_height(const CanvasPtr &canvas, float width)
 	{
 		if (style_cascade().computed_value("height").is_keyword("auto"))
 		{
@@ -180,13 +180,13 @@ namespace uicore
 			return style_cascade().computed_value("height").number();
 	}
 
-	float LabelView::calculate_first_baseline_offset(Canvas &canvas, float width)
+	float LabelView::calculate_first_baseline_offset(const CanvasPtr &canvas, float width)
 	{
 		Font font = impl->get_font(this);
 		return font.get_font_metrics(canvas).get_baseline_offset();
 	}
 
-	float LabelView::calculate_last_baseline_offset(Canvas &canvas, float width)
+	float LabelView::calculate_last_baseline_offset(const CanvasPtr &canvas, float width)
 	{
 		return get_first_baseline_offset(canvas, width);
 	}

@@ -33,7 +33,7 @@
 
 namespace uicore
 {
-	float VBoxLayout::get_preferred_width(Canvas &canvas, View *view)
+	float VBoxLayout::get_preferred_width(const CanvasPtr &canvas, View *view)
 	{
 		if (!view->style_cascade().computed_value("width").is_keyword("auto"))
 			return view->style_cascade().computed_value("width").number();
@@ -60,7 +60,7 @@ namespace uicore
 		return width;
 	}
 
-	float VBoxLayout::get_preferred_height(Canvas &canvas, View *view, float width)
+	float VBoxLayout::get_preferred_height(const CanvasPtr &canvas, View *view, float width)
 	{
 		if (!view->style_cascade().computed_value("height").is_keyword("auto"))
 			return view->style_cascade().computed_value("height").number();
@@ -123,7 +123,7 @@ namespace uicore
 		return height;
 	}
 
-	float VBoxLayout::get_first_baseline_offset(Canvas &canvas, View *view, float width)
+	float VBoxLayout::get_first_baseline_offset(const CanvasPtr &canvas, View *view, float width)
 	{
 		const auto &subviews = view->subviews();
 		for (const auto & subview : subviews)
@@ -134,7 +134,7 @@ namespace uicore
 		return 0.0f;
 	}
 
-	float VBoxLayout::get_last_baseline_offset(Canvas &canvas, View *view, float width)
+	float VBoxLayout::get_last_baseline_offset(const CanvasPtr &canvas, View *view, float width)
 	{
 		const auto &subviews = view->subviews();
 		for (auto it = subviews.rbegin(); it != subviews.rend(); ++it)
@@ -145,7 +145,7 @@ namespace uicore
 		return 0.0f;
 	}
 
-	void VBoxLayout::layout_subviews(Canvas &canvas, View *view)
+	void VBoxLayout::layout_subviews(const CanvasPtr &canvas, View *view)
 	{
 		// Calculate flex properties:
 

@@ -65,9 +65,9 @@ namespace uicore
 		virtual ~PathCache();
 
 		/// \brief Get a glyph. Returns NULL if the glyph was not found
-		Font_PathGlyph *get_glyph(Canvas &canvas, FontEngine *font_engine, unsigned int glyph);
+		Font_PathGlyph *get_glyph(const CanvasPtr &canvas, FontEngine *font_engine, unsigned int glyph);
 
-		GlyphMetrics get_metrics(FontEngine *font_engine, Canvas &canvas, unsigned int glyph);
+		GlyphMetrics get_metrics(FontEngine *font_engine, const CanvasPtr &canvas, unsigned int glyph);
 
 	private:
 		std::vector<Font_PathGlyph* > glyph_list;

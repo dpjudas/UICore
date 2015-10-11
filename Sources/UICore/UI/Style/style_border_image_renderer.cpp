@@ -39,7 +39,7 @@
 
 namespace uicore
 {
-	StyleBorderImageRenderer::StyleBorderImageRenderer(Canvas &canvas, const ViewGeometry &geometry, const StyleCascade &style) : canvas(canvas), geometry(geometry), style(style)
+	StyleBorderImageRenderer::StyleBorderImageRenderer(const CanvasPtr &canvas, const ViewGeometry &geometry, const StyleCascade &style) : canvas(canvas), geometry(geometry), style(style)
 	{
 	}
 

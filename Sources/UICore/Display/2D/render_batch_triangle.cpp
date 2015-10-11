@@ -45,7 +45,7 @@ namespace uicore
 		vertices = (SpriteVertex *)batch_buffer->buffer;
 	}
 
-	void RenderBatchTriangle::draw_sprite(Canvas &canvas, const Pointf texture_position[4], const Pointf dest_position[4], const Texture2DPtr &texture, const Colorf &color)
+	void RenderBatchTriangle::draw_sprite(const CanvasPtr &canvas, const Pointf texture_position[4], const Pointf dest_position[4], const Texture2DPtr &texture, const Colorf &color)
 	{
 		int texindex = set_batcher_active(canvas, texture);
 
@@ -57,7 +57,7 @@ namespace uicore
 		to_sprite_vertex(texture_position[2], dest_position[2], vertices[position++], texindex, color);
 	}
 
-	void RenderBatchTriangle::fill_triangle(Canvas &canvas, const Vec2f *triangle_positions, const Vec4f *triangle_colors, int num_vertices)
+	void RenderBatchTriangle::fill_triangle(const CanvasPtr &canvas, const Vec2f *triangle_positions, const Vec4f *triangle_colors, int num_vertices)
 	{
 		int texindex = set_batcher_active(canvas, num_vertices);
 
@@ -73,7 +73,7 @@ namespace uicore
 		}
 	}
 
-	void RenderBatchTriangle::fill_triangle(Canvas &canvas, const Vec2f *triangle_positions, const Colorf &color, int num_vertices)
+	void RenderBatchTriangle::fill_triangle(const CanvasPtr &canvas, const Vec2f *triangle_positions, const Colorf &color, int num_vertices)
 	{
 		int texindex = set_batcher_active(canvas, num_vertices);
 
@@ -89,7 +89,7 @@ namespace uicore
 		}
 	}
 
-	void RenderBatchTriangle::fill_triangles(Canvas &canvas, const Vec2f *positions, const Vec2f *texture_positions, int num_vertices, const Texture2DPtr &texture, const Colorf &color)
+	void RenderBatchTriangle::fill_triangles(const CanvasPtr &canvas, const Vec2f *positions, const Vec2f *texture_positions, int num_vertices, const Texture2DPtr &texture, const Colorf &color)
 	{
 		int texindex = set_batcher_active(canvas, texture);
 
@@ -105,7 +105,7 @@ namespace uicore
 
 	}
 
-	void RenderBatchTriangle::fill_triangles(Canvas &canvas, const Vec2f *positions, const Vec2f *texture_positions, int num_vertices, const Texture2DPtr &texture, const Colorf *colors)
+	void RenderBatchTriangle::fill_triangles(const CanvasPtr &canvas, const Vec2f *positions, const Vec2f *texture_positions, int num_vertices, const Texture2DPtr &texture, const Colorf *colors)
 	{
 		int texindex = set_batcher_active(canvas, texture);
 
@@ -128,7 +128,7 @@ namespace uicore
 		v.texindex = texindex;
 	}
 
-	void RenderBatchTriangle::draw_image(Canvas &canvas, const Rectf &src, const Rectf &dest, const Colorf &color, const Texture2DPtr &texture)
+	void RenderBatchTriangle::draw_image(const CanvasPtr &canvas, const Rectf &src, const Rectf &dest, const Colorf &color, const Texture2DPtr &texture)
 	{
 		int texindex = set_batcher_active(canvas, texture);
 
@@ -156,7 +156,7 @@ namespace uicore
 		position += 6;
 	}
 
-	void RenderBatchTriangle::draw_image(Canvas &canvas, const Rectf &src, const Quadf &dest, const Colorf &color, const Texture2DPtr &texture)
+	void RenderBatchTriangle::draw_image(const CanvasPtr &canvas, const Rectf &src, const Quadf &dest, const Colorf &color, const Texture2DPtr &texture)
 	{
 		int texindex = set_batcher_active(canvas, texture);
 
@@ -184,7 +184,7 @@ namespace uicore
 		position += 6;
 	}
 
-	void RenderBatchTriangle::draw_glyph_subpixel(Canvas &canvas, const Rectf &src, const Rectf &dest, const Colorf &color, const Texture2DPtr &texture)
+	void RenderBatchTriangle::draw_glyph_subpixel(const CanvasPtr &canvas, const Rectf &src, const Rectf &dest, const Colorf &color, const Texture2DPtr &texture)
 	{
 		int texindex = set_batcher_active(canvas, texture, true, color);
 
@@ -212,7 +212,7 @@ namespace uicore
 		position += 6;
 	}
 
-	void RenderBatchTriangle::fill(Canvas &canvas, float x1, float y1, float x2, float y2, const Colorf &color)
+	void RenderBatchTriangle::fill(const CanvasPtr &canvas, float x1, float y1, float x2, float y2, const Colorf &color)
 	{
 		int texindex = set_batcher_active(canvas);
 
@@ -241,11 +241,11 @@ namespace uicore
 	}
 
 
-	int RenderBatchTriangle::set_batcher_active(Canvas &canvas, const Texture2DPtr &texture, bool glyph_program, const Colorf &new_constant_color)
+	int RenderBatchTriangle::set_batcher_active(const CanvasPtr &canvas, const Texture2DPtr &texture, bool glyph_program, const Colorf &new_constant_color)
 	{
 		if (use_glyph_program != glyph_program || constant_color != new_constant_color)
 		{
-			canvas.flush();
+			canvas->flush();
 			use_glyph_program = glyph_program;
 			constant_color = new_constant_color;
 		}
@@ -268,45 +268,45 @@ namespace uicore
 
 		if (position == 0 || position + 6 > max_vertices || texindex == -1)
 		{
-			canvas.flush();
+			canvas->flush();
 			texindex = 0;
 			current_textures[texindex] = texture;
 			num_current_textures = 1;
 			tex_sizes[texindex] = Sizef((float)current_textures[texindex]->width(), (float)current_textures[texindex]->height());
 		}
-		canvas.set_batcher(this);
+		canvas->set_batcher(this);
 		return texindex;
 	}
 
-	int RenderBatchTriangle::set_batcher_active(Canvas &canvas)
+	int RenderBatchTriangle::set_batcher_active(const CanvasPtr &canvas)
 	{
 		if (use_glyph_program != false)
 		{
-			canvas.flush();
+			canvas->flush();
 			use_glyph_program = false;
 		}
 
 		if (position == 0 || position + 6 > max_vertices)
-			canvas.flush();
-		canvas.set_batcher(this);
+			canvas->flush();
+		canvas->set_batcher(this);
 		return RenderBatchTriangle::max_textures;
 	}
 
-	int RenderBatchTriangle::set_batcher_active(Canvas &canvas, int num_vertices)
+	int RenderBatchTriangle::set_batcher_active(const CanvasPtr &canvas, int num_vertices)
 	{
 		if (use_glyph_program != false)
 		{
-			canvas.flush();
+			canvas->flush();
 			use_glyph_program = false;
 		}
 
 		if (position + num_vertices > max_vertices)
-			canvas.flush();
+			canvas->flush();
 
 		if (num_vertices > max_vertices)
 			throw Exception("Too many vertices for RenderBatchTriangle");
 
-		canvas.set_batcher(this);
+		canvas->set_batcher(this);
 		return RenderBatchTriangle::max_textures;
 	}
 

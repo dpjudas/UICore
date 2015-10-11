@@ -43,7 +43,7 @@ namespace uicore
 	{
 	}
 
-	void ScrollBarButtonView::render_content(Canvas &canvas)
+	void ScrollBarButtonView::render_content(const CanvasPtr &canvas)
 	{
 		if (!_render_button_arrows)
 			return;

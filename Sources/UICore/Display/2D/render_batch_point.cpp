@@ -39,7 +39,7 @@ namespace uicore
 		vertices = (PointVertex *)batch_buffer->buffer;
 	}
 
-	void RenderBatchPoint::draw_point(Canvas &canvas, Vec2f *line_positions, const Vec4f &point_color, int num_vertices)
+	void RenderBatchPoint::draw_point(const CanvasPtr &canvas, Vec2f *line_positions, const Vec4f &point_color, int num_vertices)
 	{
 		set_batcher_active(canvas, num_vertices);
 
@@ -61,15 +61,15 @@ namespace uicore
 			modelview_projection_matrix.matrix[0 * 4 + 3] * x + modelview_projection_matrix.matrix[1 * 4 + 3] * y + modelview_projection_matrix.matrix[3 * 4 + 3]);
 	}
 
-	void RenderBatchPoint::set_batcher_active(Canvas &canvas, int num_vertices)
+	void RenderBatchPoint::set_batcher_active(const CanvasPtr &canvas, int num_vertices)
 	{
 		if (position + num_vertices > max_vertices)
-			canvas.flush();
+			canvas->flush();
 
 		if (num_vertices > max_vertices)
 			throw Exception("Too many vertices for RenderBatchPoint");
 
-		canvas.set_batcher(this);
+		canvas->set_batcher(this);
 	}
 
 	void RenderBatchPoint::flush(const GraphicContextPtr &gc)

@@ -103,7 +103,7 @@ namespace uicore
 		}
 	}
 
-	void ViewTree::render(Canvas &canvas, const Rectf &margin_box)
+	void ViewTree::render(const CanvasPtr &canvas, const Rectf &margin_box)
 	{
 		View *view = impl->root.get();
 

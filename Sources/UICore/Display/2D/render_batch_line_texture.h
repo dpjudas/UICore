@@ -41,7 +41,7 @@ namespace uicore
 	{
 	public:
 		RenderBatchLineTexture(const GraphicContextPtr &gc, RenderBatchBuffer *batch_buffer);
-		void draw_lines(Canvas &canvas, const Vec2f *line_positions, const Vec2f *texture_positions, int num_vertices, const Texture2DPtr &texture, const Vec4f &line_color);
+		void draw_lines(const CanvasPtr &canvas, const Vec2f *line_positions, const Vec2f *texture_positions, int num_vertices, const Texture2DPtr &texture, const Vec4f &line_color);
 
 	private:
 		struct LineTextureVertex
@@ -52,7 +52,7 @@ namespace uicore
 		};
 
 		inline Vec4f to_position(float x, float y) const;
-		void set_batcher_active(Canvas &canvas, int num_vertices, const Texture2DPtr &texture);
+		void set_batcher_active(const CanvasPtr &canvas, int num_vertices, const Texture2DPtr &texture);
 		void flush(const GraphicContextPtr &gc) override;
 		void matrix_changed(const Mat4f &modelview, const Mat4f &projection, TextureImageYAxis image_yaxis, float pixel_ratio) override;
 

@@ -49,7 +49,7 @@ namespace uicore
 		blend_state = gc->create_blend_state(blend_desc);
 	}
 
-	void PathFillRenderer::set_size(Canvas &canvas, int new_width, int new_height)
+	void PathFillRenderer::set_size(const CanvasPtr &canvas, int new_width, int new_height)
 	{
 		// For simplicity of the code, ensure the mask is always a multiple of mask_block_size
 		new_width = mask_block_size * ((new_width + mask_block_size - 1) / mask_block_size);
@@ -127,7 +127,7 @@ namespace uicore
 		}
 	}
 
-	void PathFillRenderer::fill(Canvas &canvas, PathFillMode mode, const Brush &brush, const Mat4f &transform)
+	void PathFillRenderer::fill(const CanvasPtr &canvas, PathFillMode mode, const Brush &brush, const Mat4f &transform)
 	{
 		if (scanlines.empty()) return;
 
@@ -135,12 +135,12 @@ namespace uicore
 		current_instance_offset = instances.push(canvas, brush, transform);
 		if (!current_instance_offset)
 		{
-			flush(canvas.gc());
+			flush(canvas->gc());
 			initialise_buffers(canvas);
 			current_instance_offset = instances.push(canvas, brush, transform);
 		}
 
-		int max_width = canvas.gc()->width() * antialias_level;
+		int max_width = canvas->gc()->width() * antialias_level;
 
 		int start_y = first_scanline / scanline_block_size * scanline_block_size;
 		int end_y = (last_scanline + scanline_block_size - 1) / scanline_block_size * scanline_block_size;
@@ -154,7 +154,7 @@ namespace uicore
 			{
 				if (vertices.is_full() || mask_blocks.is_full())
 				{
-					flush(canvas.gc());
+					flush(canvas->gc());
 					initialise_buffers(canvas);
 					current_instance_offset = instances.push(canvas, brush, transform);
 				}
@@ -249,11 +249,11 @@ namespace uicore
 		instance_texture.reset();
 	}
 
-	void PathFillRenderer::initialise_buffers(Canvas &canvas)
+	void PathFillRenderer::initialise_buffers(const CanvasPtr &canvas)
 	{
 		if (!mask_texture)
 		{
-			GraphicContextPtr gc = canvas.gc();
+			GraphicContextPtr gc = canvas->gc();
 			mask_texture = batch_buffer->get_texture_r8(gc);
 			mask_buffer = batch_buffer->get_transfer_r8(gc, mask_buffer_id);
 			instance_texture = batch_buffer->get_texture_rgba32f(gc);
@@ -590,7 +590,7 @@ namespace uicore
 	}
 
 	// Return 0 when buffer is full or requires flushing, else it is the instance offset
-	int PathInstanceBuffer::push(Canvas &canvas, const Brush &brush, const Mat4f &transform)
+	int PathInstanceBuffer::push(const CanvasPtr &canvas, const Brush &brush, const Mat4f &transform)
 	{
 		int instance_position;
 		switch (brush.type)
@@ -633,7 +633,7 @@ namespace uicore
 		return instance_position;
 	}
 
-	int PathInstanceBuffer::store_linear(Canvas &canvas, const Brush &brush, const Mat4f &transform)
+	int PathInstanceBuffer::store_linear(const CanvasPtr &canvas, const Brush &brush, const Mat4f &transform)
 	{
 		int num_stops = brush.stops.size();
 		int instance_position = next_position(num_stops * 2 + 3);
@@ -670,7 +670,7 @@ namespace uicore
 		return instance_position;
 	}
 
-	int PathInstanceBuffer::store_radial(Canvas &canvas, const Brush &brush, const Mat4f &transform)
+	int PathInstanceBuffer::store_radial(const CanvasPtr &canvas, const Brush &brush, const Mat4f &transform)
 	{
 		int num_stops = brush.stops.size();
 		int instance_position = next_position(num_stops * 2 + 3);
@@ -703,7 +703,7 @@ namespace uicore
 		return instance_position;
 	}
 
-	int PathInstanceBuffer::store_image(Canvas &canvas, const Brush &brush, const Mat4f &transform)
+	int PathInstanceBuffer::store_image(const CanvasPtr &canvas, const Brush &brush, const Mat4f &transform)
 	{
 		Subtexture subtexture = brush.image.get_texture();
 		if (subtexture.is_null())
@@ -743,7 +743,7 @@ namespace uicore
 		return instance_position;
 	}
 
-	int PathInstanceBuffer::store_solid(Canvas &canvas, const Brush &brush, const Mat4f &transform)
+	int PathInstanceBuffer::store_solid(const CanvasPtr &canvas, const Brush &brush, const Mat4f &transform)
 	{
 		int instance_position = next_position(2);
 		if (!instance_position)

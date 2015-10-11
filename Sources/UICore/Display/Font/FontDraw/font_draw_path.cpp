@@ -51,18 +51,18 @@ namespace uicore
 		scaled_height = new_scaled_height;
 	}
 
-	GlyphMetrics Font_DrawPath::get_metrics(Canvas &canvas, unsigned int glyph)
+	GlyphMetrics Font_DrawPath::get_metrics(const CanvasPtr &canvas, unsigned int glyph)
 	{
 		return path_cache->get_metrics(font_engine, canvas, glyph);
 	}
 
-	void Font_DrawPath::draw_text(Canvas &canvas, const Pointf &position, const std::string &text, const Colorf &color, float line_spacing)
+	void Font_DrawPath::draw_text(const CanvasPtr &canvas, const Pointf &position, const std::string &text, const Colorf &color, float line_spacing)
 	{
 		float offset_x = 0;
 		float offset_y = 0;
 		UTF8_Reader reader(text.data(), text.length());
 
-		const Mat4f original_transform = canvas.transform();
+		const Mat4f original_transform = canvas->transform();
 		uicore::Mat4f scale_matrix = uicore::Mat4f::scale(scaled_height, scaled_height, scaled_height);
 		Brush brush(color);
 		Sizef advance;
@@ -79,7 +79,7 @@ namespace uicore
 				continue;
 			}
 
-			canvas.set_transform(original_transform * Mat4f::translate(position.x + offset_x, position.y + offset_y, 0) * scale_matrix);
+			canvas->set_transform(original_transform * Mat4f::translate(position.x + offset_x, position.y + offset_y, 0) * scale_matrix);
 			Font_PathGlyph *gptr = path_cache->get_glyph(canvas, font_engine, glyph);
 			if (gptr)
 			{
@@ -88,6 +88,6 @@ namespace uicore
 				offset_y += gptr->metrics.advance.height * scaled_height;
 			}
 		}
-		canvas.set_transform(original_transform);
+		canvas->set_transform(original_transform);
 	}
 }

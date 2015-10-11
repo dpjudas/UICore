@@ -109,20 +109,20 @@ namespace uicore
 		void set_last_baseline_offset(float baseline_offset);
 		void remove_subview(const std::shared_ptr<View> &view);
 
-		void render_content(Canvas &canvas, float width);
-		void layout_views(Canvas &canvas, float width);
+		void render_content(const CanvasPtr &canvas, float width);
+		void layout_views(const CanvasPtr &canvas, float width);
 
-		float get_preferred_width(Canvas &canvas);
-		float get_preferred_height(Canvas &canvas, float width);
-		float get_first_baseline_offset(Canvas &canvas, float width);
-		float get_last_baseline_offset(Canvas &canvas, float width);
+		float get_preferred_width(const CanvasPtr &canvas);
+		float get_preferred_height(const CanvasPtr &canvas, float width);
+		float get_first_baseline_offset(const CanvasPtr &canvas, float width);
+		float get_last_baseline_offset(const CanvasPtr &canvas, float width);
 
 		void set_text_alignment(TextAlignment alignment);
 
 		mutable std::map<std::string, std::shared_ptr<Style>> text_classes;
 
 	private:
-		SpanLineMetrics find_line_metrics(Canvas &canvas, size_t obj_start, size_t text_start, float width);
+		SpanLineMetrics find_line_metrics(const CanvasPtr &canvas, size_t obj_start, size_t text_start, float width);
 
 		std::string text;
 		std::vector<SpanObject> objects;

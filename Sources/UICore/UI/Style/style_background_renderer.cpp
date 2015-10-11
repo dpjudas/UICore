@@ -42,7 +42,7 @@
 
 namespace uicore
 {
-	StyleBackgroundRenderer::StyleBackgroundRenderer(Canvas &canvas, const ViewGeometry &geometry, const StyleCascade &style) : canvas(canvas), geometry(geometry), style(style)
+	StyleBackgroundRenderer::StyleBackgroundRenderer(const CanvasPtr &canvas, const ViewGeometry &geometry, const StyleCascade &style) : canvas(canvas), geometry(geometry), style(style)
 	{
 	}
 
@@ -105,7 +105,7 @@ namespace uicore
 			Rectf origin_box = get_origin_box(index);
 			Sizef image_size = get_image_size(index, image, origin_box);
 
-			//canvas.push_cliprect(clip_box);
+			//canvas->push_cliprect(clip_box);
 
 			StyleGetValue repeat_x = get_layer_repeat_x(index);
 			StyleGetValue repeat_y = get_layer_repeat_y(index);
@@ -160,7 +160,7 @@ namespace uicore
 					break;
 			}
 
-			//canvas.pop_cliprect();
+			//canvas->pop_cliprect();
 		}
 	}
 

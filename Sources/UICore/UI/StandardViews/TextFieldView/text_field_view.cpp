@@ -332,7 +332,7 @@ namespace uicore
 		return impl->sig_enter_pressed;
 	}
 
-	void TextFieldView::render_content(Canvas &canvas)
+	void TextFieldView::render_content(const CanvasPtr &canvas)
 	{
 		std::string txt_before = impl->get_text_before_selection();
 		std::string txt_selected = impl->get_selected_text();
@@ -349,7 +349,7 @@ namespace uicore
 
 		float advance_before = font.measure_text(canvas, txt_before).advance.width;
 		float advance_selected = font.measure_text(canvas, txt_selected).advance.width;
-		float cursor_advance = canvas.grid_fit({ font.measure_text(canvas, impl->text.substr(0, impl->cursor_pos)).advance.width, 0.0f }).x;
+		float cursor_advance = canvas->grid_fit({ font.measure_text(canvas, impl->text.substr(0, impl->cursor_pos)).advance.width, 0.0f }).x;
 
 		FontMetrics font_metrics = font.get_font_metrics(canvas);
 		float baseline = font_metrics.get_baseline_offset();
@@ -378,7 +378,7 @@ namespace uicore
 
 		if (impl->cursor_blink_visible)
 		{
-			auto cursor_pos = canvas.grid_fit({ cursor_advance - impl->scroll_pos, top_y });
+			auto cursor_pos = canvas->grid_fit({ cursor_advance - impl->scroll_pos, top_y });
 			Path::rect(cursor_pos.x, cursor_pos.y, 1.0f, bottom_y - top_y).fill(canvas, Brush(color));
 		}
 
@@ -391,7 +391,7 @@ namespace uicore
 		}
 	}
 
-	float TextFieldView::calculate_preferred_width(Canvas &canvas)
+	float TextFieldView::calculate_preferred_width(const CanvasPtr &canvas)
 	{
 		if (style_cascade().computed_value("width").is_keyword("auto"))
 		{
@@ -402,7 +402,7 @@ namespace uicore
 			return style_cascade().computed_value("width").number();
 	}
 
-	float TextFieldView::calculate_preferred_height(Canvas &canvas, float width)
+	float TextFieldView::calculate_preferred_height(const CanvasPtr &canvas, float width)
 	{
 		if (style_cascade().computed_value("height").is_keyword("auto"))
 		{
@@ -413,13 +413,13 @@ namespace uicore
 			return style_cascade().computed_value("height").number();
 	}
 
-	float TextFieldView::calculate_first_baseline_offset(Canvas &canvas, float width)
+	float TextFieldView::calculate_first_baseline_offset(const CanvasPtr &canvas, float width)
 	{
 		Font font = impl->get_font();
 		return font.get_font_metrics(canvas).get_baseline_offset();
 	}
 
-	float TextFieldView::calculate_last_baseline_offset(Canvas &canvas, float width)
+	float TextFieldView::calculate_last_baseline_offset(const CanvasPtr &canvas, float width)
 	{
 		return get_first_baseline_offset(canvas, width);
 	}
@@ -1016,7 +1016,7 @@ namespace uicore
 		return last_measured_rects.size();
 	}
 
-	Size TextFieldViewImpl::get_visual_text_size(Canvas &canvas, int pos, int npos)
+	Size TextFieldViewImpl::get_visual_text_size(const CanvasPtr &canvas, int pos, int npos)
 	{
 		Font font = get_font();
 

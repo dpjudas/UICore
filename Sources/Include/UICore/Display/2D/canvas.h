@@ -24,8 +24,6 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    Harry Storbacka
-**    Kenneth Gangstoe
 **    Mark Page
 */
 
@@ -35,7 +33,6 @@
 
 namespace uicore
 {
-	class Canvas_Impl;
 	class GraphicContext;
 	class RenderBatcher;
 	class Colorf;
@@ -50,125 +47,84 @@ namespace uicore
 	class Canvas
 	{
 	public:
-		/// \brief Constructs a null instance.
-		Canvas();
+		/// \brief Constructs a canvas
+		static std::shared_ptr<Canvas> create(const DisplayWindowPtr &window);
 
-		/// \brief Constructs a Canvas
-		explicit Canvas(const DisplayWindowPtr &window);
+		/// \brief Returns the graphic context associated with this canvas
+		virtual const GraphicContextPtr &gc() const = 0;
 
-		~Canvas();
+		/// \brief Returns the transform matrix
+		virtual const Mat4f &transform() const = 0;
 
-		/// \brief Returns true if this object is invalid.
-		bool is_null() const { return !impl; }
+		/// \brief Returns the inverse of the transform matrix
+		virtual const Mat4f &inverse_transform() const = 0;
 
-		/// \brief Throw an exception if this object is invalid.
-		void throw_if_null() const;
-
-		/// \brief Get gc
-		///
-		/// \return Graphic Context
-		const GraphicContextPtr &gc() const;
-
-		/// \brief Returns the current effective transform matrix.
-		const Mat4f &transform() const;
-
-		/// \brief Returns the inverse of the current effective transform matrix
-		const Mat4f &inverse_transform() const;
-
-		/// \brief Returns the current effective projection matrix.
-		const Mat4f &projection() const;
+		/// \brief Returns the current effective projection matrix
+		virtual const Mat4f &projection() const = 0;
 
 		/// \brief Returns the current width of the context.
-		inline float width() const { return gc()->dip_width(); }
+		virtual float width() const { return gc()->dip_width(); }
 
 		/// \brief Returns the current height of the context.
-		inline float height() const { return gc()->dip_height(); }
+		virtual float height() const { return gc()->dip_height(); }
 
 		/// \brief Returns the current size of the context.
-		inline Sizef size() const { return gc()->dip_size(); }
+		virtual Sizef size() const { return gc()->dip_size(); }
 
 		/// \brief Returns the current clipping rectangle
-		Rectf cliprect() const;
-
-		/// \brief Return the content of the read buffer into a pixel buffer.
-		PixelBufferPtr pixeldata(const Rect& rect, TextureFormat texture_format = tf_rgba8, bool clamp = true);
-
-		/// \brief Return the content of the read buffer into a pixel buffer.
-		PixelBufferPtr pixeldata(TextureFormat texture_format = tf_rgba8, bool clamp = true);
+		virtual Rectf clip() const;
 
 		/// Retrieves the display pixel ratio of the context.
 		/// \seealso Resolution Independence
-		float pixel_ratio() const { return gc()->pixel_ratio(); }
+		virtual float pixel_ratio() const { return gc()->pixel_ratio(); }
 
 		/// \brief Set active rasterizer state
-		void set_rasterizer_state(const RasterizerStatePtr &state);
+		virtual void set_rasterizer_state(const RasterizerStatePtr &state) = 0;
 
 		/// \brief Set active blend state
-		void set_blend_state(const BlendStatePtr &state, const Colorf &blend_color = Colorf::white, unsigned int sample_mask = 0xffffffff);
-
-		/// \brief Set active depth stencil state
-		void set_depth_stencil_state(const DepthStencilStatePtr &state, int stencil_ref = 0);
-
-		/// \brief Set active rasterizer state
-		void reset_rasterizer_state();
-
-		/// \brief Set active blend state
-		void reset_blend_state();
-
-		/// \brief Set active depth stencil state
-		void reset_depth_stencil_state();
+		virtual void set_blend_state(const BlendStatePtr &state, const Colorf &blend_color = Colorf::white, unsigned int sample_mask = 0xffffffff) = 0;
 
 		/// \brief Set the current clipping rectangle.
-		void set_cliprect(const Rectf &rect);
+		virtual void set_clip(const Rectf &rect) = 0;
 
 		/// \brief Push current clipping rectangle to stack.
 		///
 		/// If a rectangle is passed, it afterwards sets clipping
 		/// rectangle to the union of the current rectangle and the passed
 		/// rectangle.
-		void push_cliprect(const Rectf &rect);
-
-		/// \brief Push cliprect
-		void push_cliprect();
+		virtual void push_clip(const Rectf &rect) = 0;
+		virtual void push_clip() = 0;
 
 		/// \brief Pop current clipping rectangle from the stack.
-		void pop_cliprect();
+		virtual void pop_clip() = 0;
 
-		/// \brief Removes the set clipping rectangle and empties the cliprect stack.
-		void reset_cliprect();
+		/// \brief Removes any active clipping rectangle and empties the clip stack.
+		virtual void reset_clip() = 0;
 
 		/// \brief Clears the whole context using the specified color.
-		void clear(const Colorf &color = Colorf::black);
+		virtual void clear(const Colorf &color = Colorf::black) = 0;
 
 		/// \brief Set active program object to the standard program specified.
-		void set_program_object(StandardProgram standard_program);
+		virtual void set_program_object(StandardProgram standard_program) = 0;
 
 		/// \brief Specifies which render batcher is to be currently active
 		///
 		/// If the render batcher is already active, nothing happens. If a different render batcher
 		/// is currently active, it is flushed before the new batcher is made active.
-		void set_batcher(RenderBatcher *batcher);
+		virtual void set_batcher(RenderBatcher *batcher) = 0;
 
 		/// \brief Sets the transform matrix to a new matrix.
-		void set_transform(const Mat4f &matrix);
+		virtual void set_transform(const Mat4f &matrix) = 0;
 
 		/// \brief Multiplies the passed matrix onto the transform matrix.
-		void mult_transform(const Mat4f &matrix);
+		void mult_transform(const Mat4f &matrix) { set_transform(transform() * matrix); }
 
 		/// \brief Flushes the render batcher currently active.
-		void flush();
+		virtual void flush() = 0;
 
 		/// \brief Snaps the point to the nearest pixel corner
-		Pointf grid_fit(const Pointf &pos);
-
-	private:
-		std::shared_ptr<Canvas_Impl> impl;
-
-		friend class Image;
-		friend class Font_Impl;
-		friend class Font_DrawSubPixel;
-		friend class Font_DrawFlat;
-		friend class Font_DrawScaled;
-		friend class Path;
+		virtual Pointf grid_fit(const Pointf &pos) = 0;
 	};
+
+	typedef std::shared_ptr<Canvas> CanvasPtr;
 }

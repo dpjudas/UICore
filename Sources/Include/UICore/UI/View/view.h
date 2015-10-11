@@ -47,6 +47,7 @@ namespace uicore
 	class Style;
 	class StyleCascade;
 	class Canvas;
+	typedef std::shared_ptr<Canvas> CanvasPtr;
 	class ActivationChangeEvent;
 	class CloseEvent;
 	class FocusChangeEvent;
@@ -136,7 +137,7 @@ namespace uicore
 		/// Gets the current canvas used to render this view
 		///
 		/// This function may return a null canvas if the view does not have a canvas attached to it yet.
-		Canvas get_canvas() const;
+		CanvasPtr get_canvas() const;
 
 		/// Signals this view needs to be rendered again
 		void set_needs_render();
@@ -162,19 +163,19 @@ namespace uicore
 		void set_content_clipped(bool clipped);
 
 		/// Calculates the preferred width of this view
-		float get_preferred_width(Canvas &canvas);
+		float get_preferred_width(const CanvasPtr &canvas);
 
 		/// Calculates the preferred height of this view
-		float get_preferred_height(Canvas &canvas, float width);
+		float get_preferred_height(const CanvasPtr &canvas, float width);
 
 		/// Calculates the offset to the first baseline
-		float get_first_baseline_offset(Canvas &canvas, float width);
+		float get_first_baseline_offset(const CanvasPtr &canvas, float width);
 
 		/// Calculates the offset to the last baseline
-		float get_last_baseline_offset(Canvas &canvas, float width);
+		float get_last_baseline_offset(const CanvasPtr &canvas, float width);
 
 		/// Sets the view geometry for all subviews of this view
-		virtual void layout_subviews(Canvas &canvas);
+		virtual void layout_subviews(const CanvasPtr &canvas);
 
 		/// Tree in view hierachy
 		const ViewTree *view_tree() const;
@@ -290,20 +291,20 @@ namespace uicore
 		static void dispatch_event(View *target, EventUI *e, bool no_propagation = false);
 
 		/// Calculates the preferred width of this view
-		virtual float calculate_preferred_width(Canvas &canvas);
+		virtual float calculate_preferred_width(const CanvasPtr &canvas);
 
 		/// Calculates the preferred height of this view
-		virtual float calculate_preferred_height(Canvas &canvas, float width);
+		virtual float calculate_preferred_height(const CanvasPtr &canvas, float width);
 
 		/// Calculates the offset to the first baseline
-		virtual float calculate_first_baseline_offset(Canvas &canvas, float width);
+		virtual float calculate_first_baseline_offset(const CanvasPtr &canvas, float width);
 
 		/// Calculates the offset to the last baseline
-		virtual float calculate_last_baseline_offset(Canvas &canvas, float width);
+		virtual float calculate_last_baseline_offset(const CanvasPtr &canvas, float width);
 
 	protected:
 		/// Renders the content of a view
-		virtual void render_content(Canvas &canvas) { }
+		virtual void render_content(const CanvasPtr &canvas) { }
 
 		/// Child view was added to this view
 		virtual void subview_added(const std::shared_ptr<View> &view) { }

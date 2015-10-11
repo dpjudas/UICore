@@ -62,13 +62,13 @@ namespace uicore
 		Pointf content_offset() const;
 		void set_content_offset(const Pointf &offset, bool animated = false);
 		
-		void layout_subviews(Canvas &canvas) override;
+		void layout_subviews(const CanvasPtr &canvas) override;
 
 	protected:
-		float calculate_preferred_width(Canvas &canvas) override;
-		float calculate_preferred_height(Canvas &canvas, float width) override;
-		float calculate_first_baseline_offset(Canvas &canvas, float width) override;
-		float calculate_last_baseline_offset(Canvas &canvas, float width) override;
+		float calculate_preferred_width(const CanvasPtr &canvas) override;
+		float calculate_preferred_height(const CanvasPtr &canvas, float width) override;
+		float calculate_first_baseline_offset(const CanvasPtr &canvas, float width) override;
+		float calculate_last_baseline_offset(const CanvasPtr &canvas, float width) override;
 		
 	private:
 		std::unique_ptr<ScrollViewImpl> impl;
