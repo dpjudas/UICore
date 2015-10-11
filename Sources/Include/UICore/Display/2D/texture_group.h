@@ -30,15 +30,13 @@
 #pragma once
 
 #include <memory>
+#include "../../Core/Math/size.h"
 #include "../../Core/Math/rect.h"
 
 namespace uicore
 {
-	class Size;
-	class Rect;
 	class Texture2D;
 	typedef std::shared_ptr<Texture2D> Texture2DPtr;
-	class TextureGroup_Impl;
 	class GraphicContext;
 	typedef std::shared_ptr<GraphicContext> GraphicContextPtr;
 
@@ -70,59 +68,46 @@ namespace uicore
 	class TextureGroup
 	{
 	public:
-
-		/// \brief Constructs a null instance
-		TextureGroup();
-
 		/// \brief Constructs a texture group
-		TextureGroup(const Size &texture_sizes);
-
-		~TextureGroup();
-
-		/// \brief Returns true if this object is invalid.
-		bool is_null() const { return !impl; }
-
-		/// \brief Throw an exception if this object is invalid.
-		void throw_if_null() const;
+		static std::shared_ptr<TextureGroup> create(const Size &texture_size);
 
 		/// \brief Returns the amount of sub-textures allocated in group.
-		int get_subtexture_count() const;
+		virtual int subtexture_count() const = 0;
 
 		/// \brief Returns the amount of sub-textures for a specific texture index.
-		int get_subtexture_count(unsigned int texture_index) const;
+		virtual int subtexture_count(unsigned int texture_index) const = 0;
 
 		/// \brief Returns the amount of textures used by group.
-		int get_texture_count() const;
+		virtual int texture_count() const = 0;
 
 		/// \brief Returns the texture allocation policy.
-		TextureGroupAllocationPolicy get_texture_allocation_policy() const;
+		virtual TextureGroupAllocationPolicy allocation_policy() const = 0;
 
 		/// \brief Returns the size of the textures used by this texture group.
-		Size get_texture_sizes() const;
+		virtual Size get_texture_sizes() const = 0;
 
 		/// \brief Returns the textures.
-		std::vector<Texture2DPtr> get_textures() const;
+		virtual std::vector<Texture2DPtr> textures() const = 0;
 
 		/// \brief Allocate space for another sub texture.
-		TextureGroupImage add(const GraphicContextPtr &context, const Size &size);
+		virtual TextureGroupImage add(const GraphicContextPtr &context, const Size &size) = 0;
 
 		/// \brief Deallocate space, from a previously allocated texture
 		///
 		/// Warning - It is advised to set TextureGroupAllocationPolicy to search_previous_textures
 		/// if using this function.  Also be aware of texture fragmentation.
 		/// Empty textures are not removed.
-		void remove(const TextureGroupImage &subtexture);
+		virtual void remove(const TextureGroupImage &subtexture) = 0;
 
 		/// \brief Set the texture allocation policy.
-		void set_texture_allocation_policy(TextureGroupAllocationPolicy policy);
+		virtual void set_allocation_policy(TextureGroupAllocationPolicy policy) = 0;
 
 		/// \brief Insert an existing texture into the texture group
 		///
 		/// \param texture = Texture to insert
 		/// \param texture_rect = Free space within the texture that the texture group can use
-		void insert_texture(const Texture2DPtr &texture, const Rect &texture_rect);
-
-	private:
-		std::shared_ptr<TextureGroup_Impl> impl;
+		virtual void insert_texture(const Texture2DPtr &texture, const Rect &texture_rect) = 0;
 	};
+
+	typedef std::shared_ptr<TextureGroup> TextureGroupPtr;
 }

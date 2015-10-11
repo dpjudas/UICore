@@ -36,10 +36,24 @@ namespace uicore
 {
 	class GraphicContext;
 
-	/// \brief Texture group implementation interface.
-	class TextureGroup_Impl
+	class TextureGroupImpl : public TextureGroup
 	{
 	public:
+		TextureGroupImpl(const Size &texture_sizes);
+		~TextureGroupImpl();
+
+		int subtexture_count() const override;
+		int subtexture_count(unsigned int texture_index) const override;
+		int texture_count() const override;
+		TextureGroupAllocationPolicy allocation_policy() const override { return texture_allocation_policy; }
+		Size get_texture_sizes() const override;
+		std::vector<Texture2DPtr> textures() const override;
+		TextureGroupImage add(const GraphicContextPtr &context, const Size &size) override;
+		void remove(const TextureGroupImage &subtexture) override;
+		void set_allocation_policy(TextureGroupAllocationPolicy policy) override { texture_allocation_policy = policy; }
+		void insert_texture(const Texture2DPtr &texture, const Rect &texture_rect) override;
+
+	private:
 		class Node
 		{
 		public:
@@ -68,25 +82,13 @@ namespace uicore
 			Node node;
 		};
 
-		TextureGroup_Impl(const Size &texture_sizes);
-		~TextureGroup_Impl();
-
-		int get_subtexture_count() const;
-		int get_subtexture_count(unsigned int texture_index) const;
-		void insert_texture(const Texture2DPtr &texture, const Rect &texture_rect);
-		void remove(const TextureGroupImage &subtexture);
-
-		std::vector<Texture2DPtr> get_textures() const;
-
 		TextureGroupImage add_new_node(const GraphicContextPtr &context, const Size &texture_size);
+		RootNode *add_new_root(const GraphicContextPtr &context, const Size &texture_size);
 
 		std::vector<RootNode *> root_nodes;
 
 		Size initial_texture_size;
-		TextureGroupAllocationPolicy texture_allocation_policy;
-
-	private:
-		RootNode *add_new_root(const GraphicContextPtr &context, const Size &texture_size);
+		TextureGroupAllocationPolicy texture_allocation_policy = TextureGroupAllocationPolicy::create_new_texture;
 
 		RootNode *active_root;
 		int next_id;

@@ -91,11 +91,11 @@ namespace uicore
 		void insert_glyph(const CanvasPtr &canvas, unsigned int glyph, TextureGroupImage &sub_texture, const Pointf &offset, const Sizef &size, const GlyphMetrics &glyph_metrics);
 		void insert_glyph(const CanvasPtr &canvas, FontPixelBuffer &pb);
 
-		void set_texture_group(TextureGroup &new_texture_group);
+		void set_texture_group(const TextureGroupPtr &new_texture_group);
 
 	private:
 		std::vector<std::unique_ptr<Font_TextureGlyph>> glyph_list;
-		TextureGroup texture_group;
+		TextureGroupPtr texture_group;
 
 		static const int glyph_border_size = 1;
 	};

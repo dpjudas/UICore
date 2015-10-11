@@ -85,7 +85,7 @@ namespace uicore
 		void font_face_load(const FontDescription &desc, DataBufferPtr &font_databuffer, float pixel_ratio);
 
 		std::string family_name;
-		TextureGroup texture_group;		// Shared texture group between glyph cache's
+		TextureGroupPtr texture_group;		// Shared texture group between glyph cache's
 		std::vector<Font_Cache> font_cache;
 		std::vector<FontFamily_Definition> font_definitions;
 	};

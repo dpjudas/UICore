@@ -73,7 +73,7 @@ namespace uicore
 		FontMetrics font_metrics;
 	};
 
-	FontFamily_Impl::FontFamily_Impl(const std::string &family_name) : family_name(family_name), texture_group(Size(256, 256))
+	FontFamily_Impl::FontFamily_Impl(const std::string &family_name) : family_name(family_name), texture_group(TextureGroup::create(Size(256, 256)))
 	{
 	}
 

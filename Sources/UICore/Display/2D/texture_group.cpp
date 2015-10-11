@@ -32,73 +32,8 @@
 
 namespace uicore
 {
-	TextureGroup::TextureGroup()
+	std::shared_ptr<TextureGroup> TextureGroup::create(const Size &texture_size)
 	{
-	}
-
-	TextureGroup::TextureGroup(const Size &texture_sizes)
-		: impl(std::make_shared<TextureGroup_Impl>(texture_sizes))
-	{
-		set_texture_allocation_policy(TextureGroupAllocationPolicy::create_new_texture);
-	}
-
-	TextureGroup::~TextureGroup()
-	{
-	}
-
-	void TextureGroup::throw_if_null() const
-	{
-		if (!impl)
-			throw Exception("TextureGroup is null");
-	}
-
-	int TextureGroup::get_subtexture_count() const
-	{
-		return impl->get_subtexture_count();
-	}
-
-	int TextureGroup::get_subtexture_count(unsigned int texture_index) const
-	{
-		return impl->get_subtexture_count(texture_index);
-	}
-
-	int TextureGroup::get_texture_count() const
-	{
-		return impl->root_nodes.size();
-	}
-
-	TextureGroupAllocationPolicy TextureGroup::get_texture_allocation_policy() const
-	{
-		return impl->texture_allocation_policy;
-	}
-
-	Size TextureGroup::get_texture_sizes() const
-	{
-		return impl->initial_texture_size;
-	}
-
-	std::vector<Texture2DPtr> TextureGroup::get_textures() const
-	{
-		return impl->get_textures();
-	}
-
-	TextureGroupImage TextureGroup::add(const GraphicContextPtr &context, const Size &size)
-	{
-		return impl->add_new_node(context, size);
-	}
-
-	void TextureGroup::remove(const TextureGroupImage &subtexture)
-	{
-		impl->remove(subtexture);
-	}
-
-	void TextureGroup::set_texture_allocation_policy(TextureGroupAllocationPolicy policy)
-	{
-		impl->texture_allocation_policy = policy;
-	}
-
-	void TextureGroup::insert_texture(const Texture2DPtr &texture, const Rect &texture_rect)
-	{
-		impl->insert_texture(texture, texture_rect);
+		return std::make_shared<TextureGroupImpl>(texture_size);
 	}
 }

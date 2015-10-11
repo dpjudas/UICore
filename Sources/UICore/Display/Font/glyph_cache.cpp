@@ -79,7 +79,7 @@ namespace uicore
 		return nullptr;
 	}
 
-	void GlyphCache::set_texture_group(TextureGroup &new_texture_group)
+	void GlyphCache::set_texture_group(const TextureGroupPtr &new_texture_group)
 	{
 		texture_group = new_texture_group;
 	}
@@ -106,7 +106,7 @@ namespace uicore
 		{
 			PixelBufferPtr buffer_with_border = PixelBuffer::add_border(pb.buffer, glyph_border_size, pb.buffer_rect);
 			GraphicContextPtr gc = canvas->gc();
-			TextureGroupImage sub_texture = texture_group.add(gc, buffer_with_border->size());
+			TextureGroupImage sub_texture = texture_group->add(gc, buffer_with_border->size());
 			font_glyph->texture = sub_texture.texture();
 			font_glyph->geometry = Rect(sub_texture.geometry().left + glyph_border_size, sub_texture.geometry().top + glyph_border_size, pb.buffer_rect.get_size());
 			font_glyph->size = pb.size;
