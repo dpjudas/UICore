@@ -39,7 +39,7 @@ namespace uicore
 	TextureGroup::TextureGroup(const Size &texture_sizes)
 		: impl(std::make_shared<TextureGroup_Impl>(texture_sizes))
 	{
-		set_texture_allocation_policy(create_new_texture);
+		set_texture_allocation_policy(TextureGroupAllocationPolicy::create_new_texture);
 	}
 
 	TextureGroup::~TextureGroup()
@@ -67,7 +67,7 @@ namespace uicore
 		return impl->root_nodes.size();
 	}
 
-	TextureGroup::TextureAllocationPolicy TextureGroup::get_texture_allocation_policy() const
+	TextureGroupAllocationPolicy TextureGroup::get_texture_allocation_policy() const
 	{
 		return impl->texture_allocation_policy;
 	}
@@ -92,7 +92,7 @@ namespace uicore
 		impl->remove(subtexture);
 	}
 
-	void TextureGroup::set_texture_allocation_policy(TextureAllocationPolicy policy)
+	void TextureGroup::set_texture_allocation_policy(TextureGroupAllocationPolicy policy)
 	{
 		impl->texture_allocation_policy = policy;
 	}

@@ -83,7 +83,7 @@ namespace uicore
 		std::vector<RootNode *> root_nodes;
 
 		Size initial_texture_size;
-		TextureGroup::TextureAllocationPolicy texture_allocation_policy;
+		TextureGroupAllocationPolicy texture_allocation_policy;
 
 	private:
 		RootNode *add_new_root(const GraphicContextPtr &context, const Size &texture_size);

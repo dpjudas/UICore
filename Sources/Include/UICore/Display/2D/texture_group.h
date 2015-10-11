@@ -59,16 +59,17 @@ namespace uicore
 		Rect _geometry;
 	};
 
+	/// \brief TextureGroup allocation policy.
+	enum class TextureGroupAllocationPolicy
+	{
+		create_new_texture,
+		search_previous_textures
+	};
+
 	/// \brief Dynamic atlas texture class
 	class TextureGroup
 	{
 	public:
-		/// \brief Texture allocation policy.
-		enum TextureAllocationPolicy
-		{
-			create_new_texture,
-			search_previous_textures
-		};
 
 		/// \brief Constructs a null instance
 		TextureGroup();
@@ -94,7 +95,7 @@ namespace uicore
 		int get_texture_count() const;
 
 		/// \brief Returns the texture allocation policy.
-		TextureAllocationPolicy get_texture_allocation_policy() const;
+		TextureGroupAllocationPolicy get_texture_allocation_policy() const;
 
 		/// \brief Returns the size of the textures used by this texture group.
 		Size get_texture_sizes() const;
@@ -107,13 +108,13 @@ namespace uicore
 
 		/// \brief Deallocate space, from a previously allocated texture
 		///
-		/// Warning - It is advised to set TextureAllocationPolicy to search_previous_textures
+		/// Warning - It is advised to set TextureGroupAllocationPolicy to search_previous_textures
 		/// if using this function.  Also be aware of texture fragmentation.
 		/// Empty textures are not removed.
 		void remove(const TextureGroupImage &subtexture);
 
 		/// \brief Set the texture allocation policy.
-		void set_texture_allocation_policy(TextureAllocationPolicy policy);
+		void set_texture_allocation_policy(TextureGroupAllocationPolicy policy);
 
 		/// \brief Insert an existing texture into the texture group
 		///

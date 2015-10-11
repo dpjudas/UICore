@@ -104,7 +104,7 @@ namespace uicore
 		if (node == nullptr) // Couldn't find a fit in current active texture
 		{
 			// Search previous textures if policy says so
-			if (texture_allocation_policy == TextureGroup::search_previous_textures)
+			if (texture_allocation_policy == TextureGroupAllocationPolicy::search_previous_textures)
 			{
 				std::vector<RootNode *>::size_type index, size;
 				size = root_nodes.size();
