@@ -38,7 +38,7 @@ namespace uicore
 	SpanLayout_Impl::SpanLayout_Impl()
 		: cursor_visible(false), cursor_pos(0), cursor_overwrite_mode(false), cursor_color(Colorf::black),
 		sel_start(0), sel_end(0), sel_foreground(Colorf::white), sel_background(Colorf::darkslateblue),
-		alignment(span_left), is_ellipsis_draw(false)
+		alignment(SpanAlign::left), is_ellipsis_draw(false)
 	{
 	}
 
@@ -362,10 +362,10 @@ namespace uicore
 
 		switch (alignment)
 		{
-		case span_right: align_right(max_width); break;
-		case span_center: align_center(max_width); break;
-		case span_justify: align_justify(max_width); break;
-		case span_left:
+		case SpanAlign::right: align_right(max_width); break;
+		case SpanAlign::center: align_center(max_width); break;
+		case SpanAlign::justify: align_justify(max_width); break;
+		case SpanAlign::left:
 		default: break;
 		}
 	}

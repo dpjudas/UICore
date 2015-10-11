@@ -135,12 +135,12 @@ namespace uicore
 		current_instance_offset = instances.push(canvas, brush, transform);
 		if (!current_instance_offset)
 		{
-			flush(canvas);
+			flush(canvas.gc());
 			initialise_buffers(canvas);
 			current_instance_offset = instances.push(canvas, brush, transform);
 		}
 
-		int max_width = canvas.get_gc()->width() * antialias_level;
+		int max_width = canvas.gc()->width() * antialias_level;
 
 		int start_y = first_scanline / scanline_block_size * scanline_block_size;
 		int end_y = (last_scanline + scanline_block_size - 1) / scanline_block_size * scanline_block_size;
@@ -154,7 +154,7 @@ namespace uicore
 			{
 				if (vertices.is_full() || mask_blocks.is_full())
 				{
-					flush(canvas);
+					flush(canvas.gc());
 					initialise_buffers(canvas);
 					current_instance_offset = instances.push(canvas, brush, transform);
 				}
@@ -253,7 +253,7 @@ namespace uicore
 	{
 		if (!mask_texture)
 		{
-			GraphicContextPtr gc = canvas.get_gc();
+			GraphicContextPtr gc = canvas.gc();
 			mask_texture = batch_buffer->get_texture_r8(gc);
 			mask_buffer = batch_buffer->get_transfer_r8(gc, mask_buffer_id);
 			instance_texture = batch_buffer->get_texture_rgba32f(gc);

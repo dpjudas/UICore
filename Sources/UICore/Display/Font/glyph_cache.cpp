@@ -107,7 +107,7 @@ namespace uicore
 		if (!pb.empty_buffer)
 		{
 			PixelBufferPtr buffer_with_border = PixelBuffer::add_border(pb.buffer, glyph_border_size, pb.buffer_rect);
-			GraphicContextPtr gc = canvas.get_gc();
+			GraphicContextPtr gc = canvas.gc();
 			Subtexture sub_texture = texture_group.add(gc, buffer_with_border->size());
 			font_glyph->texture = sub_texture.get_texture();
 			font_glyph->geometry = Rect(sub_texture.get_geometry().left + glyph_border_size, sub_texture.get_geometry().top + glyph_border_size, pb.buffer_rect.get_size());

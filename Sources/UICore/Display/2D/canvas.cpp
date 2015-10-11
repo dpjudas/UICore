@@ -64,80 +64,80 @@ namespace uicore
 			throw Exception("Canvas is null");
 	}
 
-	const GraphicContextPtr &Canvas::get_gc() const
+	const GraphicContextPtr &Canvas::gc() const
 	{
-		return impl->get_gc();
+		return impl->gc();
 	}
 
-	const Mat4f &Canvas::get_transform() const
+	const Mat4f &Canvas::transform() const
 	{
-		return impl->get_transform();
+		return impl->transform();
 	}
 
-	Mat4f &Canvas::get_inverse_transform()
+	Mat4f &Canvas::inverse_transform()
 	{
-		return impl->get_inverse_transform();
+		return impl->inverse_transform();
 	}
 
-	const Mat4f &Canvas::get_projection() const
+	const Mat4f &Canvas::projection() const
 	{
-		return impl->get_projection();
+		return impl->projection();
 	}
 
-	Rectf Canvas::get_cliprect() const
+	Rectf Canvas::cliprect() const
 	{
 		if (!impl->cliprects.empty())
 			return impl->cliprects.back();
 
-		return Rectf(0, 0, get_width(), get_height());
+		return Rectf(0, 0, width(), height());
 	}
 
-	PixelBufferPtr Canvas::get_pixeldata(const Rect &rect2, TextureFormat texture_format, bool clamp)
+	PixelBufferPtr Canvas::pixeldata(const Rect &rect2, TextureFormat texture_format, bool clamp)
 	{
 		flush();
-		return get_gc()->pixeldata(rect2, texture_format, clamp);
+		return gc()->pixeldata(rect2, texture_format, clamp);
 	}
 
-	PixelBufferPtr Canvas::get_pixeldata(TextureFormat texture_format, bool clamp)
+	PixelBufferPtr Canvas::pixeldata(TextureFormat texture_format, bool clamp)
 	{
 		flush();
-		return get_gc()->pixeldata(texture_format, clamp);
+		return gc()->pixeldata(texture_format, clamp);
 	}
 
 	void Canvas::set_rasterizer_state(const RasterizerStatePtr &state)
 	{
 		flush();
-		get_gc()->set_rasterizer_state(state);
+		gc()->set_rasterizer_state(state);
 	}
 
 	void Canvas::set_blend_state(const BlendStatePtr &state, const Colorf &blend_color, unsigned int sample_mask)
 	{
 		flush();
-		get_gc()->set_blend_state(state, blend_color, sample_mask);
+		gc()->set_blend_state(state, blend_color, sample_mask);
 	}
 
 	void Canvas::set_depth_stencil_state(const DepthStencilStatePtr &state, int stencil_ref)
 	{
 		flush();
-		get_gc()->set_depth_stencil_state(state, stencil_ref);
+		gc()->set_depth_stencil_state(state, stencil_ref);
 	}
 
 	void Canvas::reset_rasterizer_state()
 	{
 		flush();
-		get_gc()->reset_rasterizer_state();
+		gc()->reset_rasterizer_state();
 	}
 
 	void Canvas::reset_blend_state()
 	{
 		flush();
-		get_gc()->reset_blend_state();
+		gc()->reset_blend_state();
 	}
 
 	void Canvas::reset_depth_stencil_state()
 	{
 		flush();
-		get_gc()->reset_depth_stencil_state();
+		gc()->reset_depth_stencil_state();
 	}
 
 	void Canvas::set_cliprect(const Rectf &rect)
@@ -179,7 +179,7 @@ namespace uicore
 	void Canvas::set_program_object(StandardProgram standard_program)
 	{
 		flush();
-		get_gc()->set_program_object(standard_program);
+		gc()->set_program_object(standard_program);
 	}
 
 	void Canvas::set_batcher(RenderBatcher *batcher)
@@ -199,16 +199,16 @@ namespace uicore
 
 	void Canvas::mult_transform(const Mat4f &matrix)
 	{
-		impl->set_transform(get_transform() * matrix);
+		impl->set_transform(transform() * matrix);
 	}
 
 	Pointf Canvas::grid_fit(const Pointf &pos)
 	{
-		float pixel_ratio = get_gc()->pixel_ratio();
-		Vec4f world_pos = get_transform() * Vec4f(pos.x, pos.y, 0.0f, 1.0f);
+		float pixel_ratio = gc()->pixel_ratio();
+		Vec4f world_pos = transform() * Vec4f(pos.x, pos.y, 0.0f, 1.0f);
 		world_pos.x = std::round(world_pos.x * pixel_ratio) / pixel_ratio;
 		world_pos.y = std::round(world_pos.y * pixel_ratio) / pixel_ratio;
-		Vec4f object_pos = get_inverse_transform() * world_pos;
+		Vec4f object_pos = inverse_transform() * world_pos;
 		return Pointf(object_pos.x, object_pos.y);
 	}
 }

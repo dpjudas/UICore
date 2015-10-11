@@ -62,7 +62,7 @@ namespace uicore
 		float offset_y = 0;
 		UTF8_Reader reader(text.data(), text.length());
 
-		const Mat4f original_transform = canvas.get_transform();
+		const Mat4f original_transform = canvas.transform();
 		uicore::Mat4f scale_matrix = uicore::Mat4f::scale(scaled_height, scaled_height, scaled_height);
 		Brush brush(color);
 		Sizef advance;

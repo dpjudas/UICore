@@ -44,10 +44,10 @@ namespace uicore
 
 	TextureWindow_Impl::TextureWindow_Impl(TextureWindow *view, Canvas &canvas) : window_view(view), canvas(canvas)
 	{
-		canvas_rect = canvas.get_size();
+		canvas_rect = canvas.size();
 		BlendStateDescription blend_desc;
 		blend_desc.enable_blending(false);
-		opaque_blend = canvas.get_gc()->create_blend_state(blend_desc);
+		opaque_blend = canvas.gc()->create_blend_state(blend_desc);
 	}
 
 	void TextureWindow_Impl::set_window(const DisplayWindowPtr &window, bool enable_automatic_events, const Mat4f &new_transform_mouse_matrix)

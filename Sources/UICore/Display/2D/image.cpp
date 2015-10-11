@@ -107,8 +107,8 @@ namespace uicore
 	Image::Image(Canvas &canvas, const PixelBufferPtr &pb, const Rect &rect, float pixel_ratio)
 		: impl(std::make_shared<Image_Impl>())
 	{
-		impl->texture = Texture2D::create(canvas, pb->width(), pb->height(), pb->format());
-		impl->texture->set_subimage(canvas, 0, 0, pb, rect);
+		impl->texture = Texture2D::create(canvas.gc(), pb->width(), pb->height(), pb->format());
+		impl->texture->set_subimage(canvas.gc(), 0, 0, pb, rect);
 		impl->texture_rect = Rect(0, 0, pb->width(), pb->height());
 		impl->pixel_ratio = pixel_ratio;
 	}
@@ -132,7 +132,7 @@ namespace uicore
 	Image::Image(Canvas &canvas, const std::string &filename, const ImageImportDescription &import_desc, float pixel_ratio)
 		: impl(std::make_shared<Image_Impl>())
 	{
-		impl->texture = Texture2D::create(canvas, filename, import_desc);
+		impl->texture = Texture2D::create(canvas.gc(), filename, import_desc);
 		impl->texture_rect = impl->texture->size();
 		impl->pixel_ratio = pixel_ratio;
 	}
@@ -306,6 +306,6 @@ namespace uicore
 
 	void Image::set_subimage(Canvas &canvas, int x, int y, const PixelBufferPtr &image, const Rect &src_rect, int level)
 	{
-		impl->texture->set_subimage(canvas, x, y, image, src_rect, level);
+		impl->texture->set_subimage(canvas.gc(), x, y, image, src_rect, level);
 	}
 }

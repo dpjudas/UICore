@@ -42,12 +42,12 @@ namespace uicore
 	{
 		current_window = canvas->current_window;
 		batcher = canvas->batcher;		// Share the batcher resources
-		setup(canvas->get_gc());
+		setup(canvas->gc());
 	}
 
 	void Canvas_Impl::init(Canvas_Impl *canvas, const FrameBufferPtr &framebuffer)
 	{
-		GraphicContextPtr gc = canvas->get_gc();
+		GraphicContextPtr gc = canvas->gc();
 		gc->set_frame_buffer(framebuffer);
 		gc->set_viewport(gc->size(), y_axis_top_down);
 		batcher = canvas->batcher;		// Share the batcher resources
@@ -62,25 +62,25 @@ namespace uicore
 
 	void Canvas_Impl::setup(const GraphicContextPtr &new_gc)
 	{
-		gc = new_gc;
+		_gc = new_gc;
 
 		if (current_window)
 		{
 			sc.connect(current_window->sig_window_flip(), bind_member(this, &Canvas_Impl::on_window_flip));
 		}
 
-		gc_clip_z_range = gc->clip_z_range();
+		gc_clip_z_range = _gc->clip_z_range();
 		canvas_inverse_transform = canvas_transform = Mat4f::identity();
 		canvas_inverse_transform_set = true;
 
-		if (!gc->write_frame_buffer())	// No framebuffer attached to canvas
+		if (!_gc->write_frame_buffer())	// No framebuffer attached to canvas
 		{
 			canvas_y_axis = y_axis_top_down;
-			sc.connect(static_cast<GraphicContextImpl*>(gc.get())->sig_window_resized(), bind_member(this, &Canvas_Impl::on_window_resized));
+			sc.connect(static_cast<GraphicContextImpl*>(_gc.get())->sig_window_resized(), bind_member(this, &Canvas_Impl::on_window_resized));
 		}
 		else
 		{
-			if (gc->texture_image_y_axis() == y_axis_bottom_up)
+			if (_gc->texture_image_y_axis() == y_axis_bottom_up)
 			{
 				canvas_y_axis = y_axis_bottom_up;
 			}
@@ -94,14 +94,14 @@ namespace uicore
 
 		if (batcher.is_null())
 		{
-			batcher = CanvasBatcher(gc);
+			batcher = CanvasBatcher(_gc);
 		}
 
 	}
 
 	Canvas_Impl::~Canvas_Impl()
 	{
-		if (gc)
+		if (_gc)
 			flush();
 	}
 
@@ -112,21 +112,21 @@ namespace uicore
 
 	void Canvas_Impl::update_batcher_matrix()
 	{
-		batcher.update_batcher_matrix(gc, canvas_transform, canvas_projection, canvas_y_axis);
+		batcher.update_batcher_matrix(_gc, canvas_transform, canvas_projection, canvas_y_axis);
 	}
 
 	void Canvas_Impl::set_batcher(Canvas &canvas, RenderBatcher *new_batcher)
 	{
-		if (batcher.set_batcher(canvas, new_batcher))
+		if (batcher.set_batcher(canvas.gc(), new_batcher))
 			update_batcher_matrix();
 	}
 
 	void Canvas_Impl::calculate_map_mode_matrices()
 	{
 		Mat4f matrix;
-		Mat4f pixel_scaling_matrix = Mat4f::scale(gc->pixel_ratio(), gc->pixel_ratio(), 1.0f);
+		Mat4f pixel_scaling_matrix = Mat4f::scale(_gc->pixel_ratio(), _gc->pixel_ratio(), 1.0f);
 
-		MapMode mode = (canvas_y_axis == y_axis_bottom_up) ? get_top_down_map_mode() : canvas_map_mode;
+		MapMode mode = (canvas_y_axis == y_axis_bottom_up) ? top_down_map_mode() : canvas_map_mode;
 		switch (mode)
 		{
 		default:
@@ -148,7 +148,7 @@ namespace uicore
 		}
 	}
 
-	MapMode Canvas_Impl::get_top_down_map_mode() const
+	MapMode Canvas_Impl::top_down_map_mode() const
 	{
 		switch (canvas_map_mode)
 		{
@@ -166,12 +166,12 @@ namespace uicore
 		update_batcher_matrix();
 	}
 
-	const Mat4f &Canvas_Impl::get_transform() const
+	const Mat4f &Canvas_Impl::transform() const
 	{
 		return canvas_transform;
 	}
 
-	Mat4f &Canvas_Impl::get_inverse_transform()
+	Mat4f &Canvas_Impl::inverse_transform()
 	{
 		if (!canvas_inverse_transform_set)
 		{
@@ -181,7 +181,7 @@ namespace uicore
 		return canvas_inverse_transform;
 	}
 
-	const Mat4f &Canvas_Impl::get_projection() const
+	const Mat4f &Canvas_Impl::projection() const
 	{
 		return canvas_projection;
 	}
@@ -200,7 +200,7 @@ namespace uicore
 
 	void Canvas_Impl::update_viewport_size()
 	{
-		Rectf size(gc->size());
+		Rectf size(gc()->size());
 		if (size != viewport_rect)
 		{
 			viewport_rect = size;
@@ -210,14 +210,14 @@ namespace uicore
 
 	void Canvas_Impl::set_viewport(const Rectf &viewport)
 	{
-		viewport_rect = viewport * (1.0f * gc->pixel_ratio());
+		viewport_rect = viewport * (1.0f * gc()->pixel_ratio());
 		calculate_map_mode_matrices();
-		gc->set_viewport(viewport_rect, y_axis_top_down);
+		gc()->set_viewport(viewport_rect, y_axis_top_down);
 	}
 
 	void Canvas_Impl::clear(const Colorf &color)
 	{
-		gc->clear(color);
+		gc()->clear(color);
 	}
 
 	void Canvas_Impl::on_window_resized(const Size &size)
@@ -232,13 +232,13 @@ namespace uicore
 
 		// Grid-fitted, display pixel ratio scaled clipping rect
 		Rect recti{
-			static_cast<int>(std::round(rect.left * gc->pixel_ratio())),
-			static_cast<int>(std::round(rect.top * gc->pixel_ratio())),
-			static_cast<int>(std::round(rect.right * gc->pixel_ratio())),
-			static_cast<int>(std::round(rect.bottom * gc->pixel_ratio()))
+			static_cast<int>(std::round(rect.left * gc()->pixel_ratio())),
+			static_cast<int>(std::round(rect.top * gc()->pixel_ratio())),
+			static_cast<int>(std::round(rect.right * gc()->pixel_ratio())),
+			static_cast<int>(std::round(rect.bottom * gc()->pixel_ratio()))
 		};
 
-		gc->set_scissor(recti, canvas_y_axis ? y_axis_top_down : y_axis_bottom_up);
+		gc()->set_scissor(recti, canvas_y_axis ? y_axis_top_down : y_axis_bottom_up);
 	}
 
 	void Canvas_Impl::set_cliprect(const Rectf &rect)
@@ -270,7 +270,7 @@ namespace uicore
 	{
 		if (cliprects.empty())
 		{
-			cliprects.push_back(gc->size());
+			cliprects.push_back(gc()->size());
 		}
 		else
 		{
@@ -295,16 +295,16 @@ namespace uicore
 	void Canvas_Impl::reset_cliprect()
 	{
 		cliprects.clear();
-		gc->reset_scissor();
+		gc()->reset_scissor();
 	}
 
-	void Canvas_Impl::get_texture_coords(const Vec2f *triangles, int num_vertex, const Texture2DPtr &texture, const Rect &texture_rect, std::vector<Vec2f> &out_texture_positions)
+	void Canvas_Impl::texture_coords(const Vec2f *triangles, int num_vertex, const Texture2DPtr &texture, const Rect &texture_rect, std::vector<Vec2f> &out_texture_positions)
 	{
 		out_texture_positions.clear();
 		out_texture_positions.reserve(num_vertex);
 		if (num_vertex)
 		{
-			Rectf bounding_box = get_triangles_bounding_box(triangles, num_vertex);
+			Rectf bounding_box = triangles_bounding_box(triangles, num_vertex);
 			Sizef bounding_box_size = bounding_box.get_size();
 			if (bounding_box_size.width <= 0.0f)
 				bounding_box_size.width = 1.0f;
@@ -332,7 +332,7 @@ namespace uicore
 		}
 	}
 
-	Rectf Canvas_Impl::get_triangles_bounding_box(const Vec2f *triangles, int num_vertex)
+	Rectf Canvas_Impl::triangles_bounding_box(const Vec2f *triangles, int num_vertex)
 	{
 		Rectf bounding_box;
 		if (num_vertex)

@@ -67,42 +67,40 @@ namespace uicore
 		/// \brief Get gc
 		///
 		/// \return Graphic Context
-		const GraphicContextPtr &get_gc() const;
+		const GraphicContextPtr &gc() const;
 
 		/// \brief Returns the current effective transform matrix.
-		const Mat4f &get_transform() const;
+		const Mat4f &transform() const;
 
 		/// \brief Returns the inverse of the current effective transform matrix
 		///
 		/// This is cached
-		Mat4f &get_inverse_transform();
+		Mat4f &inverse_transform();
 
 		/// \brief Returns the current effective projection matrix.
-		const Mat4f &get_projection() const;
-
-		operator const GraphicContextPtr &() const { return get_gc(); }
+		const Mat4f &projection() const;
 
 		/// \brief Returns the current width of the context.
-		inline float get_width() const { return get_gc()->dip_width(); }
+		inline float width() const { return gc()->dip_width(); }
 
 		/// \brief Returns the current height of the context.
-		inline float get_height() const { return get_gc()->dip_height(); }
+		inline float height() const { return gc()->dip_height(); }
 
 		/// \brief Returns the current size of the context.
-		inline Sizef get_size() const { return get_gc()->dip_size(); }
+		inline Sizef size() const { return gc()->dip_size(); }
 
 		/// \brief Returns the current clipping rectangle
-		Rectf get_cliprect() const;
+		Rectf cliprect() const;
 
 		/// \brief Return the content of the read buffer into a pixel buffer.
-		PixelBufferPtr get_pixeldata(const Rect& rect, TextureFormat texture_format = tf_rgba8, bool clamp = true);
+		PixelBufferPtr pixeldata(const Rect& rect, TextureFormat texture_format = tf_rgba8, bool clamp = true);
 
 		/// \brief Return the content of the read buffer into a pixel buffer.
-		PixelBufferPtr get_pixeldata(TextureFormat texture_format = tf_rgba8, bool clamp = true);
+		PixelBufferPtr pixeldata(TextureFormat texture_format = tf_rgba8, bool clamp = true);
 
 		/// Retrieves the display pixel ratio of the context.
 		/// \seealso Resolution Independence
-		float get_pixel_ratio() const { return get_gc()->pixel_ratio(); }
+		float pixel_ratio() const { return gc()->pixel_ratio(); }
 
 		/// \brief Set active rasterizer state
 		void set_rasterizer_state(const RasterizerStatePtr &state);

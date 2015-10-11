@@ -736,7 +736,7 @@ namespace uicore
 		else if (layer == ViewRenderLayer::border)
 			style_cascade.render_border(canvas, _geometry);
 
-		Mat4f old_transform = canvas.get_transform();
+		Mat4f old_transform = canvas.transform();
 		Pointf translate = _geometry.content_pos();
 		canvas.set_transform(old_transform * Mat4f::translate(translate.x, translate.y, 0) * view_transform);
 
@@ -745,8 +745,8 @@ namespace uicore
 		{
 			// Seems canvas cliprects are always in absolute coordinates - should this be changed?
 			// Note: this code isn't correct for rotated transforms (plus canvas cliprect can only clip AABB)
-			Vec4f tl_point = canvas.get_transform() * Vec4f(0.0f, 0.0f, 0.0f, 1.0f);
-			Vec4f br_point = canvas.get_transform() * Vec4f(_geometry.content_width, _geometry.content_height, 0.0f, 1.0f);
+			Vec4f tl_point = canvas.transform() * Vec4f(0.0f, 0.0f, 0.0f, 1.0f);
+			Vec4f br_point = canvas.transform() * Vec4f(_geometry.content_width, _geometry.content_height, 0.0f, 1.0f);
 			canvas.push_cliprect(Rectf(std::min(tl_point.x, br_point.x), std::min(tl_point.y, br_point.y), std::max(tl_point.x, br_point.x), std::max(tl_point.y, br_point.y)));
 		}
 
@@ -774,15 +774,15 @@ namespace uicore
 			}
 		}
 
-		Rectf clip_box = canvas.get_cliprect();
+		Rectf clip_box = canvas.cliprect();
 		for (std::shared_ptr<View> &view : _subviews)
 		{
 			if (!view->hidden())
 			{
 				// Note: this code isn't correct for rotated transforms (plus canvas cliprect can only clip AABB)
 				Rect border_box = view->geometry().border_box();
-				Vec4f tl_point = canvas.get_transform() * Vec4f(border_box.left, border_box.top, 0.0f, 1.0f);
-				Vec4f br_point = canvas.get_transform() * Vec4f(border_box.right, border_box.bottom, 0.0f, 1.0f);
+				Vec4f tl_point = canvas.transform() * Vec4f(border_box.left, border_box.top, 0.0f, 1.0f);
+				Vec4f br_point = canvas.transform() * Vec4f(border_box.right, border_box.bottom, 0.0f, 1.0f);
 				Rectf transformed_border_box(std::min(tl_point.x, br_point.x), std::min(tl_point.y, br_point.y), std::max(tl_point.x, br_point.x), std::max(tl_point.y, br_point.y));
 				if (clip_box.is_overlapped(transformed_border_box))
 				{

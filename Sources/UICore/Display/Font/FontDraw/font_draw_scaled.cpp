@@ -63,7 +63,7 @@ namespace uicore
 		UTF8_Reader reader(text.data(), text.length());
 		RenderBatchTriangle *batcher = canvas.impl->batcher.get_triangle_batcher();
 
-		const Mat4f original_transform = canvas.get_transform();
+		const Mat4f original_transform = canvas.transform();
 		uicore::Mat4f scale_matrix = uicore::Mat4f::scale(scaled_height, scaled_height, scaled_height);
 		Sizef advance;
 

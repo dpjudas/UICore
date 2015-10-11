@@ -45,12 +45,12 @@ namespace uicore
 	class Canvas;
 
 	/// \brief Span Align
-	enum SpanAlign
+	enum class SpanAlign
 	{
-		span_left,
-		span_right,
-		span_center,
-		span_justify
+		left,
+		right,
+		center,
+		justify
 	};
 
 	/// \brief Span layout class

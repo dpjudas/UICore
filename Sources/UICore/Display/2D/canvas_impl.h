@@ -72,20 +72,20 @@ namespace uicore
 		void pop_cliprect();
 		void reset_cliprect();
 
-		const GraphicContextPtr &get_gc() const { return gc; }
+		const GraphicContextPtr &gc() const { return _gc; }
 
 		void set_transform(const Mat4f &matrix);
-		const Mat4f &get_transform() const;
-		Mat4f &get_inverse_transform();
-		const Mat4f &get_projection() const;
+		const Mat4f &transform() const;
+		Mat4f &inverse_transform();
+		const Mat4f &projection() const;
 
 		void set_map_mode(MapMode map_mode);
 		void set_user_projection(const Mat4f &projection);
 		void update_viewport_size();
 		void set_viewport(const Rectf &viewport);
 
-		static Rectf get_triangles_bounding_box(const Vec2f *triangles, int num_vertex);
-		static void get_texture_coords(const Vec2f *triangles, int num_vertex, const Texture2DPtr &texture, const Rect &texture_rect, std::vector<Vec2f> &out_texture_positions);
+		static Rectf triangles_bounding_box(const Vec2f *triangles, int num_vertex);
+		static void texture_coords(const Vec2f *triangles, int num_vertex, const Texture2DPtr &texture, const Rect &texture_rect, std::vector<Vec2f> &out_texture_positions);
 
 		std::vector<Rectf> cliprects;
 		CanvasBatcher batcher;
@@ -93,13 +93,13 @@ namespace uicore
 	private:
 		void setup(const GraphicContextPtr &new_gc);
 		void calculate_map_mode_matrices();
-		MapMode get_top_down_map_mode() const;
+		MapMode top_down_map_mode() const;
 		void on_window_resized(const Size &size);
 		void update_batcher_matrix();
 		void write_cliprect(const Rectf &rect);
 		void on_window_flip();
 
-		GraphicContextPtr gc;
+		GraphicContextPtr _gc;
 		SlotContainer sc;
 
 		Mat4f canvas_transform;
