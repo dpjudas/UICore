@@ -29,19 +29,26 @@
 
 #pragma once
 
-#include "UICore/Display/Render/graphic_context.h"
+#include "../../Core/Math/mat4.h"
+#include "../../Core/Math/mat3.h"
+#include "../../Core/Math/point.h"
+#include "../../Core/Math/size.h"
+#include "../../Core/Math/rect.h"
+#include "../../Core/Math/color.h"
 
 namespace uicore
 {
-	class GraphicContext;
-	class RenderBatcher;
-	class Colorf;
-	class Pointf;
 	class DisplayWindow;
 	typedef std::shared_ptr<DisplayWindow> DisplayWindowPtr;
+	class GraphicContext;
+	typedef std::shared_ptr<GraphicContext> GraphicContextPtr;
+	class BlendState;
+	typedef std::shared_ptr<BlendState> BlendStatePtr;
+	enum StandardProgram;
 	class Path;
 	class Pen;
 	class Brush;
+	class RenderBatcher;
 
 	/// \brief 2D Graphics Canvas
 	class Canvas
@@ -63,23 +70,20 @@ namespace uicore
 		virtual const Mat4f &projection() const = 0;
 
 		/// \brief Returns the current width of the context.
-		virtual float width() const { return gc()->dip_width(); }
+		virtual float width() const = 0;
 
 		/// \brief Returns the current height of the context.
-		virtual float height() const { return gc()->dip_height(); }
+		virtual float height() const = 0;
 
 		/// \brief Returns the current size of the context.
-		virtual Sizef size() const { return gc()->dip_size(); }
+		virtual Sizef size() const = 0;
 
 		/// \brief Returns the current clipping rectangle
-		virtual Rectf clip() const;
+		virtual Rectf clip() const = 0;
 
 		/// Retrieves the display pixel ratio of the context.
 		/// \seealso Resolution Independence
-		virtual float pixel_ratio() const { return gc()->pixel_ratio(); }
-
-		/// \brief Set active rasterizer state
-		virtual void set_rasterizer_state(const RasterizerStatePtr &state) = 0;
+		virtual float pixel_ratio() const = 0;
 
 		/// \brief Set active blend state
 		virtual void set_blend_state(const BlendStatePtr &state, const Colorf &blend_color = Colorf::white, unsigned int sample_mask = 0xffffffff) = 0;

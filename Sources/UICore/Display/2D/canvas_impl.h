@@ -55,6 +55,11 @@ namespace uicore
 	public:
 		CanvasImpl(const DisplayWindowPtr &window);
 
+		float width() const override { return gc()->dip_width(); }
+		float height() const override { return gc()->dip_height(); }
+		Sizef size() const override { return gc()->dip_size(); }
+		float pixel_ratio() const override { return gc()->pixel_ratio(); }
+
 		void clear(const Colorf &color) override;
 
 		void flush() override;
@@ -85,12 +90,6 @@ namespace uicore
 		{
 			flush();
 			gc()->set_program_object(standard_program);
-		}
-
-		void set_rasterizer_state(const RasterizerStatePtr &state) override
-		{
-			flush();
-			gc()->set_rasterizer_state(state);
 		}
 
 		void set_blend_state(const BlendStatePtr &state, const Colorf &blend_color, unsigned int sample_mask) override
