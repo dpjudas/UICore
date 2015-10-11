@@ -35,31 +35,28 @@
 
 namespace uicore
 {
-	SpanLayout_Impl::SpanLayout_Impl()
-		: cursor_visible(false), cursor_pos(0), cursor_overwrite_mode(false), cursor_color(Colorf::black),
-		sel_start(0), sel_end(0), sel_foreground(Colorf::white), sel_background(Colorf::darkslateblue),
-		alignment(SpanAlign::left), is_ellipsis_draw(false)
+	SpanLayoutImpl::SpanLayoutImpl()
 	{
 	}
 
-	SpanLayout_Impl::~SpanLayout_Impl()
+	SpanLayoutImpl::~SpanLayoutImpl()
 	{
 		clear();
 	}
 
-	void SpanLayout_Impl::clear()
+	void SpanLayoutImpl::clear()
 	{
 		objects.clear();
 		text.clear();
 		lines.clear();
 	}
 
-	std::vector<Rect> SpanLayout_Impl::get_rect_by_id(int id) const
+	std::vector<Rectf> SpanLayoutImpl::rect_by_id(int id) const
 	{
-		std::vector<Rect> segment_rects;
+		std::vector<Rectf> segment_rects;
 
-		int x = position.x;
-		int y = position.y;
+		float x = position.x;
+		float y = position.y;
 		for (auto & elem : lines)
 		{
 			const Line &line = elem;
@@ -68,7 +65,7 @@ namespace uicore
 				const LineSegment &segment = line.segments[segment_index];
 				if (segment.id == id)
 				{
-					segment_rects.push_back(Rect(x + segment.x_position, y, segment.width, y + line.height));
+					segment_rects.push_back(Rectf(x + segment.x_position, y, segment.width, y + line.height));
 				}
 			}
 			y += line.height;
@@ -77,10 +74,10 @@ namespace uicore
 		return segment_rects;
 	}
 
-	void SpanLayout_Impl::draw_layout(const CanvasPtr &canvas)
+	void SpanLayoutImpl::draw_layout(const CanvasPtr &canvas)
 	{
-		int x = position.x;
-		int y = position.y;
+		float x = position.x;
+		float y = position.y;
 		for (std::vector<Line>::size_type line_index = 0; line_index < lines.size(); line_index++)
 		{
 			Line &line = lines[line_index];
@@ -108,8 +105,8 @@ namespace uicore
 				{
 					if (segment.type == object_text)
 					{
-						int cursor_x = x + segment.x_position + segment.font.measure_text(canvas, text.substr(segment.start, segment.end - segment.start)).bbox_size.width;
-						int cursor_width = 1;
+						float cursor_x = x + segment.x_position + segment.font.measure_text(canvas, text.substr(segment.start, segment.end - segment.start)).bbox_size.width;
+						float cursor_width = 1.0f;
 						Path::rect(cursor_x, y + line.ascender - segment.ascender, cursor_x + cursor_width, y + line.ascender + segment.descender).fill(canvas, cursor_color);
 					}
 				}
@@ -119,7 +116,7 @@ namespace uicore
 		}
 	}
 
-	void SpanLayout_Impl::draw_layout_ellipsis(const CanvasPtr &canvas, const Rect &content_rect)
+	void SpanLayoutImpl::draw_layout_ellipsis(const CanvasPtr &canvas, const Rectf &content_rect)
 	{
 		is_ellipsis_draw = true;
 		ellipsis_content_rect = content_rect;
@@ -135,12 +132,12 @@ namespace uicore
 		}
 	}
 
-	void SpanLayout_Impl::draw_layout_image(const CanvasPtr &canvas, Line &line, LineSegment &segment, int x, int y)
+	void SpanLayoutImpl::draw_layout_image(const CanvasPtr &canvas, Line &line, LineSegment &segment, float x, float y)
 	{
 		segment.image->draw(canvas, x + segment.x_position, y + line.ascender - segment.ascender);
 	}
 
-	void SpanLayout_Impl::draw_layout_text(const CanvasPtr &canvas, Line &line, LineSegment &segment, int x, int y)
+	void SpanLayoutImpl::draw_layout_text(const CanvasPtr &canvas, Line &line, LineSegment &segment, float x, float y)
 	{
 		std::string segment_text = text.substr(segment.start, segment.end - segment.start);
 
@@ -150,17 +147,17 @@ namespace uicore
 
 		if (s1 != s2)
 		{
-			int xx = x + segment.x_position;
-			int xx0 = xx + segment.font.measure_text(canvas, segment_text.substr(0, s1)).advance.width;
-			int xx1 = xx0 + segment.font.measure_text(canvas, segment_text.substr(s1, s2 - s1)).advance.width;
-			int sel_width = segment.font.measure_text(canvas, segment_text.substr(s1, s2 - s1)).advance.width;
+			float xx = x + segment.x_position;
+			float xx0 = xx + segment.font.measure_text(canvas, segment_text.substr(0, s1)).advance.width;
+			float xx1 = xx0 + segment.font.measure_text(canvas, segment_text.substr(s1, s2 - s1)).advance.width;
+			float sel_width = segment.font.measure_text(canvas, segment_text.substr(s1, s2 - s1)).advance.width;
 
 			Path::rect(xx0, y + line.ascender - segment.ascender, xx1, y + line.ascender + segment.descender).fill(canvas, sel_background);
 
 			if (cursor_visible && cursor_pos >= segment.start && cursor_pos < segment.end)
 			{
-				int cursor_x = x + segment.x_position + segment.font.measure_text(canvas, text.substr(segment.start, cursor_pos - segment.start)).advance.width;
-				int cursor_width = cursor_overwrite_mode ? segment.font.measure_text(canvas, text.substr(cursor_pos, 1)).advance.width : 1;
+				float cursor_x = x + segment.x_position + segment.font.measure_text(canvas, text.substr(segment.start, cursor_pos - segment.start)).advance.width;
+				float cursor_width = cursor_overwrite_mode ? segment.font.measure_text(canvas, text.substr(cursor_pos, 1)).advance.width : 1;
 				Path::rect(cursor_x, y + line.ascender - segment.ascender, cursor_x + cursor_width, y + line.ascender + segment.descender).fill(canvas, cursor_color);
 			}
 
@@ -188,8 +185,8 @@ namespace uicore
 		{
 			if (cursor_visible && cursor_pos >= segment.start && cursor_pos < segment.end)
 			{
-				int cursor_x = x + segment.x_position + segment.font.measure_text(canvas, text.substr(segment.start, cursor_pos - segment.start)).advance.width;
-				int cursor_width = cursor_overwrite_mode ? segment.font.measure_text(canvas, text.substr(cursor_pos, 1)).advance.width : 1;
+				float cursor_x = x + segment.x_position + segment.font.measure_text(canvas, text.substr(segment.start, cursor_pos - segment.start)).advance.width;
+				float cursor_width = cursor_overwrite_mode ? segment.font.measure_text(canvas, text.substr(cursor_pos, 1)).advance.width : 1;
 				Path::rect(cursor_x, y + line.ascender - segment.ascender, cursor_x + cursor_width, y + line.ascender + segment.descender).fill(canvas, cursor_color);
 			}
 
@@ -200,7 +197,7 @@ namespace uicore
 		}
 	}
 
-	SpanLayout::HitTestResult SpanLayout_Impl::hit_test(const CanvasPtr &canvas, const Point &pos)
+	SpanLayout::HitTestResult SpanLayoutImpl::hit_test(const CanvasPtr &canvas, const Pointf &pos)
 	{
 		SpanLayout::HitTestResult result;
 
@@ -210,8 +207,8 @@ namespace uicore
 			return result;
 		}
 
-		int x = position.x;
-		int y = position.y;
+		float x = position.x;
+		float y = position.y;
 
 		// Check if we are outside to the top
 		if (pos.y < y)
@@ -279,13 +276,13 @@ namespace uicore
 		return result;
 	}
 
-	Rect SpanLayout_Impl::get_rect() const
+	Rectf SpanLayoutImpl::rect() const
 	{
-		int x = position.x;
-		int y = position.y;
+		float x = position.x;
+		float y = position.y;
 
-		const int max_value = 0x70000000;
-		Rect rect(max_value, max_value, -max_value, -max_value);
+		const float max_value = 0x7000000;
+		Rectf rect(max_value, max_value, -max_value, -max_value);
 
 		for (auto & elem : lines)
 		{
@@ -293,7 +290,7 @@ namespace uicore
 			for (std::vector<LineSegment>::size_type segment_index = 0; segment_index < line.segments.size(); segment_index++)
 			{
 				const LineSegment &segment = line.segments[segment_index];
-				Rect area(Point(x + segment.x_position, y), Size(segment.width, line.height));
+				Rectf area(Pointf(x + segment.x_position, y), Sizef(segment.width, line.height));
 
 				rect.left = min(rect.left, area.left);
 				rect.right = max(rect.right, area.right);
@@ -311,7 +308,7 @@ namespace uicore
 		return rect;
 	}
 
-	void SpanLayout_Impl::add_text(const std::string &more_text, const Font &font, const Colorf &color, int id)
+	void SpanLayoutImpl::add_text(const std::string &more_text, const Font &font, const Colorf &color, int id)
 	{
 		SpanObject object;
 		object.type = object_text;
@@ -324,7 +321,7 @@ namespace uicore
 		text += more_text;
 	}
 
-	void SpanLayout_Impl::add_image(const ImagePtr &image, int baseline_offset, int id)
+	void SpanLayoutImpl::add_image(const ImagePtr &image, float baseline_offset, int id)
 	{
 		SpanObject object;
 		object.type = object_image;
@@ -337,7 +334,7 @@ namespace uicore
 		text += "*";
 	}
 
-	void SpanLayout_Impl::add_component(std::shared_ptr<SpanComponent> component, int baseline_offset, int id)
+	void SpanLayoutImpl::add_component(std::shared_ptr<SpanComponent> component, float baseline_offset, int id)
 	{
 		SpanObject object;
 		object.type = object_component;
@@ -350,7 +347,7 @@ namespace uicore
 		text += "*";
 	}
 
-	void SpanLayout_Impl::layout(const CanvasPtr &canvas, int max_width)
+	void SpanLayoutImpl::layout(const CanvasPtr &canvas, float max_width)
 	{
 		layout_lines(canvas, max_width);
 
@@ -364,7 +361,7 @@ namespace uicore
 		}
 	}
 
-	SpanLayout_Impl::TextSizeResult SpanLayout_Impl::find_text_size(const CanvasPtr &canvas, const TextBlock &block, unsigned int object_index)
+	SpanLayoutImpl::TextSizeResult SpanLayoutImpl::find_text_size(const CanvasPtr &canvas, const TextBlock &block, unsigned int object_index)
 	{
 		Font font = objects[object_index].font;
 		if (layout_cache.object_index != object_index)
@@ -376,7 +373,7 @@ namespace uicore
 		TextSizeResult result;
 		result.start = block.start;
 		int pos = block.start;
-		int x_position = 0;
+		float x_position = 0;
 		while (pos != block.end)
 		{
 			int end = min(objects[object_index].end, block.end);
@@ -385,9 +382,9 @@ namespace uicore
 			float text_width = font.measure_text(canvas, subtext).advance.width;
 
 			result.width += text_width;
-			result.height = max(result.height, (int)(layout_cache.metrics.get_height() + layout_cache.metrics.get_external_leading()));
-			result.ascender = max(result.ascender, (int)layout_cache.metrics.get_ascent());
-			result.descender = max(result.descender, (int)layout_cache.metrics.get_descent());
+			result.height = max(result.height, layout_cache.metrics.get_height() + layout_cache.metrics.get_external_leading());
+			result.ascender = max(result.ascender, layout_cache.metrics.get_ascent());
+			result.descender = max(result.descender, layout_cache.metrics.get_descent());
 
 			LineSegment segment;
 			segment.type = object_text;
@@ -398,8 +395,8 @@ namespace uicore
 			segment.id = objects[object_index].id;
 			segment.x_position = x_position;
 			segment.width = text_width;
-			segment.ascender = (int)layout_cache.metrics.get_ascent();
-			segment.descender = (int)layout_cache.metrics.get_descent();
+			segment.ascender = layout_cache.metrics.get_ascent();
+			segment.descender = layout_cache.metrics.get_descent();
 			x_position += text_width;
 			result.segments.push_back(segment);
 
@@ -421,7 +418,7 @@ namespace uicore
 		return result;
 	}
 
-	std::vector<SpanLayout_Impl::TextBlock> SpanLayout_Impl::find_text_blocks()
+	std::vector<SpanLayoutImpl::TextBlock> SpanLayoutImpl::find_text_blocks()
 	{
 		std::vector<TextBlock> blocks;
 		std::vector<SpanObject>::iterator block_object_it;
@@ -491,12 +488,12 @@ namespace uicore
 		return blocks;
 	}
 
-	void SpanLayout_Impl::set_align(SpanAlign align)
+	void SpanLayoutImpl::set_align(SpanAlign align)
 	{
 		alignment = align;
 	}
 
-	void SpanLayout_Impl::layout_lines(const CanvasPtr &canvas, int max_width)
+	void SpanLayoutImpl::layout_lines(const CanvasPtr &canvas, float max_width)
 	{
 		lines.clear();
 		if (objects.empty())
@@ -517,7 +514,7 @@ namespace uicore
 		next_line(current_line);
 	}
 
-	void SpanLayout_Impl::layout_block(CurrentLine &current_line, int max_width, std::vector<TextBlock> &blocks, std::vector<TextBlock>::size_type block_index)
+	void SpanLayoutImpl::layout_block(CurrentLine &current_line, float max_width, std::vector<TextBlock> &blocks, std::vector<TextBlock>::size_type block_index)
 	{
 		if (objects[current_line.object_index].float_type == float_none)
 			layout_inline_block(current_line, max_width, blocks, block_index);
@@ -527,7 +524,7 @@ namespace uicore
 		current_line.object_index++;
 	}
 
-	void SpanLayout_Impl::layout_inline_block(CurrentLine &current_line, int max_width, std::vector<TextBlock> &blocks, std::vector<TextBlock>::size_type block_index)
+	void SpanLayoutImpl::layout_inline_block(CurrentLine &current_line, float max_width, std::vector<TextBlock> &blocks, std::vector<TextBlock>::size_type block_index)
 	{
 		Sizef size;
 		LineSegment segment;
@@ -559,7 +556,7 @@ namespace uicore
 		current_line.x_position += size.width;
 	}
 
-	void SpanLayout_Impl::layout_float_block(CurrentLine &current_line, int max_width)
+	void SpanLayoutImpl::layout_float_block(CurrentLine &current_line, float max_width)
 	{
 		FloatBox floatbox;
 		floatbox.type = objects[current_line.object_index].type;
@@ -567,9 +564,9 @@ namespace uicore
 		floatbox.component = objects[current_line.object_index].component.get();
 		floatbox.id = objects[current_line.object_index].id;
 		if (objects[current_line.object_index].type == object_image)
-			floatbox.rect = Rect(Point(0, current_line.y_position), Size(floatbox.image->size()));
+			floatbox.rect = Rectf(Pointf(0, current_line.y_position), Sizef(floatbox.image->size()));
 		else if (objects[current_line.object_index].type == object_component)
-			floatbox.rect = Rect(Point(0, current_line.y_position), Size(floatbox.component->size()));
+			floatbox.rect = Rectf(Pointf(0, current_line.y_position), Sizef(floatbox.component->size()));
 
 		if (objects[current_line.object_index].float_type == float_left)
 			floats_left.push_back(float_box_left(floatbox, max_width));
@@ -579,21 +576,21 @@ namespace uicore
 		reflow_line(current_line, max_width);
 	}
 
-	void SpanLayout_Impl::reflow_line(CurrentLine &step, int max_width)
+	void SpanLayoutImpl::reflow_line(CurrentLine &step, float max_width)
 	{
 	}
 
-	SpanLayout_Impl::FloatBox SpanLayout_Impl::float_box_left(FloatBox box, int max_width)
+	SpanLayoutImpl::FloatBox SpanLayoutImpl::float_box_left(FloatBox box, float max_width)
 	{
 		return float_box_any(box, max_width, floats_left);
 	}
 
-	SpanLayout_Impl::FloatBox SpanLayout_Impl::float_box_right(FloatBox box, int max_width)
+	SpanLayoutImpl::FloatBox SpanLayoutImpl::float_box_right(FloatBox box, float max_width)
 	{
 		return float_box_any(box, max_width, floats_right);
 	}
 
-	SpanLayout_Impl::FloatBox SpanLayout_Impl::float_box_any(FloatBox box, int max_width, const std::vector<FloatBox> &floats1)
+	SpanLayoutImpl::FloatBox SpanLayoutImpl::float_box_any(FloatBox box, float max_width, const std::vector<FloatBox> &floats1)
 	{
 		bool restart;
 		do
@@ -601,11 +598,11 @@ namespace uicore
 			restart = false;
 			for (auto & elem : floats1)
 			{
-				int top = max(elem.rect.top, box.rect.top);
-				int bottom = min(elem.rect.bottom, box.rect.bottom);
+				float top = max(elem.rect.top, box.rect.top);
+				float bottom = min(elem.rect.bottom, box.rect.bottom);
 				if (bottom > top && box.rect.left < elem.rect.right)
 				{
-					Size s = box.rect.get_size();
+					Sizef s = box.rect.get_size();
 					box.rect.left = elem.rect.left;
 					box.rect.right = box.rect.left + s.width;
 
@@ -624,12 +621,12 @@ namespace uicore
 		return box;
 	}
 
-	bool SpanLayout_Impl::box_fits_on_line(const FloatBox &box, int max_width)
+	bool SpanLayoutImpl::box_fits_on_line(const FloatBox &box, float max_width)
 	{
 		for (auto & elem : floats_right)
 		{
-			int top = max(elem.rect.top, box.rect.top);
-			int bottom = min(elem.rect.bottom, box.rect.bottom);
+			float top = max(elem.rect.top, box.rect.top);
+			float bottom = min(elem.rect.bottom, box.rect.bottom);
 			if (bottom > top)
 			{
 				if (box.rect.right + elem.rect.right > max_width)
@@ -639,7 +636,7 @@ namespace uicore
 		return true;
 	}
 
-	void SpanLayout_Impl::layout_text(const CanvasPtr &canvas, std::vector<TextBlock> blocks, std::vector<TextBlock>::size_type block_index, CurrentLine &current_line, int max_width)
+	void SpanLayoutImpl::layout_text(const CanvasPtr &canvas, std::vector<TextBlock> blocks, std::vector<TextBlock>::size_type block_index, CurrentLine &current_line, float max_width)
 	{
 		TextSizeResult text_size_result = find_text_size(canvas, blocks[block_index], current_line.object_index);
 		current_line.object_index += text_size_result.objects_traversed;
@@ -674,7 +671,7 @@ namespace uicore
 		}
 	}
 
-	void SpanLayout_Impl::next_line(CurrentLine &current_line)
+	void SpanLayoutImpl::next_line(CurrentLine &current_line)
 	{
 		current_line.cur_line.width = current_line.x_position;
 		for (auto it = current_line.cur_line.segments.rbegin(); it != current_line.cur_line.segments.rend(); ++it)
@@ -701,14 +698,14 @@ namespace uicore
 			}
 		}
 
-		int height = current_line.cur_line.height;
+		float height = current_line.cur_line.height;
 		lines.push_back(current_line.cur_line);
 		current_line.cur_line = Line();
 		current_line.x_position = 0;
 		current_line.y_position += height;
 	}
 
-	void SpanLayout_Impl::place_line_segments(CurrentLine &current_line, TextSizeResult &text_size_result)
+	void SpanLayoutImpl::place_line_segments(CurrentLine &current_line, TextSizeResult &text_size_result)
 	{
 		for (auto segment : text_size_result.segments)
 		{
@@ -721,7 +718,7 @@ namespace uicore
 		current_line.cur_line.ascender = max(current_line.cur_line.ascender, text_size_result.ascender);
 	}
 
-	void SpanLayout_Impl::force_place_line_segments(CurrentLine &current_line, TextSizeResult &text_size_result, int max_width)
+	void SpanLayoutImpl::force_place_line_segments(CurrentLine &current_line, TextSizeResult &text_size_result, float max_width)
 	{
 		if (current_line.x_position != 0)
 			next_line(current_line);
@@ -730,32 +727,32 @@ namespace uicore
 		place_line_segments(current_line, text_size_result);
 	}
 
-	bool SpanLayout_Impl::is_newline(const TextBlock &block)
+	bool SpanLayoutImpl::is_newline(const TextBlock &block)
 	{
 		return block.start != block.end && text[block.start] == '\n';
 	}
 
-	bool SpanLayout_Impl::is_whitespace(const TextBlock &block)
+	bool SpanLayoutImpl::is_whitespace(const TextBlock &block)
 	{
 		return block.start != block.end && text[block.start] == ' ';
 	}
 
-	bool SpanLayout_Impl::fits_on_line(int x_position, const TextSizeResult &text_size_result, int max_width)
+	bool SpanLayoutImpl::fits_on_line(float x_position, const TextSizeResult &text_size_result, float max_width)
 	{
 		return x_position + text_size_result.width <= max_width;
 	}
 
-	bool SpanLayout_Impl::larger_than_line(const TextSizeResult &text_size_result, int max_width)
+	bool SpanLayoutImpl::larger_than_line(const TextSizeResult &text_size_result, float max_width)
 	{
 		return text_size_result.width > max_width;
 	}
 
-	void SpanLayout_Impl::align_right(int max_width)
+	void SpanLayoutImpl::align_right(float max_width)
 	{
 		for (auto & elem : lines)
 		{
 			Line &line = elem;
-			int offset = max_width - line.width;
+			float offset = max_width - line.width;
 			if (offset < 0) offset = 0;
 
 			for (auto & _segment_index : line.segments)
@@ -766,12 +763,12 @@ namespace uicore
 		}
 	}
 
-	void SpanLayout_Impl::align_center(int max_width)
+	void SpanLayoutImpl::align_center(float max_width)
 	{
 		for (auto & elem : lines)
 		{
 			Line &line = elem;
-			int offset = (max_width - line.width) / 2;
+			float offset = (max_width - line.width) / 2;
 			if (offset < 0) offset = 0;
 
 			for (auto & _segment_index : line.segments)
@@ -782,13 +779,13 @@ namespace uicore
 		}
 	}
 
-	void SpanLayout_Impl::align_justify(int max_width)
+	void SpanLayoutImpl::align_justify(float max_width)
 	{
 		// Note, we do not justify the last line
 		for (std::vector<Line>::size_type line_index = 0; line_index + 1 < lines.size(); line_index++)
 		{
 			Line &line = lines[line_index];
-			int offset = max_width - line.width;
+			float offset = max_width - line.width;
 			if (offset < 0) offset = 0;
 
 			if (line.segments.size() <= 1)	// Do not justify line if only one word exists
@@ -802,13 +799,13 @@ namespace uicore
 		}
 	}
 
-	Size SpanLayout_Impl::find_preferred_size(const CanvasPtr &canvas)
+	Sizef SpanLayoutImpl::find_preferred_size(const CanvasPtr &canvas)
 	{
 		layout_lines(canvas, 0x70000000); // Feed it with a very long length so it ends up on one line
-		return get_rect().get_size();
+		return rect().get_size();
 	}
 
-	void SpanLayout_Impl::set_selection_range(std::string::size_type start, std::string::size_type end)
+	void SpanLayoutImpl::set_selection_range(std::string::size_type start, std::string::size_type end)
 	{
 		sel_start = start;
 		sel_end = end;
@@ -816,21 +813,21 @@ namespace uicore
 			sel_end = sel_start;
 	}
 
-	void SpanLayout_Impl::set_selection_colors(const Colorf &foreground, const Colorf &background)
+	void SpanLayoutImpl::set_selection_colors(const Colorf &foreground, const Colorf &background)
 	{
 		sel_foreground = foreground;
 		sel_background = background;
 	}
 
-	std::string SpanLayout_Impl::get_combined_text() const
+	std::string SpanLayoutImpl::combined_text() const
 	{
 		return text;
 	}
 
-	void SpanLayout_Impl::set_component_geometry()
+	void SpanLayoutImpl::set_component_geometry()
 	{
-		int x = position.x;
-		int y = position.y;
+		float x = position.x;
+		float y = position.y;
 		for (auto & elem : lines)
 		{
 			for (size_t j = 0; j < elem.segments.size(); j++)
@@ -847,7 +844,7 @@ namespace uicore
 		}
 	}
 
-	int SpanLayout_Impl::get_first_baseline_offset()
+	float SpanLayoutImpl::first_baseline_offset()
 	{
 		if (!lines.empty())
 		{
@@ -859,11 +856,11 @@ namespace uicore
 		}
 	}
 
-	int SpanLayout_Impl::get_last_baseline_offset()
+	float SpanLayoutImpl::last_baseline_offset()
 	{
 		if (!lines.empty())
 		{
-			int y = 0;
+			float y = 0;
 			for (size_t i = 0; i + 1 < lines.size(); i++)
 				y += lines[i].height;
 			return y + lines.back().ascender;

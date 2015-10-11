@@ -39,7 +39,6 @@ namespace uicore
 	class GraphicContext;
 	class Pointf;
 	class Sizef;
-	class SpanLayout_Impl;
 	class Image;
 	typedef std::shared_ptr<Image> ImagePtr;
 	class Canvas;
@@ -69,8 +68,7 @@ namespace uicore
 	class SpanLayout
 	{
 	public:
-		SpanLayout();
-		~SpanLayout();
+		static std::shared_ptr<SpanLayout> create();
 
 		struct HitTestResult
 		{
@@ -90,89 +88,88 @@ namespace uicore
 		};
 
 		/// \brief Removes all objects
-		void clear();
+		virtual void clear() = 0;
 
 		/// \brief Add text object
-		void add_text(const std::string &text, const Font &font, const Colorf &color = Colorf::white, int id = -1);
+		virtual void add_text(const std::string &text, const Font &font, const Colorf &color = Colorf::white, int id = -1) = 0;
 
 		/// \brief Add image object
-		void add_image(const ImagePtr &image, float baseline_offset = 0.0f, int id = -1);
+		virtual void add_image(const ImagePtr &image, float baseline_offset = 0.0f, int id = -1) = 0;
 
 		/// \brief Add component object
-		void add_component(std::shared_ptr<SpanComponent> component, float baseline_offset = 0.0f, int id = -1);
+		virtual void add_component(std::shared_ptr<SpanComponent> component, float baseline_offset = 0.0f, int id = -1) = 0;
 
 		/// \brief Layout objects
-		void layout(const CanvasPtr &canvas, float max_width);
+		virtual void layout(const CanvasPtr &canvas, float max_width) = 0;
 
 		/// \brief Set position of layout
-		void set_position(const Pointf &pos);
+		virtual void set_position(const Pointf &pos) = 0;
 
 		/// \brief Returns the size of the layout
-		Sizef size() const;
+		virtual Sizef size() const = 0;
 
 		/// \brief Returns the geometry of the layout
-		Rectf rect() const;
+		virtual Rectf rect() const = 0;
 
 		/// \brief Returns the geometry of the object with the given id
-		std::vector<Rectf> rect_by_id(int id) const;
+		virtual std::vector<Rectf> rect_by_id(int id) const = 0;
 
 		/// \brief Hit test which object is located at the specified position
-		HitTestResult hit_test(const CanvasPtr &canvas, const Pointf &pos);
+		virtual HitTestResult hit_test(const CanvasPtr &canvas, const Pointf &pos) = 0;
 
 		/// \brief Draw layout
-		void draw_layout(const CanvasPtr &canvas);
+		virtual void draw_layout(const CanvasPtr &canvas) = 0;
 
 		/// \brief Draw layout generating ellipsis for clipped text
-		void draw_layout_ellipsis(const CanvasPtr &canvas, const Rectf &content_rect);
+		virtual void draw_layout_ellipsis(const CanvasPtr &canvas, const Rectf &content_rect) = 0;
 
 		/// \brief Set component geometry
-		void set_component_geometry();
+		virtual void set_component_geometry() = 0;
 
 		/// \brief Find the preferred size for the given layout
-		Sizef find_preferred_size(const CanvasPtr &canvas);
+		virtual Sizef find_preferred_size(const CanvasPtr &canvas) = 0;
 
 		/// \brief Set selection range
-		void set_selection_range(std::string::size_type start, std::string::size_type end);
+		virtual void set_selection_range(std::string::size_type start, std::string::size_type end) = 0;
 
 		/// \brief Set selection colors
-		void set_selection_colors(const Colorf &foreground, const Colorf &background);
+		virtual void set_selection_colors(const Colorf &foreground, const Colorf &background) = 0;
 
 		/// \brief Shows the cursor caret
-		void show_cursor();
+		virtual void show_cursor() = 0;
 
 		/// \brief Hides the cursor caret
-		void hide_cursor();
+		virtual void hide_cursor() = 0;
 
 		/// \brief Sets the cursor position
 		///
 		/// \param pos = Index of cursor
-		void set_cursor_pos(std::string::size_type pos);
+		virtual void set_cursor_pos(std::string::size_type pos) = 0;
 
 		/// \brief Toggles whether the cursor caret is shown as a solid box or a line
 		///
 		/// \param enable = Shows the cursor as a solid box if set to true
-		void set_cursor_overwrite_mode(bool enable);
+		virtual void set_cursor_overwrite_mode(bool enable) = 0;
 
 		/// \brief Sets the cursor color
 		///
 		/// \param color = Color of cursor
-		void set_cursor_color(const Colorf &color);
+		virtual void set_cursor_color(const Colorf &color) = 0;
 
 		/// \brief Get all text
-		std::string combined_text() const;
+		virtual std::string combined_text() const = 0;
 
 		/// \brief Sets the text alignment
 		///
 		/// Alignment is applied when layout() is called
-		void set_align(SpanAlign align);
+		virtual void set_align(SpanAlign align) = 0;
 
 		/// \brief Returns the baseline offset for the first baseline
-		float first_baseline_offset();
+		virtual float first_baseline_offset() = 0;
 
 		/// \brief Returns the baseline offset for the last baseline
-		float last_baseline_offset();
-
-	private:
-		std::shared_ptr<SpanLayout_Impl> impl;
+		virtual float last_baseline_offset() = 0;
 	};
+
+	typedef std::shared_ptr<SpanLayout> SpanLayoutPtr;
 }

@@ -38,45 +38,44 @@ namespace uicore
 {
 	class Canvas;
 
-	class SpanLayout_Impl
+	class SpanLayoutImpl : public SpanLayout
 	{
 	public:
-		SpanLayout_Impl();
-		~SpanLayout_Impl();
+		SpanLayoutImpl();
+		~SpanLayoutImpl();
 
-		void clear();
-
-		void add_text(const std::string &text, const Font &font, const Colorf &color, int id = -1);
-		void add_image(const ImagePtr &image, int baseline_offset, int id = -1);
-		void add_component(std::shared_ptr<SpanComponent> component, int baseline_offset = 0, int id = -1);
-
-		void layout(const CanvasPtr &canvasc, int max_width);
-		SpanLayout::HitTestResult hit_test(const CanvasPtr &canvas, const Point &pos);
-		void draw_layout(const CanvasPtr &canvas);
-		void draw_layout_ellipsis(const CanvasPtr &canvas, const Rect &content_rect);
-		void set_position(const Point &pos) { position = pos; }
-		Rect get_rect() const;
-		std::vector<Rect> get_rect_by_id(int id) const;
-		void set_align(SpanAlign align);
-
-		Size find_preferred_size(const CanvasPtr &canvas);
-
-		void set_selection_range(std::string::size_type start, std::string::size_type end);
-		void set_selection_colors(const Colorf &foreground, const Colorf &background);
-
-		std::string get_combined_text() const;
-
-		void set_component_geometry();
-
-		int get_first_baseline_offset();
-		int get_last_baseline_offset();
-
-		bool cursor_visible;
-		std::string::size_type cursor_pos;
-		bool cursor_overwrite_mode;
-		Colorf cursor_color;
+		void clear() override;
+		void add_text(const std::string &text, const Font &font, const Colorf &color, int id) override;
+		void add_image(const ImagePtr &image, float baseline_offset, int id) override;
+		void add_component(std::shared_ptr<SpanComponent> component, float baseline_offset, int id) override;
+		void layout(const CanvasPtr &canvas, float max_width) override;
+		void set_position(const Pointf &pos) override { position = pos; }
+		Sizef size() const override;
+		Rectf rect() const override;
+		std::vector<Rectf> rect_by_id(int id) const override;
+		HitTestResult hit_test(const CanvasPtr &canvas, const Pointf &pos) override;
+		void draw_layout(const CanvasPtr &canvas) override;
+		void draw_layout_ellipsis(const CanvasPtr &canvas, const Rectf &content_rect) override;
+		void set_component_geometry() override;
+		Sizef find_preferred_size(const CanvasPtr &canvas) override;
+		void set_selection_range(std::string::size_type start, std::string::size_type end) override;
+		void set_selection_colors(const Colorf &foreground, const Colorf &background) override;
+		void show_cursor() override;
+		void hide_cursor() override;
+		void set_cursor_pos(std::string::size_type pos) override;
+		void set_cursor_overwrite_mode(bool enable) override;
+		void set_cursor_color(const Colorf &color) override;
+		std::string combined_text() const override;
+		void set_align(SpanAlign align) override;
+		float first_baseline_offset() override;
+		float last_baseline_offset() override;
 
 	private:
+		bool cursor_visible = false;
+		std::string::size_type cursor_pos = 0;
+		bool cursor_overwrite_mode = false;
+		Colorf cursor_color = Colorf::black;
+
 		struct TextBlock
 		{
 			TextBlock() : start(0), end(0) { }
@@ -110,7 +109,7 @@ namespace uicore
 
 			ImagePtr image;
 			std::shared_ptr<SpanComponent> component;
-			int baseline_offset = 0;
+			float baseline_offset = 0;
 
 			int id = -1;
 		};
@@ -124,15 +123,15 @@ namespace uicore
 			Font font;
 			Colorf color;
 			int start = 0, end = 0;
-			int ascender = 0;
-			int descender = 0;
+			float ascender = 0;
+			float descender = 0;
 
-			int x_position = 0;
-			int width = 0;
+			float x_position = 0;
+			float width = 0;
 
 			ImagePtr image;
 			SpanComponent *component = nullptr;
-			int baseline_offset = 0;
+			float baseline_offset = 0;
 
 			int id = -1;
 		};
@@ -141,9 +140,9 @@ namespace uicore
 		{
 			Line() { }
 
-			int width = 0;	// Width of the entire line (including spaces)
-			int height = 0;
-			int ascender = 0;
+			float width = 0;	// Width of the entire line (including spaces)
+			float height = 0;
+			float ascender = 0;
 			std::vector<LineSegment> segments;
 		};
 
@@ -151,9 +150,9 @@ namespace uicore
 		{
 			TextSizeResult()  { }
 			int start = 0, end = 0;
-			int width = 0;
-			int height = 0;
-			int ascender = 0, descender = 0;
+			float width = 0;
+			float height = 0;
+			float ascender = 0, descender = 0;
 			int objects_traversed = 0;
 			std::vector<LineSegment> segments;
 		};
@@ -164,15 +163,15 @@ namespace uicore
 
 			std::vector<SpanObject>::size_type object_index = 0;
 			Line cur_line;
-			int x_position = 0;
-			int y_position = 0;
+			float x_position = 0;
+			float y_position = 0;
 		};
 
 		struct FloatBox
 		{
 			FloatBox() { }
 
-			Rect rect;
+			Rectf rect;
 			ObjectType type = object_image;
 			ImagePtr image;
 			SpanComponent *component = nullptr;
@@ -181,39 +180,40 @@ namespace uicore
 
 		TextSizeResult find_text_size(const CanvasPtr &canvas, const TextBlock &block, unsigned int object_index);
 		std::vector<TextBlock> find_text_blocks();
-		void layout_lines(const CanvasPtr &canvas, int max_width);
-		void layout_text(const CanvasPtr &canvas, std::vector<TextBlock> blocks, std::vector<TextBlock>::size_type block_index, CurrentLine &current_line, int max_width);
-		void layout_block(CurrentLine &current_line, int max_width, std::vector<TextBlock> &blocks, std::vector<TextBlock>::size_type block_index);
-		void layout_float_block(CurrentLine &current_line, int max_width);
-		void layout_inline_block(CurrentLine &current_line, int max_width, std::vector<TextBlock> &blocks, std::vector<TextBlock>::size_type block_index);
-		void reflow_line(CurrentLine &current_line, int max_width);
-		FloatBox float_box_left(FloatBox float_box, int max_width);
-		FloatBox float_box_right(FloatBox float_box, int max_width);
-		FloatBox float_box_any(FloatBox box, int max_width, const std::vector<FloatBox> &floats1);
-		bool box_fits_on_line(const FloatBox &box, int max_width);
+		void layout_lines(const CanvasPtr &canvas, float max_width);
+		void layout_text(const CanvasPtr &canvas, std::vector<TextBlock> blocks, std::vector<TextBlock>::size_type block_index, CurrentLine &current_line, float max_width);
+		void layout_block(CurrentLine &current_line, float max_width, std::vector<TextBlock> &blocks, std::vector<TextBlock>::size_type block_index);
+		void layout_float_block(CurrentLine &current_line, float max_width);
+		void layout_inline_block(CurrentLine &current_line, float max_width, std::vector<TextBlock> &blocks, std::vector<TextBlock>::size_type block_index);
+		void reflow_line(CurrentLine &current_line, float max_width);
+		FloatBox float_box_left(FloatBox float_box, float max_width);
+		FloatBox float_box_right(FloatBox float_box, float max_width);
+		FloatBox float_box_any(FloatBox box, float max_width, const std::vector<FloatBox> &floats1);
+		bool box_fits_on_line(const FloatBox &box, float max_width);
 		void place_line_segments(CurrentLine &current_line, TextSizeResult &text_size_result);
-		void force_place_line_segments(CurrentLine &current_line, TextSizeResult &text_size_result, int max_width);
+		void force_place_line_segments(CurrentLine &current_line, TextSizeResult &text_size_result, float max_width);
 		void next_line(CurrentLine &current_line);
 		bool is_newline(const TextBlock &block);
 		bool is_whitespace(const TextBlock &block);
-		bool fits_on_line(int x_position, const TextSizeResult &text_size_result, int max_width);
-		bool larger_than_line(const TextSizeResult &text_size_result, int max_width);
-		void align_justify(int max_width);
-		void align_center(int max_width);
-		void align_right(int max_width);
-		void draw_layout_image(const CanvasPtr &canvas, Line &line, LineSegment &segment, int x, int y);
-		void draw_layout_text(const CanvasPtr &canvas, Line &line, LineSegment &segment, int x, int y);
-		std::string::size_type sel_start, sel_end;
-		Colorf sel_foreground, sel_background;
+		bool fits_on_line(float x_position, const TextSizeResult &text_size_result, float max_width);
+		bool larger_than_line(const TextSizeResult &text_size_result, float max_width);
+		void align_justify(float max_width);
+		void align_center(float max_width);
+		void align_right(float max_width);
+		void draw_layout_image(const CanvasPtr &canvas, Line &line, LineSegment &segment, float x, float y);
+		void draw_layout_text(const CanvasPtr &canvas, Line &line, LineSegment &segment, float x, float y);
+
+		std::string::size_type sel_start = 0, sel_end = 0;
+		Colorf sel_foreground = Colorf::white, sel_background = Colorf::darkslateblue;
 
 		std::string text;
 		std::vector<SpanObject> objects;
 		std::vector<Line> lines;
-		Point position;
+		Pointf position;
 
 		std::vector<FloatBox> floats_left, floats_right;
 
-		SpanAlign alignment;
+		SpanAlign alignment = SpanAlign::left;
 
 		struct LayoutCache
 		{
@@ -223,7 +223,7 @@ namespace uicore
 		};
 		LayoutCache layout_cache;
 
-		bool is_ellipsis_draw;
-		Rect ellipsis_content_rect;
+		bool is_ellipsis_draw = false;
+		Rectf ellipsis_content_rect;
 	};
 }
