@@ -39,16 +39,16 @@ namespace uicore
 	class TextureGroupImpl : public TextureGroup
 	{
 	public:
-		TextureGroupImpl(const Size &texture_sizes);
+		TextureGroupImpl(const Size &texture_size);
 		~TextureGroupImpl();
 
 		int subtexture_count() const override;
 		int subtexture_count(unsigned int texture_index) const override;
-		int texture_count() const override;
+		int texture_count() const override { return root_nodes.size(); }
 		TextureGroupAllocationPolicy allocation_policy() const override { return texture_allocation_policy; }
-		Size get_texture_sizes() const override;
+		Size texture_size() const override { return initial_texture_size; }
 		std::vector<Texture2DPtr> textures() const override;
-		TextureGroupImage add(const GraphicContextPtr &context, const Size &size) override;
+		TextureGroupImage add(const GraphicContextPtr &context, const Size &size) override { return add_new_node(context, size); }
 		void remove(const TextureGroupImage &subtexture) override;
 		void set_allocation_policy(TextureGroupAllocationPolicy policy) override { texture_allocation_policy = policy; }
 		void insert_texture(const Texture2DPtr &texture, const Rect &texture_rect) override;

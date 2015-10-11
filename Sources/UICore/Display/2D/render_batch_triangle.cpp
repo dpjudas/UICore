@@ -246,7 +246,7 @@ namespace uicore
 	{
 		if (use_glyph_program != glyph_program || constant_color != new_constant_color)
 		{
-			canvas->flush();
+			static_cast<CanvasImpl*>(canvas.get())->batcher.flush();
 			use_glyph_program = glyph_program;
 			constant_color = new_constant_color;
 		}
@@ -269,7 +269,7 @@ namespace uicore
 
 		if (position == 0 || position + 6 > max_vertices || texindex == -1)
 		{
-			canvas->flush();
+			static_cast<CanvasImpl*>(canvas.get())->batcher.flush();
 			texindex = 0;
 			current_textures[texindex] = texture;
 			num_current_textures = 1;
@@ -283,12 +283,12 @@ namespace uicore
 	{
 		if (use_glyph_program != false)
 		{
-			canvas->flush();
+			static_cast<CanvasImpl*>(canvas.get())->batcher.flush();
 			use_glyph_program = false;
 		}
 
 		if (position == 0 || position + 6 > max_vertices)
-			canvas->flush();
+			static_cast<CanvasImpl*>(canvas.get())->batcher.flush();
 		static_cast<CanvasImpl*>(canvas.get())->set_batcher(this);
 		return RenderBatchTriangle::max_textures;
 	}
@@ -297,12 +297,12 @@ namespace uicore
 	{
 		if (use_glyph_program != false)
 		{
-			canvas->flush();
+			static_cast<CanvasImpl*>(canvas.get())->batcher.flush();
 			use_glyph_program = false;
 		}
 
 		if (position + num_vertices > max_vertices)
-			canvas->flush();
+			static_cast<CanvasImpl*>(canvas.get())->batcher.flush();
 
 		if (num_vertices > max_vertices)
 			throw Exception("Too many vertices for RenderBatchTriangle");

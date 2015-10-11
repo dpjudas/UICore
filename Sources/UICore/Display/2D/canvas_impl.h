@@ -62,7 +62,8 @@ namespace uicore
 
 		void clear(const Colorf &color) override;
 
-		void flush() override;
+		void begin() override;
+		void end() override;
 
 		Rectf clip() const override
 		{
@@ -85,16 +86,20 @@ namespace uicore
 		const Mat4f &inverse_transform() const override;
 		const Mat4f &projection() const override;
 
-		void set_program_object(StandardProgram standard_program) override
+		void set_program_object(StandardProgram new_standard_program) override
 		{
-			flush();
+			batcher.flush();
+			standard_program = new_standard_program;
 			gc()->set_program_object(standard_program);
 		}
 
-		void set_blend_state(const BlendStatePtr &state, const Colorf &blend_color, unsigned int sample_mask) override
+		void set_blend_state(const BlendStatePtr &new_state, const Colorf &new_blend_color, unsigned int new_sample_mask) override
 		{
-			flush();
-			gc()->set_blend_state(state, blend_color, sample_mask);
+			batcher.flush();
+			blend_state = new_state;
+			blend_color = new_blend_color;
+			sample_mask = new_sample_mask;
+			gc()->set_blend_state(blend_state, blend_color, sample_mask);
 		}
 
 		Pointf grid_fit(const Pointf &pos) override
@@ -122,13 +127,10 @@ namespace uicore
 	private:
 		void calculate_map_mode_matrices();
 		MapMode top_down_map_mode() const;
-		void on_window_resized(const Size &size);
 		void update_batcher_matrix();
 		void write_clip(const Rectf &rect);
-		void on_window_flip();
 
 		GraphicContextPtr _gc;
-		SlotContainer sc;
 
 		Mat4f canvas_transform;
 		mutable bool canvas_inverse_transform_set = false;
@@ -138,6 +140,13 @@ namespace uicore
 		Rectf viewport_rect;
 
 		DisplayWindowPtr current_window;
+
+		StandardProgram standard_program = program_sprite;
+		RasterizerStatePtr rasterizer_state;
+		BlendStatePtr blend_state;
+		Colorf blend_color = Colorf::white;
+		unsigned int sample_mask = 0xffffffff;
+		DepthStencilStatePtr depth_stencil_state;
 
 		TextureImageYAxis canvas_y_axis;
 

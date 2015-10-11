@@ -34,8 +34,8 @@
 
 namespace uicore
 {
-	TextureGroupImpl::TextureGroupImpl(const Size &texture_sizes)
-		: initial_texture_size(texture_sizes), active_root(nullptr), next_id(0)
+	TextureGroupImpl::TextureGroupImpl(const Size &texture_size)
+		: initial_texture_size(texture_size), active_root(nullptr), next_id(0)
 	{
 	}
 

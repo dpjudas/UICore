@@ -84,7 +84,7 @@ namespace uicore
 		virtual TextureGroupAllocationPolicy allocation_policy() const = 0;
 
 		/// \brief Returns the size of the textures used by this texture group.
-		virtual Size get_texture_sizes() const = 0;
+		virtual Size texture_size() const = 0;
 
 		/// \brief Returns the textures.
 		virtual std::vector<Texture2DPtr> textures() const = 0;

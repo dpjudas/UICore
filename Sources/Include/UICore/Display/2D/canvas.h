@@ -116,8 +116,15 @@ namespace uicore
 		/// \brief Multiplies the passed matrix onto the transform matrix.
 		void mult_transform(const Mat4f &matrix) { set_transform(transform() * matrix); }
 
-		/// \brief Flushes the render batcher currently active.
-		virtual void flush() = 0;
+		/// \brief Marks the start of a canvas rendering pass
+		///
+		/// Prepares the graphic context for rendering by binding the appropriate state.
+		virtual void begin() = 0;
+
+		/// \brief Marks the end of a canvas rendering pass
+		///
+		/// All batched rendering requests are flushed and the graphic context state is reset to its defaults.
+		virtual void end() = 0;
 
 		/// \brief Snaps the point to the nearest pixel corner
 		virtual Pointf grid_fit(const Pointf &pos) = 0;

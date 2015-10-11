@@ -65,7 +65,7 @@ namespace uicore
 	void RenderBatchPoint::set_batcher_active(const CanvasPtr &canvas, int num_vertices)
 	{
 		if (position + num_vertices > max_vertices)
-			canvas->flush();
+			static_cast<CanvasImpl*>(canvas.get())->batcher.flush();
 
 		if (num_vertices > max_vertices)
 			throw Exception("Too many vertices for RenderBatchPoint");

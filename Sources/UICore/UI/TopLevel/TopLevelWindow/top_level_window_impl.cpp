@@ -74,9 +74,10 @@ namespace uicore
 
 	void TopLevelWindow_Impl::on_paint()
 	{
+		canvas->begin();
 		canvas->clear(uicore::Colorf::transparent);
 		window_view->render(canvas, window->viewport());
-		canvas->flush();
+		canvas->end();
 		window->flip();
 	}
 

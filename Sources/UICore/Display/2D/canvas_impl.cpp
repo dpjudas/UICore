@@ -39,19 +39,19 @@ namespace uicore
 		current_window = window;
 		_gc = window->gc();
 
-		if (current_window)
-		{
-			sc.connect(current_window->sig_window_flip(), bind_member(this, &CanvasImpl::on_window_flip));
-		}
+		rasterizer_state = _gc->create_rasterizer_state(RasterizerStateDescription());
+		blend_state = _gc->create_blend_state(BlendStateDescription());
+		depth_stencil_state = _gc->create_depth_stencil_state(DepthStencilStateDescription());
 
 		gc_clip_z_range = _gc->clip_z_range();
 		canvas_inverse_transform = canvas_transform = Mat4f::identity();
 		canvas_inverse_transform_set = true;
 
+		batcher = CanvasBatcher(_gc);
+
 		if (!_gc->write_frame_buffer())	// No framebuffer attached to canvas
 		{
 			canvas_y_axis = y_axis_top_down;
-			sc.connect(static_cast<GraphicContextImpl*>(_gc.get())->sig_window_resized(), bind_member(this, &CanvasImpl::on_window_resized));
 		}
 		else
 		{
@@ -67,17 +67,27 @@ namespace uicore
 
 		update_viewport_size();
 
-		if (batcher.is_null())
-		{
-			batcher = CanvasBatcher(_gc);
-		}
-
 		calculate_map_mode_matrices();
 	}
 
-	void CanvasImpl::flush()
+	void CanvasImpl::begin()
+	{
+		update_viewport_size();
+
+		gc()->set_viewport(gc()->size(), gc()->texture_image_y_axis());
+		gc()->set_depth_stencil_state(depth_stencil_state);
+		gc()->set_blend_state(blend_state, blend_color, sample_mask);
+		gc()->set_program_object(standard_program);
+	}
+
+	void CanvasImpl::end()
 	{
 		batcher.flush();
+
+		gc()->set_viewport(gc()->size(), gc()->texture_image_y_axis());
+		gc()->set_depth_stencil_state(nullptr);
+		gc()->set_blend_state(nullptr);
+		gc()->set_program_object(nullptr);
 	}
 
 	void CanvasImpl::update_batcher_matrix()
@@ -180,11 +190,6 @@ namespace uicore
 		gc()->clear(color);
 	}
 
-	void CanvasImpl::on_window_resized(const Size &size)
-	{
-		update_viewport_size();
-	}
-
 	void CanvasImpl::write_clip(const Rectf &rect)
 	{
 		if ((rect.left > rect.right) || (rect.top > rect.bottom))
@@ -203,7 +208,7 @@ namespace uicore
 
 	void CanvasImpl::set_clip(const Rectf &rect)
 	{
-		flush();
+		batcher.flush();
 
 		if (!cliprects.empty())
 			cliprects.back() = rect;
@@ -214,7 +219,7 @@ namespace uicore
 
 	void CanvasImpl::push_clip(const Rectf &rect)
 	{
-		flush();
+		batcher.flush();
 
 		if (!cliprects.empty())
 		{
@@ -232,7 +237,7 @@ namespace uicore
 
 	void CanvasImpl::push_clip()
 	{
-		flush();
+		batcher.flush();
 
 		if (cliprects.empty())
 		{
@@ -250,7 +255,7 @@ namespace uicore
 	{
 		if (!cliprects.empty())
 		{
-			flush();
+			batcher.flush();
 
 			cliprects.pop_back();
 
@@ -265,7 +270,7 @@ namespace uicore
 	{
 		if (!cliprects.empty())
 		{
-			flush();
+			batcher.flush();
 			cliprects.clear();
 			gc()->reset_scissor();
 		}
@@ -320,10 +325,5 @@ namespace uicore
 			bounding_box.bottom = max(triangles->y, bounding_box.bottom);
 		}
 		return bounding_box;
-	}
-
-	void CanvasImpl::on_window_flip()
-	{
-		flush();
 	}
 }

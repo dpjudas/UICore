@@ -87,6 +87,26 @@ namespace uicore
 		float _pixel_ratio = 1.0f;
 	};
 
+	std::shared_ptr<Image> Image::create(Texture2DPtr texture, const Rect &rect, float pixel_ratio)
+	{
+		return std::make_shared<ImageImpl>(texture, rect, pixel_ratio);
+	}
+
+	std::shared_ptr<Image> Image::create(TextureGroupImage &sub_texture, float pixel_ratio)
+	{
+		return std::make_shared<ImageImpl>(sub_texture, pixel_ratio);
+	}
+
+	std::shared_ptr<Image> Image::create(const CanvasPtr &canvas, const PixelBufferPtr &pixelbuffer, const Rect &rect, float pixel_ratio)
+	{
+		return std::make_shared<ImageImpl>(canvas, pixelbuffer, rect, pixel_ratio);
+	}
+
+	std::shared_ptr<Image> Image::create(const CanvasPtr &canvas, const std::string &filename, const ImageImportDescription &import_desc, float pixel_ratio)
+	{
+		return std::make_shared<ImageImpl>(canvas, filename, import_desc, pixel_ratio);
+	}
+
 	ImageImpl::ImageImpl(const CanvasPtr &canvas, const PixelBufferPtr &pb, const Rect &rect, float pixel_ratio)
 	{
 		_texture = Texture2D::create(canvas->gc(), pb->width(), pb->height(), pb->format());
