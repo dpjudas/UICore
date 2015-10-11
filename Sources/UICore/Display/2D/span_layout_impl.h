@@ -38,58 +38,6 @@ namespace uicore
 {
 	class Canvas;
 
-	/// \brief Span component class
-	class SpanComponent
-	{
-	public:
-		virtual ~SpanComponent() { }
-
-		/// \brief Get Size
-		///
-		/// \return size
-		virtual Size get_size() const = 0;
-
-		/// \brief Set geometry
-		///
-		/// \param geometry = Rect
-		virtual void set_geometry(const Rect &geometry) = 0;
-	};
-
-	/// \brief Span Component Binder (templated class)
-	///
-	template<typename T>
-	class SpanComponentBinder : public SpanComponent
-	{
-	public:
-
-		/// \brief Constructs a SpanComponentBinder
-		///
-		/// \param component = T
-		SpanComponentBinder(T *component)
-			: component(component)
-		{
-		}
-
-		/// \brief Get Size
-		///
-		/// \return size
-		Size get_size() const override
-		{
-			return component->get_size();
-		}
-
-		/// \brief Set geometry
-		///
-		/// \param geometry = Rect
-		void set_geometry(const Rect &geometry) override
-		{
-			component->set_geometry(geometry);
-		}
-
-	private:
-		T *component;
-	};
-
 	class SpanLayout_Impl
 	{
 	public:
@@ -100,7 +48,7 @@ namespace uicore
 
 		void add_text(const std::string &text, const Font &font, const Colorf &color, int id = -1);
 		void add_image(const ImagePtr &image, int baseline_offset, int id = -1);
-		void add_component(SpanComponent *component, int baseline_offset = 0, int id = -1);
+		void add_component(std::shared_ptr<SpanComponent> component, int baseline_offset = 0, int id = -1);
 
 		void layout(const CanvasPtr &canvasc, int max_width);
 		SpanLayout::HitTestResult hit_test(const CanvasPtr &canvas, const Point &pos);
@@ -152,20 +100,19 @@ namespace uicore
 
 		struct SpanObject
 		{
-			SpanObject() : type(object_text), float_type(float_none), start(0), end(0), component(nullptr), baseline_offset(0), id(-1) { }
-
-			ObjectType type;
-			FloatType float_type;
+			ObjectType type = object_text;
+			FloatType float_type = float_none;
 
 			Font font;
 			Colorf color;
-			unsigned int start, end;
+			unsigned int start = 0;
+			unsigned int end = 0;
 
 			ImagePtr image;
-			SpanComponent *component;
-			int baseline_offset;
+			std::shared_ptr<SpanComponent> component;
+			int baseline_offset = 0;
 
-			int id;
+			int id = -1;
 		};
 
 		struct LineSegment

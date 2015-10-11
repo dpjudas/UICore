@@ -49,12 +49,6 @@ namespace uicore
 
 	void SpanLayout_Impl::clear()
 	{
-		for (auto & elem : objects)
-		{
-			if (elem.type == object_component)
-				delete elem.component;
-		}
-
 		objects.clear();
 		text.clear();
 		lines.clear();
@@ -343,7 +337,7 @@ namespace uicore
 		text += "*";
 	}
 
-	void SpanLayout_Impl::add_component(SpanComponent *component, int baseline_offset, int id)
+	void SpanLayout_Impl::add_component(std::shared_ptr<SpanComponent> component, int baseline_offset, int id)
 	{
 		SpanObject object;
 		object.type = object_component;
@@ -545,9 +539,9 @@ namespace uicore
 		}
 		else if (objects[current_line.object_index].type == object_component)
 		{
-			size = objects[current_line.object_index].component->get_size();
+			size = objects[current_line.object_index].component->size();
 			segment.type = object_component;
-			segment.component = objects[current_line.object_index].component;
+			segment.component = objects[current_line.object_index].component.get();
 		}
 
 		if (current_line.x_position + size.width > max_width)
@@ -570,12 +564,12 @@ namespace uicore
 		FloatBox floatbox;
 		floatbox.type = objects[current_line.object_index].type;
 		floatbox.image = objects[current_line.object_index].image;
-		floatbox.component = objects[current_line.object_index].component;
+		floatbox.component = objects[current_line.object_index].component.get();
 		floatbox.id = objects[current_line.object_index].id;
 		if (objects[current_line.object_index].type == object_image)
 			floatbox.rect = Rect(Point(0, current_line.y_position), Size(floatbox.image->size()));
 		else if (objects[current_line.object_index].type == object_component)
-			floatbox.rect = Rect(Point(0, current_line.y_position), Size(floatbox.component->get_size()));
+			floatbox.rect = Rect(Point(0, current_line.y_position), Size(floatbox.component->size()));
 
 		if (objects[current_line.object_index].float_type == float_left)
 			floats_left.push_back(float_box_left(floatbox, max_width));
@@ -843,9 +837,9 @@ namespace uicore
 			{
 				if (elem.segments[j].type == object_component)
 				{
-					Point pos(x + elem.segments[j].x_position, y + elem.ascender - elem.segments[j].ascender);
-					Size size = elem.segments[j].component->get_size();
-					Rect rect(pos, size);
+					Pointf pos(x + elem.segments[j].x_position, y + elem.ascender - elem.segments[j].ascender);
+					Sizef size = elem.segments[j].component->size();
+					Rectf rect(pos, size);
 					elem.segments[j].component->set_geometry(rect);
 				}
 			}

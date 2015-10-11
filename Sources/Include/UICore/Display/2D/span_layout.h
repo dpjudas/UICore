@@ -37,12 +37,11 @@ namespace uicore
 {
 	class Font;
 	class GraphicContext;
-	class Point;
-	class Size;
+	class Pointf;
+	class Sizef;
 	class SpanLayout_Impl;
 	class Image;
 	typedef std::shared_ptr<Image> ImagePtr;
-	class SpanComponent;
 	class Canvas;
 	typedef std::shared_ptr<Canvas> CanvasPtr;
 
@@ -55,6 +54,17 @@ namespace uicore
 		justify
 	};
 
+	/// \brief Component placed in the layout
+	class SpanComponent
+	{
+	public:
+		/// \brief Size of component
+		virtual Sizef size() const = 0;
+
+		/// \brief Sets the component geometry after layout
+		virtual void set_geometry(const Rectf &geometry) = 0;
+	};
+
 	/// \brief Span layout class
 	class SpanLayout
 	{
@@ -64,8 +74,6 @@ namespace uicore
 
 		struct HitTestResult
 		{
-			HitTestResult() : object_id(-1), offset(0) {}
-
 			enum Type
 			{
 				no_objects_available,
@@ -74,104 +82,59 @@ namespace uicore
 				outside_right,
 				outside_bottom,
 				inside
-			} type;
+			};
 
-			int object_id;
-			int offset;
+			Type type = no_objects_available;
+			int object_id = -1;
+			int offset = 0;
 		};
 
-		/// \brief Clear
+		/// \brief Removes all objects
 		void clear();
 
-		/// \brief Add text
-		///
-		/// \param text = String
-		/// \param font = Font
-		/// \param color = Colorf
-		/// \param id = value
+		/// \brief Add text object
 		void add_text(const std::string &text, const Font &font, const Colorf &color = Colorf::white, int id = -1);
 
-		/// \brief Add image
-		///
-		/// \param image = Image
-		/// \param baseline_offset = value
-		/// \param id = value
-		void add_image(const ImagePtr &image, int baseline_offset = 0, int id = -1);
+		/// \brief Add image object
+		void add_image(const ImagePtr &image, float baseline_offset = 0.0f, int id = -1);
 
-		template<typename T>
+		/// \brief Add component object
+		void add_component(std::shared_ptr<SpanComponent> component, float baseline_offset = 0.0f, int id = -1);
 
-		/// \brief Add component
-		///
-		/// \param component = T
-		/// \param baseline_offset = value
-		/// \param id = value
-		void add_component(T *component, int baseline_offset = 0, int id = -1);
+		/// \brief Layout objects
+		void layout(const CanvasPtr &canvas, float max_width);
 
-		/// \brief Layout
-		///
-		/// \param canvas = Canvas
-		/// \param max_width = value
-		void layout(const CanvasPtr &canvas, int max_width);
+		/// \brief Set position of layout
+		void set_position(const Pointf &pos);
 
-		/// \brief Set position
-		///
-		/// \param pos = Point
-		void set_position(const Point &pos);
+		/// \brief Returns the size of the layout
+		Sizef size() const;
 
-		/// \brief Get Size
-		///
-		/// \return size
-		Size get_size() const;
+		/// \brief Returns the geometry of the layout
+		Rectf rect() const;
 
-		/// \brief Get Rect
-		///
-		/// \return rect
-		Rect get_rect() const;
+		/// \brief Returns the geometry of the object with the given id
+		std::vector<Rectf> rect_by_id(int id) const;
 
-		/// \brief Get Rect By Id
-		///
-		/// \return rect
-		std::vector<Rect> get_rect_by_id(int id) const;
-
-		/// \brief Hit test
-		///
-		/// \param canvas = Canvas
-		/// \param pos = Point
-		///
-		/// \return Hit Test Result
-		HitTestResult hit_test(const CanvasPtr &canvas, const Point &pos);
+		/// \brief Hit test which object is located at the specified position
+		HitTestResult hit_test(const CanvasPtr &canvas, const Pointf &pos);
 
 		/// \brief Draw layout
-		///
-		/// \param canvas = Canvas
 		void draw_layout(const CanvasPtr &canvas);
 
 		/// \brief Draw layout generating ellipsis for clipped text
-		///
-		/// \param canvas = Canvas
-		/// \param content_rect = Clipping rectangle
-		void draw_layout_ellipsis(const CanvasPtr &canvas, const Rect &content_rect);
+		void draw_layout_ellipsis(const CanvasPtr &canvas, const Rectf &content_rect);
 
 		/// \brief Set component geometry
 		void set_component_geometry();
 
-		/// \brief Find preferred size
-		///
-		/// \param canvas = Canvas
-		///
-		/// \return Size
-		Size find_preferred_size(const CanvasPtr &canvas);
+		/// \brief Find the preferred size for the given layout
+		Sizef find_preferred_size(const CanvasPtr &canvas);
 
 		/// \brief Set selection range
-		///
-		/// \param size_type = String
-		/// \param size_type = String
 		void set_selection_range(std::string::size_type start, std::string::size_type end);
 
 		/// \brief Set selection colors
-		///
-		/// \param foreground = Colorf
-		/// \param background = Colorf
 		void set_selection_colors(const Colorf &foreground, const Colorf &background);
 
 		/// \brief Shows the cursor caret
@@ -195,27 +158,21 @@ namespace uicore
 		/// \param color = Color of cursor
 		void set_cursor_color(const Colorf &color);
 
-		/// \brief Get Combined text
-		///
-		/// \return combined_text
-		std::string get_combined_text() const;
+		/// \brief Get all text
+		std::string combined_text() const;
 
 		/// \brief Sets the text alignment
 		///
 		/// Alignment is applied when layout() is called
-		///
-		/// \param align = The alignment
 		void set_align(SpanAlign align);
 
 		/// \brief Returns the baseline offset for the first baseline
-		int get_first_baseline_offset();
+		float first_baseline_offset();
 
 		/// \brief Returns the baseline offset for the last baseline
-		int get_last_baseline_offset();
+		float last_baseline_offset();
 
 	private:
-		void add_component_helper(SpanComponent *component, int baseline_offset, int id);
-
 		std::shared_ptr<SpanLayout_Impl> impl;
 	};
 }

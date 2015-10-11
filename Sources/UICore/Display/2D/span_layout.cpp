@@ -46,35 +46,29 @@ namespace uicore
 		impl->clear();
 	}
 
-	template<typename T>
-	void SpanLayout::add_component(T *component, int baseline_offset, int id)
-	{
-		add_component_helper(new SpanComponentBinder<T>(component), baseline_offset, id);
-	}
-
 	void SpanLayout::add_text(const std::string &text, const Font &font, const Colorf &color, int id)
 	{
 		impl->add_text(text, font, color, id);
 	}
 
-	void SpanLayout::add_image(const ImagePtr &image, int baseline_offset, int id)
+	void SpanLayout::add_image(const ImagePtr &image, float baseline_offset, int id)
 	{
 		impl->add_image(image, baseline_offset, id);
 	}
 
-	void SpanLayout::add_component_helper(SpanComponent *component, int baseline_offset, int id)
+	void SpanLayout::add_component(std::shared_ptr<SpanComponent> component, float baseline_offset, int id)
 	{
 		impl->add_component(component, baseline_offset, id);
 	}
 
-	void SpanLayout::layout(const CanvasPtr &canvas, int max_width)
+	void SpanLayout::layout(const CanvasPtr &canvas, float max_width)
 	{
 		impl->layout(canvas, max_width);
 	}
 
-	SpanLayout::HitTestResult SpanLayout::hit_test(const CanvasPtr &canvas, const Point &pos)
+	SpanLayout::HitTestResult SpanLayout::hit_test(const CanvasPtr &canvas, const Pointf &pos)
 	{
-		return impl->hit_test(canvas, pos);
+		return impl->hit_test(canvas, Point(pos));
 	}
 
 	void SpanLayout::draw_layout(const CanvasPtr &canvas)
@@ -82,29 +76,32 @@ namespace uicore
 		impl->draw_layout(canvas);
 	}
 
-	void SpanLayout::draw_layout_ellipsis(const CanvasPtr &canvas, const Rect &content_rect)
+	void SpanLayout::draw_layout_ellipsis(const CanvasPtr &canvas, const Rectf &content_rect)
 	{
 		impl->draw_layout_ellipsis(canvas, content_rect);
 	}
 
-	void SpanLayout::set_position(const Point &pos)
+	void SpanLayout::set_position(const Pointf &pos)
 	{
-		impl->set_position(pos);
+		impl->set_position(Point(pos));
 	}
 
-	Size SpanLayout::get_size() const
+	Sizef SpanLayout::size() const
 	{
 		return impl->get_rect().get_size();
 	}
 
-	Rect SpanLayout::get_rect() const
+	Rectf SpanLayout::rect() const
 	{
 		return impl->get_rect();
 	}
 
-	std::vector<Rect> SpanLayout::get_rect_by_id(int id) const
+	std::vector<Rectf> SpanLayout::rect_by_id(int id) const
 	{
-		return impl->get_rect_by_id(id);
+		std::vector<Rectf> results;
+		for (const auto &r : impl->get_rect_by_id(id))
+			results.push_back(r);
+		return results;
 	}
 
 	void SpanLayout::set_align(SpanAlign align)
@@ -112,7 +109,7 @@ namespace uicore
 		impl->set_align(align);
 	}
 
-	Size SpanLayout::find_preferred_size(const CanvasPtr &canvas)
+	Sizef SpanLayout::find_preferred_size(const CanvasPtr &canvas)
 	{
 		return impl->find_preferred_size(canvas);
 	}
@@ -127,7 +124,7 @@ namespace uicore
 		impl->set_selection_colors(foreground, background);
 	}
 
-	std::string SpanLayout::get_combined_text() const
+	std::string SpanLayout::combined_text() const
 	{
 		return impl->get_combined_text();
 	}
@@ -162,12 +159,12 @@ namespace uicore
 		impl->cursor_color = color;
 	}
 
-	int SpanLayout::get_first_baseline_offset()
+	float SpanLayout::first_baseline_offset()
 	{
 		return impl->get_first_baseline_offset();
 	}
 
-	int SpanLayout::get_last_baseline_offset()
+	float SpanLayout::last_baseline_offset()
 	{
 		return impl->get_last_baseline_offset();
 	}
