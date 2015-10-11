@@ -37,16 +37,11 @@ namespace uicore
 {
 	class Canvas_Impl;
 	class GraphicContext;
-	class PrimitivesArray;
-	class Image;
-	class GlyphCache;
-	class Draw;
 	class RenderBatcher;
 	class Colorf;
 	class Pointf;
 	class DisplayWindow;
 	typedef std::shared_ptr<DisplayWindow> DisplayWindowPtr;
-	class DisplayWindowDescription;
 	class Path;
 	class Pen;
 	class Brush;

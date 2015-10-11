@@ -32,6 +32,8 @@
 
 namespace uicore
 {
+	class GlyphCache;
+
 	class Font_DrawSubPixel : public Font_Draw
 	{
 	public:
