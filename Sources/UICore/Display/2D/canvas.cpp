@@ -74,7 +74,7 @@ namespace uicore
 		return impl->transform();
 	}
 
-	Mat4f &Canvas::inverse_transform()
+	const Mat4f &Canvas::inverse_transform() const
 	{
 		return impl->inverse_transform();
 	}

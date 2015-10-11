@@ -73,9 +73,7 @@ namespace uicore
 		const Mat4f &transform() const;
 
 		/// \brief Returns the inverse of the current effective transform matrix
-		///
-		/// This is cached
-		Mat4f &inverse_transform();
+		const Mat4f &inverse_transform() const;
 
 		/// \brief Returns the current effective projection matrix.
 		const Mat4f &projection() const;

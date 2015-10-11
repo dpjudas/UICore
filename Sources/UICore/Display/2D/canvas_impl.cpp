@@ -171,7 +171,7 @@ namespace uicore
 		return canvas_transform;
 	}
 
-	Mat4f &Canvas_Impl::inverse_transform()
+	const Mat4f &Canvas_Impl::inverse_transform() const
 	{
 		if (!canvas_inverse_transform_set)
 		{

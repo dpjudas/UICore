@@ -76,7 +76,7 @@ namespace uicore
 
 		void set_transform(const Mat4f &matrix);
 		const Mat4f &transform() const;
-		Mat4f &inverse_transform();
+		const Mat4f &inverse_transform() const;
 		const Mat4f &projection() const;
 
 		void set_map_mode(MapMode map_mode);
@@ -103,8 +103,8 @@ namespace uicore
 		SlotContainer sc;
 
 		Mat4f canvas_transform;
-		bool canvas_inverse_transform_set = false;
-		Mat4f canvas_inverse_transform;
+		mutable bool canvas_inverse_transform_set = false;
+		mutable Mat4f canvas_inverse_transform;
 		Mat4f canvas_projection;
 		MapMode canvas_map_mode;
 		Rectf viewport_rect;
