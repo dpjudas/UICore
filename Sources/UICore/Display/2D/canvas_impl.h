@@ -55,6 +55,8 @@ namespace uicore
 	public:
 		CanvasImpl(const DisplayWindowPtr &window);
 
+		const GraphicContextPtr &gc() const override { return _gc; }
+
 		float width() const override { return gc()->dip_width(); }
 		float height() const override { return gc()->dip_height(); }
 		Sizef size() const override { return gc()->dip_size(); }
@@ -79,38 +81,15 @@ namespace uicore
 		void pop_clip() override;
 		void reset_clip() override;
 
-		const GraphicContextPtr &gc() const override { return _gc; }
-
 		void set_transform(const Mat4f &matrix) override;
 		const Mat4f &transform() const override;
 		const Mat4f &inverse_transform() const override;
 		const Mat4f &projection() const override;
 
-		void set_program_object(StandardProgram new_standard_program) override
-		{
-			batcher.flush();
-			standard_program = new_standard_program;
-			gc()->set_program_object(standard_program);
-		}
+		void set_program_object(StandardProgram new_standard_program);
+		void set_blend_state(const BlendStatePtr &new_state, const Colorf &new_blend_color, unsigned int new_sample_mask);
 
-		void set_blend_state(const BlendStatePtr &new_state, const Colorf &new_blend_color, unsigned int new_sample_mask) override
-		{
-			batcher.flush();
-			blend_state = new_state;
-			blend_color = new_blend_color;
-			sample_mask = new_sample_mask;
-			gc()->set_blend_state(blend_state, blend_color, sample_mask);
-		}
-
-		Pointf grid_fit(const Pointf &pos) override
-		{
-			float pixel_ratio = gc()->pixel_ratio();
-			Vec4f world_pos = transform() * Vec4f(pos.x, pos.y, 0.0f, 1.0f);
-			world_pos.x = std::round(world_pos.x * pixel_ratio) / pixel_ratio;
-			world_pos.y = std::round(world_pos.y * pixel_ratio) / pixel_ratio;
-			Vec4f object_pos = inverse_transform() * world_pos;
-			return Pointf(object_pos.x, object_pos.y);
-		}
+		Pointf grid_fit(const Pointf &pos) override;
 
 		void set_batcher(RenderBatcher *batcher);
 
@@ -143,7 +122,7 @@ namespace uicore
 
 		StandardProgram standard_program = program_sprite;
 		RasterizerStatePtr rasterizer_state;
-		BlendStatePtr blend_state;
+		BlendStatePtr blend_state, default_blend_state;
 		Colorf blend_color = Colorf::white;
 		unsigned int sample_mask = 0xffffffff;
 		DepthStencilStatePtr depth_stencil_state;

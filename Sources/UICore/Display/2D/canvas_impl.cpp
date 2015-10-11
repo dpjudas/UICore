@@ -40,7 +40,8 @@ namespace uicore
 		_gc = window->gc();
 
 		rasterizer_state = _gc->create_rasterizer_state(RasterizerStateDescription());
-		blend_state = _gc->create_blend_state(BlendStateDescription());
+		default_blend_state = _gc->create_blend_state(BlendStateDescription::blend(false));
+		blend_state = default_blend_state;
 		depth_stencil_state = _gc->create_depth_stencil_state(DepthStencilStateDescription());
 
 		gc_clip_z_range = _gc->clip_z_range();
@@ -75,19 +76,51 @@ namespace uicore
 		update_viewport_size();
 
 		gc()->set_viewport(gc()->size(), gc()->texture_image_y_axis());
+		gc()->set_rasterizer_state(rasterizer_state);
 		gc()->set_depth_stencil_state(depth_stencil_state);
 		gc()->set_blend_state(blend_state, blend_color, sample_mask);
 		gc()->set_program_object(standard_program);
+		if (!cliprects.empty())
+			write_clip(cliprects.back());
 	}
 
 	void CanvasImpl::end()
 	{
 		batcher.flush();
 
-		gc()->set_viewport(gc()->size(), gc()->texture_image_y_axis());
+		if (!cliprects.empty())
+			gc()->reset_scissor();
+		gc()->set_rasterizer_state(nullptr);
 		gc()->set_depth_stencil_state(nullptr);
 		gc()->set_blend_state(nullptr);
 		gc()->set_program_object(nullptr);
+		gc()->set_viewport(gc()->size(), gc()->texture_image_y_axis());
+	}
+
+	void CanvasImpl::set_program_object(StandardProgram new_standard_program)
+	{
+		batcher.flush();
+		standard_program = new_standard_program;
+		gc()->set_program_object(standard_program);
+	}
+
+	void CanvasImpl::set_blend_state(const BlendStatePtr &new_state, const Colorf &new_blend_color, unsigned int new_sample_mask)
+	{
+		batcher.flush();
+		blend_state = new_state ? new_state : default_blend_state;
+		blend_color = new_blend_color;
+		sample_mask = new_sample_mask;
+		gc()->set_blend_state(blend_state, blend_color, sample_mask);
+	}
+
+	Pointf CanvasImpl::grid_fit(const Pointf &pos)
+	{
+		float pixel_ratio = gc()->pixel_ratio();
+		Vec4f world_pos = transform() * Vec4f(pos.x, pos.y, 0.0f, 1.0f);
+		world_pos.x = std::round(world_pos.x * pixel_ratio) / pixel_ratio;
+		world_pos.y = std::round(world_pos.y * pixel_ratio) / pixel_ratio;
+		Vec4f object_pos = inverse_transform() * world_pos;
+		return Pointf(object_pos.x, object_pos.y);
 	}
 
 	void CanvasImpl::update_batcher_matrix()
