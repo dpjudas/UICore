@@ -57,7 +57,7 @@ namespace uicore
 		impl->add_text(text, font, color, id);
 	}
 
-	void SpanLayout::add_image(const Image &image, int baseline_offset, int id)
+	void SpanLayout::add_image(const ImagePtr &image, int baseline_offset, int id)
 	{
 		impl->add_image(image, baseline_offset, id);
 	}

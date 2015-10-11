@@ -33,9 +33,11 @@
 namespace uicore
 {
 	class Image;
+	typedef std::shared_ptr<Image> ImagePtr;
 	class Font;
 	class FontDescription;
 	class Canvas;
+	typedef std::shared_ptr<Canvas> CanvasPtr;
 
 	class UIThread
 	{
@@ -45,7 +47,7 @@ namespace uicore
 		static std::string resource_path();
 		static void set_resource_path(const std::string &path);
 
-		static Image image(const CanvasPtr &canvas, const std::string &name);
+		static ImagePtr image(const CanvasPtr &canvas, const std::string &name);
 		static Font font(const std::string &family, const FontDescription &desc);
 
 		static void set_exception_handler(const std::function<void(const std::exception_ptr &)> &exception_handler);

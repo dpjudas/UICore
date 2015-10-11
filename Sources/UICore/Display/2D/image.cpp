@@ -40,262 +40,247 @@
 
 namespace uicore
 {
-	class Image_Impl
+	class ImageImpl : public Image
 	{
 	public:
+		ImageImpl(const ImageImpl &other) { *this = other; }
+		ImageImpl(const CanvasPtr &canvas, const PixelBufferPtr &pb, const Rect &rect, float _pixel_ratio);
+		ImageImpl(Texture2DPtr texture, const Rect &rect, float _pixel_ratio);
+		ImageImpl(Subtexture &sub_texture, float _pixel_ratio);
+		ImageImpl(const CanvasPtr &canvas, const std::string &filename, const ImageImportDescription &import_desc, float _pixel_ratio);
+
+		float scale_x() const override { return _scale_x; }
+		float scale_y() const override { return _scale_y; }
+		Colorf color() const override { return _color; }
+		void get_alignment(Origin &origin, float &x, float &y) const override;
+		Subtexture texture() const override;
+		Sizef size() const override;
+		float width() const override;
+		float height() const override;
+		std::shared_ptr<Image> clone() const override;
+		void draw(const CanvasPtr &canvas, float x, float y) const override;
+		void draw(const CanvasPtr &canvas, const Rectf &src, const Rectf &dest) const override;
+		void draw(const CanvasPtr &canvas, const Rectf &dest) const override;
+		void draw(const CanvasPtr &canvas, const Rectf &src, const Quadf &dest) const override;
+		void draw(const CanvasPtr &canvas, const Quadf &dest) const override;
+		void set_scale(float x, float y) override;
+		void set_color(const Colorf &color) override;
+		void set_alignment(Origin origin, float x, float y) override;
+		void set_wrap_mode(TextureWrapMode wrap_s, TextureWrapMode wrap_t) override;
+		void set_linear_filter(bool linear_filter = true) override;
+
+	private:
 		void calc_hotspot();
 
-		Colorf color = Colorf::white;
+		Colorf _color = Colorf::white;
 
-		float scale_x = 1.0f, scale_y = 1.0f;
+		float _scale_x = 1.0f;
+		float _scale_y = 1.0f;
 
-		Pointf translation_hotspot;
-		Origin translation_origin = origin_top_left;
+		Pointf _translation_hotspot;
+		Origin _translation_origin = origin_top_left;
 
-		Pointf translated_hotspot;	// Precalculated from calc_hotspot()
+		Pointf _translated_hotspot;	// Precalculated from calc_hotspot()
 
-		Texture2DPtr texture;
-		Rect texture_rect;
-		float pixel_ratio = 1.0f;
+		Texture2DPtr _texture;
+		Rect _texture_rect;
+		float _pixel_ratio = 1.0f;
 	};
 
-	void Image_Impl::calc_hotspot()
+	ImageImpl::ImageImpl(const CanvasPtr &canvas, const PixelBufferPtr &pb, const Rect &rect, float pixel_ratio)
 	{
-		switch (translation_origin)
-		{
-		case origin_top_left:
-		default:
-			translated_hotspot = Pointf(translation_hotspot.x, translation_hotspot.y);
-			break;
-		case origin_top_center:
-			translated_hotspot = Pointf(translation_hotspot.x - texture_rect.get_width() * scale_x * 0.5f, translation_hotspot.y);
-			break;
-		case origin_top_right:
-			translated_hotspot = Pointf(translation_hotspot.x - texture_rect.get_width() * scale_x, translation_hotspot.y);
-			break;
-		case origin_center_left:
-			translated_hotspot = Pointf(translation_hotspot.x, translation_hotspot.y - texture_rect.get_height() * scale_y * 0.5f);
-			break;
-		case origin_center:
-			translated_hotspot = Pointf(translation_hotspot.x - texture_rect.get_width() * scale_x * 0.5f, translation_hotspot.y - texture_rect.get_height() * scale_y * 0.5f);
-			break;
-		case origin_center_right:
-			translated_hotspot = Pointf(translation_hotspot.x - texture_rect.get_width() * scale_x, translation_hotspot.y - texture_rect.get_height() * scale_y * 0.5f);
-			break;
-		case origin_bottom_left:
-			translated_hotspot = Pointf(translation_hotspot.x, translation_hotspot.y - texture_rect.get_height() * scale_y);
-			break;
-		case origin_bottom_center:
-			translated_hotspot = Pointf(translation_hotspot.x - texture_rect.get_width() * scale_x * 0.5f, translation_hotspot.y - texture_rect.get_height() * scale_y);
-			break;
-		case origin_bottom_right:
-			translated_hotspot = Pointf(translation_hotspot.x - texture_rect.get_width() * scale_x, translation_hotspot.y - texture_rect.get_height() * scale_y);
-			break;
-		}
-
-		if (pixel_ratio != 0.0f)
-		{
-			translated_hotspot.x /= pixel_ratio;
-			translated_hotspot.y /= pixel_ratio;
-		}
+		_texture = Texture2D::create(canvas->gc(), pb->width(), pb->height(), pb->format());
+		_texture->set_subimage(canvas->gc(), 0, 0, pb, rect);
+		_texture_rect = Rect(0, 0, pb->width(), pb->height());
+		_pixel_ratio = pixel_ratio;
 	}
 
-	Image::Image()
+	ImageImpl::ImageImpl(Texture2DPtr texture, const Rect &rect, float pixel_ratio)
 	{
+		_texture = texture;
+		_texture_rect = rect;
+		_pixel_ratio = pixel_ratio;
 	}
 
-	Image::Image(const CanvasPtr &canvas, const PixelBufferPtr &pb, const Rect &rect, float pixel_ratio)
-		: impl(std::make_shared<Image_Impl>())
+	ImageImpl::ImageImpl(Subtexture &sub_texture, float pixel_ratio)
 	{
-		impl->texture = Texture2D::create(canvas->gc(), pb->width(), pb->height(), pb->format());
-		impl->texture->set_subimage(canvas->gc(), 0, 0, pb, rect);
-		impl->texture_rect = Rect(0, 0, pb->width(), pb->height());
-		impl->pixel_ratio = pixel_ratio;
+		_texture = sub_texture.get_texture();
+		_texture_rect = sub_texture.get_geometry();
+		_pixel_ratio = pixel_ratio;
 	}
 
-	Image::Image(Texture2DPtr texture, const Rect &rect, float pixel_ratio)
-		: impl(std::make_shared<Image_Impl>())
+	ImageImpl::ImageImpl(const CanvasPtr &canvas, const std::string &filename, const ImageImportDescription &import_desc, float pixel_ratio)
 	{
-		impl->texture = texture;
-		impl->texture_rect = rect;
-		impl->pixel_ratio = pixel_ratio;
+		_texture = Texture2D::create(canvas->gc(), filename, import_desc);
+		_texture_rect = _texture->size();
+		_pixel_ratio = pixel_ratio;
 	}
 
-	Image::Image(Subtexture &sub_texture, float pixel_ratio)
-		: impl(std::make_shared<Image_Impl>())
+	std::shared_ptr<Image> ImageImpl::clone() const
 	{
-		impl->texture = sub_texture.get_texture();
-		impl->texture_rect = sub_texture.get_geometry();
-		impl->pixel_ratio = pixel_ratio;
+		return std::make_shared<ImageImpl>(*this);
 	}
 
-	Image::Image(const CanvasPtr &canvas, const std::string &filename, const ImageImportDescription &import_desc, float pixel_ratio)
-		: impl(std::make_shared<Image_Impl>())
+	Subtexture ImageImpl::texture() const
 	{
-		impl->texture = Texture2D::create(canvas->gc(), filename, import_desc);
-		impl->texture_rect = impl->texture->size();
-		impl->pixel_ratio = pixel_ratio;
+		return Subtexture(_texture, _texture_rect);
 	}
 
-	Image::~Image()
+	void ImageImpl::get_alignment(Origin &origin, float &x, float &y) const
 	{
+		origin = _translation_origin;
+		x = _translation_hotspot.x;
+		y = _translation_hotspot.y;
 	}
 
-	Image Image::clone() const
+	float ImageImpl::width() const
 	{
-		Image copy;
-		copy.impl = std::shared_ptr<Image_Impl>(new Image_Impl());
-		*(copy.impl) = *impl;
-		return copy;
-	}
-
-	Subtexture Image::texture() const
-	{
-		return Subtexture(impl->texture, impl->texture_rect);
-	}
-
-	void Image::throw_if_null() const
-	{
-		if (!impl)
-			throw Exception("Image is null");
-	}
-
-	float Image::scale_x() const
-	{
-		return impl->scale_x;
-	}
-
-	float Image::scale_y() const
-	{
-		return impl->scale_y;
-	}
-
-	Colorf Image::color() const
-	{
-		return impl->color;
-	}
-
-	void Image::get_alignment(Origin &origin, float &x, float &y) const
-	{
-		origin = impl->translation_origin;
-		x = impl->translation_hotspot.x;
-		y = impl->translation_hotspot.y;
-	}
-
-	float Image::width() const
-	{
-		if (impl->pixel_ratio != 0.0f)
-			return impl->texture_rect.get_width() / impl->pixel_ratio;
+		if (_pixel_ratio != 0.0f)
+			return _texture_rect.get_width() / _pixel_ratio;
 		else
-			return impl->texture_rect.get_width();
+			return _texture_rect.get_width();
 	}
 
-	float Image::height() const
+	float ImageImpl::height() const
 	{
-		if (impl->pixel_ratio != 0.0f)
-			return impl->texture_rect.get_height() / impl->pixel_ratio;
+		if (_pixel_ratio != 0.0f)
+			return _texture_rect.get_height() / _pixel_ratio;
 		else
-			return impl->texture_rect.get_height();
+			return _texture_rect.get_height();
 	}
 
-	Sizef Image::size() const
+	Sizef ImageImpl::size() const
 	{
 		return Sizef(width(), height());
 	}
 
-	void Image::draw(const CanvasPtr &canvas, float x, float y) const
+	void ImageImpl::draw(const CanvasPtr &canvas, float x, float y) const
 	{
 		Rectf dest(
-			x + impl->translated_hotspot.x, y + impl->translated_hotspot.y,
-			Sizef(width() * impl->scale_x, height() * impl->scale_y));
+			x + _translated_hotspot.x, y + _translated_hotspot.y,
+			Sizef(width() * _scale_x, height() * _scale_y));
 
 		RenderBatchTriangle *batcher = static_cast<CanvasImpl*>(canvas.get())->batcher.get_triangle_batcher();
-		batcher->draw_image(canvas, impl->texture_rect, dest, impl->color, impl->texture);
+		batcher->draw_image(canvas, _texture_rect, dest, _color, _texture);
 	}
 
-	void Image::draw(const CanvasPtr &canvas, const Rectf &src, const Rectf &dest) const
+	void ImageImpl::draw(const CanvasPtr &canvas, const Rectf &src, const Rectf &dest) const
 	{
 		Rectf new_src = src;
-		new_src.translate(impl->texture_rect.left, impl->texture_rect.top);
+		new_src.translate(_texture_rect.left, _texture_rect.top);
 
 		Rectf new_dest = dest;
-		new_dest.translate(impl->translated_hotspot);
+		new_dest.translate(_translated_hotspot);
 
 		RenderBatchTriangle *batcher = static_cast<CanvasImpl*>(canvas.get())->batcher.get_triangle_batcher();
-		batcher->draw_image(canvas, new_src, new_dest, impl->color, impl->texture);
+		batcher->draw_image(canvas, new_src, new_dest, _color, _texture);
 	}
 
-	void Image::draw(const CanvasPtr &canvas, const Rectf &dest) const
+	void ImageImpl::draw(const CanvasPtr &canvas, const Rectf &dest) const
 	{
 		Rectf new_dest = dest;
-		new_dest.translate(impl->translated_hotspot);
+		new_dest.translate(_translated_hotspot);
 
 		RenderBatchTriangle *batcher = static_cast<CanvasImpl*>(canvas.get())->batcher.get_triangle_batcher();
-		batcher->draw_image(canvas, impl->texture_rect, new_dest, impl->color, impl->texture);
+		batcher->draw_image(canvas, _texture_rect, new_dest, _color, _texture);
 	}
 
-	void Image::draw(const CanvasPtr &canvas, const Rectf &src, const Quadf &dest) const
+	void ImageImpl::draw(const CanvasPtr &canvas, const Rectf &src, const Quadf &dest) const
 	{
 		Rectf new_src = src;
-		new_src.translate(impl->texture_rect.left, impl->texture_rect.top);
+		new_src.translate(_texture_rect.left, _texture_rect.top);
 
 		Quadf new_dest = dest;
-		new_dest.p += impl->translated_hotspot;
-		new_dest.q += impl->translated_hotspot;
-		new_dest.r += impl->translated_hotspot;
-		new_dest.s += impl->translated_hotspot;
+		new_dest.p += _translated_hotspot;
+		new_dest.q += _translated_hotspot;
+		new_dest.r += _translated_hotspot;
+		new_dest.s += _translated_hotspot;
 
 		RenderBatchTriangle *batcher = static_cast<CanvasImpl*>(canvas.get())->batcher.get_triangle_batcher();
-		batcher->draw_image(canvas, new_src, new_dest, impl->color, impl->texture);
+		batcher->draw_image(canvas, new_src, new_dest, _color, _texture);
 	}
 
-	void Image::draw(const CanvasPtr &canvas, const Quadf &dest) const
+	void ImageImpl::draw(const CanvasPtr &canvas, const Quadf &dest) const
 	{
 		Quadf new_dest = dest;
-		new_dest.p += impl->translated_hotspot;
-		new_dest.q += impl->translated_hotspot;
-		new_dest.r += impl->translated_hotspot;
-		new_dest.s += impl->translated_hotspot;
+		new_dest.p += _translated_hotspot;
+		new_dest.q += _translated_hotspot;
+		new_dest.r += _translated_hotspot;
+		new_dest.s += _translated_hotspot;
 
 		RenderBatchTriangle *batcher = static_cast<CanvasImpl*>(canvas.get())->batcher.get_triangle_batcher();
-		batcher->draw_image(canvas, impl->texture_rect, new_dest, impl->color, impl->texture);
+		batcher->draw_image(canvas, _texture_rect, new_dest, _color, _texture);
 	}
 
-	void Image::set_scale(float x, float y)
+	void ImageImpl::set_scale(float x, float y)
 	{
-		impl->scale_x = x;
-		impl->scale_y = y;
-		impl->calc_hotspot();
+		_scale_x = x;
+		_scale_y = y;
+		calc_hotspot();
 	}
 
-	void Image::set_color(const Colorf &color)
+	void ImageImpl::set_color(const Colorf &color)
 	{
-		impl->color = color;
+		_color = color;
 	}
 
-	void Image::set_alignment(Origin origin, float x, float y)
+	void ImageImpl::set_alignment(Origin origin, float x, float y)
 	{
-		impl->translation_origin = origin;
-		impl->translation_hotspot.x = x;
-		impl->translation_hotspot.y = y;
-		impl->calc_hotspot();
+		_translation_origin = origin;
+		_translation_hotspot.x = x;
+		_translation_hotspot.y = y;
+		calc_hotspot();
 	}
 
-	void Image::set_wrap_mode(
-		TextureWrapMode wrap_s,
-		TextureWrapMode wrap_t)
+	void ImageImpl::set_wrap_mode(TextureWrapMode wrap_s, TextureWrapMode wrap_t)
 	{
-		impl->texture->set_wrap_mode(wrap_s, wrap_t);
+		_texture->set_wrap_mode(wrap_s, wrap_t);
 	}
 
-	void Image::set_linear_filter(bool linear_filter)
+	void ImageImpl::set_linear_filter(bool linear_filter)
 	{
-		impl->texture->set_mag_filter(linear_filter ? filter_linear : filter_nearest);
-		impl->texture->set_min_filter(linear_filter ? filter_linear : filter_nearest);
+		_texture->set_mag_filter(linear_filter ? filter_linear : filter_nearest);
+		_texture->set_min_filter(linear_filter ? filter_linear : filter_nearest);
 	}
 
-	void Image::set_subimage(const CanvasPtr &canvas, int x, int y, const PixelBufferPtr &image, const Rect &src_rect, int level)
+	void ImageImpl::calc_hotspot()
 	{
-		impl->texture->set_subimage(canvas->gc(), x, y, image, src_rect, level);
+		switch (_translation_origin)
+		{
+		case origin_top_left:
+		default:
+			_translated_hotspot = Pointf(_translation_hotspot.x, _translation_hotspot.y);
+			break;
+		case origin_top_center:
+			_translated_hotspot = Pointf(_translation_hotspot.x - _texture_rect.get_width() * _scale_x * 0.5f, _translation_hotspot.y);
+			break;
+		case origin_top_right:
+			_translated_hotspot = Pointf(_translation_hotspot.x - _texture_rect.get_width() * _scale_x, _translation_hotspot.y);
+			break;
+		case origin_center_left:
+			_translated_hotspot = Pointf(_translation_hotspot.x, _translation_hotspot.y - _texture_rect.get_height() * _scale_y * 0.5f);
+			break;
+		case origin_center:
+			_translated_hotspot = Pointf(_translation_hotspot.x - _texture_rect.get_width() * _scale_x * 0.5f, _translation_hotspot.y - _texture_rect.get_height() * _scale_y * 0.5f);
+			break;
+		case origin_center_right:
+			_translated_hotspot = Pointf(_translation_hotspot.x - _texture_rect.get_width() * _scale_x, _translation_hotspot.y - _texture_rect.get_height() * _scale_y * 0.5f);
+			break;
+		case origin_bottom_left:
+			_translated_hotspot = Pointf(_translation_hotspot.x, _translation_hotspot.y - _texture_rect.get_height() * _scale_y);
+			break;
+		case origin_bottom_center:
+			_translated_hotspot = Pointf(_translation_hotspot.x - _texture_rect.get_width() * _scale_x * 0.5f, _translation_hotspot.y - _texture_rect.get_height() * _scale_y);
+			break;
+		case origin_bottom_right:
+			_translated_hotspot = Pointf(_translation_hotspot.x - _texture_rect.get_width() * _scale_x, _translation_hotspot.y - _texture_rect.get_height() * _scale_y);
+			break;
+		}
+
+		if (_pixel_ratio != 0.0f)
+		{
+			_translated_hotspot.x /= _pixel_ratio;
+			_translated_hotspot.y /= _pixel_ratio;
+		}
 	}
 }

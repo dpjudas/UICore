@@ -36,11 +36,9 @@
 
 namespace uicore
 {
-	class GraphicContext;
 	class Rect;
 	class Size;
 	class Rectf;
-	class Image_Impl;
 	class Texture2D;
 	typedef std::shared_ptr<Texture2D> Texture2DPtr;
 	class Subtexture;
@@ -53,161 +51,67 @@ namespace uicore
 	class Image
 	{
 	public:
-		/// \brief Constructs a null instance.
-		Image();
-
-		/// \brief Constructs an image from a texture.
-		///
-		/// \param texture = Texture to get image data from
-		/// \param rect = Position and size in texture to get image data from
-		Image(Texture2DPtr texture, const Rect &rect, float pixel_ratio = 1.0f);
-
-		/// \brief Constructs an image from a subtexture.
-		///
-		/// \param sub_texture = Subtexture to get image data from
-		Image(Subtexture &sub_texture, float pixel_ratio = 1.0f);
-
-		/// \brief Constructs a Image from a pixelbuffer.
-		///
-		/// \param canvas = Canvas
-		/// \param pixelbuffer = Pixelbuffer to get image data from
-		/// \param rect = pixelbuffer rect
-		Image(const CanvasPtr &canvas, const PixelBufferPtr &pixelbuffer, const Rect &rect, float pixel_ratio = 1.0f);
-
-		/// \brief Constructs a Image
-		///
-		/// \param canvas = Canvas
-		/// \param filename Filename of image to load
-		/// \param import_desc = Image Import Description
-		Image(const CanvasPtr &canvas, const std::string &filename, const ImageImportDescription &import_desc = ImageImportDescription(), float pixel_ratio = 1.0f);
-
-		virtual ~Image();
-
-		/// \brief Returns true if this object is invalid.
-		bool is_null() const { return !impl; }
-
-		/// \brief Throw an exception if this object is invalid.
-		void throw_if_null() const;
+		/// \brief Constructs an image
+		static std::shared_ptr<Image> create(Texture2DPtr texture, const Rect &rect, float pixel_ratio = 1.0f);
+		static std::shared_ptr<Image> create(Subtexture &sub_texture, float pixel_ratio = 1.0f);
+		static std::shared_ptr<Image> create(const CanvasPtr &canvas, const PixelBufferPtr &pixelbuffer, const Rect &rect, float pixel_ratio = 1.0f);
+		static std::shared_ptr<Image> create(const CanvasPtr &canvas, const std::string &filename, const ImageImportDescription &import_desc = ImageImportDescription(), float pixel_ratio = 1.0f);
 
 		/// \brief Returns x scale.
-		float scale_x() const;
+		virtual float scale_x() const = 0;
 
 		/// \brief Returns y scale.
-		float scale_y() const;
+		virtual float scale_y() const = 0;
 
 		/// \brief Returns current color.
-		Colorf color() const;
+		virtual Colorf color() const = 0;
 
 		/// \brief Returns translation hot-spot.
-		void get_alignment(Origin &origin, float &x, float &y) const;
+		virtual void get_alignment(Origin &origin, float &x, float &y) const = 0;
 
 		/// \brief Return the texture of the image
-		Subtexture texture() const;
+		virtual Subtexture texture() const = 0;
 
 		/// \brief Return the size of the image.
-		Sizef size() const;
+		virtual Sizef size() const = 0;
 
 		/// \brief Return the width of the image.
-		float width() const;
+		virtual float width() const = 0;
 
 		/// \brief Return the height of the image.
-		float height() const;
-
-		/// \brief Equality operator
-		bool operator==(const Image &other) const
-		{
-			return impl == other.impl;
-		}
-
-		/// \brief Inequality operator
-		bool operator!=(const Image &other) const
-		{
-			return impl != other.impl;
-		}
-
-		/// \brief Less than operator
-		bool operator<(const Image &other) const
-		{
-			return impl < other.impl;
-		}
+		virtual float height() const = 0;
 
 		/// \brief Copies all information from this image to another, excluding the graphics that remain shared
-		Image clone() const;
+		virtual std::shared_ptr<Image> clone() const = 0;
 
 		/// \brief Draw image on graphic context.
 		///
+		/// \param canvas Target canvas
 		/// \param x, y Anchor position of where to render image. Actual rendering position depends on the anchor and the alignment mode.
-		/// \param gc Graphic context on which to render upon.
-		void draw(
-			const CanvasPtr &canvas,
-			float x,
-			float y) const;
-
-		/// \brief Draw image on graphic context.
-		///
-		/// \param gc Graphic context on which to render upon.
-		/// \param src Source rectangle to draw. Use this is draw only part of the image.
-		/// \param dest Rectangle to draw image in.
-		void draw(
-			const CanvasPtr &canvas,
-			const Rectf &src,
-			const Rectf &dest) const;
-
-		/// \brief Draw image on graphic context.
-		///
-		/// \param gc Graphic context on which to render upon.
-		/// \param dest Rectangle to draw image in.
-		void draw(
-			const CanvasPtr &canvas,
-			const Rectf &dest) const;
-
-		/// \brief Draw image on graphic context.
-		///
-		/// \param gc Graphic context on which to render upon.
-		/// \param src Source rectangle to draw. Use this is draw only part of the image.
-		/// \param dest Quad to draw image in.
-		void draw(
-			const CanvasPtr &canvas,
-			const Rectf &src,
-			const Quadf &dest) const;
-
-		/// \brief Draw image on graphic context.
-		///
-		/// \param gc Graphic context on which to render upon.
-		/// \param dest Quad to draw image in.
-		void draw(
-			const CanvasPtr &canvas,
-			const Quadf &dest) const;
+		/// \param src Source rectangle to draw
+		/// \param dest Area to draw image in
+		virtual void draw(const CanvasPtr &canvas, float x, float y) const = 0;
+		virtual void draw(const CanvasPtr &canvas, const Rectf &src, const Rectf &dest) const = 0;
+		virtual void draw(const CanvasPtr &canvas, const Rectf &dest) const = 0;
+		virtual void draw(const CanvasPtr &canvas, const Rectf &src, const Quadf &dest) const = 0;
+		virtual void draw(const CanvasPtr &canvas, const Quadf &dest) const = 0;
 
 		/// \brief Set scale factors
-		void set_scale(float x, float y);
+		virtual void set_scale(float x, float y) = 0;
 
 		/// \brief Sets the color.
-		void set_color(const Colorf &color);
+		virtual void set_color(const Colorf &color) = 0;
 		void set_color(const Color& c) { Colorf color; color.r = c.get_red() / 255.0f; color.g = c.get_green() / 255.0f; color.b = c.get_blue() / 255.0f; color.a = c.get_alpha() / 255.0f; set_color(color); }
 
 		/// \brief Sets translation hotspot.
-		void set_alignment(Origin origin, float x = 0, float y = 0);
+		virtual void set_alignment(Origin origin, float x = 0, float y = 0) = 0;
 
-		void set_wrap_mode(
-			TextureWrapMode wrap_s,
-			TextureWrapMode wrap_t);
+		/// \brief Sets the wrapping mode to use
+		virtual void set_wrap_mode(TextureWrapMode wrap_s, TextureWrapMode wrap_t) = 0;
 
 		/// \brief Set to true if a linear filter should be used for scaling up and down, false if a nearest-point filter should be used.
-		void set_linear_filter(bool linear_filter = true);
-
-		/** Upload image to sub-texture.
-		*  \param canvas Canvas to use for the request.
-		*  \param x       The horizontal point in the texture to write the new
-		*                 sub-texture image onto.
-		*  \param y       The vertical point in the texture to write the new
-		*                 sub-texture image onto.
-		*  \param image   Image to upload.
-		*  \param level   Mipmap level-of-detail number.
-		*/
-		void set_subimage(const CanvasPtr &canvas, int x, int y, const PixelBufferPtr &image, const Rect &src_rect, int level = 0);
-
-	private:
-		std::shared_ptr<Image_Impl> impl;
+		virtual void set_linear_filter(bool linear_filter = true) = 0;
 	};
+
+	typedef std::shared_ptr<Image> ImagePtr;
 }

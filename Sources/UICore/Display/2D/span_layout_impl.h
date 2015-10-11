@@ -99,7 +99,7 @@ namespace uicore
 		void clear();
 
 		void add_text(const std::string &text, const Font &font, const Colorf &color, int id = -1);
-		void add_image(const Image &image, int baseline_offset, int id = -1);
+		void add_image(const ImagePtr &image, int baseline_offset, int id = -1);
 		void add_component(SpanComponent *component, int baseline_offset = 0, int id = -1);
 
 		void layout(const CanvasPtr &canvasc, int max_width);
@@ -161,7 +161,7 @@ namespace uicore
 			Colorf color;
 			unsigned int start, end;
 
-			Image image;
+			ImagePtr image;
 			SpanComponent *component;
 			int baseline_offset;
 
@@ -183,7 +183,7 @@ namespace uicore
 			int x_position = 0;
 			int width = 0;
 
-			Image image;
+			ImagePtr image;
 			SpanComponent *component = nullptr;
 			int baseline_offset = 0;
 
@@ -227,7 +227,7 @@ namespace uicore
 
 			Rect rect;
 			ObjectType type = object_image;
-			Image image;
+			ImagePtr image;
 			SpanComponent *component = nullptr;
 			int id = 1;
 		};

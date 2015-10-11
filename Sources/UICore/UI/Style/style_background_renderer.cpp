@@ -94,12 +94,12 @@ namespace uicore
 
 	void StyleBackgroundRenderer::render_background_image(const StyleGetValue &layer_image, int index)
 	{
-		Image image;
+		ImagePtr image;
 
 		if (layer_image.is_url())
 			image = ImageSource::from_resource(layer_image.text())->get_image(canvas);
 
-		if (!image.is_null())
+		if (image)
 		{
 			Rectf clip_box = get_clip_box(index);
 			Rectf origin_box = get_origin_box(index);
@@ -116,7 +116,7 @@ namespace uicore
 				float x = get_start_x(index, clip_box, origin_box, image_size);
 				while (true)
 				{
-					image.draw(canvas, Rectf(x, y, x + image_size.width, y + image_size.height));
+					image->draw(canvas, Rectf(x, y, x + image_size.width, y + image_size.height));
 
 					if (repeat_x.is_keyword("no-repeat"))
 					{
@@ -381,7 +381,7 @@ namespace uicore
 		return y;
 	}
 
-	Sizef StyleBackgroundRenderer::get_image_size(int index, Image &image, Rectf origin_box)
+	Sizef StyleBackgroundRenderer::get_image_size(int index, const ImagePtr &image, Rectf origin_box)
 	{
 		Sizef size;
 		StyleGetValue size_x = get_layer_size_x(index);
@@ -389,21 +389,21 @@ namespace uicore
 		
 		if (size_x.is_keyword("contain"))
 		{
-			if (origin_box.get_height()*image.width() / image.height() <= origin_box.get_width())
-				size = Sizef(origin_box.get_height()*image.width() / image.height(), origin_box.get_height());
+			if (origin_box.get_height()*image->width() / image->height() <= origin_box.get_width())
+				size = Sizef(origin_box.get_height()*image->width() / image->height(), origin_box.get_height());
 			else
-				size = Sizef(origin_box.get_width(), origin_box.get_width()*image.height() / image.width());
+				size = Sizef(origin_box.get_width(), origin_box.get_width()*image->height() / image->width());
 		}
 		else if (size_x.is_keyword("cover"))
 		{
-			if (origin_box.get_height()*image.width() / image.height() >= origin_box.get_width())
-				size = Sizef(origin_box.get_height()*image.width() / image.height(), origin_box.get_height());
+			if (origin_box.get_height()*image->width() / image->height() >= origin_box.get_width())
+				size = Sizef(origin_box.get_height()*image->width() / image->height(), origin_box.get_height());
 			else
-				size = Sizef(origin_box.get_width(), origin_box.get_width()*image.height() / image.width());
+				size = Sizef(origin_box.get_width(), origin_box.get_width()*image->height() / image->width());
 		}
 		else
 		{
-			float width = image.width();
+			float width = image->width();
 			if (size_x.is_length())
 			{
 				width = size_x.number();
@@ -413,7 +413,7 @@ namespace uicore
 				width = size_x.number() * width / 100.0f;
 			}
 
-			float height = image.height();
+			float height = image->height();
 			if (size_y.is_length())
 			{
 				height = size_y.number();
@@ -443,11 +443,11 @@ namespace uicore
 
 		if (repeat_x.is_keyword("round") && size_y.is_keyword("auto"))
 		{
-			size.height = size.width*image.height() / image.width();
+			size.height = size.width*image->height() / image->width();
 		}
 		else if (repeat_y.is_keyword("round") && size_x.is_keyword("auto"))
 		{
-			size.width = size.height*image.width() / image.height();
+			size.width = size.height*image->width() / image->height();
 		}
 
 		return size;

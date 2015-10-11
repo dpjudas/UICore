@@ -143,7 +143,7 @@ namespace uicore
 
 	void SpanLayout_Impl::draw_layout_image(const CanvasPtr &canvas, Line &line, LineSegment &segment, int x, int y)
 	{
-		segment.image.draw(canvas, x + segment.x_position, y + line.ascender - segment.ascender);
+		segment.image->draw(canvas, x + segment.x_position, y + line.ascender - segment.ascender);
 	}
 
 	void SpanLayout_Impl::draw_layout_text(const CanvasPtr &canvas, Line &line, LineSegment &segment, int x, int y)
@@ -330,7 +330,7 @@ namespace uicore
 		text += more_text;
 	}
 
-	void SpanLayout_Impl::add_image(const Image &image, int baseline_offset, int id)
+	void SpanLayout_Impl::add_image(const ImagePtr &image, int baseline_offset, int id)
 	{
 		SpanObject object;
 		object.type = object_image;
@@ -539,7 +539,7 @@ namespace uicore
 		LineSegment segment;
 		if (objects[current_line.object_index].type == object_image)
 		{
-			size = objects[current_line.object_index].image.size();
+			size = objects[current_line.object_index].image->size();
 			segment.type = object_image;
 			segment.image = objects[current_line.object_index].image;
 		}
@@ -573,7 +573,7 @@ namespace uicore
 		floatbox.component = objects[current_line.object_index].component;
 		floatbox.id = objects[current_line.object_index].id;
 		if (objects[current_line.object_index].type == object_image)
-			floatbox.rect = Rect(Point(0, current_line.y_position), Size(floatbox.image.size()));
+			floatbox.rect = Rect(Point(0, current_line.y_position), Size(floatbox.image->size()));
 		else if (objects[current_line.object_index].type == object_component)
 			floatbox.rect = Rect(Point(0, current_line.y_position), Size(floatbox.component->get_size()));
 

@@ -41,6 +41,7 @@ namespace uicore
 	class Size;
 	class SpanLayout_Impl;
 	class Image;
+	typedef std::shared_ptr<Image> ImagePtr;
 	class SpanComponent;
 	class Canvas;
 	typedef std::shared_ptr<Canvas> CanvasPtr;
@@ -95,7 +96,7 @@ namespace uicore
 		/// \param image = Image
 		/// \param baseline_offset = value
 		/// \param id = value
-		void add_image(const Image &image, int baseline_offset = 0, int id = -1);
+		void add_image(const ImagePtr &image, int baseline_offset = 0, int id = -1);
 
 		template<typename T>
 

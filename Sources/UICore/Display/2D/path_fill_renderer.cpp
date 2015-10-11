@@ -705,7 +705,7 @@ namespace uicore
 
 	int PathInstanceBuffer::store_image(const CanvasPtr &canvas, const Brush &brush, const Mat4f &transform)
 	{
-		Subtexture subtexture = brush.image.texture();
+		Subtexture subtexture = brush.image->texture();
 		if (subtexture.is_null())
 			throw Exception("BrushType::image used without a valid texture");
 

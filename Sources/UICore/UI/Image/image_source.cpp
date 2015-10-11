@@ -37,13 +37,13 @@ namespace uicore
 	class ImageSourceCallback : public ImageSource
 	{
 	public:
-		ImageSourceCallback(const std::function<Image(const CanvasPtr &)> &cb_get_image) : cb_get_image(cb_get_image) { }
-		Image get_image(const CanvasPtr &canvas) override { return cb_get_image(canvas); }
+		ImageSourceCallback(const std::function<ImagePtr(const CanvasPtr &)> &cb_get_image) : cb_get_image(cb_get_image) { }
+		ImagePtr get_image(const CanvasPtr &canvas) override { return cb_get_image(canvas); }
 
-		std::function<Image(const CanvasPtr &)> cb_get_image;
+		std::function<ImagePtr(const CanvasPtr &)> cb_get_image;
 	};
 
-	std::shared_ptr<ImageSource> ImageSource::from_callback(const std::function<Image(const CanvasPtr &)> &get_image_callback)
+	std::shared_ptr<ImageSource> ImageSource::from_callback(const std::function<ImagePtr(const CanvasPtr &)> &get_image_callback)
 	{
 		return std::make_shared<ImageSourceCallback>(get_image_callback);
 	}
@@ -56,7 +56,7 @@ namespace uicore
 		});
 	}
 
-	std::shared_ptr<ImageSource> ImageSource::from_image(const Image &image)
+	std::shared_ptr<ImageSource> ImageSource::from_image(const ImagePtr &image)
 	{
 		return ImageSource::from_callback([=](const CanvasPtr &canvas)
 		{

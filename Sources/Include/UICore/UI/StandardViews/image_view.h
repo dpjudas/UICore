@@ -35,6 +35,7 @@ namespace uicore
 {
 	class Canvas;
 	class Image;
+	typedef std::shared_ptr<Image> ImagePtr;
 	class ImageViewImpl;
 
 	class ImageView : public View
@@ -44,11 +45,11 @@ namespace uicore
 
 		std::shared_ptr<ImageSource> image();
 		void set_image(const std::shared_ptr<ImageSource> &image);
-		void set_image(const Image &image);
+		void set_image(const ImagePtr &image);
 
 		std::shared_ptr<ImageSource> highlighted_image();
 		void set_highlighted_image(const std::shared_ptr<ImageSource> &image);
-		void set_highlighted_image(const Image &image);
+		void set_highlighted_image(const ImagePtr &image);
 
 		/*
 		std::vector<std::shared_ptr<ImageSource>> animation_images();

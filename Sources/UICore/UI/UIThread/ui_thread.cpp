@@ -57,7 +57,7 @@ namespace uicore
 		std::function<void(const std::exception_ptr &)> exception_handler;
 
 		std::map<std::string, FontFamily> font_families;
-		std::map<std::string, Image> images;
+		std::map<std::string, ImagePtr> images;
 
 		static UIThreadImpl *instance()
 		{
@@ -119,11 +119,11 @@ namespace uicore
 		UIThreadImpl::instance()->resource_path = path;
 	}
 
-	Image UIThread::image(const CanvasPtr &canvas, const std::string &name)
+	ImagePtr UIThread::image(const CanvasPtr &canvas, const std::string &name)
 	{
 		auto &images = UIThreadImpl::instance()->images;
 		if (images.find(name) == images.end())
-			images[name] = Image(canvas, PathHelp::combine(UIThreadImpl::instance()->resource_path, name));
+			images[name] = Image::create(canvas, PathHelp::combine(UIThreadImpl::instance()->resource_path, name));
 		return images[name];
 	}
 

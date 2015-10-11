@@ -43,15 +43,15 @@ namespace uicore
 	public:
 		std::shared_ptr<ImageSource> image;
 		std::shared_ptr<ImageSource> highlighted_image;
-		Image canvas_image;
-		Image canvas_highlighted_image;
+		ImagePtr canvas_image;
+		ImagePtr canvas_highlighted_image;
 
 		void get_images(const CanvasPtr &canvas)
 		{
-			if (canvas_image.is_null() && image)
+			if (!canvas_image && image)
 				canvas_image = image->get_image(canvas);
 
-			if (canvas_highlighted_image.is_null() && highlighted_image)
+			if (!canvas_highlighted_image && highlighted_image)
 				canvas_highlighted_image = highlighted_image->get_image(canvas);
 		}
 	};
@@ -68,12 +68,12 @@ namespace uicore
 	void ImageView::set_image(const std::shared_ptr<ImageSource> &image)
 	{
 		impl->image = image;
-		impl->canvas_image = Image();
+		impl->canvas_image = nullptr;
 		set_needs_render();
 		set_needs_layout();
 	}
 
-	void ImageView::set_image(const Image &image)
+	void ImageView::set_image(const ImagePtr &image)
 	{
 		set_image(ImageSource::from_image(image));
 	}
@@ -86,12 +86,12 @@ namespace uicore
 	void ImageView::set_highlighted_image(const std::shared_ptr<ImageSource> &image)
 	{
 		impl->highlighted_image = image;
-		impl->canvas_highlighted_image = Image();
+		impl->canvas_highlighted_image = nullptr;
 		set_needs_render();
 		set_needs_layout();
 	}
 
-	void ImageView::set_highlighted_image(const Image &image)
+	void ImageView::set_highlighted_image(const ImagePtr &image)
 	{
 		set_highlighted_image(ImageSource::from_image(image));
 	}
@@ -100,16 +100,16 @@ namespace uicore
 	{
 		impl->get_images(canvas);
 
-		if (!impl->canvas_image.is_null() && impl->canvas_image.width() != 0.0f && impl->canvas_image.height() != 0.0f)
+		if (impl->canvas_image && impl->canvas_image->width() != 0.0f && impl->canvas_image->height() != 0.0f)
 		{
-			float scale_x = geometry().content_width / impl->canvas_image.width();
-			float scale_y = geometry().content_height / impl->canvas_image.height();
+			float scale_x = geometry().content_width / impl->canvas_image->width();
+			float scale_y = geometry().content_height / impl->canvas_image->height();
 			float scale = std::min(scale_x, scale_y);
 
-			float width = impl->canvas_image.width() * scale;
-			float height = impl->canvas_image.width() * scale;
+			float width = impl->canvas_image->width() * scale;
+			float height = impl->canvas_image->width() * scale;
 
-			impl->canvas_image.draw(canvas, Rectf::xywh((geometry().content_width - width) * 0.5f, (geometry().content_height - height) * 0.5f, width, height));
+			impl->canvas_image->draw(canvas, Rectf::xywh((geometry().content_width - width) * 0.5f, (geometry().content_height - height) * 0.5f, width, height));
 		}
 	}
 
@@ -117,8 +117,8 @@ namespace uicore
 	{
 		impl->get_images(canvas);
 
-		if (!impl->canvas_image.is_null())
-			return impl->canvas_image.width();
+		if (impl->canvas_image)
+			return impl->canvas_image->width();
 		else
 			return 0.0f;
 	}
@@ -127,8 +127,8 @@ namespace uicore
 	{
 		impl->get_images(canvas);
 
-		if (!impl->canvas_image.is_null() && impl->canvas_image.width() != 0)
-			return impl->canvas_image.height() * width / impl->canvas_image.width();
+		if (impl->canvas_image && impl->canvas_image->width() != 0)
+			return impl->canvas_image->height() * width / impl->canvas_image->width();
 		else
 			return 0.0f;
 	}
