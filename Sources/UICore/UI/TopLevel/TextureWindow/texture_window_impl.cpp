@@ -45,9 +45,6 @@ namespace uicore
 	TextureWindow_Impl::TextureWindow_Impl(TextureWindow *view, const CanvasPtr &canvas) : window_view(view), canvas(canvas)
 	{
 		canvas_rect = canvas->size();
-		BlendStateDescription blend_desc;
-		blend_desc.enable_blending(false);
-		opaque_blend = canvas->gc()->create_blend_state(blend_desc);
 	}
 
 	void TextureWindow_Impl::set_window(const DisplayWindowPtr &window, bool enable_automatic_events, const Mat4f &new_transform_mouse_matrix)
@@ -77,10 +74,7 @@ namespace uicore
 
 			if (clear_background_enable)
 			{
-				canvas->set_blend_state(opaque_blend);
-				Path::rect(canvas_rect)->fill(canvas, background_color);
-				canvas->set_blend_state(nullptr);
-				//canvas->clear(background_color);	<--- On d3d, this clears the entire canvas - It does not recognise the cliprect
+				canvas->clear(background_color);
 			}
 
 			needs_render = false;

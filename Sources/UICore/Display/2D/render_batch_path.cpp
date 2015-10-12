@@ -53,8 +53,7 @@ namespace uicore
 	{
 		static_cast<CanvasImpl*>(canvas.get())->set_batcher(this);
 
-		fill_renderer.set_size(canvas, canvas->gc()->width(), canvas->gc()->height());
-		fill_renderer.clear();
+		fill_renderer.clear(canvas->gc()->width(), canvas->gc()->height());
 		render(path, &fill_renderer);
 		fill_renderer.fill(canvas, path.fill_mode(), brush, modelview_matrix);
 	}

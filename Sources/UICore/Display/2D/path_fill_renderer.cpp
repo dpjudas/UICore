@@ -49,8 +49,17 @@ namespace uicore
 		blend_state = gc->create_blend_state(blend_desc);
 	}
 
-	void PathFillRenderer::set_size(const CanvasPtr &canvas, int new_width, int new_height)
+	void PathFillRenderer::clear(int new_width, int new_height)
 	{
+		for (size_t y = first_scanline; y < last_scanline; y++)
+		{
+			auto &scanline = scanlines[y];
+			if (!scanline.edges.empty())
+			{
+				scanline.edges.clear();
+			}
+		}
+
 		// For simplicity of the code, ensure the mask is always a multiple of mask_block_size
 		new_width = mask_block_size * ((new_width + mask_block_size - 1) / mask_block_size);
 		new_height = mask_block_size * ((new_height + mask_block_size - 1) / mask_block_size);
@@ -60,20 +69,6 @@ namespace uicore
 			width = new_width;
 			height = new_height;
 			scanlines.resize(height * antialias_level);
-			first_scanline = scanlines.size();
-			last_scanline = 0;
-		}
-	}
-
-	void PathFillRenderer::clear()
-	{
-		for (size_t y = first_scanline; y < last_scanline; y++)
-		{
-			auto &scanline = scanlines[y];
-			if (!scanline.edges.empty())
-			{
-				scanline.edges.clear();
-			}
 		}
 
 		first_scanline = scanlines.size();
@@ -192,7 +187,7 @@ namespace uicore
 
 	void PathFillRenderer::flush(const GraphicContextPtr &gc)
 	{
-		if (mask_blocks.next_block == 0) // Nothing to flush
+		if (!mask_texture) // Nothing to flush
 			return;
 
 		mask_blocks.flush_block();
@@ -237,10 +232,6 @@ namespace uicore
 		gc->reset_texture(0);
 		gc->reset_program_object();
 		gc->reset_blend_state();
-
-		// Set nothing more to flush.
-		// Although this is cleared in PathMaskBuffer::reset() called by initialise_buffers(), It is still possible for this function to be called without reinitialising the buffers
-		mask_blocks.next_block = 0;
 
 		// Finished with the buffers
 		mask_buffer.reset();

@@ -40,9 +40,8 @@ namespace uicore
 		_gc = window->gc();
 
 		rasterizer_state = _gc->create_rasterizer_state(RasterizerStateDescription());
-		default_blend_state = _gc->create_blend_state(BlendStateDescription::blend(false));
-		blend_state = default_blend_state;
 		depth_stencil_state = _gc->create_depth_stencil_state(DepthStencilStateDescription());
+		opaque_blend = _gc->create_blend_state(BlendStateDescription::opaque());
 
 		gc_clip_z_range = _gc->clip_z_range();
 		canvas_inverse_transform = canvas_transform = Mat4f::identity();
@@ -78,8 +77,7 @@ namespace uicore
 		gc()->set_viewport(gc()->size(), gc()->texture_image_y_axis());
 		gc()->set_rasterizer_state(rasterizer_state);
 		gc()->set_depth_stencil_state(depth_stencil_state);
-		gc()->set_blend_state(blend_state, blend_color, sample_mask);
-		gc()->set_program_object(standard_program);
+		gc()->set_blend_state(nullptr);
 		if (!cliprects.empty())
 			write_clip(cliprects.back());
 	}
@@ -95,22 +93,6 @@ namespace uicore
 		gc()->set_blend_state(nullptr);
 		gc()->set_program_object(nullptr);
 		gc()->set_viewport(gc()->size(), gc()->texture_image_y_axis());
-	}
-
-	void CanvasImpl::set_program_object(StandardProgram new_standard_program)
-	{
-		batcher.flush();
-		standard_program = new_standard_program;
-		gc()->set_program_object(standard_program);
-	}
-
-	void CanvasImpl::set_blend_state(const BlendStatePtr &new_state, const Colorf &new_blend_color, unsigned int new_sample_mask)
-	{
-		batcher.flush();
-		blend_state = new_state ? new_state : default_blend_state;
-		blend_color = new_blend_color;
-		sample_mask = new_sample_mask;
-		gc()->set_blend_state(blend_state, blend_color, sample_mask);
 	}
 
 	Pointf CanvasImpl::grid_fit(const Pointf &pos)
@@ -220,7 +202,22 @@ namespace uicore
 
 	void CanvasImpl::clear(const Colorf &color)
 	{
-		gc()->clear(color);
+		if (!cliprects.empty()) // D3D target doesn't restrict clear to the scissor rect
+		{
+			batcher.flush();
+			gc()->set_blend_state(opaque_blend);
+
+			batcher.set_batcher(gc(), batcher.get_triangle_batcher());
+			batcher.get_triangle_batcher()->fill(shared_from_this(), 0.0f, 0.0f, width(), height(), color);
+			batcher.flush();
+
+			gc()->set_blend_state(nullptr);
+		}
+		else
+		{
+			batcher.flush();
+			gc()->clear(color);
+		}
 	}
 
 	void CanvasImpl::write_clip(const Rectf &rect)
@@ -293,7 +290,7 @@ namespace uicore
 			cliprects.pop_back();
 
 			if (cliprects.empty())
-				reset_clip();
+				gc()->reset_scissor();
 			else
 				write_clip(cliprects.back());
 		}

@@ -84,9 +84,6 @@ namespace uicore
 		/// \seealso Resolution Independence
 		virtual float pixel_ratio() const = 0;
 
-		/// \brief Set active blend state
-		virtual void set_blend_state(const BlendStatePtr &state, const Colorf &blend_color = Colorf::white, unsigned int sample_mask = 0xffffffff) = 0;
-
 		/// \brief Set the current clipping rectangle.
 		virtual void set_clip(const Rectf &rect) = 0;
 
@@ -106,9 +103,6 @@ namespace uicore
 
 		/// \brief Clears the whole context using the specified color.
 		virtual void clear(const Colorf &color = Colorf::black) = 0;
-
-		/// \brief Set active program object to the standard program specified.
-		virtual void set_program_object(StandardProgram standard_program) = 0;
 
 		/// \brief Sets the transform matrix to a new matrix.
 		virtual void set_transform(const Mat4f &matrix) = 0;

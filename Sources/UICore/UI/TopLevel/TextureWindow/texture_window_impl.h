@@ -56,8 +56,6 @@ namespace uicore
 		bool clear_background_enable = true;
 		bool always_render = false;
 
-		BlendStatePtr opaque_blend;
-
 		void on_window_close();
 		void on_lost_focus();
 		void on_got_focus();

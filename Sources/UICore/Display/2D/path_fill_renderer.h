@@ -198,8 +198,7 @@ namespace uicore
 	public:
 		PathFillRenderer(const GraphicContextPtr &gc, RenderBatchBuffer *batch_buffer);
 
-		void set_size(const CanvasPtr &canvas, int width, int height);
-		void clear();
+		void clear(int width, int height);
 
 		void line(float x, float y) override;
 		void end(bool close) override;

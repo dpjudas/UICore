@@ -50,7 +50,7 @@ namespace uicore
 		map_2d_lower_left
 	};
 
-	class CanvasImpl : public Canvas
+	class CanvasImpl : public Canvas, public std::enable_shared_from_this<CanvasImpl>
 	{
 	public:
 		CanvasImpl(const DisplayWindowPtr &window);
@@ -86,9 +86,6 @@ namespace uicore
 		const Mat4f &inverse_transform() const override;
 		const Mat4f &projection() const override;
 
-		void set_program_object(StandardProgram new_standard_program);
-		void set_blend_state(const BlendStatePtr &new_state, const Colorf &new_blend_color, unsigned int new_sample_mask);
-
 		Pointf grid_fit(const Pointf &pos) override;
 
 		void set_batcher(RenderBatcher *batcher);
@@ -120,11 +117,8 @@ namespace uicore
 
 		DisplayWindowPtr current_window;
 
-		StandardProgram standard_program = program_sprite;
 		RasterizerStatePtr rasterizer_state;
-		BlendStatePtr blend_state, default_blend_state;
-		Colorf blend_color = Colorf::white;
-		unsigned int sample_mask = 0xffffffff;
+		BlendStatePtr opaque_blend;
 		DepthStencilStatePtr depth_stencil_state;
 
 		TextureImageYAxis canvas_y_axis;
