@@ -107,7 +107,7 @@ namespace uicore
 					{
 						float cursor_x = x + segment.x_position + segment.font.measure_text(canvas, text.substr(segment.start, segment.end - segment.start)).bbox_size.width;
 						float cursor_width = 1.0f;
-						Path::rect(cursor_x, y + line.ascender - segment.ascender, cursor_x + cursor_width, y + line.ascender + segment.descender)->fill(canvas, cursor_color);
+						Path::rect(cursor_x, y + line.ascender - segment.ascender, cursor_width, segment.ascender + segment.descender)->fill(canvas, cursor_color);
 					}
 				}
 			}
@@ -152,13 +152,13 @@ namespace uicore
 			float xx1 = xx0 + segment.font.measure_text(canvas, segment_text.substr(s1, s2 - s1)).advance.width;
 			float sel_width = segment.font.measure_text(canvas, segment_text.substr(s1, s2 - s1)).advance.width;
 
-			Path::rect(xx0, y + line.ascender - segment.ascender, xx1, y + line.ascender + segment.descender)->fill(canvas, sel_background);
+			Path::rect(xx0, y + line.ascender - segment.ascender, xx1 - xx0, segment.ascender + segment.descender)->fill(canvas, sel_background);
 
 			if (cursor_visible && cursor_pos >= segment.start && cursor_pos < segment.end)
 			{
 				float cursor_x = x + segment.x_position + segment.font.measure_text(canvas, text.substr(segment.start, cursor_pos - segment.start)).advance.width;
 				float cursor_width = cursor_overwrite_mode ? segment.font.measure_text(canvas, text.substr(cursor_pos, 1)).advance.width : 1;
-				Path::rect(cursor_x, y + line.ascender - segment.ascender, cursor_x + cursor_width, y + line.ascender + segment.descender)->fill(canvas, cursor_color);
+				Path::rect(cursor_x, y + line.ascender - segment.ascender, cursor_width, segment.ascender + segment.descender)->fill(canvas, cursor_color);
 			}
 
 			if (s1 > 0)
@@ -187,7 +187,7 @@ namespace uicore
 			{
 				float cursor_x = x + segment.x_position + segment.font.measure_text(canvas, text.substr(segment.start, cursor_pos - segment.start)).advance.width;
 				float cursor_width = cursor_overwrite_mode ? segment.font.measure_text(canvas, text.substr(cursor_pos, 1)).advance.width : 1;
-				Path::rect(cursor_x, y + line.ascender - segment.ascender, cursor_x + cursor_width, y + line.ascender + segment.descender)->fill(canvas, cursor_color);
+				Path::rect(cursor_x, y + line.ascender - segment.ascender, cursor_width, segment.ascender + segment.descender)->fill(canvas, cursor_color);
 			}
 
 			if (is_ellipsis_draw)
@@ -245,6 +245,8 @@ namespace uicore
 						std::string segment_text = text.substr(segment.start, segment.end - segment.start);
 						Pointf hit_point(pos.x - x - segment.x_position, 0);
 						int offset = segment.start + segment.font.get_character_index(canvas, segment_text, hit_point);
+						if (offset == -1)
+							offset = segment_text.size();
 
 						result.type = SpanLayout::HitTestResult::inside;
 						result.object_id = segment.id;
