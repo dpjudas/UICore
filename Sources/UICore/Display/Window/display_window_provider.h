@@ -170,7 +170,7 @@ namespace uicore
 			int xi = (int)std::round(x * pixel_ratio());
 			int yi = (int)std::round(y * pixel_ratio());
 			Rect geometry = backing_geometry();
-			set_backing_position(Rect(xi, yi, xi + geometry.get_width(), yi + geometry.get_height()), false);
+			set_backing_position(Rect(xi, yi, xi + geometry.width(), yi + geometry.height()), false);
 		}
 
 		void set_size(float width, float height, bool client_area)

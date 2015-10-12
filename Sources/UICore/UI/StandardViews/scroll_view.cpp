@@ -174,15 +174,15 @@ namespace uicore
 		float y_scroll_width = 0.0f;
 		float x_scroll_height = 0.0f;
 		
-		float width = geometry().content_box().get_width();
-		float height = geometry().content_box().get_height();
+		float width = geometry().content_box().width();
+		float height = geometry().content_box().height();
 		
 		if (impl->overflow_y != ContentOverflow::hidden)
 		{
 			content_height = impl->content_container->get_preferred_height(canvas, width);
 			y_scroll_needed = impl->overflow_y == ContentOverflow::scroll || content_height > height;
 			if (y_scroll_needed)
-				y_scroll_width = ViewGeometry::from_content_box(impl->scroll_y->style_cascade(), Rectf(0.0f, 0.0f, impl->scroll_y->get_preferred_width(canvas), 0.0f)).margin_box().get_width();
+				y_scroll_width = ViewGeometry::from_content_box(impl->scroll_y->style_cascade(), Rectf(0.0f, 0.0f, impl->scroll_y->get_preferred_width(canvas), 0.0f)).margin_box().width();
 		}
 		
 		if (impl->overflow_x != ContentOverflow::hidden)
@@ -190,7 +190,7 @@ namespace uicore
 			content_width = impl->content_container->get_preferred_width(canvas);
 			x_scroll_needed = impl->overflow_x == ContentOverflow::scroll || content_width > width;
 			if (x_scroll_needed)
-				x_scroll_height = ViewGeometry::from_content_box(impl->scroll_x->style_cascade(), Rectf(0.0f, 0.0f, 0.0f, impl->scroll_x->get_preferred_height(canvas, width))).margin_box().get_height();
+				x_scroll_height = ViewGeometry::from_content_box(impl->scroll_x->style_cascade(), Rectf(0.0f, 0.0f, 0.0f, impl->scroll_x->get_preferred_height(canvas, width))).margin_box().height();
 		}
 		
 		float content_view_width = width - y_scroll_width;

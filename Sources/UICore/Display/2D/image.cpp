@@ -156,17 +156,17 @@ namespace uicore
 	float ImageImpl::width() const
 	{
 		if (_pixel_ratio != 0.0f)
-			return _texture_rect.get_width() / _pixel_ratio;
+			return _texture_rect.width() / _pixel_ratio;
 		else
-			return _texture_rect.get_width();
+			return _texture_rect.width();
 	}
 
 	float ImageImpl::height() const
 	{
 		if (_pixel_ratio != 0.0f)
-			return _texture_rect.get_height() / _pixel_ratio;
+			return _texture_rect.height() / _pixel_ratio;
 		else
-			return _texture_rect.get_height();
+			return _texture_rect.height();
 	}
 
 	Sizef ImageImpl::size() const
@@ -272,28 +272,28 @@ namespace uicore
 			_translated_hotspot = Pointf(_translation_hotspot.x, _translation_hotspot.y);
 			break;
 		case origin_top_center:
-			_translated_hotspot = Pointf(_translation_hotspot.x - _texture_rect.get_width() * _scale_x * 0.5f, _translation_hotspot.y);
+			_translated_hotspot = Pointf(_translation_hotspot.x - _texture_rect.width() * _scale_x * 0.5f, _translation_hotspot.y);
 			break;
 		case origin_top_right:
-			_translated_hotspot = Pointf(_translation_hotspot.x - _texture_rect.get_width() * _scale_x, _translation_hotspot.y);
+			_translated_hotspot = Pointf(_translation_hotspot.x - _texture_rect.width() * _scale_x, _translation_hotspot.y);
 			break;
 		case origin_center_left:
-			_translated_hotspot = Pointf(_translation_hotspot.x, _translation_hotspot.y - _texture_rect.get_height() * _scale_y * 0.5f);
+			_translated_hotspot = Pointf(_translation_hotspot.x, _translation_hotspot.y - _texture_rect.height() * _scale_y * 0.5f);
 			break;
 		case origin_center:
-			_translated_hotspot = Pointf(_translation_hotspot.x - _texture_rect.get_width() * _scale_x * 0.5f, _translation_hotspot.y - _texture_rect.get_height() * _scale_y * 0.5f);
+			_translated_hotspot = Pointf(_translation_hotspot.x - _texture_rect.width() * _scale_x * 0.5f, _translation_hotspot.y - _texture_rect.height() * _scale_y * 0.5f);
 			break;
 		case origin_center_right:
-			_translated_hotspot = Pointf(_translation_hotspot.x - _texture_rect.get_width() * _scale_x, _translation_hotspot.y - _texture_rect.get_height() * _scale_y * 0.5f);
+			_translated_hotspot = Pointf(_translation_hotspot.x - _texture_rect.width() * _scale_x, _translation_hotspot.y - _texture_rect.height() * _scale_y * 0.5f);
 			break;
 		case origin_bottom_left:
-			_translated_hotspot = Pointf(_translation_hotspot.x, _translation_hotspot.y - _texture_rect.get_height() * _scale_y);
+			_translated_hotspot = Pointf(_translation_hotspot.x, _translation_hotspot.y - _texture_rect.height() * _scale_y);
 			break;
 		case origin_bottom_center:
-			_translated_hotspot = Pointf(_translation_hotspot.x - _texture_rect.get_width() * _scale_x * 0.5f, _translation_hotspot.y - _texture_rect.get_height() * _scale_y);
+			_translated_hotspot = Pointf(_translation_hotspot.x - _texture_rect.width() * _scale_x * 0.5f, _translation_hotspot.y - _texture_rect.height() * _scale_y);
 			break;
 		case origin_bottom_right:
-			_translated_hotspot = Pointf(_translation_hotspot.x - _texture_rect.get_width() * _scale_x, _translation_hotspot.y - _texture_rect.get_height() * _scale_y);
+			_translated_hotspot = Pointf(_translation_hotspot.x - _texture_rect.width() * _scale_x, _translation_hotspot.y - _texture_rect.height() * _scale_y);
 			break;
 		}
 

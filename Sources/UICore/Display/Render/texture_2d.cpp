@@ -75,7 +75,7 @@ namespace uicore
 
 	std::shared_ptr<Texture2D> Texture2D::create(const GraphicContextPtr &context, const PixelBufferPtr &image, const Rect &src_rect, bool is_srgb)
 	{
-		auto texture = create(context, src_rect.get_width(), src_rect.get_height(), is_srgb ? tf_srgb8_alpha8 : tf_rgba8);
+		auto texture = create(context, src_rect.width(), src_rect.height(), is_srgb ? tf_srgb8_alpha8 : tf_rgba8);
 		texture->set_subimage(context, Point(0, 0), image, src_rect, 0);
 		return texture;
 	}

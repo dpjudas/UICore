@@ -59,7 +59,7 @@ namespace uicore
 						if (!superview)
 						{
 							offset_initial_containing_box = current->geometry().content_box();
-							offset_initial_containing_box.set_top_left(offset_initial_containing_box.get_top_left() - offset);
+							offset_initial_containing_box.set_position(offset_initial_containing_box.position() - offset);
 							break;
 						}
 					}
@@ -84,7 +84,7 @@ namespace uicore
 		if (!view->style_cascade().computed_value("left").is_keyword("auto") && !view->style_cascade().computed_value("right").is_keyword("auto"))
 		{
 			x = view->style_cascade().computed_value("left").number();
-			width = uicore::max(containing_box.get_width() - view->style_cascade().computed_value("right").number() - x, 0.0f);
+			width = uicore::max(containing_box.width() - view->style_cascade().computed_value("right").number() - x, 0.0f);
 		}
 		else if (!view->style_cascade().computed_value("left").is_keyword("auto") && !view->style_cascade().computed_value("width").is_keyword("auto"))
 		{
@@ -94,7 +94,7 @@ namespace uicore
 		else if (!view->style_cascade().computed_value("right").is_keyword("auto") && !view->style_cascade().computed_value("width").is_keyword("auto"))
 		{
 			width = view->style_cascade().computed_value("width").number();
-			x = containing_box.get_width() - view->style_cascade().computed_value("right").number() - width;
+			x = containing_box.width() - view->style_cascade().computed_value("right").number() - width;
 		}
 		else if (!view->style_cascade().computed_value("left").is_keyword("auto"))
 		{
@@ -104,7 +104,7 @@ namespace uicore
 		else if (!view->style_cascade().computed_value("right").is_keyword("auto"))
 		{
 			width = view->get_preferred_width(canvas);
-			x = containing_box.get_width() - view->style_cascade().computed_value("right").number() - width;
+			x = containing_box.width() - view->style_cascade().computed_value("right").number() - width;
 		}
 		else
 		{
@@ -118,7 +118,7 @@ namespace uicore
 		if (!view->style_cascade().computed_value("top").is_keyword("auto") && !view->style_cascade().computed_value("bottom").is_keyword("auto"))
 		{
 			y = view->style_cascade().computed_value("top").number();
-			height = uicore::max(containing_box.get_height() - view->style_cascade().computed_value("bottom").number() - y, 0.0f);
+			height = uicore::max(containing_box.height() - view->style_cascade().computed_value("bottom").number() - y, 0.0f);
 		}
 		else if (!view->style_cascade().computed_value("top").is_keyword("auto") && !view->style_cascade().computed_value("height").is_keyword("auto"))
 		{
@@ -128,7 +128,7 @@ namespace uicore
 		else if (!view->style_cascade().computed_value("bottom").is_keyword("auto") && !view->style_cascade().computed_value("height").is_keyword("auto"))
 		{
 			height = view->style_cascade().computed_value("height").number();
-			y = containing_box.get_height() - view->style_cascade().computed_value("bottom").number() - height;
+			y = containing_box.height() - view->style_cascade().computed_value("bottom").number() - height;
 		}
 		else if (!view->style_cascade().computed_value("top").is_keyword("auto"))
 		{
@@ -138,7 +138,7 @@ namespace uicore
 		else if (!view->style_cascade().computed_value("bottom").is_keyword("auto"))
 		{
 			height = view->get_preferred_height(canvas, width);
-			y = containing_box.get_height() - view->style_cascade().computed_value("bottom").number() - height;
+			y = containing_box.height() - view->style_cascade().computed_value("bottom").number() - height;
 		}
 		else
 		{

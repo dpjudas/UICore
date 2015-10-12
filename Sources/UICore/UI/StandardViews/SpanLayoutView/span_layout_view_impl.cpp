@@ -135,7 +135,7 @@ namespace uicore
 				}
 				else if (object.type == SpanObjectType::view)
 				{
-					x += object.view->geometry().margin_box().get_width();
+					x += object.view->geometry().margin_box().width();
 				}
 			}
 

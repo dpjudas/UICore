@@ -120,7 +120,10 @@ namespace uicore
 			return Rectx<Type>(left*s, top*s, right*s, bottom *s);
 		}
 
+		static Rectx<Type> wh(Type width, Type height) { return Rectx<Type>(0, 0, width, height); }
+		static Rectx<Type> wh(const Sizex<Type> &size) { return Rectx<Type>(0, 0, size.width, size.height); }
 		static Rectx<Type> xywh(Type x, Type y, Type width, Type height) { return Rectx<Type>(x, y, x + width, y + height); }
+		static Rectx<Type> xywh(const Pointx<Type> &pos, const Sizex<Type> &size) { return Rectx<Type>(pos.x, pos.y, pos.x + size.width, pos.y + size.height); }
 		static Rectx<Type> ltrb(Type left, Type top, Type right, Type bottom) { return Rectx<Type>(left, top, right, bottom); }
 
 		/// \brief X1-coordinate (left point inside the rectangle)
@@ -136,13 +139,22 @@ namespace uicore
 		Type bottom;
 
 		/// \brief Returns the width of the rectangle.
-		Type get_width() const { return right - left; }
+		Type width() const { return right - left; }
 
 		/// \brief Returns the height of the rectangle.
-		Type get_height() const { return bottom - top; }
+		Type height() const { return bottom - top; }
+
+		/// \brief X position of rectangle
+		Type x() const { return left; }
+
+		/// \brief Y position of rectangle
+		Type y() const { return top; }
+
+		/// \brief Returns the position of the rectangle.
+		Pointx<Type> position() const { return Pointx<Type>(left, top); }
 
 		/// \brief Returns the size of the rectangle.
-		Sizex<Type> get_size() const { return Sizex<Type>(right - left, bottom - top); }
+		Sizex<Type> size() const { return Sizex<Type>(right - left, bottom - top); }
 
 		/// \brief Returns true if the rectangle contains the point.
 		bool contains(const Vec2<Type> &p) const
@@ -152,25 +164,25 @@ namespace uicore
 		}
 
 		/// \brief Returns the top-left point inside the rectangle
-		Pointx<Type> get_top_left() const
+		Pointx<Type> top_left() const
 		{
 			return Pointx<Type>(left, top);
 		}
 
 		/// \brief Returns the top-right point outside the rectangle
-		Pointx<Type> get_top_right() const
+		Pointx<Type> top_right() const
 		{
 			return Pointx<Type>(right, top);
 		}
 
 		/// \brief Returns the bottom-right point outside the rectangle
-		Pointx<Type> get_bottom_right() const
+		Pointx<Type> bottom_right() const
 		{
 			return Pointx<Type>(right, bottom);
 		}
 
 		/// \brief Returns the bottom-left point outside the rectangle
-		Pointx<Type> get_bottom_left() const
+		Pointx<Type> bottom_left() const
 		{
 			return Pointx<Type>(left, bottom);
 		}
@@ -194,7 +206,7 @@ namespace uicore
 		///
 		/// \param hotspot Point to rotate around.
 		/// \param angle Angle to rotate.
-		Rectx<Type> get_rot_bounds(const Vec2<Type> &hotspot, const Angle &angle) const;
+		Rectx<Type> rot_bounds(const Vec2<Type> &hotspot, const Angle &angle) const;
 
 		/// \brief Returns another Rectx<Type> containing a rotated version of this one.
 		///
@@ -202,21 +214,25 @@ namespace uicore
 		/// \param x Offsets applied negatively to the hotspot point
 		/// \param y Offsets applied negatively to the hotspot point
 		/// \param angle Angle
-		Rectx<Type> get_rot_bounds(Origin origin, Type x, Type y, const Angle &angle) const;
+		Rectx<Type> rot_bounds(Origin origin, Type x, Type y, const Angle &angle) const;
 
 		/// \brief Returns the center point of the rectangle.
-		Pointx<Type> get_center() const
+		Pointx<Type> center() const
 		{
 			return Pointx<Type>((left + right) / 2, (top + bottom) / 2);
 		}
 
-		/// \brief Sets the top-left point of the rectangle.
+		/// \brief Sets the position of the rectangle.
 		///
 		/// \return reference to this object
-		Rectx<Type> &set_top_left(const Vec2<Type>& p)
+		Rectx<Type> &set_position(const Vec2<Type>& p)
 		{
+			auto w = width();
+			auto h = height();
 			left = p.x;
 			top = p.y;
+			right = left + w;
+			bottom = top + h;
 			return *this;
 		}
 
@@ -406,7 +422,7 @@ namespace uicore
 		/// \return reference to this object
 		Rectx<Type> &apply_alignment(Origin origin, Type x, Type y)
 		{
-			Vec2<Type> offset = Vec2<Type>::calc_origin(origin, get_size());
+			Vec2<Type> offset = Vec2<Type>::calc_origin(origin, size());
 			offset.x -= x;
 			offset.y -= y;
 

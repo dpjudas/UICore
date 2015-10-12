@@ -214,19 +214,19 @@ namespace uicore
 				return nullptr;
 
 			// If we're too small, return
-			if (rect_size.width > node_rect.get_width() || rect_size.height > node_rect.get_height())
+			if (rect_size.width > node_rect.width() || rect_size.height > node_rect.height())
 				return nullptr;
 
 			// If we're just right, accept
-			if (rect_size.width == node_rect.get_width() && rect_size.height == node_rect.get_height())
+			if (rect_size.width == node_rect.width() && rect_size.height == node_rect.height())
 			{
 				id = rect_id;
 				return this;
 			}
 
 			// Otherwise, decide which way to split
-			int dw = node_rect.get_width() - rect_size.width;
-			int dh = node_rect.get_height() - rect_size.height;
+			int dw = node_rect.width() - rect_size.width;
+			int dh = node_rect.height() - rect_size.height;
 
 			if (dw > dh)
 			{

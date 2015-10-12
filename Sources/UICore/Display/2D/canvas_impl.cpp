@@ -313,7 +313,7 @@ namespace uicore
 		if (num_vertex)
 		{
 			Rectf bounding_box = triangles_bounding_box(triangles, num_vertex);
-			Sizef bounding_box_size = bounding_box.get_size();
+			Sizef bounding_box_size = bounding_box.size();
 			if (bounding_box_size.width <= 0.0f)
 				bounding_box_size.width = 1.0f;
 			if (bounding_box_size.height <= 0.0f)
@@ -322,7 +322,7 @@ namespace uicore
 			Sizef texture_size = texture->size();
 			Rectf texture_rect_scaled(texture_rect.left / texture_size.width, texture_rect.top / texture_size.height, texture_rect.right / texture_size.width, texture_rect.bottom / texture_size.height);
 
-			Sizef bounding_box_invert_size(texture_rect_scaled.get_width() / bounding_box_size.width, texture_rect_scaled.get_height() / bounding_box_size.height);
+			Sizef bounding_box_invert_size(texture_rect_scaled.width() / bounding_box_size.width, texture_rect_scaled.height() / bounding_box_size.height);
 
 			for (; num_vertex > 0; --num_vertex)
 			{

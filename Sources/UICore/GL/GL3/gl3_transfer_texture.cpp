@@ -65,10 +65,10 @@ namespace uicore
 	void GL3TransferTexture::upload_data(const GraphicContextPtr &gc, const Rect &dest_rect, const void *data)
 	{
 		// Handle the simple base
-		if (dest_rect.left == 0 && dest_rect.get_width() == _size.width)
+		if (dest_rect.left == 0 && dest_rect.width() == _size.width)
 		{
 			int offset = dest_rect.top * _pitch;
-			int total_size = dest_rect.get_height() * _pitch;
+			int total_size = dest_rect.height() * _pitch;
 			buffer.upload_data(gc, offset, data, total_size);
 		}
 		else

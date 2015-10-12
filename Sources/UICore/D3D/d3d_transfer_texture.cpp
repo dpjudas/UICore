@@ -147,7 +147,7 @@ namespace uicore
 		handle.texture->GetDesc(&texture_desc);
 		int pitch = D3DTextureObject::get_bytes_per_pixel(texture_desc.Format) * texture_desc.Width;
 
-		gc_provider->get_window()->get_device_context()->UpdateSubresource(handle.texture, 0, &box, data, pitch, pitch * dest_rect.get_height());
+		gc_provider->get_window()->get_device_context()->UpdateSubresource(handle.texture, 0, &box, data, pitch, pitch * dest_rect.height());
 	}
 
 	void D3DTransferTexture::device_destroyed(ID3D11Device *device)

@@ -287,27 +287,27 @@ namespace uicore
 
 			if (texture_type == GL_TEXTURE_1D)
 			{
-				glCompressedTexSubImage1D(texture_type, level, x, src_rect.get_width(), tf.pixel_datatype, data_size, data);
+				glCompressedTexSubImage1D(texture_type, level, x, src_rect.width(), tf.pixel_datatype, data_size, data);
 			}
 			else if (texture_type == GL_TEXTURE_1D_ARRAY)
 			{
-				glCompressedTexSubImage2D(texture_type, level, x, slice, src_rect.get_width(), 1, tf.pixel_datatype, data_size, data);
+				glCompressedTexSubImage2D(texture_type, level, x, slice, src_rect.width(), 1, tf.pixel_datatype, data_size, data);
 			}
 			else if (texture_type == GL_TEXTURE_2D || texture_type == GL_TEXTURE_2D_MULTISAMPLE)
 			{
-				glCompressedTexSubImage2D(texture_type, level, x, y, src_rect.get_width(), src_rect.get_height(), tf.pixel_datatype, data_size, data);
+				glCompressedTexSubImage2D(texture_type, level, x, y, src_rect.width(), src_rect.height(), tf.pixel_datatype, data_size, data);
 			}
 			else if (texture_type == GL_TEXTURE_2D_ARRAY || texture_type == GL_TEXTURE_2D_MULTISAMPLE_ARRAY || texture_type == GL_TEXTURE_3D)
 			{
-				glCompressedTexSubImage3D(texture_type, level, x, y, slice, src_rect.get_width(), src_rect.get_height(), 1, tf.pixel_datatype, data_size, data);
+				glCompressedTexSubImage3D(texture_type, level, x, y, slice, src_rect.width(), src_rect.height(), 1, tf.pixel_datatype, data_size, data);
 			}
 			else if (texture_type == GL_TEXTURE_CUBE_MAP)
 			{
-				glCompressedTexSubImage2D(OpenGL::to_cube_target(slice), level, x, y, src_rect.get_width(), src_rect.get_height(), tf.pixel_datatype, data_size, data);
+				glCompressedTexSubImage2D(OpenGL::to_cube_target(slice), level, x, y, src_rect.width(), src_rect.height(), tf.pixel_datatype, data_size, data);
 			}
 			else if (texture_type == GL_TEXTURE_CUBE_MAP_ARRAY)
 			{
-				glCompressedTexSubImage3D(OpenGL::to_cube_target(slice % 6), level, x, y, slice / 6, src_rect.get_width(), src_rect.get_height(), 1, tf.pixel_datatype, data_size, data);
+				glCompressedTexSubImage3D(OpenGL::to_cube_target(slice % 6), level, x, y, slice / 6, src_rect.width(), src_rect.height(), 1, tf.pixel_datatype, data_size, data);
 			}
 		}
 		else
@@ -321,27 +321,27 @@ namespace uicore
 
 			if (texture_type == GL_TEXTURE_1D)
 			{
-				glTexSubImage1D(texture_type, level, x, src_rect.get_width(), tf.pixel_format, tf.pixel_datatype, data);
+				glTexSubImage1D(texture_type, level, x, src_rect.width(), tf.pixel_format, tf.pixel_datatype, data);
 			}
 			else if (texture_type == GL_TEXTURE_1D_ARRAY)
 			{
-				glTexSubImage2D(texture_type, level, x, slice, src_rect.get_width(), 1, tf.pixel_format, tf.pixel_datatype, data);
+				glTexSubImage2D(texture_type, level, x, slice, src_rect.width(), 1, tf.pixel_format, tf.pixel_datatype, data);
 			}
 			else if (texture_type == GL_TEXTURE_2D || texture_type == GL_TEXTURE_2D_MULTISAMPLE)
 			{
-				glTexSubImage2D(texture_type, level, x, y, src_rect.get_width(), src_rect.get_height(), tf.pixel_format, tf.pixel_datatype, data);
+				glTexSubImage2D(texture_type, level, x, y, src_rect.width(), src_rect.height(), tf.pixel_format, tf.pixel_datatype, data);
 			}
 			else if (texture_type == GL_TEXTURE_2D_ARRAY || texture_type == GL_TEXTURE_2D_MULTISAMPLE_ARRAY || texture_type == GL_TEXTURE_3D)
 			{
-				glTexSubImage3D(texture_type, level, x, y, slice, src_rect.get_width(), src_rect.get_height(), 1, tf.pixel_format, tf.pixel_datatype, data);
+				glTexSubImage3D(texture_type, level, x, y, slice, src_rect.width(), src_rect.height(), 1, tf.pixel_format, tf.pixel_datatype, data);
 			}
 			else if (texture_type == GL_TEXTURE_CUBE_MAP)
 			{
-				glTexSubImage2D(OpenGL::to_cube_target(slice), level, x, y, src_rect.get_width(), src_rect.get_height(), tf.pixel_datatype, tf.pixel_datatype, data);
+				glTexSubImage2D(OpenGL::to_cube_target(slice), level, x, y, src_rect.width(), src_rect.height(), tf.pixel_datatype, tf.pixel_datatype, data);
 			}
 			else if (texture_type == GL_TEXTURE_CUBE_MAP_ARRAY)
 			{
-				glTexSubImage3D(OpenGL::to_cube_target(slice % 6), level, x, y, slice / 6, src_rect.get_width(), src_rect.get_height(), 1, tf.pixel_format, tf.pixel_datatype, data);
+				glTexSubImage3D(OpenGL::to_cube_target(slice % 6), level, x, y, slice / 6, src_rect.width(), src_rect.height(), 1, tf.pixel_format, tf.pixel_datatype, data);
 			}
 
 			// Restore these unpack values to the default

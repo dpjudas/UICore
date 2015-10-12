@@ -56,8 +56,8 @@ namespace uicore
 		if (cursor_description.frames().empty())
 			throw Exception("Cannot create cursor with no image frames");
 		DataBufferPtr ani_file = create_ani_file(cursor_description);
-		int desired_width = cursor_description.frames().front().rect.get_width();
-		int desired_height = cursor_description.frames().front().rect.get_height();
+		int desired_width = cursor_description.frames().front().rect.width();
+		int desired_height = cursor_description.frames().front().rect.height();
 		HICON icon = CreateIconFromResourceEx((PBYTE)ani_file->data(), ani_file->size(), FALSE, 0x00030000, desired_width, desired_height, LR_DEFAULTCOLOR);
 		return (HCURSOR)icon;
 	}

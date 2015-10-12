@@ -84,7 +84,7 @@ namespace uicore
 
 	Sizef DisplayWindowDescription::size() const
 	{
-		return impl->position.get_size();
+		return impl->position.size();
 	}
 
 	Rectf DisplayWindowDescription::position() const

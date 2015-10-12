@@ -579,7 +579,7 @@ namespace uicore
 	{
 		ViewTree *tree = view_tree();
 		Pointf root_content_pos = to_root_pos(pos);
-		Pointf root_pos = root_content_pos + tree->root_view()->geometry().content_box().get_top_left();
+		Pointf root_pos = root_content_pos + tree->root_view()->geometry().content_box().position();
 		return tree ? tree->client_to_screen_pos(root_pos) : root_pos;
 	}
 
@@ -587,14 +587,14 @@ namespace uicore
 	{
 		ViewTree *tree = view_tree();
 		Pointf root_pos = tree ? tree->screen_to_client_pos(pos) : pos;
-		Pointf root_content_pos = root_pos - tree->root_view()->geometry().content_box().get_top_left();
+		Pointf root_content_pos = root_pos - tree->root_view()->geometry().content_box().position();
 		return from_root_pos(root_content_pos);
 	}
 
 	Pointf View::to_root_pos(const Pointf &pos)
 	{
 		if (superview())
-			return superview()->to_root_pos(geometry().content_box().get_top_left() + Vec2f(view_transform() * Vec4f(pos, 0.0f, 1.0f)));
+			return superview()->to_root_pos(geometry().content_box().position() + Vec2f(view_transform() * Vec4f(pos, 0.0f, 1.0f)));
 		else
 			return pos;
 	}
@@ -602,7 +602,7 @@ namespace uicore
 	Pointf View::from_root_pos(const Pointf &pos)
 	{
 		if (superview())
-			return superview()->from_root_pos(Vec2f(Mat4f::inverse(view_transform()) * Vec4f(pos, 0.0f, 1.0f)) - geometry().content_box().get_top_left());
+			return superview()->from_root_pos(Vec2f(Mat4f::inverse(view_transform()) * Vec4f(pos, 0.0f, 1.0f)) - geometry().content_box().position());
 		else
 			return pos;
 	}

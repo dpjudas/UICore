@@ -63,8 +63,8 @@ namespace uicore
 
 		geometry.content_x = content_box.left;
 		geometry.content_y = content_box.top;
-		geometry.content_width = content_box.get_width();
-		geometry.content_height = content_box.get_height();
+		geometry.content_width = content_box.width();
+		geometry.content_height = content_box.height();
 
 		return geometry;
 	}
@@ -81,8 +81,8 @@ namespace uicore
 
 		geometry.content_x = content_box.left;
 		geometry.content_y = content_box.top;
-		geometry.content_width = content_box.get_width();
-		geometry.content_height = content_box.get_height();
+		geometry.content_width = content_box.width();
+		geometry.content_height = content_box.height();
 
 		return geometry;
 	}
@@ -99,8 +99,8 @@ namespace uicore
 
 		geometry.content_x = content_box.left;
 		geometry.content_y = content_box.top;
-		geometry.content_width = content_box.get_width();
-		geometry.content_height = content_box.get_height();
+		geometry.content_width = content_box.width();
+		geometry.content_height = content_box.height();
 
 		return geometry;
 	}
@@ -110,8 +110,8 @@ namespace uicore
 		ViewGeometry geometry(style);
 		geometry.content_x = box.left;
 		geometry.content_y = box.top;
-		geometry.content_width = box.get_width();
-		geometry.content_height = box.get_height();
+		geometry.content_width = box.width();
+		geometry.content_height = box.height();
 		return geometry;
 	}
 

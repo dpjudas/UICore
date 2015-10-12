@@ -59,10 +59,10 @@ namespace uicore
 
 			Rectf border_image_area = get_border_image_area();
 
-			float grid_left = get_left_grid(border_image_area.get_width(), slice_left);
-			float grid_right = get_right_grid(border_image_area.get_width(), slice_right);
-			float grid_top = get_top_grid(border_image_area.get_height(), slice_top);
-			float grid_bottom = get_bottom_grid(border_image_area.get_height(), slice_bottom);
+			float grid_left = get_left_grid(border_image_area.width(), slice_left);
+			float grid_right = get_right_grid(border_image_area.width(), slice_right);
+			float grid_top = get_top_grid(border_image_area.height(), slice_top);
+			float grid_bottom = get_bottom_grid(border_image_area.height(), slice_bottom);
 
 			float x[4] = { border_image_area.left, border_image_area.left + grid_left, border_image_area.right - grid_right, border_image_area.right };
 			float y[4] = { border_image_area.top, border_image_area.top + grid_top, border_image_area.bottom - grid_bottom, border_image_area.bottom };
@@ -145,10 +145,10 @@ namespace uicore
 				Rectf dest_clipped = dest;
 				dest_clipped.clip(clip);
 				
-				float tleft = (dest_clipped.left - dest.left) / dest.get_width();
-				float tright = (dest_clipped.right - dest.left) / dest.get_width();
-				float ttop = (dest_clipped.top - dest.top) / dest.get_height();
-				float tbottom = (dest_clipped.bottom - dest.top) / dest.get_height();
+				float tleft = (dest_clipped.left - dest.left) / dest.width();
+				float tright = (dest_clipped.right - dest.left) / dest.width();
+				float ttop = (dest_clipped.top - dest.top) / dest.height();
+				float tbottom = (dest_clipped.bottom - dest.top) / dest.height();
 				
 				Rectf src_clipped(mix(src.left, src.right, tleft), mix(src.top, src.bottom, ttop), mix(src.left, src.right, tright), mix(src.top, src.bottom, tbottom));
 				

@@ -50,7 +50,7 @@ namespace uicore
 		void add_component(std::shared_ptr<SpanComponent> component, float baseline_offset, int id) override;
 		void layout(const CanvasPtr &canvas, float max_width) override;
 		void set_position(const Pointf &pos) override { position = pos; }
-		Sizef size() const override { return rect().get_size(); }
+		Sizef size() const override { return rect().size(); }
 		Rectf rect() const override;
 		std::vector<Rectf> rect_by_id(int id) const override;
 		HitTestResult hit_test(const CanvasPtr &canvas, const Pointf &pos) override;

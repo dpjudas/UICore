@@ -563,7 +563,7 @@ namespace uicore
 
 		Rectf content_rect = textfield->geometry().content_box();
 		Vec2f pos = e.pos(textfield);
-		if (pos.x < 0.0f || pos.x > content_rect.get_width())
+		if (pos.x < 0.0f || pos.x > content_rect.width())
 		{
 			if (pos.x < 0.0f)
 				mouse_moves_left = true;

@@ -139,7 +139,7 @@ namespace uicore
 
 	Size D3DGraphicContext::display_window_size() const
 	{
-		return window->backing_viewport().get_size();
+		return window->backing_viewport().size();
 	}
 
 	float D3DGraphicContext::pixel_ratio() const
@@ -151,7 +151,7 @@ namespace uicore
 	{
 		// To do: fetch format from window->get_back_buffer()->GetDesc(&desc)
 		// To do: window->get_back_buffer() is only correct when no frame buffer is bound
-		auto pixels = std::make_shared<D3DTransferTexture>(window->get_device(), nullptr, rect.get_size(), data_from_gpu, texture_format, usage_stream_copy);
+		auto pixels = std::make_shared<D3DTransferTexture>(window->get_device(), nullptr, rect.size(), data_from_gpu, texture_format, usage_stream_copy);
 		D3D11_BOX box;
 		box.left = rect.left;
 		box.top = rect.top;
@@ -706,8 +706,8 @@ namespace uicore
 		{
 			viewports[i].TopLeftX = viewport.left;
 			viewports[i].TopLeftY = viewport.top;
-			viewports[i].Width = viewport.get_width();
-			viewports[i].Height = viewport.get_height();
+			viewports[i].Width = viewport.width();
+			viewports[i].Height = viewport.height();
 		}
 		window->get_device_context()->RSSetViewports(D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT, viewports);
 	}
@@ -718,8 +718,8 @@ namespace uicore
 		{
 			viewports[index].TopLeftX = viewport.left;
 			viewports[index].TopLeftY = viewport.top;
-			viewports[index].Width = viewport.get_width();
-			viewports[index].Height = viewport.get_height();
+			viewports[index].Width = viewport.width();
+			viewports[index].Height = viewport.height();
 			window->get_device_context()->RSSetViewports(D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT, viewports);
 		}
 	}
@@ -745,7 +745,7 @@ namespace uicore
 
 	void D3DGraphicContext::on_window_resized()
 	{
-		Size new_size = window->backing_viewport().get_size();
+		Size new_size = window->backing_viewport().size();
 		window_resized_signal(new_size);
 	}
 

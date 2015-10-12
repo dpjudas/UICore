@@ -105,7 +105,7 @@ namespace uicore
 			Rectf rect2 = rect;
 			if (texture_image_y_axis() != y_axis)
 			{
-				rect2 = Rectf(Pointf(rect.left, size().height - rect.bottom), rect.get_size());
+				rect2 = Rectf(Pointf(rect.left, size().height - rect.bottom), rect.size());
 			}
 			set_viewport(rect2);
 		}
@@ -115,7 +115,7 @@ namespace uicore
 			Rectf rect2 = rect;
 			if (texture_image_y_axis() != y_axis)
 			{
-				rect2 = Rectf(Pointf(rect.left, size().height - rect.bottom), rect.get_size());
+				rect2 = Rectf(Pointf(rect.left, size().height - rect.bottom), rect.size());
 			}
 			set_viewport(index, rect2);
 		}
@@ -128,7 +128,7 @@ namespace uicore
 			Rect rect2 = rect;
 			if (texture_image_y_axis() != y_axis)
 			{
-				rect2 = Rect(Point(rect.left, size().height - rect.bottom), rect.get_size());
+				rect2 = Rect(Point(rect.left, size().height - rect.bottom), rect.size());
 			}
 			set_scissor(rect2);
 		}

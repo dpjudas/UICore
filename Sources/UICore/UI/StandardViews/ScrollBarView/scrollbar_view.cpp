@@ -279,7 +279,7 @@ namespace uicore
 		else
 		{
 			double content_size = impl->max_pos - impl->min_pos + impl->page_step;
-			double track_length = vertical() ? track_geometry.content_box().get_height() : track_geometry.content_box().get_width();
+			double track_length = vertical() ? track_geometry.content_box().height() : track_geometry.content_box().width();
 			double thumb_length = impl->page_step / content_size * track_length;
 
 			thumb_length = std::min(std::max(thumb_length, 16.0), track_length);

@@ -110,14 +110,14 @@ namespace uicore
 		virtual void copy_image_from(const GraphicContextPtr &context, int x, int y, int width, int height, int level = 0, TextureFormat texture_format = tf_rgba8) = 0;
 		void copy_image_from(const GraphicContextPtr &context, const Rect &pos, int level = 0, TextureFormat texture_format = tf_rgba8)
 		{
-			copy_image_from(context, pos.left, pos.top, pos.get_width(), pos.get_height(), level, texture_format);
+			copy_image_from(context, pos.left, pos.top, pos.width(), pos.height(), level, texture_format);
 		}
 
 		/// Copy sub image data from a graphic context.
 		virtual void copy_subimage_from(const GraphicContextPtr &context, int offset_x, int offset_y, int x, int y, int width, int height, int level = 0) = 0;
 		virtual void copy_subimage_from(const GraphicContextPtr &context, const Point &offset, const Rect &pos, int level = 0)
 		{
-			copy_subimage_from(context, offset.x, offset.y, pos.left, pos.top, pos.get_width(), pos.get_height(), level);
+			copy_subimage_from(context, offset.x, offset.y, pos.left, pos.top, pos.width(), pos.height(), level);
 		}
 
 		virtual void set_wrap_mode(TextureWrapMode wrap_s, TextureWrapMode wrap_t) = 0;

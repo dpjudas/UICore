@@ -174,7 +174,7 @@ namespace uicore
 			return;
 
 		Rectf clip_box = get_clip_box(index);
-		Pointf center = clip_box.get_center();
+		Pointf center = clip_box.center();
 
 		Brush brush;
 		brush.type = BrushType::linear;
@@ -195,20 +195,20 @@ namespace uicore
 			{
 			default:
 			case 0:
-				corner1 = clip_box.get_bottom_left();
-				corner2 = clip_box.get_top_right();
+				corner1 = clip_box.bottom_left();
+				corner2 = clip_box.top_right();
 				break;
 			case 1:
-				corner1 = clip_box.get_top_left();
-				corner2 = clip_box.get_bottom_right();
+				corner1 = clip_box.top_left();
+				corner2 = clip_box.bottom_right();
 				break;
 			case 2:
-				corner1 = clip_box.get_top_right();
-				corner2 = clip_box.get_bottom_left();
+				corner1 = clip_box.top_right();
+				corner2 = clip_box.bottom_left();
 				break;
 			case 3:
-				corner1 = clip_box.get_bottom_right();
-				corner2 = clip_box.get_top_left();
+				corner1 = clip_box.bottom_right();
+				corner2 = clip_box.top_left();
 				break;
 			}
 
@@ -318,7 +318,7 @@ namespace uicore
 	float StyleBackgroundRenderer::get_start_x(int index, const Rectf &clip_box, const Rectf &origin_box, const Sizef &image_size)
 	{
 		float x;
-		if (get_layer_repeat_x(index).is_keyword("space") && image_size.width * 2 > origin_box.get_width())
+		if (get_layer_repeat_x(index).is_keyword("space") && image_size.width * 2 > origin_box.width())
 		{
 			x = origin_box.left;
 		}
@@ -329,11 +329,11 @@ namespace uicore
 			if (pos_x.is_keyword("left"))
 				x = origin_box.left;
 			else if (pos_x.is_keyword("center"))
-				x = origin_box.left + (origin_box.get_width() - image_size.width) / 2;
+				x = origin_box.left + (origin_box.width() - image_size.width) / 2;
 			else if (pos_x.is_keyword("right"))
 				x = origin_box.right - image_size.width;
 			else if (pos_x.is_percentage())
-				x = origin_box.left + (origin_box.get_width() - image_size.width) * pos_x.number() / 100.0f;
+				x = origin_box.left + (origin_box.width() - image_size.width) * pos_x.number() / 100.0f;
 			else if (pos_x.is_length())
 				x = origin_box.left + pos_x.number();
 		}
@@ -351,7 +351,7 @@ namespace uicore
 	float StyleBackgroundRenderer::get_start_y(int index, const Rectf &clip_box, const Rectf &origin_box, const Sizef &image_size)
 	{
 		float y;
-		if (get_layer_repeat_y(index).is_keyword("space") && image_size.height * 2 > origin_box.get_height())
+		if (get_layer_repeat_y(index).is_keyword("space") && image_size.height * 2 > origin_box.height())
 		{
 			y = origin_box.top;
 		}
@@ -362,11 +362,11 @@ namespace uicore
 			if (pos_y.is_keyword("top"))
 				y = origin_box.top;
 			else if (pos_y.is_keyword("center"))
-				y = origin_box.top + (origin_box.get_height() - image_size.height) / 2;
+				y = origin_box.top + (origin_box.height() - image_size.height) / 2;
 			else if (pos_y.is_keyword("bottom"))
 				y = origin_box.bottom - image_size.height;
 			else if (pos_y.is_percentage())
-				y = origin_box.top + (origin_box.get_height() - image_size.height) * pos_y.number() / 100.0f;
+				y = origin_box.top + (origin_box.height() - image_size.height) * pos_y.number() / 100.0f;
 			else if (pos_y.is_length())
 				y = origin_box.top + pos_y.number();
 		}
@@ -389,17 +389,17 @@ namespace uicore
 		
 		if (size_x.is_keyword("contain"))
 		{
-			if (origin_box.get_height()*image->width() / image->height() <= origin_box.get_width())
-				size = Sizef(origin_box.get_height()*image->width() / image->height(), origin_box.get_height());
+			if (origin_box.height()*image->width() / image->height() <= origin_box.width())
+				size = Sizef(origin_box.height()*image->width() / image->height(), origin_box.height());
 			else
-				size = Sizef(origin_box.get_width(), origin_box.get_width()*image->height() / image->width());
+				size = Sizef(origin_box.width(), origin_box.width()*image->height() / image->width());
 		}
 		else if (size_x.is_keyword("cover"))
 		{
-			if (origin_box.get_height()*image->width() / image->height() >= origin_box.get_width())
-				size = Sizef(origin_box.get_height()*image->width() / image->height(), origin_box.get_height());
+			if (origin_box.height()*image->width() / image->height() >= origin_box.width())
+				size = Sizef(origin_box.height()*image->width() / image->height(), origin_box.height());
 			else
-				size = Sizef(origin_box.get_width(), origin_box.get_width()*image->height() / image->width());
+				size = Sizef(origin_box.width(), origin_box.width()*image->height() / image->width());
 		}
 		else
 		{
@@ -432,13 +432,13 @@ namespace uicore
 		if (repeat_x.is_keyword("round"))
 		{
 			if (size.width != 0)
-				size.width = origin_box.get_width() / (int)(origin_box.get_width() / (float)size.width + 0.5f);
+				size.width = origin_box.width() / (int)(origin_box.width() / (float)size.width + 0.5f);
 		}
 
 		if (repeat_y.is_keyword("round"))
 		{
 			if (size.height != 0)
-				size.height = origin_box.get_height() / (int)(origin_box.get_height() / (float)size.height + 0.5f);
+				size.height = origin_box.height() / (int)(origin_box.height() / (float)size.height + 0.5f);
 		}
 
 		if (repeat_x.is_keyword("round") && size_y.is_keyword("auto"))
@@ -959,7 +959,7 @@ namespace uicore
 		if (border_radius.is_length())
 			return border_radius.number();
 		else if (border_radius.is_percentage())
-			return border_radius.number() * geometry.border_box().get_width() / 100.0f;
+			return border_radius.number() * geometry.border_box().width() / 100.0f;
 		else
 			return 0.0f;
 	}
@@ -969,7 +969,7 @@ namespace uicore
 		if (border_radius.is_length())
 			return border_radius.number();
 		else if (border_radius.is_percentage())
-			return border_radius.number() * geometry.border_box().get_height() / 100.0f;
+			return border_radius.number() * geometry.border_box().height() / 100.0f;
 		else
 			return 0.0f;
 	}

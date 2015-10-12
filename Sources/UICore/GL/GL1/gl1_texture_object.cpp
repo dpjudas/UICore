@@ -325,7 +325,7 @@ namespace uicore
 		// conversion needed
 		else
 		{
-			auto buffer = PixelBuffer::create(src_rect.get_width(), src_rect.get_height(), needs_alpha ? tf_rgba8 : tf_rgb8);
+			auto buffer = PixelBuffer::create(src_rect.width(), src_rect.height(), needs_alpha ? tf_rgba8 : tf_rgb8);
 	
 			buffer->set_subimage(image, Point(0, 0), src_rect);
 
@@ -352,8 +352,8 @@ namespace uicore
 			GL_TEXTURE_2D,            // target
 			level,                    // level
 			x, y,                     // xoffset, yoffset
-			src_rect.get_width(),        // width
-			src_rect.get_height(),       // height
+			src_rect.width(),        // width
+			src_rect.height(),       // height
 			format,					  // format
 			type,					  // type
 			image->data());        // texels
@@ -376,7 +376,7 @@ namespace uicore
 						level,				// level
 						edge_cnt, y,		// xoffset, yoffset
 						1,					// width
-						src_rect.get_height(),	// height
+						src_rect.height(),	// height
 						format,				// format
 						type,				// type
 						edge_data);				// texels
@@ -395,7 +395,7 @@ namespace uicore
 						GL_TEXTURE_2D,		// target
 						level,				// level
 						x, edge_cnt,		// xoffset, yoffset
-						src_rect.get_width(),		// width
+						src_rect.width(),		// width
 						1,	// height
 						format,				// format
 						type,				// type

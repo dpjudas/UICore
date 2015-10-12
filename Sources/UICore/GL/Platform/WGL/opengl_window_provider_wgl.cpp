@@ -484,8 +484,8 @@ namespace uicore
 		glFlush();
 		if (shadow_window)
 		{
-			int width = viewport().get_width();
-			int height = viewport().get_height();
+			int width = viewport().width();
+			int height = viewport().height();
 
 			if (using_gl3)
 			{
@@ -571,8 +571,8 @@ namespace uicore
 
 			if (dwm_layered)
 			{
-				int width = viewport().get_width();
-				int height = viewport().get_height();
+				int width = viewport().width();
+				int height = viewport().height();
 
 				glReadBuffer(GL_FRONT);
 

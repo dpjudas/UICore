@@ -103,7 +103,7 @@ namespace uicore
 			float height = controller->root_view()->calculate_preferred_height(canvas, width);
 			Rectf content_box(0.0f, 0.0f, width, height);
 			Rectf margin_box = ViewGeometry::from_content_box(controller->root_view()->style_cascade(), content_box).margin_box();
-			display_window->set_size(margin_box.get_width(), margin_box.get_height(), true);
+			display_window->set_size(margin_box.width(), margin_box.height(), true);
 		}
 
 		if (!controller->impl->icon_images.empty())
@@ -117,7 +117,7 @@ namespace uicore
 
 	void WindowManager::present_modal(View *owner, const std::shared_ptr<WindowController> &controller)
 	{
-		Pointf screen_pos = owner->to_screen_pos(owner->geometry().content_box().get_center());
+		Pointf screen_pos = owner->to_screen_pos(owner->geometry().content_box().center());
 
 		DisplayWindowDescription desc;
 		desc.set_dialog_window();

@@ -267,7 +267,7 @@ namespace uicore
 
 	Size GL3GraphicContext::display_window_size() const
 	{
-		return render_window->backing_viewport().get_size();
+		return render_window->backing_viewport().size();
 	}
 
 	float GL3GraphicContext::pixel_ratio() const
@@ -506,7 +506,7 @@ namespace uicore
 		if (!tf.valid)
 			throw Exception("Unsupported texture format passed to GraphicContext::get_pixeldata");
 
-		auto pbuf = PixelBuffer::create(rect.get_width(), rect.get_height(), texture_format);
+		auto pbuf = PixelBuffer::create(rect.width(), rect.height(), texture_format);
 		OpenGL::set_active(this);
 		if (!framebuffer_bound)
 		{
@@ -521,7 +521,7 @@ namespace uicore
 		glPixelStorei(GL_PACK_ROW_LENGTH, pbuf->pitch() / pbuf->bytes_per_pixel());
 		glPixelStorei(GL_PACK_SKIP_PIXELS, 0);
 		glPixelStorei(GL_PACK_SKIP_ROWS, 0);
-		glReadPixels(rect.left, display_size.height - rect.bottom, rect.get_width(), rect.get_height(), tf.pixel_format, tf.pixel_datatype, pbuf->data());
+		glReadPixels(rect.left, display_size.height - rect.bottom, rect.width(), rect.height(), tf.pixel_format, tf.pixel_datatype, pbuf->data());
 		pbuf->flip_vertical();
 		return pbuf;
 	}
@@ -794,10 +794,10 @@ namespace uicore
 
 		glEnable(GL_SCISSOR_TEST);
 		glScissor(
-			rect.left,
-			rect.top,
-			rect.get_width(),
-			rect.get_height());
+			rect.x(),
+			rect.y(),
+			rect.width(),
+			rect.height());
 	}
 
 	void GL3GraphicContext::reset_scissor()
@@ -842,7 +842,7 @@ namespace uicore
 
 	void GL3GraphicContext::on_window_resized()
 	{
-		window_resized_signal(render_window->backing_viewport().get_size());
+		window_resized_signal(render_window->backing_viewport().size());
 	}
 
 	void GL3GraphicContext::set_viewport(const Rectf &viewport)

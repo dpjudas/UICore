@@ -35,7 +35,7 @@
 namespace uicore
 {
 	template<typename Type>
-	Rectx<Type> Rectx<Type>::get_rot_bounds(const Vec2<Type> &hotspot, const Angle &angle) const
+	Rectx<Type> Rectx<Type>::rot_bounds(const Vec2<Type> &hotspot, const Angle &angle) const
 	{
 		//Find the rotated positions of each corner
 		Rectx<Type> retVal(*this);
@@ -58,10 +58,10 @@ namespace uicore
 	}
 
 	template<typename Type>
-	Rectx<Type> Rectx<Type>::get_rot_bounds(Origin origin, Type x, Type y, const Angle &angle) const
+	Rectx<Type> Rectx<Type>::rot_bounds(Origin origin, Type x, Type y, const Angle &angle) const
 	{
-		return get_rot_bounds(
-			Vec2<Type>(left, top) + Vec2<Type>::calc_origin(origin, get_size()) + Vec2<Type>(x, y),
+		return rot_bounds(
+			Vec2<Type>(left, top) + Vec2<Type>::calc_origin(origin, size()) + Vec2<Type>(x, y),
 			angle);
 	}
 

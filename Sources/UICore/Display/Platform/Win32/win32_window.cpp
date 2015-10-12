@@ -256,7 +256,7 @@ namespace uicore
 		}
 		else
 		{
-			SetWindowPos(hwnd, 0, pos.left, pos.top, pos.get_width(), pos.get_height(), SWP_NOACTIVATE | SWP_NOREPOSITION | SWP_NOZORDER);
+			SetWindowPos(hwnd, 0, pos.left, pos.top, pos.width(), pos.height(), SWP_NOACTIVATE | SWP_NOREPOSITION | SWP_NOZORDER);
 		}
 	}
 
@@ -1165,7 +1165,7 @@ namespace uicore
 
 		// Convert pixel buffer to DIB compatible format:
 		int pitch = 4;
-		auto bmp_image = PixelBuffer::create(rect.get_width(), rect.get_height(), tf_bgra8);
+		auto bmp_image = PixelBuffer::create(rect.width(), rect.height(), tf_bgra8);
 
 		bmp_image->set_subimage(image, Point(0, 0), rect);
 		bmp_image->flip_vertical(); // flip_vertical() ensures the pixels are stored upside-down as expected by the BMP format
@@ -1724,8 +1724,8 @@ namespace uicore
 			clientSize = false;
 			x = (int)std::round(R.left * pixel_ratio);
 			y = (int)std::round(R.top * pixel_ratio);
-			width = (int)std::round(R.get_width() * pixel_ratio);
-			height = (int)std::round(R.get_height() * pixel_ratio);
+			width = (int)std::round(R.width() * pixel_ratio);
+			height = (int)std::round(R.height() * pixel_ratio);
 		}
 		else if (desc.position().left == -1 && desc.position().top == -1)
 		{
@@ -1946,7 +1946,7 @@ namespace uicore
 
 	void Win32Window::set_alpha_channel()
 	{
-		if (window_blur_rect.get_width() == 0)
+		if (window_blur_rect.width() == 0)
 		{
 			DwmFunctions::enable_alpha_channel(hwnd, 0);
 		}

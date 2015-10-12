@@ -48,7 +48,7 @@ namespace uicore
 		if (!_render_button_arrows)
 			return;
 
-		Rectf box = geometry().content_box().get_size();
+		Rectf box = geometry().content_box().size();
 		box.shrink(4.0f, 6.0f);
 
 		auto path = Path::create();
@@ -58,25 +58,25 @@ namespace uicore
 		case ScrollBarButtonDirection::left:
 			path->move_to(box.right, box.top);
 			path->line_to(box.right, box.bottom);
-			path->line_to(box.left, box.top + box.get_height() * 0.5f);
+			path->line_to(box.left, box.top + box.height() * 0.5f);
 			path->close();
 			break;
 		case ScrollBarButtonDirection::right:
 			path->move_to(box.left, box.top);
 			path->line_to(box.left, box.bottom);
-			path->line_to(box.right, box.top + box.get_height() * 0.5f);
+			path->line_to(box.right, box.top + box.height() * 0.5f);
 			path->close();
 			break;
 		case ScrollBarButtonDirection::up:
 			path->move_to(box.left, box.bottom);
 			path->line_to(box.right, box.bottom);
-			path->line_to(box.left + box.get_width() * 0.5f, box.top);
+			path->line_to(box.left + box.width() * 0.5f, box.top);
 			path->close();
 			break;
 		case ScrollBarButtonDirection::down:
 			path->move_to(box.left, box.top);
 			path->line_to(box.right, box.top);
-			path->line_to(box.left + box.get_width() * 0.5f, box.bottom);
+			path->line_to(box.left + box.width() * 0.5f, box.bottom);
 			path->close();
 			break;
 		}
@@ -163,14 +163,14 @@ namespace uicore
 		if (scrollbar->horizontal())
 		{
 			mouse_pos = e.pos(track.get()).x;
-			thumb_position = thumb_geometry.left + thumb_geometry.get_width() / 2.0f;
-			timer_target_position = min_pos + mouse_pos * ((max_pos - min_pos)) / (track->geometry().content_box().get_width());
+			thumb_position = thumb_geometry.left + thumb_geometry.width() / 2.0f;
+			timer_target_position = min_pos + mouse_pos * ((max_pos - min_pos)) / (track->geometry().content_box().width());
 		}
 		else
 		{
 			mouse_pos = e.pos(track.get()).y;
-			thumb_position = thumb_geometry.top + thumb_geometry.get_height() / 2.0f;
-			timer_target_position = min_pos + mouse_pos * ((max_pos - min_pos)) / (track->geometry().content_box().get_height());
+			thumb_position = thumb_geometry.top + thumb_geometry.height() / 2.0f;
+			timer_target_position = min_pos + mouse_pos * ((max_pos - min_pos)) / (track->geometry().content_box().height());
 		}
 
 		if (mouse_pos < thumb_position)
@@ -272,7 +272,7 @@ namespace uicore
 
 		double last_position = pos;
 
-		if (mouse_pos.x < -100 || mouse_pos.x > track_geometry.get_width() + 100 || mouse_pos.y < -100 || mouse_pos.y > track_geometry.get_height() + 100)
+		if (mouse_pos.x < -100 || mouse_pos.x > track_geometry.width() + 100 || mouse_pos.y < -100 || mouse_pos.y > track_geometry.height() + 100)
 		{
 			pos = thumb_move_start_position;
 		}
@@ -281,12 +281,12 @@ namespace uicore
 			if (scrollbar->horizontal())
 			{
 				double delta = (mouse_pos.x - mouse_drag_start_pos.x);
-				pos = thumb_move_start_position + delta * ((max_pos - min_pos)) / (track->geometry().content_box().get_width());
+				pos = thumb_move_start_position + delta * ((max_pos - min_pos)) / (track->geometry().content_box().width());
 			}
 			else
 			{
 				double delta = (mouse_pos.y - mouse_drag_start_pos.y);
-				pos = thumb_move_start_position + delta * ((max_pos - min_pos)) / (track->geometry().content_box().get_height());
+				pos = thumb_move_start_position + delta * ((max_pos - min_pos)) / (track->geometry().content_box().height());
 			}
 		}
 		if (pos > max_pos)

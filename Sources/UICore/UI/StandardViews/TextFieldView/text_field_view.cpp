@@ -637,7 +637,7 @@ namespace uicore
 
 		Rect content_rect = textfield->geometry().content_box();
 		int xpos = e.pos(textfield).x;
-		if (xpos < 0 || xpos > content_rect.get_width())
+		if (xpos < 0 || xpos > content_rect.width())
 		{
 			if (xpos < 0)
 				mouse_moves_left = true;

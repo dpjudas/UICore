@@ -108,7 +108,7 @@ namespace uicore
 			GraphicContextPtr gc = canvas->gc();
 			TextureGroupImage sub_texture = texture_group->add(gc, buffer_with_border->size());
 			font_glyph->texture = sub_texture.texture();
-			font_glyph->geometry = Rect(sub_texture.geometry().left + glyph_border_size, sub_texture.geometry().top + glyph_border_size, pb.buffer_rect.get_size());
+			font_glyph->geometry = Rect(sub_texture.geometry().left + glyph_border_size, sub_texture.geometry().top + glyph_border_size, pb.buffer_rect.size());
 			font_glyph->size = pb.size;
 			sub_texture.texture()->set_subimage(gc, sub_texture.geometry().left, sub_texture.geometry().top, buffer_with_border, buffer_with_border->size());
 		}
@@ -125,7 +125,7 @@ namespace uicore
 		font_glyph->metrics = glyph_metrics;
 		font_glyph->size = size;
 
-		if ((sub_texture.geometry().get_width() > 0) && (sub_texture.geometry().get_height() > 0))
+		if ((sub_texture.geometry().width() > 0) && (sub_texture.geometry().height() > 0))
 		{
 			font_glyph->texture = sub_texture.texture();
 			font_glyph->geometry = sub_texture.geometry();

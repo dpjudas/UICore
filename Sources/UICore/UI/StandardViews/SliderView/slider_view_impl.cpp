@@ -114,14 +114,14 @@ namespace uicore
 		if (slider->horizontal())
 		{
 			mouse_pos = e.pos(track.get()).x;
-			thumb_position = thumb_geometry.left + thumb_geometry.get_width() / 2.0f;
-			timer_target_position = _min_position + mouse_pos * ((_max_position - _min_position)) / (track->geometry().content_box().get_width());
+			thumb_position = thumb_geometry.left + thumb_geometry.width() / 2.0f;
+			timer_target_position = _min_position + mouse_pos * ((_max_position - _min_position)) / (track->geometry().content_box().width());
 		}
 		else
 		{
 			mouse_pos = e.pos(track.get()).y;
-			thumb_position = thumb_geometry.top + thumb_geometry.get_height() / 2.0f;
-			timer_target_position = _min_position + mouse_pos * ((_max_position - _min_position)) / (track->geometry().content_box().get_height());
+			thumb_position = thumb_geometry.top + thumb_geometry.height() / 2.0f;
+			timer_target_position = _min_position + mouse_pos * ((_max_position - _min_position)) / (track->geometry().content_box().height());
 		}
 
 		if (mouse_pos < thumb_position)
@@ -182,7 +182,7 @@ namespace uicore
 
 		int last_position = _position;
 
-		if (mouse_pos.x < -100 || mouse_pos.x > track_geometry.get_width() + 100 || mouse_pos.y < -100 || mouse_pos.y > track_geometry.get_height() + 100)
+		if (mouse_pos.x < -100 || mouse_pos.x > track_geometry.width() + 100 || mouse_pos.y < -100 || mouse_pos.y > track_geometry.height() + 100)
 		{
 			_position = thumb_move_start_position;
 		}
@@ -191,12 +191,12 @@ namespace uicore
 			if (slider->horizontal())
 			{
 				int delta = (mouse_pos.x - mouse_drag_start_pos.x);
-				_position = thumb_move_start_position + (delta * (_max_position - _min_position)) / (track->geometry().content_box().get_width());
+				_position = thumb_move_start_position + (delta * (_max_position - _min_position)) / (track->geometry().content_box().width());
 			}
 			else
 			{
 				int delta = (mouse_pos.y - mouse_drag_start_pos.y);
-				_position = thumb_move_start_position + (delta * (_max_position - _min_position)) / (track->geometry().content_box().get_height());
+				_position = thumb_move_start_position + (delta * (_max_position - _min_position)) / (track->geometry().content_box().height());
 			}
 		}
 		if (_position > _max_position)

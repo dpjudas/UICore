@@ -50,7 +50,7 @@ namespace uicore
 	public:
 		static void convert(const PixelBuffer *source, PixelBuffer *target, const Rect &dest_rect, const Rect &src_rect, const PixelConverterPtr &converter)
 		{
-			if (dest_rect.get_size() != src_rect.get_size())
+			if (dest_rect.size() != src_rect.size())
 			{
 				throw Exception("Source and destination rects must have same size. Scaled converting not supported.");
 			}
@@ -64,7 +64,7 @@ namespace uicore
 			src_data += src_rect.top * src_pitch + src_rect.left * source->bytes_per_pixel();
 			dest_data += dest_rect.top * dest_pitch + dest_rect.left * target->bytes_per_pixel();
 
-			converter->convert(dest_data, dest_pitch, target->format(), src_data, src_pitch, source->format(), dest_rect.get_width(), dest_rect.get_height());
+			converter->convert(dest_data, dest_pitch, target->format(), src_data, src_pitch, source->format(), dest_rect.width(), dest_rect.height());
 		}
 	};
 
@@ -343,8 +343,8 @@ namespace uicore
 		if (rect.left < 0 || rect.top < 0 || rect.right > width() || rect.bottom > height())
 			throw Exception("Rectangle passed to PixelBuffer::copy() out of bounds");
 
-		int new_width = rect.get_width();
-		int new_height = rect.get_height();
+		int new_width = rect.width();
+		int new_height = rect.height();
 
 		auto pbuf = PixelBuffer::create(new_width, new_height, format());
 		uint8_t *dst_data = pbuf->data<uint8_t>();
@@ -370,7 +370,7 @@ namespace uicore
 	void PixelBuffer::set_subimage(const std::shared_ptr<PixelBuffer> &source, const Point &dest_pos, const Rect &src_rect)
 	{
 		auto converter = PixelConverter::create();
-		PixelBufferImpl::convert(source.get(), this, Rect(dest_pos, src_rect.get_size()), src_rect, converter);
+		PixelBufferImpl::convert(source.get(), this, Rect(dest_pos, src_rect.size()), src_rect, converter);
 	}
 
 	void PixelBuffer::set_image(const std::shared_ptr<PixelBuffer> &source, const PixelConverterPtr &converter)
@@ -380,7 +380,7 @@ namespace uicore
 
 	void PixelBuffer::set_subimage(const std::shared_ptr<PixelBuffer> &source, const Point &dest_pos, const Rect &src_rect, const PixelConverterPtr &converter)
 	{
-		PixelBufferImpl::convert(source.get(), this, Rect(dest_pos, src_rect.get_size()), src_rect, converter);
+		PixelBufferImpl::convert(source.get(), this, Rect(dest_pos, src_rect.size()), src_rect, converter);
 	}
 
 	std::shared_ptr<PixelBuffer> PixelBuffer::to_format(TextureFormat texture_format) const
@@ -644,8 +644,8 @@ namespace uicore
 		int old_width = pb->width();
 		int old_height = pb->height();
 
-		int new_width = rect.get_width() + border_size * 2;
-		int new_height = rect.get_height() + border_size * 2;
+		int new_width = rect.width() + border_size * 2;
+		int new_height = rect.height() + border_size * 2;
 
 		// Convert pixel buffer if in an unsupported format
 		PixelBufferPtr work_buffer;

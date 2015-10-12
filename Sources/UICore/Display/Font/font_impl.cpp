@@ -312,8 +312,8 @@ namespace uicore
 			total_metrics.advance += metrics.advance;
 		}
 
-		total_metrics.bbox_offset = text_bbox.get_top_left();
-		total_metrics.bbox_size = text_bbox.get_size();
+		total_metrics.bbox_offset = text_bbox.position();
+		total_metrics.bbox_size = text_bbox.size();
 
 		total_metrics.advance *= scaled_height;
 		total_metrics.bbox_offset *= scaled_height;

@@ -794,7 +794,7 @@ namespace uicore
 			array_slice = 0;
 		}
 
-		if (x < 0 || x + src_rect.get_width() > texture_width || y < 0 || y + src_rect.get_height() > texture_height)
+		if (x < 0 || x + src_rect.width() > texture_width || y < 0 || y + src_rect.height() > texture_height)
 			throw Exception("out of bounds!");
 
 		int dest_subresource = D3D11CalcSubresource(level, array_slice, mip_levels);
@@ -826,8 +826,8 @@ namespace uicore
 			D3D11_BOX box;
 			box.left = x;
 			box.top = y;
-			box.right = x + src_rect.get_width();
-			box.bottom = y + src_rect.get_height();
+			box.right = x + src_rect.width();
+			box.bottom = y + src_rect.height();
 			box.front = z;
 			box.back = z + 1;
 

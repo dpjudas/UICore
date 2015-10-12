@@ -96,10 +96,10 @@ namespace uicore
 
 	void PathImpl::add_rect(const Rectf &box)
 	{
-		move_to(box.get_top_left());
-		line_to(Pointf(box.get_top_right()));
-		line_to(Pointf(box.get_bottom_right()));
-		line_to(Pointf(box.get_bottom_left()));
+		move_to(box.top_left());
+		line_to(Pointf(box.top_right()));
+		line_to(Pointf(box.bottom_right()));
+		line_to(Pointf(box.bottom_left()));
 		close();
 	}
 
