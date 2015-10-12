@@ -328,7 +328,7 @@ namespace uicore
 				prim_array[gpu_index]->set_attributes(2, gpu_vertices, cl_offsetof(SpriteVertex, texcoord));
 				prim_array[gpu_index]->set_attributes(3, gpu_vertices, cl_offsetof(SpriteVertex, texindex));
 
-				if (glyph_blend)
+				if (!glyph_blend)
 				{
 					BlendStateDescription blend_desc;
 					blend_desc.set_blend_function(blend_constant_color, blend_one_minus_src_color, blend_zero, blend_one);

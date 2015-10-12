@@ -84,6 +84,7 @@ namespace uicore
 		D3DShareList::context_created(this);
 
 		set_default_state();
+		reset_scissor();
 	}
 
 	D3DGraphicContext::~D3DGraphicContext()
@@ -652,9 +653,8 @@ namespace uicore
 
 	void D3DGraphicContext::reset_scissor()
 	{
+		// To do: remove reset_scissor as the only way to disable scissor is to create a rasterizer state with ScissorEnable to false
 		set_scissor(Rect(0, 0, 0x7FFFFFFF, 0x7FFFFFFF));
-		// The below does not work, why?
-		//window->get_device_context()->RSSetScissorRects(0, 0);
 	}
 
 	void D3DGraphicContext::dispatch(int x, int y, int z)
