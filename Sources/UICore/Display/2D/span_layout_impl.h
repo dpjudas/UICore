@@ -50,7 +50,7 @@ namespace uicore
 		void add_component(std::shared_ptr<SpanComponent> component, float baseline_offset, int id) override;
 		void layout(const CanvasPtr &canvas, float max_width) override;
 		void set_position(const Pointf &pos) override { position = pos; }
-		Sizef size() const override;
+		Sizef size() const override { return rect().get_size(); }
 		Rectf rect() const override;
 		std::vector<Rectf> rect_by_id(int id) const override;
 		HitTestResult hit_test(const CanvasPtr &canvas, const Pointf &pos) override;
@@ -60,11 +60,11 @@ namespace uicore
 		Sizef find_preferred_size(const CanvasPtr &canvas) override;
 		void set_selection_range(std::string::size_type start, std::string::size_type end) override;
 		void set_selection_colors(const Colorf &foreground, const Colorf &background) override;
-		void show_cursor() override;
-		void hide_cursor() override;
-		void set_cursor_pos(std::string::size_type pos) override;
-		void set_cursor_overwrite_mode(bool enable) override;
-		void set_cursor_color(const Colorf &color) override;
+		void show_cursor() override { cursor_visible = true; }
+		void hide_cursor() override { cursor_visible = false; }
+		void set_cursor_pos(std::string::size_type pos) override { cursor_pos = pos; }
+		void set_cursor_overwrite_mode(bool enable) override { cursor_overwrite_mode = enable; }
+		void set_cursor_color(const Colorf &color) override { cursor_color = color; }
 		std::string combined_text() const override;
 		void set_align(SpanAlign align) override;
 		float first_baseline_offset() override;
