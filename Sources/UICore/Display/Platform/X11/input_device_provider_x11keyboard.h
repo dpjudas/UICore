@@ -37,7 +37,7 @@
 
 #include <map>
 
-namespace clan
+namespace uicore
 {
 	class X11Window;
 

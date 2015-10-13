@@ -112,7 +112,11 @@ namespace uicore
 
 		static uint16_t swap(uint16_t val)
 		{
+#ifdef bswap_16
+			return bswap_16(val);
+#else
 			return __bswap_16(val);
+#endif
 		}
 
 		static int16_t swap(int16_t val)
@@ -122,7 +126,11 @@ namespace uicore
 
 		static uint32_t swap(uint32_t val)
 		{
+#ifdef bswap_32
+			return bswap_32(val);
+#else
 			return __bswap_32(val);
+#endif
 		}
 
 		static int32_t swap(int32_t val)
@@ -132,7 +140,11 @@ namespace uicore
 
 		static uint64_t swap(uint64_t val)
 		{
+#ifdef bswap_64
+			return bswap_64(val);
+#else
 			return __bswap_64(val);
+#endif
 		}
 
 		static int64_t swap(int64_t val)
@@ -215,3 +227,4 @@ namespace uicore
 
 #endif
 }
+

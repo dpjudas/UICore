@@ -44,7 +44,7 @@ extern "C"
 	#include FT_LCD_FILTER_H
 }
 
-namespace clan
+namespace uicore
 {
 
 struct TagStruct

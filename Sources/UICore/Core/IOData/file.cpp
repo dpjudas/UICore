@@ -39,6 +39,8 @@
 #endif
 
 #undef max
+#include <limits>
+#include <algorithm>
 
 namespace uicore
 {
@@ -265,7 +267,7 @@ namespace uicore
 		}
 
 		auto file = std::make_shared<FileImpl>();
-		file.handle = open(filename.c_str(), access_flags|O_CREAT, S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH);
+		file->handle = open(filename.c_str(), access_flags|O_CREAT, S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH);
 		if (file->handle == -1)
 			throw Exception("open failed");
 		return file;
@@ -344,7 +346,7 @@ namespace uicore
 		return result;
 	}
 
-	int FileImpl::read(void *data, int size)
+	int FileImpl::try_read(void *data, int size)
 	{
 		int result = ::read(handle, data, size);
 		if (result == -1)
@@ -417,12 +419,12 @@ namespace uicore
 		auto output_file = copy_always ? File::create_always(to) : File::create_new(to);
 		long long pos = 0;
 		long long size = input_file->size();
-		DataBufferPtr buffer(1024 * 1024);
+		auto buffer = DataBuffer::create(1024 * 1024);
 		while (pos < size)
 		{
-			long long amount = std::min(1024 * 1024, size - pos);
-			input_file->read(buffer.get_data(), amount);
-			output_file->write(buffer.get_data(), amount);
+			long long amount = std::min(1024 * 1024LL, size - pos);
+			input_file->read(buffer->data(), amount);
+			output_file->write(buffer->data(), amount);
 			pos += amount;
 		}
 #endif

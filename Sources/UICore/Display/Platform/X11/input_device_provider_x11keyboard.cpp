@@ -36,7 +36,7 @@
 #include <cstdio>
 #include <X11/XKBlib.h>
 
-namespace clan
+namespace uicore
 {
 	InputDeviceProvider_X11Keyboard::InputDeviceProvider_X11Keyboard(X11Window *window)
 		: window(window), ctrl_down(false), shift_down(false), alt_down(false)

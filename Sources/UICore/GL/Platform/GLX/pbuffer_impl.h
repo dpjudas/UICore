@@ -32,7 +32,7 @@
 #include "../../opengl_graphic_context_provider.h"
 #include "opengl_window_provider_glx.h"
 
-namespace clan
+namespace uicore
 {
 
 class GL1GraphicContextProvider;

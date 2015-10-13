@@ -31,7 +31,7 @@
 #include "API/Display/TargetProviders/input_device_provider.h"
 #include "API/Core/Text/string_format.h"
 
-namespace clan
+namespace uicore
 {
 
 class CocoaMouseInputDeviceProvider : public InputDeviceProvider

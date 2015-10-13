@@ -37,7 +37,7 @@
 #include "input_device_provider_linuxjoystick.h"
 #include "API/Display/Window/input_event.h"
 
-namespace clan
+namespace uicore
 {
 	InputDeviceProvider_LinuxJoystick::InputDeviceProvider_LinuxJoystick(X11Window *window, const std::string &device)
 		: window(window), device(device), fd(-1), new_event(false)

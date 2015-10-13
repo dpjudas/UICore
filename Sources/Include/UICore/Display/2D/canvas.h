@@ -44,7 +44,6 @@ namespace uicore
 	typedef std::shared_ptr<GraphicContext> GraphicContextPtr;
 	class BlendState;
 	typedef std::shared_ptr<BlendState> BlendStatePtr;
-	enum StandardProgram;
 	class Path;
 	class Pen;
 	class Brush;

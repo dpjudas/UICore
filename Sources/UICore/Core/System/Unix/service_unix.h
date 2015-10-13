@@ -32,7 +32,7 @@
 #include <mutex>
 #include <condition_variable>
 
-namespace clan
+namespace uicore
 {
 
 class Service_Unix : public Service_Impl

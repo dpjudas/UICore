@@ -43,7 +43,7 @@
 #include "cocoa_controller.h"
 #include <QuartzCore/CAEAGLLayer.h>
 
-namespace clan
+namespace uicore
 {
 
 class InputDeviceProvider_CocoaKeyboard;

@@ -28,7 +28,7 @@
 
 #include "x11_atoms.h"
 
-namespace clan
+namespace uicore
 {
 	const std::vector< std::string > X11Atoms::_atoms_ =
 	{

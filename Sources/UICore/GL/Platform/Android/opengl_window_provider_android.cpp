@@ -46,7 +46,7 @@
 #include "API/Display/Window/input_device.h"
 #include "API/Display/Window/input_event.h"
 
-namespace clan
+namespace uicore
 {
 
 /////////////////////////////////////////////////////////////////////////////

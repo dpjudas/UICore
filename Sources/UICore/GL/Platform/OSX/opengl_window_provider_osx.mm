@@ -37,7 +37,7 @@
 
 #import "cocoa_window.h"
 
-namespace clan
+namespace uicore
 {
 	OpenGLWindowProvider::OpenGLWindowProvider(OpenGLContextDescription &opengl_desc)
 	{

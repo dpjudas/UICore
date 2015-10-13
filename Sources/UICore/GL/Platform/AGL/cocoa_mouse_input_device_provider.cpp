@@ -3,7 +3,7 @@
 #include "cocoa_mouse_input_device_provider.h"
 #include "API/Display/Window/keys.h"
 
-namespace clan
+namespace uicore
 {
 
 CocoaMouseInputDeviceProvider::CocoaMouseInputDeviceProvider()

@@ -30,7 +30,7 @@
 
 #include "Display/System/run_loop_impl.h"
 
-namespace clan
+namespace uicore
 {
 	class DisplayMessageQueue_Cocoa : public RunLoopImpl
 	{

@@ -47,7 +47,7 @@
 #include "cocoa_window.h"
 #include "cocoa_mouse_input_device_provider.h"
 
-namespace clan
+namespace uicore
 {
 
 CocoaWindow::CocoaWindow()

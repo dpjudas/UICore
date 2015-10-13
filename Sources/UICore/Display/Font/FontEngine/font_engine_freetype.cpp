@@ -37,7 +37,7 @@
 #include "API/Core/IOData/iodevice.h"
 #include "API/Display/2D/path.h"
 
-namespace clan
+namespace uicore
 {
 
 class FontEngine_Freetype_Library

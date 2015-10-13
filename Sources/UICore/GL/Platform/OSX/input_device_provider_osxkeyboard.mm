@@ -36,7 +36,7 @@
 #include "API/Display/Window/input_event.h"
 #include "API/Display/Window/keys.h"
 
-namespace clan
+namespace uicore
 {
 
 /////////////////////////////////////////////////////////////////////////////

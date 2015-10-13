@@ -53,7 +53,7 @@ namespace uicore
 		}
 
 		TransferVector(const GraphicContextPtr &gc, Type *data, int size, BufferUsage usage = usage_dynamic_copy)
-			: _buffer(TransferBuffer:.create(gc, data, size * sizeof(Type), usage))
+			: _buffer(TransferBuffer::create(gc, data, size * sizeof(Type), usage))
 		{
 		}
 

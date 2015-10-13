@@ -34,7 +34,7 @@
 #include "API/Display/Window/keys.h"
 #include "x11_window.h"
 
-namespace clan
+namespace uicore
 {
 	InputDeviceProvider_X11Mouse::InputDeviceProvider_X11Mouse(X11Window *window)
 		: window(window), mouse_pos(-1, -1), time_at_last_press(0), last_press_id(-1)

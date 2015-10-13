@@ -36,7 +36,7 @@
 
 #include "API/Core/Text/logger.h"
 
-namespace clan
+namespace uicore
 {
 	using X11AtomMap = std::map< std::string, Atom >;
 

@@ -36,7 +36,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 
-namespace clan
+namespace uicore
 {
 	class X11Window;
 

@@ -43,7 +43,7 @@
 #include "../../opengl_graphic_context_provider.h"
 #include "../opengl_target_provider.h"
 
-namespace clan
+namespace uicore
 {
 
 void cl_agl_make_none_current()

@@ -66,7 +66,7 @@
 
 constexpr int _ResizeMinimumSize_ = 8;
 
-namespace clan
+namespace uicore
 {
 	X11Window::X11Window()
 	: handle(), color_map(0), system_cursor(0), hidden_cursor(0), cursor_bitmap(0), size_hints(nullptr),

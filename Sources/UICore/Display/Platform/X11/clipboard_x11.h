@@ -31,7 +31,7 @@
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 
-namespace clan
+namespace uicore
 {
 	class X11Window;
 

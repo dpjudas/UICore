@@ -28,18 +28,17 @@
 
 #include <cstdlib>
 #include <iostream>
-#include "API/App/clanapp.h"
-#include "API/Core/System/exception.h"
-#include "API/Core/System/console_window.h"
-#include "API/Core/Text/console.h"
-#include "API/Core/Text/console_logger.h"
-#include "API/display.h"
+#include <vector>
+#include "UICore/Application/application.h"
+#include "UICore/Core/Text/text.h"
+#include "UICore/Core/System/exception.h"
+#include "UICore/Core/ErrorReporting/exception_dialog.h"
+#include "UICore/display.h"
 
-namespace clan
+namespace uicore
 {
 	static ApplicationInstancePrivate *app_instance = 0;
 	static bool enable_catch_exceptions = false;
-	static int timing_timeout = 0;
 
 	static std::vector<std::string> command_line_args;
 
@@ -53,16 +52,11 @@ namespace clan
 	{
 		return command_line_args;
 	}
-
-	void Application::use_timeout_timing(int timeout)
-	{
-		timing_timeout = timeout;
-	}
 }
 
 int main(int argc, char **argv)
 {
-	if (clan::app_instance == nullptr)
+	if (uicore::app_instance == nullptr)
 	{
 		std::cout << "ClanLib: No global Application instance!" << std::endl;
 		return 255;
@@ -71,7 +65,7 @@ int main(int argc, char **argv)
 	std::vector<std::string> args;
 	for (int i = 0; i < argc; i++)
 		args.push_back(argv[i]);
-	clan::command_line_args = args;
+	uicore::command_line_args = args;
 
 #ifdef DEBUG
 	clan::ConsoleLogger console_logger;
@@ -80,60 +74,27 @@ int main(int argc, char **argv)
 
 	int retval = 0;
 
-	if (clan::enable_catch_exceptions)
+	if (uicore::enable_catch_exceptions)
 	{
 		try
 		{
-			std::unique_ptr<clan::Application> app = clan::app_instance->create();
-			while (true)
-			{
-				try
-				{
-					if (!app->update())
-						break;
-
-					if (!clan::RunLoop::process(clan::timing_timeout))
-						break;
-				}
-				catch (clan::Exception &exception)
-				{
-					std::string console_name("Console");
-					if (!args.empty())
-						console_name = args[0];
-
-					clan::ConsoleWindow console(console_name, 80, 160);
-					clan::Console::write_line("Exception caught: " + exception.get_message_and_stack_trace());
-					console.display_close_message();
-
-					retval = -1;
-					break;
-				}
-			}
+			std::unique_ptr<uicore::Application> app = uicore::app_instance->create();
+			uicore::RunLoop::run();
 		}
-		catch (clan::Exception &exception)
+		catch (uicore::Exception &exception)
 		{
 			std::string console_name("Console");
 			if (!args.empty())
 				console_name = args[0];
 
-			clan::ConsoleWindow console(console_name, 80, 160);
-			clan::Console::write_line("Exception caught: " + exception.get_message_and_stack_trace());
-			console.display_close_message();
-
+			std::cout << "Exception caught: " + exception.get_message_and_stack_trace() << std::endl;
 			retval = -1;
 		}
 	}
 	else
 	{
-		std::unique_ptr<clan::Application> app = clan::app_instance->create();
-		while (true)
-		{
-			if (!app->update())
-				break;
-
-			if (!clan::RunLoop::process(clan::timing_timeout))
-				break;
-		}
+		std::unique_ptr<uicore::Application> app = uicore::app_instance->create();
+		uicore::RunLoop::run();
 	}
 
 	return retval;
