@@ -12,7 +12,7 @@ CubeView::CubeView()
 void CubeView::render_content(const CanvasPtr &canvas)
 {
 	time.update();
-	rotate_angle += std::fmod(time.get_time_elapsed() * 50.0f, 360.0f);
+	rotate_angle = std::fmod(rotate_angle + time.get_time_elapsed() * 150.0f, 360.0f);
 
 	render_scene(canvas);
 
@@ -65,7 +65,7 @@ void CubeView::render_scene(const uicore::CanvasPtr &canvas)
 
 	float fov = 60.0f;
 	float aspect = geometry().content_width / geometry().content_height;
-	Mat4f cube_rotate = Mat4f::rotate(Angle::from_degrees(rotate_angle), Vec3f(1.0f, 1.0f, 1.0f));
+	Mat4f cube_rotate = Mat4f::rotate(Angle::from_degrees(rotate_angle), Vec3f(1.2f, 0.74f, 0.38f));
 	Mat4f camera = Mat4f::translate(0.0f, 0.0f, 4.0f);
 	Mat4f perspective = Mat4f::perspective(fov, aspect, 0.5f, 1000.0f, handed_left, gc->clip_z_range());
 
