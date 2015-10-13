@@ -27,7 +27,7 @@
 **    (if your name is missing here, please add it)
 */
 
-#include "Core/precomp.h"
+#include "UICore/precomp.h"
 #ifdef HAVE_LIBGEN_H
 #include <libgen.h>
 #endif
