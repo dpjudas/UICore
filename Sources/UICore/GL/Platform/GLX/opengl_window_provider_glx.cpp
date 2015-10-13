@@ -66,7 +66,7 @@
 #endif
 #include "../../../Display/setup_display.h"
 
-namespace clan
+namespace uicore
 {
 
 /////////////////////////////////////////////////////////////////////////////

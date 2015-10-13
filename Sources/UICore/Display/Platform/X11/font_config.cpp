@@ -33,7 +33,7 @@
 #include "API/Display/Font/font_description.h"
 #include <cmath>
 
-namespace clan
+namespace uicore
 {
 	FontConfig::FontConfig()
 	{

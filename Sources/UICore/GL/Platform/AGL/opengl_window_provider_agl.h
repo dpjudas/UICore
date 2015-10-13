@@ -34,7 +34,7 @@
 #include "API/Display/Image/pixel_buffer.h"
 #include "API/GL/opengl_wrap.h"
 
-namespace clan
+namespace uicore
 {
 class OpenGLWindowProvider;
 
@@ -51,7 +51,7 @@ void cl_set_default_frame_buffer(DisplayWindowProvider *provider);
 #import <OpenGLES/ES2/gl.h>
 #import <OpenGLES/ES2/glext.h>
 
-namespace clan
+namespace uicore
 {
 
 class OpenGLWindowProvider;

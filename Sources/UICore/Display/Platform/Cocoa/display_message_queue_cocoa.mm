@@ -31,7 +31,7 @@
 #include <CoreFoundation/CoreFoundation.h>
 #import <Cocoa/Cocoa.h>
 
-namespace clan
+namespace uicore
 {
 	void DisplayMessageQueue_Cocoa::run()
 	{

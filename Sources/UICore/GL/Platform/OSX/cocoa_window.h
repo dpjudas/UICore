@@ -30,7 +30,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-namespace clan { class OpenGLWindowProvider_Impl; }
+namespace uicore { class OpenGLWindowProvider_Impl; }
 
 @interface CocoaWindow : NSWindow <NSWindowDelegate>
 

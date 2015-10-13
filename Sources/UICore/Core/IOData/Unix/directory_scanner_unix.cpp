@@ -37,7 +37,7 @@
 
 #include <string.h>
 
-namespace clan
+namespace uicore
 {
 
 DirectoryScanner_Unix::DirectoryScanner_Unix ()

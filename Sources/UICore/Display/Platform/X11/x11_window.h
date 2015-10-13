@@ -51,7 +51,7 @@
 
 #include <sys/time.h>
 
-namespace clan
+namespace uicore
 {
 	class InputDeviceProvider_X11Keyboard;
 	class InputDeviceProvider_X11Mouse;

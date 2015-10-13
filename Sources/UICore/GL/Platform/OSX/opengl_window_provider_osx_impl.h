@@ -48,7 +48,7 @@
 
 @class CocoaWindow;
 
-namespace clan
+namespace uicore
 {
 
 	class OpenGLWindowProvider_Impl

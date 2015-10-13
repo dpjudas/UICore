@@ -46,7 +46,7 @@
 
 #include "API/GL/opengl_wrap.h"
 
-namespace clan
+namespace uicore
 {
 
 typedef int (*ptr_glXSwapIntervalSGI)(int interval);

@@ -31,7 +31,7 @@
 #include "API/Display/TargetProviders/cursor_provider.h"
 #include <vector>
 
-namespace clan
+namespace uicore
 {
 	class Point;
 	class CursorDescription;

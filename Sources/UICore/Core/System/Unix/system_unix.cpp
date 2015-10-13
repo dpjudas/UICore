@@ -53,7 +53,7 @@
 		extern const char *__progname;
 #endif
 
-namespace clan
+namespace uicore
 {
 
 uint64_t System::get_time()

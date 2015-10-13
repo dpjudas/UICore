@@ -32,7 +32,7 @@
 #include "fontconfig/fontconfig.h"
 #endif
 
-namespace clan
+namespace uicore
 {
 	class FontDescription;
 

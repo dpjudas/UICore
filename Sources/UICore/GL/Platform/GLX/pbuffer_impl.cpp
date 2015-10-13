@@ -34,7 +34,7 @@
 #include "API/Display/Render/shared_gc_data.h"
 #include "opengl_window_provider_glx.h"
 
-namespace clan
+namespace uicore
 {
 
 PBuffer_GL1_Impl::PBuffer_GL1_Impl(GL1GraphicContextProvider *gc_provider) : gc_provider(gc_provider), window_provider(nullptr), pbuffer(0), pbuffer_context(nullptr)

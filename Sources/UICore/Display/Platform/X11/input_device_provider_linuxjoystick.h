@@ -34,7 +34,7 @@
 
 struct js_event;
 
-namespace clan
+namespace uicore
 {
 	class X11Window;
 

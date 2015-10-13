@@ -32,7 +32,7 @@
 #include "x11_window.h"
 #include <X11/Xatom.h>
 
-namespace clan
+namespace uicore
 {
 	Clipboard_X11::Clipboard_X11(X11Window *x11_window)
 		: x11_window(x11_window), atom_CLIPBOARD(None), clipboard_available(false)

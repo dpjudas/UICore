@@ -30,7 +30,7 @@
 #include "setupnetwork.h"
 #include <signal.h>
 
-namespace clan
+namespace uicore
 {
 
 	void SetupNetwork::start()

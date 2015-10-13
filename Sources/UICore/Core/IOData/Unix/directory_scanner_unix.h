@@ -35,7 +35,7 @@
 #include <stdio.h>
 #include <unistd.h>
 
-namespace clan
+namespace uicore
 {
 	class DirectoryScanner_Unix : public DirectoryScanner
 	{

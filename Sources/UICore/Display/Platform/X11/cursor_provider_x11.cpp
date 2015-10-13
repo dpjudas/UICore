@@ -31,7 +31,7 @@
 #include "API/Display/Window/cursor_description.h"
 #include "x11_window.h"
 
-namespace clan
+namespace uicore
 {
 	CursorProvider_X11::CursorProvider_X11(const CursorDescription &cursor_description, const Point &hotspot)
 		: handle(0)

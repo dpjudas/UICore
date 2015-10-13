@@ -36,7 +36,7 @@
 #include "../../setup_display.h"
 #include "API/Core/System/system.h"
 
-namespace clan
+namespace uicore
 {
 	DisplayMessageQueue_X11::DisplayMessageQueue_X11()
 	{

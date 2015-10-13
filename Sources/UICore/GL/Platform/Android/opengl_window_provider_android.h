@@ -38,7 +38,7 @@
 #include <EGL/egl.h>
 #include <GLES/gl.h>
 
-namespace clan
+namespace uicore
 {
 
 	class OpenGLContextDescription;

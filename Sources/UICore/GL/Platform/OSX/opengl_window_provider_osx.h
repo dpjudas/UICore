@@ -35,7 +35,7 @@
 #include "API/GL/opengl_wrap.h"
 #include <memory>
 
-namespace clan
+namespace uicore
 {
 	class InputDeviceProvider_OSXKeyboard;
 	class InputDeviceProvider_OSXMouse;
