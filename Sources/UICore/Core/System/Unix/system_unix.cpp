@@ -26,7 +26,7 @@
 **    Magnus Norddahl
 */
 
-#include "Core/precomp.h"
+#include "UICore/precomp.h"
 
 #include <libgen.h>
 #include <unistd.h>
@@ -43,7 +43,7 @@
 // note: this cannot be replaced by <ctime>! (timeval needs to be defined)
 #include <sys/time.h>
 #include <sys/stat.h>
-#include "API/Core/System/system.h"
+#include "UICore/Core/System/system.h"
 
 #ifdef __APPLE__
 #include <CoreFoundation/CoreFoundation.h>
