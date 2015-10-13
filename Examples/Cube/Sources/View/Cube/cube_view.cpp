@@ -47,7 +47,7 @@ void CubeView::render_scene(const uicore::CanvasPtr &canvas)
 		prim_array->set_attributes(0, vertices);
 
 		int texture_width = (int)std::round(geometry().content_width * canvas->pixel_ratio());
-		int texture_height = (int)std::round(geometry().content_width * canvas->pixel_ratio());
+		int texture_height = (int)std::round(geometry().content_height * canvas->pixel_ratio());
 		scene_texture = Texture2D::create(gc, texture_width, texture_height);
 
 		RasterizerStateDescription raster_desc;
