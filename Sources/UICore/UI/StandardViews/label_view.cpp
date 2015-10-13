@@ -104,7 +104,7 @@ namespace uicore
 	{
 		Font font = impl->get_font(this);
 		FontMetrics font_metrics = font.get_font_metrics(canvas);
-		float baseline = font_metrics.get_baseline_offset();
+		float baseline = font_metrics.baseline_offset();
 
 		std::string clipped_text = impl->_text;
 		GlyphMetrics advance = font.measure_text(canvas, clipped_text);
@@ -174,7 +174,7 @@ namespace uicore
 		if (style_cascade().computed_value("height").is_keyword("auto"))
 		{
 			Font font = impl->get_font(this);
-			return font.get_font_metrics(canvas).get_line_height();
+			return font.get_font_metrics(canvas).line_height();
 		}
 		else
 			return style_cascade().computed_value("height").number();
@@ -183,7 +183,7 @@ namespace uicore
 	float LabelView::calculate_first_baseline_offset(const CanvasPtr &canvas, float width)
 	{
 		Font font = impl->get_font(this);
-		return font.get_font_metrics(canvas).get_baseline_offset();
+		return font.get_font_metrics(canvas).baseline_offset();
 	}
 
 	float LabelView::calculate_last_baseline_offset(const CanvasPtr &canvas, float width)

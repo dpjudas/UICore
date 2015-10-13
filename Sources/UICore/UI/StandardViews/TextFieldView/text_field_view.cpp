@@ -352,9 +352,9 @@ namespace uicore
 		float cursor_advance = canvas->grid_fit({ font.measure_text(canvas, impl->text.substr(0, impl->cursor_pos)).advance.width, 0.0f }).x;
 
 		FontMetrics font_metrics = font.get_font_metrics(canvas);
-		float baseline = font_metrics.get_baseline_offset();
-		float top_y = baseline - font_metrics.get_ascent();
-		float bottom_y = baseline + font_metrics.get_descent();
+		float baseline = font_metrics.baseline_offset();
+		float top_y = baseline - font_metrics.ascent();
+		float bottom_y = baseline + font_metrics.descent();
 
 		// Keep cursor in view
 		impl->scroll_pos = std::min(impl->scroll_pos, cursor_advance);
@@ -407,7 +407,7 @@ namespace uicore
 		if (style_cascade().computed_value("height").is_keyword("auto"))
 		{
 			Font font = impl->get_font();
-			return font.get_font_metrics(canvas).get_line_height();
+			return font.get_font_metrics(canvas).line_height();
 		}
 		else
 			return style_cascade().computed_value("height").number();
@@ -416,7 +416,7 @@ namespace uicore
 	float TextFieldView::calculate_first_baseline_offset(const CanvasPtr &canvas, float width)
 	{
 		Font font = impl->get_font();
-		return font.get_font_metrics(canvas).get_baseline_offset();
+		return font.get_font_metrics(canvas).baseline_offset();
 	}
 
 	float TextFieldView::calculate_last_baseline_offset(const CanvasPtr &canvas, float width)

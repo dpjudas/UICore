@@ -118,11 +118,11 @@ namespace uicore
 			}
 
 			selected_metrics = FontMetrics(
-				metrics.get_height() * scaled_height,
-				metrics.get_ascent() * scaled_height,
-				metrics.get_descent() * scaled_height,
-				metrics.get_internal_leading() * scaled_height,
-				metrics.get_external_leading() * scaled_height,
+				metrics.height() * scaled_height,
+				metrics.ascent() * scaled_height,
+				metrics.descent() * scaled_height,
+				metrics.internal_leading() * scaled_height,
+				metrics.external_leading() * scaled_height,
 				selected_line_height,	// Do not scale the line height
 				pixel_ratio
 				);
@@ -142,8 +142,8 @@ namespace uicore
 
 		int character_counter = 0;
 
-		float font_height = selected_metrics.get_height();
-		float font_ascent = selected_metrics.get_ascent();
+		float font_height = selected_metrics.height();
+		float font_ascent = selected_metrics.ascent();
 		float line_spacing = std::round(selected_line_height); // TBD: do we want to round this?
 
 		//TODO: Fix me, so we do not need to line split
@@ -193,8 +193,8 @@ namespace uicore
 		float dest_x = 0;
 		float dest_y = 0;
 
-		float font_height = selected_metrics.get_height();
-		float font_ascent = selected_metrics.get_ascent();
+		float font_height = selected_metrics.height();
+		float font_ascent = selected_metrics.ascent();
 		float line_spacing = std::round(selected_line_height); // TBD: do we want to round this?
 
 		//TODO: Fix me, so we do not need to line split

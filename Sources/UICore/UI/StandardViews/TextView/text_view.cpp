@@ -250,9 +250,9 @@ namespace uicore
 	{
 		Font font = impl->get_font(canvas);
 		FontMetrics font_metrics = font.get_font_metrics(canvas);
-		float baseline = font_metrics.get_baseline_offset();
-		float top_y = baseline - font_metrics.get_ascent();
-		float bottom_y = baseline + font_metrics.get_descent();
+		float baseline = font_metrics.baseline_offset();
+		float top_y = baseline - font_metrics.ascent();
+		float bottom_y = baseline + font_metrics.descent();
 
 		Colorf color = style_cascade().computed_value("color").color();
 
@@ -288,12 +288,12 @@ namespace uicore
 			font.draw_text(canvas, advance_before - impl->scroll_pos.x, baseline + line_start_y, txt_selected, focus_view() == this ? Colorf(255, 255, 255) : color);
 			font.draw_text(canvas, advance_before + advance_selected - impl->scroll_pos.x, baseline + line_start_y, txt_after, color);
 
-			line_start_y += font_metrics.get_line_height();
+			line_start_y += font_metrics.line_height();
 		}
 
 		if (impl->cursor_blink_visible)
 		{
-			auto cursor_pos = canvas->grid_fit({ cursor_advance - impl->scroll_pos.x, top_y - impl->scroll_pos.y + font_metrics.get_line_height() * impl->cursor_pos.y });
+			auto cursor_pos = canvas->grid_fit({ cursor_advance - impl->scroll_pos.x, top_y - impl->scroll_pos.y + font_metrics.line_height() * impl->cursor_pos.y });
 			Path::rect(cursor_pos.x, cursor_pos.y, 1.0f, bottom_y - top_y)->fill(canvas, Brush(color));
 		}
 
@@ -322,7 +322,7 @@ namespace uicore
 		if (style_cascade().computed_value("height").is_keyword("auto"))
 		{
 			Font font = impl->get_font(canvas);
-			return font.get_font_metrics(canvas).get_line_height() * impl->preferred_size.height;
+			return font.get_font_metrics(canvas).line_height() * impl->preferred_size.height;
 		}
 		else
 			return style_cascade().computed_value("height").number();
@@ -331,7 +331,7 @@ namespace uicore
 	float TextView::calculate_first_baseline_offset(const CanvasPtr &canvas, float width)
 	{
 		Font font = impl->get_font(canvas);
-		return font.get_font_metrics(canvas).get_baseline_offset();
+		return font.get_font_metrics(canvas).baseline_offset();
 	}
 
 	float TextView::calculate_last_baseline_offset(const CanvasPtr &canvas, float width)

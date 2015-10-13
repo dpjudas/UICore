@@ -34,50 +34,54 @@
 
 namespace uicore
 {
-	class FontMetrics_Impl;
-
 	/// \brief Font metrics class.
 	///
 	/// <img src="../../img/FontMetrics.png">
 	class FontMetrics
 	{
 	public:
-		FontMetrics();
+		// \brief Text metrics constructor
+		// \param line_height If 0, then line_height is calculated as height + external_leading
+		FontMetrics() { }
+		FontMetrics(float height, float ascent, float descent, float internal_leading, float external_leading, float line_height, float pixel_ratio)
+			: _height(height), _ascent(ascent), _descent(descent), _internal_leading(internal_leading), _external_leading(external_leading), _line_height(line_height)
+		{
+			// Calculate line_height when not specified
+			if (_line_height == 0.0f)
+				_line_height = height + external_leading;
 
-		FontMetrics(
-			float height,
-			float ascent,
-			float descent,
-			float internal_leading,
-			float external_leading,
-			float line_height,		// If 0, then line_height is calculated as height + external_leading
-			float pixel_ratio
-			);
-
-		~FontMetrics();
+			_baseline_offset = (_line_height - _height) * 0.5f + ascent;
+			_baseline_offset = std::round(_baseline_offset / pixel_ratio) * pixel_ratio;
+		}
 
 		/// \brief Returns the height of the font.
-		float get_height() const;
+		float height() const { return _height; }
 
 		/// \brief Return the distance between lines.
-		float get_line_height() const;
+		float line_height() const { return _line_height; }
 
 		/// \brief Returns the baseline offset from the top of a line
-		float get_baseline_offset() const;
+		float baseline_offset() const { return _baseline_offset; }
 
 		/// \brief Returns the font ascender.
-		float get_ascent() const;
+		float ascent() const { return _ascent; }
 
 		/// \brief Returns the font descender.
-		float get_descent() const;
+		float descent() const { return _descent; }
 
-		/// \brief Returns the amount of leading (space) inside the bounds set by the get_height() function.
-		float get_internal_leading() const;
+		/// \brief Returns the amount of leading (space) inside the bounds set by the height() function.
+		float internal_leading() const { return _internal_leading; }
 
 		/// \brief Returns the amount of extra leading (space) that to add between rows.
-		float get_external_leading() const;
+		float external_leading() const { return _external_leading; }
 
 	private:
-		std::shared_ptr<FontMetrics_Impl> impl;
+		float _height = 0.0f;
+		float _ascent = 0.0f;
+		float _descent = 0.0f;
+		float _internal_leading = 0.0f;
+		float _external_leading = 0.0f;
+		float _line_height = 0.0f;
+		float _baseline_offset = 0.0f;
 	};
 }

@@ -384,9 +384,9 @@ namespace uicore
 			float text_width = font.measure_text(canvas, subtext).advance.width;
 
 			result.width += text_width;
-			result.height = max(result.height, layout_cache.metrics.get_height() + layout_cache.metrics.get_external_leading());
-			result.ascender = max(result.ascender, layout_cache.metrics.get_ascent());
-			result.descender = max(result.descender, layout_cache.metrics.get_descent());
+			result.height = max(result.height, layout_cache.metrics.height() + layout_cache.metrics.external_leading());
+			result.ascender = max(result.ascender, layout_cache.metrics.ascent());
+			result.descender = max(result.descender, layout_cache.metrics.descent());
 
 			LineSegment segment;
 			segment.type = object_text;
@@ -397,8 +397,8 @@ namespace uicore
 			segment.id = objects[object_index].id;
 			segment.x_position = x_position;
 			segment.width = text_width;
-			segment.ascender = layout_cache.metrics.get_ascent();
-			segment.descender = layout_cache.metrics.get_descent();
+			segment.ascender = layout_cache.metrics.ascent();
+			segment.descender = layout_cache.metrics.descent();
 			x_position += text_width;
 			result.segments.push_back(segment);
 
