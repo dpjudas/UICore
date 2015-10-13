@@ -67,15 +67,15 @@ namespace uicore
 
 		int id = -1;
 
-		Font &get_font()
+		const FontPtr &get_font()
 		{
-			if (font.is_null())
+			if (!font)
 				font = style_cascade.get_font();
 			return font;
 		}
 
 	private:
-		Font font;
+		FontPtr font;
 		std::shared_ptr<Style> style;
 	};
 

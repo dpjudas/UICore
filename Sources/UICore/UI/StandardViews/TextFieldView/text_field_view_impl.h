@@ -119,8 +119,8 @@ namespace uicore
 
 		TextAlignment alignment = TextAlignment::left;
 
-		Font &get_font();
-		Font font; // Do not use directly. Use get_font.
+		const FontPtr &get_font();
+		FontPtr font; // Do not use directly. Use get_font.
 
 		int preferred_size = 20;
 		std::string text;

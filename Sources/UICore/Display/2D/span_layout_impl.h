@@ -45,7 +45,7 @@ namespace uicore
 		~SpanLayoutImpl();
 
 		void clear() override;
-		void add_text(const std::string &text, const Font &font, const Colorf &color, int id) override;
+		void add_text(const std::string &text, const FontPtr &font, const Colorf &color, int id) override;
 		void add_image(const ImagePtr &image, float baseline_offset, int id) override;
 		void add_component(std::shared_ptr<SpanComponent> component, float baseline_offset, int id) override;
 		void layout(const CanvasPtr &canvas, float max_width) override;
@@ -102,7 +102,7 @@ namespace uicore
 			ObjectType type = object_text;
 			FloatType float_type = float_none;
 
-			Font font;
+			FontPtr font;
 			Colorf color;
 			unsigned int start = 0;
 			unsigned int end = 0;
@@ -120,7 +120,7 @@ namespace uicore
 
 			ObjectType type = object_text;
 
-			Font font;
+			FontPtr font;
 			Colorf color;
 			int start = 0, end = 0;
 			float ascender = 0;

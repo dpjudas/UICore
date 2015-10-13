@@ -248,15 +248,15 @@ namespace uicore
 
 	void TextView::render_content(const CanvasPtr &canvas)
 	{
-		Font font = impl->get_font(canvas);
-		FontMetrics font_metrics = font.get_font_metrics(canvas);
+		FontPtr font = impl->get_font(canvas);
+		FontMetrics font_metrics = font->font_metrics(canvas);
 		float baseline = font_metrics.baseline_offset();
 		float top_y = baseline - font_metrics.ascent();
 		float bottom_y = baseline + font_metrics.descent();
 
 		Colorf color = style_cascade().computed_value("color").color();
 
-		float cursor_advance = canvas->grid_fit({ font.measure_text(canvas, impl->text_lines[impl->cursor_pos.y].substr(0, impl->cursor_pos.x)).advance.width, 0.0f }).x;
+		float cursor_advance = canvas->grid_fit({ font->measure_text(canvas, impl->text_lines[impl->cursor_pos.y].substr(0, impl->cursor_pos.x)).advance.width, 0.0f }).x;
 
 		// Keep cursor in view
 		impl->scroll_pos.x = std::min(impl->scroll_pos.x, cursor_advance);
@@ -270,11 +270,11 @@ namespace uicore
 			std::string txt_selected = impl->get_selected_text(line_index);
 			std::string txt_after = impl->get_text_after_selection(line_index);
 
-			float advance_before = font.measure_text(canvas, txt_before).advance.width;
-			float advance_selected = font.measure_text(canvas, txt_selected).advance.width;
+			float advance_before = font->measure_text(canvas, txt_before).advance.width;
+			float advance_selected = font->measure_text(canvas, txt_selected).advance.width;
 
 			// Measure text for get_character_index()
-			impl->last_measured_rects = font.get_character_indices(canvas, txt_before + txt_selected + txt_after);
+			impl->last_measured_rects = font->character_indices(canvas, txt_before + txt_selected + txt_after);
 			for (auto &box : impl->last_measured_rects)
 				box.translate(-impl->scroll_pos.x, line_start_y);
 
@@ -284,9 +284,9 @@ namespace uicore
 				Path::rect(selection_rect)->fill(canvas, focus_view() == this ? Brush::solid_rgb8(51, 153, 255) : Brush::solid_rgb8(200, 200, 200));
 			}
 
-			font.draw_text(canvas, -impl->scroll_pos.x, baseline + line_start_y, txt_before, color);
-			font.draw_text(canvas, advance_before - impl->scroll_pos.x, baseline + line_start_y, txt_selected, focus_view() == this ? Colorf(255, 255, 255) : color);
-			font.draw_text(canvas, advance_before + advance_selected - impl->scroll_pos.x, baseline + line_start_y, txt_after, color);
+			font->draw_text(canvas, -impl->scroll_pos.x, baseline + line_start_y, txt_before, color);
+			font->draw_text(canvas, advance_before - impl->scroll_pos.x, baseline + line_start_y, txt_selected, focus_view() == this ? Colorf(255, 255, 255) : color);
+			font->draw_text(canvas, advance_before + advance_selected - impl->scroll_pos.x, baseline + line_start_y, txt_after, color);
 
 			line_start_y += font_metrics.line_height();
 		}
@@ -302,7 +302,7 @@ namespace uicore
 			color.r = color.r * 0.5f + 0.5f;
 			color.g = color.g * 0.5f + 0.5f;
 			color.b = color.b * 0.5f + 0.5f;
-			font.draw_text(canvas, 0.0f, baseline, impl->placeholder, color);
+			font->draw_text(canvas, 0.0f, baseline, impl->placeholder, color);
 		}
 	}
 
@@ -310,8 +310,8 @@ namespace uicore
 	{
 		if (style_cascade().computed_value("width").is_keyword("auto"))
 		{
-			Font font = impl->get_font(canvas);
-			return font.measure_text(canvas, "X").advance.width * impl->preferred_size.width;
+			FontPtr font = impl->get_font(canvas);
+			return font->measure_text(canvas, "X").advance.width * impl->preferred_size.width;
 		}
 		else
 			return style_cascade().computed_value("width").number();
@@ -321,8 +321,8 @@ namespace uicore
 	{
 		if (style_cascade().computed_value("height").is_keyword("auto"))
 		{
-			Font font = impl->get_font(canvas);
-			return font.get_font_metrics(canvas).line_height() * impl->preferred_size.height;
+			FontPtr font = impl->get_font(canvas);
+			return font->font_metrics(canvas).line_height() * impl->preferred_size.height;
 		}
 		else
 			return style_cascade().computed_value("height").number();
@@ -330,8 +330,8 @@ namespace uicore
 
 	float TextView::calculate_first_baseline_offset(const CanvasPtr &canvas, float width)
 	{
-		Font font = impl->get_font(canvas);
-		return font.get_font_metrics(canvas).baseline_offset();
+		FontPtr font = impl->get_font(canvas);
+		return font->font_metrics(canvas).baseline_offset();
 	}
 
 	float TextView::calculate_last_baseline_offset(const CanvasPtr &canvas, float width)
@@ -341,9 +341,9 @@ namespace uicore
 
 	/////////////////////////////////////////////////////////////////////////
 
-	Font &TextViewImpl::get_font(const CanvasPtr &canvas)
+	FontPtr &TextViewImpl::get_font(const CanvasPtr &canvas)
 	{
-		if (font.is_null())
+		if (!font)
 			font = textfield->style_cascade().get_font();
 		return font;
 	}

@@ -37,6 +37,7 @@
 namespace uicore
 {
 	class Font;
+	typedef std::shared_ptr<Font> FontPtr;
 	class PathImpl;
 	class GlyphMetrics;
 	class Canvas;
@@ -68,7 +69,7 @@ namespace uicore
 		static std::shared_ptr<Path> ellipse(const Pointf &center, const Sizef &radius) { auto path = create(); path->add_ellipse(center, radius); return path; }
 
 		// This function is to assist in debugging, it has not been decided if it will be removed. Don't use at the moment.
-		static std::shared_ptr<Path> glyph(const CanvasPtr &canvas, Font &font, unsigned int glyph, GlyphMetrics &out_metrics);
+		static std::shared_ptr<Path> glyph(const CanvasPtr &canvas, const FontPtr &font, unsigned int glyph, GlyphMetrics &out_metrics);
 
 		virtual PathFillMode fill_mode() const = 0;
 		virtual void set_fill_mode(PathFillMode fill_mode) = 0;

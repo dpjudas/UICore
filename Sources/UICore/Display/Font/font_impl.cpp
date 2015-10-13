@@ -131,7 +131,7 @@ namespace uicore
 	{
 	}
 
-	int Font_Impl::get_character_index(const CanvasPtr &canvas, const std::string &text, const Pointf &point)
+	int Font_Impl::character_index(const CanvasPtr &canvas, const std::string &text, const Pointf &point)
 	{
 		select_font_family(canvas);
 
@@ -183,7 +183,7 @@ namespace uicore
 		return -1;	// Not found
 	}
 
-	std::vector<Rectf> Font_Impl::get_character_indices(const CanvasPtr &canvas, const std::string &text)
+	std::vector<Rectf> Font_Impl::character_indices(const CanvasPtr &canvas, const std::string &text)
 	{
 		select_font_family(canvas);
 		std::vector<Rectf> index_store;
@@ -229,19 +229,19 @@ namespace uicore
 		return index_store;
 	}
 
-	const FontMetrics &Font_Impl::get_font_metrics(const CanvasPtr &canvas)
+	const FontMetrics &Font_Impl::font_metrics(const CanvasPtr &canvas)
 	{
 		select_font_family(canvas);
 		return selected_metrics;
 	}
 
-	void Font_Impl::get_glyph_path(const CanvasPtr &canvas, unsigned int glyph_index, const PathPtr &out_path, GlyphMetrics &out_metrics)
+	void Font_Impl::glyph_path(const CanvasPtr &canvas, unsigned int glyph_index, const PathPtr &out_path, GlyphMetrics &out_metrics)
 	{
 		select_font_family(canvas);
 		return font_engine->load_glyph_path(glyph_index, out_path, out_metrics);
 	}
 
-	FontHandle *Font_Impl::get_handle(const CanvasPtr &canvas)
+	FontHandle *Font_Impl::handle(const CanvasPtr &canvas)
 	{
 		select_font_family(canvas);
 		if (font_engine)
@@ -258,7 +258,7 @@ namespace uicore
 		font_draw->draw_text(canvas, pos, text, color, line_spacing);
 	}
 
-	GlyphMetrics Font_Impl::get_metrics(const CanvasPtr &canvas, unsigned int glyph)
+	GlyphMetrics Font_Impl::metrics(const CanvasPtr &canvas, unsigned int glyph)
 	{
 		select_font_family(canvas);
 		GlyphMetrics metrics = font_draw->get_metrics(canvas, glyph);

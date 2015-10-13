@@ -116,8 +116,8 @@ namespace uicore
 
 		TextAlignment alignment = TextAlignment::left;
 
-		Font &get_font(const CanvasPtr &canvas);
-		Font font; // Do not use directly. Use get_font.
+		FontPtr &get_font(const CanvasPtr &canvas);
+		FontPtr font; // Do not use directly. Use get_font.
 
 		Size preferred_size = Size(20, 5);
 		std::vector<std::string> text_lines;

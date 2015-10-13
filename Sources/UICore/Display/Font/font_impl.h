@@ -52,31 +52,26 @@ namespace uicore
 	class XMLResourceNode;
 	class DomElement;
 
-	class Font_Impl
+	class Font_Impl : public Font
 	{
 	public:
 		Font_Impl(const FontFamilyPtr &new_font_family, const FontDescription &description);
 		~Font_Impl();
 
-		const FontMetrics &get_font_metrics(const CanvasPtr &canvas);
+		void set_height(float value) override;
+		void set_weight(FontWeight value) override;
+		void set_line_height(float height) override;
+		void set_style(FontStyle setting) override;
+		void set_scalable(float height_threshold) override;
+		void draw_text(const CanvasPtr &canvas, const Pointf &position, const std::string &text, const Colorf &color) override;
+		GlyphMetrics metrics(const CanvasPtr &canvas, unsigned int glyph) override;
+		GlyphMetrics measure_text(const CanvasPtr &canvas, const std::string &string) override;
+		const FontMetrics &font_metrics(const CanvasPtr &canvas) override;
+		int character_index(const CanvasPtr &canvas, const std::string &text, const Pointf &point) override;
+		std::vector<Rectf> character_indices(const CanvasPtr &canvas, const std::string &text) override;
+		FontHandle *handle(const CanvasPtr &canvas) override;
 
-		int get_character_index(const CanvasPtr &canvas, const std::string &text, const Pointf &point);
-		std::vector<Rectf> get_character_indices(const CanvasPtr &canvas, const std::string &text);
-
-		GlyphMetrics get_metrics(const CanvasPtr &canvas, unsigned int glyph);
-
-		GlyphMetrics measure_text(const CanvasPtr &canvas, const std::string &string);
-
-		void draw_text(const CanvasPtr &canvas, const Pointf &position, const std::string &text, const Colorf &color);
-
-		void get_glyph_path(const CanvasPtr &canvas, unsigned int glyph_index, const PathPtr &out_path, GlyphMetrics &out_metrics);
-
-		void set_height(float value);
-		void set_weight(FontWeight value);
-		void set_line_height(float height);
-		void set_style(FontStyle setting);
-		void set_scalable(float height_threshold);
-		FontHandle *get_handle(const CanvasPtr &canvas);
+		void glyph_path(const CanvasPtr &canvas, unsigned int glyph_index, const PathPtr &out_path, GlyphMetrics &out_metrics);
 
 	private:
 		void select_font_family(const CanvasPtr &canvas);

@@ -345,13 +345,13 @@ namespace uicore
 			txt_after = impl->create_password(Text::char_length(txt_after));
 		}
 
-		Font font = impl->get_font();
+		FontPtr font = impl->get_font();
 
-		float advance_before = font.measure_text(canvas, txt_before).advance.width;
-		float advance_selected = font.measure_text(canvas, txt_selected).advance.width;
-		float cursor_advance = canvas->grid_fit({ font.measure_text(canvas, impl->text.substr(0, impl->cursor_pos)).advance.width, 0.0f }).x;
+		float advance_before = font->measure_text(canvas, txt_before).advance.width;
+		float advance_selected = font->measure_text(canvas, txt_selected).advance.width;
+		float cursor_advance = canvas->grid_fit({ font->measure_text(canvas, impl->text.substr(0, impl->cursor_pos)).advance.width, 0.0f }).x;
 
-		FontMetrics font_metrics = font.get_font_metrics(canvas);
+		FontMetrics font_metrics = font->font_metrics(canvas);
 		float baseline = font_metrics.baseline_offset();
 		float top_y = baseline - font_metrics.ascent();
 		float bottom_y = baseline + font_metrics.descent();
@@ -361,7 +361,7 @@ namespace uicore
 		impl->scroll_pos = std::max(impl->scroll_pos, cursor_advance - geometry().content_width + 1.0f);
 
 		// Measure text for get_character_index()
-		impl->last_measured_rects = font.get_character_indices(canvas, txt_before + txt_selected + txt_after);
+		impl->last_measured_rects = font->character_indices(canvas, txt_before + txt_selected + txt_after);
 		for (auto &box : impl->last_measured_rects)
 			box.translate(-impl->scroll_pos, 0.0f);
 
@@ -372,9 +372,9 @@ namespace uicore
 		}
 
 		Colorf color = style_cascade().computed_value("color").color();
-		font.draw_text(canvas, -impl->scroll_pos, baseline, txt_before, color);
-		font.draw_text(canvas, advance_before - impl->scroll_pos, baseline, txt_selected, focus_view() == this ? Colorf(255, 255, 255) : color);
-		font.draw_text(canvas, advance_before + advance_selected - impl->scroll_pos, baseline, txt_after, color);
+		font->draw_text(canvas, -impl->scroll_pos, baseline, txt_before, color);
+		font->draw_text(canvas, advance_before - impl->scroll_pos, baseline, txt_selected, focus_view() == this ? Colorf(255, 255, 255) : color);
+		font->draw_text(canvas, advance_before + advance_selected - impl->scroll_pos, baseline, txt_after, color);
 
 		if (impl->cursor_blink_visible)
 		{
@@ -387,7 +387,7 @@ namespace uicore
 			color.r = color.r * 0.5f + 0.5f;
 			color.g = color.g * 0.5f + 0.5f;
 			color.b = color.b * 0.5f + 0.5f;
-			font.draw_text(canvas, 0.0f, baseline, impl->placeholder, color);
+			font->draw_text(canvas, 0.0f, baseline, impl->placeholder, color);
 		}
 	}
 
@@ -395,8 +395,8 @@ namespace uicore
 	{
 		if (style_cascade().computed_value("width").is_keyword("auto"))
 		{
-			Font font = impl->get_font();
-			return font.measure_text(canvas, "X").advance.width * impl->preferred_size;
+			FontPtr font = impl->get_font();
+			return font->measure_text(canvas, "X").advance.width * impl->preferred_size;
 		}
 		else
 			return style_cascade().computed_value("width").number();
@@ -406,8 +406,8 @@ namespace uicore
 	{
 		if (style_cascade().computed_value("height").is_keyword("auto"))
 		{
-			Font font = impl->get_font();
-			return font.get_font_metrics(canvas).line_height();
+			FontPtr font = impl->get_font();
+			return font->font_metrics(canvas).line_height();
 		}
 		else
 			return style_cascade().computed_value("height").number();
@@ -415,8 +415,8 @@ namespace uicore
 
 	float TextFieldView::calculate_first_baseline_offset(const CanvasPtr &canvas, float width)
 	{
-		Font font = impl->get_font();
-		return font.get_font_metrics(canvas).baseline_offset();
+		FontPtr font = impl->get_font();
+		return font->font_metrics(canvas).baseline_offset();
 	}
 
 	float TextFieldView::calculate_last_baseline_offset(const CanvasPtr &canvas, float width)
@@ -426,9 +426,9 @@ namespace uicore
 
 	/////////////////////////////////////////////////////////////////////////
 
-	Font &TextFieldViewImpl::get_font()
+	const FontPtr &TextFieldViewImpl::get_font()
 	{
-		if (font.is_null())
+		if (!font)
 			font = textfield->style_cascade().get_font();
 		return font;
 	}
@@ -1018,11 +1018,11 @@ namespace uicore
 
 	Size TextFieldViewImpl::get_visual_text_size(const CanvasPtr &canvas, int pos, int npos)
 	{
-		Font font = get_font();
+		FontPtr font = get_font();
 
 		return password_mode ? 
-			Size(font.measure_text(canvas, create_password(Text::char_length(text.substr(pos, npos)))).bbox_size) :
-			Size(font.measure_text(canvas, text.substr(pos, npos)).bbox_size);
+			Size(font->measure_text(canvas, create_password(Text::char_length(text.substr(pos, npos)))).bbox_size) :
+			Size(font->measure_text(canvas, text.substr(pos, npos)).bbox_size);
 	}
 	const std::string TextFieldViewImpl::numeric_mode_characters = "0123456789";
 	const std::string TextFieldViewImpl::break_characters = " ::;,.-";

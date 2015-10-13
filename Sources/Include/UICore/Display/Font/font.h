@@ -42,13 +42,12 @@ namespace uicore
 	typedef std::shared_ptr<FontFamily> FontFamilyPtr;
 	class Canvas;
 	typedef std::shared_ptr<Canvas> CanvasPtr;
-	class Font_Impl;
 	class GlyphMetrics;
 
 	class FontHandle
 	{
 	public:
-		virtual ~FontHandle() = 0;
+		virtual ~FontHandle() { }
 	};
 
 	/// \brief Font class
@@ -57,46 +56,37 @@ namespace uicore
 	class Font
 	{
 	public:
-		/// \brief Constructs a null font.
-		Font();
+		// \brief Create font using the specified font family
+		static std::shared_ptr<Font> create(const FontFamilyPtr &font_family, float height);
 
 		// \brief Create font using the specified font family
-		Font(const FontFamilyPtr &font_family, float height);
-
-		// \brief Create font using the specified font family
-		Font(const FontFamilyPtr &font_family, const FontDescription &desc);
+		static std::shared_ptr<Font> create(const FontFamilyPtr &font_family, const FontDescription &desc);
 
 		/// \brief Constructs standard font
-		Font(const std::string &typeface_name, float height);
+		static std::shared_ptr<Font> create(const std::string &typeface_name, float height);
 
 		// \brief Constructs standard font
-		Font(const std::string &typeface_name, const FontDescription &desc);
+		static std::shared_ptr<Font> create(const std::string &typeface_name, const FontDescription &desc);
 
 		// \brief Constructs standard font
-		Font(const FontDescription &desc, const std::string &ttf_filename);
-
-		/// \brief Returns true if this object is invalid.
-		bool is_null() const { return !impl; }
-
-		/// \brief Throw an exception if this object is invalid.
-		void throw_if_null() const;
+		static std::shared_ptr<Font> create(const FontDescription &desc, const std::string &ttf_filename);
 
 		/// \brief Sets the font height
-		void set_height(float value);
+		virtual void set_height(float value) = 0;
 
 		/// \brief Sets the font weight
-		void set_weight(FontWeight value = FontWeight::normal);
+		virtual void set_weight(FontWeight value = FontWeight::normal) = 0;
 
 		/// \brief Sets the distance between each line
-		void set_line_height(float height);
+		virtual void set_line_height(float height) = 0;
 
 		/// \brief Sets the font style setting
-		void set_style(FontStyle setting = FontStyle::normal);
+		virtual void set_style(FontStyle setting = FontStyle::normal) = 0;
 
 		/// \brief Sets the threshold to determine if the font can be drawn scaled
 		///
 		/// All font sizes are scalable when using sprite fonts
-		void set_scalable(float height_threshold = 64.0f);
+		virtual void set_scalable(float height_threshold = 64.0f) = 0;
 
 		/// \brief Print text
 		///
@@ -104,28 +94,28 @@ namespace uicore
 		/// \param position = Dest position
 		/// \param text = The text to draw
 		/// \param color = The text color
-		void draw_text(const CanvasPtr &canvas, const Pointf &position, const std::string &text, const Colorf &color = Colorf::white);
+		virtual void draw_text(const CanvasPtr &canvas, const Pointf &position, const std::string &text, const Colorf &color = Colorf::white) = 0;
 		void draw_text(const CanvasPtr &canvas, float xpos, float ypos, const std::string &text, const Colorf &color = Colorf::white) { draw_text(canvas, Pointf(xpos, ypos), text, color); }
 
 		/// \brief Gets the glyph metrics
 		///
 		/// \param glyph = The glyph to get
 		/// \return The glyph metrics
-		GlyphMetrics get_metrics(const CanvasPtr &canvas, unsigned int glyph);
+		virtual GlyphMetrics metrics(const CanvasPtr &canvas, unsigned int glyph) = 0;
 
 		/// \brief Measure text size
 		///
 		/// \param string = The text to use
 		/// \return The metrics
-		GlyphMetrics measure_text(const CanvasPtr &canvas, const std::string &string);
+		virtual GlyphMetrics measure_text(const CanvasPtr &canvas, const std::string &string) = 0;
 
 		/// \brief Retrieves font metrics description for the selected font.
-		FontMetrics get_font_metrics(const CanvasPtr &canvas);
+		virtual const FontMetrics &font_metrics(const CanvasPtr &canvas) = 0;
 
 		/// \brief Retrieves clipped version of the text that will fit into a box
 		///
 		/// \return The string
-		std::string get_clipped_text(const CanvasPtr &canvas, const Sizef &box_size, const std::string &text, const std::string &ellipsis_text = "...");
+		std::string clipped_text(const CanvasPtr &canvas, const Sizef &box_size, const std::string &text, const std::string &ellipsis_text = "...");
 
 		/// \brief Get the character index at a specified point
 		///
@@ -133,12 +123,12 @@ namespace uicore
 		/// \param text = The string
 		/// \param point = The point
 		/// \return The character index. -1 = Not at specified point
-		int get_character_index(const CanvasPtr &canvas, const std::string &text, const Pointf &point);
+		virtual int character_index(const CanvasPtr &canvas, const std::string &text, const Pointf &point) = 0;
 
 		/// \brief Get the rectangles of each glyph in a string of text
 		///
 		/// \return A list of Rects for every glyph
-		std::vector<Rectf> get_character_indices(const CanvasPtr &canvas, const std::string &text);
+		virtual std::vector<Rectf> character_indices(const CanvasPtr &canvas, const std::string &text) = 0;
 
 		// Finds the offset for the last visible character when clipping the head
 		size_t clip_from_left(const CanvasPtr &canvas, const std::string &text, float width);
@@ -148,16 +138,13 @@ namespace uicore
 
 		/// \brief Get the font handle interface
 		///
-		/// For example, use auto handle = dynamic_cast<FontHandle_Win32>(font.get_handle()); if (handle) {...} to obtain a specific interface
+		/// For example, use auto handle = dynamic_cast<FontHandle_Win32>(font.handle()); if (handle) {...} to obtain a specific interface
 		///
 		/// \return The font handle interface
-		FontHandle *get_handle(const CanvasPtr &canvas);
-
-	private:
-		std::shared_ptr<Font_Impl> impl;
-
-		friend class Path;
+		virtual FontHandle *handle(const CanvasPtr &canvas) = 0;
 	};
+
+	typedef std::shared_ptr<Font> FontPtr;
 
 	#ifdef WIN32
 	class FontHandle_Win32 : public FontHandle

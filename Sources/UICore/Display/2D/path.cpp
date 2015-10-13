@@ -41,13 +41,10 @@ namespace uicore
 		return std::make_shared<PathImpl>();
 	}
 
-	std::shared_ptr<Path> Path::glyph(const CanvasPtr &canvas, Font &font, unsigned int glyph, GlyphMetrics &out_metrics)
+	std::shared_ptr<Path> Path::glyph(const CanvasPtr &canvas, const FontPtr &font, unsigned int glyph, GlyphMetrics &out_metrics)
 	{
 		auto path = Path::create();
-		if (font.impl)
-		{
-			font.impl->get_glyph_path(canvas, glyph, path, out_metrics);
-		}
+		static_cast<Font_Impl*>(font.get())->glyph_path(canvas, glyph, path, out_metrics);
 		return path;
 	}
 

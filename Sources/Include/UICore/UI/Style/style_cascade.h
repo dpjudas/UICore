@@ -40,6 +40,7 @@ namespace uicore
 	class Canvas;
 	typedef std::shared_ptr<Canvas> CanvasPtr;
 	class Font;
+	typedef std::shared_ptr<Font> FontPtr;
 	class ViewGeometry;
 
 #if defined(MICROSOFT_FINALLY_IMPLEMENTED_CONSTEXPR_TEN_YEARS_AFTER_EVERYONE_ELSE)
@@ -115,6 +116,6 @@ namespace uicore
 		void render_border(const CanvasPtr &canvas, const ViewGeometry &geometry) const;
 		
 		/// Font used by this style cascade
-		Font get_font() const;
+		FontPtr get_font() const;
 	};
 }

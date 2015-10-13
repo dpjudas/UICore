@@ -47,12 +47,12 @@ namespace uicore
 	public:
 		std::string _text;
 		TextAlignment text_alignment = TextAlignment::left;
-		Font font;
+		FontPtr font;
 		LineBreakMode _line_break_mode = LineBreakMode::truncating_tail;
 
-		Font &get_font(LabelView *view)
+		const FontPtr &get_font(LabelView *view)
 		{
-			if (font.is_null())
+			if (!font)
 				font = view->style_cascade().get_font();
 			return font;
 		}
@@ -102,41 +102,41 @@ namespace uicore
 
 	void LabelView::render_content(const CanvasPtr &canvas)
 	{
-		Font font = impl->get_font(this);
-		FontMetrics font_metrics = font.get_font_metrics(canvas);
+		FontPtr font = impl->get_font(this);
+		FontMetrics font_metrics = font->font_metrics(canvas);
 		float baseline = font_metrics.baseline_offset();
 
 		std::string clipped_text = impl->_text;
-		GlyphMetrics advance = font.measure_text(canvas, clipped_text);
+		GlyphMetrics advance = font->measure_text(canvas, clipped_text);
 
 		if (advance.advance.width > geometry().content_width)
 		{
 			std::string ellipsis = Text::from_utf32(0x2026);
-			GlyphMetrics ellipsis_advance = font.measure_text(canvas, ellipsis);
+			GlyphMetrics ellipsis_advance = font->measure_text(canvas, ellipsis);
 
 			switch (impl->_line_break_mode)
 			{
 			case LineBreakMode::clipping:
-				clipped_text = clipped_text.substr(0, font.clip_from_left(canvas, clipped_text, geometry().content_width));
+				clipped_text = clipped_text.substr(0, font->clip_from_left(canvas, clipped_text, geometry().content_width));
 				break;
 			case LineBreakMode::truncating_head:
-				clipped_text = ellipsis + clipped_text.substr(font.clip_from_right(canvas, clipped_text, geometry().content_width - ellipsis_advance.advance.width));
+				clipped_text = ellipsis + clipped_text.substr(font->clip_from_right(canvas, clipped_text, geometry().content_width - ellipsis_advance.advance.width));
 				break;
 			case LineBreakMode::truncating_middle:
 				{
-					std::string text_left = clipped_text.substr(0, font.clip_from_left(canvas, clipped_text, geometry().content_width * 0.5f - ellipsis_advance.advance.width));
-					std::string text_right = clipped_text.substr(font.clip_from_right(canvas, clipped_text, geometry().content_width * 0.5f - ellipsis_advance.advance.width));
+					std::string text_left = clipped_text.substr(0, font->clip_from_left(canvas, clipped_text, geometry().content_width * 0.5f - ellipsis_advance.advance.width));
+					std::string text_right = clipped_text.substr(font->clip_from_right(canvas, clipped_text, geometry().content_width * 0.5f - ellipsis_advance.advance.width));
 					clipped_text = text_left + ellipsis + text_right;
 				}
 				break;
 			case LineBreakMode::truncating_tail:
-				clipped_text = clipped_text.substr(0, font.clip_from_left(canvas, clipped_text, geometry().content_width - ellipsis_advance.advance.width)) + ellipsis;
+				clipped_text = clipped_text.substr(0, font->clip_from_left(canvas, clipped_text, geometry().content_width - ellipsis_advance.advance.width)) + ellipsis;
 				break;
 			default:
 				break;
 			}
 
-			advance = font.measure_text(canvas, clipped_text);
+			advance = font->measure_text(canvas, clipped_text);
 			
 			if (advance.advance.width > geometry().content_width)
 				return; // Still no room.  Draw nothing!
@@ -146,15 +146,15 @@ namespace uicore
 
 		if (impl->text_alignment == TextAlignment::left)
 		{
-			font.draw_text(canvas, Pointf(0.0f, baseline), clipped_text, color);
+			font->draw_text(canvas, Pointf(0.0f, baseline), clipped_text, color);
 		}
 		else if (impl->text_alignment == TextAlignment::right)
 		{
-			font.draw_text(canvas, Pointf(geometry().content_width - advance.advance.width, baseline), clipped_text, color);
+			font->draw_text(canvas, Pointf(geometry().content_width - advance.advance.width, baseline), clipped_text, color);
 		}
 		else if (impl->text_alignment == TextAlignment::center)
 		{
-			font.draw_text(canvas, Pointf(std::round((geometry().content_width - advance.advance.width) * 0.5f), baseline), clipped_text, color);
+			font->draw_text(canvas, Pointf(std::round((geometry().content_width - advance.advance.width) * 0.5f), baseline), clipped_text, color);
 		}
 	}
 
@@ -162,8 +162,8 @@ namespace uicore
 	{
 		if (style_cascade().computed_value("width").is_keyword("auto"))
 		{
-			Font font = impl->get_font(this);
-			return font.measure_text(canvas, impl->_text).advance.width + 1.0f;
+			FontPtr font = impl->get_font(this);
+			return font->measure_text(canvas, impl->_text).advance.width + 1.0f;
 		}
 		else
 			return style_cascade().computed_value("width").number();
@@ -173,8 +173,8 @@ namespace uicore
 	{
 		if (style_cascade().computed_value("height").is_keyword("auto"))
 		{
-			Font font = impl->get_font(this);
-			return font.get_font_metrics(canvas).line_height();
+			FontPtr font = impl->get_font(this);
+			return font->font_metrics(canvas).line_height();
 		}
 		else
 			return style_cascade().computed_value("height").number();
@@ -182,8 +182,8 @@ namespace uicore
 
 	float LabelView::calculate_first_baseline_offset(const CanvasPtr &canvas, float width)
 	{
-		Font font = impl->get_font(this);
-		return font.get_font_metrics(canvas).baseline_offset();
+		FontPtr font = impl->get_font(this);
+		return font->font_metrics(canvas).baseline_offset();
 	}
 
 	float LabelView::calculate_last_baseline_offset(const CanvasPtr &canvas, float width)

@@ -127,13 +127,13 @@ namespace uicore
 		return images[name];
 	}
 
-	Font UIThread::font(const std::string &family, const FontDescription &desc)
+	FontPtr UIThread::font(const std::string &family, const FontDescription &desc)
 	{
 		auto it = UIThreadImpl::instance()->font_families.find(family);
 		if (it != UIThreadImpl::instance()->font_families.end())
-			return Font(it->second, desc);
+			return Font::create(it->second, desc);
 		else
-			return Font(family, desc);
+			return Font::create(family, desc);
 	}
 
 	bool UIThread::try_catch(const std::function<void()> &block)

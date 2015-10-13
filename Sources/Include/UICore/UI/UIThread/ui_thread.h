@@ -35,6 +35,7 @@ namespace uicore
 	class Image;
 	typedef std::shared_ptr<Image> ImagePtr;
 	class Font;
+	typedef std::shared_ptr<Font> FontPtr;
 	class FontDescription;
 	class Canvas;
 	typedef std::shared_ptr<Canvas> CanvasPtr;
@@ -48,7 +49,7 @@ namespace uicore
 		static void set_resource_path(const std::string &path);
 
 		static ImagePtr image(const CanvasPtr &canvas, const std::string &name);
-		static Font font(const std::string &family, const FontDescription &desc);
+		static FontPtr font(const std::string &family, const FontDescription &desc);
 
 		static void set_exception_handler(const std::function<void(const std::exception_ptr &)> &exception_handler);
 		static bool try_catch(const std::function<void()> &block);
