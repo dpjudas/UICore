@@ -115,9 +115,9 @@ namespace uicore
 		}
 
 #else
-		File file("/dev/urandom");
-		file.read(random_pool, random_pool_size);
-		file.close();
+		auto file = File::open_existing("/dev/urandom");
+		file->read(random_pool, random_pool_size);
+		file->close();
 #endif
 
 		random_pool_free = random_pool_size;	// Reset it
