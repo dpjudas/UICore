@@ -44,11 +44,9 @@
 
 namespace uicore
 {
-	Font_Impl::Font_Impl(FontFamily &new_font_family, const FontDescription &description)
+	Font_Impl::Font_Impl(const FontFamilyPtr &new_font_family, const FontDescription &description)
 	{
-		new_font_family.throw_if_null();
-
-		font_family = new_font_family;
+		font_family = std::static_pointer_cast<FontFamily_Impl>(new_font_family);
 
 		selected_description = description.clone();
 		selected_line_height = description.get_line_height();
@@ -69,9 +67,9 @@ namespace uicore
 
 			selected_pixel_ratio = pixel_ratio;
 
-			Font_Cache font_cache = font_family.impl->get_font(new_selected, pixel_ratio);
+			Font_Cache font_cache = font_family->get_font(new_selected, pixel_ratio);
 			if (!font_cache.engine)	// Font not found
-				font_cache = font_family.impl->copy_font(new_selected, pixel_ratio);
+				font_cache = font_family->copy_font(new_selected, pixel_ratio);
 
 			font_engine = font_cache.engine.get();
 			GlyphCache *glyph_cache = font_cache.glyph_cache.get();

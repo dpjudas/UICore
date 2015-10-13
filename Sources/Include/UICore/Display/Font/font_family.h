@@ -37,44 +37,27 @@
 
 namespace uicore
 {
-	class FontProvider;
-	class Canvas;
-	class FontFamily_Impl;
-	class GlyphMetrics;
-
 	/// \brief FontFamily class
 	///
 	/// A FontFamily is a collection of font descriptions
 	class FontFamily
 	{
 	public:
-		/// \brief Constructs a null font family
-		FontFamily();
-
 		/// \brief Constructs a font family with the given family name
-		FontFamily(const std::string &family_name);
-
-		/// \brief Returns true if this object is invalid.
-		bool is_null() const { return !impl; }
-
-		/// \brief Throw an exception if this object is invalid.
-		void throw_if_null() const;
+		static std::shared_ptr<FontFamily> create(const std::string &family_name);
 
 		/// \brief Font family name used for this font family
-		const std::string &get_family_name() const;
+		virtual const std::string &family_name() const = 0;
 
 		/// \brief Add standard font
-		void add(const std::string &typeface_name, float height);
+		virtual void add(const std::string &typeface_name, float height) = 0;
 
 		// \brief Add standard font
-		void add(const std::string &typeface_name, const FontDescription &desc);
+		virtual void add(const std::string &typeface_name, const FontDescription &desc) = 0;
 
 		// \brief Add standard font
-		void add(const FontDescription &desc, const std::string &ttf_filename);
-
-	private:
-		std::shared_ptr<FontFamily_Impl> impl;
-
-		friend class Font_Impl;
+		virtual void add(const FontDescription &desc, const std::string &ttf_filename) = 0;
 	};
+
+	typedef std::shared_ptr<FontFamily> FontFamilyPtr;
 }

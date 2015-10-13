@@ -30,6 +30,7 @@
 #include "UICore/Display/Font/font.h"
 #include "UICore/Display/Font/font_metrics.h"
 #include "UICore/Display/Font/font_description.h"
+#include "UICore/Display/Font/font_family.h"
 #include "UICore/Core/IOData/path_help.h"
 #include "UICore/Core/Text/text.h"
 #include "UICore/Core/Text/string_format.h"
@@ -43,15 +44,14 @@ namespace uicore
 	{
 	}
 
-	Font::Font(FontFamily &font_family, float height)
+	Font::Font(const FontFamilyPtr &font_family, float height)
 	{
-		font_family.throw_if_null();
 		FontDescription desc;
 		desc.set_height(height);
 		*this = Font(font_family, desc);
 	}
 
-	Font::Font(FontFamily &font_family, const FontDescription &desc)
+	Font::Font(const FontFamilyPtr &font_family, const FontDescription &desc)
 	{
 		impl = std::make_shared<Font_Impl>(font_family, desc);
 	}
@@ -65,7 +65,7 @@ namespace uicore
 
 	Font::Font(const std::string &typeface_name, const FontDescription &desc)
 	{
-		FontFamily font_family(typeface_name);
+		auto font_family = FontFamily::create(typeface_name);
 		*this = Font(font_family, desc);
 	}
 
@@ -73,8 +73,8 @@ namespace uicore
 	{
 		std::string new_filename = PathHelp::get_filename(ttf_filename, PathHelp::path_type_file);
 
-		FontFamily font_family(new_filename);
-		font_family.add(desc, ttf_filename);
+		auto font_family = FontFamily::create(new_filename);
+		font_family->add(desc, ttf_filename);
 		impl = std::make_shared<Font_Impl>(font_family, desc);
 	}
 

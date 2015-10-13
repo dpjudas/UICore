@@ -56,7 +56,7 @@ namespace uicore
 		std::string resource_path;
 		std::function<void(const std::exception_ptr &)> exception_handler;
 
-		std::map<std::string, FontFamily> font_families;
+		std::map<std::string, FontFamilyPtr> font_families;
 		std::map<std::string, ImagePtr> images;
 
 		static UIThreadImpl *instance()
@@ -103,10 +103,10 @@ namespace uicore
 			family_name = "sans-serif";
 
 		auto &family = UIThreadImpl::instance()->font_families[family_name];
-		if (family.is_null())
-			family = FontFamily(family_name);
+		if (!family)
+			family = FontFamily::create(family_name);
 
-		family.add(font_desc, PathHelp::combine(UIThreadImpl::instance()->resource_path, src));
+		family->add(font_desc, PathHelp::combine(UIThreadImpl::instance()->resource_path, src));
 	}
 
 	std::string UIThread::resource_path()

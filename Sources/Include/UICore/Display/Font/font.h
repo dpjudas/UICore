@@ -39,6 +39,7 @@ namespace uicore
 {
 	class FontProvider;
 	class FontFamily;
+	typedef std::shared_ptr<FontFamily> FontFamilyPtr;
 	class Canvas;
 	typedef std::shared_ptr<Canvas> CanvasPtr;
 	class Font_Impl;
@@ -60,10 +61,10 @@ namespace uicore
 		Font();
 
 		// \brief Create font using the specified font family
-		Font(FontFamily &font_family, float height);
+		Font(const FontFamilyPtr &font_family, float height);
 
 		// \brief Create font using the specified font family
-		Font(FontFamily &font_family, const FontDescription &desc);
+		Font(const FontFamilyPtr &font_family, const FontDescription &desc);
 
 		/// \brief Constructs standard font
 		Font(const std::string &typeface_name, float height);

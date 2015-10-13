@@ -30,6 +30,7 @@
 
 #pragma once
 
+#include "UICore/Display/Font/font_description.h"
 #include "UICore/Display/Font/font_metrics.h"
 #include "UICore/Display/Font/glyph_metrics.h"
 #include "UICore/Display/Font/font_family.h"
@@ -63,15 +64,19 @@ namespace uicore
 		DataBufferPtr font_databuffer;	// Empty = use typeface_name instead
 	};
 
-	class FontFamily_Impl
+	class FontFamily_Impl : public FontFamily
 	{
 	public:
 		FontFamily_Impl(const std::string &family_name);
 		~FontFamily_Impl();
 
-		const std::string &get_family_name() const { return family_name; }
+		void add(const std::string &typeface_name, float height) override;
+		void add(const std::string &typeface_name, const FontDescription &desc) override;
+		void add(const FontDescription &desc, const std::string &ttf_filename) override;
 
-		void add(const FontDescription &desc, const std::string &typeface_name);
+		const std::string &family_name() const { return _family_name; }
+
+		void add_system(const FontDescription &desc, const std::string &typeface_name);
 		void add(const FontDescription &desc, DataBufferPtr &font_databuffer);
 
 		// Returns null engine if font not found
@@ -84,7 +89,7 @@ namespace uicore
 		void font_face_load(const FontDescription &desc, const std::string &typeface_name, float pixel_ratio);
 		void font_face_load(const FontDescription &desc, DataBufferPtr &font_databuffer, float pixel_ratio);
 
-		std::string family_name;
+		std::string _family_name;
 		TextureGroupPtr texture_group;		// Shared texture group between glyph cache's
 		std::vector<Font_Cache> font_cache;
 		std::vector<FontFamily_Definition> font_definitions;

@@ -55,7 +55,7 @@ namespace uicore
 	class Font_Impl
 	{
 	public:
-		Font_Impl(FontFamily &new_font_family, const FontDescription &description);
+		Font_Impl(const FontFamilyPtr &new_font_family, const FontDescription &description);
 		~Font_Impl();
 
 		const FontMetrics &get_font_metrics(const CanvasPtr &canvas);
@@ -91,7 +91,7 @@ namespace uicore
 		FontMetrics selected_metrics;
 
 		FontEngine *font_engine = nullptr;	// If null, use select_font_family() to update
-		FontFamily font_family;
+		std::shared_ptr<FontFamily_Impl> font_family;
 
 		Font_Draw *font_draw = nullptr;
 

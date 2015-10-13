@@ -39,6 +39,7 @@
 #include "UICore/Display/2D/canvas.h"
 #include "UICore/Display/2D/path.h"
 #include "UICore/Core/IOData/path_help.h"
+#include "UICore/Core/IOData/file.h"
 #include "UICore/Display/2D/canvas_impl.h"
 
 #ifdef WIN32
@@ -73,12 +74,29 @@ namespace uicore
 		FontMetrics font_metrics;
 	};
 
-	FontFamily_Impl::FontFamily_Impl(const std::string &family_name) : family_name(family_name), texture_group(TextureGroup::create(Size(256, 256)))
+	FontFamily_Impl::FontFamily_Impl(const std::string &family_name) : _family_name(family_name), texture_group(TextureGroup::create(Size(256, 256)))
 	{
 	}
 
 	FontFamily_Impl::~FontFamily_Impl()
 	{
+	}
+
+	void FontFamily_Impl::add(const std::string &typeface_name, float height)
+	{
+		FontDescription desc;
+		desc.set_height(height);
+		add_system(desc, typeface_name);
+	}
+
+	void FontFamily_Impl::add(const std::string &typeface_name, const FontDescription &desc)
+	{
+		add(desc, typeface_name);
+	}
+
+	void FontFamily_Impl::add(const FontDescription &desc, const std::string &ttf_filename)
+	{
+		add(desc, !ttf_filename.empty() ? File::read_all_bytes(ttf_filename) : nullptr);
 	}
 
 	void FontFamily_Impl::add(const FontDescription &desc, DataBufferPtr &font_databuffer)
@@ -89,7 +107,7 @@ namespace uicore
 		font_definitions.push_back(definition);
 	}
 
-	void FontFamily_Impl::add(const FontDescription &desc, const std::string &typeface_name)
+	void FontFamily_Impl::add_system(const FontDescription &desc, const std::string &typeface_name)
 	{
 		FontFamily_Definition definition;
 		definition.desc = desc.clone();
@@ -196,7 +214,7 @@ namespace uicore
 		if (!found)
 		{
 			// Could not find a cached version of the font to use as reference
-			font_face_load(desc, family_name, pixel_ratio);
+			font_face_load(desc, _family_name, pixel_ratio);
 		}
 		else
 		{
