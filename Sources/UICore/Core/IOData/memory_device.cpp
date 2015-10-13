@@ -49,11 +49,11 @@ namespace uicore
 
 		long long size() const override { return _buffer->size(); }
 
-		long long seek(long long pos) { if (pos >= 0 && pos < size()) _pos = pos; return _pos; }
-		long long seek_from_current(long long offset) { return seek(_pos + offset); }
-		long long seek_from_end(long long offset) { return seek(size() + offset); }
+		long long seek(long long pos) override { if (pos >= 0 && pos < size()) _pos = pos; return _pos; }
+		long long seek_from_current(long long offset) override { return seek(_pos + offset); }
+		long long seek_from_end(long long offset) override { return seek(size() + offset); }
 
-		int try_read(void *data, int size)
+		int try_read(void *data, int size) override
 		{
 			if (size < 0)
 				throw Exception("Read failed");
@@ -63,7 +63,7 @@ namespace uicore
 			return size;
 		}
 
-		void write(const void *data, int size)
+		void write(const void *data, int size) override
 		{
 			if (size < 0)
 				throw Exception("Write failed");
