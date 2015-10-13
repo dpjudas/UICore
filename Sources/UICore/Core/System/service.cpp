@@ -33,6 +33,7 @@
 #include "Win32/service_win32.h"
 #else
 #include "Unix/service_unix.h"
+#include "UICore/Core/Math/cl_math.h"
 #endif
 
 namespace uicore
@@ -42,7 +43,7 @@ namespace uicore
 #ifdef WIN32
 		impl = std::make_unique<Service_Win32>(this, service_name);
 #else
-		impl = std::make_unique<Service_Unix>(this, service_name);
+		impl = uicore::make_unique<Service_Unix>(this, service_name);
 #endif
 	}
 

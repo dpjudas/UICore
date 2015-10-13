@@ -26,11 +26,12 @@
 **    Magnus Norddahl
 */
 
-#include "Core/precomp.h"
-#include "API/Core/System/service.h"
-#include "API/Core/IOData/file.h"
-#include "API/Core/Text/string_help.h"
-#include "API/Core/System/exception.h"
+#include "UICore/precomp.h"
+#include "UICore/Core/System/service.h"
+#include "UICore/Core/IOData/file.h"
+#include "UICore/Core/System/exception.h"
+#include "UICore/Core/Text/text.h"
+#include "UICore/Core/Text/string_format.h"
 #include "service_unix.h"
 #include <iostream>
 #include <thread>
@@ -132,7 +133,7 @@ int Service_Unix::run_daemon(std::vector<std::string> args)
 {
 	try
 	{
-		File file(args[2], File::create_always, File::access_read_write);
+		auto file = File::create_always(args[2], FileAccess::read_write);
 
 		struct sigaction action;
 		memset(&action, 0, sizeof(struct sigaction));
@@ -145,14 +146,14 @@ int Service_Unix::run_daemon(std::vector<std::string> args)
 		int pid = fork();
 		if (pid)
 		{
-			std::string str_pid = StringHelp::int_to_local8(pid);
-			file.write(str_pid.c_str(), str_pid.length());
-			file.write("\n", 1);
+			std::string str_pid = Text::to_string(pid);
+			file->write(str_pid.c_str(), str_pid.length());
+			file->write("\n", 1);
 			return pid;
 		}
 		else
 		{
-			file.close();
+			file->close();
 			close(0);
 			close(1);
 			close(2);
