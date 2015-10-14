@@ -527,7 +527,7 @@ namespace uicore
 
 	std::shared_ptr<Texture> D3DTextureObject::create_view(TextureDimensions texture_dimensions, TextureFormat texture_format, int min_level, int num_levels, int min_layer, int num_layers)
 	{
-		switch (data->texture_dimensions)
+		switch (texture_dimensions)
 		{
 		case texture_1d:
 			return std::make_shared<Texture1DImpl<D3DTextureObject>>(HandleInit(this, texture_dimensions, texture_format, min_level, num_levels, min_layer, num_layers));
