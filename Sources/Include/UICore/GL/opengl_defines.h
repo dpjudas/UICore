@@ -18,7 +18,7 @@
 **     misrepresented as being the original software.
 **  3. This notice may not be removed or altered from any source distribution.
 **
-**  Note: Some of the libraries ClanLib may link to may have additional
+**  Note: Some of the libraries UICore may link to may have additional
 **  requirements or restrictions.
 **
 **  File Author(s):
@@ -1902,7 +1902,7 @@ enum DisplayDefines
 #endif
 
 	// ***********************************************************
-	// *** Legacy defines for ClanLib OpenGL 1.3 (GL1) support ***
+	// *** Legacy defines for UICore OpenGL 1.3 (GL1) support ***
 #ifndef GL_COMPARE_R_TO_TEXTURE
 	GL_COMPARE_R_TO_TEXTURE = 0x884e,
 #endif

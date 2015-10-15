@@ -18,7 +18,7 @@
 **     misrepresented as being the original software.
 **  3. This notice may not be removed or altered from any source distribution.
 **
-**  Note: Some of the libraries ClanLib may link to may have additional
+**  Note: Some of the libraries UICore may link to may have additional
 **  requirements or restrictions.
 **
 **  File Author(s):
@@ -1905,7 +1905,7 @@ namespace uicore
 		// the red, green and blue channels must be multiplied by x and divided by
 		// 0xff prior to the call.
 
-		// ClanLib now uses pre-multiplied alpha
+		// UICore now uses pre-multiplied alpha
 
 		BITMAPV5HEADER bmp_header;
 		memset(&bmp_header, 0, sizeof(BITMAPV5HEADER));
