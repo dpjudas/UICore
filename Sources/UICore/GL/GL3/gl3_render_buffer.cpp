@@ -34,7 +34,7 @@
 
 namespace uicore
 {
-	GL3RenderBuffer::GL3RenderBuffer(int width, int height, TextureFormat texture_format, int multisample_samples) : _size({width, height})
+	GL3RenderBuffer::GL3RenderBuffer(int width, int height, TextureFormat texture_format, int multisample_samples) : _size(width, height)
 	{
 		OpenGL::set_active();
 		GLuint last_render_buffer = 0;

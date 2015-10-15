@@ -59,17 +59,17 @@ namespace uicore
 
 	OpenGLWindowProvider::~OpenGLWindowProvider()
 	{
-		if (!gc.is_null())
+		if (!_gc.is_null())
 		{
 			if (using_gl3)
 			{
-				GL3GraphicContextProvider *gl_provider = dynamic_cast<GL3GraphicContextProvider*>(gc.get_provider());
+				GL3GraphicContextProvider *gl_provider = dynamic_cast<GL3GraphicContextProvider*>(_gc.get_provider());
 				if (gl_provider)
 					gl_provider->dispose();
 			}
 			else
 			{
-				GL1GraphicContextProvider *gl_provider = dynamic_cast<GL1GraphicContextProvider*>(gc.get_provider());
+				GL1GraphicContextProvider *gl_provider = dynamic_cast<GL1GraphicContextProvider*>(_gc.get_provider());
 				if (gl_provider)
 					gl_provider->dispose();
 			}
@@ -300,12 +300,12 @@ namespace uicore
 		if (use_gl3)
 		{
 			using_gl3 = true;
-			gc = GraphicContext(new GL3GraphicContextProvider(this));
+			_gc = GraphicContext(new GL3GraphicContextProvider(this));
 		}
 		else
 		{
 			using_gl3 = false;
-			gc = GraphicContext(new GL1GraphicContextProvider(this));
+			_gc = GraphicContext(new GL1GraphicContextProvider(this));
 		}
 		swap_interval = desc.get_swap_interval();
 		if (swap_interval != -1)
