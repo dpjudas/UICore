@@ -28,11 +28,11 @@
 
 #pragma once
 
-#include "API/Display/TargetProviders/display_window_provider.h"
-#include "API/Display/Render/graphic_context.h"
-#include "API/Display/Window/input_device.h"
-#include "API/Display/Image/pixel_buffer.h"
-#include "API/GL/opengl_wrap.h"
+#include "UICore/Display/TargetProviders/display_window_provider.h"
+#include "UICore/Display/Render/graphic_context.h"
+#include "UICore/Display/Window/input_device.h"
+#include "UICore/Display/Image/pixel_buffer.h"
+#include "UICore/GL/opengl_wrap.h"
 
 namespace uicore
 {

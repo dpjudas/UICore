@@ -29,17 +29,17 @@
 
 #pragma once
 
-#include "API/Core/Math/rect.h"
-#include "API/Display/Window/display_window_description.h"
-#include "API/Display/display_target.h"
-#include "API/Display/TargetProviders/display_window_provider.h"
-#include "API/Display/Window/display_window.h"
-#include "API/Display/Render/shared_gc_data.h"
-#include "API/Display/Image/pixel_buffer.h"
-#include "API/Display/Window/input_device.h"
-#include "API/GL/opengl.h"
-#include "API/GL/opengl_context_description.h"
-#include "API/Core/Text/logger.h"
+#include "UICore/Core/Math/rect.h"
+#include "UICore/Display/Window/display_window_description.h"
+#include "UICore/Display/display_target.h"
+#include "UICore/Display/TargetProviders/display_window_provider.h"
+#include "UICore/Display/Window/display_window.h"
+#include "UICore/Display/Render/shared_gc_data.h"
+#include "UICore/Display/Image/pixel_buffer.h"
+#include "UICore/Display/Window/input_device.h"
+#include "UICore/GL/opengl.h"
+#include "UICore/GL/opengl_context_description.h"
+#include "UICore/Core/Text/logger.h"
 #include "GL/opengl_context_description_impl.h"
 #include "GL/GL3/gl3_graphic_context_provider.h"
 

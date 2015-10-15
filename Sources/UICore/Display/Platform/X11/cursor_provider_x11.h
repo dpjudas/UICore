@@ -28,7 +28,7 @@
 
 #pragma once
 
-#include "API/Display/TargetProviders/cursor_provider.h"
+#include "UICore/Display/TargetProviders/cursor_provider.h"
 #include <vector>
 
 namespace uicore

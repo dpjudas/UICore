@@ -32,7 +32,7 @@
 #include "Display/System/run_loop_impl.h"
 #include <vector>
 #include <X11/Xlib.h>
-#include "API/Core/System/thread_local_storage.h"
+#include "UICore/Core/System/thread_local_storage.h"
 #include <unistd.h>
 #include <fcntl.h>
 

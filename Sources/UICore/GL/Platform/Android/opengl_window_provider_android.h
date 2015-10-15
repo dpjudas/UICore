@@ -29,11 +29,11 @@
 
 #pragma once
 
-#include "API/Display/TargetProviders/display_window_provider.h"
-#include "API/Display/Render/graphic_context.h"
+#include "UICore/Display/TargetProviders/display_window_provider.h"
+#include "UICore/Display/Render/graphic_context.h"
 #include <memory>
-#include "API/GL/opengl_context_description.h"
-#include "API/GL/opengl_wrap.h"
+#include "UICore/GL/opengl_context_description.h"
+#include "UICore/GL/opengl_wrap.h"
 
 #include <EGL/egl.h>
 #include <GLES/gl.h>

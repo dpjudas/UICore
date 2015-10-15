@@ -27,11 +27,11 @@
 */
 
 #include "GL/precomp.h"
-#include "API/GL/opengl_wrap.h"
-#include "API/GL/opengl.h"
+#include "UICore/GL/opengl_wrap.h"
+#include "UICore/GL/opengl.h"
 #include "pbuffer_impl.h"
 #include "../../GL1/gl1_graphic_context_provider.h"
-#include "API/Display/Render/shared_gc_data.h"
+#include "UICore/Display/Render/shared_gc_data.h"
 #include "opengl_window_provider_android.h"
 
 namespace uicore

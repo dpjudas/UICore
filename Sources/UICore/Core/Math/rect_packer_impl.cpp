@@ -33,7 +33,7 @@
 namespace uicore
 {
 	RectPackerImpl::RectPackerImpl(const Size &max_group_size, AllocationPolicy policy)
-		: active_root_node(nullptr), next_node_id(0), _max_group_size(max_group_size), _allocation_policy(policy)
+		: active_root_node(nullptr), next_node_id(0), _allocation_policy(policy), _max_group_size(max_group_size)
 	{
 	}
 

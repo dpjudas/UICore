@@ -28,7 +28,7 @@
 */
 
 #include "GL/precomp.h"
-#include "API/Display/Window/input_event.h"
+#include "UICore/Display/Window/input_event.h"
 
 #include "opengl_window_provider_osx.h"
 #include "opengl_window_provider_osx_impl.h"

@@ -26,7 +26,7 @@
 **    Magnus Norddahl
 */
 
-#include "Display/precomp.h"
+#include "UICore/precomp.h"
 #include "display_message_queue_cocoa.h"
 #include <CoreFoundation/CoreFoundation.h>
 #import <Cocoa/Cocoa.h>

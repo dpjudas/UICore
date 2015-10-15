@@ -27,9 +27,9 @@
  */
 
 #include "Core/precomp.h"
-#include "API/Core/IOData/directory.h"
-#include "API/Core/IOData/path_help.h"
-#include "API/Core/Text/string_help.h"
+#include "UICore/Core/IOData/directory.h"
+#include "UICore/Core/IOData/path_help.h"
+#include "UICore/Core/Text/string_help.h"
 
 #import <Foundation/Foundation.h>
 

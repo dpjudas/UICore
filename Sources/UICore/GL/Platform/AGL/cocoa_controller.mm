@@ -30,7 +30,7 @@
 #include "cocoa_controller.h"
 #include "cocoa_view.h"
 #include "cocoa_window.h"
-#include "API/Core/Math/vec2.h"
+#include "UICore/Core/Math/vec2.h"
 #import <QuartzCore/QuartzCore.h>
 
 @interface CocoaController ()

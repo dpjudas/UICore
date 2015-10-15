@@ -26,8 +26,8 @@
 **    Mark Page
 */
 
-#include "Display/precomp.h"
-#include "API/Core/System/system.h"
+#include "UICore/precomp.h"
+#include "UICore/Core/System/system.h"
 #include "input_device_provider_x11keyboard.h"
 #include "x11_window.h"
 #include <X11/Xatom.h>

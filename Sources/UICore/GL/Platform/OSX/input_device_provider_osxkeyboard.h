@@ -29,10 +29,10 @@
 
 #pragma once
 
-#include "API/Display/TargetProviders/input_device_provider.h"
-#include "API/Display/Window/input_device.h"
-#include "API/Display/Window/input_event.h"
-#include "API/Display/Window/keys.h"
+#include "UICore/Display/TargetProviders/input_device_provider.h"
+#include "UICore/Display/Window/input_device.h"
+#include "UICore/Display/Window/input_event.h"
+#include "UICore/Display/Window/keys.h"
 
 namespace uicore
 {

@@ -30,11 +30,11 @@
 #pragma once
 
 #include "font_engine.h"
-#include "API/Core/System/databuffer.h"
-#include "API/Display/Font/font.h"
-#include "API/Display/Font/font_description.h"
-#include "API/Display/Font/font_metrics.h"
-#include "API/Display/2D/path.h"
+#include "UICore/Core/System/databuffer.h"
+#include "UICore/Display/Font/font.h"
+#include "UICore/Display/Font/font_description.h"
+#include "UICore/Display/Font/font_metrics.h"
+#include "UICore/Display/2D/path.h"
 #include <CoreText/CoreText.h>
 #include <CoreGraphics/CoreGraphics.h>
 #include <string>

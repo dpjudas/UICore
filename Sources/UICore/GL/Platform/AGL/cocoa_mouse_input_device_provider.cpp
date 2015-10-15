@@ -1,7 +1,7 @@
 
 #include "GL/precomp.h"
 #include "cocoa_mouse_input_device_provider.h"
-#include "API/Display/Window/keys.h"
+#include "UICore/Display/Window/keys.h"
 
 namespace uicore
 {

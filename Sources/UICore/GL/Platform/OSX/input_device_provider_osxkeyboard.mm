@@ -28,13 +28,13 @@
 **    Harry Storbacka
 */
 
-#include "Display/precomp.h"
+#include "UICore/precomp.h"
 #include "input_device_provider_osxkeyboard.h"
 
-#include "API/Core/Text/string_help.h"
-#include "API/Display/Window/display_window.h"
-#include "API/Display/Window/input_event.h"
-#include "API/Display/Window/keys.h"
+#include "UICore/Core/Text/string_help.h"
+#include "UICore/Display/Window/display_window.h"
+#include "UICore/Display/Window/input_event.h"
+#include "UICore/Display/Window/keys.h"
 
 namespace uicore
 {

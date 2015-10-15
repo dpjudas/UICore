@@ -74,10 +74,10 @@ namespace uicore
 		void add(const std::string &typeface_name, const FontDescription &desc) override;
 		void add(const FontDescription &desc, const std::string &ttf_filename) override;
 
-		const std::string &family_name() const { return _family_name; }
+		const std::string &family_name() const override { return _family_name; }
 
 		void add_system(const FontDescription &desc, const std::string &typeface_name);
-		void add(const FontDescription &desc, DataBufferPtr &font_databuffer);
+		void add(const FontDescription &desc, const DataBufferPtr &font_databuffer);
 
 		// Returns null engine if font not found
 		Font_Cache get_font(const FontDescription &desc, float pixel_ratio);

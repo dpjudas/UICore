@@ -28,14 +28,13 @@
 **    Harry Storbacka
 */
 
-#include "Display/precomp.h"
-#include "API/Display/Font/font_metrics.h"
-#include "API/Core/Math/bezier_curve.h"
-#include "API/Display/Image/pixel_buffer.h"
-#include "API/Display/2D/color.h"
+#include "UICore/precomp.h"
+#include "UICore/Display/Font/font_metrics.h"
+#include "UICore/Display/Image/pixel_buffer.h"
+#include "UICore/Core/Math/color.h"
 #include "font_engine_freetype.h"
-#include "API/Core/IOData/iodevice.h"
-#include "API/Display/2D/path.h"
+#include "UICore/Core/IOData/iodevice.h"
+#include "UICore/Display/2D/path.h"
 
 namespace uicore
 {
@@ -82,7 +81,7 @@ FontEngine_Freetype_Library &FontEngine_Freetype_Library::instance()
 /////////////////////////////////////////////////////////////////////////////
 // FontEngine_Freetype Construction:
 
-FontEngine_Freetype::FontEngine_Freetype(const FontDescription &description, DataBuffer &font_databuffer, float new_pixel_ratio) : face(nullptr), pixel_ratio(new_pixel_ratio)
+FontEngine_Freetype::FontEngine_Freetype(const FontDescription &description, DataBufferPtr &font_databuffer, float new_pixel_ratio) : face(nullptr), pixel_ratio(new_pixel_ratio)
 {
 	font_description = description.clone();
 
@@ -97,7 +96,7 @@ FontEngine_Freetype::FontEngine_Freetype(const FontDescription &description, Dat
 
 	FontEngine_Freetype_Library &library = FontEngine_Freetype_Library::instance();
 
-	FT_Error error = FT_New_Memory_Face( library.library, (FT_Byte*)data_buffer.get_data(), data_buffer.get_size(), 0, &face);
+	FT_Error error = FT_New_Memory_Face( library.library, (FT_Byte*)data_buffer->data(), data_buffer->size(), 0, &face);
 
 	if ( error == FT_Err_Unknown_File_Format )
 	{
@@ -142,9 +141,9 @@ FontPixelBuffer FontEngine_Freetype::get_font_glyph(int glyph)
 /////////////////////////////////////////////////////////////////////////////
 // FontEngine_Freetype Operations:
 
-void FontEngine_Freetype::load_glyph_path(unsigned int c, Path &out_path, GlyphMetrics &out_metrics)
+void FontEngine_Freetype::load_glyph_path(unsigned int c, const PathPtr &out_path, GlyphMetrics &out_metrics)
 {
-	out_path.set_fill_mode(PathFillMode::winding);
+	out_path->set_fill_mode(PathFillMode::winding);
 
 	FT_UInt glyph_index;
 
@@ -182,19 +181,19 @@ void FontEngine_Freetype::load_glyph_path(unsigned int c, Path &out_path, GlyphM
 			{
 				if (initial)
 				{
-					out_path.move_to(tp.pos);
+					out_path->move_to(tp.pos);
 					initial = false;
 				}
 				else
 				{
-					out_path.line_to(tp.pos);
+					out_path->line_to(tp.pos);
 				}
 			}
 			else if( tp.tag == FT_Curve_Tag_Conic )
 			{
 				if (i)
 				{
-					out_path.bezier_to(points[i - 1].pos, tp.pos, points[i + 1].pos);
+					out_path->bezier_to(points[i - 1].pos, tp.pos, points[i + 1].pos);
 				}
 			}
 			else if( tp.tag == FT_Curve_Tag_Cubic && points[i-1].tag == FT_Curve_Tag_Cubic )
@@ -202,12 +201,12 @@ void FontEngine_Freetype::load_glyph_path(unsigned int c, Path &out_path, GlyphM
 				// TODO: This needs checking. We do not have a fonts that uses cubics ... and this bezier is currrently not supported by path
 				//if (i >= 2)
 				//{
-					//out_path.bezier_to(points[i - 2].pos, points[i - 1].pos, tp.pos, points[i + 1].pos);
+					//out_path->bezier_to(points[i - 2].pos, points[i - 1].pos, tp.pos, points[i + 1].pos);
 				//}
 			}
 		}
 
-		out_path.close();
+		out_path->close();
 	}
 
 	FT_GlyphSlot slot = face->glyph;
@@ -285,17 +284,17 @@ FontPixelBuffer FontEngine_Freetype::get_font_glyph_standard(int glyph, bool ant
 	int src_height = slot->bitmap.rows;
 	int src_pitch = slot->bitmap.pitch;
 
-	PixelBuffer pixelbuffer(src_width, src_height, tf_rgba8);
+	auto pixelbuffer = PixelBuffer::create(src_width, src_height, tf_rgba8);
 	font_buffer.buffer = pixelbuffer;
-	font_buffer.buffer_rect = pixelbuffer.get_size();
+	font_buffer.buffer_rect = pixelbuffer->size();
 	font_buffer.empty_buffer = false;
 
-	font_buffer.size = Sizef(pixelbuffer.get_width() / pixel_ratio, pixelbuffer.get_height() / pixel_ratio);
+	font_buffer.size = Sizef(pixelbuffer->width() / pixel_ratio, pixelbuffer->height() / pixel_ratio);
 
 	unsigned char *src_data = slot->bitmap.buffer;
-	unsigned char *pixel_data = (unsigned char *) font_buffer.buffer.get_data();
+	unsigned char *pixel_data = (unsigned char *) font_buffer.buffer->data();
 	unsigned char *dest_data;
-	int dest_pitch = font_buffer.buffer.get_pitch();
+	int dest_pitch = font_buffer.buffer->pitch();
 
 	// Convert the bitmap
 	if (anti_alias)
@@ -398,15 +397,15 @@ FontPixelBuffer FontEngine_Freetype::get_font_glyph_subpixel(int glyph)
 
 	// Convert the bitmap
 
-	PixelBuffer pixelbuffer(src_width/3, src_height, tf_rgba8);
+	auto pixelbuffer = PixelBuffer::create(src_width/3, src_height, tf_rgba8);
 	font_buffer.buffer = pixelbuffer;
-	font_buffer.buffer_rect = pixelbuffer.get_size();
+	font_buffer.buffer_rect = pixelbuffer->size();
 	font_buffer.empty_buffer = false;
-	font_buffer.size = Sizef(pixelbuffer.get_width() / pixel_ratio, pixelbuffer.get_height() / pixel_ratio);
+	font_buffer.size = Sizef(pixelbuffer->width() / pixel_ratio, pixelbuffer->height() / pixel_ratio);
 
 	unsigned char *src_data = slot->bitmap.buffer;
-	unsigned char *pixel_data = (unsigned char *) font_buffer.buffer.get_data();
-	int dest_pitch = font_buffer.buffer.get_pitch();
+	unsigned char *pixel_data = (unsigned char *) font_buffer.buffer->data();
+	int dest_pitch = font_buffer.buffer->pitch();
 
 	// For 8bit bitmaps
 	for (int ycnt = 0; ycnt < src_height; ycnt++)

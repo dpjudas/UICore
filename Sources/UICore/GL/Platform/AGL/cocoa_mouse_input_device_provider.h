@@ -28,8 +28,8 @@
 
 #pragma once
 
-#include "API/Display/TargetProviders/input_device_provider.h"
-#include "API/Core/Text/string_format.h"
+#include "UICore/Display/TargetProviders/input_device_provider.h"
+#include "UICore/Core/Text/string_format.h"
 
 namespace uicore
 {

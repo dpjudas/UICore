@@ -31,10 +31,10 @@
 #pragma once
 
 #include "../FontEngine/font_engine.h"
-#include "API/Display/Font/font.h"
-#include "API/Display/Font/font_description.h"
-#include "API/Display/Font/font_metrics.h"
-#include "API/Core/System/databuffer.h"
+#include "UICore/Display/Font/font.h"
+#include "UICore/Display/Font/font_description.h"
+#include "UICore/Display/Font/font_metrics.h"
+#include "UICore/Core/System/databuffer.h"
 
 extern "C"
 {
@@ -65,7 +65,7 @@ class FontEngine_Freetype : public FontEngine
 /// \name Construction
 /// \{
 public:
-	FontEngine_Freetype(const FontDescription &description, DataBuffer &font_databuffer, float pixel_ratio);
+	FontEngine_Freetype(const FontDescription &description, DataBufferPtr &font_databuffer, float pixel_ratio);
 	~FontEngine_Freetype();
 
 /// \}
@@ -88,7 +88,7 @@ public:
 /// \{
 
 public:
-	void load_glyph_path(unsigned int glyph_index, Path &out_path, GlyphMetrics &out_metrics) override;
+	void load_glyph_path(unsigned int glyph_index, const PathPtr &out_path, GlyphMetrics &out_metrics) override;
 
 /// \}
 /// \name Implementation
@@ -105,7 +105,7 @@ private:
 
 	std::vector<TaggedPoint> get_contour_points(int cont, FT_Outline *outline);
 
-	DataBuffer data_buffer;
+	DataBufferPtr data_buffer;
 	FontDescription font_description;
 	FontMetrics font_metrics;
 	float pixel_ratio;

@@ -26,11 +26,11 @@
 **    Kevin Bluck
 */
 
-#include "Display/precomp.h"
+#include "UICore/precomp.h"
 #include "font_config.h"
-#include "API/Core/IOData/iodevice.h"
-#include "API/Core/System/databuffer.h"
-#include "API/Display/Font/font_description.h"
+#include "UICore/Core/IOData/iodevice.h"
+#include "UICore/Core/System/databuffer.h"
+#include "UICore/Display/Font/font_description.h"
 #include <cmath>
 
 namespace uicore
