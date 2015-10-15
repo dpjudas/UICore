@@ -24,37 +24,38 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    Mark Page
 */
 
-#include "UICore/precomp.h"
-#include "gl1_transfer_buffer.h"
+#pragma once
+
+#include <memory>
+#include "buffer_usage.h"
 
 namespace uicore
 {
-	GL1TransferBuffer::GL1TransferBuffer(int new_size, BufferUsage usage)
-	{
-		data_ptr = new char[new_size];
-		size = new_size;
-	}
+	class GraphicContext;
+	typedef std::shared_ptr<GraphicContext> GraphicContextPtr;
 
-	GL1TransferBuffer::GL1TransferBuffer(const void *init_data, int new_size, BufferUsage usage)
+	/// \brief Transfer Buffer
+	class StagingBuffer
 	{
-		data_ptr = new char[new_size];
-		size = new_size;
-		memcpy(data_ptr, init_data, size);
-	}
+	public:
+		/// \brief Constructs a transfer buffer
+		static std::shared_ptr<StagingBuffer> create(const GraphicContextPtr &gc, int size, BufferUsage usage = usage_dynamic_copy);
+		static std::shared_ptr<StagingBuffer> create(const GraphicContextPtr &gc, const void *data, int size, BufferUsage usage = usage_dynamic_copy);
 
-	GL1TransferBuffer::~GL1TransferBuffer()
-	{
-		delete[] data_ptr;
-	}
+		/// \brief Retrieves a pointer to the mapped buffer.
+		virtual void *data() = 0;
 
-	void GL1TransferBuffer::upload_data(const GraphicContextPtr &gc, int offset, const void *data, int size)
-	{
-		if ((size < 0) || (offset < 0) || ((size + offset) > this->size))
-			throw Exception("Transfer buffer, invalid size");
+		/// \brief Maps buffer into system memory.
+		virtual void lock(const GraphicContextPtr &gc, BufferAccess access) = 0;
 
-		memcpy(data_ptr + offset, data, size);
-	}
+		/// \brief Unmaps buffer.
+		virtual void unlock() = 0;
+
+		/// \brief Uploads data to transfer buffer.
+		virtual void upload_data(const GraphicContextPtr &gc, int offset, const void *data, int size) = 0;
+	};
+
+	typedef std::shared_ptr<StagingBuffer> StagingBufferPtr;
 }

@@ -27,7 +27,7 @@
 */
 
 #include "UICore/precomp.h"
-#include "d3d_transfer_texture.h"
+#include "d3d_staging_texture.h"
 #include "d3d_texture_object.h"
 #include "d3d_graphic_context.h"
 #include "d3d_display_window.h"
@@ -35,7 +35,7 @@
 
 namespace uicore
 {
-	D3DTransferTexture::D3DTransferTexture(const ComPtr<ID3D11Device> &device, const void *data, const Size &new_size, PixelBufferDirection direction, TextureFormat format, BufferUsage usage)
+	D3DStagingTexture::D3DStagingTexture(const ComPtr<ID3D11Device> &device, const void *data, const Size &new_size, StagingDirection direction, TextureFormat format, BufferUsage usage)
 	{
 		handles.push_back(std::shared_ptr<DeviceHandles>(new DeviceHandles(device)));
 		map_data.pData = 0;
@@ -61,7 +61,7 @@ namespace uicore
 		texture_desc.CPUAccessFlags = to_d3d_cpu_access(direction);
 		texture_desc.MiscFlags = D3D11_RESOURCE_MISC_SHARED;
 
-		if ((usage == usage_stream_draw) && (direction == data_to_gpu)) // To do: find a buffer usage API that works well for both Direct3D and OpenGL
+		if ((usage == usage_stream_draw) && (direction == StagingDirection::to_gpu)) // To do: find a buffer usage API that works well for both Direct3D and OpenGL
 		{
 			texture_desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 			texture_desc.Usage = D3D11_USAGE_DYNAMIC;
@@ -73,19 +73,11 @@ namespace uicore
 		D3DTarget::throw_if_failed("ID3D11Device.CreateTexture2D failed", result);
 	}
 
-	D3DTransferTexture::~D3DTransferTexture()
+	D3DStagingTexture::~D3DStagingTexture()
 	{
 	}
 
-	void *D3DTransferTexture::data()
-	{
-		if (!data_locked)
-			throw Exception("lock() not called before get_data()");
-
-		return map_data.pData;
-	}
-
-	const void *D3DTransferTexture::data() const
+	void *D3DStagingTexture::data()
 	{
 		if (!data_locked)
 			throw Exception("lock() not called before get_data()");
@@ -93,7 +85,15 @@ namespace uicore
 		return map_data.pData;
 	}
 
-	ComPtr<ID3D11Texture2D> &D3DTransferTexture::get_texture_2d(const ComPtr<ID3D11Device> &device)
+	const void *D3DStagingTexture::data() const
+	{
+		if (!data_locked)
+			throw Exception("lock() not called before get_data()");
+
+		return map_data.pData;
+	}
+
+	ComPtr<ID3D11Texture2D> &D3DStagingTexture::get_texture_2d(const ComPtr<ID3D11Device> &device)
 	{
 		if (device)
 			return get_handles(device).texture;
@@ -101,7 +101,7 @@ namespace uicore
 			return handles.front()->texture;
 	}
 
-	int D3DTransferTexture::pitch() const
+	int D3DStagingTexture::pitch() const
 	{
 		if (!data_locked)
 			throw Exception("lock() not called before get_pitch()");
@@ -109,7 +109,7 @@ namespace uicore
 		return map_data.RowPitch;
 	}
 
-	void D3DTransferTexture::lock(const GraphicContextPtr &gc, BufferAccess access)
+	void D3DStagingTexture::lock(const GraphicContextPtr &gc, BufferAccess access)
 	{
 		map_gc_provider = static_cast<D3DGraphicContext *>(gc.get());
 		DeviceHandles &handle = get_handles(map_gc_provider->get_window()->get_device());
@@ -120,7 +120,7 @@ namespace uicore
 		data_locked = true;
 	}
 
-	void D3DTransferTexture::unlock()
+	void D3DStagingTexture::unlock()
 	{
 		map_gc_provider->get_window()->get_device_context()->Unmap(get_handles(map_gc_provider->get_window()->get_device()).texture, 0);
 		map_gc_provider = 0;
@@ -130,7 +130,7 @@ namespace uicore
 		data_locked = false;
 	}
 
-	void D3DTransferTexture::upload_data(const GraphicContextPtr &gc, const Rect &dest_rect, const void *data)
+	void D3DStagingTexture::upload_data(const GraphicContextPtr &gc, const Rect &dest_rect, const void *data)
 	{
 		D3DGraphicContext *gc_provider = static_cast<D3DGraphicContext *>(gc.get());
 		DeviceHandles &handle = get_handles(gc_provider->get_window()->get_device());
@@ -150,7 +150,7 @@ namespace uicore
 		gc_provider->get_window()->get_device_context()->UpdateSubresource(handle.texture, 0, &box, data, pitch, pitch * dest_rect.height());
 	}
 
-	void D3DTransferTexture::device_destroyed(ID3D11Device *device)
+	void D3DStagingTexture::device_destroyed(ID3D11Device *device)
 	{
 		for (size_t i = 0; i < handles.size(); i++)
 		{
@@ -162,7 +162,7 @@ namespace uicore
 		}
 	}
 
-	D3DTransferTexture::DeviceHandles &D3DTransferTexture::get_handles(const ComPtr<ID3D11Device> &device)
+	D3DStagingTexture::DeviceHandles &D3DStagingTexture::get_handles(const ComPtr<ID3D11Device> &device)
 	{
 		for (size_t i = 0; i < handles.size(); i++)
 			if (handles[i]->device == device)
@@ -185,7 +185,7 @@ namespace uicore
 		return *handles.back();
 	}
 
-	D3D11_MAP D3DTransferTexture::to_d3d_map_type(BufferAccess access)
+	D3D11_MAP D3DStagingTexture::to_d3d_map_type(BufferAccess access)
 	{
 		switch (access)
 		{
@@ -201,13 +201,13 @@ namespace uicore
 		throw Exception("Unsupported access type");
 	}
 
-	UINT D3DTransferTexture::to_d3d_cpu_access(PixelBufferDirection direction)
+	UINT D3DStagingTexture::to_d3d_cpu_access(StagingDirection direction)
 	{
 		switch (direction)
 		{
-		case data_to_gpu:
+		case StagingDirection::to_gpu:
 			return D3D11_CPU_ACCESS_WRITE;
-		case data_from_gpu:
+		case StagingDirection::from_gpu:
 			return D3D11_CPU_ACCESS_READ;
 		}
 		throw Exception("Unsupported pixel buffer direction");

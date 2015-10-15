@@ -30,7 +30,7 @@
 #include "d3d_storage_buffer.h"
 #include "d3d_graphic_context.h"
 #include "d3d_display_window.h"
-#include "d3d_transfer_buffer.h"
+#include "d3d_staging_buffer.h"
 #include "UICore/D3D/d3d_target.h"
 
 namespace uicore
@@ -131,16 +131,16 @@ namespace uicore
 		device_context->UpdateSubresource(get_handles(device).buffer, 0, 0, data, 0, 0);
 	}
 
-	void D3DStorageBuffer::copy_from(const GraphicContextPtr &gc, const TransferBufferPtr &buffer, int dest_pos, int src_pos, int copy_size)
+	void D3DStorageBuffer::copy_from(const GraphicContextPtr &gc, const StagingBufferPtr &buffer, int dest_pos, int src_pos, int copy_size)
 	{
 		const ComPtr<ID3D11Device> &device = static_cast<D3DGraphicContext*>(gc.get())->get_window()->get_device();
-		ComPtr<ID3D11Buffer> &transfer_buffer = static_cast<D3DTransferBuffer*>(buffer.get())->get_buffer(device);
-		int transfer_buffer_size = static_cast<D3DTransferBuffer*>(buffer.get())->get_size();
+		ComPtr<ID3D11Buffer> &staging_buffer = static_cast<D3DStagingBuffer*>(buffer.get())->get_buffer(device);
+		int staging_buffer_size = static_cast<D3DStagingBuffer*>(buffer.get())->get_size();
 
 		if (copy_size == -1)
-			copy_size = transfer_buffer_size;
+			copy_size = staging_buffer_size;
 
-		if (dest_pos < 0 || copy_size < 0 || dest_pos + copy_size > size || src_pos < 0 || src_pos + copy_size > transfer_buffer_size)
+		if (dest_pos < 0 || copy_size < 0 || dest_pos + copy_size > size || src_pos < 0 || src_pos + copy_size > staging_buffer_size)
 			throw Exception("Out of bounds!");
 
 		ComPtr<ID3D11DeviceContext> device_context;
@@ -153,19 +153,19 @@ namespace uicore
 		box.bottom = 1;
 		box.front = 0;
 		box.back = 1;
-		device_context->CopySubresourceRegion(get_handles(device).buffer, 0, dest_pos, 0, 0, transfer_buffer, 0, &box);
+		device_context->CopySubresourceRegion(get_handles(device).buffer, 0, dest_pos, 0, 0, staging_buffer, 0, &box);
 	}
 
-	void D3DStorageBuffer::copy_to(const GraphicContextPtr &gc, const TransferBufferPtr &buffer, int dest_pos, int src_pos, int copy_size)
+	void D3DStorageBuffer::copy_to(const GraphicContextPtr &gc, const StagingBufferPtr &buffer, int dest_pos, int src_pos, int copy_size)
 	{
 		const ComPtr<ID3D11Device> &device = static_cast<D3DGraphicContext*>(gc.get())->get_window()->get_device();
-		ComPtr<ID3D11Buffer> &transfer_buffer = static_cast<D3DTransferBuffer*>(buffer.get())->get_buffer(device);
-		int transfer_buffer_size = static_cast<D3DTransferBuffer*>(buffer.get())->get_size();
+		ComPtr<ID3D11Buffer> &staging_buffer = static_cast<D3DStagingBuffer*>(buffer.get())->get_buffer(device);
+		int staging_buffer_size = static_cast<D3DStagingBuffer*>(buffer.get())->get_size();
 
 		if (copy_size == -1)
-			copy_size = transfer_buffer_size;
+			copy_size = staging_buffer_size;
 
-		if (dest_pos < 0 || copy_size < 0 || dest_pos + copy_size > transfer_buffer_size || src_pos < 0 || src_pos + copy_size > size)
+		if (dest_pos < 0 || copy_size < 0 || dest_pos + copy_size > staging_buffer_size || src_pos < 0 || src_pos + copy_size > size)
 			throw Exception("Out of bounds!");
 
 		ComPtr<ID3D11DeviceContext> device_context;
@@ -178,7 +178,7 @@ namespace uicore
 		box.bottom = 1;
 		box.front = 0;
 		box.back = 1;
-		device_context->CopySubresourceRegion(transfer_buffer, 0, src_pos, 0, 0, get_handles(device).buffer, 0, &box);
+		device_context->CopySubresourceRegion(staging_buffer, 0, src_pos, 0, 0, get_handles(device).buffer, 0, &box);
 	}
 
 	void D3DStorageBuffer::device_destroyed(ID3D11Device *device)

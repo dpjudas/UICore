@@ -43,8 +43,8 @@
 #include "gl3_uniform_buffer.h"
 #include "gl3_storage_buffer.h"
 #include "gl3_element_array_buffer.h"
-#include "gl3_transfer_buffer.h"
-#include "gl3_transfer_texture.h"
+#include "gl3_staging_buffer.h"
+#include "gl3_staging_texture.h"
 #include "gl3_primitives_array.h"
 #include "UICore/Core/System/databuffer.h"
 #include "UICore/Core/Math/cl_math.h"
@@ -390,14 +390,14 @@ namespace uicore
 		return std::make_shared<GL3UniformBuffer>(data, size, usage);
 	}
 
-	std::shared_ptr<TransferBuffer> GL3GraphicContext::create_transfer_buffer(int size, BufferUsage usage)
+	std::shared_ptr<StagingBuffer> GL3GraphicContext::create_staging_buffer(int size, BufferUsage usage)
 	{
-		return std::make_shared<GL3TransferBuffer>(size, usage);
+		return std::make_shared<GL3StagingBuffer>(size, usage);
 	}
 
-	std::shared_ptr<TransferBuffer> GL3GraphicContext::create_transfer_buffer(const void *data, int size, BufferUsage usage)
+	std::shared_ptr<StagingBuffer> GL3GraphicContext::create_staging_buffer(const void *data, int size, BufferUsage usage)
 	{
-		return std::make_shared<GL3TransferBuffer>(data, size, usage);
+		return std::make_shared<GL3StagingBuffer>(data, size, usage);
 	}
 
 	std::shared_ptr<PrimitivesArray> GL3GraphicContext::create_primitives_array()
@@ -440,9 +440,9 @@ namespace uicore
 		return std::make_shared<TextureCubeArrayImpl<GL3TextureObject>>(GL3TextureObject::InitData(), width, height, array_size, texture_format, levels);
 	}
 
-	std::shared_ptr<TransferTexture> GL3GraphicContext::create_transfer_texture(const void *data, const Size &size, PixelBufferDirection direction, TextureFormat format, BufferUsage usage)
+	std::shared_ptr<StagingTexture> GL3GraphicContext::create_staging_texture(const void *data, const Size &size, StagingDirection direction, TextureFormat format, BufferUsage usage)
 	{
-		return std::make_shared<GL3TransferTexture>(data, size, direction, format, usage);
+		return std::make_shared<GL3StagingTexture>(data, size, direction, format, usage);
 	}
 
 	void GL3GraphicContext::set_rasterizer_state(const RasterizerStatePtr &state)

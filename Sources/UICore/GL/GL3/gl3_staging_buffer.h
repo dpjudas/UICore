@@ -24,38 +24,34 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    Mark Page
 */
 
 #pragma once
 
-#include <memory>
-#include "buffer_usage.h"
+#include "UICore/Display/Render/staging_buffer.h"
+#include "UICore/GL/opengl.h"
+#include "UICore/Core/System/disposable_object.h"
+#include "gl3_buffer_object.h"
 
 namespace uicore
 {
-	class GraphicContext;
-	typedef std::shared_ptr<GraphicContext> GraphicContextPtr;
+	class GL3GraphicContext;
 
-	/// \brief Transfer Buffer
-	class TransferBuffer
+	class GL3StagingBuffer : public StagingBuffer
 	{
 	public:
-		/// \brief Constructs a transfer buffer
-		static std::shared_ptr<TransferBuffer> create(const GraphicContextPtr &gc, int size, BufferUsage usage = usage_dynamic_copy);
-		static std::shared_ptr<TransferBuffer> create(const GraphicContextPtr &gc, const void *data, int size, BufferUsage usage = usage_dynamic_copy);
+		GL3StagingBuffer(int size, BufferUsage usage);
+		GL3StagingBuffer(const void *data, int size, BufferUsage usage);
 
-		/// \brief Retrieves a pointer to the mapped buffer.
-		virtual void *data() = 0;
+		void *data() override { return buffer.get_data(); }
+		GLuint get_handle() const { return buffer.get_handle(); }
 
-		/// \brief Maps buffer into system memory.
-		virtual void lock(const GraphicContextPtr &gc, BufferAccess access) = 0;
+		void lock(const GraphicContextPtr &gc, BufferAccess access) override { buffer.lock(gc, access); }
+		void unlock() override { buffer.unlock(); }
+		void upload_data(const GraphicContextPtr &gc, int offset, const void *data, int size) override { buffer.upload_data(gc, offset, data, size); }
 
-		/// \brief Unmaps buffer.
-		virtual void unlock() = 0;
-
-		/// \brief Uploads data to transfer buffer.
-		virtual void upload_data(const GraphicContextPtr &gc, int offset, const void *data, int size) = 0;
+	private:
+		GL3BufferObject buffer;
 	};
-
-	typedef std::shared_ptr<TransferBuffer> TransferBufferPtr;
 }

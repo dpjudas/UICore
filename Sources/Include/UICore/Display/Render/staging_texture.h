@@ -43,18 +43,18 @@ namespace uicore
 	class PixelBuffer;
 	class PixelFormat;
 
-	/// \brief Pixel buffer prefered direction
-	enum class PixelBufferDirection : int
+	/// \brief Staging usage direction
+	enum class StagingDirection : int
 	{
 		/// \brief Use of the pixel buffer is to send data to the gpu
-		data_to_gpu,
+		to_gpu,
 
 		/// \brief Use of the pixel buffer is to retrieve data from the gpu
-		data_from_gpu
+		from_gpu
 	};
 
 	/// \brief Texture Transfer class.
-	class TransferTexture : public PixelBuffer
+	class StagingTexture : public PixelBuffer
 	{
 	public:
 		/// \brief Constructs a GPU Transfer Buffer
@@ -67,8 +67,8 @@ namespace uicore
 		/// \param data = data to copy from (May be nullptr)
 		/// \param usage = Buffer Usage
 		/// \param pbuff = The pixelbuffer to copy from
-		static std::shared_ptr<TransferTexture> create(const GraphicContextPtr &gc, int width, int height, PixelBufferDirection direction = data_to_gpu, TextureFormat texture_format = tf_rgba8, const void *data = nullptr, BufferUsage usage = usage_stream_draw);
-		static std::shared_ptr<TransferTexture> create(const GraphicContextPtr &gc, const PixelBufferPtr &pbuff, PixelBufferDirection direction = data_to_gpu, BufferUsage usage = usage_stream_draw);
+		static std::shared_ptr<StagingTexture> create(const GraphicContextPtr &gc, int width, int height, StagingDirection direction = StagingDirection::to_gpu, TextureFormat texture_format = tf_rgba8, const void *data = nullptr, BufferUsage usage = usage_stream_draw);
+		static std::shared_ptr<StagingTexture> create(const GraphicContextPtr &gc, const PixelBufferPtr &pbuff, StagingDirection direction = StagingDirection::to_gpu, BufferUsage usage = usage_stream_draw);
 
 		/// \brief Maps buffer into system memory.
 		///
@@ -82,5 +82,5 @@ namespace uicore
 		virtual void upload_data(const GraphicContextPtr &gc, const Rect &dest_rect, const void *data) = 0;
 	};
 
-	typedef std::shared_ptr<TransferTexture> TransferTexturePtr;
+	typedef std::shared_ptr<StagingTexture> StagingTexturePtr;
 }

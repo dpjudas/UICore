@@ -37,7 +37,7 @@
 #include "UICore/Display/Render/depth_stencil_state_description.h"
 #include "UICore/Core/Math/mat4.h"
 #include "UICore/Core/Signals/signal.h"
-#include "UICore/Display/Render/transfer_texture.h"
+#include "UICore/Display/Render/staging_texture.h"
 
 namespace uicore
 {
@@ -53,7 +53,7 @@ namespace uicore
 	class RenderBuffer;
 	class VertexArrayBufferProvider;
 	class ElementArray;
-	class TransferBufferProvider;
+	class StagingBufferProvider;
 	class FontDescription;
 	class PixelBufferProvider;
 	class UniformBufferProvider;
@@ -62,7 +62,7 @@ namespace uicore
 	class RasterizerStateDescription;
 	class BlendStateDescription;
 	class DepthStencilStateDescription;
-	class TransferTexture;
+	class StagingTexture;
 	enum class ShaderType;
 
 	class GraphicContextImpl : public GraphicContext
@@ -82,8 +82,8 @@ namespace uicore
 		virtual std::shared_ptr<VertexArrayBuffer> create_vertex_array_buffer(const void *data, int size, BufferUsage usage) = 0;
 		virtual std::shared_ptr<UniformBuffer> create_uniform_buffer(int size, BufferUsage usage) = 0;
 		virtual std::shared_ptr<UniformBuffer> create_uniform_buffer(const void *data, int size, BufferUsage usage) = 0;
-		virtual std::shared_ptr<TransferBuffer> create_transfer_buffer(int size, BufferUsage usage) = 0;
-		virtual std::shared_ptr<TransferBuffer> create_transfer_buffer(const void *data, int size, BufferUsage usage) = 0;
+		virtual std::shared_ptr<StagingBuffer> create_staging_buffer(int size, BufferUsage usage) = 0;
+		virtual std::shared_ptr<StagingBuffer> create_staging_buffer(const void *data, int size, BufferUsage usage) = 0;
 		virtual std::shared_ptr<PrimitivesArray> create_primitives_array() = 0;
 		virtual std::shared_ptr<Texture1D> create_texture_1d(int width, TextureFormat texture_format, int levels) = 0;
 		virtual std::shared_ptr<Texture1DArray> create_texture_1d_array(int width, int array_size, TextureFormat texture_format, int levels) = 0;
@@ -92,7 +92,7 @@ namespace uicore
 		virtual std::shared_ptr<Texture3D> create_texture_3d(int width, int height, int depth, TextureFormat texture_format, int levels) = 0;
 		virtual std::shared_ptr<TextureCube> create_texture_cube(int width, int height, TextureFormat texture_format, int levels) = 0;
 		virtual std::shared_ptr<TextureCubeArray> create_texture_cube_array(int width, int height, int array_size, TextureFormat texture_format, int levels) = 0;
-		virtual std::shared_ptr<TransferTexture> create_transfer_texture(const void *data, const Size &new_size, PixelBufferDirection direction, TextureFormat new_format, BufferUsage usage) = 0;
+		virtual std::shared_ptr<StagingTexture> create_staging_texture(const void *data, const Size &new_size, StagingDirection direction, TextureFormat new_format, BufferUsage usage) = 0;
 
 		virtual Size display_window_size() const = 0;
 		virtual Signal<void(const Size &)> &sig_window_resized() = 0;

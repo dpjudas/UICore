@@ -36,7 +36,7 @@
 #include "UICore/GL/opengl_wrap.h"
 #include "UICore/GL/opengl.h"
 #include "UICore/Core/System/databuffer.h"
-#include "gl3_transfer_texture.h"
+#include "gl3_staging_texture.h"
 
 namespace uicore
 {
@@ -265,9 +265,9 @@ namespace uicore
 		TextureStateTracker state_tracker(texture_type, handle);
 
 		const unsigned char *data = nullptr;
-		GL3TransferTexture *buffer_provider = nullptr;
+		GL3StagingTexture *buffer_provider = nullptr;
 		GLint last_buffer = 0;
-		buffer_provider = dynamic_cast<GL3TransferTexture*>(src_converted.get());
+		buffer_provider = dynamic_cast<GL3StagingTexture*>(src_converted.get());
 		if (buffer_provider)
 		{
 			glGetIntegerv(GL_PIXEL_UNPACK_BUFFER_BINDING, &last_buffer);

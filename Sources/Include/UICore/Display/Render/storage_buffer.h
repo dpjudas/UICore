@@ -35,8 +35,8 @@ namespace uicore
 {
 	class GraphicContext;
 	typedef std::shared_ptr<GraphicContext> GraphicContextPtr;
-	class TransferBuffer;
-	typedef std::shared_ptr<TransferBuffer> TransferBufferPtr;
+	class StagingBuffer;
+	typedef std::shared_ptr<StagingBuffer> StagingBufferPtr;
 
 	/// \brief Storage Buffer
 	class StorageBuffer
@@ -52,10 +52,10 @@ namespace uicore
 		virtual void upload_data(const GraphicContextPtr &gc, const void *data, int size) = 0;
 
 		/// \brief Copies data from transfer buffer
-		virtual void copy_from(const GraphicContextPtr &gc, const TransferBufferPtr &buffer, int dest_pos = 0, int src_pos = 0, int size = -1) = 0;
+		virtual void copy_from(const GraphicContextPtr &gc, const StagingBufferPtr &buffer, int dest_pos = 0, int src_pos = 0, int size = -1) = 0;
 
 		/// \brief Copies data to transfer buffer
-		virtual void copy_to(const GraphicContextPtr &gc, const TransferBufferPtr &buffer, int dest_pos = 0, int src_pos = 0, int size = -1) = 0;
+		virtual void copy_to(const GraphicContextPtr &gc, const StagingBufferPtr &buffer, int dest_pos = 0, int src_pos = 0, int size = -1) = 0;
 	};
 
 	typedef std::shared_ptr<StorageBuffer> StorageBufferPtr;

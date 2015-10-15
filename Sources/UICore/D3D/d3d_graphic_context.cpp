@@ -31,7 +31,7 @@
 #include "d3d_display_window.h"
 #include "d3d_texture_object.h"
 #include "d3d_element_array_buffer.h"
-#include "d3d_transfer_texture.h"
+#include "d3d_staging_texture.h"
 #include "d3d_frame_buffer.h"
 #include "d3d_occlusion_query.h"
 #include "d3d_program_object.h"
@@ -42,8 +42,8 @@
 #include "d3d_uniform_buffer.h"
 #include "d3d_storage_buffer.h"
 #include "d3d_element_array_buffer.h"
-#include "d3d_transfer_buffer.h"
-#include "UICore/Display/Render/transfer_texture.h"
+#include "d3d_staging_buffer.h"
+#include "UICore/Display/Render/staging_texture.h"
 #include "UICore/Display/Window/display_window_description.h"
 #include "UICore/D3D/d3d_target.h"
 
@@ -151,7 +151,7 @@ namespace uicore
 	{
 		// To do: fetch format from window->get_back_buffer()->GetDesc(&desc)
 		// To do: window->get_back_buffer() is only correct when no frame buffer is bound
-		auto pixels = std::make_shared<D3DTransferTexture>(window->get_device(), nullptr, rect.size(), data_from_gpu, texture_format, usage_stream_copy);
+		auto pixels = std::make_shared<D3DStagingTexture>(window->get_device(), nullptr, rect.size(), StagingDirection::from_gpu, texture_format, usage_stream_copy);
 		D3D11_BOX box;
 		box.left = rect.left;
 		box.top = rect.top;
@@ -278,14 +278,14 @@ namespace uicore
 		return std::make_shared<D3DUniformBuffer>(window->get_device(), data, size, usage);
 	}
 
-	std::shared_ptr<TransferBuffer> D3DGraphicContext::create_transfer_buffer(int size, BufferUsage usage)
+	std::shared_ptr<StagingBuffer> D3DGraphicContext::create_staging_buffer(int size, BufferUsage usage)
 	{
-		return std::make_shared<D3DTransferBuffer>(window->get_device(), size, usage);
+		return std::make_shared<D3DStagingBuffer>(window->get_device(), size, usage);
 	}
 
-	std::shared_ptr<TransferBuffer> D3DGraphicContext::create_transfer_buffer(const void *data, int size, BufferUsage usage)
+	std::shared_ptr<StagingBuffer> D3DGraphicContext::create_staging_buffer(const void *data, int size, BufferUsage usage)
 	{
-		return std::make_shared<D3DTransferBuffer>(window->get_device(), data, size, usage);
+		return std::make_shared<D3DStagingBuffer>(window->get_device(), data, size, usage);
 	}
 
 	std::shared_ptr<PrimitivesArray> D3DGraphicContext::create_primitives_array()
@@ -328,9 +328,9 @@ namespace uicore
 		return std::make_shared<TextureCubeArrayImpl<D3DTextureObject>>(D3DTextureObject::InitData(window->get_device(), window->get_feature_level()), width, height, array_size, texture_format, levels);
 	}
 
-	std::shared_ptr<TransferTexture> D3DGraphicContext::create_transfer_texture(const void *data, const Size &size, PixelBufferDirection direction, TextureFormat format, BufferUsage usage)
+	std::shared_ptr<StagingTexture> D3DGraphicContext::create_staging_texture(const void *data, const Size &size, StagingDirection direction, TextureFormat format, BufferUsage usage)
 	{
-		return std::make_shared<D3DTransferTexture>(window->get_device(), data, size, direction, format, usage);
+		return std::make_shared<D3DStagingTexture>(window->get_device(), data, size, direction, format, usage);
 	}
 
 	void D3DGraphicContext::set_rasterizer_state(const RasterizerStatePtr &state)

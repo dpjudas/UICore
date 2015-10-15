@@ -37,7 +37,7 @@
 #include "gl1_primitives_array.h"
 #include "gl1_vertex_array_buffer.h"
 #include "gl1_uniform_buffer.h"
-#include "gl1_transfer_buffer.h"
+#include "gl1_staging_buffer.h"
 #include "UICore/Core/System/databuffer.h"
 #include "UICore/Core/Math/vec3.h"
 #include "UICore/Core/Text/text.h"
@@ -359,14 +359,14 @@ namespace uicore
 		return std::make_shared<GL1UniformBuffer>(data, size, usage);
 	}
 
-	std::shared_ptr<TransferBuffer> GL1GraphicContext::create_transfer_buffer(int size, BufferUsage usage)
+	std::shared_ptr<StagingBuffer> GL1GraphicContext::create_staging_buffer(int size, BufferUsage usage)
 	{
-		return std::make_shared<GL1TransferBuffer>(size, usage);
+		return std::make_shared<GL1StagingBuffer>(size, usage);
 	}
 
-	std::shared_ptr<TransferBuffer> GL1GraphicContext::create_transfer_buffer(const void *data, int size, BufferUsage usage)
+	std::shared_ptr<StagingBuffer> GL1GraphicContext::create_staging_buffer(const void *data, int size, BufferUsage usage)
 	{
-		return std::make_shared<GL1TransferBuffer>(data, size, usage);
+		return std::make_shared<GL1StagingBuffer>(data, size, usage);
 	}
 
 	std::shared_ptr<PrimitivesArray> GL1GraphicContext::create_primitives_array()
@@ -409,7 +409,7 @@ namespace uicore
 		return std::make_shared<TextureCubeArrayImpl<GL1TextureObject>>(GL1TextureObject::InitData(), width, height, array_size, texture_format, levels);
 	}
 
-	std::shared_ptr<TransferTexture> GL1GraphicContext::create_transfer_texture(const void *data, const Size &new_size, PixelBufferDirection direction, TextureFormat new_format, BufferUsage usage)
+	std::shared_ptr<StagingTexture> GL1GraphicContext::create_staging_texture(const void *data, const Size &new_size, StagingDirection direction, TextureFormat new_format, BufferUsage usage)
 	{
 		throw Exception("Transfer textures are not supported for OpenGL 1.3");
 	}

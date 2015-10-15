@@ -27,31 +27,20 @@
 **    Mark Page
 */
 
-#pragma once
-
-#include "UICore/Display/Render/transfer_buffer.h"
-#include "UICore/GL/opengl.h"
-#include "UICore/Core/System/disposable_object.h"
-#include "gl3_buffer_object.h"
+#include "UICore/precomp.h"
+#include "UICore/Display/Render/staging_texture.h"
+#include "UICore/Display/Render/graphic_context.h"
+#include "UICore/Display/Render/graphic_context_impl.h"
 
 namespace uicore
 {
-	class GL3GraphicContext;
-
-	class GL3TransferBuffer : public TransferBuffer
+	std::shared_ptr<StagingTexture> StagingTexture::create(const GraphicContextPtr &gc, int width, int height, StagingDirection direction, TextureFormat texture_format, const void *data, BufferUsage usage)
 	{
-	public:
-		GL3TransferBuffer(int size, BufferUsage usage);
-		GL3TransferBuffer(const void *data, int size, BufferUsage usage);
+		return static_cast<GraphicContextImpl*>(gc.get())->create_staging_texture(data, Size(width, height), direction, texture_format, usage);
+	}
 
-		void *data() override { return buffer.get_data(); }
-		GLuint get_handle() const { return buffer.get_handle(); }
-
-		void lock(const GraphicContextPtr &gc, BufferAccess access) override { buffer.lock(gc, access); }
-		void unlock() override { buffer.unlock(); }
-		void upload_data(const GraphicContextPtr &gc, int offset, const void *data, int size) override { buffer.upload_data(gc, offset, data, size); }
-
-	private:
-		GL3BufferObject buffer;
-	};
+	std::shared_ptr<StagingTexture> StagingTexture::create(const GraphicContextPtr &gc, const PixelBufferPtr &pbuff, StagingDirection direction, BufferUsage usage)
+	{
+		return static_cast<GraphicContextImpl*>(gc.get())->create_staging_texture(pbuff->data(), pbuff->size(), direction, pbuff->format(), usage);
+	}
 }

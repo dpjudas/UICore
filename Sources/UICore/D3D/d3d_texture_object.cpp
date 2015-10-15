@@ -28,11 +28,11 @@
 
 #include "UICore/precomp.h"
 #include "d3d_texture_object.h"
-#include "d3d_transfer_texture.h"
+#include "d3d_staging_texture.h"
 #include "d3d_graphic_context.h"
 #include "d3d_display_window.h"
 #include "UICore/Display/Image/pixel_buffer.h"
-#include "UICore/Display/Render/transfer_texture.h"
+#include "UICore/Display/Render/staging_texture.h"
 #include "UICore/D3D/d3d_target.h"
 
 namespace uicore
@@ -735,8 +735,8 @@ namespace uicore
 			format = texture_desc.Format;
 		}
 
-		auto pixels = TransferTexture::create(gc, width, height, data_from_gpu, from_d3d_format(format));
-		D3DTransferTexture *pb_provider = static_cast<D3DTransferTexture *>(pixels.get());
+		auto pixels = StagingTexture::create(gc, width, height, StagingDirection::from_gpu, from_d3d_format(format));
+		D3DStagingTexture *pb_provider = static_cast<D3DStagingTexture *>(pixels.get());
 		D3D11_BOX box;
 		box.left = 0;
 		box.top = 0;
@@ -799,7 +799,7 @@ namespace uicore
 
 		int dest_subresource = D3D11CalcSubresource(level, array_slice, mip_levels);
 
-		D3DTransferTexture *pb_provider = dynamic_cast<D3DTransferTexture*>(source_image.get());
+		D3DStagingTexture *pb_provider = dynamic_cast<D3DStagingTexture*>(source_image.get());
 		if (pb_provider)
 		{
 			int src_subresource = D3D11CalcSubresource(0, 0, 1);

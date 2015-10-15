@@ -28,18 +28,18 @@
 */
 
 #include "UICore/precomp.h"
-#include "gl3_transfer_texture.h"
+#include "gl3_staging_texture.h"
 #include "gl3_graphic_context.h"
 #include "UICore/GL/opengl_wrap.h"
 
 namespace uicore
 {
-	GL3TransferTexture::GL3TransferTexture(const void *data, const Size &new_size, PixelBufferDirection direction, TextureFormat new_format, BufferUsage usage)
+	GL3StagingTexture::GL3StagingTexture(const void *data, const Size &new_size, StagingDirection direction, TextureFormat new_format, BufferUsage usage)
 	{
 		data_locked = false;
 		texture_format = new_format;
 		_size = new_size;
-		if (direction == data_from_gpu)
+		if (direction == StagingDirection::from_gpu)
 		{
 			selected_binding = GL_PIXEL_PACK_BUFFER_BINDING;
 			selected_target = GL_PIXEL_PACK_BUFFER;
@@ -58,11 +58,11 @@ namespace uicore
 		buffer.create(data, total_size, usage, selected_binding, selected_target);
 	}
 
-	GL3TransferTexture::~GL3TransferTexture()
+	GL3StagingTexture::~GL3StagingTexture()
 	{
 	}
 
-	void GL3TransferTexture::upload_data(const GraphicContextPtr &gc, const Rect &dest_rect, const void *data)
+	void GL3StagingTexture::upload_data(const GraphicContextPtr &gc, const Rect &dest_rect, const void *data)
 	{
 		// Handle the simple base
 		if (dest_rect.left == 0 && dest_rect.width() == _size.width)
@@ -74,11 +74,11 @@ namespace uicore
 		else
 		{
 			// Need to upload in blocks here
-			throw Exception("GL3TransferTexture::upload_data() Implement me for this situation");
+			throw Exception("GL3StagingTexture::upload_data() Implement me for this situation");
 		}
 	}
 
-	void *GL3TransferTexture::data()
+	void *GL3StagingTexture::data()
 	{
 		if (!data_locked)
 			throw Exception("lock() not called before get_data()");
@@ -86,7 +86,7 @@ namespace uicore
 		return buffer.get_data();
 	}
 
-	const void *GL3TransferTexture::data() const
+	const void *GL3StagingTexture::data() const
 	{
 		if (!data_locked)
 			throw Exception("lock() not called before get_data()");

@@ -37,7 +37,7 @@
 namespace uicore
 {
 	class GraphicContext;
-	class TransferBuffer;
+	class StagingBuffer;
 	class GL3GraphicContext;
 
 	class GL3BufferObject : GLSharedResource
@@ -59,8 +59,8 @@ namespace uicore
 		void upload_data(const GraphicContextPtr &gc, int offset, const void *data, int size);
 
 		void upload_data(const GraphicContextPtr &gc, const void *data, int size);
-		void copy_from(const GraphicContextPtr &gc, const TransferBufferPtr &buffer, int dest_pos, int src_pos, int size);
-		void copy_to(const GraphicContextPtr &gc, const TransferBufferPtr &buffer, int dest_pos, int src_pos, int size);
+		void copy_from(const GraphicContextPtr &gc, const StagingBufferPtr &buffer, int dest_pos, int src_pos, int size);
+		void copy_to(const GraphicContextPtr &gc, const StagingBufferPtr &buffer, int dest_pos, int src_pos, int size);
 
 	private:
 		void on_dispose() override;

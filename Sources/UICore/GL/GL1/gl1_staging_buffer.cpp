@@ -28,19 +28,33 @@
 */
 
 #include "UICore/precomp.h"
-#include "gl3_transfer_buffer.h"
-#include "gl3_graphic_context.h"
-#include "UICore/GL/opengl_wrap.h"
+#include "gl1_staging_buffer.h"
 
 namespace uicore
 {
-	GL3TransferBuffer::GL3TransferBuffer(int size, BufferUsage usage)
+	GL1StagingBuffer::GL1StagingBuffer(int new_size, BufferUsage usage)
 	{
-		buffer.create(nullptr, size, usage, 0, GL_COPY_WRITE_BUFFER);
+		data_ptr = new char[new_size];
+		size = new_size;
 	}
 
-	GL3TransferBuffer::GL3TransferBuffer(const void *data, int size, BufferUsage usage)
+	GL1StagingBuffer::GL1StagingBuffer(const void *init_data, int new_size, BufferUsage usage)
 	{
-		buffer.create(data, size, usage, 0, GL_COPY_WRITE_BUFFER);
+		data_ptr = new char[new_size];
+		size = new_size;
+		memcpy(data_ptr, init_data, size);
+	}
+
+	GL1StagingBuffer::~GL1StagingBuffer()
+	{
+		delete[] data_ptr;
+	}
+
+	void GL1StagingBuffer::upload_data(const GraphicContextPtr &gc, int offset, const void *data, int size)
+	{
+		if ((size < 0) || (offset < 0) || ((size + offset) > this->size))
+			throw Exception("Transfer buffer, invalid size");
+
+		memcpy(data_ptr + offset, data, size);
 	}
 }

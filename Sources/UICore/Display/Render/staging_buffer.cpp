@@ -27,20 +27,20 @@
 */
 
 #include "UICore/precomp.h"
-#include "UICore/Display/Render/transfer_buffer.h"
+#include "UICore/Display/Render/staging_buffer.h"
 #include "UICore/Display/Render/graphic_context.h"
 #include "UICore/Display/Render/graphic_context_impl.h"
 #include "UICore/Core/System/exception.h"
 
 namespace uicore
 {
-	std::shared_ptr<TransferBuffer> TransferBuffer::create(const GraphicContextPtr &gc, int size, BufferUsage usage)
+	std::shared_ptr<StagingBuffer> StagingBuffer::create(const GraphicContextPtr &gc, int size, BufferUsage usage)
 	{
-		return static_cast<GraphicContextImpl*>(gc.get())->create_transfer_buffer(size, usage);
+		return static_cast<GraphicContextImpl*>(gc.get())->create_staging_buffer(size, usage);
 	}
 
-	std::shared_ptr<TransferBuffer> TransferBuffer::create(const GraphicContextPtr &gc, const void *data, int size, BufferUsage usage)
+	std::shared_ptr<StagingBuffer> StagingBuffer::create(const GraphicContextPtr &gc, const void *data, int size, BufferUsage usage)
 	{
-		return static_cast<GraphicContextImpl*>(gc.get())->create_transfer_buffer(data, size, usage);
+		return static_cast<GraphicContextImpl*>(gc.get())->create_staging_buffer(data, size, usage);
 	}
 }

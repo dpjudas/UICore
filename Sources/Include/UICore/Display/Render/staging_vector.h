@@ -28,44 +28,44 @@
 
 #pragma once
 
-#include "transfer_buffer.h"
+#include "staging_buffer.h"
 
 namespace uicore
 {
 	/// \brief Typed access to a transfer buffer
 	template<typename Type>
-	class TransferVector
+	class StagingVector
 	{
 	public:
 		/// \brief Constructs a transfer vector
-		TransferVector()
+		StagingVector()
 		{
 		}
 
-		TransferVector(const TransferBufferPtr &transfer_buffer)
-			: _buffer(transfer_buffer)
+		StagingVector(const StagingBufferPtr &staging_buffer)
+			: _buffer(staging_buffer)
 		{
 		}
 
-		TransferVector(const GraphicContextPtr &gc, int size, BufferUsage usage = usage_dynamic_copy)
-			: _buffer(TransferBuffer::create(gc, size * sizeof(Type), usage))
+		StagingVector(const GraphicContextPtr &gc, int size, BufferUsage usage = usage_dynamic_copy)
+			: _buffer(StagingBuffer::create(gc, size * sizeof(Type), usage))
 		{
 		}
 
-		TransferVector(const GraphicContextPtr &gc, Type *data, int size, BufferUsage usage = usage_dynamic_copy)
-			: _buffer(TransferBuffer::create(gc, data, size * sizeof(Type), usage))
+		StagingVector(const GraphicContextPtr &gc, Type *data, int size, BufferUsage usage = usage_dynamic_copy)
+			: _buffer(StagingBuffer::create(gc, data, size * sizeof(Type), usage))
 		{
 		}
 
-		TransferVector(const GraphicContextPtr &gc, const std::vector<Type> &data, BufferUsage usage = usage_dynamic_copy)
-			: _buffer(TransferBuffer::create(gc, data.empty() ? (Type*)0 : &data[0], data.size() * sizeof(Type), usage))
+		StagingVector(const GraphicContextPtr &gc, const std::vector<Type> &data, BufferUsage usage = usage_dynamic_copy)
+			: _buffer(StagingBuffer::create(gc, data.empty() ? (Type*)0 : &data[0], data.size() * sizeof(Type), usage))
 		{
 		}
 
 		/// Returns the buffer used by the vector
-		const TransferBufferPtr &buffer() const { return _buffer; }
+		const StagingBufferPtr &buffer() const { return _buffer; }
 
-		operator const TransferBufferPtr &() const { return buffer(); }
+		operator const StagingBufferPtr &() const { return buffer(); }
 
 		/// \brief Retrieves a pointer to the mapped buffer.
 		Type *data() { return reinterpret_cast<Type*>(_buffer->data()); }
@@ -89,6 +89,6 @@ namespace uicore
 		}
 
 	private:
-		TransferBufferPtr _buffer;
+		StagingBufferPtr _buffer;
 	};
 }

@@ -34,9 +34,9 @@
 namespace uicore
 {
 	class GraphicContext;
-	class TransferBuffer;
+	class StagingBuffer;
 	typedef std::shared_ptr<GraphicContext> GraphicContextPtr;
-	typedef std::shared_ptr<TransferBuffer> TransferBufferPtr;
+	typedef std::shared_ptr<StagingBuffer> StagingBufferPtr;
 
 	/// \brief Vertex Array Buffer
 	class VertexArrayBuffer
@@ -50,10 +50,10 @@ namespace uicore
 		virtual void upload_data(const GraphicContextPtr &gc, int offset, const void *data, int size) = 0;
 
 		/// \brief Copies data from transfer buffer
-		virtual void copy_from(const GraphicContextPtr &gc, const TransferBufferPtr &buffer, int dest_pos = 0, int src_pos = 0, int size = -1) = 0;
+		virtual void copy_from(const GraphicContextPtr &gc, const StagingBufferPtr &buffer, int dest_pos = 0, int src_pos = 0, int size = -1) = 0;
 
 		/// \brief Copies data to transfer buffer
-		virtual void copy_to(const GraphicContextPtr &gc, const TransferBufferPtr &buffer, int dest_pos = 0, int src_pos = 0, int size = -1) = 0;
+		virtual void copy_to(const GraphicContextPtr &gc, const StagingBufferPtr &buffer, int dest_pos = 0, int src_pos = 0, int size = -1) = 0;
 	};
 
 	typedef std::shared_ptr<VertexArrayBuffer> VertexArrayBufferPtr;

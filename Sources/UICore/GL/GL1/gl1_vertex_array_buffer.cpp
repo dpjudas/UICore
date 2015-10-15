@@ -28,7 +28,7 @@
 
 #include "UICore/precomp.h"
 #include "gl1_vertex_array_buffer.h"
-#include "UICore/Display/Render/transfer_buffer.h"
+#include "UICore/Display/Render/staging_buffer.h"
 
 namespace uicore
 {
@@ -64,14 +64,14 @@ namespace uicore
 		memcpy(data + offset, new_data, new_size);
 	}
 
-	void GL1VertexArrayBuffer::copy_from(const GraphicContextPtr &gc, const TransferBufferPtr &buffer, int dest_pos, int src_pos, int size)
+	void GL1VertexArrayBuffer::copy_from(const GraphicContextPtr &gc, const StagingBufferPtr &buffer, int dest_pos, int src_pos, int size)
 	{
 		buffer->lock(gc, access_read_only);
 		memcpy(this->data + dest_pos, (char *)buffer->data() + src_pos, size);
 		buffer->unlock();
 	}
 
-	void GL1VertexArrayBuffer::copy_to(const GraphicContextPtr &gc, const TransferBufferPtr &buffer, int dest_pos, int src_pos, int size)
+	void GL1VertexArrayBuffer::copy_to(const GraphicContextPtr &gc, const StagingBufferPtr &buffer, int dest_pos, int src_pos, int size)
 	{
 		buffer->upload_data(gc, dest_pos, this->data + src_pos, size);
 	}

@@ -77,7 +77,7 @@ namespace uicore
 		}
 
 		/// \brief Copies data from transfer buffer
-		void copy_from(const GraphicContextPtr &gc, TransferVector<Type> &buffer, int dest_pos = 0, int src_pos = 0, int size = -1)
+		void copy_from(const GraphicContextPtr &gc, StagingVector<Type> &buffer, int dest_pos = 0, int src_pos = 0, int size = -1)
 		{
 			if (size != -1)
 				size = size * sizeof(Type);
@@ -85,7 +85,7 @@ namespace uicore
 		}
 
 		/// \brief Copies data to transfer buffer
-		void copy_to(const GraphicContextPtr &gc, TransferVector<Type> &buffer, int dest_pos = 0, int src_pos = 0, int size = -1)
+		void copy_to(const GraphicContextPtr &gc, StagingVector<Type> &buffer, int dest_pos = 0, int src_pos = 0, int size = -1)
 		{
 			if (size != -1)
 				size = size * sizeof(Type);

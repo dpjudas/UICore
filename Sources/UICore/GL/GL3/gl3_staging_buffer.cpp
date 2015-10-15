@@ -28,19 +28,19 @@
 */
 
 #include "UICore/precomp.h"
-#include "UICore/Display/Render/transfer_texture.h"
-#include "UICore/Display/Render/graphic_context.h"
-#include "UICore/Display/Render/graphic_context_impl.h"
+#include "gl3_staging_buffer.h"
+#include "gl3_graphic_context.h"
+#include "UICore/GL/opengl_wrap.h"
 
 namespace uicore
 {
-	std::shared_ptr<TransferTexture> TransferTexture::create(const GraphicContextPtr &gc, int width, int height, PixelBufferDirection direction, TextureFormat texture_format, const void *data, BufferUsage usage)
+	GL3StagingBuffer::GL3StagingBuffer(int size, BufferUsage usage)
 	{
-		return static_cast<GraphicContextImpl*>(gc.get())->create_transfer_texture(data, Size(width, height), direction, texture_format, usage);
+		buffer.create(nullptr, size, usage, 0, GL_COPY_WRITE_BUFFER);
 	}
 
-	std::shared_ptr<TransferTexture> TransferTexture::create(const GraphicContextPtr &gc, const PixelBufferPtr &pbuff, PixelBufferDirection direction, BufferUsage usage)
+	GL3StagingBuffer::GL3StagingBuffer(const void *data, int size, BufferUsage usage)
 	{
-		return static_cast<GraphicContextImpl*>(gc.get())->create_transfer_texture(pbuff->data(), pbuff->size(), direction, pbuff->format(), usage);
+		buffer.create(data, size, usage, 0, GL_COPY_WRITE_BUFFER);
 	}
 }

@@ -30,7 +30,7 @@
 #include "UICore/precomp.h"
 #include "gl3_buffer_object.h"
 #include "gl3_graphic_context.h"
-#include "gl3_transfer_buffer.h"
+#include "gl3_staging_buffer.h"
 #include "UICore/GL/opengl_wrap.h"
 
 namespace uicore
@@ -134,13 +134,13 @@ namespace uicore
 		upload_data(gc, 0, data, size);
 	}
 
-	void GL3BufferObject::copy_from(const GraphicContextPtr &gc, const TransferBufferPtr &buffer, int dest_pos, int src_pos, int size)
+	void GL3BufferObject::copy_from(const GraphicContextPtr &gc, const StagingBufferPtr &buffer, int dest_pos, int src_pos, int size)
 	{
 		throw_if_disposed();
 		OpenGL::set_active(gc);
 
 		glBindBuffer(GL_COPY_WRITE_BUFFER, handle);
-		glBindBuffer(GL_COPY_READ_BUFFER, static_cast<GL3TransferBuffer*>(buffer.get())->get_handle());
+		glBindBuffer(GL_COPY_READ_BUFFER, static_cast<GL3StagingBuffer*>(buffer.get())->get_handle());
 
 		glCopyBufferSubData(GL_COPY_READ_BUFFER, GL_COPY_WRITE_BUFFER, src_pos, dest_pos, size);
 
@@ -148,12 +148,12 @@ namespace uicore
 		glBindBuffer(GL_COPY_READ_BUFFER, 0);
 	}
 
-	void GL3BufferObject::copy_to(const GraphicContextPtr &gc, const TransferBufferPtr &buffer, int dest_pos, int src_pos, int size)
+	void GL3BufferObject::copy_to(const GraphicContextPtr &gc, const StagingBufferPtr &buffer, int dest_pos, int src_pos, int size)
 	{
 		throw_if_disposed();
 		OpenGL::set_active(gc);
 
-		glBindBuffer(GL_COPY_WRITE_BUFFER, static_cast<GL3TransferBuffer*>(buffer.get())->get_handle());
+		glBindBuffer(GL_COPY_WRITE_BUFFER, static_cast<GL3StagingBuffer*>(buffer.get())->get_handle());
 		glBindBuffer(GL_COPY_READ_BUFFER, handle);
 
 		glCopyBufferSubData(GL_COPY_READ_BUFFER, GL_COPY_WRITE_BUFFER, dest_pos, src_pos, size);

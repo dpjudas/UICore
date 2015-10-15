@@ -24,47 +24,31 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    Mark Page
 */
 
 #pragma once
 
-#include "UICore/Display/Render/transfer_buffer.h"
-#include "UICore/Core/System/comptr.h"
+#include "UICore/Display/Render/staging_buffer.h"
+#include "UICore/Core/System/disposable_object.h"
 
 namespace uicore
 {
-	class D3DTransferBuffer : public TransferBuffer
+	class GL1StagingBuffer : public StagingBuffer
 	{
 	public:
-		D3DTransferBuffer(const ComPtr<ID3D11Device> &device, int size, BufferUsage usage);
-		D3DTransferBuffer(const ComPtr<ID3D11Device> &device, const void *data, int size, BufferUsage usage);
-		~D3DTransferBuffer();
+		GL1StagingBuffer(int size, BufferUsage usage);
+		GL1StagingBuffer(const void *data, int size, BufferUsage usage);
+		~GL1StagingBuffer();
 
-		void *data() override;
-		ComPtr<ID3D11Buffer> &get_buffer(const ComPtr<ID3D11Device> &device);
+		void *data() override { return data_ptr; }
 
-		int get_size() const { return size; }
-
-		void lock(const GraphicContextPtr &gc, BufferAccess access) override;
-		void unlock() override;
+		void lock(const GraphicContextPtr &gc, BufferAccess access) override {}
+		void unlock() override {}
 		void upload_data(const GraphicContextPtr &gc, int offset, const void *data, int size) override;
 
 	private:
-		struct DeviceHandles
-		{
-			DeviceHandles(const ComPtr<ID3D11Device> &device) : device(device) { }
-			ComPtr<ID3D11Device> device;
-			ComPtr<ID3D11Buffer> buffer;
-		};
-
-		void device_destroyed(ID3D11Device *device);
-		DeviceHandles &get_handles(const ComPtr<ID3D11Device> &device);
-
-		static D3D11_MAP to_d3d_map_type(BufferAccess access);
-
-		std::vector<std::shared_ptr<DeviceHandles> > handles;
-		D3D11_MAPPED_SUBRESOURCE map_data;
-		ComPtr<ID3D11Device> map_device;
+		char *data_ptr = nullptr;
 		int size = 0;
 	};
 }

@@ -35,7 +35,7 @@
 #include "UICore/Core/Text/string_format.h"
 #include "d3d_target_provider.h"
 #include "d3d_texture_object.h"
-#include "d3d_transfer_texture.h"
+#include "d3d_staging_texture.h"
 #include "d3d_render_buffer.h"
 #include "d3d_vertex_array_buffer.h"
 #include "d3d_element_array_buffer.h"
@@ -70,7 +70,7 @@ namespace uicore
 
 	ID3D11Texture2D *D3DTarget::get_texture2d_handle(const GraphicContextPtr &gc, const PixelBufferPtr &pixel_buffer)
 	{
-		//D3DTransferTexture *provider = static_cast<D3DTransferTexture *>(pixel_buffer.get());
+		//D3DStagingTexture *provider = static_cast<D3DStagingTexture *>(pixel_buffer.get());
 		//return provider->get_texture_2d();
 		return 0;
 	}

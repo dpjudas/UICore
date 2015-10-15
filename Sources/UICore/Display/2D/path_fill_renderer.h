@@ -37,7 +37,7 @@
 #include "UICore/Display/Render/blend_state_description.h"
 #include "UICore/Display/Render/shader_object.h"
 #include "UICore/Display/Render/texture_2d.h"
-#include "UICore/Display/Render/transfer_texture.h"
+#include "UICore/Display/Render/staging_texture.h"
 #include "UICore/Display/Image/pixel_buffer.h"
 #include "UICore/Display/Render/program_object.h"
 #include "render_batch_buffer.h"
@@ -250,10 +250,10 @@ namespace uicore
 
 		RenderBatchBuffer *batch_buffer;
 
-		TransferTexturePtr mask_buffer;
+		StagingTexturePtr mask_buffer;
 		int mask_buffer_id;	// Buffer index of the mask buffer
 		Texture2DPtr mask_texture;
-		TransferTexturePtr instance_buffer;
+		StagingTexturePtr instance_buffer;
 		Texture2DPtr instance_texture;
 		PrimitivesArrayPtr prim_array[RenderBatchBuffer::num_vertex_buffers];
 		BlendStatePtr blend_state;

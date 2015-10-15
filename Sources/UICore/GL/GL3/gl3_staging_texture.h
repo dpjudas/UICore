@@ -30,7 +30,7 @@
 #pragma once
 
 
-#include "UICore/Display/Render/transfer_texture.h"
+#include "UICore/Display/Render/staging_texture.h"
 #include "UICore/GL/opengl.h"
 #include "UICore/Core/System/disposable_object.h"
 #include "gl3_buffer_object.h"
@@ -39,11 +39,11 @@ namespace uicore
 {
 	class GL3GraphicContext;
 
-	class GL3TransferTexture : public TransferTexture
+	class GL3StagingTexture : public StagingTexture
 	{
 	public:
-		GL3TransferTexture(const void *data, const Size &new_size, PixelBufferDirection direction, TextureFormat new_format, BufferUsage usage);
-		~GL3TransferTexture();
+		GL3StagingTexture(const void *data, const Size &new_size, StagingDirection direction, TextureFormat new_format, BufferUsage usage);
+		~GL3StagingTexture();
 
 		void *data() override;
 		const void *data() const override;

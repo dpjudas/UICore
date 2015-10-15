@@ -32,7 +32,7 @@
 #include "UICore/Display/Render/texture.h"
 #include "UICore/Display/Render/graphic_context.h"
 #include "UICore/Display/Render/texture_2d.h"
-#include "UICore/Display/Render/transfer_texture.h"
+#include "UICore/Display/Render/staging_texture.h"
 #include "UICore/Display/2D/render_batcher.h"
 
 namespace uicore
@@ -45,9 +45,9 @@ namespace uicore
 		VertexArrayBufferPtr get_vertex_buffer(const GraphicContextPtr &gc, int &out_index);
 		Texture2DPtr get_texture_rgba32f(const GraphicContextPtr &gc);
 		Texture2DPtr get_texture_r8(const GraphicContextPtr &gc);
-		TransferTexturePtr get_transfer_rgba32f(const GraphicContextPtr &gc);
+		StagingTexturePtr get_transfer_rgba32f(const GraphicContextPtr &gc);
 
-		TransferTexturePtr get_transfer_r8(const GraphicContextPtr &gc, int &out_index);
+		StagingTexturePtr get_transfer_r8(const GraphicContextPtr &gc, int &out_index);
 		static const int num_vertex_buffers = 4;
 		enum { vertex_buffer_size = 1024 * 1024 };
 		char buffer[vertex_buffer_size];
@@ -68,9 +68,9 @@ namespace uicore
 		Texture2DPtr textures_r8[num_r8_buffers];
 		int current_r8_texture = 0;
 
-		TransferTexturePtr transfers_rgba32f[num_rgba32f_buffers];
+		StagingTexturePtr transfers_rgba32f[num_rgba32f_buffers];
 		int current_rgba32f_transfer = 0;
-		TransferTexturePtr transfers_r8[num_r8_buffers];
+		StagingTexturePtr transfers_r8[num_r8_buffers];
 		int current_r8_transfer = 0;
 	};
 }

@@ -28,7 +28,7 @@
 
 #pragma once
 
-#include "UICore/Display/Render/transfer_texture.h"
+#include "UICore/Display/Render/staging_texture.h"
 #include "UICore/Core/System/comptr.h"
 #include "d3d_share_list.h"
 
@@ -36,11 +36,11 @@ namespace uicore
 {
 	class D3DGraphicContext;
 
-	class D3DTransferTexture : public TransferTexture, D3DSharedResource
+	class D3DStagingTexture : public StagingTexture, D3DSharedResource
 	{
 	public:
-		D3DTransferTexture(const ComPtr<ID3D11Device> &device, const void *data, const Size &new_size, PixelBufferDirection direction, TextureFormat new_format, BufferUsage usage);
-		~D3DTransferTexture();
+		D3DStagingTexture(const ComPtr<ID3D11Device> &device, const void *data, const Size &new_size, StagingDirection direction, TextureFormat new_format, BufferUsage usage);
+		~D3DStagingTexture();
 
 		void *data() override;
 		const void *data() const override;
@@ -73,7 +73,7 @@ namespace uicore
 		DeviceHandles &get_handles(const ComPtr<ID3D11Device> &device);
 
 		static D3D11_MAP to_d3d_map_type(BufferAccess access);
-		static UINT to_d3d_cpu_access(PixelBufferDirection direction);
+		static UINT to_d3d_cpu_access(StagingDirection direction);
 
 		std::vector<std::shared_ptr<DeviceHandles> > handles;
 		D3D11_MAPPED_SUBRESOURCE map_data;

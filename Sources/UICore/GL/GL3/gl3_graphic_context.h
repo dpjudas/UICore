@@ -117,8 +117,8 @@ namespace uicore
 		std::shared_ptr<VertexArrayBuffer> create_vertex_array_buffer(const void *data, int size, BufferUsage usage) override;
 		std::shared_ptr<UniformBuffer> create_uniform_buffer(int size, BufferUsage usage) override;
 		std::shared_ptr<UniformBuffer> create_uniform_buffer(const void *data, int size, BufferUsage usage) override;
-		std::shared_ptr<TransferBuffer> create_transfer_buffer(int size, BufferUsage usage) override;
-		std::shared_ptr<TransferBuffer> create_transfer_buffer(const void *data, int size, BufferUsage usage) override;
+		std::shared_ptr<StagingBuffer> create_staging_buffer(int size, BufferUsage usage) override;
+		std::shared_ptr<StagingBuffer> create_staging_buffer(const void *data, int size, BufferUsage usage) override;
 		std::shared_ptr<PrimitivesArray> create_primitives_array() override;
 		std::shared_ptr<Texture1D> create_texture_1d(int width, TextureFormat texture_format, int levels) override;
 		std::shared_ptr<Texture1DArray> create_texture_1d_array(int width, int array_size, TextureFormat texture_format, int levels) override;
@@ -127,7 +127,7 @@ namespace uicore
 		std::shared_ptr<Texture3D> create_texture_3d(int width, int height, int depth, TextureFormat texture_format, int levels) override;
 		std::shared_ptr<TextureCube> create_texture_cube(int width, int height, TextureFormat texture_format, int levels) override;
 		std::shared_ptr<TextureCubeArray> create_texture_cube_array(int width, int height, int array_size, TextureFormat texture_format, int levels) override;
-		std::shared_ptr<TransferTexture> create_transfer_texture(const void *data, const Size &size, PixelBufferDirection direction, TextureFormat new_format, BufferUsage usage) override;
+		std::shared_ptr<StagingTexture> create_staging_texture(const void *data, const Size &size, StagingDirection direction, TextureFormat new_format, BufferUsage usage) override;
 		void set_rasterizer_state(const RasterizerStatePtr &state) override;
 		void set_blend_state(const BlendStatePtr &state, const Colorf &blend_color, unsigned int sample_mask) override;
 		void set_depth_stencil_state(const DepthStencilStatePtr &state, int stencil_ref) override;
