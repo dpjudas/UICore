@@ -18,7 +18,7 @@
 **     misrepresented as being the original software.
 **  3. This notice may not be removed or altered from any source distribution.
 **
-**  Note: Some of the libraries ClanLib may link to may have additional
+**  Note: Some of the libraries UICore may link to may have additional
 **  requirements or restrictions.
 **
 **  File Author(s):
@@ -34,7 +34,7 @@ namespace uicore
 	/// \brief Texture format.
 	enum TextureFormat
 	{
-		// Standard ClanLib sized formats (most common listed first)
+		// Standard UICore sized formats (most common listed first)
 		tf_rgba8,
 		tf_rgb8,
 		tf_bgra8,

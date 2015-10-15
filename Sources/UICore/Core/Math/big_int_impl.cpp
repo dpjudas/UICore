@@ -18,7 +18,7 @@
 **     misrepresented as being the original software.
 **  3. This notice may not be removed or altered from any source distribution.
 **
-**  Note: Some of the libraries ClanLib may link to may have additional
+**  Note: Some of the libraries UICore may link to may have additional
 **  requirements or restrictions.
 **
 **  File Author(s):
@@ -88,7 +88,7 @@ namespace uicore
 		// Remember to clear memory when deleting
 		if (digits)
 		{
-			// memset(digits, 0, digits_alloc * sizeof(uint32_t)); <-- ClanLib does not pretend to be secure
+			// memset(digits, 0, digits_alloc * sizeof(uint32_t)); <-- UICore does not pretend to be secure
 			delete[] digits;
 			digits = nullptr;
 

@@ -18,7 +18,7 @@
 **     misrepresented as being the original software.
 **  3. This notice may not be removed or altered from any source distribution.
 **
-**  Note: Some of the libraries ClanLib may link to may have additional
+**  Note: Some of the libraries UICore may link to may have additional
 **  requirements or restrictions.
 **
 **  File Author(s):
@@ -53,7 +53,7 @@ namespace uicore
 	{
 		normal,
 		italic,
-		oblique	// Currently not supported by ClanLib
+		oblique	// Currently not supported by UICore
 	};
 
 	/// \brief Font description class.

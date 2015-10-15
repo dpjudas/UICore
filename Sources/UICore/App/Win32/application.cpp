@@ -18,7 +18,7 @@
 **     misrepresented as being the original software.
 **  3. This notice may not be removed or altered from any source distribution.
 **
-**  Note: Some of the libraries ClanLib may link to may have additional
+**  Note: Some of the libraries UICore may link to may have additional
 **  requirements or restrictions.
 **
 **  File Author(s):
@@ -91,7 +91,7 @@ int WINAPI WinMain(
 	// interface?
 	if (uicore::app_instance == 0)
 	{
-		MessageBox(NULL, TEXT("No program instance found"), TEXT("ClanLib/Win32"), 32);
+		MessageBox(NULL, TEXT("No program instance found"), TEXT("UICore/Win32"), 32);
 		return 0;
 	}
 

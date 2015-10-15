@@ -2,7 +2,7 @@
 
 ## Rationale
 
-To make sure ClanLib's X11 implementation works on major standards-compliant
+To make sure UICore's X11 implementation works on major standards-compliant
 windowing managers at all times.
 
 

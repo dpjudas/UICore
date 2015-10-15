@@ -1,6 +1,6 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
+**  UICore
+**  Copyright (c) 1997-2015 The UICore Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -18,7 +18,7 @@
 **     misrepresented as being the original software.
 **  3. This notice may not be removed or altered from any source distribution.
 **
-**  Note: Some of the libraries ClanLib may link to may have additional
+**  Note: Some of the libraries UICore may link to may have additional
 **  requirements or restrictions.
 **
 **  File Author(s):
@@ -58,7 +58,7 @@ int main(int argc, char **argv)
 {
 	if (uicore::app_instance == nullptr)
 	{
-		std::cout << "ClanLib: No global Application instance!" << std::endl;
+		std::cout << "UICore: No global Application instance!" << std::endl;
 		return 255;
 	}
 
