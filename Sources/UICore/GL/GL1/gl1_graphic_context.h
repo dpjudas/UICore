@@ -100,8 +100,8 @@ namespace uicore
 
 		Signal<void(const Size &)> &sig_window_resized() override { return window_resized_signal; }
 
-		FrameBufferPtr write_frame_buffer() const { return _write_frame_buffer; }
-		FrameBufferPtr read_frame_buffer() const { return _read_frame_buffer; }
+		FrameBufferPtr write_frame_buffer() const  override { return _write_frame_buffer; }
+		FrameBufferPtr read_frame_buffer() const  override { return _read_frame_buffer; }
 		ProgramObjectPtr program_object() const override;
 
 		ClipZRange clip_z_range() const override { return clip_negative_positive_w; }
@@ -171,7 +171,7 @@ namespace uicore
 		void set_viewport(const Rectf &viewport) override;
 		void set_viewport(int index, const Rectf &viewport) override;
 		void set_depth_range(int viewport, float n, float f) override;
-		void on_window_resized();
+		void on_window_resized() override;
 
 		ProcAddress *get_proc_address(const std::string& function_name) const override;
 
