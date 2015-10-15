@@ -39,22 +39,6 @@
 
 namespace uicore
 {
-	class ShaderObject_Impl
-	{
-	public:
-		ShaderObject_Impl() : provider(nullptr)
-		{
-		}
-
-		~ShaderObject_Impl()
-		{
-			if (provider)
-				delete provider;
-		}
-
-		ShaderObjectImpl *provider;
-	};
-
 	std::shared_ptr<ShaderObject> ShaderObject::create(const GraphicContextPtr &gc, ShaderType type, const std::string &source)
 	{
 		return static_cast<GraphicContextImpl*>(gc.get())->create_shader(type, source);
