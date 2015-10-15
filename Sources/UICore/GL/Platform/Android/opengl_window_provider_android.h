@@ -29,7 +29,7 @@
 
 #pragma once
 
-#include "UICore/Display/TargetProviders/display_window_provider.h"
+#include "UICore/Display/Window/display_window_provider.h"
 #include "UICore/Display/Render/graphic_context.h"
 #include <memory>
 #include "UICore/GL/opengl_context_description.h"
