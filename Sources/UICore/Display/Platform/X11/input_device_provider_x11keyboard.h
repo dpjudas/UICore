@@ -29,8 +29,8 @@
 
 #pragma once
 
-#include "API/Display/Window/input_device.h"
-#include "API/Display/TargetProviders/input_device_provider.h"
+#include "UICore/Display/Window/input_device.h"
+#include "UICore/Display/TargetProviders/input_device_provider.h"
 
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>

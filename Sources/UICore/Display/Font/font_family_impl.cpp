@@ -99,7 +99,7 @@ namespace uicore
 		add(desc, !ttf_filename.empty() ? File::read_all_bytes(ttf_filename) : nullptr);
 	}
 
-	void FontFamily_Impl::add(const FontDescription &desc, DataBufferPtr &font_databuffer)
+	void FontFamily_Impl::add(const FontDescription &desc, const DataBufferPtr &font_databuffer)
 	{
 		FontFamily_Definition definition;
 		definition.desc = desc.clone();

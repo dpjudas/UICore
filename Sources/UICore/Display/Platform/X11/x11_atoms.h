@@ -34,7 +34,7 @@
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 
-#include "API/Core/Text/logger.h"
+#include "UICore/Core/Text/logger.h"
 
 namespace uicore
 {

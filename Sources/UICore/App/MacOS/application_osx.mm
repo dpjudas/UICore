@@ -29,9 +29,9 @@
 
 #include "clanapp_osx.h"
 
-#include "API/Display/System/run_loop.h"
-#include "API/Core/System/exception.h"
-#include "API/App/clanapp.h"
+#include "UICore/Display/System/run_loop.h"
+#include "UICore/Core/System/exception.h"
+#include "UICore/App/clanapp.h"
 
 namespace clan
 {

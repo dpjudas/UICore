@@ -37,6 +37,7 @@
 #include "UICore/Display/Render/depth_stencil_state_description.h"
 #include "UICore/Core/Math/mat4.h"
 #include "UICore/Core/Signals/signal.h"
+#include "UICore/Display/Render/transfer_texture.h"
 
 namespace uicore
 {
@@ -63,7 +64,6 @@ namespace uicore
 	class DepthStencilStateDescription;
 	class TransferTexture;
 	enum class ShaderType;
-	enum PixelBufferDirection;
 
 	class GraphicContextImpl : public GraphicContext
 	{
@@ -100,7 +100,7 @@ namespace uicore
 
 		virtual int max_attributes() = 0;
 
-		void set_viewport(const Rectf &rect, TextureImageYAxis y_axis)
+		void set_viewport(const Rectf &rect, TextureImageYAxis y_axis) override
 		{
 			Rectf rect2 = rect;
 			if (texture_image_y_axis() != y_axis)
@@ -110,7 +110,7 @@ namespace uicore
 			set_viewport(rect2);
 		}
 
-		void set_viewport(int index, const Rectf &rect, TextureImageYAxis y_axis)
+		void set_viewport(int index, const Rectf &rect, TextureImageYAxis y_axis) override
 		{
 			Rectf rect2 = rect;
 			if (texture_image_y_axis() != y_axis)

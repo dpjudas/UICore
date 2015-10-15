@@ -29,18 +29,18 @@
 **    Chu Chin Kuan
 */
 
-#include "Display/precomp.h"
-#include "API/Core/Math/rect.h"
-#include "API/Core/Math/point.h"
-#include "API/Core/System/system.h"
-#include "API/Core/Text/logger.h"
-#include "API/Display/display_target.h"
-#include "API/Display/Window/keys.h"
-#include "API/Display/Image/pixel_buffer.h"
-#include "API/Display/TargetProviders/display_window_provider.h"
-#include "API/Display/Window/display_window.h"
-#include "API/Display/Window/display_window_description.h"
-#include "API/Display/Window/input_event.h"
+#include "UICore/precomp.h"
+#include "UICore/Core/Math/rect.h"
+#include "UICore/Core/Math/point.h"
+#include "UICore/Core/System/system.h"
+#include "UICore/Core/Text/logger.h"
+#include "UICore/Display/display_target.h"
+#include "UICore/Display/Window/keys.h"
+#include "UICore/Display/Image/pixel_buffer.h"
+#include "UICore/Display/TargetProviders/display_window_provider.h"
+#include "UICore/Display/Window/display_window.h"
+#include "UICore/Display/Window/display_window_description.h"
+#include "UICore/Display/Window/input_event.h"
 
 #include <algorithm>
 #include <cstdio>

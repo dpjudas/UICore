@@ -27,14 +27,14 @@
 **    Mark Page
 */
 
-#include "Display/precomp.h"
-#include "API/Core/System/databuffer.h"
-#include "API/Core/System/thread_local_storage.h"
+#include "UICore/precomp.h"
+#include "UICore/Core/System/databuffer.h"
+#include "UICore/Core/System/thread_local_storage.h"
 #include "display_message_queue_x11.h"
 #include "x11_window.h"
 #include <dlfcn.h>
 #include "../../setup_display.h"
-#include "API/Core/System/system.h"
+#include "UICore/Core/System/system.h"
 
 namespace uicore
 {

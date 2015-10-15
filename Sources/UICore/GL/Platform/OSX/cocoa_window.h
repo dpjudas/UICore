@@ -26,7 +26,7 @@
 **    Magnus Norddahl
 */
 
-#include "API/Display/Window/display_window_description.h"
+#include "UICore/Display/Window/display_window_description.h"
 
 #import <Cocoa/Cocoa.h>
 

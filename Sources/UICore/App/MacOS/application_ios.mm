@@ -28,11 +28,11 @@
 
 #include <cstdlib>
 #include <iostream>
-#include "API/Display/System/run_loop.h"
-#include "API/App/clanapp.h"
-#include "API/Core/System/exception.h"
-#include "API/Core/System/console_window.h"
-#include "API/Core/Text/console.h"
+#include "UICore/Display/System/run_loop.h"
+#include "UICore/App/clanapp.h"
+#include "UICore/Core/System/exception.h"
+#include "UICore/Core/System/console_window.h"
+#include "UICore/Core/Text/console.h"
 
 #if defined(USE_IOS)
 

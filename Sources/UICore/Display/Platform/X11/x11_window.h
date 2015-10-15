@@ -34,13 +34,13 @@
 #include <cmath>
 #include <list>
 #include <map>
-#include "API/Core/Signals/signal.h"
-#include "API/Display/Window/input_device.h"
-#include "API/Display/TargetProviders/input_device_provider.h"
-#include "API/Display/Window/display_window.h"
-#include "API/Display/Window/cursor.h"
-#include "API/Core/Math/point.h"
-#include "API/Core/Math/rect.h"
+#include "UICore/Core/Signals/signal.h"
+#include "UICore/Display/Window/input_device.h"
+#include "UICore/Display/TargetProviders/input_device_provider.h"
+#include "UICore/Display/Window/display_window.h"
+#include "UICore/Display/Window/cursor.h"
+#include "UICore/Core/Math/point.h"
+#include "UICore/Core/Math/rect.h"
 #include "clipboard_x11.h"
 #include "x11_atoms.h"
 

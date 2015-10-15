@@ -32,14 +32,14 @@
 
 #include <list>
 #include <map>
-#include "API/Display/Window/input_context.h"
-#include "API/Display/Window/input_device.h"
-#include "API/Display/Window/display_window.h"
-#include "API/Display/TargetProviders/input_device_provider.h"
-#include "API/Core/Math/point.h"
-#include "API/Core/Math/rect.h"
-#include "API/Core/System/cl_platform.h"
-#include "API/Core/Signals/signal.h"
+#include "UICore/Display/Window/input_context.h"
+#include "UICore/Display/Window/input_device.h"
+#include "UICore/Display/Window/display_window.h"
+#include "UICore/Display/TargetProviders/input_device_provider.h"
+#include "UICore/Core/Math/point.h"
+#include "UICore/Core/Math/rect.h"
+#include "UICore/Core/System/cl_platform.h"
+#include "UICore/Core/Signals/signal.h"
 #include "cocoa_controller.h"
 #include <QuartzCore/CAEAGLLayer.h>
 

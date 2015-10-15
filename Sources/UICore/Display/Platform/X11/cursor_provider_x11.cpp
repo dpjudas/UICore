@@ -26,9 +26,9 @@
 **    Magnus Norddahl
 */
 
-#include "Display/precomp.h"
+#include "UICore/precomp.h"
 #include "cursor_provider_x11.h"
-#include "API/Display/Window/cursor_description.h"
+#include "UICore/Display/Window/cursor_description.h"
 #include "x11_window.h"
 
 namespace uicore
