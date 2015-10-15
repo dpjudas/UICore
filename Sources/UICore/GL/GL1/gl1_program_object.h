@@ -67,8 +67,11 @@ namespace uicore
 		/// \brief Returns the location of a named uniform variable.
 		int get_uniform_location(const std::string &name) const override;
 
+		using ProgramObject::get_uniform_buffer_size;
 		int get_uniform_buffer_size(int block_index) const override;
+		using ProgramObject::get_uniform_buffer_index;
 		int get_uniform_buffer_index(const std::string &block_name) const override;
+		using ProgramObject::get_storage_buffer_index;
 		int get_storage_buffer_index(const std::string &name) const override;
 
 		/// \brief Add shader to program object.
@@ -108,7 +111,9 @@ namespace uicore
 		void set_uniformfv(int location, int size, int count, const float *data) override;
 		void set_uniform_matrix(int location, int size, int count, bool transpose, const float *data) override;
 
+		using ProgramObject::set_uniform_buffer_index;
 		void set_uniform_buffer_index(int block_index, int bind_index) override;
+		using ProgramObject::set_storage_buffer_index;
 		void set_storage_buffer_index(int buffer_index, int bind_unit_index) override;
 
 	private:
