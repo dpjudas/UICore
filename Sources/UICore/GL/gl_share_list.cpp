@@ -29,6 +29,7 @@
 
 #include "UICore/precomp.h"
 #include "gl_share_list.h"
+#include <algorithm>
 
 namespace uicore
 {

@@ -40,6 +40,8 @@
 #include "UICore/Display/Image/pixel_buffer.h"
 #include <memory>
 
+#include "graphic_context_impl.h"
+
 namespace uicore
 {
 	class TextureObject

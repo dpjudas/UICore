@@ -31,6 +31,7 @@
 #pragma once
 
 #include <memory>
+#include <cmath>
 
 namespace uicore
 {

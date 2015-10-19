@@ -36,14 +36,14 @@
 namespace uicore
 {
 
-	class GL1GraphicContextProvider;
+	class GL1GraphicContext;
 	class OpenGLWindowProvider;
 
-	class PBuffer_GL1_Impl : public OpenGLGraphicContextProvider
+	class PBuffer_GL1_Impl : public OpenGLContextProvider
 	{
 
 	public:
-		PBuffer_GL1_Impl(GL1GraphicContextProvider *gc_provider);
+		PBuffer_GL1_Impl(GL1GraphicContext *gc_provider);
 
 		~PBuffer_GL1_Impl();
 
@@ -59,7 +59,7 @@ namespace uicore
 	private:
 		void reset();
 
-		GL1GraphicContextProvider *gc_provider;
+		GL1GraphicContext *gc_provider;
 		OpenGLWindowProvider *window_provider = nullptr;
 		EGLSurface surface = EGL_NO_SURFACE;
 

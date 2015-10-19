@@ -131,7 +131,7 @@ namespace uicore
 			return sizef;
 		}
 
-		Pointf client_to_screen(const Pointf &client)
+		Pointf client_to_screen(const Pointf &client) override
 		{
 			Point clienti;
 			clienti.x = (int)std::round(client.x * pixel_ratio());
@@ -143,7 +143,7 @@ namespace uicore
 			return screen;
 		}
 
-		Pointf screen_to_client(const Pointf &screen)
+		Pointf screen_to_client(const Pointf &screen) override
 		{
 			Point screeni;
 			screeni.x = (int)std::round(screen.x * pixel_ratio());
@@ -155,7 +155,7 @@ namespace uicore
 			return client;
 		}
 
-		void set_position(const Rectf &rect, bool client_area)
+		void set_position(const Rectf &rect, bool client_area) override
 		{
 			Rect recti;
 			recti.left = (int)std::round(rect.left * pixel_ratio());
@@ -165,7 +165,7 @@ namespace uicore
 			set_backing_position(recti, client_area);
 		}
 
-		void set_position(float x, float y)
+		void set_position(float x, float y) override
 		{
 			int xi = (int)std::round(x * pixel_ratio());
 			int yi = (int)std::round(y * pixel_ratio());
@@ -173,28 +173,28 @@ namespace uicore
 			set_backing_position(Rect(xi, yi, xi + geometry.width(), yi + geometry.height()), false);
 		}
 
-		void set_size(float width, float height, bool client_area)
+		void set_size(float width, float height, bool client_area) override
 		{
 			int widthi = (int)std::round(width * pixel_ratio());
 			int heighti = (int)std::round(height * pixel_ratio());
 			set_backing_size(widthi, heighti, client_area);
 		}
 
-		void set_minimum_size(float width, float height, bool client_area)
+		void set_minimum_size(float width, float height, bool client_area) override
 		{
 			int widthi = (int)std::round(width * pixel_ratio());
 			int heighti = (int)std::round(height * pixel_ratio());
 			set_backing_minimum_size(widthi, heighti, client_area);
 		}
 
-		void set_maximum_size(float width, float height, bool client_area)
+		void set_maximum_size(float width, float height, bool client_area) override
 		{
 			int widthi = (int)std::round(width * pixel_ratio());
 			int heighti = (int)std::round(height * pixel_ratio());
 			set_backing_maximum_size(widthi, heighti, client_area);
 		}
 
-		void enable_alpha_channel(const Rectf &blur_rect)
+		void enable_alpha_channel(const Rectf &blur_rect) override
 		{
 			Rect blur_recti;
 			blur_recti.left = (int)std::round(blur_rect.left * pixel_ratio());
@@ -204,7 +204,7 @@ namespace uicore
 			backing_enable_alpha_channel(blur_recti);
 		}
 
-		void extend_frame_into_client_area(float left, float top, float right, float bottom)
+		void extend_frame_into_client_area(float left, float top, float right, float bottom) override
 		{
 			int lefti = (int)std::round(left * pixel_ratio());
 			int topi = (int)std::round(top * pixel_ratio());

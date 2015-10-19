@@ -38,10 +38,6 @@
 #include "UICore/Core/Text/string_format.h"
 #include "gl1_vertex_array_buffer.h"
 
-#ifndef WIN32
-#include "UICore/Core/Text/console.h"
-#endif
-
 namespace uicore
 {
 	GL1TextureObject::GL1TextureObject(InitData, TextureDimensions texture_dimensions, int new_width, int new_height, int new_depth, int array_size, TextureFormat texture_format, int levels)
