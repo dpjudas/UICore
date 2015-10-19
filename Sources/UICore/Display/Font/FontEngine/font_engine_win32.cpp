@@ -653,10 +653,31 @@ namespace uicore
 					if (naming_record.nameID == 4)
 					{
 						std::vector<char> buffer;
-						buffer.resize(naming_record.length + 1);
+						buffer.resize(naming_record.length + 4);
 						memcpy(&buffer[0], string_base + naming_record.offset, naming_record.length);
 						buffer[naming_record.length] = 0;
-						return &buffer[0];
+						buffer[naming_record.length + 1] = 0;
+						buffer[naming_record.length + 2] = 0;
+						buffer[naming_record.length + 3] = 0;
+
+						if (naming_record.platformID == 3 && naming_record.encodingID == 1) // UCS-2
+						{
+							for (size_t i = 0; i + 1 < buffer.size(); i += 2)
+							{
+								char t = buffer[i];
+								buffer[i] = buffer[i + 1];
+								buffer[i + 1] = t;
+							}
+							return Text::from_utf16((wchar_t*)buffer.data());
+						}
+						/*else if (naming_record.platformID == 3 && naming_record.encodingID == 10) // UCS-4
+						{
+							return Text::from_utf32((unsigned int*)buffer.data());
+						}*/
+						else
+						{
+							return &buffer[0];
+						}
 					}
 				}
 
