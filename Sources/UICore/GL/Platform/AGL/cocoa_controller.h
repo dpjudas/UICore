@@ -47,6 +47,6 @@ class CocoaWindow;
     clan::CocoaWindow *clanlib_window;
 }
 
--(void) setClanLibWindow:(clan::CocoaWindow *)window;
+-(void) setUICoreWindow:(clan::CocoaWindow *)window;
 
 @end

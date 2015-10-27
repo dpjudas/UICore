@@ -57,7 +57,7 @@
     [super dealloc];
 }
 
--(void) setClanLibWindow:(clan::CocoaWindow *)window
+-(void) setUICoreWindow:(clan::CocoaWindow *)window
 {
     self->clanlib_window = window;
 }

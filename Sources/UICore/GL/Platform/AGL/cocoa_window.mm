@@ -138,7 +138,7 @@ void CocoaWindow::create(DisplayWindowSite *new_site, const DisplayWindowDescrip
         window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
         controller = [[CocoaController alloc] init];
         window.rootViewController = controller;
-        [controller setClanLibWindow:this];
+        [controller setUICoreWindow:this];
         [window makeKeyAndVisible];
     }
 }
