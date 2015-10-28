@@ -95,13 +95,12 @@ namespace uicore
 
 	void XmlNodeImpl::set_prefix(const XmlString &prefix)
 	{
-		auto doc_impl = weak_owner_document.lock();
 		XmlString node_name = get_tree_node()->get_node_name();
 		XmlString::size_type pos = node_name.find(':');
 		if (pos == XmlString::npos)
-			get_tree_node()->set_node_name(doc_impl.get(), prefix + ':' + node_name);
+			get_tree_node()->set_node_name(_owner_document.get(), prefix + ':' + node_name);
 		else
-			get_tree_node()->set_node_name(doc_impl.get(), prefix + node_name.substr(pos));
+			get_tree_node()->set_node_name(_owner_document.get(), prefix + node_name.substr(pos));
 	}
 
 	XmlString XmlNodeImpl::local_name() const
@@ -136,9 +135,8 @@ namespace uicore
 		}
 		else
 		{
-			auto doc_impl = weak_owner_document.lock();
 			auto tree_node = get_tree_node();
-			tree_node->set_node_value(doc_impl.get(), value);
+			tree_node->set_node_value(_owner_document.get(), value);
 		}
 	}
 
@@ -152,11 +150,10 @@ namespace uicore
 		const XmlTreeNode *tree_node = get_tree_node();
 		if (tree_node->parent != cl_null_node_index)
 		{
-			auto doc_impl = weak_owner_document.lock();
-			if (tree_node->parent != doc_impl->node_index)
-				return doc_impl->allocate_dom_node(tree_node->parent);
+			if (tree_node->parent != _owner_document->node_index)
+				return _owner_document->allocate_dom_node(tree_node->parent);
 			else
-				return doc_impl;
+				return _owner_document;
 		}
 		else
 		{
@@ -169,8 +166,7 @@ namespace uicore
 		const XmlTreeNode *tree_node = get_tree_node();
 		if (tree_node->first_child != cl_null_node_index)
 		{
-			auto doc_impl = weak_owner_document.lock();
-			return doc_impl->allocate_dom_node(tree_node->first_child);
+			return _owner_document->allocate_dom_node(tree_node->first_child);
 		}
 		else
 		{
@@ -183,8 +179,7 @@ namespace uicore
 		const XmlTreeNode *tree_node = get_tree_node();
 		if (tree_node->last_child != cl_null_node_index)
 		{
-			auto doc_impl = weak_owner_document.lock();
-			return doc_impl->allocate_dom_node(tree_node->last_child);
+			return _owner_document->allocate_dom_node(tree_node->last_child);
 		}
 		else
 		{
@@ -197,8 +192,7 @@ namespace uicore
 		const XmlTreeNode *tree_node = get_tree_node();
 		if (tree_node->previous_sibling != cl_null_node_index)
 		{
-			auto doc_impl = weak_owner_document.lock();
-			return doc_impl->allocate_dom_node(tree_node->previous_sibling);
+			return _owner_document->allocate_dom_node(tree_node->previous_sibling);
 		}
 		else
 		{
@@ -211,8 +205,7 @@ namespace uicore
 		const XmlTreeNode *tree_node = get_tree_node();
 		if (tree_node->next_sibling != cl_null_node_index)
 		{
-			auto doc_impl = weak_owner_document.lock();
-			return doc_impl->allocate_dom_node(tree_node->next_sibling);
+			return _owner_document->allocate_dom_node(tree_node->next_sibling);
 		}
 		else
 		{
@@ -222,7 +215,7 @@ namespace uicore
 
 	XmlDocumentPtr XmlNodeImpl::owner_document() const
 	{
-		return weak_owner_document.lock();
+		return _owner_document;
 	}
 
 	bool XmlNodeImpl::has_attributes() const
@@ -239,7 +232,6 @@ namespace uicore
 		}
 		else if (new_child && ref_child)
 		{
-			auto doc_impl = weak_owner_document.lock();
 			auto new_child_impl = static_cast<XmlNodeImpl*>(new_child.get());
 			auto ref_child_impl = static_cast<XmlNodeImpl*>(ref_child.get());
 			XmlTreeNode *tree_node = get_tree_node();
@@ -250,7 +242,7 @@ namespace uicore
 			new_tree_node->next_sibling = ref_child_impl->node_index;
 			ref_tree_node->previous_sibling = new_child_impl->node_index;
 			if (new_tree_node->previous_sibling != cl_null_node_index)
-				new_tree_node->get_previous_sibling(doc_impl.get())->next_sibling = new_child_impl->node_index;
+				new_tree_node->get_previous_sibling(_owner_document.get())->next_sibling = new_child_impl->node_index;
 			if (tree_node->first_child == ref_child_impl->node_index)
 				tree_node->first_child = new_child_impl->node_index;
 			new_tree_node->parent = node_index;
@@ -297,14 +289,13 @@ namespace uicore
 	{
 		if (old_child)
 		{
-			auto doc_impl = weak_owner_document.lock();
 			auto old_child_impl = static_cast<XmlNodeImpl*>(old_child.get());
 			XmlTreeNode *tree_node = get_tree_node();
 			XmlTreeNode *old_tree_node = old_child_impl->get_tree_node();
 			unsigned int prev_index = old_tree_node->previous_sibling;
 			unsigned int next_index = old_tree_node->next_sibling;
-			XmlTreeNode *prev = old_tree_node->get_previous_sibling(doc_impl.get());
-			XmlTreeNode *next = old_tree_node->get_next_sibling(doc_impl.get());
+			XmlTreeNode *prev = old_tree_node->get_previous_sibling(_owner_document.get());
+			XmlTreeNode *next = old_tree_node->get_next_sibling(_owner_document.get());
 			if (next)
 				next->previous_sibling = prev_index;
 			if (prev)
@@ -328,13 +319,12 @@ namespace uicore
 	{
 		if (new_child)
 		{
-			auto doc_impl = weak_owner_document.lock();
 			auto new_child_impl = static_cast<XmlNodeImpl*>(new_child.get());
 			XmlTreeNode *tree_node = get_tree_node();
 			XmlTreeNode *new_tree_node = new_child_impl->get_tree_node();
 			if (tree_node->last_child != cl_null_node_index)
 			{
-				XmlTreeNode *last_tree_node = tree_node->get_last_child(doc_impl.get());
+				XmlTreeNode *last_tree_node = tree_node->get_last_child(_owner_document.get());
 				last_tree_node->next_sibling = new_child_impl->node_index;
 				new_tree_node->previous_sibling = tree_node->last_child;
 				tree_node->last_child = new_child_impl->node_index;
@@ -357,14 +347,13 @@ namespace uicore
 	{
 		if (old_child)
 		{
-			auto doc_impl = weak_owner_document.lock();
 			auto old_child_impl = static_cast<XmlNodeImpl*>(old_child.get());
 			XmlTreeNode *tree_node = get_tree_node();
 			XmlTreeNode *old_tree_node = old_child_impl->get_tree_node();
 			unsigned int prev_index = old_tree_node->previous_sibling;
 			unsigned int next_index = old_tree_node->next_sibling;
-			XmlTreeNode *prev = old_tree_node->get_previous_sibling(doc_impl.get());
-			XmlTreeNode *next = old_tree_node->get_next_sibling(doc_impl.get());
+			XmlTreeNode *prev = old_tree_node->get_previous_sibling(_owner_document.get());
+			XmlTreeNode *next = old_tree_node->get_next_sibling(_owner_document.get());
 			if (next)
 				next->previous_sibling = prev_index;
 			if (prev)
@@ -386,13 +375,12 @@ namespace uicore
 	{
 		if (new_child)
 		{
-			auto doc_impl = weak_owner_document.lock();
 			auto new_child_impl = static_cast<XmlNodeImpl*>(new_child.get());
 			XmlTreeNode *tree_node = get_tree_node();
 			XmlTreeNode *new_tree_node = new_child_impl->get_tree_node();
 			if (tree_node->first_attribute != cl_null_node_index)
 			{
-				XmlTreeNode *first_tree_node = tree_node->get_first_attribute(doc_impl.get());
+				XmlTreeNode *first_tree_node = tree_node->get_first_attribute(_owner_document.get());
 				first_tree_node->previous_sibling = new_child_impl->node_index;
 				new_tree_node->next_sibling = tree_node->first_attribute;
 				tree_node->first_attribute = new_child_impl->node_index;
@@ -440,17 +428,16 @@ namespace uicore
 
 	bool XmlNodeImpl::has_attribute(const XmlString &name) const
 	{
-		auto doc_impl = weak_owner_document.lock();
 		const XmlTreeNode *tree_node = get_tree_node();
 		unsigned int cur_index = tree_node->first_attribute;
-		const XmlTreeNode *cur_attribute = tree_node->get_first_attribute(doc_impl.get());
+		const XmlTreeNode *cur_attribute = tree_node->get_first_attribute(_owner_document.get());
 		while (cur_attribute)
 		{
 			if (cur_attribute->get_node_name() == name)
 				return true;
 
 			cur_index = cur_attribute->next_sibling;
-			cur_attribute = cur_attribute->get_next_sibling(doc_impl.get());
+			cur_attribute = cur_attribute->get_next_sibling(_owner_document.get());
 		}
 		return false;
 	}
@@ -467,17 +454,16 @@ namespace uicore
 
 	XmlString XmlNodeImpl::attribute(const XmlString &name, const XmlString &default_value) const
 	{
-		auto doc_impl = weak_owner_document.lock();
 		const XmlTreeNode *tree_node = get_tree_node();
 		unsigned int cur_index = tree_node->first_attribute;
-		const XmlTreeNode *cur_attribute = tree_node->get_first_attribute(doc_impl.get());
+		const XmlTreeNode *cur_attribute = tree_node->get_first_attribute(_owner_document.get());
 		while (cur_attribute)
 		{
 			if (cur_attribute->get_node_name() == name)
 				return cur_attribute->get_node_value();
 
 			cur_index = cur_attribute->next_sibling;
-			cur_attribute = cur_attribute->get_next_sibling(doc_impl.get());
+			cur_attribute = cur_attribute->get_next_sibling(_owner_document.get());
 		}
 		return default_value;
 	}
@@ -586,11 +572,10 @@ namespace uicore
 		else if (prefix == xmlns_xmlns || qualified_name == xmlns_xmlns)
 			return xmlns_xmlns;
 
-		auto doc_impl = weak_owner_document.lock();
 		const XmlTreeNode *cur = get_tree_node();
 		while (cur)
 		{
-			const XmlTreeNode *cur_attr = cur->get_first_attribute(doc_impl.get());
+			const XmlTreeNode *cur_attr = cur->get_first_attribute(_owner_document.get());
 			while (cur_attr)
 			{
 				std::string node_name = cur_attr->get_node_name();
@@ -604,9 +589,9 @@ namespace uicore
 					if (node_name.substr(0, 6) == xmlns_prefix && node_name.substr(6) == prefix)
 						return cur_attr->get_node_value();
 				}
-				cur_attr = cur_attr->get_next_sibling(doc_impl.get());
+				cur_attr = cur_attr->get_next_sibling(_owner_document.get());
 			}
-			cur = cur->get_parent(doc_impl.get());
+			cur = cur->get_parent(_owner_document.get());
 		}
 		return XmlString();
 	}
@@ -630,15 +615,13 @@ namespace uicore
 	{
 		if (node_index == cl_null_node_index)
 			return nullptr;
-		auto doc_impl = weak_owner_document.lock();
-		return doc_impl->nodes[node_index];
+		return _owner_document->nodes[node_index];
 	}
 
 	const XmlTreeNode *XmlNodeImpl::get_tree_node() const
 	{
 		if (node_index == cl_null_node_index)
 			return nullptr;
-		auto doc_impl = weak_owner_document.lock();
-		return doc_impl->nodes[node_index];
+		return _owner_document->nodes[node_index];
 	}
 }

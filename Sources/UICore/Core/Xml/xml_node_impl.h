@@ -81,7 +81,7 @@ namespace uicore
 		XmlString find_prefix(const XmlString &namespace_uri) const override;
 
 	private:
-		std::weak_ptr<XmlDocumentImpl> weak_owner_document;
+		std::shared_ptr<XmlDocumentImpl> _owner_document;
 		unsigned int node_index = cl_null_node_index;
 
 		XmlTreeNode *get_tree_node();

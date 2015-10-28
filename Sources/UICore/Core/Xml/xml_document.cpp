@@ -439,11 +439,15 @@ namespace uicore
 
 	std::shared_ptr<XmlNodeImpl> XmlDocumentImpl::allocate_dom_node(unsigned int node_index)
 	{
+		auto public_node = nodes[node_index]->public_node.lock();
+		if (public_node)
+			return public_node;
+
 		XmlNodeImpl *node = nullptr;
 		if (free_dom_nodes.empty())
 		{
 			node = new XmlNodeImpl;
-			node->weak_owner_document = std::static_pointer_cast<XmlDocumentImpl>(shared_from_this());
+			node->_owner_document = std::static_pointer_cast<XmlDocumentImpl>(shared_from_this());
 			node->node_index = node_index;
 		}
 		else
@@ -452,14 +456,16 @@ namespace uicore
 			node->node_index = node_index;
 			free_dom_nodes.pop_back();
 		}
-		return std::shared_ptr<XmlNodeImpl>(node, [this](XmlNodeImpl *ptr) { free_dom_node(ptr); });
+
+		public_node = std::shared_ptr<XmlNodeImpl>(node, [this](XmlNodeImpl *ptr) { free_dom_node(ptr); });
+		nodes[node_index]->public_node = public_node;
+		return public_node;
 	}
 
 	void XmlDocumentImpl::free_dom_node(XmlNodeImpl *node)
 	{
-		if (!node->weak_owner_document.expired())
-			free_dom_nodes.push_back(node);
-		else
-			delete node;
+		auto owner = node->_owner_document;
+		node->_owner_document = nullptr;
+		free_dom_nodes.push_back(node);
 	}
 }

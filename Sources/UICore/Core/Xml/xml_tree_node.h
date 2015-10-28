@@ -48,6 +48,7 @@ namespace uicore
 		unsigned int previous_sibling = cl_null_node_index;
 		unsigned int next_sibling = cl_null_node_index;
 		unsigned int first_attribute = cl_null_node_index;
+		std::weak_ptr<XmlNodeImpl> public_node;
 
 		void reset()
 		{
