@@ -108,3 +108,8 @@
 #include "Core/Crypto/tls_client.h"
 #include "Core/Crypto/hash_functions.h"
 #include "Core/Json/json_value.h"
+#include "Core/Xml/xml_document.h"
+#include "Core/Xml/xml_node.h"
+#include "Core/Xml/xml_tokenizer.h"
+#include "Core/Xml/xml_writer.h"
+#include "Core/Xml/xml_token.h"

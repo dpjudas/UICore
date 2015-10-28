@@ -139,55 +139,167 @@ namespace uicore
 
 	XmlNodePtr XmlDocumentImpl::document_element() const
 	{
-		if (nodes[node_index]->first_child != cl_null_node_index)
-			return const_cast<XmlDocumentImpl*>(this)->allocate_dom_node(nodes[node_index]->first_child);
+		for (auto cur = first_child(); cur; cur = cur->next_sibling())
+		{
+			if (cur->is_element())
+				return cur;
+		}
+		return nullptr;
+	}
+
+	XmlNodePtr XmlDocumentImpl::first_child() const
+	{
+		const XmlTreeNode *tree_node = get_tree_node();
+		if (tree_node->first_child != cl_null_node_index)
+		{
+			return const_cast<XmlDocumentImpl*>(this)->allocate_dom_node(tree_node->first_child);
+		}
 		else
+		{
 			return nullptr;
+		}
+	}
+
+	XmlNodePtr XmlDocumentImpl::last_child() const
+	{
+		const XmlTreeNode *tree_node = get_tree_node();
+		if (tree_node->last_child != cl_null_node_index)
+		{
+			return const_cast<XmlDocumentImpl*>(this)->allocate_dom_node(tree_node->last_child);
+		}
+		else
+		{
+			return nullptr;
+		}
 	}
 
 	XmlNodePtr XmlDocumentImpl::insert_before(const XmlNodePtr &new_child, const XmlNodePtr &ref_child)
 	{
 		if (!ref_child)
-			return append_child(new_child);
-		else
+		{
+			append_child(new_child);
 			return new_child;
+		}
+		else if (new_child && ref_child)
+		{
+			if (new_child->parent())
+				new_child->parent()->remove_child(new_child);
+
+			auto new_child_impl = static_cast<XmlNodeImpl*>(new_child.get());
+			auto ref_child_impl = static_cast<XmlNodeImpl*>(ref_child.get());
+			XmlTreeNode *tree_node = get_tree_node();
+			XmlTreeNode *new_tree_node = new_child_impl->get_tree_node();
+			XmlTreeNode *ref_tree_node = ref_child_impl->get_tree_node();
+
+			new_tree_node->previous_sibling = ref_tree_node->previous_sibling;
+			new_tree_node->next_sibling = ref_child_impl->node_index;
+			ref_tree_node->previous_sibling = new_child_impl->node_index;
+			if (new_tree_node->previous_sibling != cl_null_node_index)
+				new_tree_node->get_previous_sibling(this)->next_sibling = new_child_impl->node_index;
+			if (tree_node->first_child == ref_child_impl->node_index)
+				tree_node->first_child = new_child_impl->node_index;
+			new_tree_node->parent = node_index;
+
+			return new_child;
+		}
+		else
+		{
+			return nullptr;
+		}
 	}
 
 	XmlNodePtr XmlDocumentImpl::replace_child(const XmlNodePtr &new_child, const XmlNodePtr &old_child)
 	{
-		if (old_child && old_child == document_element())
+		if (new_child && old_child)
 		{
-			remove_child(old_child);
-			return append_child(new_child);
+			if (new_child->parent())
+				new_child->parent()->remove_child(new_child);
+
+			auto new_child_impl = static_cast<XmlNodeImpl*>(new_child.get());
+			auto old_child_impl = static_cast<XmlNodeImpl*>(old_child.get());
+
+			XmlTreeNode *tree_node = get_tree_node();
+			XmlTreeNode *new_tree_node = new_child_impl->get_tree_node();
+			XmlTreeNode *old_tree_node = old_child_impl->get_tree_node();
+
+			new_tree_node->previous_sibling = old_tree_node->previous_sibling;
+			new_tree_node->next_sibling = old_tree_node->next_sibling;
+			new_tree_node->parent = node_index;
+			if (tree_node->first_child == old_child_impl->node_index)
+				tree_node->first_child = new_child_impl->node_index;
+			if (tree_node->last_child == old_child_impl->node_index)
+				tree_node->last_child = new_child_impl->node_index;
+			old_tree_node->previous_sibling = cl_null_node_index;
+			old_tree_node->next_sibling = cl_null_node_index;
+			old_tree_node->parent = cl_null_node_index;
+
+			return new_child;
 		}
 		else
 		{
-			return new_child;
+			return nullptr;
 		}
 	}
 
 	XmlNodePtr XmlDocumentImpl::remove_child(const XmlNodePtr &old_child)
 	{
-		if (old_child && old_child == document_element())
+		if (old_child)
 		{
-			auto node_impl = std::static_pointer_cast<XmlNodeImpl>(old_child);
-			node_impl->get_tree_node()->parent = cl_null_node_index;
-			nodes[node_index]->first_child = cl_null_node_index;
-			nodes[node_index]->last_child = cl_null_node_index;
+			auto old_child_impl = static_cast<XmlNodeImpl*>(old_child.get());
+			XmlTreeNode *tree_node = get_tree_node();
+			XmlTreeNode *old_tree_node = old_child_impl->get_tree_node();
+			unsigned int prev_index = old_tree_node->previous_sibling;
+			unsigned int next_index = old_tree_node->next_sibling;
+			XmlTreeNode *prev = old_tree_node->get_previous_sibling(this);
+			XmlTreeNode *next = old_tree_node->get_next_sibling(this);
+			if (next)
+				next->previous_sibling = prev_index;
+			if (prev)
+				prev->next_sibling = next_index;
+			if (tree_node->first_child == old_child_impl->node_index)
+				tree_node->first_child = next_index;
+			if (tree_node->last_child == old_child_impl->node_index)
+				tree_node->last_child = prev_index;
+			old_tree_node->previous_sibling = cl_null_node_index;
+			old_tree_node->next_sibling = cl_null_node_index;
+			old_tree_node->parent = cl_null_node_index;
+			return old_child;
 		}
-		return old_child;
+		else
+		{
+			return nullptr;
+		}
 	}
 
 	XmlNodePtr XmlDocumentImpl::append_child(const XmlNodePtr &new_child)
 	{
-		if (new_child && nodes[node_index]->first_child == cl_null_node_index)
+		if (new_child)
 		{
-			auto node_impl = std::static_pointer_cast<XmlNodeImpl>(new_child);
-			node_impl->get_tree_node()->parent = node_index;
-			nodes[node_index]->first_child = node_index;
-			nodes[node_index]->last_child = node_index;
+			if (new_child->parent())
+				new_child->parent()->remove_child(new_child);
+
+			auto new_child_impl = static_cast<XmlNodeImpl*>(new_child.get());
+			XmlTreeNode *tree_node = get_tree_node();
+			XmlTreeNode *new_tree_node = new_child_impl->get_tree_node();
+			if (tree_node->last_child != cl_null_node_index)
+			{
+				XmlTreeNode *last_tree_node = tree_node->get_last_child(this);
+				last_tree_node->next_sibling = new_child_impl->node_index;
+				new_tree_node->previous_sibling = tree_node->last_child;
+				tree_node->last_child = new_child_impl->node_index;
+			}
+			else
+			{
+				tree_node->first_child = new_child_impl->node_index;
+				tree_node->last_child = new_child_impl->node_index;
+			}
+			new_tree_node->parent = node_index;
+			return new_child;
 		}
-		return new_child;
+		else
+		{
+			return nullptr;
+		}
 	}
 
 	XmlNodePtr XmlDocumentImpl::clone(bool deep) const
@@ -420,6 +532,7 @@ namespace uicore
 		if (free_nodes.empty())
 		{
 			auto node = new (&node_allocator) XmlTreeNode();
+			node->node_type = type;
 			nodes.push_back(node);
 			return nodes.size() - 1;
 		}
@@ -427,6 +540,7 @@ namespace uicore
 		{
 			unsigned index = free_nodes.back();
 			nodes[index]->reset();
+			nodes[index]->node_type = type;
 			free_nodes.pop_back();
 			return index;
 		}
@@ -453,6 +567,7 @@ namespace uicore
 		else
 		{
 			node = free_dom_nodes.back();
+			node->_owner_document = std::static_pointer_cast<XmlDocumentImpl>(shared_from_this());
 			node->node_index = node_index;
 			free_dom_nodes.pop_back();
 		}

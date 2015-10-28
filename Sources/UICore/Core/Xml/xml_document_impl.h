@@ -54,8 +54,8 @@ namespace uicore
 		XmlString local_name() const override { return "#document"; }
 		XmlString text() const override { return XmlString(); }
 		XmlNodePtr parent() const override { return nullptr; }
-		XmlNodePtr first_child() const override { return document_element(); }
-		XmlNodePtr last_child() const override { return document_element(); }
+		XmlNodePtr first_child() const override;
+		XmlNodePtr last_child() const override;
 		XmlNodePtr previous_sibling() const override { return nullptr; }
 		XmlNodePtr next_sibling() const override { return nullptr; }
 		XmlNodePtr first_attribute() const override { return nullptr; }
@@ -103,6 +103,22 @@ namespace uicore
 		std::vector<XmlNodeImpl *> free_dom_nodes;
 
 		unsigned int node_index = cl_null_node_index;
+
+		XmlTreeNode *get_tree_node()
+		{
+			if (node_index == cl_null_node_index)
+				return nullptr;
+			else
+				return nodes[node_index];
+		}
+
+		const XmlTreeNode *get_tree_node() const
+		{
+			if (node_index == cl_null_node_index)
+				return nullptr;
+			else
+				return nodes[node_index];
+		}
 
 		static XmlString find_namespace_uri(const XmlString &qualified_name, const XmlToken &search_token, const XmlNodePtr &search_node);
 

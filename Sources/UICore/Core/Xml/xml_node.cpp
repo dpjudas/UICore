@@ -187,6 +187,19 @@ namespace uicore
 		}
 	}
 
+	XmlNodePtr XmlNodeImpl::first_attribute() const
+	{
+		const XmlTreeNode *tree_node = get_tree_node();
+		if (tree_node->first_attribute != cl_null_node_index)
+		{
+			return _owner_document->allocate_dom_node(tree_node->first_attribute);
+		}
+		else
+		{
+			return nullptr;
+		}
+	}
+
 	XmlNodePtr XmlNodeImpl::previous_sibling() const
 	{
 		const XmlTreeNode *tree_node = get_tree_node();
@@ -232,6 +245,9 @@ namespace uicore
 		}
 		else if (new_child && ref_child)
 		{
+			if (new_child->parent())
+				new_child->parent()->remove_child(new_child);
+
 			auto new_child_impl = static_cast<XmlNodeImpl*>(new_child.get());
 			auto ref_child_impl = static_cast<XmlNodeImpl*>(ref_child.get());
 			XmlTreeNode *tree_node = get_tree_node();
@@ -259,6 +275,9 @@ namespace uicore
 	{
 		if (new_child && old_child)
 		{
+			if (new_child->parent())
+				new_child->parent()->remove_child(new_child);
+
 			auto new_child_impl = static_cast<XmlNodeImpl*>(new_child.get());
 			auto old_child_impl = static_cast<XmlNodeImpl*>(old_child.get());
 
@@ -319,6 +338,9 @@ namespace uicore
 	{
 		if (new_child)
 		{
+			if (new_child->parent())
+				new_child->parent()->remove_child(new_child);
+
 			auto new_child_impl = static_cast<XmlNodeImpl*>(new_child.get());
 			XmlTreeNode *tree_node = get_tree_node();
 			XmlTreeNode *new_tree_node = new_child_impl->get_tree_node();

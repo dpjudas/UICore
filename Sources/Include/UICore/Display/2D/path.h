@@ -112,4 +112,6 @@ namespace uicore
 		// \brief Make a copy of the path
 		virtual std::shared_ptr<Path> clone() const = 0;
 	};
+
+	typedef std::shared_ptr<Path> PathPtr;
 }
