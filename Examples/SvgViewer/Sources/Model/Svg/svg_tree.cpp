@@ -1,52 +1,25 @@
-/*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
-**
-**  This software is provided 'as-is', without any express or implied
-**  warranty.  In no event will the authors be held liable for any damages
-**  arising from the use of this software.
-**
-**  Permission is granted to anyone to use this software for any purpose,
-**  including commercial applications, and to alter it and redistribute it
-**  freely, subject to the following restrictions:
-**
-**  1. The origin of this software must not be misrepresented; you must not
-**     claim that you wrote the original software. If you use this software
-**     in a product, an acknowledgment in the product documentation would be
-**     appreciated but is not required.
-**  2. Altered source versions must be plainly marked as such, and must not be
-**     misrepresented as being the original software.
-**  3. This notice may not be removed or altered from any source distribution.
-**
-**  Note: Some of the libraries ClanLib may link to may have additional
-**  requirements or restrictions.
-**
-**  File Author(s):
-**
-**    Magnus Norddahl
-**    Mark Page
-*/
 
 #include "precomp.h"
 #include "svg_tree.h"
 #include "svg_attribute_reader.h"
 #include "svg_transform_scope.h"
 
-SvgTreeBuilder::SvgTreeBuilder(clan::Canvas &canvas) : canvas(canvas), node(std::make_shared<SvgNode>())
+using namespace uicore;
+
+SvgTreeBuilder::SvgTreeBuilder(const CanvasPtr &canvas) : canvas(canvas), node(std::make_shared<SvgNode>())
 {
 }
 
-void SvgTreeBuilder::build(clan::DomElement &e)
+void SvgTreeBuilder::build(const XmlNodePtr &e)
 {
-	// To do: parse viewBox, width and height
-
-	for (auto child = e.get_first_child_element(); !child.is_null(); child = child.get_next_sibling_element())
+	for (auto child = e->first_child(); child; child = child->next_sibling())
 	{
-		visit(child);
+		if (child->is_element())
+			visit(child);
 	}
 }
 
-void SvgTreeBuilder::g(clan::DomElement &e)
+void SvgTreeBuilder::g(const XmlNodePtr &e)
 {
 	SvgTreeBuilder group(canvas);
 	group.node->transform = SvgTransformScope::parse_transform(e, group.node->transform_active);
@@ -55,21 +28,21 @@ void SvgTreeBuilder::g(clan::DomElement &e)
 	node->nodes.push_back(group.node);
 }
 
-void SvgTreeBuilder::line(clan::DomElement &e)
+void SvgTreeBuilder::line(const XmlNodePtr &e)
 {
 	float x0 = (float)SvgAttributeReader::single_length(e, "x0");
 	float y0 = (float)SvgAttributeReader::single_length(e, "y0");
 	float x1 = (float)SvgAttributeReader::single_length(e, "x1");
 	float y1 = (float)SvgAttributeReader::single_length(e, "y1");
-	auto path = clan::Path::line(x0, y0, x1, y1);
+	auto path = Path::line(x0, y0, x1, y1);
 	render_path(path, e);
 }
 
-void SvgTreeBuilder::polyline(clan::DomElement &e)
+void SvgTreeBuilder::polyline(const XmlNodePtr &e)
 {
 }
 
-void SvgTreeBuilder::rect(clan::DomElement &e)
+void SvgTreeBuilder::rect(const XmlNodePtr &e)
 {
 	float x = (float)SvgAttributeReader::single_length(e, "x");
 	float y = (float)SvgAttributeReader::single_length(e, "y");
@@ -77,24 +50,24 @@ void SvgTreeBuilder::rect(clan::DomElement &e)
 	float height = (float)SvgAttributeReader::single_length(e, "height");
 	if (width != 0.0f && height != 0.0f)
 	{
-		auto path = clan::Path::rect(x, y, width, height);
+		auto path = Path::rect(x, y, width, height);
 		render_path(path, e);
 	}
 }
 
-void SvgTreeBuilder::circle(clan::DomElement &e)
+void SvgTreeBuilder::circle(const XmlNodePtr &e)
 {
 	float cx = (float)SvgAttributeReader::single_length(e, "cx");
 	float cy = (float)SvgAttributeReader::single_length(e, "cy");
 	float r = (float)SvgAttributeReader::single_length(e, "r");
 	if (r != 0.0f)
 	{
-		auto path = clan::Path::circle(cx, cy, r);
+		auto path = Path::circle(cx, cy, r);
 		render_path(path, e);
 	}
 }
 
-void SvgTreeBuilder::ellipse(clan::DomElement &e)
+void SvgTreeBuilder::ellipse(const XmlNodePtr &e)
 {
 	float cx = (float)SvgAttributeReader::single_length(e, "cx");
 	float cy = (float)SvgAttributeReader::single_length(e, "cy");
@@ -102,20 +75,20 @@ void SvgTreeBuilder::ellipse(clan::DomElement &e)
 	float ry = (float)SvgAttributeReader::single_length(e, "ry");
 	if (rx != 0.0f && ry != 0.0f)
 	{
-		auto path = clan::Path::ellipse(cx, cy, rx, ry);
+		auto path = Path::ellipse(cx, cy, rx, ry);
 		render_path(path, e);
 	}
 }
 
-void SvgTreeBuilder::polygon(clan::DomElement &e)
+void SvgTreeBuilder::polygon(const XmlNodePtr &e)
 {
 }
 
-void SvgTreeBuilder::path(clan::DomElement &e)
+void SvgTreeBuilder::path(const XmlNodePtr &e)
 {
 	SvgAttributeReader data(e, "d");
 
-	clan::Path path;
+	auto path = Path::create();
 
 	try
 	{
@@ -141,7 +114,7 @@ void SvgTreeBuilder::path(clan::DomElement &e)
 					mx += last_x;
 					my += last_y;
 				}
-				path.move_to((float)mx, (float)my);
+				path->move_to((float)mx, (float)my);
 				last_x = mx;
 				last_y = my;
 				last_cp_x = last_x;
@@ -155,7 +128,7 @@ void SvgTreeBuilder::path(clan::DomElement &e)
 						lx += last_x;
 						ly += last_y;
 					}
-					path.line_to((float)lx, (float)ly);
+					path->line_to((float)lx, (float)ly);
 					last_x = lx;
 					last_y = ly;
 					last_cp_x = last_x;
@@ -165,7 +138,7 @@ void SvgTreeBuilder::path(clan::DomElement &e)
 			}
 			case 'Z': // Close path
 			case 'z':
-				path.close();
+				path->close();
 				break;
 			case 'L': // Line to (abs)
 			case 'l': // Line to (rel)
@@ -178,7 +151,7 @@ void SvgTreeBuilder::path(clan::DomElement &e)
 						x += last_x;
 						y += last_y;
 					}
-					path.line_to((float)x, (float)y);
+					path->line_to((float)x, (float)y);
 					last_x = x;
 					last_y = y;
 					last_cp_x = last_x;
@@ -192,7 +165,7 @@ void SvgTreeBuilder::path(clan::DomElement &e)
 					double x = data.get_sequence_number();
 					if (!absolute)
 						x += last_x;
-					path.line_to((float)x, (float)last_y);
+					path->line_to((float)x, (float)last_y);
 					last_x = x;
 					last_cp_x = last_x;
 				} while (data.is_sequence_number());
@@ -204,7 +177,7 @@ void SvgTreeBuilder::path(clan::DomElement &e)
 					double y = data.get_number();
 					if (!absolute)
 						y += last_y;
-					path.line_to((float)last_x, (float)y);
+					path->line_to((float)last_x, (float)y);
 					last_y = y;
 					last_cp_y = last_y;
 				} while (data.is_sequence_number());
@@ -228,7 +201,7 @@ void SvgTreeBuilder::path(clan::DomElement &e)
 						x += last_x;
 						y += last_y;
 					}
-					path.bezier_to(clan::Pointf((float)x1, (float)y1), clan::Pointf((float)x2, (float)y2), clan::Pointf((float)x, (float)y));
+					path->bezier_to(Pointf((float)x1, (float)y1), Pointf((float)x2, (float)y2), Pointf((float)x, (float)y));
 					last_x = x;
 					last_y = y;
 					last_cp_x = x2;
@@ -252,7 +225,7 @@ void SvgTreeBuilder::path(clan::DomElement &e)
 					}
 					double x1 = last_cp_x + x - last_x;
 					double y1 = last_cp_y + y - last_y;
-					path.bezier_to(clan::Pointf((float)x1, (float)y1), clan::Pointf((float)x2, (float)y2), clan::Pointf((float)x, (float)y));
+					path->bezier_to(Pointf((float)x1, (float)y1), Pointf((float)x2, (float)y2), Pointf((float)x, (float)y));
 					last_x = x;
 					last_y = y;
 					last_cp_x = x2;
@@ -274,7 +247,7 @@ void SvgTreeBuilder::path(clan::DomElement &e)
 						x += last_x;
 						y += last_y;
 					}
-					path.bezier_to(clan::Pointf((float)x1, (float)y1), clan::Pointf((float)x, (float)y));
+					path->bezier_to(Pointf((float)x1, (float)y1), Pointf((float)x, (float)y));
 					last_x = x;
 					last_y = y;
 					last_cp_x = x1;
@@ -294,7 +267,7 @@ void SvgTreeBuilder::path(clan::DomElement &e)
 					}
 					double x1 = last_cp_x + x - last_x;
 					double y1 = last_cp_y + y - last_y;
-					path.bezier_to(clan::Pointf((float)x1, (float)y1), clan::Pointf((float)x, (float)y));
+					path->bezier_to(Pointf((float)x1, (float)y1), Pointf((float)x, (float)y));
 					last_x = x;
 					last_y = y;
 					last_cp_x = x1;
@@ -324,22 +297,22 @@ void SvgTreeBuilder::path(clan::DomElement &e)
 			}
 		}
 	}
-	catch (clan::Exception &)
+	catch (Exception &)
 	{
 	}
 
 	render_path(path, e);
 }
 
-void SvgTreeBuilder::text(clan::DomElement &e)
+void SvgTreeBuilder::text(const XmlNodePtr &e)
 {
 }
 
-void SvgTreeBuilder::image(clan::DomElement &e)
+void SvgTreeBuilder::image(const XmlNodePtr &e)
 {
 }
 
-void SvgTreeBuilder::render_path(clan::Path &path, clan::DomElement &e)
+void SvgTreeBuilder::render_path(const PathPtr &path, const XmlNodePtr &e)
 {
 	auto path_node = std::make_shared<SvgNode>();
 	path_node->transform = SvgTransformScope::parse_transform(e, path_node->transform_active);
@@ -373,13 +346,13 @@ void SvgTreeBuilder::render_path(clan::Path &path, clan::DomElement &e)
 	SvgAttributeReader stroke_width(e, "stroke-width");
 
 	if (fill_rule.is_keyword("evenodd"))
-		path.set_fill_mode(clan::PathFillMode::alternate);
+		path->set_fill_mode(PathFillMode::alternate);
 	else
-		path.set_fill_mode(clan::PathFillMode::winding);
+		path->set_fill_mode(PathFillMode::winding);
 
 	if (!fill.is_keyword("none"))
 	{
-		clan::Brush brush = clan::Brush::solid_rgb8(0, 0, 0);
+		Brush brush = Brush::solid_rgb8(0, 0, 0);
 		if (fill.is_color())
 		{
 			brush.color = fill.get_color();
@@ -395,7 +368,7 @@ void SvgTreeBuilder::render_path(clan::Path &path, clan::DomElement &e)
 		if (stroke_width.is_length())
 			width = stroke_width.get_length();
 
-		path_node->pen = clan::Pen(clan::Colorf::white, (float)width);
+		path_node->pen = Pen(Colorf::white, (float)width);
 		path_node->stroke = true;
 	}
 
@@ -407,7 +380,7 @@ void SvgTreeBuilder::render_path(clan::Path &path, clan::DomElement &e)
 
 /////////////////////////////////////////////////////////////////////////////
 
-void SvgNode::render(clan::Canvas &canvas)
+void SvgNode::render(const CanvasPtr &canvas)
 {
 	SvgTransformScope transform(canvas, this->transform, transform_active);
 
@@ -416,15 +389,15 @@ void SvgNode::render(clan::Canvas &canvas)
 
 	if (stroke && fill)
 	{
-		path.stroke(canvas, pen);
-		path.fill(canvas, brush);
+		path->stroke(canvas, pen);
+		path->fill(canvas, brush);
 	}
 	else if (stroke)
 	{
-		path.stroke(canvas, pen);
+		path->stroke(canvas, pen);
 	}
 	else if (fill)
 	{
-		path.fill(canvas, brush);
+		path->fill(canvas, brush);
 	}
 }

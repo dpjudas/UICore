@@ -1,52 +1,45 @@
-/*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
-**
-**  This software is provided 'as-is', without any express or implied
-**  warranty.  In no event will the authors be held liable for any damages
-**  arising from the use of this software.
-**
-**  Permission is granted to anyone to use this software for any purpose,
-**  including commercial applications, and to alter it and redistribute it
-**  freely, subject to the following restrictions:
-**
-**  1. The origin of this software must not be misrepresented; you must not
-**     claim that you wrote the original software. If you use this software
-**     in a product, an acknowledgment in the product documentation would be
-**     appreciated but is not required.
-**  2. Altered source versions must be plainly marked as such, and must not be
-**     misrepresented as being the original software.
-**  3. This notice may not be removed or altered from any source distribution.
-**
-**  Note: Some of the libraries ClanLib may link to may have additional
-**  requirements or restrictions.
-**
-**  File Author(s):
-**
-**    Magnus Norddahl
-**    Mark Page
-*/
 
 #include "precomp.h"
 #include "svg.h"
 #include "svg_tree.h"
+#include "svg_attribute_reader.h"
+
+using namespace uicore;
 
 Svg::Svg(const std::string &filename)
 {
-	auto device = clan::File(filename);
-	xml.load(device, false);
+	auto device = File::open_existing(filename);
+	xml = XmlDocument::load(device, false);
 }
 
-void Svg::render(clan::Canvas &canvas)
+void Svg::render(const CanvasPtr &canvas, Rectf render_viewbox)
 {
 	if (!root_node)
 	{
 		SvgTreeBuilder builder(canvas);
-		auto element = xml.get_document_element();
+		auto element = xml->document_element();
 		builder.build(element);
 		root_node = builder.node;
 	}
 
+	SvgAttributeReader attr_viewbox(xml->document_element(), "viewBox");
+	float x = (float)attr_viewbox.get_number();
+	float y = (float)attr_viewbox.get_number();
+	float w = (float)attr_viewbox.get_number();
+	float h = (float)attr_viewbox.get_number();
+	Rectf svg_viewport = Rectf::xywh(x, y, w, h);
+
+	float aspect = svg_viewport.width() / svg_viewport.height();
+	auto center = render_viewbox.center();
+	render_viewbox.set_width(render_viewbox.height() * aspect);
+	render_viewbox.set_position(center - Vec2f(render_viewbox.size() * 0.5f));
+
+	auto offset_svg = Mat4f::translate(-svg_viewport.x(), -svg_viewport.y(), 0.0f);
+	auto scale = Mat4f::scale(render_viewbox.width() / svg_viewport.width(), render_viewbox.height() / svg_viewport.height(), 1.0f);
+	auto offset_render = Mat4f::translate(render_viewbox.x(), render_viewbox.y(), 0.0f);
+
+	root_node->transform = offset_render * scale * offset_svg;
+	root_node->transform_active = true;
 	root_node->render(canvas);
 }
 

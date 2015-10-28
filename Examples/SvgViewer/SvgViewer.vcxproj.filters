@@ -22,6 +22,9 @@
     <Filter Include="View\Svg">
       <UniqueIdentifier>{2f6bc29d-021d-49c7-8d59-5d52e7cab354}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Model\Svg">
+      <UniqueIdentifier>{ea2f015d-134b-4754-a2df-092a21017186}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sources\precomp.cpp" />
@@ -36,6 +39,21 @@
     </ClCompile>
     <ClCompile Include="Sources\Model\app_model.cpp">
       <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Model\Svg\svg.cpp">
+      <Filter>Model\Svg</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Model\Svg\svg_attribute_reader.cpp">
+      <Filter>Model\Svg</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Model\Svg\svg_element_visitor.cpp">
+      <Filter>Model\Svg</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Model\Svg\svg_transform_scope.cpp">
+      <Filter>Model\Svg</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Model\Svg\svg_tree.cpp">
+      <Filter>Model\Svg</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -54,6 +72,21 @@
     </ClInclude>
     <ClInclude Include="Sources\Model\app_model.h">
       <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Model\Svg\svg.h">
+      <Filter>Model\Svg</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Model\Svg\svg_attribute_reader.h">
+      <Filter>Model\Svg</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Model\Svg\svg_element_visitor.h">
+      <Filter>Model\Svg</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Model\Svg\svg_transform_scope.h">
+      <Filter>Model\Svg</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Model\Svg\svg_tree.h">
+      <Filter>Model\Svg</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -14,6 +14,11 @@
     <ClCompile Include="Sources\Controller\Application\application_controller.cpp" />
     <ClCompile Include="Sources\Controller\MainWindow\main_window_controller.cpp" />
     <ClCompile Include="Sources\Model\app_model.cpp" />
+    <ClCompile Include="Sources\Model\Svg\svg.cpp" />
+    <ClCompile Include="Sources\Model\Svg\svg_attribute_reader.cpp" />
+    <ClCompile Include="Sources\Model\Svg\svg_element_visitor.cpp" />
+    <ClCompile Include="Sources\Model\Svg\svg_transform_scope.cpp" />
+    <ClCompile Include="Sources\Model\Svg\svg_tree.cpp" />
     <ClCompile Include="Sources\precomp.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -24,6 +29,11 @@
     <ClInclude Include="Sources\Controller\Application\application_controller.h" />
     <ClInclude Include="Sources\Controller\MainWindow\main_window_controller.h" />
     <ClInclude Include="Sources\Model\app_model.h" />
+    <ClInclude Include="Sources\Model\Svg\svg.h" />
+    <ClInclude Include="Sources\Model\Svg\svg_attribute_reader.h" />
+    <ClInclude Include="Sources\Model\Svg\svg_element_visitor.h" />
+    <ClInclude Include="Sources\Model\Svg\svg_transform_scope.h" />
+    <ClInclude Include="Sources\Model\Svg\svg_tree.h" />
     <ClInclude Include="Sources\precomp.h" />
     <ClInclude Include="Sources\View\MainWindow\main_window_view.h" />
     <ClInclude Include="Sources\View\Svg\svg_view.h" />

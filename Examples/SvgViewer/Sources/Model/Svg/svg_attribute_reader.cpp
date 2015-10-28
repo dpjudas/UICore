@@ -1,47 +1,21 @@
-/*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
-**
-**  This software is provided 'as-is', without any express or implied
-**  warranty.  In no event will the authors be held liable for any damages
-**  arising from the use of this software.
-**
-**  Permission is granted to anyone to use this software for any purpose,
-**  including commercial applications, and to alter it and redistribute it
-**  freely, subject to the following restrictions:
-**
-**  1. The origin of this software must not be misrepresented; you must not
-**     claim that you wrote the original software. If you use this software
-**     in a product, an acknowledgment in the product documentation would be
-**     appreciated but is not required.
-**  2. Altered source versions must be plainly marked as such, and must not be
-**     misrepresented as being the original software.
-**  3. This notice may not be removed or altered from any source distribution.
-**
-**  Note: Some of the libraries ClanLib may link to may have additional
-**  requirements or restrictions.
-**
-**  File Author(s):
-**
-**    Magnus Norddahl
-**    Mark Page
-*/
 
 #include "precomp.h"
 #include "svg_attribute_reader.h"
 #include "svg.h"
+
+using namespace uicore;
 
 SvgAttributeReader::SvgAttributeReader(const std::string &attr) : attr(attr)
 {
 	eat_whitespace();
 }
 
-SvgAttributeReader::SvgAttributeReader(clan::DomElement e, const std::string &attr_name, bool inherit)
+SvgAttributeReader::SvgAttributeReader(XmlNodePtr e, const std::string &attr_name, bool inherit)
 {
-	while (!e.is_null() && !e.has_attribute_ns(Svg::svg_ns, attr_name))
-		e = e.get_parent_node().to_element();
+	while (inherit && !e->has_attribute(Svg::svg_ns, attr_name) && e->parent())
+		e = e->parent();
 
-	attr = e.get_attribute_ns(Svg::svg_ns, attr_name);
+	attr = e->attribute_ns(Svg::svg_ns, attr_name);
 	eat_whitespace();
 }
 
@@ -119,7 +93,7 @@ bool SvgAttributeReader::is_color() const
 	return !is_end() && attr[pos] == '#'; // To do: support all the colors
 }
 
-clan::Colorf SvgAttributeReader::get_color()
+Colorf SvgAttributeReader::get_color()
 {
 	if (!is_color()) parse_error("expected color");
 
@@ -133,7 +107,7 @@ clan::Colorf SvgAttributeReader::get_color()
 
 	if (end_pos != pos + 4 && end_pos != pos + 7) parse_error("invalid color");
 
-	clan::Colorf color;
+	Colorf color;
 	std::string hexstr = attr.substr(pos + 1, end_pos - pos - 1);
 	unsigned int value = strtoul(hexstr.c_str(), 0, 16);
 	if (end_pos == pos + 4)
@@ -141,14 +115,14 @@ clan::Colorf SvgAttributeReader::get_color()
 		int red = ((((value >> 8) & 0xf) + 1) << 4) - 1;
 		int green = ((((value >> 4) & 0xf) + 1) << 4) - 1;
 		int blue = (((value & 0xf) + 1) << 4) - 1;
-		color = clan::Colorf(red / 255.0f, green / 255.0f, blue / 255.0f);
+		color = Colorf(red / 255.0f, green / 255.0f, blue / 255.0f);
 	}
 	else
 	{
 		int red = (value >> 16) & 0xff;
 		int green = (value >> 8) & 0xff;
 		int blue = value & 0xff;
-		color = clan::Colorf(red / 255.0f, green / 255.0f, blue / 255.0f);
+		color = Colorf(red / 255.0f, green / 255.0f, blue / 255.0f);
 	}
 	pos = end_pos;
 	return color;
@@ -232,7 +206,7 @@ double SvgAttributeReader::get_number()
 		}
 	}
 
-	double number = clan::StringHelp::text_to_double(attr.substr(pos, end_pos - pos));
+	double number = Text::parse_double(attr.substr(pos, end_pos - pos));
 	pos = end_pos;
 
 	eat_whitespace();
@@ -248,12 +222,12 @@ double SvgAttributeReader::get_length()
 
 void SvgAttributeReader::parse_error(const std::string &reason)
 {
-	throw clan::Exception(reason);
+	throw Exception(reason);
 }
 
-double SvgAttributeReader::single_number(clan::DomElement &e, const std::string &attr_name, double default_value)
+double SvgAttributeReader::single_number(const XmlNodePtr &e, const std::string &attr_name, double default_value)
 {
-	std::string attr = e.get_attribute_ns(Svg::svg_ns, attr_name);
+	std::string attr = e->attribute_ns(Svg::svg_ns, attr_name);
 
 	SvgAttributeReader reader(attr);
 	if (reader.is_number())
@@ -267,9 +241,9 @@ double SvgAttributeReader::single_number(clan::DomElement &e, const std::string 
 	}
 }
 
-double SvgAttributeReader::single_length(clan::DomElement &e, const std::string &attr_name, double default_value)
+double SvgAttributeReader::single_length(const XmlNodePtr &e, const std::string &attr_name, double default_value)
 {
-	std::string attr = e.get_attribute_ns(Svg::svg_ns, attr_name);
+	std::string attr = e->attribute_ns(Svg::svg_ns, attr_name);
 
 	SvgAttributeReader reader(attr);
 	if (reader.is_length())
