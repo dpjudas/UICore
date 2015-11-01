@@ -144,11 +144,22 @@ public:
         output << "endif (HAVE_LINUX_JOYSTICK_H)" << std::endl;
         output << "include_directories(BEFORE Sources/Include Sources ${FREETYPE2_INCLUDE_DIRS})" << std::endl;
         output << "link_directories(${FREETYPE2_LIBRARY_DIRS})" << std::endl;
-        output << "add_library(uicore" << std::endl;
+        output << "add_library(uicore SHARED " << std::endl;
         output_target_files(output, "Sources/UICore");
         output << ")" << std::endl;
+        output << "set(VERSION_MAJOR 1)" << std::endl;
+        output << "set(VERSION_MINOR 0)" << std::endl;
+        output << "set(VERSION_PATCH 0)" << std::endl;
+        output << "set(VERSION_STRING ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH})" << std::endl;
+        output << "set(SO_VERSION 0)" << std::endl;
+        output << "set_target_properties(uicore PROPERTIES VERSION ${VERSION_STRING} SOVERSION ${SO_VERSION})" << std::endl;
         output << "target_link_libraries(uicore ${FREETYPE2_LIBRARIES})" << std::endl;
-        output << "install(TARGETS uicore ARCHIVE DESTINATION lib)" << std::endl;
+        output << "install(" << std::endl;
+        output << "    TARGETS uicore" << std::endl;
+        output << "    RUNTIME DESTINATION bin" << std::endl;
+        output << "    LIBRARY DESTINATION lib" << std::endl;
+        output << "    ARCHIVE DESTINATION lib)" << std::endl;
+        output << "install(DIRECTORY Sources/Include/ DESTINATION include FILES_MATCHING PATTERN \"*.h\")" << std::endl;
     }
     
     static void output_target_files(std::ofstream &output, const std::string &path)
@@ -186,7 +197,7 @@ int main(int argc, const char * argv[])
 
     std::cout << "Finished generating files." << std::endl;
     std::cout << std::endl;
-    std::cout << "Please use cmake start building or open the project in KDevelop." << std::endl;
+    std::cout << "Please use cmake to start building or open the project in KDevelop." << std::endl;
     std::cout << std::endl;
     
     return 0;
