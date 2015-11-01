@@ -68,7 +68,7 @@ namespace uicore
 		Size max_group_size() const override { return _max_group_size; }
 		int total_rect_count() const override;
 		int rect_count(unsigned int group_index) const override;
-		int group_count() const override;
+		int group_count() const override { return root_nodes.size(); }
 		AllocatedRect add(const Size &size) override { return add_new_node(size); }
 
 		AllocatedRect add_new_node(const Size &rect_size);

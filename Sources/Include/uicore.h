@@ -42,7 +42,9 @@
 
 #include "UICore/core.h"
 #include "UICore/display.h"
+#ifdef WIN32
 #include "UICore/d3d.h"
+#endif
 #include "UICore/gl.h"
 #include "UICore/ui.h"
 #include "UICore/network.h"

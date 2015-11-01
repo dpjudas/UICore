@@ -74,7 +74,7 @@ namespace uicore
 		/// \brief Add data to be decrypted
 		///
 		/// \param data = Data Buffer
-		void add(const DataBufferPtr &data) override;
+		void add(const DataBufferPtr &data) override { add(data->data(), data->size()); }
 
 		/// \brief Finalize decryption
 		///

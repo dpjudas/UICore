@@ -161,7 +161,7 @@ namespace uicore
 			FD_SET(async_work_event.read_fd(), &rfds);
 			FD_SET(exit_event.read_fd(), &rfds);
 
-			int result = select(std::max(std::max(async_work_event.read_fd(), x11_handle), exit_event.read_fd()) + 1, &rfds, nullptr, nullptr, &tv);
+			int result = select(std::max(std::max(async_work_event.read_fd(), x11_handle), exit_event.read_fd()) + 1, &rfds, nullptr, nullptr, timeout_ms != -1 ? &tv : nullptr);
 			if (result > 0)
 			{
 				if (FD_ISSET(async_work_event.read_fd(), &rfds))
