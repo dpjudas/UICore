@@ -124,7 +124,7 @@ namespace uicore
 				throw Exception("Unable to create socket handle");
 
 			int nonblocking = 1;
-			ioctl(impl->handle, FIONBIO, &nonblocking);
+			ioctl(handle, FIONBIO, &nonblocking);
 		}
 
 		UDPSocketImpl(int handle) : handle(handle)

@@ -30,7 +30,7 @@
 #pragma once
 
 #include "UICore/Display/Window/input_device.h"
-#include "UICore/Display/TargetProviders/input_device_provider.h"
+#include "UICore/Display/Window/input_device_provider.h"
 
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
@@ -47,18 +47,16 @@ namespace uicore
 		InputDeviceProvider_X11Keyboard(X11Window *window);
 		~InputDeviceProvider_X11Keyboard();
 
-		void destroy() { delete this; }
-
-		InputDevice::Type get_type() const override { return InputDevice::keyboard; }
-		bool get_keycode(int keycode) const override;
-		std::string get_key_name(int id) const override;
-		std::string get_name() const override;
-		std::string get_device_name() const override;
-		int get_button_count() const override { return -1; }
+		InputDevice::Type type() const override { return InputDevice::keyboard; }
+		bool keycode(int keycode) const override;
+		std::string key_name(int id) const override;
+		std::string name() const override;
+		std::string device_name() const override;
+		int button_count() const override { return -1; }
 
 		void get_keyboard_modifiers(bool &key_shift, bool &key_alt, bool &key_ctrl) const;
 
-		void received_keyboard_input(InputDevice &keyboard, XKeyEvent &event);
+		void received_keyboard_input(InputDevicePtr &keyboard, XKeyEvent &event);
 
 	private:
 		void on_dispose() override;

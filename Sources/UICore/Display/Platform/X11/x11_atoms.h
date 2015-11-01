@@ -34,8 +34,6 @@
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 
-#include "UICore/Core/Text/logger.h"
-
 namespace uicore
 {
 	using X11AtomMap = std::map< std::string, Atom >;
@@ -46,11 +44,11 @@ namespace uicore
 		X11Atoms() : _display_(nullptr) {  }
 		X11Atoms(::Display *display) : _display_(display)
 		{
-			log_event("debug", "Initializing X11 Display Atoms...");
+			//log_event("debug", "Initializing X11 Display Atoms...");
 			for (const auto &elem : _atoms_)
 			{
 				_map_[elem] = XInternAtom(_display_, elem.c_str(), True);
-				log_event("debug", "  %1\t: %2", elem, (_map_[elem] == None) ? "None" : "OK");
+				//log_event("debug", "  %1\t: %2", elem, (_map_[elem] == None) ? "None" : "OK");
 			}
 		}
 
@@ -116,7 +114,7 @@ namespace uicore
 
 			if ((*this)["_NET_WM_STATE"] == None)
 			{
-				log_event("debug", "clan::X11Window::check_net_wm_state(): _NET_WM_STATE not provided by WM.");
+				//log_event("debug", "clan::X11Window::check_net_wm_state(): _NET_WM_STATE not provided by WM.");
 				return states;
 			}
 
@@ -125,7 +123,7 @@ namespace uicore
 			unsigned char *data = get_property(window, "_NET_WM_STATE", item_count);
 			if (data == NULL)
 			{
-				log_event("debug", "clan::X11Atoms::check_net_wm_state(): Failed to query _NET_WM_STATE.");
+				//log_event("debug", "clan::X11Atoms::check_net_wm_state(): Failed to query _NET_WM_STATE.");
 				return states;
 			}
 
@@ -138,7 +136,7 @@ namespace uicore
 				Atom state = static_cast<unsigned long>((*this)[elem]);
 				if (state == None)
 				{
-					log_event("debug", "clan::X11Atoms::check_net_wm_state(): %1 is not provided by WM.", elem);
+					//log_event("debug", "clan::X11Atoms::check_net_wm_state(): %1 is not provided by WM.", elem);
 					continue; // Unsupported states are not queried.
 				}
 
@@ -177,7 +175,7 @@ namespace uicore
 
 			if (ret == 0)
 			{
-				log_event("debug", "clan::X11Atoms::modify_net_wm_state(): XSendEvent failed.");
+				//log_event("debug", "clan::X11Atoms::modify_net_wm_state(): XSendEvent failed.");
 				return false;
 			}
 			else

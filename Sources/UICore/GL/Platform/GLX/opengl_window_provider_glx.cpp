@@ -29,25 +29,26 @@
 **    Kevin J Bluck
 */
 
-#include "GL/precomp.h"
+#include "UICore/precomp.h"
 #include "opengl_window_provider_glx.h"
 #include "UICore/Core/Math/rect.h"
-#include "UICore/Core/Text/logger.h"
+#include "UICore/Core/Text/text.h"
+#include "UICore/Core/Text/string_format.h"
 #include "UICore/Display/Window/display_window_description.h"
 #include "UICore/Display/display_target.h"
 #include "UICore/Display/Window/cursor_description.h"
 #include "UICore/Display/Window/display_window.h"
-#include "UICore/Display/Render/shared_gc_data.h"
 #include "UICore/GL/opengl.h"
 #include "UICore/GL/opengl_wrap.h"
 #include "UICore/GL/opengl_context_description.h"
-#include "Display/Platform/X11/cursor_provider_x11.h"
-#include "Display/Platform/X11/display_message_queue_x11.h"
-#include "GL/opengl_context_description_impl.h"
-#include "GL/opengl_graphic_context_provider.h"
-#include "GL/opengl_target_provider.h"
-#include "GL/GL3/gl3_graphic_context_provider.h"
-#include "GL/GL1/gl1_graphic_context_provider.h"
+#include "UICore/Display/Platform/X11/cursor_provider_x11.h"
+#include "UICore/Display/Platform/X11/display_message_queue_x11.h"
+#include "UICore/GL/opengl_context_description_impl.h"
+#include "UICore/GL/opengl_graphic_context_provider.h"
+#include "UICore/GL/opengl_target_provider.h"
+#include "UICore/GL/GL3/gl3_graphic_context.h"
+#include "UICore/GL/GL1/gl1_graphic_context.h"
+#include "UICore/GL/gl_share_list.h"
 #include <cstdio>
 
 #ifdef GL_USE_DLOPEN
@@ -72,7 +73,7 @@ namespace uicore
 /////////////////////////////////////////////////////////////////////////////
 // OpenGLWindowProvider Construction:
 
-OpenGLWindowProvider::OpenGLWindowProvider(OpenGLContextDescription &opengl_desc)
+OpenGLWindowProvider::OpenGLWindowProvider(OpenGLContextDescription &opengl_desc, const DisplayWindowDescription &desc)
 : x11_window(),
  opengl_context(nullptr), opengl_visual_info(nullptr), glXSwapIntervalSGI(nullptr), glXSwapIntervalMESA(nullptr), swap_interval(-1), opengl_desc(opengl_desc), using_gl3(true)
 #ifdef GL_USE_DLOPEN
@@ -157,6 +158,103 @@ OpenGLWindowProvider::OpenGLWindowProvider(OpenGLContextDescription &opengl_desc
 	}
 
 	x11_window.func_on_resized() = bind_member(this, &OpenGLWindowProvider::on_window_resized);
+	
+	bool create_provider_flag = false;
+
+	::Display *disp = x11_window.get_display();
+
+	if (!opengl_context)
+	{
+		// FBConfigs were added in GLX version 1.3.
+		int glx_major, glx_minor;
+		if ( !glx.glXQueryVersion( disp, &glx_major, &glx_minor ) ||
+			( ( glx_major == 1 ) && ( glx_minor < 3 ) ) || ( glx_major < 1 ) )
+		{
+			glx_1_3 = false;
+		}
+		else
+		{
+			glx_1_3 = true;
+		}
+
+		create_provider_flag = true;
+
+		if (glx_1_3)
+		{
+			create_glx_1_3(desc, disp);
+		}
+		else
+		{
+			create_glx_1_2(desc, disp);
+		}
+
+		if (!glx.glXIsDirect(disp, opengl_context))
+			printf("No hardware acceleration available. I hope you got a really fast machine.\n");
+	}
+
+	x11_window.create(opengl_visual_info, this, desc);
+
+	if (create_provider_flag)
+	{
+
+		bool use_gl3;
+		int desc_version_major = opengl_desc.get_version_major();
+		int desc_version_minor = opengl_desc.get_version_minor();
+
+		// Do not attempt GL3, if not requested that version
+		if (desc_version_major < 3)
+		{
+			use_gl3 = false;
+		}
+		else if (!opengl_desc.get_allow_lower_versions())	// If we do not allow lower versions, only attempt GL3
+		{
+			use_gl3 = true;
+		}
+		else
+		{
+			// Choose the target depending on the current opengl version
+			int gl_version_major;
+			int gl_version_minor;
+			get_opengl_version(gl_version_major, gl_version_minor);
+			if (gl_version_major < 3)
+			{
+				use_gl3 = false;
+			}
+			else
+			{
+				use_gl3 = true;
+			}
+
+		}
+
+		if (use_gl3)
+		{
+			using_gl3 = true;
+			_gc = std::make_shared<GL3GraphicContext>(this);
+		}
+		else
+		{
+			using_gl3 = false;
+			_gc = std::make_shared<GL1GraphicContext>(this);
+		}
+	}
+
+	setup_extension_pointers();
+	swap_interval = desc.swap_interval();
+	if (swap_interval != -1)
+	{
+		if (glXSwapIntervalEXT)
+		{
+			glXSwapIntervalEXT(disp, x11_window.get_window(), swap_interval);
+		}else if (glXSwapIntervalSGI)
+		{
+			glXSwapIntervalSGI(swap_interval);
+		}
+		else if (glXSwapIntervalMESA)
+		{
+			glXSwapIntervalMESA(swap_interval);
+		}
+	}
 }
 
 OpenGLWindowProvider::~OpenGLWindowProvider()
@@ -170,17 +268,17 @@ OpenGLWindowProvider::~OpenGLWindowProvider()
 
 	if (opengl_context)
 	{
-		if (!gc.is_null())
+		if (_gc)
 		{
 			if (using_gl3)
 			{
-				GL3GraphicContextProvider *gl_provider = dynamic_cast<GL3GraphicContextProvider*>(gc.get_provider());
+				GL3GraphicContext *gl_provider = dynamic_cast<GL3GraphicContext*>(_gc.get());
 				if (gl_provider)
 					gl_provider->dispose();
 			}
 			else
 			{
-				GL1GraphicContextProvider *gl_provider = dynamic_cast<GL1GraphicContextProvider*>(gc.get_provider());
+				GL1GraphicContext *gl_provider = dynamic_cast<GL1GraphicContext*>(_gc.get());
 				if (gl_provider)
 					gl_provider->dispose();
 			}
@@ -227,107 +325,6 @@ void OpenGLWindowProvider::make_current() const
 
 }
 
-void OpenGLWindowProvider::create(DisplayWindowSite *new_site, const DisplayWindowDescription &desc)
-{
-	site = new_site;
-	bool create_provider_flag = false;
-
-	::Display *disp = x11_window.get_display();
-
-	if (!opengl_context)
-	{
-		// FBConfigs were added in GLX version 1.3.
-		int glx_major, glx_minor;
-		if ( !glx.glXQueryVersion( disp, &glx_major, &glx_minor ) ||
-			( ( glx_major == 1 ) && ( glx_minor < 3 ) ) || ( glx_major < 1 ) )
-		{
-			glx_1_3 = false;
-		}
-		else
-		{
-			glx_1_3 = true;
-		}
-
-		create_provider_flag = true;
-
-		if (glx_1_3)
-		{
-			create_glx_1_3(new_site, desc, disp);
-		}
-		else
-		{
-			create_glx_1_2(new_site, desc, disp);
-		}
-
-		if (!glx.glXIsDirect(disp, opengl_context))
-			printf("No hardware acceleration available. I hope you got a really fast machine.\n");
-	}
-
-	x11_window.create(opengl_visual_info, site, desc);
-
-	if (create_provider_flag)
-	{
-
-		bool use_gl3;
-		int desc_version_major = opengl_desc.get_version_major();
-		int desc_version_minor = opengl_desc.get_version_minor();
-
-		// Do not attempt GL3, if not requested that version
-		if (desc_version_major < 3)
-		{
-			use_gl3 = false;
-		}
-		else if (!opengl_desc.get_allow_lower_versions())	// If we do not allow lower versions, only attempt GL3
-		{
-			use_gl3 = true;
-		}
-		else
-		{
-			// Choose the target depending on the current opengl version
-			int gl_version_major;
-			int gl_version_minor;
-			get_opengl_version(gl_version_major, gl_version_minor);
-			if (gl_version_major < 3)
-			{
-				use_gl3 = false;
-			}
-			else
-			{
-				use_gl3 = true;
-			}
-
-		}
-
-		if (use_gl3)
-		{
-			using_gl3 = true;
-			gc = GraphicContext(new GL3GraphicContextProvider(this));
-		}
-		else
-		{
-			using_gl3 = false;
-			gc = GraphicContext(new GL1GraphicContextProvider(this));
-		}
-	}
-
-	setup_extension_pointers();
-	swap_interval = desc.get_swap_interval();
-	if (swap_interval != -1)
-	{
-		if (glXSwapIntervalEXT)
-		{
-			glXSwapIntervalEXT(disp, x11_window.get_window(), swap_interval);
-		}else if (glXSwapIntervalSGI)
-		{
-			glXSwapIntervalSGI(swap_interval);
-		}
-		else if (glXSwapIntervalMESA)
-		{
-			glXSwapIntervalMESA(swap_interval);
-		}
-	}
-}
-
 void OpenGLWindowProvider::get_opengl_version(int &version_major, int &version_minor)
 {
 	make_current();
@@ -337,15 +334,15 @@ void OpenGLWindowProvider::get_opengl_version(int &version_major, int &version_m
 	version_major = 0;
 	version_minor = 0;
 
-	std::vector<std::string> split_version = StringHelp::split_text(version, ".");
+	std::vector<std::string> split_version = Text::split(version, ".");
 	if(split_version.size() > 0)
-		version_major = StringHelp::text_to_int(split_version[0]);
+		version_major = Text::parse_int32(split_version[0]);
 	if(split_version.size() > 1)
-		version_minor = StringHelp::text_to_int(split_version[1]);
+		version_minor = Text::parse_int32(split_version[1]);
 
 }
 
-void OpenGLWindowProvider::create_glx_1_3(DisplayWindowSite *new_site, const DisplayWindowDescription &desc, ::Display *disp)
+void OpenGLWindowProvider::create_glx_1_3(const DisplayWindowDescription &desc, ::Display *disp)
 {
 	if (glx.glXChooseFBConfig == nullptr)
 		throw Exception("Cannot find the glXChooseFBConfig function");
@@ -399,9 +396,9 @@ void OpenGLWindowProvider::create_glx_1_3(DisplayWindowSite *new_site, const Dis
 	gl_attribs.push_back(GLX_ALPHA_SIZE);
 	gl_attribs.push_back(4);
 	gl_attribs.push_back(GLX_DEPTH_SIZE);
-	gl_attribs.push_back(desc.get_depth_size());
+	gl_attribs.push_back(desc.depth_size());
 	gl_attribs.push_back(GLX_STENCIL_SIZE);
-	gl_attribs.push_back(desc.get_stencil_size());
+	gl_attribs.push_back(desc.stencil_size());
 	gl_attribs.push_back(GLX_DOUBLEBUFFER);
 	gl_attribs.push_back(True );
 	gl_attribs.push_back(GLX_STEREO);
@@ -428,7 +425,7 @@ void OpenGLWindowProvider::create_glx_1_3(DisplayWindowSite *new_site, const Dis
 		int desired_config = 0;
 		int max_sample_buffers = 0;
 		int max_samples = 0;
-		int required_samples = desc.get_multisampling();
+		int required_samples = desc.multisampling();
 		// Find the best fitting multisampling option
 		for (int i=0; i<fb_count; i++)
 		{
@@ -499,7 +496,7 @@ void OpenGLWindowProvider::create_glx_1_3(DisplayWindowSite *new_site, const Dis
 	opengl_context = create_context(desc);
 }
 
-void OpenGLWindowProvider::create_glx_1_2(DisplayWindowSite *new_site, const DisplayWindowDescription &desc, ::Display *disp)
+void OpenGLWindowProvider::create_glx_1_2(const DisplayWindowDescription &desc, ::Display *disp)
 {
 	// Setup OpenGL:
 	int gl_attribs_single[] =
@@ -527,9 +524,9 @@ void OpenGLWindowProvider::create_glx_1_2(DisplayWindowSite *new_site, const Dis
 	gl_attribs[i++] = GLX_BLUE_SIZE;
 	gl_attribs[i++] = 4;
 	gl_attribs[i++] = GLX_DEPTH_SIZE;
-	gl_attribs[i++] = desc.get_depth_size();
+	gl_attribs[i++] = desc.depth_size();
 	gl_attribs[i++] = GLX_STENCIL_SIZE;
-	gl_attribs[i++] = desc.get_stencil_size();
+	gl_attribs[i++] = desc.stencil_size();
 	gl_attribs[i++] = None;
 
 	// get an appropriate visual
@@ -555,13 +552,13 @@ void OpenGLWindowProvider::on_window_resized()
 {
 	if (using_gl3)
 	{
-		GL3GraphicContextProvider *gl_provider = dynamic_cast<GL3GraphicContextProvider*>(gc.get_provider());
+		GL3GraphicContext *gl_provider = dynamic_cast<GL3GraphicContext*>(_gc.get());
 		if (gl_provider)
 			gl_provider->on_window_resized();
 	}
 	else
 	{
-		GL1GraphicContextProvider *gl_provider = dynamic_cast<GL1GraphicContextProvider*>(gc.get_provider());
+		GL1GraphicContext *gl_provider = dynamic_cast<GL1GraphicContext*>(_gc.get());
 		if (gl_provider)
 			gl_provider->on_window_resized();
 	}
@@ -652,20 +649,19 @@ GLXContext OpenGLWindowProvider::create_context(const DisplayWindowDescription &
 {
 	GLXContext shared_context = nullptr;
 
-	std::unique_ptr<std::unique_lock<std::recursive_mutex>> mutex_section;
-	GraphicContextProvider* gc_providers = SharedGCData::get_provider(mutex_section);
+	auto gc_providers = GLShareList::any_context();
 	if (gc_providers)
 	{
 
 		const DisplayWindowProvider *rwp = nullptr;
 
-		GL3GraphicContextProvider *gl3_provider = dynamic_cast<GL3GraphicContextProvider*>(gc_providers);
+		GL3GraphicContext *gl3_provider = dynamic_cast<GL3GraphicContext*>(gc_providers);
 		if (gl3_provider)
 			rwp = &gl3_provider->get_render_window();
 
 		if (!rwp)
 		{
-			GL1GraphicContextProvider *gl1_provider = dynamic_cast<GL1GraphicContextProvider*>(gc_providers);
+			GL1GraphicContext *gl1_provider = dynamic_cast<GL1GraphicContext*>(gc_providers);
 			if (gl1_provider)
 				rwp = &gl1_provider->get_render_window();
 		}
@@ -703,7 +699,7 @@ GLXContext OpenGLWindowProvider::create_context_glx_1_3_helper(GLXContext shared
 
 	// Layer plane does not exist on GLX - http://www.opengl.org/registry/specs/ARB/glx_create_context.txt
 	//int_attributes.push_back(0x2093);	// GLX_CONTEXT_LAYER_PLANE_ARB
-	//int_attributes.push_back(opengl_desc.get_layer_plane());
+	//int_attributes.push_back(opengl_desc.layer_plane());
 
 	int_attributes.push_back(0x2094);	// GLX_CONTEXT_FLAGS_ARB
 	int flags = 0;
@@ -842,10 +838,9 @@ GLXContext OpenGLWindowProvider::create_context_glx_1_2(const DisplayWindowDescr
 	return context;
 }
 
-void OpenGLWindowProvider::flip(int interval)
+void OpenGLWindowProvider::backing_flip(int interval)
 {
-	GraphicContext gc = get_gc();
-	OpenGL::set_active(gc);
+	OpenGL::set_active(_gc);
 	glFlush();
 
 	if (interval != -1 && interval != swap_interval)
@@ -869,32 +864,32 @@ void OpenGLWindowProvider::flip(int interval)
 	OpenGL::check_error();
 }
 
-CursorProvider *OpenGLWindowProvider::create_cursor(const CursorDescription &cursor_description)
+CursorPtr OpenGLWindowProvider::create_cursor(const CursorDescription &cursor_description)
 {
-	return new CursorProvider_X11(cursor_description, cursor_description.get_hotspot());
+	return std::make_shared<CursorProvider_X11>(cursor_description, cursor_description.hotspot());
 }
 
-void OpenGLWindowProvider::set_cursor(CursorProvider *cursor)
+void OpenGLWindowProvider::set_cursor(const CursorPtr &cursor)
 {
-	x11_window.set_cursor(static_cast<CursorProvider_X11 *>(cursor));
+	x11_window.set_cursor(static_cast<CursorProvider_X11 *>(cursor.get()));
 }
 
-void OpenGLWindowProvider::set_large_icon(const PixelBuffer &image)
+void OpenGLWindowProvider::set_large_icon(const PixelBufferPtr &image)
 {
 	x11_window.set_large_icon(image);
 }
 
-void OpenGLWindowProvider::set_small_icon(const PixelBuffer &image)
+void OpenGLWindowProvider::set_small_icon(const PixelBufferPtr &image)
 {
 	x11_window.set_small_icon(image);
 }
 
-void OpenGLWindowProvider::enable_alpha_channel(const Rect &blur_rect)
+void OpenGLWindowProvider::backing_enable_alpha_channel(const Rect &blur_rect)
 {
 	// Implement me, if possible
 }
 
-void OpenGLWindowProvider::extend_frame_into_client_area(int left, int top, int right, int bottom)
+void OpenGLWindowProvider::backing_extend_frame_into_client_area(int left, int top, int right, int bottom)
 {
 	// Implement me, if possible
 }
@@ -907,22 +902,22 @@ bool OpenGLWindowProvider::on_clicked(XButtonEvent &event)
 	if (event.button != 1)	// Left mouse button
 		return true;
 
-	int height = get_viewport().get_height();
+	int height = backing_viewport().height();
 
 	glDrawBuffer(GL_BACK);
 	glReadBuffer(GL_FRONT);
 
 	Rect rect = Rect(event.x,event.y, Size(1,1));
 
-	PixelBuffer pixelbuffer(rect.get_width(), rect.get_height(), tf_rgba8);
+	auto pixelbuffer = PixelBuffer::create(rect.width(), rect.height(), tf_rgba8);
 	glReadPixels(
 		rect.left, height - rect.bottom,
 		rect.right - rect.left, rect.bottom - rect.top,
 		GL_RGBA,
 		GL_UNSIGNED_INT_8_8_8_8,
-		pixelbuffer.get_data());
+		pixelbuffer->data());
 
-	const uint32_t *xptr = (const uint32_t *) (pixelbuffer.get_data());
+	const uint32_t *xptr = (const uint32_t *) (pixelbuffer->data());
 	if (((*xptr) & 0xFF) < 10)
 	{
 

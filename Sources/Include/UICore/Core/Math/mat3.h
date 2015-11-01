@@ -35,6 +35,7 @@
 #include "vec3.h"
 #include "angle.h"
 #include <cstdint>
+#include <string.h>
 
 namespace uicore
 {

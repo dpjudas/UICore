@@ -26,7 +26,7 @@
 **    Magnus Norddahl
 */
 
-#include "Network/precomp.h"
+#include "UICore/precomp.h"
 #include "setupnetwork.h"
 #include <signal.h>
 

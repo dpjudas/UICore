@@ -38,11 +38,11 @@ namespace uicore
 class GL1GraphicContextProvider;
 class OpenGLWindowProvider;
 
-class PBuffer_GL1_Impl : public OpenGLGraphicContextProvider
+class PBuffer_GL1_Impl : public OpenGLContextProvider
 {
 
 public:
-	PBuffer_GL1_Impl(GL1GraphicContextProvider *gc_provider);
+	PBuffer_GL1_Impl(GL1GraphicContext *gc_provider);
 
 	~PBuffer_GL1_Impl();
 
@@ -58,7 +58,7 @@ public:
 private:
 	void reset();
 
-	GL1GraphicContextProvider *gc_provider;
+	GL1GraphicContext *gc_provider;
 
 	Size pbuffer_size;
 	OpenGLWindowProvider *window_provider;

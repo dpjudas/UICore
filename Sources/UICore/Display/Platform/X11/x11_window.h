@@ -36,7 +36,6 @@
 #include <map>
 #include "UICore/Core/Signals/signal.h"
 #include "UICore/Display/Window/input_device.h"
-#include "UICore/Display/TargetProviders/input_device_provider.h"
 #include "UICore/Display/Window/display_window.h"
 #include "UICore/Display/Window/cursor.h"
 #include "UICore/Core/Math/point.h"
@@ -58,7 +57,6 @@ namespace uicore
 	class InputDeviceProvider_LinuxJoystick;
 	class DisplayMessageQueue_X11;
 	class Rect;
-	class DisplayWindowSite;
 	class DisplayWindowDescription;
 	class CursorProvider_X11;
 
@@ -90,9 +88,9 @@ namespace uicore
 		::Window get_window() const { return handle.window; }
 		int get_screen() const { return handle.screen; }
 
-		InputDevice &get_keyboard() { return keyboard; }
-		InputDevice &get_mouse() { return mouse; }
-		std::vector<InputDevice> &get_game_controllers() { return joysticks; }
+		const InputDevicePtr &get_keyboard() const { return keyboard; }
+		const InputDevicePtr &get_mouse() const { return mouse; }
+		const std::vector<InputDevicePtr> &get_game_controllers() const { return joysticks; }
 
 		std::function<void()> &func_on_resized() { return callback_on_resized; }
 		std::function<bool(XButtonEvent &)> &func_on_clicked() { return callback_on_clicked; }
@@ -101,7 +99,7 @@ namespace uicore
 		bool is_clipboard_image_available() const;
 
 		std::string get_clipboard_text() const;
-		PixelBuffer get_clipboard_image() const;
+		PixelBufferPtr get_clipboard_image() const;
 
 		const std::vector<int> &get_window_socket_messages() const;
 
@@ -112,7 +110,7 @@ namespace uicore
 
 		void request_repaint();
 
-		void create(XVisualInfo *visual, DisplayWindowSite *site, const DisplayWindowDescription &description);
+		void create(XVisualInfo *visual, DisplayWindowProvider *site, const DisplayWindowDescription &description);
 
 		void show_system_cursor();
 		void hide_system_cursor();
@@ -136,10 +134,10 @@ namespace uicore
 		void bring_to_front();
 
 		void set_clipboard_text(const std::string &text);
-		void set_clipboard_image(const PixelBuffer &buf);
+		void set_clipboard_image(const PixelBufferPtr &buf);
 
-		void set_large_icon(const PixelBuffer &image);
-		void set_small_icon(const PixelBuffer &image);
+		void set_large_icon(const PixelBufferPtr &image);
+		void set_small_icon(const PixelBufferPtr &image);
 
 		void process_message(XEvent &event, X11Window *mouse_capture_window);
 		void process_window();
@@ -175,9 +173,9 @@ namespace uicore
 		::Cursor system_cursor;
 		::Cursor hidden_cursor;
 		Pixmap cursor_bitmap;
-		InputDevice keyboard, mouse;
-		std::vector<InputDevice> joysticks;
-		DisplayWindowSite *site;
+		InputDevicePtr keyboard, mouse;
+		std::vector<InputDevicePtr> joysticks;
+		DisplayWindowProvider *site;
 		std::function<void()> callback_on_resized;
 		std::function<bool(XButtonEvent &)> callback_on_clicked;
 		Size minimum_size; //!< Minimum client area size.

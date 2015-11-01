@@ -33,12 +33,11 @@
 #include "UICore/Core/Math/rect.h"
 #include "UICore/Core/Math/point.h"
 #include "UICore/Core/System/system.h"
-#include "UICore/Core/Text/logger.h"
 #include "UICore/Display/display_target.h"
 #include "UICore/Display/Window/keys.h"
 #include "UICore/Display/Image/pixel_buffer.h"
-#include "UICore/Display/TargetProviders/display_window_provider.h"
 #include "UICore/Display/Window/display_window.h"
+#include "UICore/Display/Window/display_window_provider.h"
 #include "UICore/Display/Window/display_window_description.h"
 #include "UICore/Display/Window/input_event.h"
 
@@ -75,8 +74,8 @@ namespace uicore
 	  site(nullptr), clipboard(this)
 	{
 		handle.display = SetupDisplay::get_message_queue()->get_display();
-		keyboard = InputDevice(new InputDeviceProvider_X11Keyboard(this));
-		mouse = InputDevice(new InputDeviceProvider_X11Mouse(this));
+		keyboard = std::make_shared<InputDeviceProvider_X11Keyboard>(this);
+		mouse = std::make_shared<InputDeviceProvider_X11Mouse>(this);
 
 		SetupDisplay::get_message_queue()->add_client(this);
 	}
@@ -89,13 +88,15 @@ namespace uicore
 		get_keyboard_provider()->dispose();
 		get_mouse_provider()->dispose();
 
+#ifdef HAVE_LINUX_JOYSTICK_H
 		for (auto & elem : joysticks)
-			elem.get_provider()->dispose();
+			static_cast<InputDeviceProvider_LinuxJoystick*>(elem.get())->dispose();
+#endif
 
 		close_window();
 	}
 
-	void X11Window::create(XVisualInfo *visual, DisplayWindowSite *new_site, const DisplayWindowDescription &desc)
+	void X11Window::create(XVisualInfo *visual, DisplayWindowProvider *new_site, const DisplayWindowDescription &desc)
 	{
 		site = new_site;
 
@@ -119,10 +120,10 @@ namespace uicore
 		auto _root_window = RootWindow(handle.display, handle.screen);
 
 		// Get and validate initial window position and size.
-		int win_x = desc.get_position().left * pixel_ratio;
-		int win_y = desc.get_position().top * pixel_ratio;
-		int win_width = desc.get_size().width * pixel_ratio;
-		int win_height = desc.get_size().height * pixel_ratio;
+		int win_x = desc.position().left * pixel_ratio;
+		int win_y = desc.position().top * pixel_ratio;
+		int win_width = desc.size().width * pixel_ratio;
+		int win_height = desc.size().height * pixel_ratio;
 
 		if (win_width <= 0)
 			throw Exception("Invalid window width.");
@@ -147,7 +148,7 @@ namespace uicore
 		}
 
 		// Set minimum and maximum size
-		this->resize_allowed = desc.get_allow_resize() || desc.is_fullscreen(); // Fullscreen mode needs a resizable window.
+		this->resize_allowed = desc.allow_resize() || desc.is_fullscreen(); // Fullscreen mode needs a resizable window.
 		if (resize_allowed)
 		{
 			minimum_size = Size(_ResizeMinimumSize_, _ResizeMinimumSize_);
@@ -193,7 +194,7 @@ namespace uicore
 
 		// Static popups are unresizable captionless popup windows.
 		// These windows should not be decorated.
-		bool is_static_popup = desc.is_popup() && !desc.has_caption() && !desc.get_allow_resize();
+		bool is_static_popup = desc.is_popup() && !desc.has_caption() && !desc.allow_resize();
 
 		// Tell X11 to perserve graphical content under small popup windows to avoid redraws.
 		bool save_under = desc.is_popup() && ( (win_width * win_height) < (256 * 256 * pixel_ratio * pixel_ratio) );
@@ -231,9 +232,9 @@ namespace uicore
 
 		this->system_cursor = XCreateFontCursor(handle.display, XC_left_ptr); // This is allowed to fail
 
-		log_event("debug", "clan::X11Window::create(): Creating window...");
-		log_event("debug", "    x%1 y%2 w%3 h%4 b%5 d%6", win_x, win_y, win_width, win_height, border_width, visual->depth);
-		log_event("debug", "    a.su%1, a.od%2", save_under, is_static_popup);
+		//log_event("debug", "clan::X11Window::create(): Creating window...");
+		//log_event("debug", "    x%1 y%2 w%3 h%4 b%5 d%6", win_x, win_y, win_width, win_height, border_width, visual->depth);
+		//log_event("debug", "    a.su%1, a.od%2", save_under, is_static_popup);
 
 		// Create window
 		handle.window = XCreateWindow(
@@ -247,10 +248,10 @@ namespace uicore
 		if (!handle.window)
 			throw Exception("Unable to create the X11 window");
 
-		if (!desc.get_owner().is_null())
+		if (desc.owner())
 		{
-			DisplayWindow owner = desc.get_owner();
-			XSetTransientForHint(handle.display, handle.window, owner.get_handle().window);
+			DisplayWindowPtr owner = desc.owner();
+			XSetTransientForHint(handle.display, handle.window, owner->handle().window);
 		}
 
 		// Setup the hidden cursor (Maybe this should be done only once when required)
@@ -264,7 +265,7 @@ namespace uicore
 		hidden_cursor = XCreatePixmapCursor(handle.display, cursor_bitmap, cursor_bitmap, &black_color, &black_color, 0,0);
 
 		// Set title of window:
-		set_title(desc.get_title());
+		set_title(desc.title());
 
 		{   // Inform the window manager who we are, so it can kill us if we're not good for its universe.
 			Atom atom;
@@ -320,16 +321,16 @@ namespace uicore
 			if (type != None) // Ensure selected type exists.
 			{
 				XChangeProperty(handle.display, handle.window, atoms["_NET_WM_WINDOW_TYPE"], XA_ATOM, 32, PropModeReplace, (unsigned char *)&type, 1);
-				log_event("debug", "clan::X11Window::create(): Creating window of type '%1'.", name);
+				//log_event("debug", "clan::X11Window::create(): Creating window of type '%1'.", name);
 			}
 			else
 			{
-				log_event("debug", "clan::X11Window::create(): Failed to find a suitable window type.");
+				//log_event("debug", "clan::X11Window::create(): Failed to find a suitable window type.");
 			}
 		}
 		else
 		{
-			log_event("debug", "clan::X11Window::create(): _NET_WM_WINDOW_TYPE does not exist.");
+			//log_event("debug", "clan::X11Window::create(): _NET_WM_WINDOW_TYPE does not exist.");
 		}
 
 		// Set size hints
@@ -338,8 +339,8 @@ namespace uicore
 		{	// Subscribe to WM events.
 			Atom protocol = atoms["WM_DELETE_WINDOW"];
 			Status result = XSetWMProtocols(handle.display, handle.window, &protocol, 1);
-			if (result == 0)
-				log_event("debug", "clan::X11Window::create(): Failed to set WM_PROTOCOLS.");
+			//if (result == 0)
+			//	log_event("debug", "clan::X11Window::create(): Failed to set WM_PROTOCOLS.");
 		}
 
 		{	// Make auto-repeat keys detectable.
@@ -351,7 +352,7 @@ namespace uicore
 			if (atoms["_NET_WM_STATE"] == None && atoms["_NET_WM_STATE_FULLSCREEN"])
 			{
 				fullscreen = false;
-				log_event("debug", "clan::X11Window: Fullscreen not supported by WM.");
+				//log_event("debug", "clan::X11Window: Fullscreen not supported by WM.");
 			}
 			else
 			{
@@ -367,7 +368,7 @@ namespace uicore
 
 		update_frame_extents();
 
-		auto new_client_area = desc.get_position_client_area() // supplied position is at ? client area : window area;
+		auto new_client_area = desc.position_client_area() // supplied position is at ? client area : window area;
 			? Rect::xywh(win_x, win_y, win_width, win_height)
 			: Rect::xywh(win_x + frame_extents.left, win_y + frame_extents.right, win_width, win_height)
 			;
@@ -412,7 +413,7 @@ namespace uicore
 			{
 				if (timer < 0)
 				{
-					log_event("debug", "clan::X11Window: Your window manager has a broken _NET_REQUEST_FRAME_EXTENTS implementation.");
+					//log_event("debug", "clan::X11Window: Your window manager has a broken _NET_REQUEST_FRAME_EXTENTS implementation.");
 					break;
 				}
 
@@ -421,7 +422,7 @@ namespace uicore
 					break;
 				}
 
-				clan::System::sleep(5);
+				uicore::System::sleep(5);
 				timer--;
 			}
 		}
@@ -497,7 +498,7 @@ namespace uicore
 
 	Rect X11Window::get_viewport() const
 	{
-		return Rect { 0, 0, client_area.get_size() };
+		return Rect { 0, 0, client_area.size() };
 	}
 
 	bool X11Window::has_focus() const
@@ -510,8 +511,8 @@ namespace uicore
 
 	bool X11Window::is_minimized() const
 	{
-		if (!is_window_mapped)
-			log_event("debug", "clan::X11Window::is_minimized(): Window is unmapped.");
+		//if (!is_window_mapped)
+		//	log_event("debug", "clan::X11Window::is_minimized(): Window is unmapped.");
 
 		// Check FreeDeskop specified _NET_WM_STATE first.
 		if (atoms["_NET_WM_STATE"] != None)
@@ -521,11 +522,11 @@ namespace uicore
 				auto ret = atoms.check_net_wm_state(handle.window, { "_NET_WM_STATE_HIDDEN" } );
 				return ret.front();
 			}
-			else
-				log_event("debug", "clan::X11Window::is_minimized(): _NET_WM_STATE_HIDDEN not provided by WM.");
+			//else
+			//	log_event("debug", "clan::X11Window::is_minimized(): _NET_WM_STATE_HIDDEN not provided by WM.");
 		}
-		else
-			log_event("debug", "clan::X11Window::is_minimized(): _NET_WM_STATE not provided by WM.");
+		//else
+		//	log_event("debug", "clan::X11Window::is_minimized(): _NET_WM_STATE not provided by WM.");
 
 		// If not available, check legacy WM_STATE property
 		if (atoms["WM_STATE"] != None)
@@ -538,23 +539,23 @@ namespace uicore
 				XFree(data);
 				return state == IconicState;
 			}
-			else
-				log_event("debug", "clan::X11Window::is_minimized(): Failed to query WM_STATE.");
+			//else
+			//	log_event("debug", "clan::X11Window::is_minimized(): Failed to query WM_STATE.");
 		}
-		else
-			log_event("debug", "clan::X11Window::is_minimized(): WM_STATE not provided by WM.");
+		//else
+		//	log_event("debug", "clan::X11Window::is_minimized(): WM_STATE not provided by WM.");
 
 		return false;
 	}
 
 	bool X11Window::is_maximized() const
 	{
-		if (!is_window_mapped)
-			log_event("debug", "clan::X11Window::is_minimized(): Window is unmapped.");
+		//if (!is_window_mapped)
+		//	log_event("debug", "clan::X11Window::is_minimized(): Window is unmapped.");
 
 		auto ret = atoms.check_net_wm_state(handle.window, { "_NET_WM_STATE_MAXIMIZED_HORZ", "_NET_WM_STATE_MAXIMIZED_VERT" });
-		if (ret[0] != ret[1])
-			log_event("debug", "clan::X11Window::is_maximized(): Window is only maximized on the %1 side.", ret[0] ? "horizontal" : "vertical");
+		//if (ret[0] != ret[1])
+		//	log_event("debug", "clan::X11Window::is_maximized(): Window is only maximized on the %1 side.", ret[0] ? "horizontal" : "vertical");
 
 		return ret[0] && ret[1];
 	}
@@ -679,8 +680,8 @@ namespace uicore
 			XSetWMNormalHints(handle.display, handle.window, size_hints);
 		}
 
-		int width = pos.get_width();
-		int height = pos.get_height();
+		int width = pos.width();
+		int height = pos.height();
 
 		Rect new_client_area;
 
@@ -768,44 +769,44 @@ namespace uicore
 
 	void X11Window::minimize()
 	{
-		if (!is_window_mapped)
-			log_event("debug", "clan::X11Window::minimize(): Window is not yet mapped.");
+		//if (!is_window_mapped)
+		//	log_event("debug", "clan::X11Window::minimize(): Window is not yet mapped.");
 
 		if (!is_minimized())
 		{
-			log_event("debug", "clan::X11Window::minimize(): Minimizing.");
+			//log_event("debug", "clan::X11Window::minimize(): Minimizing.");
 			restore_to_maximized = is_maximized();
 			XIconifyWindow(handle.display, handle.window, handle.screen);
 			minimized = true;
 		}
 		else
 		{
-			log_event("debug", "clan::X11Window::minimize(): Window already minimized.");
+			//log_event("debug", "clan::X11Window::minimize(): Window already minimized.");
 		}
 	}
 
 	void X11Window::restore()
 	{
-		if (!is_window_mapped)
-			log_event("debug", "clan::X11Window::restore(): Window is not yet mapped.");
+		//if (!is_window_mapped)
+		//	log_event("debug", "clan::X11Window::restore(): Window is not yet mapped.");
 
 		if (is_minimized())
 		{
 			if (restore_to_maximized)
 			{
-				log_event("debug", "clan::X11Window::restore(): Restoring to maximized window.");
+				//log_event("debug", "clan::X11Window::restore(): Restoring to maximized window.");
 				maximize();
 			}
 			else
 			{
-				log_event("debug", "clan::X11Window::restore(): Restoring minimized window.");
+				//log_event("debug", "clan::X11Window::restore(): Restoring minimized window.");
 				map_window();
 				maximized = false;
 			}
 		}
 		else if (is_maximized())
 		{
-			log_event("debug", "clan::X11Window::restore(): Restoring window size.");
+			//log_event("debug", "clan::X11Window::restore(): Restoring window size.");
 			atoms.modify_net_wm_state(handle.window, _NET_WM_STATE_REMOVE, "_NET_WM_STATE_MAXIMIZED_HORZ", "_NET_WM_STATE_MAXIMIZED_VERT");
 			maximized = false;
 		}
@@ -821,14 +822,14 @@ namespace uicore
 		{
 			if (!is_minimized())
 			{
-				log_event("debug", "clan::X11Window::map_window(): Window already mapped.");
+				//log_event("debug", "clan::X11Window::map_window(): Window already mapped.");
 				return;
 			}
-			else
-				log_event("debug", "clan::X11Window::map_window(): Mapping minimized window.");
+			//else
+			//	log_event("debug", "clan::X11Window::map_window(): Mapping minimized window.");
 		}
 
-		log_event("debug", "clan::X11Window::map_window(): Mapping window...");
+		//log_event("debug", "clan::X11Window::map_window(): Mapping window...");
 
 		int result = XMapWindow(handle.display, handle.window);
 		if ((result == BadValue) || (result == BadWindow))
@@ -864,11 +865,11 @@ namespace uicore
 
 		if (!is_window_mapped)
 		{
-			log_event("debug", "clan::X11Window::unmap_window(): Window already unmapped.");
+			//log_event("debug", "clan::X11Window::unmap_window(): Window already unmapped.");
 			return;
 		}
 
-		log_event("debug", "clan::X11Window::map_window(): Unmapping window...");
+		//log_event("debug", "clan::X11Window::map_window(): Unmapping window...");
 
 		int result = XUnmapWindow(handle.display, handle.window);
 		if ( (result == BadValue) || (result == BadWindow) )
@@ -886,14 +887,14 @@ namespace uicore
 
 	void X11Window::maximize()
 	{
-		log_event("debug", "clan::X11Window::maximize(): Maximizing window.");
+		//log_event("debug", "clan::X11Window::maximize(): Maximizing window.");
 		atoms.modify_net_wm_state(handle.window, _NET_WM_STATE_ADD, "_NET_WM_STATE_MAXIMIZED_HORZ", "_NET_WM_STATE_MAXIMIZED_VERT");
 		maximized = true;
 	}
 
 	void X11Window::show(bool activate)
 	{
-		log_event("debug", "clan::X11Window::show(): Mapping window.");
+		//log_event("debug", "clan::X11Window::show(): Mapping window.");
 		map_window();
 		if (activate)
 			set_enabled(true);
@@ -950,10 +951,10 @@ namespace uicore
 		{
 			if (old_client_area.left != client_area.left || old_client_area.top != client_area.top)
 			{
-				(site->sig_window_moved)();
+				site->sig_window_moved()();
 			}
 
-			if (old_client_area.get_width() != client_area.get_width() || old_client_area.get_height() != client_area.get_height())
+			if (old_client_area.width() != client_area.width() || old_client_area.height() != client_area.height())
 			{
 				Rectf rectf = client_area;
 				rectf.left   /= pixel_ratio;
@@ -964,10 +965,10 @@ namespace uicore
 				if (callback_on_resized)
 					callback_on_resized(); // OpenGLWindowProvider::on_window_resized
 
-				(site->sig_resize)(rectf.get_width(), rectf.get_height()); // TopLevelWindow_Impl::on_resize
+				site->sig_resize()(rectf.width(), rectf.height()); // TopLevelWindow_Impl::on_resize
 
-				if (site->func_window_resize)
-					(site->func_window_resize)(rectf);
+				if (site->func_window_resize())
+					site->func_window_resize()(rectf);
 			}
 		}
 	}
@@ -995,7 +996,7 @@ namespace uicore
 				Atom WM_PROTOCOLS = atoms["WM_PROTOCOLS"];
 				if (WM_PROTOCOLS == None)
 				{
-					log_event("debug", "clan::X11Window::process_message: WM_PROTOCOLS not supported by WM.");
+					//log_event("debug", "clan::X11Window::process_message: WM_PROTOCOLS not supported by WM.");
 					break;
 				}
 				else if (event.xclient.message_type == WM_PROTOCOLS)
@@ -1003,7 +1004,7 @@ namespace uicore
 					unsigned long protocol = event.xclient.data.l[0];
 					if (protocol == None)
 					{
-						log_event("debug", "clan::X11Window::process_message: WM_PROTOCOLS event protocol supplied is None.");
+						//log_event("debug", "clan::X11Window::process_message: WM_PROTOCOLS event protocol supplied is None.");
 						break;
 					}
 
@@ -1012,7 +1013,7 @@ namespace uicore
 
 					if (protocol == WM_DELETE_WINDOW && site)
 					{
-						(site->sig_window_close)();
+						site->sig_window_close()();
 					}
 					else if (protocol == _NET_WM_PING)
 					{
@@ -1028,14 +1029,14 @@ namespace uicore
 			}
 			case FocusIn:
 				if (site)
-					(site->sig_got_focus)();
+					site->sig_got_focus()();
 				break;
 			case FocusOut:
 				if (site)
 				{
 					if (!has_focus())	// For an unknown reason, FocusOut is called when clicking on title bar of window
 					{
-						(site->sig_lost_focus)();
+						site->sig_lost_focus()();
 					}
 				}
 				break;
@@ -1052,14 +1053,14 @@ namespace uicore
 					if (is_minimized())
 					{
 						if (!minimized && site != nullptr)
-							(site->sig_window_minimized)();
+							site->sig_window_minimized()();
 						minimized = true;
 						maximized = false;
 					}
 					else if (is_maximized())
 					{
 						if (!maximized && site != nullptr)
-							(site->sig_window_maximized)();
+							site->sig_window_maximized()();
 						if (minimized && site != nullptr)
 						{
 							// generate resize events for minimized -> maximized transition
@@ -1069,14 +1070,14 @@ namespace uicore
 							rectf.right  /= pixel_ratio;
 							rectf.bottom /= pixel_ratio;
 
-							(site->sig_window_moved)();
-							if (site->func_window_resize)
-								(site->func_window_resize)(rectf);
+							site->sig_window_moved()();
+							if (site->func_window_resize())
+								site->func_window_resize()(rectf);
 
 							if (callback_on_resized)
 								callback_on_resized();
 
-							(site->sig_resize)(rectf.get_width(), rectf.get_height());
+							site->sig_resize()(rectf.width(), rectf.height());
 						}
 						minimized = false;
 						maximized = true;
@@ -1084,7 +1085,7 @@ namespace uicore
 					else
 					{
 						if ((minimized || maximized) && site != nullptr)
-							(site->sig_window_restored)();
+							site->sig_window_restored()();
 						minimized = false;
 						maximized = false;
 					}
@@ -1094,13 +1095,13 @@ namespace uicore
 					if (is_minimized())
 					{
 						if (!minimized && site != nullptr)
-							(site->sig_window_minimized)();
+							site->sig_window_minimized()();
 						minimized = true;
 					}
 					else
 					{
 						if (minimized && site != nullptr)
-							(site->sig_window_restored)();
+							site->sig_window_restored()();
 						minimized = false;
 					}
 				}
@@ -1173,7 +1174,7 @@ namespace uicore
 		{
 			if (repaint_request)
 			{
-				(site->sig_paint)();
+				site->sig_paint()();
 				repaint_request = false;
 			}
 		}
@@ -1182,11 +1183,10 @@ namespace uicore
 
 	void X11Window::setup_joysticks()
 	{
-		for (auto & elem : joysticks)
-			elem.get_provider()->dispose();
-		joysticks.clear();
-
 	#ifdef HAVE_LINUX_JOYSTICK_H
+		for (auto & elem : joysticks)
+			static_cast<InputDeviceProvider_LinuxJoystick*>(elem.get())->dispose();
+		joysticks.clear();
 
 		std::string joydev;
 		if (access("/dev/input/", R_OK | X_OK) == 0)
@@ -1212,7 +1212,7 @@ namespace uicore
 				}
 				catch (Exception error)
 				{
-					log_event("debug", "Joystick Error: %1", error.message);
+					//log_event("debug", "Joystick Error: %1", error.message);
 				}
 			}
 		}
@@ -1224,7 +1224,7 @@ namespace uicore
 		clipboard.set_clipboard_text(text);
 	}
 
-	void X11Window::set_clipboard_image(const PixelBuffer &buf)
+	void X11Window::set_clipboard_image(const PixelBufferPtr &buf)
 	{
 		throw Exception("Todo: X11Window::set_clipboard_image");
 	}
@@ -1234,7 +1234,7 @@ namespace uicore
 		return clipboard.get_clipboard_text();
 	}
 
-	PixelBuffer X11Window::get_clipboard_image() const
+	PixelBufferPtr X11Window::get_clipboard_image() const
 	{
 		throw Exception("Todo: X11Window::get_clipboard_image");
 	}
@@ -1262,8 +1262,8 @@ namespace uicore
 		expose.window = handle.window;
 		expose.x = 0;
 		expose.y = 0;
-		expose.width = client_area.get_width();
-		expose.height = client_area.get_height();
+		expose.width = client_area.width();
+		expose.height = client_area.height();
 		expose.count = 0;
 		XSendEvent(handle.display, handle.window, False, 0, (XEvent *) &expose);
 	}
@@ -1345,7 +1345,7 @@ namespace uicore
 		{
 			return Point();
 		}
-		return get_mouse_provider()->get_device_position();
+		return get_mouse_provider()->device_position();
 	}
 
 	const std::vector<int> &X11Window::get_window_socket_messages() const
@@ -1353,24 +1353,24 @@ namespace uicore
 		return current_window_events;
 	}
 
-	void X11Window::set_large_icon(const PixelBuffer &image)
+	void X11Window::set_large_icon(const PixelBufferPtr &image)
 	{
-		unsigned int size = (image.get_width() * image.get_height()) + 2; // header is 2 ints
+		unsigned int size = (image->width() * image->height()) + 2; // header is 2 ints
 		unsigned long* data = (unsigned long*)malloc(size * sizeof(unsigned long));
 
 		// set header
-		data[0] = image.get_width();
-		data[1] = image.get_height();
+		data[0] = image->width();
+		data[1] = image->height();
 
 		// icon data is expected as ARGB
-		PixelBuffer transformed_image = image.to_format(tf_bgra8);
+		PixelBufferPtr transformed_image = image->to_format(tf_bgra8);
 
 		// on 64bit systems, the destination buffer is 64 bit per pixel
 		// thus, we have to copy each pixel individually (no memcpy)
-		for (int y = 0; y < image.get_height(); ++y) {
-			const uint32_t* src = (const uint32_t*)transformed_image.get_line(y);
-			unsigned long* dst = &data[2 + (y * image.get_width())];
-			for (int x = 0; x < image.get_width(); ++x) {
+		for (int y = 0; y < image->height(); ++y) {
+			const uint32_t* src = (const uint32_t*)transformed_image->line(y);
+			unsigned long* dst = &data[2 + (y * image->width())];
+			for (int x = 0; x < image->width(); ++x) {
 				dst[x] = src[x];
 			}
 		}
@@ -1378,8 +1378,8 @@ namespace uicore
 		// set icon geometry
 		unsigned long* geom = (unsigned long*)malloc(4 * sizeof(unsigned long));
 		geom[0] = geom[1] = 0; // x, y
-		geom[2] = image.get_width();
-		geom[3] = image.get_height();
+		geom[2] = image->width();
+		geom[3] = image->height();
 
 		Atom propertyGeom = XInternAtom(handle.display, "_NET_WM_ICON_GEOMETRY", 0);
 		XChangeProperty(handle.display, handle.window, propertyGeom, XA_CARDINAL, 32, PropModeReplace, (unsigned char*)geom, 4);
@@ -1391,28 +1391,30 @@ namespace uicore
 
 	}
 
-	void X11Window::set_small_icon(const PixelBuffer &image)
+	void X11Window::set_small_icon(const PixelBufferPtr &image)
 	{
 		set_large_icon(image);
 	}
 
 	InputDeviceProvider_X11Keyboard *X11Window::get_keyboard_provider() const
 	{
-		return static_cast<InputDeviceProvider_X11Keyboard *>(keyboard.get_provider());
+		return static_cast<InputDeviceProvider_X11Keyboard *>(keyboard.get());
 	}
 
 	InputDeviceProvider_X11Mouse *X11Window::get_mouse_provider() const
 	{
-		return static_cast<InputDeviceProvider_X11Mouse *>(mouse.get_provider());
+		return static_cast<InputDeviceProvider_X11Mouse *>(mouse.get());
 	}
 
 	void X11Window::process_window_sockets()
 	{
+#ifdef HAVE_LINUX_JOYSTICK_H
 		for (auto & elem : joysticks)
 		{
-			InputDeviceProvider_LinuxJoystick *joystick_provider = dynamic_cast<InputDeviceProvider_LinuxJoystick *>(elem.get_provider());
+			InputDeviceProvider_LinuxJoystick *joystick_provider = dynamic_cast<InputDeviceProvider_LinuxJoystick *>(elem.get());
 			if (joystick_provider)
 				joystick_provider->poll(elem, false);
 		}
+#endif
 	}
 }

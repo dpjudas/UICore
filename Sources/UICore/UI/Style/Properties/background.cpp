@@ -213,7 +213,7 @@ namespace uicore
 		for (size_t i = 0; i < bgimages.size(); i++)
 		{
 			auto &img = bgimages[i];
-			std::string prop_name = "background-image[" + Text::to_string(i) + "]";
+			std::string prop_name = "background-image[" + Text::to_string((int)i) + "]";
 			if (!img.image.is_undefined())
 			{
 				setter->set_value(prop_name, img.image);
@@ -229,7 +229,7 @@ namespace uicore
 				setter->set_value(prop_name + ".position-y", img.gradient.radial_position_y);
 				for (size_t j = 0; j < img.gradient.stops.size(); j++)
 				{
-					std::string stop_prop_name = prop_name + ".stop[" + Text::to_string(j) + "]";
+					std::string stop_prop_name = prop_name + ".stop[" + Text::to_string((int)j) + "]";
 					setter->set_value(stop_prop_name, img.gradient.stops[j].color);
 					setter->set_value(stop_prop_name + ".position", img.gradient.stops[j].position);
 				}
@@ -729,7 +729,7 @@ namespace uicore
 		for (size_t i = 0; i < background_images.size(); i++)
 		{
 			auto &img = background_images[i];
-			std::string prop_name = "background-image[" + Text::to_string(i) + "]";
+			std::string prop_name = "background-image[" + Text::to_string((int)i) + "]";
 			if (!img.image.is_undefined())
 			{
 				setter->set_value(prop_name, img.image);
@@ -745,7 +745,7 @@ namespace uicore
 				setter->set_value(prop_name + ".position-y", img.gradient.radial_position_y);
 				for (size_t j = 0; j < img.gradient.stops.size(); j++)
 				{
-					std::string stop_prop_name = prop_name + ".stop[" + Text::to_string(j) + "]";
+					std::string stop_prop_name = prop_name + ".stop[" + Text::to_string((int)j) + "]";
 					setter->set_value(stop_prop_name, img.gradient.stops[j].color);
 					setter->set_value(stop_prop_name + ".position", img.gradient.stops[j].position);
 				}

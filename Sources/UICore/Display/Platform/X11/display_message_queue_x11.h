@@ -29,10 +29,9 @@
 
 #pragma once
 
-#include "Display/System/run_loop_impl.h"
+#include "UICore/Display/System/run_loop_impl.h"
 #include <vector>
 #include <X11/Xlib.h>
-#include "UICore/Core/System/thread_local_storage.h"
 #include <unistd.h>
 #include <fcntl.h>
 
@@ -50,10 +49,9 @@ namespace uicore
 		void add_client(X11Window *window);
 		void remove_client(X11Window *window);
 
-		class ThreadData : public ThreadLocalStorageData
+		class ThreadData
 		{
 		public:
-			ThreadData() {}
 			std::vector<X11Window *> windows;
 			bool modified = false;	// Set by add_client and remove_client
 		};

@@ -26,18 +26,17 @@
 **    Mark Page
 */
 
-#include "GL/precomp.h"
+#include "UICore/precomp.h"
 #include "UICore/GL/opengl_wrap.h"
 #include "UICore/GL/opengl.h"
 #include "pbuffer_impl.h"
-#include "../../GL1/gl1_graphic_context_provider.h"
-#include "UICore/Display/Render/shared_gc_data.h"
+#include "UICore/GL/GL1/gl1_graphic_context.h"
 #include "opengl_window_provider_glx.h"
 
 namespace uicore
 {
 
-PBuffer_GL1_Impl::PBuffer_GL1_Impl(GL1GraphicContextProvider *gc_provider) : gc_provider(gc_provider), window_provider(nullptr), pbuffer(0), pbuffer_context(nullptr)
+PBuffer_GL1_Impl::PBuffer_GL1_Impl(GL1GraphicContext *gc_provider) : gc_provider(gc_provider), window_provider(nullptr), pbuffer(0), pbuffer_context(nullptr)
 {
 	if (!gc_provider)
 		throw Exception("Unexpected provider");
@@ -56,16 +55,16 @@ void PBuffer_GL1_Impl::reset()
 
 	if (window_provider)
 	{
-		if (pbuffer_context) window_provider->glx.glXDestroyContext(window_provider->get_handle().display, pbuffer_context);
+		if (pbuffer_context) window_provider->glx.glXDestroyContext(window_provider->handle().display, pbuffer_context);
 		if (pbuffer)
 		{
 			if (window_provider->glx_1_3)
 			{
-				window_provider->glx.glXDestroyPbuffer(window_provider->get_handle().display, pbuffer);
+				window_provider->glx.glXDestroyPbuffer(window_provider->handle().display, pbuffer);
 			}
 			else
 			{
-				window_provider->glx.glXDestroyPbufferSGIX(window_provider->get_handle().display, pbuffer);
+				window_provider->glx.glXDestroyPbufferSGIX(window_provider->handle().display, pbuffer);
 			}
 		}
 	}
@@ -90,7 +89,7 @@ void PBuffer_GL1_Impl::create(OpenGLWindowProvider &gl_window_provider, const Si
 	window_provider = &gl_window_provider;
 	pbuffer_size = size;
 
-	::Display *disp = gl_window_provider.get_handle().display;
+	::Display *disp = gl_window_provider.handle().display;
 	if (disp == nullptr)
 	{
 		throw Exception("Cannot obtain GL1 display");
@@ -221,7 +220,7 @@ void PBuffer_GL1_Impl::create(OpenGLWindowProvider &gl_window_provider, const Si
 
 void PBuffer_GL1_Impl::make_current() const
 {
-	window_provider->glx.glXMakeCurrent(window_provider->get_handle().display, pbuffer, pbuffer_context);
+	window_provider->glx.glXMakeCurrent(window_provider->handle().display, pbuffer, pbuffer_context);
 }
 
 void PBuffer_GL1_Impl::get_opengl_version(int &version_major, int &version_minor) const

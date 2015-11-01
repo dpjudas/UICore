@@ -32,6 +32,7 @@
 #include "setup_gl.h"
 #include "UICore/GL/opengl_target.h"
 #include "../Display/setup_display.h"
+#include "UICore/Core/Math/cl_math.h"
 
 namespace uicore
 {
@@ -45,7 +46,7 @@ namespace uicore
 			return;
 
 		SetupDisplay::start();	// GL depends on display
-		SetupCore::instance.module_gl = std::make_unique<SetupGL_Impl>();
+		SetupCore::instance.module_gl = uicore::make_unique<SetupGL_Impl>();
 	}
 
 	SetupGL_Impl::SetupGL_Impl()

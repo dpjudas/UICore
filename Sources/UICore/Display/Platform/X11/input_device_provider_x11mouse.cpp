@@ -51,12 +51,12 @@ namespace uicore
 	{
 	}
 
-	Pointf InputDeviceProvider_X11Mouse::get_position() const
+	Pointf InputDeviceProvider_X11Mouse::position() const
 	{
-		return Pointf{ get_device_position() } / window->get_pixel_ratio();
+		return Pointf{ device_position() } / window->get_pixel_ratio();
 	}
 
-	Point InputDeviceProvider_X11Mouse::get_device_position() const
+	Point InputDeviceProvider_X11Mouse::device_position() const
 	{
 		Window root_return;
 		Window child_return;
@@ -72,13 +72,13 @@ namespace uicore
 	}
 
 
-	bool InputDeviceProvider_X11Mouse::get_keycode(int keycode) const
+	bool InputDeviceProvider_X11Mouse::keycode(int keycode) const
 	{
 		if (keycode < 0 || keycode >= 32) return false;
 		return key_states[keycode];
 	}
 
-	std::string InputDeviceProvider_X11Mouse::get_key_name(int id) const
+	std::string InputDeviceProvider_X11Mouse::key_name(int id) const
 	{
 		switch (id)
 		{
@@ -92,17 +92,17 @@ namespace uicore
 		return string_format("Mouse button %1", id);
 	}
 
-	std::string InputDeviceProvider_X11Mouse::get_name() const
+	std::string InputDeviceProvider_X11Mouse::name() const
 	{
 		return "System Mouse";
 	}
 
-	std::string InputDeviceProvider_X11Mouse::get_device_name() const
+	std::string InputDeviceProvider_X11Mouse::device_name() const
 	{
 		return "System Mouse";
 	}
 
-	int InputDeviceProvider_X11Mouse::get_button_count() const
+	int InputDeviceProvider_X11Mouse::button_count() const
 	{
 		return -1;
 	}
@@ -119,7 +119,7 @@ namespace uicore
 		XWarpPointer(window->get_display(), None, window->get_window(), 0, 0, 0, 0, x, y);
 	}
 
-	void InputDeviceProvider_X11Mouse::received_mouse_input(InputDevice &mouse, XButtonEvent &event)
+	void InputDeviceProvider_X11Mouse::received_mouse_input(InputDevicePtr &mouse, XButtonEvent &event)
 	{
 		int id;
 
@@ -190,12 +190,12 @@ namespace uicore
 		window->get_keyboard_modifiers(key.shift, key.alt, key.ctrl);
 
 		if (event.type == ButtonPress)
-			mouse.sig_key_down()(key);
+			mouse->sig_key_down()(key);
 		else
-			mouse.sig_key_up()(key);
+			mouse->sig_key_up()(key);
 	}
 
-	void InputDeviceProvider_X11Mouse::received_mouse_move(InputDevice &mouse, XMotionEvent &event)
+	void InputDeviceProvider_X11Mouse::received_mouse_move(InputDevicePtr &mouse, XMotionEvent &event)
 	{
 		int x = event.x;
 		int y = event.y;
@@ -211,7 +211,7 @@ namespace uicore
 			key.mouse_device_pos = mouse_pos;
 			window->get_keyboard_modifiers(key.shift, key.alt, key.ctrl);
 
-			mouse.sig_pointer_move()(key);
+			mouse->sig_pointer_move()(key);
 		}
 	}
 }

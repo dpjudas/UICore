@@ -29,7 +29,6 @@
 
 #include "UICore/precomp.h"
 #include "UICore/Core/System/databuffer.h"
-#include "UICore/Core/System/thread_local_storage.h"
 #include "display_message_queue_x11.h"
 #include "x11_window.h"
 #include <dlfcn.h>
@@ -101,12 +100,9 @@ namespace uicore
 
 	std::shared_ptr<DisplayMessageQueue_X11::ThreadData> DisplayMessageQueue_X11::get_thread_data()
 	{
-		std::shared_ptr<ThreadData> data = std::dynamic_pointer_cast<ThreadData>(ThreadLocalStorage::get_variable("DisplayMessageQueue_X11::thread_data"));
+		thread_local std::shared_ptr<ThreadData> data;
 		if (!data)
-		{
-			data = std::shared_ptr<ThreadData>(new ThreadData);
-			ThreadLocalStorage::set_variable("DisplayMessageQueue_X11::thread_data", data);
-		}
+			data = std::make_shared<ThreadData>();
 		return data;
 	}
 

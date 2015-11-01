@@ -28,7 +28,7 @@
 
 #pragma once
 
-#include "UICore/Display/TargetProviders/cursor_provider.h"
+#include "UICore/Display/Window/cursor.h"
 #include <vector>
 
 namespace uicore
@@ -36,16 +36,13 @@ namespace uicore
 	class Point;
 	class CursorDescription;
 
-	class CursorProvider_X11 : public CursorProvider
+	class CursorProvider_X11 : public Cursor
 	{
 	public:
 		CursorProvider_X11(const CursorDescription &cursor_description, const Point &hotspot);
 		~CursorProvider_X11();
 
 		int handle;
-
-		/// \brief Destroys the cursor provider.
-		void destroy() { delete this; }
 
 	private:
 		int create_cursor(const CursorDescription &cursor_description, const Point &hotspot) const;

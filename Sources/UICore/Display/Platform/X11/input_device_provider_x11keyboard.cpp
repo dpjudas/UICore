@@ -32,7 +32,7 @@
 #include "input_device_provider_x11keyboard.h"
 #include "UICore/Display/Window/input_event.h"
 #include "UICore/Display/Window/keys.h"
-#include "UICore/Core/Text/string_help.h"
+#include "UICore/Core/Text/text.h"
 #include <cstdio>
 #include <X11/XKBlib.h>
 
@@ -53,7 +53,7 @@ namespace uicore
 	{
 	}
 
-	bool InputDeviceProvider_X11Keyboard::get_keycode(int keycode) const
+	bool InputDeviceProvider_X11Keyboard::keycode(int keycode) const
 	{
 		// Ignore all key events when we don't have focus
 		if (!window->has_focus())
@@ -67,7 +67,7 @@ namespace uicore
 		return keyboard_state[code / 8] & (1 << code % 8);
 	}
 
-	std::string InputDeviceProvider_X11Keyboard::get_key_name(int virtual_key) const
+	std::string InputDeviceProvider_X11Keyboard::key_name(int virtual_key) const
 	{
 		// Look up key name:
 
@@ -80,12 +80,12 @@ namespace uicore
 		return buffer;
 	}
 
-	std::string InputDeviceProvider_X11Keyboard::get_name() const
+	std::string InputDeviceProvider_X11Keyboard::name() const
 	{
 		return "System Keyboard";
 	}
 
-	std::string InputDeviceProvider_X11Keyboard::get_device_name() const
+	std::string InputDeviceProvider_X11Keyboard::device_name() const
 	{
 		return "System Keyboard";
 	}
@@ -97,7 +97,7 @@ namespace uicore
 		key_ctrl = ctrl_down;
 	}
 
-	void InputDeviceProvider_X11Keyboard::received_keyboard_input(InputDevice &keyboard, XKeyEvent &event)
+	void InputDeviceProvider_X11Keyboard::received_keyboard_input(InputDevicePtr &keyboard, XKeyEvent &event)
 	{
 		// Is message a down or up event?
 		bool keydown = (event.type == KeyPress);
@@ -116,7 +116,7 @@ namespace uicore
 
 		KeySym key_symbol = XkbKeycodeToKeysym(window->get_display(), key_code, 0, 0);
 
-		bool keypressed = get_keycode(key_symbol);
+		bool keypressed = keycode(key_symbol);
 
 		// Add to repeat count
 		if (keydown && keypressed)
@@ -243,12 +243,12 @@ namespace uicore
 		if (result > (buff_size - 1)) result = buff_size - 1;
 		buff[result] = 0;
 
-		key.str = StringHelp::local8_to_text(std::string(buff, result));
+		key.str = std::string(buff, result);
 
 		// Emit message:
 		if (keydown)
-			keyboard.sig_key_down()(key);
+			keyboard->sig_key_down()(key);
 		else
-			keyboard.sig_key_up()(key);
+			keyboard->sig_key_up()(key);
 	}
 }

@@ -133,7 +133,7 @@ namespace uicore
 		ioctl(handle, FIONBIO, &nonblocking);
 	}
 
-	TCPConnectionImpl::TCPConnectionImpl(SOCKET init_handle) : TCPSocket(init_handle)
+	TCPConnectionImpl::TCPConnectionImpl(int init_handle) : TCPSocket(init_handle)
 	{
 		//int receive_buffer_size = 600*1024;
 		int send_buffer_size = 600*1024;

@@ -59,7 +59,7 @@ namespace uicore
 		if (ioctl(fd, JSIOCGNAME(sizeof(name_cstr)), name_cstr) < 0)
 			strncpy(name_cstr, "Unknown", sizeof(name_cstr));
 
-		name = name_cstr;
+		_name = name_cstr;
 
 		axis_states.resize(number_of_axes);
 		button_states.resize(number_of_buttons);
@@ -84,36 +84,36 @@ namespace uicore
 		return fd;
 	}
 
-	bool InputDeviceProvider_LinuxJoystick::get_keycode(int keycode) const
+	bool InputDeviceProvider_LinuxJoystick::keycode(int keycode) const
 	{
 		int size = button_states.size();
 		if (keycode < 0 || keycode >= size) return false;
 		return button_states[keycode];
 	}
 
-	std::string InputDeviceProvider_LinuxJoystick::get_key_name(int id) const
+	std::string InputDeviceProvider_LinuxJoystick::key_name(int id) const
 	{
 		return string_format("Joystick button %1", id);
 	}
 
-	float InputDeviceProvider_LinuxJoystick::get_axis(int index) const
+	float InputDeviceProvider_LinuxJoystick::axis(int index) const
 	{
 		int size = axis_states.size();
 		if (index < 0 || index >= size) return 0.0f;
 		return axis_states[index];
 	}
 
-	std::string InputDeviceProvider_LinuxJoystick::get_name() const
+	std::string InputDeviceProvider_LinuxJoystick::name() const
 	{
-		return name;
+		return _name;
 	}
 
-	std::string InputDeviceProvider_LinuxJoystick::get_device_name() const
+	std::string InputDeviceProvider_LinuxJoystick::device_name() const
 	{
 		return device;
 	}
 
-	std::vector<int> InputDeviceProvider_LinuxJoystick::get_axis_ids() const
+	std::vector<int> InputDeviceProvider_LinuxJoystick::axis_ids() const
 	{
 		std::vector<int> ids;
 		for (size_t i = 0; i < axis_states.size(); i++)
@@ -121,7 +121,7 @@ namespace uicore
 		return ids;
 	}
 
-	int InputDeviceProvider_LinuxJoystick::get_button_count() const
+	int InputDeviceProvider_LinuxJoystick::button_count() const
 	{
 		return button_states.size();
 	}

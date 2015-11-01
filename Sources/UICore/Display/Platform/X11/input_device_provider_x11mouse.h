@@ -29,8 +29,7 @@
 
 #pragma once
 
-#include "UICore/Display/Window/input_device.h"
-#include "UICore/Display/TargetProviders/input_device_provider.h"
+#include "UICore/Display/Window/input_device_provider.h"
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 
@@ -44,22 +43,20 @@ namespace uicore
 		InputDeviceProvider_X11Mouse(X11Window *window);
 		~InputDeviceProvider_X11Mouse();
 
-		void destroy() { delete this; }
-
-		InputDevice::Type get_type() const override { return InputDevice::pointer; }
-		Pointf get_position() const override;
-		Point get_device_position() const override;
-		bool get_keycode(int keycode) const override;
-		std::string get_key_name(int id) const override;
-		std::string get_name() const override;
-		std::string get_device_name() const override;
-		int get_button_count() const override;
+		InputDevice::Type type() const override { return InputDevice::pointer; }
+		Pointf position() const override;
+		Point device_position() const override;
+		bool keycode(int keycode) const override;
+		std::string key_name(int id) const override;
+		std::string name() const override;
+		std::string device_name() const override;
+		int button_count() const override;
 
 		void set_position(float x, float y) override;
 		void set_device_position(int x, int y) override;
 
-		void received_mouse_input(InputDevice &mouse, XButtonEvent &event);
-		void received_mouse_move(InputDevice &mouse, XMotionEvent &event);
+		void received_mouse_input(InputDevicePtr &mouse, XButtonEvent &event);
+		void received_mouse_move(InputDevicePtr &mouse, XMotionEvent &event);
 
 	private:
 		void on_dispose() override;

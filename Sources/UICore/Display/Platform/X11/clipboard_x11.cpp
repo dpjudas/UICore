@@ -79,7 +79,7 @@ namespace uicore
 		unsigned char *read_data = X11Atoms::get_property(handle.display, handle.window, atom_CLIPBOARD, actual_type, actual_format, item_count);
 		if (actual_type != XA_STRING || actual_format != 8 || item_count <= 0 || read_data == nullptr)
 		{
-			log_event("debug", "Failed to get X11 CLIPBOARD text.");
+			//log_event("debug", "Failed to get X11 CLIPBOARD text.");
 			if (read_data != nullptr) XFree(read_data);
 			return std::string();
 		}

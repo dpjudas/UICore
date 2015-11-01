@@ -29,8 +29,7 @@
 
 #pragma once
 
-#include "UICore/Display/Window/input_device.h"
-#include "UICore/Display/TargetProviders/input_device_provider.h"
+#include "UICore/Display/Window/input_device_provider.h"
 
 struct js_event;
 
@@ -49,14 +48,14 @@ namespace uicore
 		/// \brief Get the file descriptor of the joystick
 		int get_fd() const;
 
-		InputDevice::Type get_type() const override { return InputDevice::joystick; }
-		bool get_keycode(int keycode) const override;
-		std::string get_key_name(int id) const override;
-		float get_axis(int index) const override;
-		std::string get_name() const override;
-		std::string get_device_name() const override;
-		std::vector<int> get_axis_ids() const override;
-		int get_button_count() const override;
+		InputDevice::Type type() const override { return InputDevice::joystick; }
+		bool keycode(int keycode) const override;
+		std::string key_name(int id) const override;
+		float axis(int index) const override;
+		std::string name() const override;
+		std::string device_name() const override;
+		std::vector<int> axis_ids() const override;
+		int button_count() const override;
 
 		/// \brief Update device
 		/// \param peek_only Treat as a request to see if an event would occur
@@ -74,7 +73,7 @@ namespace uicore
 		mutable std::vector<float> axis_states;
 		mutable std::vector<bool>  button_states;
 
-		std::string name;
+		std::string _name;
 
 		mutable bool new_event;
 	};
