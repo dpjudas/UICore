@@ -133,8 +133,8 @@ public:
         output << "# Warning! This is an auto-generated file. Please edit Setup/Unix/configure.cpp instead." << std::endl;
         output << "cmake_minimum_required(VERSION 2.8)" << std::endl;
         output << "project(uicore)" << std::endl;
-        output << "SET( CMAKE_CXX_FLAGS \"${CMAKE_CXX_FLAGS} -std=gnu++11\" )" << std::endl;
-        output << "SET( CMAKE_EXE_LINKER_FLAGS \"${CMAKE_EXE_LINKER_FLAGS} -std=gnu++11\" )" << std::endl;
+        output << "SET( CMAKE_CXX_FLAGS \"${CMAKE_CXX_FLAGS} -std=gnu++11 -pthread\" )" << std::endl;
+        output << "SET( CMAKE_EXE_LINKER_FLAGS \"${CMAKE_EXE_LINKER_FLAGS} -std=gnu++11 -pthread\" )" << std::endl;
         output << "INCLUDE(FindPkgConfig)" << std::endl;
         output << "INCLUDE(CheckIncludeFiles)" << std::endl;
         output << "pkg_check_modules(FREETYPE2 REQUIRED freetype2)" << std::endl;
@@ -153,7 +153,7 @@ public:
         output << "set(VERSION_STRING ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH})" << std::endl;
         output << "set(SO_VERSION 0)" << std::endl;
         output << "set_target_properties(uicore PROPERTIES VERSION ${VERSION_STRING} SOVERSION ${SO_VERSION})" << std::endl;
-        output << "target_link_libraries(uicore ${FREETYPE2_LIBRARIES})" << std::endl;
+        output << "target_link_libraries(uicore ${FREETYPE2_LIBRARIES} -lX11 -ldl -lfontconfig -lGL)" << std::endl;
         output << "install(" << std::endl;
         output << "    TARGETS uicore" << std::endl;
         output << "    RUNTIME DESTINATION bin" << std::endl;
