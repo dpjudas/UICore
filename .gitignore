@@ -75,4 +75,10 @@ xcshareddata
 /Projects/uicore.vcxproj
 /Projects/uicore.vcxproj.filters
 /Setup/VisualStudio/Win32/configure.aps
+/Setup/Xcode/configure
 /UICore.sln
+/.kdev4
+/CMakeLists.txt
+/UICore.kdev4
+/build
+/Setup/Unix/configure
