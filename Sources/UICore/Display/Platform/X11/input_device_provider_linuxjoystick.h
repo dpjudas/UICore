@@ -43,8 +43,6 @@ namespace uicore
 		InputDeviceProvider_LinuxJoystick(X11Window *window, const std::string &device);
 		~InputDeviceProvider_LinuxJoystick();
 
-		void destroy() { delete this; }
-
 		/// \brief Get the file descriptor of the joystick
 		int get_fd() const;
 
@@ -60,11 +58,11 @@ namespace uicore
 		/// \brief Update device
 		/// \param peek_only Treat as a request to see if an event would occur
 		/// \return true when the device event has occurred
-		bool poll(InputDevice &joystick, bool peek_only);
+		bool poll(bool peek_only);
 
 	private:
 		void on_dispose() override;
-		void process_event(InputDevice &joystick, js_event event) const;
+		void process_event(js_event event);
 
 		X11Window *window;
 		std::string device;

@@ -1203,9 +1203,8 @@ namespace uicore
 			{
 				try
 				{
-					auto joystick_provider = new InputDeviceProvider_LinuxJoystick(this, pathname);
-					InputDevice device(joystick_provider);
-					joysticks.push_back(device);
+					auto joystick_provider = std::make_shared<InputDeviceProvider_LinuxJoystick>(this, pathname);
+					joysticks.push_back(joystick_provider);
 
 					current_window_events.push_back(joystick_provider->get_fd());
 
@@ -1413,7 +1412,7 @@ namespace uicore
 		{
 			InputDeviceProvider_LinuxJoystick *joystick_provider = dynamic_cast<InputDeviceProvider_LinuxJoystick *>(elem.get());
 			if (joystick_provider)
-				joystick_provider->poll(elem, false);
+				joystick_provider->poll(false);
 		}
 #endif
 	}

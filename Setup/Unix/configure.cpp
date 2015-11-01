@@ -136,12 +136,12 @@ public:
         output << "SET( CMAKE_CXX_FLAGS \"${CMAKE_CXX_FLAGS} -std=gnu++11\" )" << std::endl;
         output << "SET( CMAKE_EXE_LINKER_FLAGS \"${CMAKE_EXE_LINKER_FLAGS} -std=gnu++11\" )" << std::endl;
         output << "INCLUDE(FindPkgConfig)" << std::endl;
-        output << "INCLUDE (CheckIncludeFiles)" << std::endl;
+        output << "INCLUDE(CheckIncludeFiles)" << std::endl;
         output << "pkg_check_modules(FREETYPE2 REQUIRED freetype2)" << std::endl;
         output << "CHECK_INCLUDE_FILES(linux/joystick.h HAVE_LINUX_JOYSTICK_H)" << std::endl;
-        //output << "if (NOT HAVE_FREETYPE)" << std::endl;
-        //output << "message( FATAL_ERROR \"Freetype headers not found. Try 'apt-cache search libfreetype.*dev'\" )" << std::endl;
-        //output << "endif (NOT HAVE_FREETYPE)" << std::endl;
+        output << "if (HAVE_LINUX_JOYSTICK_H)" << std::endl;
+        output << "SET( CMAKE_CXX_FLAGS \"${CMAKE_CXX_FLAGS} -DHAVE_LINUX_JOYSTICK_H\" )" << std::endl;
+        output << "endif (HAVE_LINUX_JOYSTICK_H)" << std::endl;
         output << "include_directories(BEFORE Sources/Include Sources ${FREETYPE2_INCLUDE_DIRS})" << std::endl;
         output << "link_directories(${FREETYPE2_LIBRARY_DIRS})" << std::endl;
         output << "add_library(uicore" << std::endl;

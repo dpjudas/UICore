@@ -126,7 +126,7 @@ namespace uicore
 		return button_states.size();
 	}
 
-	void InputDeviceProvider_LinuxJoystick::process_event(InputDevice &joystick, js_event event) const
+	void InputDeviceProvider_LinuxJoystick::process_event(js_event event)
 	{
 		InputEvent input_event;
 		input_event.mouse_pos = Pointf(window->get_mouse_position()) / window->get_pixel_ratio();
@@ -157,9 +157,9 @@ namespace uicore
 			input_event.id = (InputCode)event.number;
 
 			if (value)
-				joystick.sig_key_down()(input_event);
+				sig_key_down()(input_event);
 			else
-				joystick.sig_key_up()(input_event);
+				sig_key_up()(input_event);
 		}
 		else if (event.type & JS_EVENT_AXIS)
 		{
@@ -176,18 +176,18 @@ namespace uicore
 			input_event.id = (InputCode)event.number;
 			input_event.axis_pos = value;
 
-			joystick.sig_axis_move()(input_event);
+			sig_axis_move()(input_event);
 		}
 	}
 
 
-	bool InputDeviceProvider_LinuxJoystick::poll(InputDevice &joystick, bool peek_only)
+	bool InputDeviceProvider_LinuxJoystick::poll(bool peek_only)
 	{
 		struct js_event event;
 
 		while (read(fd, &event, sizeof(struct js_event)) != -1)
 		{
-			process_event(joystick, event);
+			process_event(event);
 		}
 
 		bool joy_event = new_event;
