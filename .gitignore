@@ -36,7 +36,6 @@ Makefile.in
 /compile
 /config.guess
 /config.sub
-/configure
 /depcomp
 /install-sh
 /ltmain.sh
