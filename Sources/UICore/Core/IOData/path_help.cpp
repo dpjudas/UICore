@@ -224,7 +224,7 @@ namespace uicore
 
 			base_location = get_location(base, path_type_file);
 			absolute_location = get_location(absolute, path_type_file);
-			if (Text::equal_caseless(absolute_location, base_location) != 0)
+			if (!Text::equal_caseless(absolute_location, base_location))
 				return absolute_path;
 		}
 
