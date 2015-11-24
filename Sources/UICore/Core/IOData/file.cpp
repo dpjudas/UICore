@@ -90,7 +90,7 @@ namespace uicore
 		auto file = std::make_shared<FileImpl>();
 		file->handle = CreateFile(Text::to_utf16(filename).c_str(), access_flags, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 		if (file->handle == INVALID_HANDLE_VALUE)
-			throw Exception("CreateFile failed");
+			throw Exception("Could not open existing file: " + filename);
 		return file;
 	}
 
@@ -107,7 +107,7 @@ namespace uicore
 		auto file = std::make_shared<FileImpl>();
 		file->handle = CreateFile(Text::to_utf16(filename).c_str(), access_flags, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, 0, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
 		if (file->handle == INVALID_HANDLE_VALUE)
-			throw Exception("CreateFile failed");
+			throw Exception("Could not open or create file: " + filename);
 		return file;
 	}
 
@@ -124,7 +124,7 @@ namespace uicore
 		auto file = std::make_shared<FileImpl>();
 		file->handle = CreateFile(Text::to_utf16(filename).c_str(), access_flags, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
 		if (file->handle == INVALID_HANDLE_VALUE)
-			throw Exception("CreateFile failed");
+			throw Exception("Could not create file: " + filename);
 		return file;
 	}
 
@@ -141,7 +141,7 @@ namespace uicore
 		auto file = std::make_shared<FileImpl>();
 		file->handle = CreateFile(Text::to_utf16(filename).c_str(), access_flags, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, 0, CREATE_NEW, FILE_ATTRIBUTE_NORMAL, 0);
 		if (file->handle == INVALID_HANDLE_VALUE)
-			throw Exception("CreateFile failed");
+			throw Exception("Could not create new file: " + filename);
 		return file;
 	}
 
@@ -252,7 +252,7 @@ namespace uicore
 		auto file = std::make_shared<FileImpl>();
 		file->handle = open(filename.c_str(), access_flags, 0);
 		if (file->handle == -1)
-			throw Exception("open failed");
+			throw Exception("Could not open existing file: " + filename);
 		return file;
 	}
 
@@ -269,7 +269,7 @@ namespace uicore
 		auto file = std::make_shared<FileImpl>();
 		file->handle = open(filename.c_str(), access_flags|O_CREAT, S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH);
 		if (file->handle == -1)
-			throw Exception("open failed");
+			throw Exception("Could not open or create file: " + filename);
 		return file;
 	}
 
@@ -286,7 +286,7 @@ namespace uicore
 		auto file = std::make_shared<FileImpl>();
 		file->handle = open(filename.c_str(), access_flags|O_CREAT|O_TRUNC, S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH);
 		if (file->handle == -1)
-			throw Exception("open failed");
+			throw Exception("Could not create file: " + filename);
 		return file;
 	}
 
@@ -303,7 +303,7 @@ namespace uicore
 		auto file = std::make_shared<FileImpl>();
 		file->handle = open(filename.c_str(), access_flags|O_CREAT|O_EXCL, S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH);
 		if (file->handle == -1)
-			throw Exception("open failed");
+			throw Exception("Could not create new file: " + filename);
 		return file;
 	}
 
