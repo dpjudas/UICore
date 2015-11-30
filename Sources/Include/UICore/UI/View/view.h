@@ -60,6 +60,7 @@ namespace uicore
 	class DisplayWindow;
 	typedef std::shared_ptr<DisplayWindow> DisplayWindowPtr;
 	class ViewTree;
+	class ViewAction;
 
 	/// View for an area of the user interface
 	class View : public std::enable_shared_from_this<View>
@@ -110,6 +111,20 @@ namespace uicore
 
 		/// Remove view from parent
 		void remove_from_super();
+
+		/// Add an action recognizer
+		void add_action(const std::shared_ptr<ViewAction> &action);
+
+		template<typename T, typename... Types>
+		std::shared_ptr<T> add_action(Types &&... args)
+		{
+			auto action = std::make_shared<T>(std::forward<Types>(args)...);
+			add_action(action);
+			return action;
+		}
+
+		/// List of all action recognizers
+		const std::vector<std::shared_ptr<ViewAction>> &actions() const;
 
 		/// Test if view is set to hidden
 		bool hidden() const;
@@ -320,5 +335,6 @@ namespace uicore
 
 		friend class ViewTree;
 		friend class ViewImpl;
+		friend class ViewAction;
 	};
 }

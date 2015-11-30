@@ -28,6 +28,7 @@
 
 #include "UICore/precomp.h"
 #include "UICore/UI/View/view.h"
+#include "UICore/UI/View/view_action.h"
 #include "UICore/UI/TopLevel/view_tree.h"
 #include "UICore/UI/Events/event.h"
 #include "UICore/UI/Events/activation_change_event.h"
@@ -43,6 +44,7 @@
 #include "UICore/Display/2D/brush.h"
 #include "UICore/Core/Text/text.h"
 #include "view_impl.h"
+#include "view_action_impl.h"
 #include "vbox_layout.h"
 #include "hbox_layout.h"
 #include <algorithm>
@@ -60,6 +62,11 @@ namespace uicore
 		{
 			subview->impl->_superview = nullptr;
 			subview->impl->update_style_cascade();
+		}
+
+		for (auto &action : actions())
+		{
+			action->impl->view = nullptr;
 		}
 	}
 
@@ -168,6 +175,21 @@ namespace uicore
 			super->set_needs_layout();
 
 			subview_removed(view_ptr);
+		}
+	}
+
+	const std::vector<std::shared_ptr<ViewAction>> &View::actions() const
+	{
+		return impl->_actions;
+	}
+
+	void View::add_action(const std::shared_ptr<ViewAction> &action)
+	{
+		if (action)
+		{
+			action->remove_from_view();
+			impl->_actions.push_back(action);
+			action->impl->view = this;
 		}
 	}
 
@@ -832,8 +854,85 @@ namespace uicore
 			style_cascade.cascade.push_back(match.first);
 	}
 
+	void ViewImpl::process_action(ViewAction *action, EventUI *e)
+	{
+		_active_action->any_event(e);
+		if (e->propagation_stopped())
+			return;
+
+		ActivationChangeEvent *activation_change = dynamic_cast<ActivationChangeEvent*>(e);
+		CloseEvent *close = dynamic_cast<CloseEvent*>(e);
+		ResizeEvent *resize = dynamic_cast<ResizeEvent*>(e);
+		FocusChangeEvent *focus_change = dynamic_cast<FocusChangeEvent*>(e);
+		PointerEvent *pointer = dynamic_cast<PointerEvent*>(e);
+		KeyEvent *key = dynamic_cast<KeyEvent*>(e);
+
+		if (activation_change)
+		{
+			switch (activation_change->type())
+			{
+			case ActivationChangeType::activated: _active_action->activated(*activation_change); break;
+			case ActivationChangeType::deactivated: _active_action->deactivated(*activation_change); break;
+			}
+		}
+		else if (focus_change)
+		{
+			switch (focus_change->type())
+			{
+			case FocusChangeType::gained: _active_action->focus_gained(*focus_change); break;
+			case FocusChangeType::lost: _active_action->focus_lost(*focus_change); break;
+			}
+		}
+		else if (pointer)
+		{
+			switch (pointer->type())
+			{
+			case PointerEventType::enter: _active_action->pointer_enter(*pointer); break;
+			case PointerEventType::leave: _active_action->pointer_leave(*pointer); break;
+			case PointerEventType::move: _active_action->pointer_move(*pointer); break;
+			case PointerEventType::press: _active_action->pointer_press(*pointer); break;
+			case PointerEventType::release: _active_action->pointer_release(*pointer); break;
+			case PointerEventType::double_click: _active_action->pointer_double_click(*pointer); break;
+			case PointerEventType::promixity_change: _active_action->pointer_proximity_change(*pointer); break;
+			case PointerEventType::none: break;
+			}
+		}
+		else if (key)
+		{
+			switch (key->type())
+			{
+			case KeyEventType::none: break;
+			case KeyEventType::press: _active_action->key_press(*key); break;
+			case KeyEventType::release: _active_action->key_release(*key); break;
+			}
+		}
+
+		if (e->propagation_stopped())
+			return;
+	}
+
 	void ViewImpl::process_event(View *self, EventUI *e, bool use_capture)
 	{
+		if (!use_capture)
+		{
+			if (_active_action)
+			{
+				process_action(_active_action, e);
+				if (e->propagation_stopped())
+					return;
+			}
+			else
+			{
+				for (auto &action : _actions)
+				{
+					process_action(action.get(), e);
+					if (_active_action || e->propagation_stopped())
+						break;
+				}
+			}
+			
+		}
+
 		ActivationChangeEvent *activation_change = dynamic_cast<ActivationChangeEvent*>(e);
 		CloseEvent *close = dynamic_cast<CloseEvent*>(e);
 		ResizeEvent *resize = dynamic_cast<ResizeEvent*>(e);

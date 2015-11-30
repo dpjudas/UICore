@@ -68,6 +68,7 @@ namespace uicore
 	public:
 		void render(View *self, const CanvasPtr &canvas, ViewRenderLayer layer);
 		void process_event(View *self, EventUI *e, bool use_capture);
+		void process_action(ViewAction *action, EventUI *e);
 		void update_style_cascade() const;
 
 		unsigned int find_next_tab_index(unsigned int tab_index) const;
@@ -82,6 +83,9 @@ namespace uicore
 
 		View *_superview = nullptr;
 		std::vector<std::shared_ptr<View>> _subviews;
+
+		std::vector<std::shared_ptr<ViewAction>> _actions;
+		ViewAction *_active_action = nullptr;
 
 		unsigned int tab_index = 0;
 		FocusPolicy focus_policy = FocusPolicy::reject;
