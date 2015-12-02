@@ -28,8 +28,9 @@
 */
 
 #include "UICore/precomp.h"
-#include "UICore/Display/System/timer.h"
 #include "UICore/Core/System/system.h"
+#include "UICore/Core/System/singleton_bugfix.h"
+#include "UICore/Display/System/timer.h"
 #include "UICore/Display/System/run_loop.h"
 #include <map>
 #include <thread>
@@ -125,6 +126,12 @@ namespace uicore
 			}
 		}
 
+		static TimerThread &instance()
+		{
+			static Singleton<TimerThread> timer_thread;
+			return *timer_thread.get();
+		}
+
 	private:
 		void worker_main()
 		{
@@ -216,11 +223,10 @@ namespace uicore
 		std::vector<std::shared_ptr<ActiveTimer>> timers;
 	};
 
-	TimerThread timer_thread;
 
 	TimerImpl::~TimerImpl()
 	{
-		timer_thread.stop(this);
+		TimerThread::instance().stop(this);
 	}
 
 	std::shared_ptr<Timer> Timer::create()
@@ -232,11 +238,11 @@ namespace uicore
 	{
 		_timeout = timeout;
 		is_repeating = repeat;
-		timer_thread.start(shared_from_this());
+		TimerThread::instance().start(shared_from_this());
 	}
 
 	void TimerImpl::stop()
 	{
-		timer_thread.stop(this);
+		TimerThread::instance().stop(this);
 	}
 }

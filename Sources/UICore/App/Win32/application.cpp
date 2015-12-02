@@ -36,6 +36,7 @@
 #include "UICore/Core/System/exception.h"
 #include "UICore/Core/ErrorReporting/exception_dialog.h"
 #include "UICore/display.h"
+#include "UICore/Core/System/singleton_bugfix.h"
 
 #ifdef _MSC_VER
 #include <crtdbg.h>
@@ -119,6 +120,7 @@ int WINAPI WinMain(
 		RunLoop::run();
 	}
 
+	SingletonBugfix::deinitialize();
 	return retval;
 }
 

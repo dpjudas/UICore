@@ -31,6 +31,7 @@
 #include "Core/Text/string_format.h"
 #include "Core/Text/text.h"
 #include "Core/Text/utf8_reader.h"
+#include "Core/System/singleton_bugfix.h"
 #include "Core/System/comptr.h"
 #include "Core/System/databuffer.h"
 #include "Core/System/datetime.h"

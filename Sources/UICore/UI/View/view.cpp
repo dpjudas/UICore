@@ -856,7 +856,7 @@ namespace uicore
 
 	void ViewImpl::process_action(ViewAction *action, EventUI *e)
 	{
-		_active_action->any_event(e);
+		action->any_event(e);
 		if (e->propagation_stopped())
 			return;
 
@@ -871,29 +871,29 @@ namespace uicore
 		{
 			switch (activation_change->type())
 			{
-			case ActivationChangeType::activated: _active_action->activated(*activation_change); break;
-			case ActivationChangeType::deactivated: _active_action->deactivated(*activation_change); break;
+			case ActivationChangeType::activated: action->activated(*activation_change); break;
+			case ActivationChangeType::deactivated: action->deactivated(*activation_change); break;
 			}
 		}
 		else if (focus_change)
 		{
 			switch (focus_change->type())
 			{
-			case FocusChangeType::gained: _active_action->focus_gained(*focus_change); break;
-			case FocusChangeType::lost: _active_action->focus_lost(*focus_change); break;
+			case FocusChangeType::gained: action->focus_gained(*focus_change); break;
+			case FocusChangeType::lost: action->focus_lost(*focus_change); break;
 			}
 		}
 		else if (pointer)
 		{
 			switch (pointer->type())
 			{
-			case PointerEventType::enter: _active_action->pointer_enter(*pointer); break;
-			case PointerEventType::leave: _active_action->pointer_leave(*pointer); break;
-			case PointerEventType::move: _active_action->pointer_move(*pointer); break;
-			case PointerEventType::press: _active_action->pointer_press(*pointer); break;
-			case PointerEventType::release: _active_action->pointer_release(*pointer); break;
-			case PointerEventType::double_click: _active_action->pointer_double_click(*pointer); break;
-			case PointerEventType::promixity_change: _active_action->pointer_proximity_change(*pointer); break;
+			case PointerEventType::enter: action->pointer_enter(*pointer); break;
+			case PointerEventType::leave: action->pointer_leave(*pointer); break;
+			case PointerEventType::move: action->pointer_move(*pointer); break;
+			case PointerEventType::press: action->pointer_press(*pointer); break;
+			case PointerEventType::release: action->pointer_release(*pointer); break;
+			case PointerEventType::double_click: action->pointer_double_click(*pointer); break;
+			case PointerEventType::promixity_change: action->pointer_proximity_change(*pointer); break;
 			case PointerEventType::none: break;
 			}
 		}
@@ -902,8 +902,8 @@ namespace uicore
 			switch (key->type())
 			{
 			case KeyEventType::none: break;
-			case KeyEventType::press: _active_action->key_press(*key); break;
-			case KeyEventType::release: _active_action->key_release(*key); break;
+			case KeyEventType::press: action->key_press(*key); break;
+			case KeyEventType::release: action->key_release(*key); break;
 			}
 		}
 
