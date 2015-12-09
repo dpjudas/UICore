@@ -36,6 +36,7 @@
 #include "UICore/Core/System/databuffer.h"
 #include "UICore/Core/IOData/memory_device.h"
 #include "UICore/Core/Text/text.h"
+#include "UICore/Core/ErrorReporting/exception_dialog.h"
 #include "UICore/Display/Window/display_window_description.h"
 #include "UICore/Display/Window/input_event.h"
 #include "UICore/Display/display_target.h"
@@ -1775,29 +1776,36 @@ namespace uicore
 
 	void Win32Window::update_layered_worker_thread()
 	{
-		while (true)
+		try
 		{
-			std::unique_lock<std::mutex> lock(update_window_mutex);
-			update_window_worker_event.wait(lock, [&]() { return update_window_start_flag || update_window_stop_flag; });
-			if (update_window_stop_flag)
-				break;
-			update_window_start_flag = false;
-			lock.unlock();
-
-			if (DwmFunctions::is_composition_enabled())
+			while (true)
 			{
-				update_layered_worker_thread_process_dwm();
-			}
-			else
-			{
-				update_layered_worker_thread_process();
-			}
+				std::unique_lock<std::mutex> lock(update_window_mutex);
+				update_window_worker_event.wait(lock, [&]() { return update_window_start_flag || update_window_stop_flag; });
+				if (update_window_stop_flag)
+					break;
+				update_window_start_flag = false;
+				lock.unlock();
 
-			lock.lock();
-			update_window_image.reset();
-			update_window_completed_flag = true;
-			lock.unlock();
-			update_window_main_event.notify_one();
+				if (DwmFunctions::is_composition_enabled())
+				{
+					update_layered_worker_thread_process_dwm();
+				}
+				else
+				{
+					update_layered_worker_thread_process();
+				}
+
+				lock.lock();
+				update_window_image.reset();
+				update_window_completed_flag = true;
+				lock.unlock();
+				update_window_main_event.notify_one();
+			}
+		}
+		catch (...)
+		{
+			ExceptionDialog::show(std::current_exception());
 		}
 	}
 

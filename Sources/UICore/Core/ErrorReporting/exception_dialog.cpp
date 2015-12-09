@@ -67,6 +67,8 @@ namespace uicore
 
 	void ExceptionDialog_Impl::show(const std::string &message_and_stack_trace)
 	{
+		SetProcessDPIAware();
+
 		INITCOMMONCONTROLSEX desc = { 0 };
 		desc.dwSize = sizeof(INITCOMMONCONTROLSEX);
 		desc.dwICC = ICC_STANDARD_CLASSES | ICC_WIN95_CLASSES | ICC_COOL_CLASSES;

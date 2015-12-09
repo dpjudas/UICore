@@ -30,8 +30,10 @@
 #include "UICore/precomp.h"
 #include "UICore/Core/System/system.h"
 #include "UICore/Core/System/singleton_bugfix.h"
+#include "UICore/Core/ErrorReporting/exception_dialog.h"
 #include "UICore/Display/System/timer.h"
 #include "UICore/Display/System/run_loop.h"
+#include "UICore/Display/setup_display.h"
 #include <map>
 #include <thread>
 #include <algorithm>
@@ -135,15 +137,22 @@ namespace uicore
 	private:
 		void worker_main()
 		{
-			std::unique_lock<std::mutex> lock(mutex);
-			while (!stop_flag)
+			try
 			{
-				fire_timers();
+				std::unique_lock<std::mutex> lock(mutex);
+				while (!stop_flag)
+				{
+					fire_timers();
 
-				if (timers.empty())
-					timers_changed_event.wait(lock);
-				else
-					timers_changed_event.wait_until(lock, next_awake_time());
+					if (timers.empty())
+						timers_changed_event.wait(lock);
+					else
+						timers_changed_event.wait_until(lock, next_awake_time());
+				}
+			}
+			catch (...)
+			{
+				ExceptionDialog::show(std::current_exception());
 			}
 		}
 
@@ -231,6 +240,7 @@ namespace uicore
 
 	std::shared_ptr<Timer> Timer::create()
 	{
+		SetupDisplay::start(); // Needed for RunLoop::main_thread_async
 		return std::make_shared<TimerImpl>();
 	}
 
