@@ -34,11 +34,16 @@ namespace uicore
 {
 	D3DRasterizerState::D3DRasterizerState(const ComPtr<ID3D11Device> &device, const RasterizerStateDescription &desc)
 	{
+		float factor = 0.0f;
+		float units = 0.0f;
+		desc.get_polygon_offset(factor, units);
+
 		D3D11_RASTERIZER_DESC d3d_desc;
 		d3d_desc.FrontCounterClockwise = (desc.get_front_face() == face_counter_clockwise) ? TRUE : FALSE;
-		d3d_desc.DepthBias = 0;
-		d3d_desc.SlopeScaledDepthBias = 0.0f;
-		d3d_desc.DepthBiasClamp = 0.0f;
+		d3d_desc.DepthBias = factor;
+		d3d_desc.SlopeScaledDepthBias = units;
+		d3d_desc.DepthBiasClamp = FLT_MAX;
+		d3d_desc.DepthClipEnable = TRUE;
 		d3d_desc.ScissorEnable = desc.get_enable_scissor() ? TRUE : FALSE;
 		d3d_desc.MultisampleEnable = FALSE;
 		d3d_desc.AntialiasedLineEnable = desc.get_enable_line_antialiasing() ? TRUE : FALSE;
