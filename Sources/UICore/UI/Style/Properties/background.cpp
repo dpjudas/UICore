@@ -675,6 +675,11 @@ namespace uicore
 					background_color = StyleSetValue::from_keyword("inherit");
 					setter->set_value("background-color", background_color);
 				}
+				else if (equals(token.value, "none"))
+				{
+					background_color = StyleSetValue::from_color(Colorf::transparent);
+					setter->set_value("background-color", background_color);
+				}
 			}
 		}
 	}
