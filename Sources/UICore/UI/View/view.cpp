@@ -734,13 +734,11 @@ namespace uicore
 				if (!e->propagation_stopped())
 					e->_current_target->impl->process_event(e->_current_target.get(), e, false);
 
-				while (e->_current_target && !e->propagation_stopped())
+				while (e->_current_target->superview() && !e->propagation_stopped())
 				{
-					View *current_target_superview = e->_current_target->superview();
 					e->_phase = EventUIPhase::bubbling;
-					e->_current_target = current_target_superview ? current_target_superview->shared_from_this() : std::shared_ptr<View>();
-					if (e->_current_target)
-						e->_current_target->impl->process_event(e->_current_target.get(), e, false);
+					e->_current_target = e->_current_target->superview()->shared_from_this();
+					e->_current_target->impl->process_event(e->_current_target.get(), e, false);
 				}
 			}
 		}
