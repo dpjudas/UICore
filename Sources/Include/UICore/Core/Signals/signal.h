@@ -104,7 +104,7 @@ namespace uicore
 		Signal() : impl(std::make_shared<SignalImpl<SlotImplT<FuncType>>>()) { }
 
 		template<typename... Args>
-		void operator()(Args... args)
+		void operator()(Args&&... args)
 		{
 			std::vector<std::weak_ptr<SlotImplT<FuncType>>> slots = impl->slots;
 			for (std::weak_ptr<SlotImplT<FuncType>> &weak_slot : slots)
@@ -112,7 +112,7 @@ namespace uicore
 				std::shared_ptr<SlotImplT<FuncType>> slot = weak_slot.lock();
 				if (slot)
 				{
-					slot->callback(args...);
+					slot->callback(std::forward<Args>(args)...);
 				}
 			}
 		}
