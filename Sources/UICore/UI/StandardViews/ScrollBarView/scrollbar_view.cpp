@@ -72,8 +72,8 @@ namespace uicore
 		impl->button_decrement->style()->set("width: 17px; height: 17px");
 		impl->button_increment->style()->set("width: 17px; height: 17px");
 
-		slots.connect(impl->track->sig_pointer_press(true), impl.get(), &ScrollBarViewImpl::on_pointer_track_press);
-		slots.connect(impl->track->sig_pointer_release(true), impl.get(), &ScrollBarViewImpl::on_pointer_track_release);
+		slots.connect(impl->track->sig_pointer_press(), impl.get(), &ScrollBarViewImpl::on_pointer_track_press);
+		slots.connect(impl->track->sig_pointer_release(), impl.get(), &ScrollBarViewImpl::on_pointer_track_release);
 
 		slots.connect(impl->thumb->sig_pointer_press(), impl.get(), &ScrollBarViewImpl::on_pointer_thumb_press);
 		slots.connect(impl->thumb->sig_pointer_release(), impl.get(), &ScrollBarViewImpl::on_pointer_thumb_release);
@@ -278,14 +278,8 @@ namespace uicore
 		}
 		else
 		{
-			double content_size = impl->max_pos - impl->min_pos + impl->page_step;
-			double track_length = vertical() ? track_geometry.content_box().height() : track_geometry.content_box().width();
-			double thumb_length = impl->page_step / content_size * track_length;
-
-			thumb_length = std::min(std::max(thumb_length, 16.0), track_length);
-
-			double t = (impl->pos - impl->min_pos) / (impl->max_pos - impl->min_pos);
-			double thumb_pos = t * (track_length - thumb_length);
+			double thumb_pos = impl->thumb_pos();
+			double thumb_length = impl->thumb_length();
 
 			if (vertical())
 			{
