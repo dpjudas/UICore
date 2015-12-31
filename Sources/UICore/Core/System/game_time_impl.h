@@ -45,6 +45,8 @@ namespace uicore
 		int ticks_per_second = 0;
 		int min_update_time_ms = 0;
 
+		int64_t tick_time_adjustment = 0;
+
 		uint64_t start_time = 0;
 		uint64_t current_time = 0;
 

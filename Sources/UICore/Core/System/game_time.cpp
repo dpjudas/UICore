@@ -39,55 +39,60 @@ namespace uicore
 		reset();
 	}
 
-	float GameTime::get_time_elapsed() const
+	float GameTime::time_elapsed() const
 	{
 		return impl->time_elapsed;
 	}
 
-	int GameTime::get_time_elapsed_ms() const
+	int GameTime::time_elapsed_ms() const
 	{
 		return impl->time_elapsed_ms;
 	}
 
-	int GameTime::get_ticks_elapsed() const
+	int GameTime::ticks_elapsed() const
 	{
 		return impl->ticks_elapsed;
 	}
 
-	float GameTime::get_tick_time_elapsed() const
+	float GameTime::tick_time_elapsed() const
 	{
 		return 1.0f / impl->ticks_per_second;
 	}
 
-	int GameTime::get_tick_time_elapsed_ms() const
+	int GameTime::tick_time_elapsed_ms() const
 	{
 		return 1000 / impl->ticks_per_second;
 	}
 
-	float GameTime::get_tick_interpolation_time() const
+	float GameTime::tick_interpolation_time() const
 	{
 		return impl->tick_interpolation_time;
 	}
 
-	float GameTime::get_updates_per_second() const
+	float GameTime::updates_per_second() const
 	{
 		return impl->current_fps;
 	}
 
-	float GameTime::get_current_time() const
+	float GameTime::current_time() const
 	{
 		double timer = ((double)(impl->current_time - impl->start_time)) / 1000000.0;
 		return (float)timer;
 	}
 
-	uint64_t GameTime::get_current_time_microseconds() const
+	uint64_t GameTime::current_time_microseconds() const
 	{
 		return (impl->current_time - impl->start_time);
 	}
 
-	uint64_t GameTime::get_current_time_ms() const
+	uint64_t GameTime::current_time_ms() const
 	{
 		return (impl->current_time - impl->start_time) / 1000;
+	}
+
+	void GameTime::set_tick_time_adjustment(int64_t microseconds)
+	{
+		impl->tick_time_adjustment = microseconds;
 	}
 
 	void GameTime::update()
@@ -104,14 +109,14 @@ namespace uicore
 		if (current_time < last_time)		// Old cpu's may report time travelling on early multicore processors (iirc)
 			last_time = current_time;
 
-		uint64_t ticks_per_microsecond = 1000000 / ticks_per_second;
-		uint64_t current_tick = (current_time - start_time) / ticks_per_microsecond;
+		uint64_t microseconds_per_tick = ((uint64_t)(1000000 + tick_time_adjustment)) / ticks_per_second;
+		uint64_t current_tick = (current_time - start_time) / microseconds_per_tick;
 
 		ticks_elapsed = current_tick - last_tick;
 		time_elapsed_ms = (int)((time_elapsed_ms_microsecond_adjustment + current_time - last_time) / 1000);
 		time_elapsed_ms_microsecond_adjustment = (current_time - last_time) % 1000;
 		time_elapsed = (float)((current_time - last_time) / (double)1000000);
-		tick_interpolation_time = (float)(((current_time - start_time) % ticks_per_microsecond) / (double)ticks_per_microsecond);
+		tick_interpolation_time = (float)(((current_time - start_time) % microseconds_per_tick) / (double)microseconds_per_tick);
 
 		last_tick = current_tick;
 

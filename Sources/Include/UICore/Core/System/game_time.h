@@ -46,37 +46,40 @@ namespace uicore
 		GameTime(int ticks_per_second = 20, int max_updates_per_second = 0);
 
 		/// \brief Returns the time elapsed in seconds since last update.
-		float get_time_elapsed() const;
+		float time_elapsed() const;
 
 		/// \brief Returns the time elapsed in seconds since last update in milliseconds
-		int get_time_elapsed_ms() const;
+		int time_elapsed_ms() const;
 
 		/// \brief Returns the number of ticks that elapsed since last update.
-		int get_ticks_elapsed() const;
+		int ticks_elapsed() const;
 
 		/// \brief Returns the time elapsed per tick.
-		float get_tick_time_elapsed() const;
+		float tick_time_elapsed() const;
 
 		/// \brief Returns the time elapsed per tick in milliseconds
-		int get_tick_time_elapsed_ms() const;
+		int tick_time_elapsed_ms() const;
 
 		/// \brief Returns the current time between ticks as a normalized number.
 		///
 		/// If the current time is half-way between two tick updates this function returns 0.5,
 		/// at the start of a tick its 0.0, and at the end its 1.0.
-		float get_tick_interpolation_time() const;
+		float tick_interpolation_time() const;
 
 		/// \brief Returns the number of updates that occurred every second (aka fps, frames per second)
-		float get_updates_per_second() const;
+		float updates_per_second() const;
 
 		/// \brief Returns the number of seconds since this class was reset()
-		float get_current_time() const;
+		float current_time() const;
 
 		/// \brief Returns the number of microseconds since this class was reset()
-		uint64_t get_current_time_microseconds() const;
+		uint64_t current_time_microseconds() const;
 
 		/// \brief Returns the number of milliseconds since this class was reset()
-		uint64_t get_current_time_ms() const;
+		uint64_t current_time_ms() const;
+
+		/// \brief Increases or decreases tick speed by the specified amount of microseconds per second
+		void set_tick_time_adjustment(int64_t microseconds);
 
 		/// \brief Updates time data for the frame to be rendered
 		///
