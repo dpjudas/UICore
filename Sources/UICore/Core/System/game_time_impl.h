@@ -49,8 +49,7 @@ namespace uicore
 
 		uint64_t start_time = 0;
 		uint64_t current_time = 0;
-
-		uint64_t last_tick = 0;
+		uint64_t last_tick_time = 0;
 
 		float time_elapsed = 0.0f;
 		int time_elapsed_ms = 0;

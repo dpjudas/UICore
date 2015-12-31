@@ -110,15 +110,15 @@ namespace uicore
 			last_time = current_time;
 
 		uint64_t microseconds_per_tick = ((uint64_t)(1000000 + tick_time_adjustment)) / ticks_per_second;
-		uint64_t current_tick = (current_time - start_time) / microseconds_per_tick;
 
-		ticks_elapsed = current_tick - last_tick;
+		ticks_elapsed = (current_time - last_tick_time) / microseconds_per_tick;
+		tick_interpolation_time = (float)(((current_time - last_tick_time) % microseconds_per_tick) / (double)microseconds_per_tick);
+
+		last_tick_time += ticks_elapsed * microseconds_per_tick;
+
 		time_elapsed_ms = (int)((time_elapsed_ms_microsecond_adjustment + current_time - last_time) / 1000);
 		time_elapsed_ms_microsecond_adjustment = (current_time - last_time) % 1000;
 		time_elapsed = (float)((current_time - last_time) / (double)1000000);
-		tick_interpolation_time = (float)(((current_time - start_time) % microseconds_per_tick) / (double)microseconds_per_tick);
-
-		last_tick = current_tick;
 
 		if (min_update_time_ms)	// Handle max fps
 			process_max_fps();
@@ -168,7 +168,7 @@ namespace uicore
 	{
 		start_time = System::get_microseconds();
 		current_time = start_time;
-		last_tick = 0;
+		last_tick_time = start_time;
 		time_elapsed = 0.0f;
 		ticks_elapsed = 0;
 		tick_interpolation_time = 0.0f;
