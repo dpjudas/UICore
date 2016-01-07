@@ -1942,15 +1942,15 @@ namespace uicore
 	#define glVertexArrayVertexBindingDivisorEXT uicore::OpenGL::functions->vertexArrayVertexBindingDivisorEXT
 
 	// OpenGL 4.4
-	#define glBufferStorage uicore::OpenGL::functions->BufferStorage;
-	#define glClearTexImage uicore::OpenGL::functions->ClearTexImage;
-	#define glClearTexSubImage uicore::OpenGL::functions->ClearTexSubImage;
-	#define glBindBuffersBase uicore::OpenGL::functions->BindBuffersBase;
-	#define glBindBuffersRange uicore::OpenGL::functions->BindBuffersRange;
-	#define glBindTextures uicore::OpenGL::functions->BindTextures;
-	#define glBindSamplers uicore::OpenGL::functions->BindSamplers;
-	#define glBindImageTextures uicore::OpenGL::functions->BindImageTextures;
-	#define glBindVertexBuffers uicore::OpenGL::functions->BindVertexBuffers;
+	#define glBufferStorage uicore::OpenGL::functions->BufferStorage
+	#define glClearTexImage uicore::OpenGL::functions->ClearTexImage
+	#define glClearTexSubImage uicore::OpenGL::functions->ClearTexSubImage
+	#define glBindBuffersBase uicore::OpenGL::functions->BindBuffersBase
+	#define glBindBuffersRange uicore::OpenGL::functions->BindBuffersRange
+	#define glBindTextures uicore::OpenGL::functions->BindTextures
+	#define glBindSamplers uicore::OpenGL::functions->BindSamplers
+	#define glBindImageTextures uicore::OpenGL::functions->BindImageTextures
+	#define glBindVertexBuffers uicore::OpenGL::functions->BindVertexBuffers
 
 	// For Legacy OpenGL (For GL1 target)
 	#define glClientActiveTexture uicore::OpenGL::functions->clientActiveTexture

@@ -59,12 +59,13 @@ namespace uicore
 		}
 	}
 
-	void GL3BufferObject::create(const void *data, int size, BufferUsage usage, GLenum new_binding, GLenum new_target)
+	void GL3BufferObject::create(const void *data, int new_size, BufferUsage usage, GLenum new_binding, GLenum new_target)
 	{
 		throw_if_disposed();
 
 		binding = new_binding;
 		target = new_target;
+		size = new_size;
 
 		OpenGL::set_active();
 
@@ -72,7 +73,10 @@ namespace uicore
 		if (binding)
 			glGetIntegerv(binding, &last_buffer);
 		glBindBuffer(target, handle);
-		glBufferData(target, size, data, OpenGL::to_enum(usage));
+		if (glBufferStorage) // To do: redesign BufferUsage enum to something less useless!
+			glBufferStorage(target, size, data, usage == usage_stream_draw ? GL_MAP_WRITE_BIT | GL_DYNAMIC_STORAGE_BIT : GL_MAP_WRITE_BIT | GL_MAP_READ_BIT | GL_DYNAMIC_STORAGE_BIT);
+		else
+			glBufferData(target, size, data, OpenGL::to_enum(usage));
 		glBindBuffer(target, last_buffer);
 	}
 
@@ -99,7 +103,18 @@ namespace uicore
 		if (binding)
 			glGetIntegerv(binding, &last_buffer);
 		glBindBuffer(target, handle);
-		data_ptr = (void *)glMapBuffer(target, OpenGL::to_enum(access));
+		GLbitfield flags = 0;
+		switch (access)
+		{
+		case access_read_only: flags = GL_MAP_READ_BIT; break;
+		case access_write_only: flags = GL_MAP_WRITE_BIT; break;
+		case access_read_write: flags = GL_MAP_READ_BIT | GL_MAP_WRITE_BIT; break;
+		case access_write_discard: flags = GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT; break;
+		}
+		if (glMapBufferRange)
+			data_ptr = (void *)glMapBufferRange(target, 0, size, flags);
+		else
+			data_ptr = (void *)glMapBuffer(target, OpenGL::to_enum(access));
 		glBindBuffer(target, last_buffer);
 	}
 

@@ -69,7 +69,8 @@ namespace uicore
 		GLenum binding;
 		GLenum target;
 
-		void *data_ptr;
+		void *data_ptr = nullptr;
+		int size = 0;
 		GraphicContextPtr lock_gc;
 	};
 }
