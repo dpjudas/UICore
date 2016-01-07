@@ -98,7 +98,19 @@ namespace uicore
 		{
 			if (attached_textures[cnt])
 			{
-				Size texture_size = std::dynamic_pointer_cast<Texture2D>(attached_textures[cnt])->size();
+				Size texture_size;
+
+				auto texture2d = std::dynamic_pointer_cast<Texture2D>(attached_textures[cnt]);
+				if (texture2d)
+				{
+					texture_size = texture2d->size();
+				}
+				else
+				{
+					auto texture2d_array = std::dynamic_pointer_cast<Texture2DArray>(attached_textures[cnt]);
+					texture_size = texture2d_array->size();
+				}
+
 				if (size_set)
 				{
 					if (texture_size.width < size.width)
