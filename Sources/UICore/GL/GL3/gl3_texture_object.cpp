@@ -54,8 +54,6 @@ namespace uicore
 		{
 			dimensions = init.orig_texture->dimensions;
 
-			create_initial(init.texture_dimensions);
-
 			TextureFormat_GL tf = OpenGL::get_textureformat(init.texture_format);
 			if (!tf.valid)
 				throw Exception("Texture format not supported by OpenGL");
@@ -63,7 +61,46 @@ namespace uicore
 			if (!glTextureView)
 				throw Exception("glTextureView required OpenGL 4.3");
 
+			// same as create_initial(), except we are not allowed to bind the handle to a texture type until after the call the glTextureView:
+
+			switch (init.texture_dimensions)
+			{
+			case texture_1d:
+				texture_type = GL_TEXTURE_1D;
+				break;
+			case texture_1d_array:
+				texture_type = GL_TEXTURE_1D_ARRAY;
+				break;
+			case texture_2d:
+				texture_type = GL_TEXTURE_2D;
+				break;
+			case texture_2d_array:
+				texture_type = GL_TEXTURE_2D_ARRAY;
+				break;
+			case texture_3d:
+				texture_type = GL_TEXTURE_3D;
+				break;
+			case texture_cube:
+				texture_type = GL_TEXTURE_CUBE_MAP;
+				break;
+			case texture_cube_array:
+				texture_type = GL_TEXTURE_CUBE_MAP_ARRAY;
+				break;
+			default:
+				throw Exception("Unsupported texture type");
+			}
+
+			TextureStateTracker state_tracker(texture_type, 0);
+			glGenTextures(1, &handle);
 			glTextureView(handle, texture_type, init.orig_texture->handle, tf.internal_format, init.min_level, init.num_levels, init.min_layer, init.num_layers);
+			glBindTexture(texture_type, handle);
+			glTexParameteri(texture_type, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexParameteri(texture_type, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glTexParameteri(texture_type, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+			if (texture_type != GL_TEXTURE_1D)
+				glTexParameteri(texture_type, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+			if (texture_type == GL_TEXTURE_3D)
+				glTexParameteri(texture_type, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 		}
 	}
 
@@ -92,57 +129,98 @@ namespace uicore
 			} while (max(width() >> levels, 1) != 1 || max(height() >> levels, 1) != 1);
 		}
 
-		// Emulate glTexStorage behavior so we can support older versions of OpenGL
-		for (int level = 0; level < levels; level++)
+		if (glTexStorage2D)
 		{
-			int mip_width = max(width() >> level, 1);
-			int mip_height = max(height() >> level, 1);
-
 			if (texture_type == GL_TEXTURE_1D)
 			{
-				glTexImage1D(GL_TEXTURE_1D, level, tf.internal_format, mip_width, 0, tf.pixel_format, tf.pixel_datatype, nullptr);
+				glTexStorage1D(GL_TEXTURE_1D, levels, tf.internal_format, new_width);
 			}
 			else if (texture_type == GL_TEXTURE_1D_ARRAY)
 			{
-				glTexImage2D(GL_TEXTURE_1D_ARRAY, level, tf.internal_format, mip_width, array_size(), 0, tf.pixel_format, tf.pixel_datatype, nullptr);
+				glTexStorage2D(GL_TEXTURE_1D_ARRAY, levels, tf.internal_format, new_width, array_size());
 			}
 			else if (texture_type == GL_TEXTURE_2D)
 			{
-				if (PixelBuffer::is_compressed(texture_format))
-				{
-					unsigned data_size = PixelBuffer::data_size(Size(mip_width, mip_height), texture_format);
-					glCompressedTexImage2D(GL_TEXTURE_2D, level, tf.internal_format, mip_width, mip_height, 0, data_size, nullptr);
-				}
-				else
-				{
-					glTexImage2D(GL_TEXTURE_2D, level, tf.internal_format, mip_width, mip_height, 0, tf.pixel_format, tf.pixel_datatype, nullptr);
-				}
+				glTexStorage2D(GL_TEXTURE_2D, levels, tf.internal_format, new_width, new_height);
 			}
 			else if (texture_type == GL_TEXTURE_2D_ARRAY)
 			{
-				glTexImage3D(GL_TEXTURE_2D_ARRAY, level, tf.internal_format, mip_width, mip_height, array_size(), 0, tf.pixel_format, tf.pixel_datatype, nullptr);
+				glTexStorage3D(GL_TEXTURE_2D_ARRAY, levels, tf.internal_format, new_width, new_height, array_size());
 			}
 			else if (texture_type == GL_TEXTURE_2D_MULTISAMPLE)
 			{
-				glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, tf.internal_format, mip_width, mip_height, fixed_sample_locations);
+				glTexStorage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, tf.internal_format, new_width, new_height, fixed_sample_locations);
 			}
 			else if (texture_type == GL_TEXTURE_2D_MULTISAMPLE_ARRAY)
 			{
-				glTexImage3DMultisample(GL_TEXTURE_2D_MULTISAMPLE_ARRAY, samples, tf.internal_format, mip_width, mip_height, array_size(), fixed_sample_locations);
+				glTexStorage3DMultisample(GL_TEXTURE_2D_MULTISAMPLE_ARRAY, samples, tf.internal_format, new_width, new_height, array_size(), fixed_sample_locations);
 			}
 			else if (texture_type == GL_TEXTURE_CUBE_MAP)
 			{
-				for (int i = 0; i < 6; i++)
-					glTexImage2D(OpenGL::to_cube_target(i), level, tf.internal_format, mip_width, mip_height, 0, tf.pixel_format, tf.pixel_datatype, nullptr);
+				glTexStorage2D(GL_TEXTURE_CUBE_MAP, levels, tf.internal_format, new_width, new_height);
 			}
 			else if (texture_type == GL_TEXTURE_CUBE_MAP_ARRAY)
 			{
-				for (int i = 0; i < 6; i++)
-					glTexImage3D(OpenGL::to_cube_target(i), level, tf.internal_format, mip_width, mip_height, array_size(), 0, tf.pixel_format, tf.pixel_datatype, nullptr);
+				glTexStorage3D(GL_TEXTURE_CUBE_MAP_ARRAY, levels, tf.internal_format, new_width, new_height, array_size());
 			}
 			else
 			{
-				glTexImage3D(GL_TEXTURE_3D, level, tf.internal_format, mip_width, mip_height, depth(), 0, tf.pixel_format, tf.pixel_datatype, nullptr);
+				glTexStorage3D(GL_TEXTURE_3D, levels, tf.internal_format, new_width, new_height, depth());
+			}
+		}
+		else // Emulate glTexStorage behavior so we can support older versions of OpenGL
+		{
+			for (int level = 0; level < levels; level++)
+			{
+				int mip_width = max(width() >> level, 1);
+				int mip_height = max(height() >> level, 1);
+
+				if (texture_type == GL_TEXTURE_1D)
+				{
+					glTexImage1D(GL_TEXTURE_1D, level, tf.internal_format, mip_width, 0, tf.pixel_format, tf.pixel_datatype, nullptr);
+				}
+				else if (texture_type == GL_TEXTURE_1D_ARRAY)
+				{
+					glTexImage2D(GL_TEXTURE_1D_ARRAY, level, tf.internal_format, mip_width, array_size(), 0, tf.pixel_format, tf.pixel_datatype, nullptr);
+				}
+				else if (texture_type == GL_TEXTURE_2D)
+				{
+					if (PixelBuffer::is_compressed(texture_format))
+					{
+						unsigned data_size = PixelBuffer::data_size(Size(mip_width, mip_height), texture_format);
+						glCompressedTexImage2D(GL_TEXTURE_2D, level, tf.internal_format, mip_width, mip_height, 0, data_size, nullptr);
+					}
+					else
+					{
+						glTexImage2D(GL_TEXTURE_2D, level, tf.internal_format, mip_width, mip_height, 0, tf.pixel_format, tf.pixel_datatype, nullptr);
+					}
+				}
+				else if (texture_type == GL_TEXTURE_2D_ARRAY)
+				{
+					glTexImage3D(GL_TEXTURE_2D_ARRAY, level, tf.internal_format, mip_width, mip_height, array_size(), 0, tf.pixel_format, tf.pixel_datatype, nullptr);
+				}
+				else if (texture_type == GL_TEXTURE_2D_MULTISAMPLE)
+				{
+					glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, tf.internal_format, mip_width, mip_height, fixed_sample_locations);
+				}
+				else if (texture_type == GL_TEXTURE_2D_MULTISAMPLE_ARRAY)
+				{
+					glTexImage3DMultisample(GL_TEXTURE_2D_MULTISAMPLE_ARRAY, samples, tf.internal_format, mip_width, mip_height, array_size(), fixed_sample_locations);
+				}
+				else if (texture_type == GL_TEXTURE_CUBE_MAP)
+				{
+					for (int i = 0; i < 6; i++)
+						glTexImage2D(OpenGL::to_cube_target(i), level, tf.internal_format, mip_width, mip_height, 0, tf.pixel_format, tf.pixel_datatype, nullptr);
+				}
+				else if (texture_type == GL_TEXTURE_CUBE_MAP_ARRAY)
+				{
+					for (int i = 0; i < 6; i++)
+						glTexImage3D(OpenGL::to_cube_target(i), level, tf.internal_format, mip_width, mip_height, array_size(), 0, tf.pixel_format, tf.pixel_datatype, nullptr);
+				}
+				else
+				{
+					glTexImage3D(GL_TEXTURE_3D, level, tf.internal_format, mip_width, mip_height, depth(), 0, tf.pixel_format, tf.pixel_datatype, nullptr);
+				}
 			}
 		}
 	}
