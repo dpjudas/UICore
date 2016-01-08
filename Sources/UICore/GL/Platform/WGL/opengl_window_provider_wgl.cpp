@@ -94,9 +94,12 @@ namespace uicore
 			}
 			else
 			{
+				// Note: if this list is updated with newer versions, make sure that OpenGLContextDescription_Impl::version_major/minor is updated as well.
+
 				static const char opengl_version_list[] =
 				{
 					// Clanlib supported version pairs
+					4, 5,
 					4, 4,
 					4, 3,
 					4, 2,

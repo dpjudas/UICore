@@ -35,27 +35,14 @@ namespace uicore
 	class OpenGLContextDescription_Impl
 	{
 	public:
-		OpenGLContextDescription_Impl()
-		{
-			version_major = 3;
-			version_minor = 2;
-			allow_lower_versions = true;
-			debug_flag = false;
-			forward_compatible_flag = false;
-			core_profile_flag = true;
-			compatibility_profile_flag = false;
-			layer_plane = 0;
+		int version_major = 4;
+		int version_minor = 5;
+		bool allow_lower_versions = true;
 
-		}
-
-		int version_major;
-		int version_minor;
-		bool allow_lower_versions;
-
-		bool debug_flag;
-		bool forward_compatible_flag;
-		bool core_profile_flag;
-		bool compatibility_profile_flag;
-		int layer_plane;
+		bool debug_flag = false;
+		bool forward_compatible_flag = false;
+		bool core_profile_flag = true;
+		bool compatibility_profile_flag = false;
+		int layer_plane = 0;
 	};
 }

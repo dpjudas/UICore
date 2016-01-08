@@ -99,7 +99,7 @@ namespace uicore
 		ShaderLanguage shader_language() const override { return shader_glsl; }
 		int major_version() const override { int major = 0, minor = 0; get_opengl_version(major, minor); return major; }
 		int minor_version() const override { int major = 0, minor = 0; get_opengl_version(major, minor); return minor; }
-		bool has_compute_shader_support() const override { return false; }
+		bool has_compute_shader_support() const override { return major_version() > 4 || (major_version() == 4 && minor_version() >= 3); }
 		std::shared_ptr<RasterizerState> create_rasterizer_state(const RasterizerStateDescription &desc) override;
 		std::shared_ptr<BlendState> create_blend_state(const BlendStateDescription &desc) override;
 		std::shared_ptr<DepthStencilState> create_depth_stencil_state(const DepthStencilStateDescription &desc) override;
