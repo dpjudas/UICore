@@ -83,7 +83,7 @@ namespace uicore
 		const std::vector<InputDevicePtr> &get_game_controllers() const { return joysticks; }
 
 	public:
-		void create(DisplayWindowProvider *site, const DisplayWindowDescription &description);
+		void create(DisplayWindowProvider *site, const DisplayWindowDescription &description, bool no_redirection_bitmap);
 
 		Point client_to_screen(const Point &client);
 		Point screen_to_client(const Point &screen);
@@ -159,7 +159,7 @@ namespace uicore
 		LRESULT window_proc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam);
 
 		/// \brief Creates the initial window based on the window description.
-		void create_new_window();
+		void create_new_window(bool no_redirection_bitmap);
 
 		void get_styles_from_description(const DisplayWindowDescription &desc, DWORD &out_style, DWORD &out_ex_style);
 		RECT get_window_geometry_from_description(const DisplayWindowDescription &desc, DWORD style, DWORD ex_style);

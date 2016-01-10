@@ -58,7 +58,7 @@ namespace uicore
 
 		fullscreen = desc.is_fullscreen();
 
-		win32_window.create(this, desc);
+		win32_window.create(this, desc, false);
 
 		if (!opengl_context)
 		{

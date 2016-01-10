@@ -301,9 +301,10 @@ namespace uicore
 	std::string D3DShaderObject::get_shader_model() const
 	{
 		int major = 5;
-		int minor = 0;
+		int minor = 1;
 		switch (feature_level)
 		{
+		case D3D_FEATURE_LEVEL_11_1: major = 5; minor = 1; break;
 		case D3D_FEATURE_LEVEL_11_0: major = 5; minor = 0; break;
 		case D3D_FEATURE_LEVEL_10_1: major = 4; minor = 1; break;
 		case D3D_FEATURE_LEVEL_10_0: major = 4; minor = 0; break;

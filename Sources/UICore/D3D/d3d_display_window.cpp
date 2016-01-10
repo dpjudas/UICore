@@ -38,6 +38,8 @@
 #include "UICore/Display/Platform/Win32/cursor_provider_win32.h"
 #include "d3d_share_list.h"
 
+#define DXGI_SWAP_EFFECT_FLIP_DISCARD ((DXGI_SWAP_EFFECT)4) // Only defined in the latest SDK (Windows 10)
+
 namespace uicore
 {
 	std::recursive_mutex D3DDisplayWindow::d3d11_mutex;
@@ -49,11 +51,16 @@ namespace uicore
 		window.set_allow_drop_shadow(true);
 		window.func_on_resized() = bind_member(this, &D3DDisplayWindow::on_window_resized);
 
-		window.create(this, description);
+		OSVERSIONINFOEX version_info = { 0 };
+		version_info.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
+		GetVersionEx((OSVERSIONINFO*)&version_info);
+		bool no_redirection_bitmap = version_info.dwMajorVersion > 6 || (version_info.dwMajorVersion == 6 && version_info.dwMinorVersion > 1);
+
+		window.create(this, description, no_redirection_bitmap);
 
 		use_fake_front_buffer = description.is_update_supported();
 
-		D3D_FEATURE_LEVEL request_levels[] = { D3D_FEATURE_LEVEL_11_0, D3D_FEATURE_LEVEL_10_1, D3D_FEATURE_LEVEL_10_0 };
+		D3D_FEATURE_LEVEL request_levels[] = { /*D3D_FEATURE_LEVEL_11_1, */D3D_FEATURE_LEVEL_11_0, D3D_FEATURE_LEVEL_10_1, D3D_FEATURE_LEVEL_10_0 };
 		DXGI_SWAP_CHAIN_DESC swap_chain_description;
 		swap_chain_description.BufferCount = description.flipping_buffers();
 		swap_chain_description.BufferDesc.Width = 0;
@@ -68,7 +75,7 @@ namespace uicore
 		swap_chain_description.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 		swap_chain_description.OutputWindow = window.get_hwnd();
 		swap_chain_description.Windowed = TRUE; // Seems the documentation wants us to call IDXGISwapChain::SetFullscreenState afterwards
-		swap_chain_description.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
+		swap_chain_description.SwapEffect = no_redirection_bitmap ? DXGI_SWAP_EFFECT_FLIP_DISCARD : DXGI_SWAP_EFFECT_DISCARD;
 		swap_chain_description.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 
 		bool debug_mode = false; // To do: fetch this from DisplayWindowDescription
@@ -99,18 +106,14 @@ namespace uicore
 				throw;
 			}
 		}
-		HRESULT result = d3d11_createdeviceandswapchain(
-			0,
-			D3D_DRIVER_TYPE_HARDWARE,
-			0,
-			device_flags,
-			request_levels, 3,
-			D3D11_SDK_VERSION,
-			&swap_chain_description,
-			swap_chain.output_variable(),
-			device.output_variable(),
-			&feature_level,
-			device_context.output_variable());
+
+		HRESULT result = d3d11_createdeviceandswapchain(0, D3D_DRIVER_TYPE_HARDWARE, 0, device_flags, request_levels, 3, D3D11_SDK_VERSION, &swap_chain_description, swap_chain.output_variable(), device.output_variable(), &feature_level, device_context.output_variable());
+		if (FAILED(result) && no_redirection_bitmap)
+		{
+			swap_chain_description.SwapEffect = DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL; // DXGI_SWAP_EFFECT_FLIP_DISCARD requires Windows 10 - fall back to Windows 8
+			result = d3d11_createdeviceandswapchain(0, D3D_DRIVER_TYPE_HARDWARE, 0, device_flags, request_levels, 3, D3D11_SDK_VERSION, &swap_chain_description, swap_chain.output_variable(), device.output_variable(), &feature_level, device_context.output_variable());
+		}
+
 		D3DTarget::throw_if_failed("D3D11CreateDeviceAndSwapChain failed", result);
 
 		if (debug_mode)
@@ -371,6 +374,35 @@ namespace uicore
 		window.bring_to_front();
 	}
 
+#ifndef __IDXGISwapChain1_INTERFACE_DEFINED__
+	struct DXGI_SWAP_CHAIN_DESC1;
+	struct DXGI_SWAP_CHAIN_FULLSCREEN_DESC;
+	typedef struct DXGI_PRESENT_PARAMETERS
+	{
+		UINT DirtyRectsCount;
+		RECT* pDirtyRects;
+		RECT* pScrollRect;
+		POINT* pScrollOffset;
+	} DXGI_PRESENT_PARAMETERS;
+	MIDL_INTERFACE("790a45f7-0d42-4876-983a-0a55cfe6f4aa")
+	IDXGISwapChain1 : public IDXGISwapChain
+	{
+	public:
+		virtual HRESULT STDMETHODCALLTYPE GetDesc1(DXGI_SWAP_CHAIN_DESC1 *pDesc) = 0;
+		virtual HRESULT STDMETHODCALLTYPE GetFullscreenDesc(DXGI_SWAP_CHAIN_FULLSCREEN_DESC *pDesc) = 0;
+		virtual HRESULT STDMETHODCALLTYPE GetHwnd(HWND *pHwnd) = 0;
+		virtual HRESULT STDMETHODCALLTYPE GetCoreWindow(REFIID refiid, void **ppUnk) = 0;
+		virtual HRESULT STDMETHODCALLTYPE Present1(UINT SyncInterval, UINT PresentFlags, const DXGI_PRESENT_PARAMETERS* pPresentParameters) = 0;
+		virtual BOOL STDMETHODCALLTYPE IsTemporaryMonoSupported() = 0;
+		virtual HRESULT STDMETHODCALLTYPE GetRestrictToOutput(IDXGIOutput** ppRestrictToOutput) = 0;
+		virtual HRESULT STDMETHODCALLTYPE SetBackgroundColor(const DXGI_RGBA* pColor) = 0;
+		virtual HRESULT STDMETHODCALLTYPE GetBackgroundColor(DXGI_RGBA* pColor) = 0;
+		virtual HRESULT STDMETHODCALLTYPE SetRotation(DXGI_MODE_ROTATION Rotation) = 0;
+		virtual HRESULT STDMETHODCALLTYPE GetRotation(DXGI_MODE_ROTATION* pRotation) = 0;
+	};
+	static const GUID IID_IDXGISwapChain1 = { 0x790a45f7, 0x0d42, 0x4876, 0x98, 0x3a, 0x0a, 0x55, 0xcf, 0xe6, 0xf4, 0xaa };
+#endif
+
 	void D3DDisplayWindow::backing_flip(int interval)
 	{
 		if (use_fake_front_buffer)
@@ -379,7 +411,22 @@ namespace uicore
 		//D3DGraphicContext *gc_provider = static_cast<D3DGraphicContext*>(gc.get());
 		if (interval != -1)
 			current_interval_setting = interval;
-		swap_chain->Present(current_interval_setting, 0);
+
+		// Use SwapChain1 swapping semantics, if available:
+		ComPtr<IDXGISwapChain1> swap_chain1;
+		HRESULT result = swap_chain->QueryInterface(IID_IDXGISwapChain1, (void**)swap_chain1.output_variable());
+		if (SUCCEEDED(result))
+		{
+			DXGI_PRESENT_PARAMETERS present_params = { 0 };
+			present_params.DirtyRectsCount = 0;
+			result = swap_chain1->Present1(current_interval_setting, 0, &present_params);
+			D3DTarget::throw_if_failed("SwapChain1.Present failed", result);
+		}
+		else
+		{
+			swap_chain->Present(current_interval_setting, 0);
+		}
+
 		log_debug_messages();
 	}
 

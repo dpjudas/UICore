@@ -133,7 +133,8 @@ namespace uicore
 		case D3D_FEATURE_LEVEL_10_0:
 		case D3D_FEATURE_LEVEL_10_1: return Size(8192, 8192);
 		default:
-		case D3D_FEATURE_LEVEL_11_0: return Size(16384, 16384);
+		case D3D_FEATURE_LEVEL_11_0:
+		case D3D_FEATURE_LEVEL_11_1: return Size(16384, 16384);
 		}
 	}
 

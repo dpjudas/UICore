@@ -165,11 +165,11 @@ namespace uicore
 		return Text::from_utf16(std::wstring(str, len));
 	}
 
-	void Win32Window::create(DisplayWindowProvider *new_site, const DisplayWindowDescription &description)
+	void Win32Window::create(DisplayWindowProvider *new_site, const DisplayWindowDescription &description, bool no_redirection_bitmap)
 	{
 		window_desc = description;
 		site = new_site;
-		create_new_window();
+		create_new_window(no_redirection_bitmap);
 	}
 
 	Point Win32Window::client_to_screen(const Point &client)
@@ -653,7 +653,7 @@ namespace uicore
 		return DefWindowProc(hwnd, WM_DWMCOMPOSITIONCHANGED, wparam, lparam);
 	}
 
-	void Win32Window::create_new_window()
+	void Win32Window::create_new_window(bool no_redirection_bitmap)
 	{
 		DwmFunctions::open_dll();
 
@@ -668,6 +668,14 @@ namespace uicore
 
 			DWORD style, ex_style;
 			get_styles_from_description(window_desc, style, ex_style);
+
+			if (no_redirection_bitmap)
+			{
+				#ifndef WS_EX_NOREDIRECTIONBITMAP
+				#define WS_EX_NOREDIRECTIONBITMAP 0x00200000L
+				#endif
+				ex_style |= WS_EX_NOREDIRECTIONBITMAP;
+			}
 
 			RECT window_rect = get_window_geometry_from_description(window_desc, style, ex_style);
 
