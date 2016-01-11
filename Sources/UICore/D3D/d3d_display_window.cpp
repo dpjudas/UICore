@@ -134,16 +134,19 @@ namespace uicore
 
 		create_swap_chain_buffers();
 
-		// Prevent DXGI from responding to an alt-enter sequence.
-		ComPtr<IDXGIAdapter> dxgi_adapter;
-		result = dxgi_device->GetParent(__uuidof(IDXGIAdapter), (void **)dxgi_adapter.output_variable());
-		if (SUCCEEDED(result))
+		if (!description.allow_alt_enter())
 		{
-			ComPtr<IDXGIFactory> dxgi_factory;
-			result = dxgi_adapter->GetParent(__uuidof(IDXGIFactory), (void **)dxgi_factory.output_variable());
+			// Prevent DXGI from responding to an alt-enter sequence.
+			ComPtr<IDXGIAdapter> dxgi_adapter;
+			result = dxgi_device->GetParent(__uuidof(IDXGIAdapter), (void **)dxgi_adapter.output_variable());
 			if (SUCCEEDED(result))
 			{
-				dxgi_factory->MakeWindowAssociation(window.get_hwnd(), DXGI_MWA_NO_ALT_ENTER);
+				ComPtr<IDXGIFactory> dxgi_factory;
+				result = dxgi_adapter->GetParent(__uuidof(IDXGIFactory), (void **)dxgi_factory.output_variable());
+				if (SUCCEEDED(result))
+				{
+					dxgi_factory->MakeWindowAssociation(window.get_hwnd(), DXGI_MWA_NO_ALT_ENTER);
+				}
 			}
 		}
 

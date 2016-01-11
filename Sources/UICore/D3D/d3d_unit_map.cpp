@@ -39,94 +39,94 @@ namespace uicore
 {
 	void D3DUnitMap::bind_program(D3DGraphicContext *gc, D3DProgramObject *program)
 	{
-		for (size_t i = 0; i < program->uniforms.size(); i++)
+		for (const auto &uniform : program->uniforms)
 		{
-			switch (program->uniforms[i].type)
+			switch (uniform.type)
 			{
 			case D3DUniform::type_sampler:
-				if (sampler_units.size() < program->uniforms[i].value + 1)
-					sampler_units.resize(program->uniforms[i].value + 1);
+				if (sampler_units.size() < uniform.value + 1)
+					sampler_units.resize(uniform.value + 1);
 				for (int j = 0; j < (int)ShaderType::num_types; j++)
-					sampler_units[program->uniforms[i].value].shader_index[j] = program->uniforms[i].shader_index[j];
-				bind_sampler(gc, program->uniforms[i].value);
+					sampler_units[uniform.value].shader_index[j] = uniform.shader_index[j];
+				bind_sampler(gc, uniform.value);
 				break;
 			case D3DUniform::type_texture:
-				if (texture_units.size() < program->uniforms[i].value + 1)
-					texture_units.resize(program->uniforms[i].value + 1);
+				if (texture_units.size() < uniform.value + 1)
+					texture_units.resize(uniform.value + 1);
 				for (int j = 0; j < (int)ShaderType::num_types; j++)
-					texture_units[program->uniforms[i].value].shader_index[j] = program->uniforms[i].shader_index[j];
-				bind_texture(gc, program->uniforms[i].value);
+					texture_units[uniform.value].shader_index[j] = uniform.shader_index[j];
+				bind_texture(gc, uniform.value);
 				break;
 			case D3DUniform::type_image:
-				if (image_units.size() < program->uniforms[i].value + 1)
-					image_units.resize(program->uniforms[i].value + 1);
+				if (image_units.size() < uniform.value + 1)
+					image_units.resize(uniform.value + 1);
 				for (int j = 0; j < (int)ShaderType::num_types; j++)
-					image_units[program->uniforms[i].value].shader_index[j] = program->uniforms[i].shader_index[j];
-				bind_image(gc, program->uniforms[i].value);
+					image_units[uniform.value].shader_index[j] = uniform.shader_index[j];
+				bind_image(gc, uniform.value);
 				break;
 			}
 		}
 
-		for (size_t i = 0; i < program->uniform_blocks.size(); i++)
+		for (const auto &uniform_block : program->uniform_blocks)
 		{
-			if (uniform_units.size() < program->uniform_blocks[i].value + 1)
-				uniform_units.resize(program->uniform_blocks[i].value + 1);
+			if (uniform_units.size() < uniform_block.value + 1)
+				uniform_units.resize(uniform_block.value + 1);
 			for (int j = 0; j < (int)ShaderType::num_types; j++)
-				uniform_units[program->uniform_blocks[i].value].shader_index[j] = program->uniform_blocks[i].shader_index[j];
-			bind_uniform_buffer(gc, program->uniform_blocks[i].value);
+				uniform_units[uniform_block.value].shader_index[j] = uniform_block.shader_index[j];
+			bind_uniform_buffer(gc, uniform_block.value);
 		}
 
-		for (size_t i = 0; i < program->storage_blocks.size(); i++)
+		for (const auto &storage_block : program->storage_blocks)
 		{
-			if (storage_units.size() < program->storage_blocks[i].value + 1)
-				storage_units.resize(program->storage_blocks[i].value + 1);
+			if (storage_units.size() < storage_block.value + 1)
+				storage_units.resize(storage_block.value + 1);
 			for (int j = 0; j < (int)ShaderType::num_types; j++)
 			{
-				storage_units[program->storage_blocks[i].value].shader_srv_index[j] = program->storage_blocks[i].shader_srv_index[j];
-				storage_units[program->storage_blocks[i].value].shader_uav_index[j] = program->storage_blocks[i].shader_uav_index[j];
+				storage_units[storage_block.value].shader_srv_index[j] = storage_block.shader_srv_index[j];
+				storage_units[storage_block.value].shader_uav_index[j] = storage_block.shader_uav_index[j];
 			}
-			bind_storage_buffer(gc, program->storage_blocks[i].value);
+			bind_storage_buffer(gc, storage_block.value);
 		}
 	}
 
 	void D3DUnitMap::unbind_program(D3DGraphicContext *gc, D3DProgramObject *program)
 	{
-		for (size_t i = 0; i < program->uniforms.size(); i++)
+		for (const auto &uniform : program->uniforms)
 		{
-			switch (program->uniforms[i].type)
+			switch (uniform.type)
 			{
 			case D3DUniform::type_sampler:
-				unbind_sampler(gc, program->uniforms[i].value);
+				unbind_sampler(gc, uniform.value);
 				for (int j = 0; j < (int)ShaderType::num_types; j++)
-					sampler_units[program->uniforms[i].value].shader_index[j] = -1;
+					sampler_units[uniform.value].shader_index[j] = -1;
 				break;
 			case D3DUniform::type_texture:
-				unbind_texture(gc, program->uniforms[i].value);
+				unbind_texture(gc, uniform.value);
 				for (int j = 0; j < (int)ShaderType::num_types; j++)
-					texture_units[program->uniforms[i].value].shader_index[j] = -1;
+					texture_units[uniform.value].shader_index[j] = -1;
 				break;
 			case D3DUniform::type_image:
-				unbind_image(gc, program->uniforms[i].value);
+				unbind_image(gc, uniform.value);
 				for (int j = 0; j < (int)ShaderType::num_types; j++)
-					image_units[program->uniforms[i].value].shader_index[j] = -1;
+					image_units[uniform.value].shader_index[j] = -1;
 				break;
 			}
 		}
 
-		for (size_t i = 0; i < program->uniform_blocks.size(); i++)
+		for (const auto &uniform_block : program->uniform_blocks)
 		{
-			unbind_uniform_buffer(gc, program->uniform_blocks[i].value);
+			unbind_uniform_buffer(gc, uniform_block.value);
 			for (int j = 0; j < (int)ShaderType::num_types; j++)
-				uniform_units[program->uniform_blocks[i].value].shader_index[j] = -1;
+				uniform_units[uniform_block.value].shader_index[j] = -1;
 		}
 
-		for (size_t i = 0; i < program->storage_blocks.size(); i++)
+		for (const auto &storage_block : program->storage_blocks)
 		{
-			unbind_storage_buffer(gc, program->storage_blocks[i].value);
+			unbind_storage_buffer(gc, storage_block.value);
 			for (int j = 0; j < (int)ShaderType::num_types; j++)
 			{
-				storage_units[program->storage_blocks[i].value].shader_srv_index[j] = -1;
-				storage_units[program->storage_blocks[i].value].shader_uav_index[j] = -1;
+				storage_units[storage_block.value].shader_srv_index[j] = -1;
+				storage_units[storage_block.value].shader_uav_index[j] = -1;
 			}
 		}
 	}
