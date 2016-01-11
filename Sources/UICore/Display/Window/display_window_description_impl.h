@@ -60,6 +60,7 @@ namespace uicore
 		bool fullscreen = false;
 		int fullscreen_monitor = 0;
 		bool allow_resize = true;
+		bool allow_alt_enter = false;
 		int flipping_buffers = 2;
 		int swap_interval = -1;
 		int bpp = 0;

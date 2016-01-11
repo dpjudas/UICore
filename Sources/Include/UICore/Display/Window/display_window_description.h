@@ -92,6 +92,9 @@ namespace uicore
 		/// \brief Returns true if window should be resizeable.
 		bool allow_resize() const;
 
+		/// \brief Returns true if alt-enter enters fullscreen or not
+		bool allow_alt_enter() const;
+
 		/// \brief Returns the numbers of bytes per pixel in the window.
 		int bpp() const;
 
@@ -246,6 +249,9 @@ namespace uicore
 		///
 		/// This is used for all window types (Main, Dialog and Popup)
 		void set_allow_resize(bool allow_resize = true);
+
+		/// \brief Sets if alt-enter switches to fullscreen or not
+		void set_allow_alt_enter(bool value = true);
 
 		/// \brief Sets the number of bytes per pixel
 		void set_bpp(int bpp);

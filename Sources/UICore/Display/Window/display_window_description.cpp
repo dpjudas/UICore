@@ -117,6 +117,11 @@ namespace uicore
 		return impl->allow_resize;
 	}
 
+	bool DisplayWindowDescription::allow_alt_enter() const
+	{
+		return impl->allow_alt_enter;
+	}
+
 	DisplayWindowPtr DisplayWindowDescription::owner() const
 	{
 		return impl->owner;
@@ -329,6 +334,11 @@ namespace uicore
 	void DisplayWindowDescription::set_allow_resize(bool allow_resize)
 	{
 		impl->allow_resize = allow_resize;
+	}
+
+	void DisplayWindowDescription::set_allow_alt_enter(bool value)
+	{
+		impl->allow_alt_enter = value;
 	}
 
 	void DisplayWindowDescription::set_bpp(int bytes)
