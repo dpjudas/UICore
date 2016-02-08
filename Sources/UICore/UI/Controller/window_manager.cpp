@@ -99,8 +99,8 @@ namespace uicore
 		if (controller->impl->initial_size == Sizef())
 		{
 			CanvasPtr canvas = controller->root_view()->get_canvas();
-			float width = controller->root_view()->calculate_preferred_width(canvas);
-			float height = controller->root_view()->calculate_preferred_height(canvas, width);
+			float width = controller->root_view()->preferred_width(canvas);
+			float height = controller->root_view()->preferred_height(canvas, width);
 			Rectf content_box(0.0f, 0.0f, width, height);
 			Rectf margin_box = ViewGeometry::from_content_box(controller->root_view()->style_cascade(), content_box).margin_box();
 			display_window->set_size(margin_box.width(), margin_box.height(), true);
@@ -147,8 +147,8 @@ namespace uicore
 		if (controller->impl->initial_size == Sizef())
 		{
 			CanvasPtr canvas = controller->root_view()->get_canvas();
-			float width = controller->root_view()->calculate_preferred_width(canvas);
-			float height = controller->root_view()->calculate_preferred_height(canvas, width);
+			float width = controller->root_view()->preferred_width(canvas);
+			float height = controller->root_view()->preferred_height(canvas, width);
 			Rectf content_box(screen_pos.x - width * 0.5f, screen_pos.y - height * 0.5f, screen_pos.x + width * 0.5f, screen_pos.y + height * 0.5f);
 			Rectf margin_box = ViewGeometry::from_content_box(controller->root_view()->style_cascade(), content_box).margin_box();
 			if (controller_display_window)
@@ -195,8 +195,8 @@ namespace uicore
 		if (controller->impl->initial_size == Sizef())
 		{
 			CanvasPtr canvas = controller->root_view()->get_canvas();
-			float width = controller->root_view()->calculate_preferred_width(canvas);
-			float height = controller->root_view()->calculate_preferred_height(canvas, width);
+			float width = controller->root_view()->preferred_width(canvas);
+			float height = controller->root_view()->preferred_height(canvas, width);
 			Rectf content_box(screen_pos.x, screen_pos.y, screen_pos.x + width, screen_pos.y + height);
 			Rectf margin_box = ViewGeometry::from_content_box(controller->root_view()->style_cascade(), content_box).margin_box();
 

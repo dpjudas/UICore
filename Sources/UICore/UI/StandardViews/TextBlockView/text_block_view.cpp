@@ -95,28 +95,22 @@ namespace uicore
 
 	float TextBlockView::calculate_preferred_width(const CanvasPtr &canvas)
 	{
-		if (style_cascade().computed_value("width").is_keyword("auto"))
-			return impl->get_preferred_width(canvas);
-		else
-			return style_cascade().computed_value("width").number();
+		return impl->preferred_width(canvas);
 	}
 
 	float TextBlockView::calculate_preferred_height(const CanvasPtr &canvas, float width)
 	{
-		if (style_cascade().computed_value("height").is_keyword("auto"))
-			return impl->get_preferred_height(canvas, width);
-		else
-			return style_cascade().computed_value("height").number();
+		return impl->preferred_height(canvas, width);
 	}
 
 	float TextBlockView::calculate_first_baseline_offset(const CanvasPtr &canvas, float width)
 	{
-		return impl->get_first_baseline_offset(canvas, width);
+		return impl->first_baseline_offset(canvas, width);
 	}
 
 	float TextBlockView::calculate_last_baseline_offset(const CanvasPtr &canvas, float width)
 	{
-		return impl->get_last_baseline_offset(canvas, width);
+		return impl->last_baseline_offset(canvas, width);
 	}
 
 	void TextBlockView::layout_subviews(const CanvasPtr &canvas)

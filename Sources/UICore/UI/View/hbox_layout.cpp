@@ -33,11 +33,8 @@
 
 namespace uicore
 {
-	float HBoxLayout::get_preferred_width(const CanvasPtr &canvas, View *view)
+	float HBoxLayout::preferred_width(const CanvasPtr &canvas, View *view)
 	{
-		if (!view->style_cascade().computed_value("width").is_keyword("auto"))
-			return view->style_cascade().computed_value("width").number();
-
 		float width = 0.0f;
 		for (const std::shared_ptr<View> &subview : view->subviews())
 		{
@@ -47,7 +44,7 @@ namespace uicore
 				width += subview->style_cascade().computed_value("border-left-width").number();
 				width += subview->style_cascade().computed_value("padding-left").number();
 				if (subview->style_cascade().computed_value("flex-basis").is_keyword("main-size"))
-					width += subview->get_preferred_width(canvas);
+					width += subview->preferred_width(canvas);
 				else
 					width += subview->style_cascade().computed_value("flex-basis").number();
 				width += subview->style_cascade().computed_value("padding-right").number();
@@ -58,11 +55,8 @@ namespace uicore
 		return width;
 	}
 
-	float HBoxLayout::get_preferred_height(const CanvasPtr &canvas, View *view, float width)
+	float HBoxLayout::preferred_height(const CanvasPtr &canvas, View *view, float width)
 	{
-		if (!view->style_cascade().computed_value("height").is_keyword("auto"))
-			return view->style_cascade().computed_value("height").number();
-
 		// Calculate flex properties:
 
 		float total_grow_factor = 0.0f;
@@ -84,7 +78,7 @@ namespace uicore
 				total_shrink_factor += subview->style_cascade().computed_value("flex-shrink").number();
 
 				if (subview->style_cascade().computed_value("flex-basis").is_keyword("main-size"))
-					basis_width += subview->get_preferred_width(canvas);
+					basis_width += subview->preferred_width(canvas);
 				else
 					basis_width += subview->style_cascade().computed_value("flex-basis").number();
 			}
@@ -101,7 +95,7 @@ namespace uicore
 			{
 				float subview_width = subview->style_cascade().computed_value("flex-basis").number();
 				if (subview->style_cascade().computed_value("flex-basis").is_keyword("main-size"))
-					subview_width = subview->get_preferred_width(canvas);
+					subview_width = subview->preferred_width(canvas);
 
 				if (free_space < 0.0f && total_shrink_factor != 0.0f)
 					subview_width += subview->style_cascade().computed_value("flex-shrink").number() * free_space / total_shrink_factor;
@@ -114,7 +108,7 @@ namespace uicore
 				margin_box_height += subview->style_cascade().computed_value("margin-top").number();
 				margin_box_height += subview->style_cascade().computed_value("border-top-width").number();
 				margin_box_height += subview->style_cascade().computed_value("padding-top").number();
-				margin_box_height += subview->get_preferred_height(canvas, subview_width);
+				margin_box_height += subview->preferred_height(canvas, subview_width);
 				margin_box_height += subview->style_cascade().computed_value("padding-bottom").number();
 				margin_box_height += subview->style_cascade().computed_value("border-bottom-width").number();
 				margin_box_height += subview->style_cascade().computed_value("margin-bottom").number();
@@ -124,24 +118,24 @@ namespace uicore
 		return height;
 	}
 
-	float HBoxLayout::get_first_baseline_offset(const CanvasPtr &canvas, View *view, float width)
+	float HBoxLayout::first_baseline_offset(const CanvasPtr &canvas, View *view, float width)
 	{
 		const auto &subviews = view->subviews();
 		for (const auto & subview : subviews)
 		{
 			if (subview->is_static_position_and_visible())
-				return (subview)->get_first_baseline_offset(canvas, width);
+				return (subview)->first_baseline_offset(canvas, width);
 		}
 		return 0.0f;
 	}
 
-	float HBoxLayout::get_last_baseline_offset(const CanvasPtr &canvas, View *view, float width)
+	float HBoxLayout::last_baseline_offset(const CanvasPtr &canvas, View *view, float width)
 	{
 		const auto &subviews = view->subviews();
 		for (auto it = subviews.rbegin(); it != subviews.rend(); ++it)
 		{
 			if ((*it)->is_static_position_and_visible())
-				return (*it)->get_last_baseline_offset(canvas, width);
+				return (*it)->last_baseline_offset(canvas, width);
 		}
 		return 0.0f;
 	}
@@ -169,7 +163,7 @@ namespace uicore
 				total_shrink_factor += subview->style_cascade().computed_value("flex-shrink").number();
 
 				if (subview->style_cascade().computed_value("flex-basis").is_keyword("main-size"))
-					basis_width += subview->get_preferred_width(canvas);
+					basis_width += subview->preferred_width(canvas);
 				else
 					basis_width += subview->style_cascade().computed_value("flex-basis").number();
 			}
@@ -186,7 +180,7 @@ namespace uicore
 			{
 				float subview_width = subview->style_cascade().computed_value("flex-basis").number();
 				if (subview->style_cascade().computed_value("flex-basis").is_keyword("main-size"))
-					subview_width = subview->get_preferred_width(canvas);
+					subview_width = subview->preferred_width(canvas);
 
 				if (free_space < 0.0f && total_shrink_factor != 0.0f)
 					subview_width += subview->style_cascade().computed_value("flex-shrink").number() * free_space / total_shrink_factor;
@@ -205,7 +199,7 @@ namespace uicore
 				bottom_noncontent += subview->style_cascade().computed_value("border-bottom-width").number();
 				bottom_noncontent += subview->style_cascade().computed_value("padding-bottom").number();
 
-				float subview_height = subview->get_preferred_height(canvas, subview_width);
+				float subview_height = subview->preferred_height(canvas, subview_width);
 				float available_margin = view->geometry().content_height - subview_height - top_noncontent - bottom_noncontent;
 
 				if (subview->style_cascade().computed_value("margin-top").is_keyword("auto") && subview->style_cascade().computed_value("margin-bottom").is_keyword("auto"))

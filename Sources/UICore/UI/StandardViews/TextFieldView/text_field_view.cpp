@@ -393,13 +393,8 @@ namespace uicore
 
 	float TextFieldView::calculate_preferred_width(const CanvasPtr &canvas)
 	{
-		if (style_cascade().computed_value("width").is_keyword("auto"))
-		{
-			FontPtr font = impl->get_font();
-			return font->measure_text(canvas, "X").advance.width * impl->preferred_size;
-		}
-		else
-			return style_cascade().computed_value("width").number();
+		FontPtr font = impl->get_font();
+		return font->measure_text(canvas, "X").advance.width * impl->preferred_size;
 	}
 
 	float TextFieldView::calculate_preferred_height(const CanvasPtr &canvas, float width)
@@ -421,7 +416,7 @@ namespace uicore
 
 	float TextFieldView::calculate_last_baseline_offset(const CanvasPtr &canvas, float width)
 	{
-		return get_first_baseline_offset(canvas, width);
+		return first_baseline_offset(canvas, width);
 	}
 
 	/////////////////////////////////////////////////////////////////////////

@@ -28,18 +28,17 @@
 
 #pragma once
 
-#include "UICore/UI/View/view.h"
 #include "view_layout.h"
 
 namespace uicore
 {
-	class VBoxLayout : public ViewLayout
+	class CustomLayout : public ViewLayout
 	{
 	public:
-		float preferred_width(const CanvasPtr &canvas, View *view) override;
-		float preferred_height(const CanvasPtr &canvas, View *view, float width) override;
-		float first_baseline_offset(const CanvasPtr &canvas, View *view, float width) override;
-		float last_baseline_offset(const CanvasPtr &canvas, View *view, float width) override;
-		void layout_subviews(const CanvasPtr &canvas, View *view) override;
+		float preferred_width(const CanvasPtr &canvas, View *view) override { return 0.0f; }
+		float preferred_height(const CanvasPtr &canvas, View *view, float width) override { return 0.0f; }
+		float first_baseline_offset(const CanvasPtr &canvas, View *view, float width) override { return 0.0f; }
+		float last_baseline_offset(const CanvasPtr &canvas, View *view, float width) override { return 0.0f; }
+		void layout_subviews(const CanvasPtr &canvas, View *view) override { for (const auto &subview : view->subviews()) subview->layout_subviews(canvas); }
 	};
 }

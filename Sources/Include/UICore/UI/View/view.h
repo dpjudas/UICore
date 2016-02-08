@@ -178,16 +178,16 @@ namespace uicore
 		void set_content_clipped(bool clipped);
 
 		/// Calculates the preferred width of this view
-		float get_preferred_width(const CanvasPtr &canvas);
+		float preferred_width(const CanvasPtr &canvas);
 
 		/// Calculates the preferred height of this view
-		float get_preferred_height(const CanvasPtr &canvas, float width);
+		float preferred_height(const CanvasPtr &canvas, float width);
 
 		/// Calculates the offset to the first baseline
-		float get_first_baseline_offset(const CanvasPtr &canvas, float width);
+		float first_baseline_offset(const CanvasPtr &canvas, float width);
 
 		/// Calculates the offset to the last baseline
-		float get_last_baseline_offset(const CanvasPtr &canvas, float width);
+		float last_baseline_offset(const CanvasPtr &canvas, float width);
 
 		/// Sets the view geometry for all subviews of this view
 		virtual void layout_subviews(const CanvasPtr &canvas);
@@ -305,6 +305,16 @@ namespace uicore
 		/// Dispatch event to signals listening for events
 		static void dispatch_event(View *target, EventUI *e, bool no_propagation = false);
 
+	protected:
+		/// Renders the content of a view
+		virtual void render_content(const CanvasPtr &canvas) { }
+
+		/// Child view was added to this view
+		virtual void subview_added(const std::shared_ptr<View> &view) { }
+
+		/// Child view was removed from this view
+		virtual void subview_removed(const std::shared_ptr<View> &view) { }
+
 		/// Calculates the preferred width of this view
 		virtual float calculate_preferred_width(const CanvasPtr &canvas);
 
@@ -316,16 +326,6 @@ namespace uicore
 
 		/// Calculates the offset to the last baseline
 		virtual float calculate_last_baseline_offset(const CanvasPtr &canvas, float width);
-
-	protected:
-		/// Renders the content of a view
-		virtual void render_content(const CanvasPtr &canvas) { }
-
-		/// Child view was added to this view
-		virtual void subview_added(const std::shared_ptr<View> &view) { }
-
-		/// Child view was removed from this view
-		virtual void subview_removed(const std::shared_ptr<View> &view) { }
 
 	private:
 		View(const View &) = delete;

@@ -112,10 +112,10 @@ namespace uicore
 		void render_content(const CanvasPtr &canvas, float width);
 		void layout_views(const CanvasPtr &canvas, float width);
 
-		float get_preferred_width(const CanvasPtr &canvas);
-		float get_preferred_height(const CanvasPtr &canvas, float width);
-		float get_first_baseline_offset(const CanvasPtr &canvas, float width);
-		float get_last_baseline_offset(const CanvasPtr &canvas, float width);
+		float preferred_width(const CanvasPtr &canvas);
+		float preferred_height(const CanvasPtr &canvas, float width);
+		float first_baseline_offset(const CanvasPtr &canvas, float width);
+		float last_baseline_offset(const CanvasPtr &canvas, float width);
 
 		void set_text_alignment(TextAlignment alignment);
 

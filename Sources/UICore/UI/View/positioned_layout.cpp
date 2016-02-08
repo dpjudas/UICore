@@ -99,17 +99,17 @@ namespace uicore
 		else if (!view->style_cascade().computed_value("left").is_keyword("auto"))
 		{
 			x = view->style_cascade().computed_value("left").number();
-			width = view->get_preferred_width(canvas);
+			width = view->preferred_width(canvas);
 		}
 		else if (!view->style_cascade().computed_value("right").is_keyword("auto"))
 		{
-			width = view->get_preferred_width(canvas);
+			width = view->preferred_width(canvas);
 			x = containing_box.width() - view->style_cascade().computed_value("right").number() - width;
 		}
 		else
 		{
 			x = 0.0f;
-			width = view->get_preferred_width(canvas);
+			width = view->preferred_width(canvas);
 		}
 
 		float y = 0.0f;
@@ -133,17 +133,17 @@ namespace uicore
 		else if (!view->style_cascade().computed_value("top").is_keyword("auto"))
 		{
 			y = view->style_cascade().computed_value("top").number();
-			height = view->get_preferred_height(canvas, width);
+			height = view->preferred_height(canvas, width);
 		}
 		else if (!view->style_cascade().computed_value("bottom").is_keyword("auto"))
 		{
-			height = view->get_preferred_height(canvas, width);
+			height = view->preferred_height(canvas, width);
 			y = containing_box.height() - view->style_cascade().computed_value("bottom").number() - height;
 		}
 		else
 		{
 			y = 0.0f;
-			height = view->get_preferred_height(canvas, width);
+			height = view->preferred_height(canvas, width);
 		}
 
 		return ViewGeometry::from_content_box(view->style_cascade(), Rectf::xywh(x, y, width, height));

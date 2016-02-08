@@ -47,6 +47,7 @@
 #include "view_action_impl.h"
 #include "vbox_layout.h"
 #include "hbox_layout.h"
+#include "custom_layout.h"
 #include <algorithm>
 
 namespace uicore
@@ -298,28 +299,37 @@ namespace uicore
 		}
 	}
 
-	float View::get_preferred_width(const CanvasPtr &canvas)
+	float View::preferred_width(const CanvasPtr &canvas)
 	{
 		if (!impl->layout_cache.preferred_width_calculated)
 		{
-			impl->layout_cache.preferred_width = calculate_preferred_width(canvas);
+			if (!style_cascade().computed_value("width").is_keyword("auto"))
+				impl->layout_cache.preferred_width = style_cascade().computed_value("width").number();
+			else
+				impl->layout_cache.preferred_width = calculate_preferred_width(canvas);
+
 			impl->layout_cache.preferred_width_calculated = true;
 		}
 		return impl->layout_cache.preferred_width;
 	}
 
-	float View::get_preferred_height(const CanvasPtr &canvas, float width)
+	float View::preferred_height(const CanvasPtr &canvas, float width)
 	{
 		auto it = impl->layout_cache.preferred_height.find(width);
 		if (it != impl->layout_cache.preferred_height.end())
 			return it->second;
 
-		float height = calculate_preferred_height(canvas, width);
+		float height = 0.0f;
+		if (!style_cascade().computed_value("height").is_keyword("auto"))
+			height = style_cascade().computed_value("height").number();
+		else
+			height = calculate_preferred_height(canvas, width);
+
 		impl->layout_cache.preferred_height[width] = height;
 		return height;
 	}
 
-	float View::get_first_baseline_offset(const CanvasPtr &canvas, float width)
+	float View::first_baseline_offset(const CanvasPtr &canvas, float width)
 	{
 		auto it = impl->layout_cache.first_baseline_offset.find(width);
 		if (it != impl->layout_cache.first_baseline_offset.end())
@@ -330,7 +340,7 @@ namespace uicore
 		return baseline_offset;
 	}
 
-	float View::get_last_baseline_offset(const CanvasPtr &canvas, float width)
+	float View::last_baseline_offset(const CanvasPtr &canvas, float width)
 	{
 		auto it = impl->layout_cache.last_baseline_offset.find(width);
 		if (it != impl->layout_cache.last_baseline_offset.end())
@@ -343,54 +353,27 @@ namespace uicore
 
 	float View::calculate_preferred_width(const CanvasPtr &canvas)
 	{
-		if (style_cascade().computed_value("layout").is_keyword("flex") && style_cascade().computed_value("flex-direction").is_keyword("column"))
-			return VBoxLayout::get_preferred_width(canvas, this);
-		else if (style_cascade().computed_value("layout").is_keyword("flex") && style_cascade().computed_value("flex-direction").is_keyword("row"))
-			return HBoxLayout::get_preferred_width(canvas, this);
-		else if (style_cascade().computed_value("width").is_keyword("auto"))
-			return 0.0f;
-		else
-			return style_cascade().computed_value("width").number();
+		return impl->active_layout(this)->preferred_width(canvas, this);
 	}
 
 	float View::calculate_preferred_height(const CanvasPtr &canvas, float width)
 	{
-		if (style_cascade().computed_value("layout").is_keyword("flex") && style_cascade().computed_value("flex-direction").is_keyword("column"))
-			return VBoxLayout::get_preferred_height(canvas, this, width);
-		else if (style_cascade().computed_value("layout").is_keyword("flex") && style_cascade().computed_value("flex-direction").is_keyword("row"))
-			return HBoxLayout::get_preferred_height(canvas, this, width);
-		else if (style_cascade().computed_value("height").is_keyword("auto"))
-			return 0.0f;
-		else
-			return style_cascade().computed_value("height").number();
+		return impl->active_layout(this)->preferred_height(canvas, this, width);
 	}
 
 	float View::calculate_first_baseline_offset(const CanvasPtr &canvas, float width)
 	{
-		if (style_cascade().computed_value("layout").is_keyword("flex") && style_cascade().computed_value("flex-direction").is_keyword("column"))
-			return VBoxLayout::get_first_baseline_offset(canvas, this, width);
-		else if (style_cascade().computed_value("layout").is_keyword("flex") && style_cascade().computed_value("flex-direction").is_keyword("row"))
-			return HBoxLayout::get_first_baseline_offset(canvas, this, width);
-		else
-			return 0.0f;
+		return impl->active_layout(this)->first_baseline_offset(canvas, this, width);
 	}
 
 	float View::calculate_last_baseline_offset(const CanvasPtr &canvas, float width)
 	{
-		if (style_cascade().computed_value("layout").is_keyword("flex") && style_cascade().computed_value("flex-direction").is_keyword("column"))
-			return VBoxLayout::get_last_baseline_offset(canvas, this, width);
-		else if (style_cascade().computed_value("layout").is_keyword("flex") && style_cascade().computed_value("flex-direction").is_keyword("row"))
-			return HBoxLayout::get_last_baseline_offset(canvas, this, width);
-		else
-			return 0.0f;
+		return impl->active_layout(this)->last_baseline_offset(canvas, this, width);
 	}
 
 	void View::layout_subviews(const CanvasPtr &canvas)
 	{
-		if (style_cascade().computed_value("layout").is_keyword("flex") && style_cascade().computed_value("flex-direction").is_keyword("column"))
-			VBoxLayout::layout_subviews(canvas, this);
-		else if (style_cascade().computed_value("layout").is_keyword("flex") && style_cascade().computed_value("flex-direction").is_keyword("row"))
-			HBoxLayout::layout_subviews(canvas, this);
+		return impl->active_layout(this)->layout_subviews(canvas, this);
 	}
 
 	ViewTree *View::view_tree()
@@ -748,6 +731,25 @@ namespace uicore
 	}
 
 	/////////////////////////////////////////////////////////////////////////
+
+	ViewLayout *ViewImpl::active_layout(View *self)
+	{
+		if (self->style_cascade().computed_value("layout").is_keyword("flex") && self->style_cascade().computed_value("flex-direction").is_keyword("column"))
+		{
+			static VBoxLayout vbox;
+			return &vbox;
+		}
+		else if (self->style_cascade().computed_value("layout").is_keyword("flex") && self->style_cascade().computed_value("flex-direction").is_keyword("row"))
+		{
+			static HBoxLayout hbox;
+			return &hbox;
+		}
+		else
+		{
+			static CustomLayout custom;
+			return &custom;
+		}
+	}
 
 	void ViewImpl::render(View *self, const CanvasPtr &canvas, ViewRenderLayer layer)
 	{

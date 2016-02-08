@@ -29,16 +29,17 @@
 #pragma once
 
 #include "UICore/UI/View/view.h"
+#include "view_layout.h"
 
 namespace uicore
 {
-	class HBoxLayout
+	class HBoxLayout : public ViewLayout
 	{
 	public:
-		static float get_preferred_width(const CanvasPtr &canvas, View *view);
-		static float get_preferred_height(const CanvasPtr &canvas, View *view, float width);
-		static float get_first_baseline_offset(const CanvasPtr &canvas, View *view, float width);
-		static float get_last_baseline_offset(const CanvasPtr &canvas, View *view, float width);
-		static void layout_subviews(const CanvasPtr &canvas, View *view);
+		float preferred_width(const CanvasPtr &canvas, View *view) override;
+		float preferred_height(const CanvasPtr &canvas, View *view, float width) override;
+		float first_baseline_offset(const CanvasPtr &canvas, View *view, float width) override;
+		float last_baseline_offset(const CanvasPtr &canvas, View *view, float width) override;
+		void layout_subviews(const CanvasPtr &canvas, View *view) override;
 	};
 }

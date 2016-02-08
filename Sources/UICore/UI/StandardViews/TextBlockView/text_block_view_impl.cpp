@@ -185,11 +185,11 @@ namespace uicore
 					float obj_x = x;
 					float obj_y = y + metrics.ascent + object.baseline_offset;
 
-					float obj_width = object.view->get_preferred_width(canvas);
-					float obj_height = object.view->get_preferred_height(canvas, obj_width);
-					float obj_baseline_offset = object.view->get_first_baseline_offset(canvas, obj_width);
+					float obj_width = object.view->preferred_width(canvas);
+					float obj_height = object.view->preferred_height(canvas, obj_width);
+					float obj_baseline_offset = object.view->first_baseline_offset(canvas, obj_width);
 
-					if (obj_baseline_offset == 0.0f) // Hmm, do we need get_first_baseline_offset to be able to return that there is no baseline?
+					if (obj_baseline_offset == 0.0f) // Hmm, do we need first_baseline_offset to be able to return that there is no baseline?
 						obj_baseline_offset = obj_height;
 
 					obj_width += object.view->style_cascade().computed_value("margin-left").number();
@@ -225,7 +225,7 @@ namespace uicore
 		}
 	}
 
-	float TextBlockViewImpl::get_preferred_width(const CanvasPtr &canvas)
+	float TextBlockViewImpl::preferred_width(const CanvasPtr &canvas)
 	{
 		float x = 0.0f;
 		for (SpanObject &object : objects)
@@ -237,13 +237,13 @@ namespace uicore
 			}
 			else if (object.type == SpanObjectType::view)
 			{
-				x += object.view->get_preferred_width(canvas);
+				x += object.view->preferred_width(canvas);
 			}
 		}
 		return x;
 	}
 
-	float TextBlockViewImpl::get_preferred_height(const CanvasPtr &canvas, float width)
+	float TextBlockViewImpl::preferred_height(const CanvasPtr &canvas, float width)
 	{
 		float y = 0.0f;
 		size_t obj_start = 0;
@@ -259,12 +259,12 @@ namespace uicore
 		return y;
 	}
 
-	float TextBlockViewImpl::get_first_baseline_offset(const CanvasPtr &canvas, float width)
+	float TextBlockViewImpl::first_baseline_offset(const CanvasPtr &canvas, float width)
 	{
 		return find_line_metrics(canvas, 0, 0, width).ascent;
 	}
 
-	float TextBlockViewImpl::get_last_baseline_offset(const CanvasPtr &canvas, float width)
+	float TextBlockViewImpl::last_baseline_offset(const CanvasPtr &canvas, float width)
 	{
 		float y = 0.0f;
 		size_t obj_start = 0;
@@ -344,11 +344,11 @@ namespace uicore
 			}
 			else if (object.type == SpanObjectType::view)
 			{
-				float obj_width = object.view->get_preferred_width(canvas);
-				float obj_height = object.view->get_preferred_height(canvas, obj_width);
-				float obj_baseline_offset = object.view->get_first_baseline_offset(canvas, obj_width);
+				float obj_width = object.view->preferred_width(canvas);
+				float obj_height = object.view->preferred_height(canvas, obj_width);
+				float obj_baseline_offset = object.view->first_baseline_offset(canvas, obj_width);
 
-				if (obj_baseline_offset == 0.0f) // Hmm, do we need get_first_baseline_offset to be able to return that there is no baseline?
+				if (obj_baseline_offset == 0.0f) // Hmm, do we need first_baseline_offset to be able to return that there is no baseline?
 					obj_baseline_offset = obj_height;
 
 				obj_width += object.view->style_cascade().computed_value("margin-left").number();

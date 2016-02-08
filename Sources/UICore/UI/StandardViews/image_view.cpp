@@ -132,14 +132,4 @@ namespace uicore
 		else
 			return 0.0f;
 	}
-
-	float ImageView::calculate_first_baseline_offset(const CanvasPtr &canvas, float width)
-	{
-		return get_preferred_height(canvas, width);
-	}
-
-	float ImageView::calculate_last_baseline_offset(const CanvasPtr &canvas, float width)
-	{
-		return get_first_baseline_offset(canvas, width);
-	}
 }

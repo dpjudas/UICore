@@ -160,24 +160,14 @@ namespace uicore
 
 	float LabelView::calculate_preferred_width(const CanvasPtr &canvas)
 	{
-		if (style_cascade().computed_value("width").is_keyword("auto"))
-		{
-			FontPtr font = impl->get_font(this);
-			return font->measure_text(canvas, impl->_text).advance.width + 1.0f;
-		}
-		else
-			return style_cascade().computed_value("width").number();
+		FontPtr font = impl->get_font(this);
+		return font->measure_text(canvas, impl->_text).advance.width + 1.0f;
 	}
 
 	float LabelView::calculate_preferred_height(const CanvasPtr &canvas, float width)
 	{
-		if (style_cascade().computed_value("height").is_keyword("auto"))
-		{
-			FontPtr font = impl->get_font(this);
-			return font->font_metrics(canvas).line_height();
-		}
-		else
-			return style_cascade().computed_value("height").number();
+		FontPtr font = impl->get_font(this);
+		return font->font_metrics(canvas).line_height();
 	}
 
 	float LabelView::calculate_first_baseline_offset(const CanvasPtr &canvas, float width)
@@ -188,6 +178,6 @@ namespace uicore
 
 	float LabelView::calculate_last_baseline_offset(const CanvasPtr &canvas, float width)
 	{
-		return get_first_baseline_offset(canvas, width);
+		return first_baseline_offset(canvas, width);
 	}
 }

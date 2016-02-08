@@ -33,10 +33,13 @@
 #include "UICore/Display/Window/cursor.h"
 #include "UICore/Display/Window/cursor_description.h"
 #include "../Animation/animation_group.h"
+#include "view_layout.h"
 #include <map>
 
 namespace uicore
 {
+	class ViewLayout;
+
 	class ViewLayoutCache
 	{
 	public:
@@ -66,6 +69,8 @@ namespace uicore
 	class ViewImpl
 	{
 	public:
+		ViewLayout *active_layout(View *self);
+
 		void render(View *self, const CanvasPtr &canvas, ViewRenderLayer layer);
 		void process_event(View *self, EventUI *e, bool use_capture);
 		void process_action(ViewAction *action, EventUI *e);

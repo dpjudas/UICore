@@ -33,11 +33,8 @@
 
 namespace uicore
 {
-	float VBoxLayout::get_preferred_width(const CanvasPtr &canvas, View *view)
+	float VBoxLayout::preferred_width(const CanvasPtr &canvas, View *view)
 	{
-		if (!view->style_cascade().computed_value("width").is_keyword("auto"))
-			return view->style_cascade().computed_value("width").number();
-
 		float width = 0.0f;
 		for (const std::shared_ptr<View> &subview : view->subviews())
 		{
@@ -48,7 +45,7 @@ namespace uicore
 				margin_box_width += subview->style_cascade().computed_value("border-left-width").number();
 				margin_box_width += subview->style_cascade().computed_value("padding-left").number();
 				if (subview->style_cascade().computed_value("flex-basis").is_keyword("main-size"))
-					margin_box_width += subview->get_preferred_width(canvas);
+					margin_box_width += subview->preferred_width(canvas);
 				else
 					margin_box_width += subview->style_cascade().computed_value("flex-basis").number();
 				margin_box_width += subview->style_cascade().computed_value("padding-right").number();
@@ -60,11 +57,8 @@ namespace uicore
 		return width;
 	}
 
-	float VBoxLayout::get_preferred_height(const CanvasPtr &canvas, View *view, float width)
+	float VBoxLayout::preferred_height(const CanvasPtr &canvas, View *view, float width)
 	{
-		if (!view->style_cascade().computed_value("height").is_keyword("auto"))
-			return view->style_cascade().computed_value("height").number();
-
 		float height = 0.0f;
 		for (const std::shared_ptr<View> &subview : view->subviews())
 		{
@@ -80,7 +74,7 @@ namespace uicore
 				right_noncontent += subview->style_cascade().computed_value("border-right-width").number();
 				right_noncontent += subview->style_cascade().computed_value("padding-right").number();
 
-				float subview_width = subview->get_preferred_width(canvas);
+				float subview_width = subview->preferred_width(canvas);
 				float available_margin = view->geometry().content_width - subview_width - left_noncontent - right_noncontent;
 
 				if (subview->style_cascade().computed_value("margin-left").is_keyword("auto") && subview->style_cascade().computed_value("margin-right").is_keyword("auto"))
@@ -114,7 +108,7 @@ namespace uicore
 				height += subview->style_cascade().computed_value("margin-top").number();
 				height += subview->style_cascade().computed_value("border-top-width").number();
 				height += subview->style_cascade().computed_value("padding-top").number();
-				height += subview->get_preferred_height(canvas, subview_width);
+				height += subview->preferred_height(canvas, subview_width);
 				height += subview->style_cascade().computed_value("padding-bottom").number();
 				height += subview->style_cascade().computed_value("border-bottom-width").number();
 				height += subview->style_cascade().computed_value("margin-bottom").number();
@@ -123,24 +117,24 @@ namespace uicore
 		return height;
 	}
 
-	float VBoxLayout::get_first_baseline_offset(const CanvasPtr &canvas, View *view, float width)
+	float VBoxLayout::first_baseline_offset(const CanvasPtr &canvas, View *view, float width)
 	{
 		const auto &subviews = view->subviews();
 		for (const auto & subview : subviews)
 		{
 			if (subview->is_static_position_and_visible())
-				return (subview)->get_first_baseline_offset(canvas, width);
+				return (subview)->first_baseline_offset(canvas, width);
 		}
 		return 0.0f;
 	}
 
-	float VBoxLayout::get_last_baseline_offset(const CanvasPtr &canvas, View *view, float width)
+	float VBoxLayout::last_baseline_offset(const CanvasPtr &canvas, View *view, float width)
 	{
 		const auto &subviews = view->subviews();
 		for (auto it = subviews.rbegin(); it != subviews.rend(); ++it)
 		{
 			if ((*it)->is_static_position_and_visible())
-				return (*it)->get_last_baseline_offset(canvas, width);
+				return (*it)->last_baseline_offset(canvas, width);
 		}
 		return 0.0f;
 	}
@@ -179,7 +173,7 @@ namespace uicore
 					right_noncontent += subview->style_cascade().computed_value("border-right-width").number();
 					right_noncontent += subview->style_cascade().computed_value("padding-right").number();
 
-					float subview_width = subview->get_preferred_width(canvas);
+					float subview_width = subview->preferred_width(canvas);
 					float available_margin = view->geometry().content_width - subview_width - left_noncontent - right_noncontent;
 
 					if (subview->style_cascade().computed_value("margin-left").is_keyword("auto") && subview->style_cascade().computed_value("margin-right").is_keyword("auto"))
@@ -210,7 +204,7 @@ namespace uicore
 						}
 					}
 
-					basis_height += subview->get_preferred_height(canvas, subview_width);
+					basis_height += subview->preferred_height(canvas, subview_width);
 				}
 				else
 				{
@@ -238,7 +232,7 @@ namespace uicore
 				right_noncontent += subview->style_cascade().computed_value("border-right-width").number();
 				right_noncontent += subview->style_cascade().computed_value("padding-right").number();
 
-				float subview_width = subview->get_preferred_width(canvas);
+				float subview_width = subview->preferred_width(canvas);
 				float available_margin = view->geometry().content_width - subview_width - left_noncontent - right_noncontent;
 
 				if (subview->style_cascade().computed_value("margin-left").is_keyword("auto") && subview->style_cascade().computed_value("margin-right").is_keyword("auto"))
@@ -271,7 +265,7 @@ namespace uicore
 
 				float subview_height = subview->style_cascade().computed_value("flex-basis").number();
 				if (subview->style_cascade().computed_value("flex-basis").is_keyword("main-size"))
-					subview_height = subview->get_preferred_height(canvas, subview_width);
+					subview_height = subview->preferred_height(canvas, subview_width);
 
 				if (free_space < 0.0f && total_shrink_factor != 0.0f)
 					subview_height += free_space * subview->style_cascade().computed_value("flex-shrink").number() / total_shrink_factor;

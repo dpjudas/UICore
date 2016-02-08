@@ -28,18 +28,18 @@
 
 #pragma once
 
-#include "UICore/UI/View/view.h"
-#include "view_layout.h"
-
 namespace uicore
 {
-	class VBoxLayout : public ViewLayout
+	class Canvas;
+	typedef std::shared_ptr<Canvas> CanvasPtr;
+
+	class ViewLayout
 	{
 	public:
-		float preferred_width(const CanvasPtr &canvas, View *view) override;
-		float preferred_height(const CanvasPtr &canvas, View *view, float width) override;
-		float first_baseline_offset(const CanvasPtr &canvas, View *view, float width) override;
-		float last_baseline_offset(const CanvasPtr &canvas, View *view, float width) override;
-		void layout_subviews(const CanvasPtr &canvas, View *view) override;
+		virtual float preferred_width(const CanvasPtr &canvas, View *view) = 0;
+		virtual float preferred_height(const CanvasPtr &canvas, View *view, float width) = 0;
+		virtual float first_baseline_offset(const CanvasPtr &canvas, View *view, float width) = 0;
+		virtual float last_baseline_offset(const CanvasPtr &canvas, View *view, float width) = 0;
+		virtual void layout_subviews(const CanvasPtr &canvas, View *view) = 0;
 	};
 }
