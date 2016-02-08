@@ -27,13 +27,13 @@
 */
 
 #include "UICore/precomp.h"
-#include "UICore/Display/2D/span_layout.h"
-#include "span_layout_impl.h"
+#include "UICore/Display/2D/text_block.h"
+#include "text_block_impl.h"
 
 namespace uicore
 {
-	std::shared_ptr<SpanLayout> SpanLayout::create()
+	std::shared_ptr<TextBlock> TextBlock::create()
 	{
-		return std::make_shared<SpanLayoutImpl>();
+		return std::make_shared<TextBlockImpl>();
 	}
 }

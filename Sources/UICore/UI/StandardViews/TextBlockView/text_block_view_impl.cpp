@@ -28,7 +28,7 @@
 
 #include "UICore/precomp.h"
 
-#include "span_layout_view_impl.h"
+#include "text_block_view_impl.h"
 #include "UICore/Display/2D/canvas.h"
 #include "UICore/Display/2D/brush.h"
 #include "UICore/Display/Font/glyph_metrics.h"
@@ -37,22 +37,22 @@
 
 namespace uicore
 {
-	SpanLayoutViewImpl::SpanLayoutViewImpl()
+	TextBlockViewImpl::TextBlockViewImpl()
 	{
 	}
 
-	void SpanLayoutViewImpl::set_text_alignment(TextAlignment text_alignment)
+	void TextBlockViewImpl::set_text_alignment(TextAlignment text_alignment)
 	{
 		alignment = text_alignment;
 	}
 
-	void SpanLayoutViewImpl::clear()
+	void TextBlockViewImpl::clear()
 	{
 		objects.clear();
 		text.clear();
 	}
 
-	void SpanLayoutViewImpl::add_text(const std::string &more_text, const std::shared_ptr<Style> &style, int id)
+	void TextBlockViewImpl::add_text(const std::string &more_text, const std::shared_ptr<Style> &style, int id)
 	{
 		SpanObject object;
 		object.type = SpanObjectType::text;
@@ -64,7 +64,7 @@ namespace uicore
 		text += more_text;
 	}
 
-	void SpanLayoutViewImpl::add_subview(const std::shared_ptr<View> &view, float baseline_offset, int id)
+	void TextBlockViewImpl::add_subview(const std::shared_ptr<View> &view, float baseline_offset, int id)
 	{
 		SpanObject object;
 		object.type = SpanObjectType::view;
@@ -77,12 +77,12 @@ namespace uicore
 		text += "*";
 	}
 
-	void SpanLayoutViewImpl::set_last_baseline_offset(float baseline_offset)
+	void TextBlockViewImpl::set_last_baseline_offset(float baseline_offset)
 	{
 		objects.back().baseline_offset = baseline_offset;
 	}
 
-	void SpanLayoutViewImpl::remove_subview(const std::shared_ptr<View> &view)
+	void TextBlockViewImpl::remove_subview(const std::shared_ptr<View> &view)
 	{
 		for (auto it = objects.begin(); it != objects.end(); ++it)
 		{
@@ -94,7 +94,7 @@ namespace uicore
 		}
 	}
 
-	void SpanLayoutViewImpl::render_content(const CanvasPtr &canvas, float width)
+	void TextBlockViewImpl::render_content(const CanvasPtr &canvas, float width)
 	{
 		float y = 0.0f;
 		size_t obj_start = 0;
@@ -146,7 +146,7 @@ namespace uicore
 		}
 	}
 
-	void SpanLayoutViewImpl::layout_views(const CanvasPtr &canvas, float width)
+	void TextBlockViewImpl::layout_views(const CanvasPtr &canvas, float width)
 	{
 		float y = 0.0f;
 		size_t obj_start = 0;
@@ -225,7 +225,7 @@ namespace uicore
 		}
 	}
 
-	float SpanLayoutViewImpl::get_preferred_width(const CanvasPtr &canvas)
+	float TextBlockViewImpl::get_preferred_width(const CanvasPtr &canvas)
 	{
 		float x = 0.0f;
 		for (SpanObject &object : objects)
@@ -243,7 +243,7 @@ namespace uicore
 		return x;
 	}
 
-	float SpanLayoutViewImpl::get_preferred_height(const CanvasPtr &canvas, float width)
+	float TextBlockViewImpl::get_preferred_height(const CanvasPtr &canvas, float width)
 	{
 		float y = 0.0f;
 		size_t obj_start = 0;
@@ -259,12 +259,12 @@ namespace uicore
 		return y;
 	}
 
-	float SpanLayoutViewImpl::get_first_baseline_offset(const CanvasPtr &canvas, float width)
+	float TextBlockViewImpl::get_first_baseline_offset(const CanvasPtr &canvas, float width)
 	{
 		return find_line_metrics(canvas, 0, 0, width).ascent;
 	}
 
-	float SpanLayoutViewImpl::get_last_baseline_offset(const CanvasPtr &canvas, float width)
+	float TextBlockViewImpl::get_last_baseline_offset(const CanvasPtr &canvas, float width)
 	{
 		float y = 0.0f;
 		size_t obj_start = 0;
@@ -282,7 +282,7 @@ namespace uicore
 		}
 	}
 
-	SpanLineMetrics SpanLayoutViewImpl::find_line_metrics(const CanvasPtr &canvas, size_t obj_start, size_t text_start, float width)
+	SpanLineMetrics TextBlockViewImpl::find_line_metrics(const CanvasPtr &canvas, size_t obj_start, size_t text_start, float width)
 	{
 		float line_ascent = 0.0f;
 		float line_descent = 0.0f;

@@ -31,18 +31,18 @@
 #include "UICore/Display/Font/font.h"
 #include "UICore/Display/Render/graphic_context.h"
 #include "UICore/Display/Font/font_metrics.h"
-#include "UICore/Display/2D/span_layout.h"
+#include "UICore/Display/2D/text_block.h"
 #include "UICore/Display/2D/image.h"
 
 namespace uicore
 {
 	class Canvas;
 
-	class SpanLayoutImpl : public SpanLayout
+	class TextBlockImpl : public TextBlock
 	{
 	public:
-		SpanLayoutImpl();
-		~SpanLayoutImpl();
+		TextBlockImpl();
+		~TextBlockImpl();
 
 		void clear() override;
 		void add_text(const std::string &text, const FontPtr &font, const Colorf &color, int id) override;

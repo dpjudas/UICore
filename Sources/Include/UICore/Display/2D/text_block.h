@@ -66,10 +66,10 @@ namespace uicore
 	};
 
 	/// \brief Span layout class
-	class SpanLayout
+	class TextBlock
 	{
 	public:
-		static std::shared_ptr<SpanLayout> create();
+		static std::shared_ptr<TextBlock> create();
 
 		struct HitTestResult
 		{
@@ -172,5 +172,5 @@ namespace uicore
 		virtual float last_baseline_offset() = 0;
 	};
 
-	typedef std::shared_ptr<SpanLayout> SpanLayoutPtr;
+	typedef std::shared_ptr<TextBlock> TextBlockPtr;
 }

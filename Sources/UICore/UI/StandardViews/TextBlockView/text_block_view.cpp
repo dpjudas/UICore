@@ -27,18 +27,18 @@
 */
 
 #include "UICore/precomp.h"
-#include "UICore/UI/StandardViews/span_layout_view.h"
-#include "span_layout_view_impl.h"
+#include "UICore/UI/StandardViews/text_block_view.h"
+#include "text_block_view_impl.h"
 
 namespace uicore
 {
-	SpanLayoutView::SpanLayoutView() : impl(new SpanLayoutViewImpl())
+	TextBlockView::TextBlockView() : impl(new TextBlockViewImpl())
 	{
 		impl->view = this;
 		style()->set("layout: none");
 	}
 
-	const std::shared_ptr<Style> &SpanLayoutView::text_style(const std::string &text_class) const
+	const std::shared_ptr<Style> &TextBlockView::text_style(const std::string &text_class) const
 	{
 		const auto it = impl->text_classes.find(text_class);
 		if (it != impl->text_classes.end())
@@ -49,14 +49,14 @@ namespace uicore
 		return style;
 	}
 
-	void SpanLayoutView::set_text_alignment(TextAlignment alignment)
+	void TextBlockView::set_text_alignment(TextAlignment alignment)
 	{
 		impl->set_text_alignment(alignment);
 		set_needs_layout();
 		set_needs_render();
 	}
 
-	void SpanLayoutView::clear()
+	void TextBlockView::clear()
 	{
 		impl->clear();
 
@@ -65,35 +65,35 @@ namespace uicore
 			view->remove_from_super();
 	}
 
-	void SpanLayoutView::add_text(const std::string &text, const std::string &text_class)
+	void TextBlockView::add_text(const std::string &text, const std::string &text_class)
 	{
 		impl->add_text(text, text_style(text_class));
 		set_needs_layout();
 		set_needs_render();
 	}
 
-	void SpanLayoutView::add_subview(const std::shared_ptr<View> &view, float baseline_offset)
+	void TextBlockView::add_subview(const std::shared_ptr<View> &view, float baseline_offset)
 	{
 		View::add_subview(view);
 		impl->set_last_baseline_offset(baseline_offset);
 	}
 
-	void SpanLayoutView::subview_added(const std::shared_ptr<View> &view)
+	void TextBlockView::subview_added(const std::shared_ptr<View> &view)
 	{
 		impl->add_subview(view);
 	}
 
-	void SpanLayoutView::subview_removed(const std::shared_ptr<View> &view)
+	void TextBlockView::subview_removed(const std::shared_ptr<View> &view)
 	{
 		impl->remove_subview(view);
 	}
 
-	void SpanLayoutView::render_content(const CanvasPtr &canvas)
+	void TextBlockView::render_content(const CanvasPtr &canvas)
 	{
 		return impl->render_content(canvas, geometry().content_width);
 	}
 
-	float SpanLayoutView::calculate_preferred_width(const CanvasPtr &canvas)
+	float TextBlockView::calculate_preferred_width(const CanvasPtr &canvas)
 	{
 		if (style_cascade().computed_value("width").is_keyword("auto"))
 			return impl->get_preferred_width(canvas);
@@ -101,7 +101,7 @@ namespace uicore
 			return style_cascade().computed_value("width").number();
 	}
 
-	float SpanLayoutView::calculate_preferred_height(const CanvasPtr &canvas, float width)
+	float TextBlockView::calculate_preferred_height(const CanvasPtr &canvas, float width)
 	{
 		if (style_cascade().computed_value("height").is_keyword("auto"))
 			return impl->get_preferred_height(canvas, width);
@@ -109,17 +109,17 @@ namespace uicore
 			return style_cascade().computed_value("height").number();
 	}
 
-	float SpanLayoutView::calculate_first_baseline_offset(const CanvasPtr &canvas, float width)
+	float TextBlockView::calculate_first_baseline_offset(const CanvasPtr &canvas, float width)
 	{
 		return impl->get_first_baseline_offset(canvas, width);
 	}
 
-	float SpanLayoutView::calculate_last_baseline_offset(const CanvasPtr &canvas, float width)
+	float TextBlockView::calculate_last_baseline_offset(const CanvasPtr &canvas, float width)
 	{
 		return impl->get_last_baseline_offset(canvas, width);
 	}
 
-	void SpanLayoutView::layout_subviews(const CanvasPtr &canvas)
+	void TextBlockView::layout_subviews(const CanvasPtr &canvas)
 	{
 		View::layout_subviews(canvas);
 		impl->layout_views(canvas, geometry().content_width);

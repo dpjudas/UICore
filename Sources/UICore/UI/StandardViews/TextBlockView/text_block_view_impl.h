@@ -28,7 +28,7 @@
 
 #pragma once
 
-#include "UICore/UI/StandardViews/span_layout_view.h"
+#include "UICore/UI/StandardViews/text_block_view.h"
 #include "UICore/UI/Style/style.h"
 #include <map>
 
@@ -96,12 +96,12 @@ namespace uicore
 		float advance_width = 0.0f;
 	};
 
-	class SpanLayoutViewImpl
+	class TextBlockViewImpl
 	{
 	public:
-		SpanLayoutViewImpl();
+		TextBlockViewImpl();
 
-		SpanLayoutView *view = nullptr;
+		TextBlockView *view = nullptr;
 
 		void clear();
 		void add_text(const std::string &text, const std::shared_ptr<Style> &style, int id = -1);
