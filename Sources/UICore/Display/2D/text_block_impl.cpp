@@ -363,7 +363,7 @@ namespace uicore
 		}
 	}
 
-	TextBlockImpl::TextSizeResult TextBlockImpl::find_text_size(const CanvasPtr &canvas, const TextBlock &block, unsigned int object_index)
+	TextBlockImpl::TextSizeResult TextBlockImpl::find_text_size(const CanvasPtr &canvas, const InlineBlock &block, unsigned int object_index)
 	{
 		FontPtr font = objects[object_index].font;
 		if (layout_cache.object_index != object_index)
@@ -420,9 +420,9 @@ namespace uicore
 		return result;
 	}
 
-	std::vector<TextBlockImpl::TextBlock> TextBlockImpl::find_text_blocks()
+	std::vector<TextBlockImpl::InlineBlock> TextBlockImpl::find_text_blocks()
 	{
-		std::vector<TextBlock> blocks;
+		std::vector<InlineBlock> blocks;
 		std::vector<SpanObject>::iterator block_object_it;
 
 		// Find first object that is not text:
@@ -455,7 +455,7 @@ namespace uicore
 				end_pos = (*block_object_it).start;
 				if (end_pos > pos)
 				{
-					TextBlock block;
+					InlineBlock block;
 					block.start = pos;
 					block.end = end_pos;
 					blocks.push_back(block);
@@ -465,7 +465,7 @@ namespace uicore
 				pos = end_pos;
 				end_pos = pos + 1;
 
-				TextBlock block;
+				InlineBlock block;
 				block.start = pos;
 				block.end = end_pos;
 				blocks.push_back(block);
@@ -477,7 +477,7 @@ namespace uicore
 			{
 				if (end_pos > pos)
 				{
-					TextBlock block;
+					InlineBlock block;
 					block.start = pos;
 					block.end = end_pos;
 					blocks.push_back(block);
@@ -505,8 +505,8 @@ namespace uicore
 		layout_cache.object_index = -1;
 
 		CurrentLine current_line;
-		std::vector<TextBlock> blocks = find_text_blocks();
-		for (std::vector<TextBlock>::size_type block_index = 0; block_index < blocks.size(); block_index++)
+		std::vector<InlineBlock> blocks = find_text_blocks();
+		for (std::vector<InlineBlock>::size_type block_index = 0; block_index < blocks.size(); block_index++)
 		{
 			if (objects[current_line.object_index].type == object_text)
 				layout_text(canvas, blocks, block_index, current_line, max_width);
@@ -516,7 +516,7 @@ namespace uicore
 		next_line(current_line);
 	}
 
-	void TextBlockImpl::layout_block(CurrentLine &current_line, float max_width, std::vector<TextBlock> &blocks, std::vector<TextBlock>::size_type block_index)
+	void TextBlockImpl::layout_block(CurrentLine &current_line, float max_width, std::vector<InlineBlock> &blocks, std::vector<InlineBlock>::size_type block_index)
 	{
 		if (objects[current_line.object_index].float_type == float_none)
 			layout_inline_block(current_line, max_width, blocks, block_index);
@@ -526,7 +526,7 @@ namespace uicore
 		current_line.object_index++;
 	}
 
-	void TextBlockImpl::layout_inline_block(CurrentLine &current_line, float max_width, std::vector<TextBlock> &blocks, std::vector<TextBlock>::size_type block_index)
+	void TextBlockImpl::layout_inline_block(CurrentLine &current_line, float max_width, std::vector<InlineBlock> &blocks, std::vector<InlineBlock>::size_type block_index)
 	{
 		Sizef size;
 		LineSegment segment;
@@ -638,7 +638,7 @@ namespace uicore
 		return true;
 	}
 
-	void TextBlockImpl::layout_text(const CanvasPtr &canvas, std::vector<TextBlock> blocks, std::vector<TextBlock>::size_type block_index, CurrentLine &current_line, float max_width)
+	void TextBlockImpl::layout_text(const CanvasPtr &canvas, std::vector<InlineBlock> blocks, std::vector<InlineBlock>::size_type block_index, CurrentLine &current_line, float max_width)
 	{
 		TextSizeResult text_size_result = find_text_size(canvas, blocks[block_index], current_line.object_index);
 		current_line.object_index += text_size_result.objects_traversed;
@@ -729,12 +729,12 @@ namespace uicore
 		place_line_segments(current_line, text_size_result);
 	}
 
-	bool TextBlockImpl::is_newline(const TextBlock &block)
+	bool TextBlockImpl::is_newline(const InlineBlock &block)
 	{
 		return block.start != block.end && text[block.start] == '\n';
 	}
 
-	bool TextBlockImpl::is_whitespace(const TextBlock &block)
+	bool TextBlockImpl::is_whitespace(const InlineBlock &block)
 	{
 		return block.start != block.end && text[block.start] == ' ';
 	}

@@ -76,9 +76,9 @@ namespace uicore
 		bool cursor_overwrite_mode = false;
 		Colorf cursor_color = Colorf::black;
 
-		struct TextBlock
+		struct InlineBlock
 		{
-			TextBlock() : start(0), end(0) { }
+			InlineBlock() : start(0), end(0) { }
 
 			unsigned int start, end;
 		};
@@ -178,13 +178,13 @@ namespace uicore
 			int id = 1;
 		};
 
-		TextSizeResult find_text_size(const CanvasPtr &canvas, const TextBlock &block, unsigned int object_index);
-		std::vector<TextBlock> find_text_blocks();
+		TextSizeResult find_text_size(const CanvasPtr &canvas, const InlineBlock &block, unsigned int object_index);
+		std::vector<InlineBlock> find_text_blocks();
 		void layout_lines(const CanvasPtr &canvas, float max_width);
-		void layout_text(const CanvasPtr &canvas, std::vector<TextBlock> blocks, std::vector<TextBlock>::size_type block_index, CurrentLine &current_line, float max_width);
-		void layout_block(CurrentLine &current_line, float max_width, std::vector<TextBlock> &blocks, std::vector<TextBlock>::size_type block_index);
+		void layout_text(const CanvasPtr &canvas, std::vector<InlineBlock> blocks, std::vector<InlineBlock>::size_type block_index, CurrentLine &current_line, float max_width);
+		void layout_block(CurrentLine &current_line, float max_width, std::vector<InlineBlock> &blocks, std::vector<InlineBlock>::size_type block_index);
 		void layout_float_block(CurrentLine &current_line, float max_width);
-		void layout_inline_block(CurrentLine &current_line, float max_width, std::vector<TextBlock> &blocks, std::vector<TextBlock>::size_type block_index);
+		void layout_inline_block(CurrentLine &current_line, float max_width, std::vector<InlineBlock> &blocks, std::vector<InlineBlock>::size_type block_index);
 		void reflow_line(CurrentLine &current_line, float max_width);
 		FloatBox float_box_left(FloatBox float_box, float max_width);
 		FloatBox float_box_right(FloatBox float_box, float max_width);
@@ -193,8 +193,8 @@ namespace uicore
 		void place_line_segments(CurrentLine &current_line, TextSizeResult &text_size_result);
 		void force_place_line_segments(CurrentLine &current_line, TextSizeResult &text_size_result, float max_width);
 		void next_line(CurrentLine &current_line);
-		bool is_newline(const TextBlock &block);
-		bool is_whitespace(const TextBlock &block);
+		bool is_newline(const InlineBlock &block);
+		bool is_whitespace(const InlineBlock &block);
 		bool fits_on_line(float x_position, const TextSizeResult &text_size_result, float max_width);
 		bool larger_than_line(const TextSizeResult &text_size_result, float max_width);
 		void align_justify(float max_width);
