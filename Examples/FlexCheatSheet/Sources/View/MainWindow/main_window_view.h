@@ -27,7 +27,7 @@ public:
 			max-height: 450px;
 			background-color: #dce7f2;
 			border: 1px solid #2a4f73;
-			max-width: 750px;
+			width: 750px;
 			margin: 15px auto;
 			)");
 		style()->set(styles);
@@ -48,7 +48,8 @@ public:
 			font-weight: 400;
 			font-style: italic;
 			font-size: 24px;
-			max-width: 750px;
+			line-height: 32px;
+			width: 750px;
 			margin: 15px auto;
 			)");
 
@@ -62,7 +63,7 @@ public:
 	FlexParagraph(const std::string &text)
 	{
 		style()->set(R"(
-			max-width: 750px;
+			width: 750px;
 			margin: 8px auto;
 			)");
 
@@ -96,7 +97,6 @@ public:
 	{
 		style()->set(R"(
 			background: rgb(250,250,250);
-			padding: 11px;
 			font: 11px/15px 'Segoe UI'; color: black
 			)");
 
