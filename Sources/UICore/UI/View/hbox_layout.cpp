@@ -40,13 +40,40 @@ namespace uicore
 		{
 			if (subview->is_static_position_and_visible())
 			{
+				bool definitive_main_size = subview->style_cascade().computed_value("flex-basis").is_length();
+				bool definite_cross_size = subview->style_cascade().computed_value("height").is_length();
+
+				float subview_width = 0.0f;
+				if (!definitive_main_size)
+					subview_width = subview->preferred_width(canvas);
+				else
+					subview_width = subview->style_cascade().computed_value("flex-basis").number();
+
+				if (subview->style_cascade().computed_value("max-width").is_length())
+					subview_width = std::min(subview_width, subview->style_cascade().computed_value("max-width").number());
+
+				if (subview->style_cascade().computed_value("min-width").is_keyword("auto") && !definitive_main_size && definite_cross_size)
+				{
+					float height = subview->style_cascade().computed_value("height").number();
+					float aspect = 1.0f; // subview->intrinsic_aspect_ratio();
+
+					if (subview->style_cascade().computed_value("max-height").is_length())
+						height = std::min(height, subview->style_cascade().computed_value("max-height").number());
+
+					if (subview->style_cascade().computed_value("min-height").is_length())
+						height = std::max(height, subview->style_cascade().computed_value("min-height").number());
+
+					subview_width = height / aspect;
+				}
+				else if (subview->style_cascade().computed_value("min-width").is_length())
+				{
+					subview_width = std::max(subview_width, subview->style_cascade().computed_value("min-width").number());
+				}
+
 				width += subview->style_cascade().computed_value("margin-left").number();
 				width += subview->style_cascade().computed_value("border-left-width").number();
 				width += subview->style_cascade().computed_value("padding-left").number();
-				if (subview->style_cascade().computed_value("flex-basis").is_keyword("main-size"))
-					width += subview->preferred_width(canvas);
-				else
-					width += subview->style_cascade().computed_value("flex-basis").number();
+				width += subview_width;
 				width += subview->style_cascade().computed_value("padding-right").number();
 				width += subview->style_cascade().computed_value("border-right-width").number();
 				width += subview->style_cascade().computed_value("margin-right").number();

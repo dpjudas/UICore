@@ -303,11 +303,13 @@ namespace uicore
 	{
 		if (!impl->layout_cache.preferred_width_calculated)
 		{
+			float width = 0.0f;
 			if (!style_cascade().computed_value("width").is_keyword("auto"))
-				impl->layout_cache.preferred_width = style_cascade().computed_value("width").number();
+				width = style_cascade().computed_value("width").number();
 			else
-				impl->layout_cache.preferred_width = calculate_preferred_width(canvas);
+				width = calculate_preferred_width(canvas);
 
+			impl->layout_cache.preferred_width = width;
 			impl->layout_cache.preferred_width_calculated = true;
 		}
 		return impl->layout_cache.preferred_width;
