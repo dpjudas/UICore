@@ -47,7 +47,7 @@ namespace uicore
 InputDeviceProvider_OSXMouse::InputDeviceProvider_OSXMouse(OpenGLWindowProvider *window)
     : mouse_position(0.0f, 0.0f), sig_provider_event(nullptr), window(window)
 {
-    for (int i = 0; i < clan::mouse_count; ++i)
+    for (int i = 0; i < uicore::mouse_count; ++i)
     {
         mouse_down_map[i] = false;
     }
@@ -61,25 +61,25 @@ InputDeviceProvider_OSXMouse::~InputDeviceProvider_OSXMouse()
 /////////////////////////////////////////////////////////////////////////////
 // InputDeviceProvider_OSXMouse attributes:
 
-float InputDeviceProvider_OSXMouse::get_x() const
+float InputDeviceProvider_OSXMouse::x() const
 {
 	throw_if_disposed();
 	return mouse_position.x;
 }
 
-float InputDeviceProvider_OSXMouse::get_y() const
+float InputDeviceProvider_OSXMouse::y() const
 {
 	throw_if_disposed();
 	return mouse_position.y;
 }
 
-bool InputDeviceProvider_OSXMouse::get_keycode(int keycode) const
+bool InputDeviceProvider_OSXMouse::keycode(int keycode) const
 {
     throw_if_disposed();
 
     bool result = false;
 
-    if (keycode < clan::mouse_count)
+    if (keycode < uicore::mouse_count)
     {
         result = mouse_down_map[keycode];
     }
@@ -87,7 +87,7 @@ bool InputDeviceProvider_OSXMouse::get_keycode(int keycode) const
     return result;
 }
 
-std::string InputDeviceProvider_OSXMouse::get_key_name(int id) const
+std::string InputDeviceProvider_OSXMouse::key_name(int id) const
 {
 	throw_if_disposed();
 
@@ -103,31 +103,31 @@ std::string InputDeviceProvider_OSXMouse::get_key_name(int id) const
 	return string_format("Mouse button %1", id);
 }
 
-float InputDeviceProvider_OSXMouse::get_axis(int index) const
+float InputDeviceProvider_OSXMouse::axis(int index) const
 {
 	throw_if_disposed();
 	return 0.0f;
 }
 
-std::string InputDeviceProvider_OSXMouse::get_name() const
+std::string InputDeviceProvider_OSXMouse::name() const
 {
 	throw_if_disposed();
 	return "System Mouse";
 }
 
-std::string InputDeviceProvider_OSXMouse::get_device_name() const
+std::string InputDeviceProvider_OSXMouse::device_name() const
 {
 	throw_if_disposed();
 	return "System Mouse";
 }
 
-std::vector<int> InputDeviceProvider_OSXMouse::get_axis_ids() const
+std::vector<int> InputDeviceProvider_OSXMouse::axis_ids() const
 {
 	throw_if_disposed();
 	return std::vector<int>();
 }
 
-int InputDeviceProvider_OSXMouse::get_button_count() const
+int InputDeviceProvider_OSXMouse::button_count() const
 {
 	throw_if_disposed();
 	return -1;
@@ -149,16 +149,16 @@ void InputDeviceProvider_OSXMouse::on_dispose()
 {
 }
 
-void InputDeviceProvider_OSXMouse::on_mouse_event(const clan::InputCode& keycode, const clan::InputEvent::Type& type,
-                                                  const clan::Pointf& position)
+void InputDeviceProvider_OSXMouse::on_mouse_event(const uicore::InputCode& keycode, const uicore::InputEvent::Type& type,
+                                                  const uicore::Pointf& position)
 {
-    if (keycode < clan::mouse_count)
+    if (keycode < uicore::mouse_count)
     {
-        if (type == InputEvent::doubleclick || type == clan::InputEvent::pressed)
+        if (type == InputEvent::doubleclick || type == uicore::InputEvent::pressed)
         {
             mouse_down_map[keycode] = true;
         }
-        else if (type == clan::InputEvent::released)
+        else if (type == uicore::InputEvent::released)
         {
             mouse_down_map[keycode] = false;
         }

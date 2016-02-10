@@ -32,16 +32,14 @@
 #include "UICore/Core/Math/rect.h"
 #include "UICore/Display/Window/display_window_description.h"
 #include "UICore/Display/display_target.h"
-#include "UICore/Display/TargetProviders/display_window_provider.h"
+#include "UICore/Display/Window/display_window_provider.h"
 #include "UICore/Display/Window/display_window.h"
-#include "UICore/Display/Render/shared_gc_data.h"
 #include "UICore/Display/Image/pixel_buffer.h"
 #include "UICore/Display/Window/input_device.h"
 #include "UICore/GL/opengl.h"
 #include "UICore/GL/opengl_context_description.h"
-#include "UICore/Core/Text/logger.h"
-#include "GL/opengl_context_description_impl.h"
-#include "GL/GL3/gl3_graphic_context_provider.h"
+#include "UICore/GL/opengl_context_description_impl.h"
+#include "UICore/GL/GL3/gl3_graphic_context.h"
 
 #import <CoreFoundation/CoreFoundation.h>
 #import <AppKit/AppKit.h>
@@ -60,8 +58,8 @@ namespace uicore
 		void on_input_event(NSEvent *theEvent);
 
 		OpenGLWindowProvider *self;
-		GraphicContext gc;
-		DisplayWindowSite *site;
+		GraphicContextPtr gc;
+		DisplayWindowProvider *site;
 		OpenGLContextDescription opengl_desc;
 
 		CocoaWindow *window;
@@ -74,7 +72,7 @@ namespace uicore
 
 	inline NSRect to_cocoa_rect(const Rectf &rect, NSRect parent_frame)
 	{
-		return NSMakeRect(rect.left, parent_frame.size.height - rect.bottom, rect.get_width(), rect.get_height());
+		return NSMakeRect(rect.left, parent_frame.size.height - rect.bottom, rect.width(), rect.height());
 	}
 	
 	inline Rectf from_cocoa_rect(NSRect rect, NSRect parent_frame)

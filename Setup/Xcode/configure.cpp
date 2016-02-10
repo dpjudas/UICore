@@ -57,7 +57,7 @@ public:
 class Solution
 {
 public:
-    std::string name = "ClanLib";
+    std::string name = "UICore";
     std::shared_ptr<SolutionBuildConfiguration> debug_config = std::make_shared<SolutionBuildConfiguration>("Debug");
     std::shared_ptr<SolutionBuildConfiguration> release_config = std::make_shared<SolutionBuildConfiguration>("Release");
     std::vector<std::shared_ptr<SolutionProject>> projects;
@@ -87,6 +87,8 @@ bool check_ignore_list(const std::string &name)
     for (const char *search : {
         "Win32",
         "win32",
+        "D3D",
+        "d3d",
         "Freetype",
         "freetype",
         "Linux",
@@ -189,10 +191,10 @@ std::shared_ptr<SolutionProject> add_project(std::string name, std::string heade
     api->items.push_back(api_subfolder);
 
     auto proj = std::make_shared<SolutionProject>();
-    proj->name = "clan" + name;
+    proj->name = name;
     proj->header_folder = name;
     proj->header_name = header_name;
-    add_source_files("Sources/API/" + name, solution, proj, api_subfolder);
+    add_source_files("Sources/Include/" + name, solution, proj, api_subfolder);
     add_source_files("Sources/" + name, solution, proj, sources_subfolder);
     solution->projects.push_back(proj);
     return proj;
@@ -202,7 +204,7 @@ void add_main_api_headers(std::shared_ptr<SolutionFileItem> api)
 {
     std::vector<std::string> files;
     
-    DIR *dir = opendir("Sources/API");
+    DIR *dir = opendir("Sources/Include");
     if (dir)
     {
         while (true)
@@ -246,7 +248,7 @@ std::shared_ptr<Solution> generate_solution()
     
     sources->path = "Sources";
     
-    api->path = "API";
+    api->path = "Include";
     
     frameworks->name = "Frameworks";
     
@@ -265,13 +267,7 @@ std::shared_ptr<Solution> generate_solution()
     solution->root_folder->items.push_back(solution->products_folder);
     solution->products_folder->parent = solution->root_folder;
     
-    auto clanCore = add_project("Core", "core.h", solution, sources, api);
-    auto clanDisplay = add_project("Display", "display.h", solution, sources, api);
-    auto clanGL = add_project("GL", "gl.h", solution, sources, api);
-    auto clanNetwork = add_project("Network", "network.h", solution, sources, api);
-    auto clanSound = add_project("Sound", "sound.h", solution, sources, api);
-    auto clanUI = add_project("UI", "ui.h", solution, sources, api);
-    auto clanApp = add_project("App", "application.h", solution, sources, api);
+    auto uicore = add_project("UICore", "uicore.h", solution, sources, api);
     
     add_main_api_headers(api);
 
@@ -511,7 +507,7 @@ private:
         output << "    attributes = {" << std::endl;
         output << "        LastUpgradeCheck = 0610;" << std::endl;
         output << "    };" << std::endl;
-        output << "    buildConfigurationList = " << id("XCConfigurationList", solution.get()) << " /* Build configuration list for PBXProject \"ClanLib\" */;" << std::endl;
+        output << "    buildConfigurationList = " << id("XCConfigurationList", solution.get()) << " /* Build configuration list for PBXProject \"UICore\" */;" << std::endl;
         output << "    compatibilityVersion = \"Xcode 3.2\";" << std::endl;
         output << "    developmentRegion = English;" << std::endl;
         output << "    hasScannedForEncodings = 0;" << std::endl;
@@ -552,12 +548,12 @@ private:
             output << "    runOnlyForDeploymentPostprocessing = 0;" << std::endl;
             output << "    shellPath = /bin/sh;" << std::endl;
             output << "    shellScript = \""
-                "if [ -d \\\"Build/include/ClanLib/" << project->header_folder <<"\\\" ]; then "
-                "rm -rf Build/include/ClanLib/" << project->header_folder << "/; "
+                "if [ -d \\\"Build/include/" << project->header_folder <<"\\\" ]; then "
+                "rm -rf Build/include/" << project->header_folder << "/; "
                 "fi \\n"
-                "mkdir -p Build/include/ClanLib/ \\n"
-                "cp -r \\\"${PROJECT_DIR}/Sources/API/" << project->header_folder << "\\\" \\\"Build/include/ClanLib/" << project->header_folder << "\\\" \\n"
-                "cp \\\"${PROJECT_DIR}/Sources/API/" << project->header_name << "\\\" \\\"Build/include/ClanLib/" << project->header_name << "\\\" \\n"
+                "mkdir -p Build/include/ \\n"
+                "cp -r \\\"${PROJECT_DIR}/Sources/Include/" << project->header_folder << "\\\" \\\"Build/include/" << project->header_folder << "\\\" \\n"
+                "cp \\\"${PROJECT_DIR}/Sources/Include/" << project->header_name << "\\\" \\\"Build/include/" << project->header_name << "\\\" \\n"
                 "\";" << std::endl;
             output << "};" << std::endl;
         }
@@ -628,7 +624,7 @@ private:
         output << "                \"$(inherited)\"," << std::endl;
         output << "        );" << std::endl;
         output << "        ONLY_ACTIVE_ARCH = YES;" << std::endl;
-        output << "        USER_HEADER_SEARCH_PATHS = Sources;" << std::endl;
+        output << "        USER_HEADER_SEARCH_PATHS = \"Sources Sources/Include\";" << std::endl;
         output << "        DEPLOYMENT_LOCATION = YES;" << std::endl;
         output << "        DSTROOT = Build;" << std::endl;
         output << "    };" << std::endl;
@@ -642,7 +638,7 @@ private:
         output << "        CLANG_CXX_LANGUAGE_STANDARD = \"c++14\";" << std::endl;
         output << "        CLANG_CXX_LIBRARY = \"libc++\";" << std::endl;
         output << "        CLANG_ENABLE_OBJC_ARC = YES;" << std::endl;
-        output << "        USER_HEADER_SEARCH_PATHS = Sources;" << std::endl;
+        output << "        USER_HEADER_SEARCH_PATHS = \"Sources Sources/Include\";" << std::endl;
         output << "        DEPLOYMENT_LOCATION = YES;" << std::endl;
         output << "        DSTROOT = Build;" << std::endl;
         output << "    };" << std::endl;
@@ -773,7 +769,7 @@ int main(int argc, const char * argv[])
 
     std::cout << "Finished generating files." << std::endl;
     std::cout << std::endl;
-    std::cout << "Please open ClanLib.xcodeproj in Xcode to build Clanlib." << std::endl;
+    std::cout << "Please open UICore.xcodeproj in Xcode to build UICore." << std::endl;
     std::cout << std::endl;
     
     return 0;

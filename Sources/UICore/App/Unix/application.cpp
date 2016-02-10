@@ -67,11 +67,6 @@ int main(int argc, char **argv)
 		args.push_back(argv[i]);
 	uicore::command_line_args = args;
 
-#ifdef DEBUG
-	clan::ConsoleLogger console_logger;
-	console_logger.enable();
-#endif
-
 	int retval = 0;
 
 	if (uicore::enable_catch_exceptions)
@@ -83,10 +78,6 @@ int main(int argc, char **argv)
 		}
 		catch (uicore::Exception &exception)
 		{
-			std::string console_name("Console");
-			if (!args.empty())
-				console_name = args[0];
-
 			std::cout << "Exception caught: " + exception.get_message_and_stack_trace() << std::endl;
 			retval = -1;
 		}

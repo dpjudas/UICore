@@ -35,6 +35,7 @@
 #include "UICore/UI/UIThread/ui_thread.h"
 #include "UICore/Core/ErrorReporting/exception_dialog.h"
 #include "UICore/Core/IOData/path_help.h"
+#include "UICore/Core/IOData/directory.h"
 #include "UICore/UI/Style/style.h"
 #include <map>
 

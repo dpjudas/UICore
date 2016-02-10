@@ -31,6 +31,7 @@
 
 #include "opengl_defines.h"
 #include <utility>
+#include <string>
 #include "../Display/Render/texture.h"
 
 #if defined(_MSC_VER)

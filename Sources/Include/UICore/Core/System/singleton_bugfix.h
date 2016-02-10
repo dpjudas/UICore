@@ -34,6 +34,20 @@
 namespace uicore
 {
 	/// \brief Workaround for broken destruction of static member variables in MSVC
+	///
+	/// The C++ runtime in Visual Studio 2013 and 2015 deinitializes the threading library prematurely.
+	/// This causes std::thread and other standard library classes to not work in static member variables.
+	///
+	/// This SingletonBugfix and the Singleton template allows an application to deinitialize all
+	/// static member variables wrapped by the Singleton template by calling SingletonBugfix::deinitialize()
+	class SingletonBugfix
+	{
+	public:
+		static void deinitialize();
+		static void add_destructor(std::function<void()> destructor);
+	};
+	
+	/// \brief Workaround for broken destruction of static member variables in MSVC
 	template<typename T>
 	class Singleton
 	{
@@ -51,19 +65,5 @@ namespace uicore
 		Singleton &operator=(const Singleton &) = delete;
 
 		std::unique_ptr<T> value;
-	};
-
-	/// \brief Workaround for broken destruction of static member variables in MSVC
-	///
-	/// The C++ runtime in Visual Studio 2013 and 2015 deinitializes the threading library prematurely.
-	/// This causes std::thread and other standard library classes to not work in static member variables.
-	///
-	/// This SingletonBugfix and the Singleton template allows an application to deinitialize all
-	/// static member variables wrapped by the Singleton template by calling SingletonBugfix::deinitialize()
-	class SingletonBugfix
-	{
-	public:
-		static void deinitialize();
-		static void add_destructor(std::function<void()> destructor);
 	};
 }

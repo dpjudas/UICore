@@ -31,7 +31,7 @@
 #include "UICore/precomp.h"
 #include "input_device_provider_osxkeyboard.h"
 
-#include "UICore/Core/Text/string_help.h"
+#include "UICore/Core/Text/text.h"
 #include "UICore/Display/Window/display_window.h"
 #include "UICore/Display/Window/input_event.h"
 #include "UICore/Display/Window/keys.h"
@@ -45,7 +45,7 @@ namespace uicore
 InputDeviceProvider_OSXKeyboard::InputDeviceProvider_OSXKeyboard(OpenGLWindowProvider *window)
     : sig_provider_event(nullptr), window(window)
 {
-    for (int i = 0; i < clan::keycode_count; ++i)
+    for (int i = 0; i < uicore::keycode_count; ++i)
     {
         key_down_map[i] = false;
     }
@@ -59,13 +59,13 @@ InputDeviceProvider_OSXKeyboard::~InputDeviceProvider_OSXKeyboard()
 /////////////////////////////////////////////////////////////////////////////
 // InputDeviceProvider_OSXKeyboard attributes:
 
-bool InputDeviceProvider_OSXKeyboard::get_keycode(int keycode) const
+bool InputDeviceProvider_OSXKeyboard::keycode(int keycode) const
 {
     throw_if_disposed();
 
     bool result = false;
 
-    if (keycode < clan::keycode_count)
+    if (keycode < uicore::keycode_count)
     {
         result = key_down_map[keycode];
     }
@@ -73,7 +73,7 @@ bool InputDeviceProvider_OSXKeyboard::get_keycode(int keycode) const
     return result;
 }
 
-std::string InputDeviceProvider_OSXKeyboard::get_key_name(int virtual_key) const
+std::string InputDeviceProvider_OSXKeyboard::key_name(int virtual_key) const
 {
     //
     // TODO: Reimplement.
@@ -83,31 +83,31 @@ std::string InputDeviceProvider_OSXKeyboard::get_key_name(int virtual_key) const
     return std::string();
 }
 
-float InputDeviceProvider_OSXKeyboard::get_axis(int index) const
+float InputDeviceProvider_OSXKeyboard::axis(int index) const
 {
     throw_if_disposed();
     return 0.0f;
 }
 
-std::string InputDeviceProvider_OSXKeyboard::get_name() const
+std::string InputDeviceProvider_OSXKeyboard::name() const
 {
     throw_if_disposed();
     return "System Keyboard";
 }
 
-std::string InputDeviceProvider_OSXKeyboard::get_device_name() const
+std::string InputDeviceProvider_OSXKeyboard::device_name() const
 {
     throw_if_disposed();
     return "System Keyboard";
 }
 
-std::vector<int> InputDeviceProvider_OSXKeyboard::get_axis_ids() const
+std::vector<int> InputDeviceProvider_OSXKeyboard::axis_ids() const
 {
     throw_if_disposed();
     return std::vector<int>();
 }
 
-int InputDeviceProvider_OSXKeyboard::get_button_count() const
+int InputDeviceProvider_OSXKeyboard::button_count() const
 {
     throw_if_disposed();
     return -1;
@@ -123,15 +123,15 @@ void InputDeviceProvider_OSXKeyboard::on_dispose()
 {
 }
 
-void InputDeviceProvider_OSXKeyboard::on_key_event(const clan::InputCode& keycode, const clan::InputEvent::Type& type)
+void InputDeviceProvider_OSXKeyboard::on_key_event(const uicore::InputCode& keycode, const uicore::InputEvent::Type& type)
 {
-    if (keycode < clan::keycode_count)
+    if (keycode < uicore::keycode_count)
     {
-        if (type == clan::InputEvent::pressed)
+        if (type == uicore::InputEvent::pressed)
         {
             key_down_map[keycode] = true;
         }
-        else if (type == clan::InputEvent::released)
+        else if (type == uicore::InputEvent::released)
         {
             key_down_map[keycode] = false;
         }

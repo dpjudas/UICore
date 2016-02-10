@@ -27,9 +27,9 @@
 **    Magnus Norddahl
 */
 
-#include "GL/precomp.h"
+#include "precomp.h"
 #include "UICore/Display/Window/input_event.h"
-
+#include "UICore/GL/gl_share_list.h"
 #include "opengl_window_provider_osx.h"
 #include "opengl_window_provider_osx_impl.h"
 #include "input_device_provider_osxkeyboard.h"
@@ -39,12 +39,87 @@
 
 namespace uicore
 {
-	OpenGLWindowProvider::OpenGLWindowProvider(OpenGLContextDescription &opengl_desc)
+	OpenGLWindowProvider::OpenGLWindowProvider(OpenGLContextDescription &opengl_desc, const DisplayWindowDescription &desc)
 	{
 		impl.reset(new OpenGLWindowProvider_Impl(this, opengl_desc));
+		
+		impl->site = this;
 
-		keyboard = InputDevice(new InputDeviceProvider_OSXKeyboard(this));
-		mouse = InputDevice(new InputDeviceProvider_OSXMouse(this));
+		_keyboard = std::make_shared<InputDeviceProvider_OSXKeyboard>(this);
+		_mouse = std::make_shared<InputDeviceProvider_OSXMouse>(this);
+		
+		impl->window = [[CocoaWindow alloc] initWithDescription:desc provider:impl.get()];
+		if (impl->window == nil)
+			throw Exception("Could not create the window.");
+		
+		[impl->window setTitle:[NSString stringWithUTF8String:desc.title().c_str()]];
+		
+		std::vector<NSOpenGLPixelFormatAttribute> attributes;
+		
+		attributes.push_back(NSOpenGLPFAOpenGLProfile);
+		attributes.push_back(NSOpenGLProfileVersion3_2Core);
+		
+		attributes.push_back(NSOpenGLPFADoubleBuffer);
+		attributes.push_back(NSOpenGLPFAColorSize);
+		attributes.push_back(24);
+		attributes.push_back(NSOpenGLPFAAlphaSize);
+		attributes.push_back(8);
+		attributes.push_back(NSOpenGLPFADepthSize);
+		attributes.push_back(desc.depth_size());
+		attributes.push_back(NSOpenGLPFAStencilSize);
+		attributes.push_back(desc.stencil_size());
+		attributes.push_back(NSOpenGLPFAMinimumPolicy); // Color and depth must minimum match what we specified
+		
+		if (desc.multisampling() > 0)
+		{
+			attributes.push_back(NSOpenGLPFAMultisample);
+			attributes.push_back(NSOpenGLPFASampleBuffers);
+			attributes.push_back(1);
+			attributes.push_back(NSOpenGLPFASamples);
+			attributes.push_back(desc.multisampling());
+		}
+		attributes.push_back(0);
+		
+		NSOpenGLPixelFormat *pixel_format = [[NSOpenGLPixelFormat alloc] initWithAttributes:&attributes[0]];
+		if (pixel_format == nil)
+			throw Exception("Could not create the requested OpenGL pixel format");
+		
+		impl->opengl_context = [[NSOpenGLContext alloc] initWithFormat:pixel_format shareContext:impl->get_share_context()];
+		if (impl->opengl_context == nil)
+			throw Exception("Could not create OpenGL context");
+		
+		[impl->window.contentView setWantsBestResolutionOpenGLSurface:true];
+		[impl->opengl_context setView:impl->window.contentView];
+		
+		if (desc.is_popup())
+		{
+			// Make window transparent:
+			[impl->window setOpaque:FALSE];
+			impl->window.backgroundColor = [NSColor clearColor];
+			
+			// The view transparent:
+			[[impl->window.contentView layer] setOpaque: FALSE];
+			
+			// And the OpenGL context transparent:
+			GLint opaque = 0;
+			[impl->opengl_context setValues:&opaque forParameter:NSOpenGLCPSurfaceOpacity];
+		}
+		
+		impl->gc = std::make_shared<GL3GraphicContext>(this);
+		
+		[impl->window setDelegate:impl->window];
+		
+		[impl->window setOneShot:NO]; // Do not destroy the 'window device' when window is hidden
+		
+		if (desc.is_visible())
+		{
+			[impl->window makeMainWindow];
+			[impl->window makeKeyAndOrderFront:impl->window];
+		}
+		/*else
+		 {
+			[impl->window orderOut:impl->window];
+		 }*/
 	}
 
 	OpenGLWindowProvider::~OpenGLWindowProvider()
@@ -69,7 +144,7 @@ namespace uicore
 		return ptr;
 	}
 
-	Rect OpenGLWindowProvider::get_geometry() const
+	Rect OpenGLWindowProvider::backing_geometry() const
 	{
 		NSRect frame = impl->window.frame;
 		NSRect screen_frame = [[NSScreen mainScreen] frame];
@@ -78,13 +153,13 @@ namespace uicore
 		frame.origin.x -= screen_frame.origin.x;
 		frame.origin.y -= screen_frame.origin.y;
 		
-		return from_cocoa_rect(frame, screen_frame) * get_pixel_ratio();
+		return from_cocoa_rect(frame, screen_frame) * pixel_ratio();
 	}
 
-	Rect OpenGLWindowProvider::get_viewport() const
+	Rect OpenGLWindowProvider::backing_viewport() const
 	{
 		NSRect client = [impl->window.contentView frame];
-		return Rectf::xywh(0.0f, 0.0f, client.size.width, client.size.height) * get_pixel_ratio();
+		return Rectf::xywh(0.0f, 0.0f, client.size.width, client.size.height) * pixel_ratio();
 	}
 	
 	bool OpenGLWindowProvider::is_fullscreen() const
@@ -112,38 +187,38 @@ namespace uicore
 		return impl->window.isVisible == YES;
 	}
 
-	Size OpenGLWindowProvider::get_minimum_size(bool client_area) const
+	Size OpenGLWindowProvider::backing_minimum_size(bool client_area) const
 	{
 		return Size();
 	}
 
-	Size OpenGLWindowProvider::get_maximum_size(bool client_area) const
+	Size OpenGLWindowProvider::backing_maximum_size(bool client_area) const
 	{
 		return Size(32768, 32768);
 	}
 
-	GraphicContext& OpenGLWindowProvider::get_gc()
+	const GraphicContextPtr &OpenGLWindowProvider::gc() const
 	{
 		return impl->gc;
 	}
 	
-	InputDevice &OpenGLWindowProvider::get_keyboard()
+	const InputDevicePtr &OpenGLWindowProvider::keyboard() const
 	{
-		return keyboard;
+		return _keyboard;
 	}
 	
-	InputDevice &OpenGLWindowProvider::get_mouse()
+	const InputDevicePtr &OpenGLWindowProvider::mouse() const
 	{
-		return mouse;
+		return _mouse;
 	}
 	
-	std::vector<InputDevice> &OpenGLWindowProvider::get_game_controllers()
+	const std::vector<InputDevicePtr> &OpenGLWindowProvider::game_controllers() const
 	{
-		static std::vector<InputDevice> empty;
+		static std::vector<InputDevicePtr> empty;
 		return empty;
 	}
 
-	std::string OpenGLWindowProvider::get_title() const
+	std::string OpenGLWindowProvider::title() const
 	{
 		return [impl->window.title UTF8String];
 	}
@@ -163,9 +238,9 @@ namespace uicore
 		[impl->opengl_context makeCurrentContext];
 	}
 
-	Point OpenGLWindowProvider::client_to_screen(const Point &client_pos)
+	Point OpenGLWindowProvider::backing_client_to_screen(const Point &client_pos)
 	{
-		Rectf client_box = Rectf::xywh(client_pos.x / get_pixel_ratio(), client_pos.y / get_pixel_ratio(), 1.0f, 1.0f);
+		Rectf client_box = Rectf::xywh(client_pos.x / pixel_ratio(), client_pos.y / pixel_ratio(), 1.0f, 1.0f);
 		
 		NSRect client = to_cocoa_rect(client_box, [impl->window.contentView bounds]);
 		NSRect window = [impl->window.contentView convertRect:client toView:nil];
@@ -175,110 +250,32 @@ namespace uicore
 		screen.origin.x -= screen_frame.origin.x;
 		screen.origin.y -= screen_frame.origin.y;
 		
-		return Rect(from_cocoa_rect(screen, screen_frame) * get_pixel_ratio()).get_top_left();
+		return Rect(from_cocoa_rect(screen, screen_frame) * pixel_ratio()).top_left();
 	}
 
-	Point OpenGLWindowProvider::screen_to_client(const Point &screen_pos)
+	Point OpenGLWindowProvider::backing_screen_to_client(const Point &screen_pos)
 	{
 		NSRect screen_frame = [[NSScreen mainScreen] frame];
-		NSRect screen = to_cocoa_rect(Rectf::xywh(screen_pos.x / get_pixel_ratio(), screen_pos.y / get_pixel_ratio(), 1.0f, 1.0f), screen_frame);
+		NSRect screen = to_cocoa_rect(Rectf::xywh(screen_pos.x / pixel_ratio(), screen_pos.y / pixel_ratio(), 1.0f, 1.0f), screen_frame);
 		screen.origin.x += screen_frame.origin.x;
 		screen.origin.y += screen_frame.origin.y;
 		
 		NSRect window = [impl->window convertRectFromScreen:screen];
 		NSRect client = [impl->window.contentView convertRect:window fromView:nil];
 		
-		return Rect(from_cocoa_rect(client, [impl->window.contentView bounds]) * get_pixel_ratio()).get_top_left();
-	}
-
-	void OpenGLWindowProvider::create(DisplayWindowSite *new_site, const DisplayWindowDescription &desc)
-	{
-		impl->site = new_site;
-
-		impl->window = [[CocoaWindow alloc] initWithDescription:desc provider:impl.get()];
-		if (impl->window == nil)
-			throw Exception("Could not create the window.");
-
-		[impl->window setTitle:[NSString stringWithUTF8String:desc.get_title().c_str()]];
-
-		std::vector<NSOpenGLPixelFormatAttribute> attributes;
-
-		attributes.push_back(NSOpenGLPFAOpenGLProfile);
-		attributes.push_back(NSOpenGLProfileVersion3_2Core);
-
-		attributes.push_back(NSOpenGLPFADoubleBuffer);
-		attributes.push_back(NSOpenGLPFAColorSize);
-		attributes.push_back(24);
-		attributes.push_back(NSOpenGLPFAAlphaSize);
-		attributes.push_back(8);
-		attributes.push_back(NSOpenGLPFADepthSize);
-		attributes.push_back(desc.get_depth_size());
-		attributes.push_back(NSOpenGLPFAStencilSize);
-		attributes.push_back(desc.get_stencil_size());
-		attributes.push_back(NSOpenGLPFAMinimumPolicy); // Color and depth must minimum match what we specified
-
-		if (desc.get_multisampling() > 0)
-		{
-			attributes.push_back(NSOpenGLPFAMultisample);
-			attributes.push_back(NSOpenGLPFASampleBuffers);
-			attributes.push_back(1);
-			attributes.push_back(NSOpenGLPFASamples);
-			attributes.push_back(desc.get_multisampling());
-		}
-		attributes.push_back(0);
-
-		NSOpenGLPixelFormat *pixel_format = [[NSOpenGLPixelFormat alloc] initWithAttributes:&attributes[0]];
-		if (pixel_format == nil)
-			throw Exception("Could not create the requested OpenGL pixel format");
-
-		impl->opengl_context = [[NSOpenGLContext alloc] initWithFormat:pixel_format shareContext:impl->get_share_context()];
-		if (impl->opengl_context == nil)
-			throw Exception("Could not create OpenGL context");
-
-		[impl->window.contentView setWantsBestResolutionOpenGLSurface:true];
-		[impl->opengl_context setView:impl->window.contentView];
-		
-		if (desc.is_popup())
-		{
-			// Make window transparent:
-			[impl->window setOpaque:FALSE];
-			impl->window.backgroundColor = [NSColor clearColor];
-			
-			// The view transparent:
-			[[impl->window.contentView layer] setOpaque: FALSE];
-			
-			// And the OpenGL context transparent:
-			GLint opaque = 0;
-			[impl->opengl_context setValues:&opaque forParameter:NSOpenGLCPSurfaceOpacity];
-		}
-
-		impl->gc = GraphicContext(new GL3GraphicContextProvider(this));
-
-		[impl->window setDelegate:impl->window];
-		
-		[impl->window setOneShot:NO]; // Do not destroy the 'window device' when window is hidden
-		
-		if (desc.is_visible())
-		{
-			[impl->window makeMainWindow];
-			[impl->window makeKeyAndOrderFront:impl->window];
-		}
-		/*else
-		{
-			[impl->window orderOut:impl->window];
-		}*/
+		return Rect(from_cocoa_rect(client, [impl->window.contentView bounds]) * pixel_ratio()).top_left();
 	}
 
 	void OpenGLWindowProvider::show_system_cursor()
 	{
 	}
 
-	CursorProvider *OpenGLWindowProvider::create_cursor(const CursorDescription &cursor_description)
+	CursorPtr OpenGLWindowProvider::create_cursor(const CursorDescription &cursor_description)
 	{
 		throw Exception("Custom cursors not supported yet by OS X target");
 	}
 
-	void OpenGLWindowProvider::set_cursor(CursorProvider *cursor)
+	void OpenGLWindowProvider::set_cursor(const CursorPtr &cursor)
 	{
 	}
 
@@ -295,18 +292,18 @@ namespace uicore
 		[impl->window setTitle:[NSString stringWithUTF8String:new_title.c_str()]];
 	}
 
-	void OpenGLWindowProvider::set_position(const Rect &pos, bool client_area)
+	void OpenGLWindowProvider::set_backing_position(const Rect &pos, bool client_area)
 	{
 		if (client_area)
 		{
-			NSRect frame = [impl->window frameRectForContentRect:to_cocoa_rect(Rectf(pos) * (1.0f / get_pixel_ratio()), impl->window.frame)];
+			NSRect frame = [impl->window frameRectForContentRect:to_cocoa_rect(Rectf(pos) * (1.0f / pixel_ratio()), impl->window.frame)];
 			[impl->window setFrame:frame display:NO animate:NO];
 		}
 		else
 		{
 			NSRect screen_frame = [[NSScreen mainScreen] frame];
 			
-			NSRect frame = to_cocoa_rect(Rectf(pos) * (1.0f / get_pixel_ratio()), screen_frame);
+			NSRect frame = to_cocoa_rect(Rectf(pos) * (1.0f / pixel_ratio()), screen_frame);
 			frame.origin.x += screen_frame.origin.x;
 			frame.origin.y += screen_frame.origin.y;
 
@@ -314,45 +311,45 @@ namespace uicore
 		}
 	}
 
-	void OpenGLWindowProvider::set_size(int width, int height, bool client_area)
+	void OpenGLWindowProvider::set_backing_size(int width, int height, bool client_area)
 	{
 		if (client_area)
 		{
-			auto box = get_geometry();
+			auto box = backing_geometry();
 			box.right = box.left + width;
 			box.bottom = box.top + height;
 			set_position(box, false);
 		}
 		else
 		{
-			auto box = get_viewport();
+			auto box = backing_viewport();
 			box.right = box.left + width;
 			box.bottom = box.top + height;
 			set_position(box, true);
 		}
 	}
 
-	void OpenGLWindowProvider::set_minimum_size( int width, int height, bool client_area )
+	void OpenGLWindowProvider::set_backing_minimum_size( int width, int height, bool client_area )
 	{
 		if (client_area)
 		{
-			[impl->window setContentMinSize:NSMakeSize(width/ get_pixel_ratio(), height/ get_pixel_ratio())];
+			[impl->window setContentMinSize:NSMakeSize(width/ pixel_ratio(), height/ pixel_ratio())];
 		}
 		else
 		{
-			[impl->window setMinSize:NSMakeSize(width/ get_pixel_ratio(), height/ get_pixel_ratio())];
+			[impl->window setMinSize:NSMakeSize(width/ pixel_ratio(), height/ pixel_ratio())];
 		}
 	}
 
-	void OpenGLWindowProvider::set_maximum_size( int width, int height, bool client_area )
+	void OpenGLWindowProvider::set_backing_maximum_size( int width, int height, bool client_area )
 	{
 		if (client_area)
 		{
-			[impl->window setContentMaxSize:NSMakeSize(width/ get_pixel_ratio(), height/ get_pixel_ratio())];
+			[impl->window setContentMaxSize:NSMakeSize(width/ pixel_ratio(), height/ pixel_ratio())];
 		}
 		else
 		{
-			[impl->window setMaxSize:NSMakeSize(width/ get_pixel_ratio(), height/ get_pixel_ratio())];
+			[impl->window setMaxSize:NSMakeSize(width/ pixel_ratio(), height/ pixel_ratio())];
 		}
 	}
 
@@ -398,9 +395,9 @@ namespace uicore
 		[impl->window makeKeyAndOrderFront:impl->window];
 	}
 
-	void OpenGLWindowProvider::flip(int interval)
+	void OpenGLWindowProvider::backing_flip(int interval)
 	{
-		OpenGL::set_active(get_gc());
+		OpenGL::set_active(gc());
 		OpenGL::check_error();
 		[impl->opengl_context flushBuffer];
 	}
@@ -413,7 +410,7 @@ namespace uicore
 	{
 	}
 
-	std::string OpenGLWindowProvider::get_clipboard_text() const
+	std::string OpenGLWindowProvider::clipboard_text() const
 	{
 		return std::string();
 	}
@@ -423,29 +420,29 @@ namespace uicore
 		[impl->window.contentView setNeedsDisplay:TRUE];
 	}
 
-	void OpenGLWindowProvider::set_large_icon(const PixelBuffer &image)
+	void OpenGLWindowProvider::set_large_icon(const PixelBufferPtr &image)
 	{
 	}
 
-	void OpenGLWindowProvider::set_small_icon(const PixelBuffer &image)
+	void OpenGLWindowProvider::set_small_icon(const PixelBufferPtr &image)
 	{
 	}
 
-	void OpenGLWindowProvider::enable_alpha_channel(const Rect &blur_rect)
+	void OpenGLWindowProvider::backing_enable_alpha_channel(const Rect &blur_rect)
 	{
 	}
 
-	void OpenGLWindowProvider::extend_frame_into_client_area(int left, int top, int right, int bottom)
+	void OpenGLWindowProvider::backing_extend_frame_into_client_area(int left, int top, int right, int bottom)
 	{
 	}
 
-	void OpenGLWindowProvider::set_clipboard_image(const PixelBuffer &buf)
+	void OpenGLWindowProvider::set_clipboard_image(const PixelBufferPtr &buf)
 	{
 	}
 
-	PixelBuffer OpenGLWindowProvider::get_clipboard_image() const
+	PixelBufferPtr OpenGLWindowProvider::clipboard_image() const
 	{
-		return PixelBuffer();
+		return nullptr;
 	}
 
 	bool OpenGLWindowProvider::is_double_buffered() const
@@ -453,23 +450,19 @@ namespace uicore
 		return true;
 	}
 		
-	float OpenGLWindowProvider::get_pixel_ratio() const
+	float OpenGLWindowProvider::pixel_ratio() const
 	{
 		return [impl->window backingScaleFactor];
 	}
 		
-	void OpenGLWindowProvider::set_pixel_ratio(float ratio)
-	{
-	}
-
 	InputDeviceProvider_OSXKeyboard *OpenGLWindowProvider::get_keyboard_provider()
 	{
-		return static_cast<InputDeviceProvider_OSXKeyboard*>(keyboard.get_provider());
+		return static_cast<InputDeviceProvider_OSXKeyboard*>(_keyboard.get());
 	}
 
 	InputDeviceProvider_OSXMouse *OpenGLWindowProvider::get_mouse_provider()
 	{
-		return static_cast<InputDeviceProvider_OSXMouse*>(mouse.get_provider());
+		return static_cast<InputDeviceProvider_OSXMouse*>(_mouse.get());
 	}
 
 	/////////////////////////////////////////////////////////////////////
@@ -483,11 +476,10 @@ namespace uicore
 	{
 		NSOpenGLContext *share_context = nil;
 
-		std::unique_ptr<std::unique_lock<std::recursive_mutex>> mutex_section;
-		GraphicContextProvider* gc_providers = SharedGCData::get_provider(mutex_section);
-		if (gc_providers)
+		GraphicContextImpl* gc = GLShareList::any_context();
+		if (gc)
 		{
-			GL3GraphicContextProvider *gl3_provider = dynamic_cast<GL3GraphicContextProvider*>(gc_providers);
+			GL3GraphicContext *gl3_provider = dynamic_cast<GL3GraphicContext*>(gc);
 			if (gl3_provider)
 			{
 				const OpenGLWindowProvider *render_window_wgl = dynamic_cast<const OpenGLWindowProvider*>(&gl3_provider->get_render_window());
@@ -545,14 +537,14 @@ namespace uicore
 		}
 
 		// Prepare event to be emitted:
-		clan::InputEvent key;
+		uicore::InputEvent key;
 		if (keydown)
 		{
-			key.type = clan::InputEvent::pressed;
+			key.type = uicore::InputEvent::pressed;
 		}
 		else
 		{
-			key.type = clan::InputEvent::released;
+			key.type = uicore::InputEvent::released;
 		}
 
 		// Handle modifier flags
@@ -653,9 +645,9 @@ namespace uicore
 			key.str = [text UTF8String];
 			
 			if (type == NSKeyDown)
-				self->keyboard.sig_key_down()(key);
+				self->_keyboard->sig_key_down()(key);
 			else
-				self->keyboard.sig_key_up()(key);
+				self->_keyboard->sig_key_up()(key);
 		}
 		else if(type == NSFlagsChanged)
 		{
@@ -663,20 +655,20 @@ namespace uicore
 			if(prevInput.shift != key.shift)
 			{
 				key.id = keycode_shift;
-				key.type = key.shift ? clan::InputEvent::pressed : clan::InputEvent::released;
+				key.type = key.shift ? uicore::InputEvent::pressed : uicore::InputEvent::released;
 				if (key.shift)
-					self->keyboard.sig_key_down()(key);
+					self->_keyboard->sig_key_down()(key);
 				else
-					self->keyboard.sig_key_up()(key);
+					self->_keyboard->sig_key_up()(key);
 			}
 			if(prevInput.ctrl != key.ctrl)
 			{
 				key.id = keycode_control;
-				key.type = key.ctrl ? clan::InputEvent::pressed : clan::InputEvent::released;
+				key.type = key.ctrl ? uicore::InputEvent::pressed : uicore::InputEvent::released;
 				if (key.ctrl)
-					self->keyboard.sig_key_down()(key);
+					self->_keyboard->sig_key_down()(key);
 				else
-					self->keyboard.sig_key_up()(key);
+					self->_keyboard->sig_key_up()(key);
 			}
 		}
 
@@ -713,7 +705,7 @@ namespace uicore
 		
 		// Prepare event to be emitted:
 		InputEvent key;
-		key.mouse_pos = clan::Pointf(content_mouse_pos.x, [window.contentView bounds].size.height - content_mouse_pos.y);
+		key.mouse_pos = uicore::Pointf(content_mouse_pos.x, [window.contentView bounds].size.height - content_mouse_pos.y);
 		key.id = id;
 
 		if (dblclk)
@@ -723,7 +715,7 @@ namespace uicore
 			// Update our internal mouse state
 			self->get_mouse_provider()->on_mouse_event(key.id, key.type, key.mouse_pos);
 
-			self->mouse.sig_key_dblclk()(key);
+			self->_mouse->sig_key_dblclk()(key);
 		}
 		else if (down)
 		{
@@ -732,7 +724,7 @@ namespace uicore
 			// Update our internal mouse state
 			self->get_mouse_provider()->on_mouse_event(key.id, key.type, key.mouse_pos);
 
-			self->mouse.sig_key_down()(key);
+			self->_mouse->sig_key_down()(key);
 		}
 
 		// It is possible for 2 events to be called when the wheelmouse is used.
@@ -743,7 +735,7 @@ namespace uicore
 			// Update our internal mouse state
 			self->get_mouse_provider()->on_mouse_event(key.id, key.type, key.mouse_pos);
 
-			self->mouse.sig_key_up()(key);
+			self->_mouse->sig_key_up()(key);
 		}
 		
 		if (type == NSMouseMoved)
@@ -753,7 +745,7 @@ namespace uicore
 			// Update our internal mouse state
 			self->get_mouse_provider()->on_mouse_event(key.id, key.type, key.mouse_pos);
 			
-			self->mouse.sig_pointer_move()(key);
+			self->_mouse->sig_pointer_move()(key);
 		}
 	}
 }

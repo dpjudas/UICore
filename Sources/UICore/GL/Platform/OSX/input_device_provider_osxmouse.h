@@ -31,7 +31,7 @@
 
 #include "UICore/Core/Signals/signal.h"
 #include "UICore/Core/Math/point.h"
-#include "UICore/Display/TargetProviders/input_device_provider.h"
+#include "UICore/Display/Window/input_device_provider.h"
 #include "UICore/Display/Window/input_device.h"
 #include "UICore/Display/Window/input_event.h"
 #include "UICore/Display/Window/keys.h"
@@ -56,35 +56,35 @@ public:
 
 public:
 	/// \brief Returns the input device type.
-	InputDevice::Type get_type() const { return InputDevice::pointer; }
+	InputDevice::Type type() const { return InputDevice::pointer; }
 
 	/// \brief Returns the x position of the device.
-	float get_x() const;
+	float x() const;
 
 	/// \brief Returns the y position of the device.
-	float get_y() const;
+	float y() const;
 
 	/// \brief Returns true if the passed key code is down for this device.
-	bool get_keycode(int keycode) const;
+	bool keycode(int keycode) const;
 
 	/// \brief Key name for specified identifier (A, B, C, Space, Enter, Backspace).
-	std::string get_key_name(int id) const;
+	std::string key_name(int id) const;
 
 	/// \brief Returns the the current position of a joystick axis.
-	float get_axis(int index) const;
+	float axis(int index) const;
 
 	/// \brief Returns the name of the device (i.e. 'Microsoft Sidewinder 3D').
-	std::string get_name() const;
+	std::string name() const;
 
 	/// \brief Return the hardware id/device for this device (i.e. /dev/input/js0)
-	std::string get_device_name() const;
+	std::string device_name() const;
 
 	/// \brief Returns the number of axes available on this device.
-	std::vector<int> get_axis_ids() const;
+	std::vector<int> axis_ids() const;
 
 	/// \brief Returns the number of buttons available on this device.
 	/** <p>If used on a keyboard, this function returns -1.</p>*/
-	int get_button_count() const;
+	int button_count() const;
 
 	/// \brief Returns true if a tablet stylus is in proximity (hovering close enough over the tablet surface).
 	bool in_proximity() const { return false; }
@@ -111,13 +111,13 @@ public:
 private:
     // Virtual Mouse State.
     // A work around the for the inability to directly query the mouse state through Cocoa.
-    bool mouse_down_map[clan::mouse_count];
-    clan::Point mouse_position;
+    bool mouse_down_map[uicore::mouse_count];
+    uicore::Point mouse_position;
     Signal<void(const InputEvent &)> *sig_provider_event;
 
     void on_dispose();
-    void on_mouse_event(const clan::InputCode& keycode, const clan::InputEvent::Type& type,
-                        const clan::Pointf& position);
+    void on_mouse_event(const uicore::InputCode& keycode, const uicore::InputEvent::Type& type,
+                        const uicore::Pointf& position);
 
     OpenGLWindowProvider *window;
     friend class OpenGLWindowProvider_Impl;

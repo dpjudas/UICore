@@ -26,14 +26,14 @@
  **    Magnus Norddahl
  */
 
-#include "Core/precomp.h"
+#include "precomp.h"
 #include "UICore/Core/IOData/directory.h"
 #include "UICore/Core/IOData/path_help.h"
-#include "UICore/Core/Text/string_help.h"
+#include "UICore/Core/Text/text.h"
 
 #import <Foundation/Foundation.h>
 
-namespace clan
+namespace uicore
 {
 	std::string Directory::get_appdata(const std::string &company_name, const std::string &application_name, const std::string &version, bool create_dirs_if_missing)
 	{

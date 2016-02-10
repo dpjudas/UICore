@@ -30,9 +30,9 @@
 
 #include <cstdint>
 
-#ifdef _MSC_VER
+#if defined(_MSC_VER)
 #include <stdlib.h>
-#else
+#elif !defined(__APPLE__)
 #include <byteswap.h>
 #define HAS_BYTESWAP
 #endif

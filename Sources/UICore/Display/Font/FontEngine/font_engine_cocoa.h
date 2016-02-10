@@ -39,15 +39,13 @@
 #include <CoreGraphics/CoreGraphics.h>
 #include <string>
 
-namespace clan
+namespace uicore
 {
-	class DataBuffer;
-
 	class FontEngine_Cocoa : public FontEngine
 	{
 	public:
 		FontEngine_Cocoa(const FontDescription &description, const std::string &typeface_name, float pixel_ratio);
-		FontEngine_Cocoa(const FontDescription &description, DataBuffer &font_databuffer, float pixel_ratio);
+		FontEngine_Cocoa(const FontDescription &description, DataBufferPtr &font_databuffer, float pixel_ratio);
 		~FontEngine_Cocoa();
 
 		bool is_automatic_recreation_allowed() const override { return true; }
@@ -55,17 +53,17 @@ namespace clan
 		const FontDescription &get_desc() const override { return font_description; }
 		FontPixelBuffer get_font_glyph(int glyph) override;
 
-		void load_glyph_path(unsigned int glyph_index, Path &out_path, GlyphMetrics &out_metrics);
+		void load_glyph_path(unsigned int glyph_index, const PathPtr &out_path, GlyphMetrics &out_metrics) override;
 
 	private:
 		static Pointf to_pointf(const CGPoint &p);
 		
 		struct LoadGlyphPathInfo
 		{
-			LoadGlyphPathInfo(Path &path, float pixel_ratio)
+			LoadGlyphPathInfo(const PathPtr &path, float pixel_ratio)
 			: path(path), pixel_ratio(pixel_ratio) { }
 			
-			Path &path;
+			const PathPtr &path;
 			float pixel_ratio;
 		};
 		

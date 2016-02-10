@@ -34,6 +34,6 @@ namespace uicore { class OpenGLWindowProvider_Impl; }
 
 @interface CocoaWindow : NSWindow <NSWindowDelegate>
 
-- (id) initWithDescription:(const clan::DisplayWindowDescription &)desc provider:(clan::OpenGLWindowProvider_Impl*)provider_impl;
+- (id) initWithDescription:(const uicore::DisplayWindowDescription &)desc provider:(uicore::OpenGLWindowProvider_Impl*)provider_impl;
 
 @end

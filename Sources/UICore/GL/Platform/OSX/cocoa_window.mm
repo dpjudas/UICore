@@ -26,7 +26,7 @@
 **    Magnus Norddahl
 */
 
-#include "GL/precomp.h"
+#include "precomp.h"
 #include "UICore/GL/opengl_context_description.h"
 #include "opengl_window_provider_osx_impl.h"
 
@@ -39,16 +39,16 @@
 
 @implementation CocoaWindow
 {
-	clan::OpenGLWindowProvider_Impl *window_provider;
+	uicore::OpenGLWindowProvider_Impl *window_provider;
 }
 
-- (id) initWithDescription:(const clan::DisplayWindowDescription &)desc provider:(clan::OpenGLWindowProvider_Impl*)provider_impl
+- (id) initWithDescription:(const uicore::DisplayWindowDescription &)desc provider:(uicore::OpenGLWindowProvider_Impl*)provider_impl
 {
-	NSRect frame = NSMakeRect(desc.get_position().left, desc.get_position().top, desc.get_size().width, desc.get_size().height);
+	NSRect frame = NSMakeRect(desc.position().left, desc.position().top, desc.size().width, desc.size().height);
 
 	NSScreen *screen = [NSScreen mainScreen];
 	
-	if (desc.get_position().left == -1 && desc.get_position().top == -1)
+	if (desc.position().left == -1 && desc.position().top == -1)
 	{
 		NSRect workarea = [screen visibleFrame];
 		frame.origin.x = workarea.origin.x + (workarea.size.width - frame.size.width) * 0.5f;
@@ -69,12 +69,12 @@
 		styles |= NSMiniaturizableWindowMask;
 	if (desc.has_sysmenu())
 		styles |= NSClosableWindowMask;
-	if (desc.get_allow_resize())
+	if (desc.allow_resize())
 		styles |= NSResizableWindowMask;
 	if (desc.is_fullscreen())
 		styles |= NSFullScreenWindowMask;
 	
-	if (!desc.get_position_client_area())
+	if (!desc.position_client_area())
 	{
 		frame = [NSWindow contentRectForFrameRect:frame styleMask:styles];
 	}
@@ -86,12 +86,12 @@
 		[self setAcceptsMouseMovedEvents:YES];
 		self.contentView = [[CocoaView alloc] initWithProvider:provider_impl];
 		
-		if (!desc.get_owner().is_null())
+		if (desc.owner())
 		{
 			// To do: Cocoa doesn't have owner window ordering (only z-order levels are supported).
 			//        We need to set the level back to NSNormalWindowLevel whenever the parent window is not key.
 			
-			//auto parent_provider = static_cast<clan::OpenGLWindowProvider*>(desc.get_owner().get_provider());
+			//auto parent_provider = static_cast<uicore::OpenGLWindowProvider*>(desc.get_owner().get_provider());
 			
 			self.level = NSFloatingWindowLevel;
 		}
@@ -162,9 +162,9 @@
 	float width = ((NSView*)self.contentView).frame.size.width;
 	float height = ((NSView*)self.contentView).frame.size.height;
 	[window_provider->opengl_context update];
-	window_provider->site->sig_resize(width, height);
+	window_provider->site->sig_resize();
 	
-	clan::GL3GraphicContextProvider *gl_provider = dynamic_cast<clan::GL3GraphicContextProvider*>(window_provider->gc.get_provider());
+	uicore::GL3GraphicContext *gl_provider = dynamic_cast<uicore::GL3GraphicContext*>(window_provider->gc.get());
 	if (gl_provider)
 		gl_provider->on_window_resized();
 }

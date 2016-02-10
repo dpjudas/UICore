@@ -31,10 +31,10 @@
 
 @implementation CocoaView
 {
-	clan::OpenGLWindowProvider_Impl *window_provider;
+	uicore::OpenGLWindowProvider_Impl *window_provider;
 }
 
-- (id) initWithProvider:(clan::OpenGLWindowProvider_Impl*)provider_impl
+- (id) initWithProvider:(uicore::OpenGLWindowProvider_Impl*)provider_impl
 {
 	self = [self initWithFrame:NSMakeRect(0, 0, 100, 100)];
 	if (self)

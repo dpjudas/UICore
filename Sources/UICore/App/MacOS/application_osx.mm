@@ -27,13 +27,13 @@
 **    Magnus Norddahl
 */
 
-#include "clanapp_osx.h"
+#include "application_osx.h"
 
 #include "UICore/Display/System/run_loop.h"
 #include "UICore/Core/System/exception.h"
-#include "UICore/App/clanapp.h"
+#include "UICore/Application/application.h"
 
-namespace clan
+namespace uicore
 {
 	static ApplicationInstancePrivate *app_instance = 0;
 	static bool enable_catch_exceptions = false;
@@ -55,15 +55,15 @@ namespace clan
 		return command_line_args;
 	}
 
-	void Application::use_timeout_timing(int timeout)
+	/*void Application::use_timeout_timing(int timeout)
 	{
 		timing_timeout = timeout;
-	}
+	}*/
 }
 
 int main(int argc, char **argv)
 {
-	using namespace clan;
+	using namespace uicore;
 	
 	if (app_instance == 0)
 	{
@@ -89,29 +89,29 @@ int main(int argc, char **argv)
 
 - (void) applicationDidFinishLaunching:(NSNotification *)aNotification
 {
-	using namespace clan;
+	using namespace uicore;
 	
-	NSTimeInterval interval = timing_timeout/1000.0;
-	if (interval == 0.0)
-		interval = 0.01;
+	//NSTimeInterval interval = timing_timeout/1000.0;
+	//if (interval == 0.0)
+	//	interval = 0.01;
 	
 	app_obj = app_instance->create();
-	app_update_timer = [NSTimer scheduledTimerWithTimeInterval:interval target:self selector:@selector(updateTimeout:) userInfo:nil repeats:YES];
+	//app_update_timer = [NSTimer scheduledTimerWithTimeInterval:interval target:self selector:@selector(updateTimeout:) userInfo:nil repeats:YES];
 }
 
 - (BOOL) applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)sender
 {
 	return NO;
 }
-
+/*
 - (void) updateTimeout:(NSTimer *)timer
 {
-	using namespace clan;
+	using namespace uicore;
 	
 	if (!app_obj->update())
 	{
 		[[NSApplication sharedApplication] terminate: self];
 	}
 }
-
+*/
 @end

@@ -32,11 +32,11 @@
 #include "font_engine_cocoa.h"
 #include "UICore/Display/Font/font_metrics.h"
 #include "UICore/Core/System/databuffer.h"
-#include "UICore/Core/Text/string_help.h"
+#include "UICore/Core/Text/text.h"
 #include "UICore/Core/Text/string_format.h"
 #include "UICore/Display/2D/path.h"
 
-namespace clan
+namespace uicore
 {
 	FontEngine_Cocoa::FontEngine_Cocoa(const FontDescription &desc, const std::string &typeface_name, float pixel_ratio)
 	: pixel_ratio(pixel_ratio)
@@ -86,12 +86,12 @@ namespace clan
 		font_description = desc.clone();
 	}
 
-	FontEngine_Cocoa::FontEngine_Cocoa(const FontDescription &desc, DataBuffer &font_databuffer, float pixel_ratio)
+	FontEngine_Cocoa::FontEngine_Cocoa(const FontDescription &desc, DataBufferPtr &font_databuffer, float pixel_ratio)
 	: pixel_ratio(pixel_ratio)
 	{
-		DataBuffer *cgdata_databuffer = new DataBuffer(font_databuffer);
+		DataBufferPtr *cgdata_databuffer = new DataBufferPtr(font_databuffer);
 		
-		CGDataProviderRef cg_fontdata = CGDataProviderCreateWithData(cgdata_databuffer, cgdata_databuffer->get_data(), cgdata_databuffer->get_size(),[](void *info, const void *data, size_t size) { delete (DataBuffer *)info; });
+		CGDataProviderRef cg_fontdata = CGDataProviderCreateWithData(cgdata_databuffer, (*cgdata_databuffer)->data(), (*cgdata_databuffer)->size(),[](void *info, const void *data, size_t size) { delete (DataBufferPtr *)info; });
 		
 		if (cg_fontdata == 0)
 		{
@@ -184,9 +184,9 @@ namespace clan
 		
 		// Render glyph into bitmap:
         
-		PixelBuffer pixelbuffer(glyph_width, glyph_height, tf_bgra8);
-		unsigned char *p = (unsigned char *)pixelbuffer.get_data();
-		int len = pixelbuffer.get_width()*pixelbuffer.get_height();
+		auto pixelbuffer = PixelBuffer::create(glyph_width, glyph_height, tf_bgra8);
+		unsigned char *p = (unsigned char *)pixelbuffer->data();
+		int len = pixelbuffer->width()*pixelbuffer->height();
 		for (int i = 0; i < len*4; i++)
 			p[i] = 255;
 		
@@ -194,7 +194,7 @@ namespace clan
 		CGFloat black_components[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
 		CGColorRef black = CGColorCreate(colorspace, black_components);
 		
-		CGContextRef context = CGBitmapContextCreate(pixelbuffer.get_data(), pixelbuffer.get_width(), pixelbuffer.get_height(), 8, pixelbuffer.get_width() * 4, colorspace, kCGImageAlphaPremultipliedLast);
+		CGContextRef context = CGBitmapContextCreate(pixelbuffer->data(), pixelbuffer->width(), pixelbuffer->height(), 8, pixelbuffer->width() * 4, colorspace, kCGImageAlphaPremultipliedLast);
 		
 		CGContextSetAllowsFontSmoothing(context, font_description.get_subpixel() || font_description.get_anti_alias());
 		CGContextSetAllowsAntialiasing(context, font_description.get_anti_alias());
@@ -230,10 +230,10 @@ namespace clan
 		FontPixelBuffer font_buffer;
 		font_buffer.glyph = glyph;
 		font_buffer.buffer = pixelbuffer;
-		font_buffer.buffer_rect = pixelbuffer.get_size();
+		font_buffer.buffer_rect = pixelbuffer->size();
 		font_buffer.offset.x = glyph_x / pixel_ratio;
 		font_buffer.offset.y = glyph_y / pixel_ratio;
-		font_buffer.size = Sizef(pixelbuffer.get_width() / pixel_ratio, pixelbuffer.get_height() / pixel_ratio);
+		font_buffer.size = Sizef(pixelbuffer->width() / pixel_ratio, pixelbuffer->height() / pixel_ratio);
 		font_buffer.empty_buffer = false;
 		font_buffer.metrics.advance.width = advance.width / pixel_ratio;
 		font_buffer.metrics.advance.height = advance.height / pixel_ratio;
@@ -245,7 +245,7 @@ namespace clan
 		return font_buffer;
 	}
 
-	void FontEngine_Cocoa::load_glyph_path(unsigned int glyph_index, Path &path, GlyphMetrics &metrics)
+	void FontEngine_Cocoa::load_glyph_path(unsigned int glyph_index, const PathPtr &path, GlyphMetrics &metrics)
 	{
 		// Retrieve glyph black box information:
 		
@@ -274,7 +274,7 @@ namespace clan
 		if (cg_path == 0)
 			return;
 		
-		path.set_fill_mode(PathFillMode::winding);
+		path->set_fill_mode(PathFillMode::winding);
 		
 		LoadGlyphPathInfo info(path, pixel_ratio);
 		
@@ -285,23 +285,23 @@ namespace clan
 			switch (element->type)
 			{
 				case kCGPathElementMoveToPoint:
-					info->path.move_to(to_pointf(element->points[0]) * info->pixel_ratio);
+					info->path->move_to(to_pointf(element->points[0]) * info->pixel_ratio);
 					break;
 					
 				case kCGPathElementAddLineToPoint:
-					info->path.line_to(to_pointf(element->points[0]) * info->pixel_ratio);
+					info->path->line_to(to_pointf(element->points[0]) * info->pixel_ratio);
 					break;
 					
 				case kCGPathElementAddQuadCurveToPoint:
-					info->path.bezier_to(to_pointf(element->points[0]) * info->pixel_ratio, to_pointf(element->points[1]) * info->pixel_ratio);
+					info->path->bezier_to(to_pointf(element->points[0]) * info->pixel_ratio, to_pointf(element->points[1]) * info->pixel_ratio);
 					break;
 					
 				case kCGPathElementAddCurveToPoint:
-					info->path.bezier_to(to_pointf(element->points[0]) * info->pixel_ratio, to_pointf(element->points[1]) * info->pixel_ratio, to_pointf(element->points[2]) * info->pixel_ratio);
+					info->path->bezier_to(to_pointf(element->points[0]) * info->pixel_ratio, to_pointf(element->points[1]) * info->pixel_ratio, to_pointf(element->points[2]) * info->pixel_ratio);
 					break;
 					
 				case kCGPathElementCloseSubpath:
-					info->path.close();
+					info->path->close();
 					break;
 					
 				default:
