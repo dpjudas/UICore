@@ -147,12 +147,12 @@
 
 - (void) windowDidMiniaturize:(NSNotification *)notification
 {
-	window_provider->site->sig_window_minimized();
+	window_provider->site->sig_window_minimized()();
 }
 
 - (void) windowDidDeminiaturize:(NSNotification *)notification
 {
-	window_provider->site->sig_window_restored();
+	window_provider->site->sig_window_restored()();
 }
 
 // - (NSSize)windowWillResize:(NSWindow *)sender toSize:(NSSize)frameSize
@@ -162,7 +162,7 @@
 	float width = ((NSView*)self.contentView).frame.size.width;
 	float height = ((NSView*)self.contentView).frame.size.height;
 	[window_provider->opengl_context update];
-	window_provider->site->sig_resize();
+	window_provider->site->sig_resize()(width, height);
 	
 	uicore::GL3GraphicContext *gl_provider = dynamic_cast<uicore::GL3GraphicContext*>(window_provider->gc.get());
 	if (gl_provider)
@@ -173,22 +173,22 @@
 
 -(void)windowDidMove:(NSNotification *)notification
 {
-	window_provider->site->sig_window_moved();
+	window_provider->site->sig_window_moved()();
 }
 
 - (void)windowDidBecomeKey:(NSNotification *)notification
 {
-	window_provider->site->sig_got_focus();
+	window_provider->site->sig_got_focus()();
 }
 
 -(void)windowDidResignKey:(NSNotification *)notification
 {
-	window_provider->site->sig_lost_focus();
+	window_provider->site->sig_lost_focus()();
 }
 
 - (BOOL)windowShouldClose:(id)sender
 {
-	window_provider->site->sig_window_close();
+	window_provider->site->sig_window_close()();
 	return NO;
 }
 

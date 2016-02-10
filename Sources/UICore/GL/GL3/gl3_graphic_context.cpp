@@ -857,7 +857,7 @@ namespace uicore
 
 	void GL3GraphicContext::set_viewport(int index, const Rectf &viewport)
 	{
-		if (glViewportIndexedf)
+		if (glViewportIndexedf && index != -1)
 		{
 			OpenGL::set_active(this);
 			glViewportIndexedf(index,
@@ -868,7 +868,7 @@ namespace uicore
 		}
 		else
 		{
-			if (index == 0)
+			if (index == 0 || index == -1)
 				set_viewport(viewport);
 		}
 	}

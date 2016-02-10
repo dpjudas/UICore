@@ -46,7 +46,7 @@
 
 - (void)drawRect:(NSRect)dirtyRect
 {
-	window_provider->site->sig_paint();
+	window_provider->site->sig_paint()();
 }
 
 @end
