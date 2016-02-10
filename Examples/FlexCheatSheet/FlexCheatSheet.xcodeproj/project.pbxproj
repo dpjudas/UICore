@@ -1,0 +1,362 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1821393B1C6B1F4B00908B27 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1821393A1C6B1F4B00908B27 /* Assets.xcassets */; };
+		182139411C6B213000908B27 /* Sources in Resources */ = {isa = PBXBuildFile; fileRef = 182139401C6B213000908B27 /* Sources */; };
+		182139531C6B219100908B27 /* application_controller.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 182139461C6B219100908B27 /* application_controller.cpp */; };
+		182139541C6B219100908B27 /* main_window_controller.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 182139491C6B219100908B27 /* main_window_controller.cpp */; };
+		182139551C6B219100908B27 /* app_model.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1821394C1C6B219100908B27 /* app_model.cpp */; };
+		182139561C6B219100908B27 /* precomp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1821394E1C6B219100908B27 /* precomp.cpp */; };
+		182139581C6B224900908B27 /* libUICore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 182139571C6B224900908B27 /* libUICore.a */; };
+		1821395A1C6B226000908B27 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 182139591C6B226000908B27 /* Cocoa.framework */; };
+		1821395C1C6B227600908B27 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1821395B1C6B227600908B27 /* OpenGL.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		182139241C6B1D9400908B27 /* FlexCheatSheet.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FlexCheatSheet.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1821393A1C6B1F4B00908B27 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		1821393C1C6B200600908B27 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		182139401C6B213000908B27 /* Sources */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Sources; path = /Users/mbn/Development/UICore/Examples/FlexCheatSheet/Sources; sourceTree = "<absolute>"; };
+		182139461C6B219100908B27 /* application_controller.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = application_controller.cpp; sourceTree = "<group>"; };
+		182139471C6B219100908B27 /* application_controller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = application_controller.h; sourceTree = "<group>"; };
+		182139491C6B219100908B27 /* main_window_controller.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main_window_controller.cpp; sourceTree = "<group>"; };
+		1821394A1C6B219100908B27 /* main_window_controller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = main_window_controller.h; sourceTree = "<group>"; };
+		1821394C1C6B219100908B27 /* app_model.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = app_model.cpp; sourceTree = "<group>"; };
+		1821394D1C6B219100908B27 /* app_model.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = app_model.h; sourceTree = "<group>"; };
+		1821394E1C6B219100908B27 /* precomp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = precomp.cpp; sourceTree = "<group>"; };
+		1821394F1C6B219100908B27 /* precomp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = precomp.h; sourceTree = "<group>"; };
+		182139521C6B219100908B27 /* main_window_view.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = main_window_view.h; sourceTree = "<group>"; };
+		182139571C6B224900908B27 /* libUICore.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libUICore.a; path = ../../build/Debug/libUICore.a; sourceTree = "<group>"; };
+		182139591C6B226000908B27 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		1821395B1C6B227600908B27 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		182139211C6B1D9400908B27 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1821395C1C6B227600908B27 /* OpenGL.framework in Frameworks */,
+				1821395A1C6B226000908B27 /* Cocoa.framework in Frameworks */,
+				182139581C6B224900908B27 /* libUICore.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1821391B1C6B1D9400908B27 = {
+			isa = PBXGroup;
+			children = (
+				1821393C1C6B200600908B27 /* Info.plist */,
+				1821393A1C6B1F4B00908B27 /* Assets.xcassets */,
+				1821395D1C6B246300908B27 /* Frameworks */,
+				182139251C6B1D9400908B27 /* Products */,
+				182139431C6B219100908B27 /* Sources */,
+			);
+			sourceTree = "<group>";
+			usesTabs = 1;
+		};
+		182139251C6B1D9400908B27 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				182139241C6B1D9400908B27 /* FlexCheatSheet.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		182139431C6B219100908B27 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				182139441C6B219100908B27 /* Controller */,
+				1821394B1C6B219100908B27 /* Model */,
+				1821394E1C6B219100908B27 /* precomp.cpp */,
+				1821394F1C6B219100908B27 /* precomp.h */,
+				182139501C6B219100908B27 /* View */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		182139441C6B219100908B27 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				182139451C6B219100908B27 /* Application */,
+				182139481C6B219100908B27 /* MainWindow */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		182139451C6B219100908B27 /* Application */ = {
+			isa = PBXGroup;
+			children = (
+				182139461C6B219100908B27 /* application_controller.cpp */,
+				182139471C6B219100908B27 /* application_controller.h */,
+			);
+			path = Application;
+			sourceTree = "<group>";
+		};
+		182139481C6B219100908B27 /* MainWindow */ = {
+			isa = PBXGroup;
+			children = (
+				182139491C6B219100908B27 /* main_window_controller.cpp */,
+				1821394A1C6B219100908B27 /* main_window_controller.h */,
+			);
+			path = MainWindow;
+			sourceTree = "<group>";
+		};
+		1821394B1C6B219100908B27 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				1821394C1C6B219100908B27 /* app_model.cpp */,
+				1821394D1C6B219100908B27 /* app_model.h */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		182139501C6B219100908B27 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				182139511C6B219100908B27 /* MainWindow */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		182139511C6B219100908B27 /* MainWindow */ = {
+			isa = PBXGroup;
+			children = (
+				182139521C6B219100908B27 /* main_window_view.h */,
+			);
+			path = MainWindow;
+			sourceTree = "<group>";
+		};
+		1821395D1C6B246300908B27 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				182139571C6B224900908B27 /* libUICore.a */,
+				182139591C6B226000908B27 /* Cocoa.framework */,
+				1821395B1C6B227600908B27 /* OpenGL.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		182139231C6B1D9400908B27 /* FlexCheatSheet */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 182139351C6B1D9400908B27 /* Build configuration list for PBXNativeTarget "FlexCheatSheet" */;
+			buildPhases = (
+				182139201C6B1D9400908B27 /* Sources */,
+				182139211C6B1D9400908B27 /* Frameworks */,
+				182139221C6B1D9400908B27 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = FlexCheatSheet;
+			productName = FlexCheatSheet;
+			productReference = 182139241C6B1D9400908B27 /* FlexCheatSheet.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		1821391C1C6B1D9400908B27 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0720;
+				ORGANIZATIONNAME = UICore;
+				TargetAttributes = {
+					182139231C6B1D9400908B27 = {
+						CreatedOnToolsVersion = 7.2.1;
+					};
+				};
+			};
+			buildConfigurationList = 1821391F1C6B1D9400908B27 /* Build configuration list for PBXProject "FlexCheatSheet" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 1821391B1C6B1D9400908B27;
+			productRefGroup = 182139251C6B1D9400908B27 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				182139231C6B1D9400908B27 /* FlexCheatSheet */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		182139221C6B1D9400908B27 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				182139411C6B213000908B27 /* Sources in Resources */,
+				1821393B1C6B1F4B00908B27 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		182139201C6B1D9400908B27 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				182139551C6B219100908B27 /* app_model.cpp in Sources */,
+				182139541C6B219100908B27 /* main_window_controller.cpp in Sources */,
+				182139561C6B219100908B27 /* precomp.cpp in Sources */,
+				182139531C6B219100908B27 /* application_controller.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		182139331C6B1D9400908B27 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					../../Build/include,
+					Sources,
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		182139341C6B1D9400908B27 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					../../Build/include,
+					Sources,
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		182139361C6B1D9400908B27 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = "$(SRCROOT)/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = org.uicore.FlexCheatSheet;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		182139371C6B1D9400908B27 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = "$(SRCROOT)/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = org.uicore.FlexCheatSheet;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1821391F1C6B1D9400908B27 /* Build configuration list for PBXProject "FlexCheatSheet" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				182139331C6B1D9400908B27 /* Debug */,
+				182139341C6B1D9400908B27 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		182139351C6B1D9400908B27 /* Build configuration list for PBXNativeTarget "FlexCheatSheet" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				182139361C6B1D9400908B27 /* Debug */,
+				182139371C6B1D9400908B27 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 1821391C1C6B1D9400908B27 /* Project object */;
+}
