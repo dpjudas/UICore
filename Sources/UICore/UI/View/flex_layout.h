@@ -29,9 +29,17 @@
 #pragma once
 
 #include "UICore/UI/View/view.h"
+#include "view_layout.h"
 
 namespace uicore
 {
+	enum class FlexViolation
+	{
+		none,
+		min_violation,
+		max_violation
+	};
+
 	class FlexLayoutItem
 	{
 	public:
@@ -60,33 +68,82 @@ namespace uicore
 		float cross_noncontent_start = 0.0f;
 		float cross_noncontent_end = 0.0f;
 
-		float flex_basis = 0.0f;
+		float flex_base_size = 0.0f;
+		float flex_preferred_main_size = 0.0f;
 		float flex_grow = 0.0f;
 		float flex_shrink = 0.0f;
 
-		float flex_main_size = 0.0f;
-		float flex_cross_size = 0.0f;
+		float used_main_size = 0.0f;
+		float used_cross_size = 0.0f;
+
+		float used_main_pos = 0.0f;
+		float used_cross_pos = 0.0f;
+
+		bool frozen = false;
+		float scaled_flex_shrink = 0.0f;
+		FlexViolation flex_violation = FlexViolation::none;
 	};
 
-	class FlexLayout
+	class FlexLayoutLine
 	{
 	public:
-		std::vector<FlexLayoutItem> items;
+		typedef std::vector<FlexLayoutItem>::iterator iterator;
 
-		float total_flex_grow = 0.0f;
-		float total_flex_shrink = 0.0f;
-		float total_flex_basis = 0.0f;
+		FlexLayoutLine(iterator begin, iterator end) : first(begin), second(end) { }
+
+		iterator begin() { return first; }
+		iterator end() { return second; }
+
+		void set_end(iterator end) { second = end; }
+
+		float total_flex_preferred_main_size = 0.0f;
 		float total_main_noncontent = 0.0f;
 
+		float cross_size = 0.0f;
+
+	private:
+		iterator first, second;
+	};
+
+	enum class FlexDirection
+	{
+		row,
+		column
+	};
+
+	enum class FlexWrap
+	{
+		nowrap,
+		wrap,
+		wrap_reverse
+	};
+
+	class FlexLayout : public ViewLayout
+	{
+	public:
+		float preferred_width(const CanvasPtr &canvas, View *view) override;
+		float preferred_height(const CanvasPtr &canvas, View *view, float width) override;
+		float first_baseline_offset(const CanvasPtr &canvas, View *view, float width) override;
+		float last_baseline_offset(const CanvasPtr &canvas, View *view, float width) override;
+		void layout_subviews(const CanvasPtr &canvas, View *view) override;
+
+	private:
+		void create_items(const CanvasPtr &canvas, View *view);
+		void create_lines(const CanvasPtr &canvas, View *view);
+		void flex_lines(const CanvasPtr &canvas, View *view);
 		void create_row_items(const CanvasPtr &canvas, View *view);
 		void create_column_items(const CanvasPtr &canvas, View *view);
 
-		void calculate_row_basis(const CanvasPtr &canvas);
-		void calculate_column_basis(const CanvasPtr &canvas);
+		FlexDirection direction = FlexDirection::row;
+		FlexWrap wrap = FlexWrap::nowrap;
 
-		void calculate_single_row_flex_main_size(const CanvasPtr &canvas, View *view);
-		void calculate_single_column_flex_main_size(const CanvasPtr &canvas, View *view);
+		float container_main_size = 0.0f;
+		float container_cross_size = 0.0f;
 
-		void calculate_single_flex_main_size(const CanvasPtr &canvas, float content_size);
+		float infinite_container_main_size = false;
+		float infinite_container_cross_size = false;
+
+		std::vector<FlexLayoutItem> items;
+		std::vector<FlexLayoutLine> lines;
 	};
 }
