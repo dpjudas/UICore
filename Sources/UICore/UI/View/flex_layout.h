@@ -73,6 +73,8 @@ namespace uicore
 		float flex_grow = 0.0f;
 		float flex_shrink = 0.0f;
 
+		float flex_preferred_cross_size = 0.0f;
+
 		float used_main_size = 0.0f;
 		float used_cross_size = 0.0f;
 
@@ -82,6 +84,9 @@ namespace uicore
 		bool frozen = false;
 		float scaled_flex_shrink = 0.0f;
 		FlexViolation flex_violation = FlexViolation::none;
+
+		float strut_size = 0.0f;
+		bool collapsed = false;
 	};
 
 	class FlexLayoutLine
@@ -128,11 +133,16 @@ namespace uicore
 		void layout_subviews(const CanvasPtr &canvas, View *view) override;
 
 	private:
+		void calculate_layout(const CanvasPtr &canvas, View *view);
+
 		void create_items(const CanvasPtr &canvas, View *view);
-		void create_lines(const CanvasPtr &canvas, View *view);
-		void flex_lines(const CanvasPtr &canvas, View *view);
 		void create_row_items(const CanvasPtr &canvas, View *view);
 		void create_column_items(const CanvasPtr &canvas, View *view);
+		void create_lines(const CanvasPtr &canvas, View *view);
+		void flex_lines(const CanvasPtr &canvas, View *view);
+
+		void calculate_items_preferred_cross_size(const CanvasPtr &canvas, View *view);
+		void calculate_lines_cross_size(const CanvasPtr &canvas, View *view);
 
 		FlexDirection direction = FlexDirection::row;
 		FlexWrap wrap = FlexWrap::nowrap;
@@ -140,10 +150,15 @@ namespace uicore
 		float container_main_size = 0.0f;
 		float container_cross_size = 0.0f;
 
+		bool definite_container_main_size = false;
+		bool definite_container_cross_size = false;
+
 		float infinite_container_main_size = false;
 		float infinite_container_cross_size = false;
 
 		std::vector<FlexLayoutItem> items;
 		std::vector<FlexLayoutLine> lines;
+		
+		bool restarted_layout = false;
 	};
 }

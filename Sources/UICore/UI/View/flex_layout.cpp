@@ -35,8 +35,7 @@ namespace uicore
 {
 	float FlexLayout::preferred_width(const CanvasPtr &canvas, View *view)
 	{
-		create_items(canvas, view);
-		create_lines(canvas, view);
+		calculate_layout(canvas, view);
 
 		if (direction == FlexDirection::row)
 		{
@@ -60,8 +59,7 @@ namespace uicore
 
 	float FlexLayout::preferred_height(const CanvasPtr &canvas, View *view, float width)
 	{
-		create_items(canvas, view);
-		create_lines(canvas, view);
+		calculate_layout(canvas, view);
 
 		if (direction == FlexDirection::row)
 		{
@@ -95,9 +93,7 @@ namespace uicore
 
 	void FlexLayout::layout_subviews(const CanvasPtr &canvas, View *view)
 	{
-		create_items(canvas, view);
-		create_lines(canvas, view);
-		flex_lines(canvas, view);
+		calculate_layout(canvas, view);
 
 		if (direction == FlexDirection::row)
 		{
@@ -123,6 +119,15 @@ namespace uicore
 				}
 			}
 		}
+	}
+
+	void FlexLayout::calculate_layout(const CanvasPtr &canvas, View *view)
+	{
+		create_items(canvas, view);
+		create_lines(canvas, view);
+		flex_lines(canvas, view);
+		calculate_items_preferred_cross_size(canvas, view);
+		calculate_lines_cross_size(canvas, view);
 	}
 
 	void FlexLayout::create_items(const CanvasPtr &canvas, View *view)
@@ -370,12 +375,17 @@ namespace uicore
 
 	void FlexLayout::create_lines(const CanvasPtr &canvas, View *view)
 	{
+		lines.clear();
+
 		if (wrap == FlexWrap::nowrap || infinite_container_main_size) // single-line
 		{
 			FlexLayoutLine line(items.begin(), items.end());
 
 			for (auto &item : items)
 			{
+				if (restarted_layout && item.collapsed)
+					continue;
+
 				line.total_flex_preferred_main_size += item.flex_preferred_main_size;
 				line.total_main_noncontent += item.main_noncontent_start + item.main_noncontent_end;
 			}
@@ -389,6 +399,9 @@ namespace uicore
 			for (auto it = items.begin(); it != items.end(); ++it)
 			{
 				auto &item = *it;
+
+				if (restarted_layout && item.collapsed)
+					continue;
 
 				float item_size = item.main_noncontent_start + item.flex_preferred_main_size + item.main_noncontent_end;
 				float pos = line.total_main_noncontent + line.total_flex_preferred_main_size + item_size;
@@ -422,7 +435,12 @@ namespace uicore
 			{
 				for (auto &item : line)
 				{
-					if (item.flex_grow == 0.0f || item.flex_base_size > item.flex_preferred_main_size)
+					if (restarted_layout && item.collapsed)
+					{
+						item.used_main_size = 0.0f;
+						item.frozen = true;
+					}
+					else if (item.flex_grow == 0.0f || item.flex_base_size > item.flex_preferred_main_size)
 					{
 						item.used_main_size = item.flex_preferred_main_size;
 						item.frozen = true;
@@ -430,6 +448,7 @@ namespace uicore
 					}
 					else
 					{
+						item.frozen = false;
 						initial_space_needed += item.flex_base_size;
 						unfrozen_count++;
 					}
@@ -439,7 +458,12 @@ namespace uicore
 			{
 				for (auto &item : line)
 				{
-					if (item.flex_shrink == 0.0f || item.flex_base_size < item.flex_preferred_main_size)
+					if (restarted_layout && item.collapsed)
+					{
+						item.used_main_size = 0.0f;
+						item.frozen = true;
+					}
+					else if (item.flex_shrink == 0.0f || item.flex_base_size < item.flex_preferred_main_size)
 					{
 						item.used_main_size = item.flex_preferred_main_size;
 						item.frozen = true;
@@ -447,6 +471,7 @@ namespace uicore
 					}
 					else
 					{
+						item.frozen = false;
 						initial_space_needed += item.flex_base_size;
 						unfrozen_count++;
 					}
@@ -559,6 +584,180 @@ namespace uicore
 						}
 					}
 				}
+			}
+		}
+	}
+
+	void FlexLayout::calculate_items_preferred_cross_size(const CanvasPtr &canvas, View *view)
+	{
+		for (auto &line : lines)
+		{
+			for (auto &item : line)
+			{
+				if (restarted_layout && item.collapsed)
+					continue;
+
+				if (item.definite_cross_size)
+					item.flex_preferred_cross_size = item.cross_size;
+				else if (direction == FlexDirection::row)
+					item.flex_preferred_cross_size = item.view->preferred_height(canvas, item.used_main_size);
+				else
+					item.flex_preferred_cross_size = item.view->preferred_width(canvas/*, item.used_main_size*/);
+
+				// Note: This clamping is not specified in the CSS-flexbox-1 "Cross Size Determination" section
+				//
+				// It might because the min/max clamping for CSS 2.1 is somehow more complex and implicitly understood to be done
+				// by the remarked "baseline offset" calculation code in the calculate_lines_cross_size function below.
+				//
+				// Maybe by 2037 when W3C actually finished the CSS 3 specifications it will be more clear why this is needed for HTML..
+
+				if (item.definite_min_cross_size)
+				item.flex_preferred_cross_size = std::max(item.flex_preferred_cross_size, item.min_cross_size);
+
+				if (item.definite_max_cross_size)
+				item.flex_preferred_cross_size = std::min(item.flex_preferred_cross_size, item.max_cross_size);
+			}
+		}
+	}
+
+	void FlexLayout::calculate_lines_cross_size(const CanvasPtr &canvas, View *view)
+	{
+		const char *margin_start = (direction == FlexDirection::row) ? "margin-top" : "margin-left";
+		const char *margin_end = (direction == FlexDirection::row) ? "margin-bottom" : "margin-right";
+
+		if (wrap == FlexWrap::nowrap && definite_container_cross_size)
+		{
+			for (auto &line : lines)
+			{
+				line.cross_size = container_cross_size;
+
+				if (restarted_layout)
+				{
+					for (auto &item : line)
+					{
+						if (item.collapsed)
+							line.cross_size = std::max(line.cross_size, item.strut_size);
+					}
+				}
+			}
+		}
+		else
+		{
+			for (auto &line : lines)
+			{
+				line.cross_size = 0.0f;
+				for (auto &item : line)
+				{
+					if (restarted_layout && item.collapsed)
+						line.cross_size = std::max(line.cross_size, item.strut_size);
+					else
+						line.cross_size = std::max(line.cross_size, item.cross_noncontent_start + item.flex_preferred_cross_size + item.cross_noncontent_end);
+				}
+
+#if 0
+				// See note in calculate_items_preferred_cross_size function for why this is commented out and replaced by the above simplified code. 
+
+				float max_start_outer_baseline_offset = 0.0f;
+				float max_end_outer_baseline_offset = 0.0f;
+				float max_outer_preferred_cross_size = 0.0f;
+
+				for (auto &item : line)
+				{
+					auto &item_style = item.view->style_cascade();
+					if (restarted_layout && item.collapsed)
+					{
+						max_outer_preferred_cross_size = std::max(max_outer_preferred_cross_size, item.strut_size);
+					}
+					else if (direction == FlexDirection::row && item_style.computed_value("align-self").is_keyword("baseline") && !item_style.computed_value(margin_start).is_keyword("auto") && !item_style.computed_value(margin_end).is_keyword("auto"))
+					{
+						float baseline_offset = item.view->first_baseline_offset(canvas, item.used_main_size);
+						float start_outer_baseline_offset = item.cross_noncontent_start + baseline_offset;
+						float end_outer_baseline_offset = item.flex_preferred_cross_size - baseline_offset + item.cross_noncontent_end;
+
+						max_start_outer_baseline_offset = std::max(max_start_outer_baseline_offset, start_outer_baseline_offset);
+						max_end_outer_baseline_offset = std::max(max_end_outer_baseline_offset, end_outer_baseline_offset);
+					}
+					else
+					{
+						max_outer_preferred_cross_size = std::max(max_outer_preferred_cross_size, item.cross_noncontent_start + item.flex_preferred_cross_size + item.cross_noncontent_end);
+					}
+				}
+
+				float max_outer_baseline_cross_size = max_start_outer_baseline_offset + max_end_outer_baseline_offset;
+
+				line.cross_size = std::max(max_outer_preferred_cross_size, max_outer_baseline_cross_size);
+#endif
+			}
+		}
+
+		if (view->style_cascade().computed_value("align-content").is_keyword("stretch") && definite_container_cross_size)
+		{
+			float total_cross_size = 0.0f;
+			for (auto &line : lines)
+				total_cross_size += line.cross_size;
+
+			float free_space = (container_cross_size - total_cross_size) / (float)lines.size();
+			if (free_space > 0.0f)
+			{
+				for (auto &line : lines)
+					line.cross_size += free_space;
+			}
+		}
+
+		if (restarted_layout)
+			return;
+
+		for (auto &line : lines)
+		{
+			for (auto &item : line)
+			{
+				if (item.view->style_cascade().computed_value("visibility").is_keyword("collapse"))
+				{
+					item.collapsed = true;
+					item.strut_size = line.cross_size;
+					restarted_layout = true;
+				}
+			}
+		}
+
+		if (restarted_layout)
+		{
+			create_lines(canvas, view);
+			flex_lines(canvas, view);
+			calculate_items_preferred_cross_size(canvas, view);
+			calculate_lines_cross_size(canvas, view);
+			restarted_layout = false;
+		}
+
+		for (auto &line : lines)
+		{
+			for (auto &item : line)
+			{
+				auto &item_style = item.view->style_cascade();
+				if (item_style.computed_value("align-self").is_keyword("stretch") && !item.definite_cross_size && !item_style.computed_value(margin_start).is_keyword("auto") && !item_style.computed_value(margin_end).is_keyword("auto"))
+				{
+					item.used_cross_size = line.cross_size - item.cross_noncontent_start - item.cross_noncontent_end;
+
+					if (item.definite_min_cross_size)
+						item.used_cross_size = std::max(item.used_cross_size, item.min_cross_size);
+
+					if (item.definite_max_cross_size)
+						item.used_cross_size = std::min(item.used_cross_size, item.max_cross_size);
+				}
+				else
+				{
+					item.used_cross_size = item.flex_preferred_cross_size;
+				}
+
+#if 0 // We do not support percentage sizing at the moment
+				if (item_style.computed_value("align-self").is_keyword("stretch"))
+				{
+					// redo layout for its contents, treating this used size as its definite cross size so that percentage-sized children can be resolved:
+
+					//item.view->set_geometry_width_definite();
+					//item.view->set_geometry_height_definite();
+				}
+#endif
 			}
 		}
 	}
