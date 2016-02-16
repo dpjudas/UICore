@@ -54,6 +54,11 @@ namespace uicore
 		bool definite_min_cross_size = false;
 		bool definite_max_cross_size = false;
 
+		bool main_auto_margin_start = false;
+		bool main_auto_margin_end = false;
+		bool cross_auto_margin_start = false;
+		bool cross_auto_margin_end = false;
+
 		float main_size = 0.0f;
 		float cross_size = 0.0f;
 
@@ -94,12 +99,12 @@ namespace uicore
 	public:
 		typedef std::vector<FlexLayoutItem>::iterator iterator;
 
-		FlexLayoutLine(iterator begin, iterator end) : first(begin), second(end) { }
+		FlexLayoutLine(iterator begin, iterator end) : _first(begin), _second(end) { }
 
-		iterator begin() { return first; }
-		iterator end() { return second; }
+		iterator begin() { return _first; }
+		iterator end() { return _second; }
 
-		void set_end(iterator end) { second = end; }
+		void set_end(iterator end) { _second = end; }
 
 		float total_flex_preferred_main_size = 0.0f;
 		float total_main_noncontent = 0.0f;
@@ -107,7 +112,7 @@ namespace uicore
 		float cross_size = 0.0f;
 
 	private:
-		iterator first, second;
+		iterator _first, _second;
 	};
 
 	enum class FlexDirection
@@ -143,6 +148,9 @@ namespace uicore
 
 		void calculate_items_preferred_cross_size(const CanvasPtr &canvas, View *view);
 		void calculate_lines_cross_size(const CanvasPtr &canvas, View *view);
+
+		void main_axis_alignment(const CanvasPtr &canvas, View *view);
+		void cross_axis_alignment(const CanvasPtr &canvas, View *view);
 
 		FlexDirection direction = FlexDirection::row;
 		FlexWrap wrap = FlexWrap::nowrap;

@@ -128,6 +128,8 @@ namespace uicore
 		flex_lines(canvas, view);
 		calculate_items_preferred_cross_size(canvas, view);
 		calculate_lines_cross_size(canvas, view);
+		main_axis_alignment(canvas, view);
+		cross_axis_alignment(canvas, view);
 	}
 
 	void FlexLayout::create_items(const CanvasPtr &canvas, View *view)
@@ -232,12 +234,18 @@ namespace uicore
 			item.main_noncontent_end += subview->style_cascade().computed_value("border-right-width").number();
 			item.main_noncontent_end += subview->style_cascade().computed_value("margin-right").number();
 
+			item.main_auto_margin_start = item_style.computed_value("margin-left").is_keyword("auto");
+			item.main_auto_margin_end = item_style.computed_value("margin-right").is_keyword("auto");
+
 			item.cross_noncontent_start += subview->style_cascade().computed_value("margin-top").number();
 			item.cross_noncontent_start += subview->style_cascade().computed_value("border-top-width").number();
 			item.cross_noncontent_start += subview->style_cascade().computed_value("padding-top").number();
 			item.cross_noncontent_end += subview->style_cascade().computed_value("padding-bottom").number();
 			item.cross_noncontent_end += subview->style_cascade().computed_value("border-bottom-width").number();
 			item.cross_noncontent_end += subview->style_cascade().computed_value("margin-bottom").number();
+
+			item.cross_auto_margin_start = item_style.computed_value("margin-top").is_keyword("auto");
+			item.cross_auto_margin_end = item_style.computed_value("margin-bottom").is_keyword("auto");
 
 			// Flex base size and hypothetical (preferred) main size:
 
@@ -340,12 +348,18 @@ namespace uicore
 			item.main_noncontent_end += subview->style_cascade().computed_value("border-bottom-width").number();
 			item.main_noncontent_end += subview->style_cascade().computed_value("margin-bottom").number();
 
+			item.main_auto_margin_start = item_style.computed_value("margin-top").is_keyword("auto");
+			item.main_auto_margin_end = item_style.computed_value("margin-bottom").is_keyword("auto");
+
 			item.cross_noncontent_start += subview->style_cascade().computed_value("margin-left").number();
 			item.cross_noncontent_start += subview->style_cascade().computed_value("border-left-width").number();
 			item.cross_noncontent_start += subview->style_cascade().computed_value("padding-left").number();
 			item.cross_noncontent_end += subview->style_cascade().computed_value("padding-right").number();
 			item.cross_noncontent_end += subview->style_cascade().computed_value("border-right-width").number();
 			item.cross_noncontent_end += subview->style_cascade().computed_value("margin-right").number();
+
+			item.cross_auto_margin_start = item_style.computed_value("margin-left").is_keyword("auto");
+			item.cross_auto_margin_end = item_style.computed_value("margin-right").is_keyword("auto");
 
 			// Flex base size and hypothetical (preferred) main size:
 
@@ -622,9 +636,6 @@ namespace uicore
 
 	void FlexLayout::calculate_lines_cross_size(const CanvasPtr &canvas, View *view)
 	{
-		const char *margin_start = (direction == FlexDirection::row) ? "margin-top" : "margin-left";
-		const char *margin_end = (direction == FlexDirection::row) ? "margin-bottom" : "margin-right";
-
 		if (wrap == FlexWrap::nowrap && definite_container_cross_size)
 		{
 			for (auto &line : lines)
@@ -668,7 +679,7 @@ namespace uicore
 					{
 						max_outer_preferred_cross_size = std::max(max_outer_preferred_cross_size, item.strut_size);
 					}
-					else if (direction == FlexDirection::row && item_style.computed_value("align-self").is_keyword("baseline") && !item_style.computed_value(margin_start).is_keyword("auto") && !item_style.computed_value(margin_end).is_keyword("auto"))
+					else if (direction == FlexDirection::row && item_style.computed_value("align-self").is_keyword("baseline") && !item.cross_auto_margin_start && !item.cross_auto_margin_end)
 					{
 						float baseline_offset = item.view->first_baseline_offset(canvas, item.used_main_size);
 						float start_outer_baseline_offset = item.cross_noncontent_start + baseline_offset;
@@ -734,7 +745,7 @@ namespace uicore
 			for (auto &item : line)
 			{
 				auto &item_style = item.view->style_cascade();
-				if (item_style.computed_value("align-self").is_keyword("stretch") && !item.definite_cross_size && !item_style.computed_value(margin_start).is_keyword("auto") && !item_style.computed_value(margin_end).is_keyword("auto"))
+				if (item_style.computed_value("align-self").is_keyword("stretch") && !item.definite_cross_size && !item.cross_auto_margin_start && !item.cross_auto_margin_end)
 				{
 					item.used_cross_size = line.cross_size - item.cross_noncontent_start - item.cross_noncontent_end;
 
@@ -761,4 +772,129 @@ namespace uicore
 			}
 		}
 	}
+
+	void FlexLayout::main_axis_alignment(const CanvasPtr &canvas, View *view)
+	{
+		for (auto &line : lines)
+		{
+			int auto_margin_count = 0;
+			int item_count = 0;
+			float space_consumed = 0;
+			for (auto &item : line)
+			{
+				if (item.collapsed)
+					continue;
+
+				if (item.main_auto_margin_start)
+					auto_margin_count++;
+				if (item.main_auto_margin_end)
+					auto_margin_count++;
+
+				space_consumed += item.main_noncontent_start;
+				space_consumed += item.used_main_size;
+				space_consumed += item.main_noncontent_end;
+				item_count++;
+			}
+
+			float space_available = container_main_size - space_consumed;
+
+			if (auto_margin_count > 0 && space_available > 0.0f)
+			{
+				float space_per_auto_margin = space_available / auto_margin_count;
+				for (auto &item : line)
+				{
+					if (item.main_auto_margin_start)
+						item.main_noncontent_start += space_per_auto_margin;
+					if (item.main_auto_margin_end)
+						item.main_noncontent_end += space_per_auto_margin;
+				}
+				space_available = 0.0f;
+			}
+
+			auto justify_content = view->style_cascade().computed_value("justify-content");
+			if (justify_content.is_keyword("flex-start") || ((item_count < 2 || space_available < 0.0f) && justify_content.is_keyword("space-between")))
+			{
+				float pos = 0.0f;
+				for (auto &item : line)
+				{
+					if (item.collapsed)
+						continue;
+
+					pos += item.main_noncontent_start;
+					item.used_main_pos = pos;
+					pos += item.used_main_size;
+					pos += item.main_noncontent_end;
+				}
+			}
+			else if (justify_content.is_keyword("flex-end"))
+			{
+				float pos = container_main_size;
+				auto it = line.begin();
+				while (it != line.end())
+				{
+					auto &item = *(++it);
+					if (item.collapsed)
+						continue;
+
+					pos -= item.main_noncontent_end;
+					pos -= item.used_main_size;
+					item.used_main_pos = pos;
+					pos -= item.main_noncontent_start;
+				}
+			}
+			else if (justify_content.is_keyword("center") || ((item_count < 2 || space_available < 0.0f) && justify_content.is_keyword("space-around")))
+			{
+				float pos = (container_main_size - space_consumed) / 2.0f;
+				for (auto &item : line)
+				{
+					if (item.collapsed)
+						continue;
+
+					pos += item.main_noncontent_start;
+					item.used_main_pos = pos;
+					pos += item.used_main_size;
+					pos += item.main_noncontent_end;
+				}
+			}
+			else if (justify_content.is_keyword("space-between"))
+			{
+				float space_extra = space_available / (float)(item_count - 1);
+				float pos = 0.0f;
+				for (auto &item : line)
+				{
+					if (item.collapsed)
+						continue;
+
+					pos += item.main_noncontent_start;
+					item.used_main_pos = pos;
+					pos += item.used_main_size;
+					pos += item.main_noncontent_end;
+
+					pos += space_extra;
+				}
+			}
+			else if (justify_content.is_keyword("space-around"))
+			{
+				float space_extra = space_available / (float)(item_count - 1);
+				float pos = space_extra / 2.0f;
+				for (auto &item : line)
+				{
+					if (item.collapsed)
+						continue;
+
+					pos += item.main_noncontent_start;
+					item.used_main_pos = pos;
+					pos += item.used_main_size;
+					pos += item.main_noncontent_end;
+
+					pos += space_extra;
+				}
+			}
+		}
+	}
+
+	void FlexLayout::cross_axis_alignment(const CanvasPtr &canvas, View *view)
+	{
+	}
+
 }
