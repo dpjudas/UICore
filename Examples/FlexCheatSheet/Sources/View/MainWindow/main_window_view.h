@@ -87,6 +87,7 @@ public:
 	FlexExampleView()
 	{
 		set_hidden();
+		style()->set("flex: 1 1"); // To do: remove this line
 	}
 };
 

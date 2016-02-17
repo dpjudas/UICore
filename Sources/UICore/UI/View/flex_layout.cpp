@@ -147,11 +147,14 @@ namespace uicore
 			if (layout_mode == FlexLayoutMode::preferred_height)
 			{
 				container_main_size = layout_width;
+				container_cross_size = 0.0f;
 				known_container_main_size = true;
 				known_container_cross_size = false;
 			}
 			else
 			{
+				container_main_size = 0.0f;
+				container_cross_size = 0.0f;
 				known_container_main_size = false;
 				known_container_cross_size = false;
 			}
@@ -282,12 +285,15 @@ namespace uicore
 		{
 			if (layout_mode == FlexLayoutMode::preferred_height)
 			{
+				container_main_size = 0.0f;
 				container_cross_size = layout_width;
 				known_container_main_size = false;
 				known_container_cross_size = true;
 			}
 			else
 			{
+				container_main_size = 0.0f;
+				container_cross_size = 0.0f;
 				known_container_main_size = false;
 				known_container_cross_size = false;
 			}
@@ -387,8 +393,10 @@ namespace uicore
 				item.flex_base_size = item.main_size;
 			else if (item.definite_cross_size)
 				item.flex_base_size = item.view->preferred_height(canvas, item.cross_size);
+			else if (known_container_main_size)
+				item.flex_base_size = item.view->preferred_height(canvas, std::max(container_main_size - item.cross_noncontent_start - item.cross_noncontent_end, 0.0f));
 			else
-				item.flex_base_size = item.view->preferred_height(canvas, std::max(view->geometry().content_width - item.cross_noncontent_start - item.cross_noncontent_end, 0.0f));
+				item.flex_base_size = item.view->preferred_height(canvas, item.view->preferred_width(canvas));
 
 			item.flex_preferred_main_size = item.flex_base_size;
 
@@ -526,6 +534,10 @@ namespace uicore
 					{
 						remaining_space_needed += item.flex_base_size;
 						flex_factor_sum += use_grow_factor ? item.flex_grow : item.flex_shrink;
+					}
+					else
+					{
+						remaining_space_needed += item.used_main_size;
 					}
 				}
 
