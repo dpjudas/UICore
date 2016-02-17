@@ -675,11 +675,18 @@ namespace uicore
 				for (auto &item : line)
 				{
 					auto &item_style = item.view->style_cascade();
+
+					auto align_self = item_style.computed_value("align-self");
+					if (align_self.is_keyword("auto")) // To do: computed_value should have done this for us
+					{
+						align_self = view->style_cascade().computed_value("align-items");
+					}
+
 					if (restarted_layout && item.collapsed)
 					{
 						max_outer_preferred_cross_size = std::max(max_outer_preferred_cross_size, item.strut_size);
 					}
-					else if (direction == FlexDirection::row && item_style.computed_value("align-self").is_keyword("baseline") && !item.cross_auto_margin_start && !item.cross_auto_margin_end)
+					else if (direction == FlexDirection::row && align_self.is_keyword("baseline") && !item.cross_auto_margin_start && !item.cross_auto_margin_end)
 					{
 						float baseline_offset = item.view->first_baseline_offset(canvas, item.used_main_size);
 						float start_outer_baseline_offset = item.cross_noncontent_start + baseline_offset;
@@ -745,7 +752,14 @@ namespace uicore
 			for (auto &item : line)
 			{
 				auto &item_style = item.view->style_cascade();
-				if (item_style.computed_value("align-self").is_keyword("stretch") && !item.definite_cross_size && !item.cross_auto_margin_start && !item.cross_auto_margin_end)
+
+				auto align_self = item_style.computed_value("align-self");
+				if (align_self.is_keyword("auto")) // To do: computed_value should have done this for us
+				{
+					align_self = view->style_cascade().computed_value("align-items");
+				}
+
+				if (align_self.is_keyword("stretch") && !item.definite_cross_size && !item.cross_auto_margin_start && !item.cross_auto_margin_end)
 				{
 					item.used_cross_size = line.cross_size - item.cross_noncontent_start - item.cross_noncontent_end;
 
@@ -761,7 +775,7 @@ namespace uicore
 				}
 
 #if 0 // We do not support percentage sizing at the moment
-				if (item_style.computed_value("align-self").is_keyword("stretch"))
+				if (align_self.is_keyword("stretch"))
 				{
 					// redo layout for its contents, treating this used size as its definite cross size so that percentage-sized children can be resolved:
 
@@ -875,7 +889,7 @@ namespace uicore
 			}
 			else if (justify_content.is_keyword("space-around"))
 			{
-				float space_extra = space_available / (float)(item_count - 1);
+				float space_extra = space_available / (float)item_count;
 				float pos = space_extra / 2.0f;
 				for (auto &item : line)
 				{
@@ -895,6 +909,135 @@ namespace uicore
 
 	void FlexLayout::cross_axis_alignment(const CanvasPtr &canvas, View *view)
 	{
-	}
+		float total_cross_size = 0.0f;
+		for (auto &line : lines)
+		{
+			float baseline_offset = 0.0f;
 
+			for (auto &item : line)
+			{
+				if (item.collapsed)
+					continue;
+
+				if (item.cross_auto_margin_start || item.cross_auto_margin_end)
+				{
+					float outer_size = item.cross_noncontent_start + item.used_cross_size + item.cross_noncontent_end;
+					if (outer_size < line.cross_size)
+					{
+						if (item.cross_auto_margin_start && item.cross_auto_margin_end)
+						{
+							float extra = (line.cross_size - outer_size) * 0.5f;
+							item.cross_noncontent_start += extra;
+							item.cross_noncontent_end += extra;
+						}
+						else if (item.cross_auto_margin_start)
+						{
+							item.cross_noncontent_start += line.cross_size - outer_size;
+						}
+						else
+						{
+							item.cross_noncontent_end += line.cross_size - outer_size;
+						}
+					}
+					else if (item.cross_auto_margin_start)
+					{
+						item.cross_noncontent_end = line.cross_size - item.cross_noncontent_start + item.used_cross_size;
+					}
+				}
+				else
+				{
+					auto align_self = item.view->style_cascade().computed_value("align-self");
+					if (align_self.is_keyword("auto")) // To do: computed_value should have done this for us
+					{
+						align_self = view->style_cascade().computed_value("align-items");
+					}
+
+					if (align_self.is_keyword("flex-start") || (direction == FlexDirection::column && align_self.is_keyword("baseline")) || align_self.is_keyword("stretch"))
+					{
+						item.used_cross_pos = item.cross_noncontent_start;
+					}
+					else if (align_self.is_keyword("flex-end"))
+					{
+						item.used_cross_pos = line.cross_size - item.cross_noncontent_end - item.used_cross_size;
+					}
+					else if (align_self.is_keyword("center"))
+					{
+						item.used_cross_pos = (line.cross_size - item.cross_noncontent_start - item.used_cross_size - item.cross_noncontent_end) * 0.5f + item.cross_noncontent_start;
+					}
+					else if (align_self.is_keyword("baseline"))
+					{
+						item.used_cross_pos = item.cross_noncontent_start;
+						baseline_offset = std::max(baseline_offset, item.cross_noncontent_start + item.view->first_baseline_offset(canvas, item.used_main_size));
+					}
+				}
+			}
+
+			if (baseline_offset > 0.0f)
+			{
+				for (auto &item : line)
+				{
+					if (item.collapsed || item.cross_auto_margin_start || item.cross_auto_margin_end)
+						continue;
+
+					auto align_self = item.view->style_cascade().computed_value("align-self");
+					if (align_self.is_keyword("auto")) // To do: computed_value should have done this for us
+					{
+						align_self = view->style_cascade().computed_value("align-items");
+					}
+
+					if (align_self.is_keyword("baseline"))
+					{
+						item.used_cross_pos = baseline_offset - item.view->first_baseline_offset(canvas, item.used_main_size);
+					}
+				}
+			}
+
+			total_cross_size += line.cross_size;
+		}
+
+		if (!definite_container_cross_size)
+			container_cross_size = total_cross_size;
+
+		if (wrap != FlexWrap::nowrap)
+		{
+			float free_space = (container_cross_size - total_cross_size);
+
+			float line_pos = 0.0f;
+			float line_extra = 0.0f;
+
+			auto align_content = view->style_cascade().computed_value("align-content");
+			if (align_content.is_keyword("flex-start") || align_content.is_keyword("stretch") || (free_space < 0.0f && align_content.is_keyword("space-between")))
+			{
+			}
+			else if (align_content.is_keyword("flex-end"))
+			{
+				line_pos = container_cross_size - total_cross_size;
+			}
+			else if (align_content.is_keyword("center") || (free_space < 0.0f && align_content.is_keyword("space-around")))
+			{
+				line_pos = (container_cross_size - total_cross_size) * 0.5f;
+			}
+			else if (align_content.is_keyword("space-between"))
+			{
+				line_extra = free_space / (lines.size() - 1.0f);
+			}
+			else if (align_content.is_keyword("space-around"))
+			{
+				line_extra = free_space / (float)lines.size();
+				line_pos = line_extra * 0.5f;
+			}
+
+			for (auto &line : lines)
+			{
+				for (auto &item : line)
+				{
+					if (!item.collapsed)
+						item.used_cross_pos += line_pos;
+				}
+
+				line_pos += line.cross_size;
+				line_pos += line_extra;
+			}
+		}
+	}
 }
