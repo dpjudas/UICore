@@ -35,59 +35,33 @@ namespace uicore
 {
 	float FlexLayout::preferred_width(const CanvasPtr &canvas, View *view)
 	{
-		calculate_layout(canvas, view);
+		calculate_layout(canvas, view, FlexLayoutMode::preferred_width);
 
 		if (direction == FlexDirection::row)
-		{
-			float width = 0.0f;
-			for (auto &line : lines)
-			{
-				width = std::max(width, line.total_main_noncontent + line.total_flex_preferred_main_size);
-			}
-			return width;
-		}
+			return container_main_size;
 		else
-		{
-			float width = 0.0f;
-			for (auto &line : lines)
-			{
-				width += line.cross_size;
-			}
-			return width;
-		}
+			return container_cross_size;
 	}
 
 	float FlexLayout::preferred_height(const CanvasPtr &canvas, View *view, float width)
 	{
-		calculate_layout(canvas, view);
+		calculate_layout(canvas, view, FlexLayoutMode::preferred_height, width);
 
 		if (direction == FlexDirection::row)
-		{
-			float height = 0.0f;
-			for (auto &line : lines)
-			{
-				height += line.cross_size;
-			}
-			return height;
-		}
+			return container_cross_size;
 		else
-		{
-			float height = 0.0f;
-			for (auto &line : lines)
-			{
-				height = std::max(height, line.total_main_noncontent + line.total_flex_preferred_main_size);
-			}
-			return height;
-		}
+			return container_main_size;
 	}
 
 	float FlexLayout::first_baseline_offset(const CanvasPtr &canvas, View *view, float width)
 	{
+		//calculate_layout(canvas, view, FlexLayoutMode::preferred_height, width);
 		return 0.0f;
 	}
 
 	float FlexLayout::last_baseline_offset(const CanvasPtr &canvas, View *view, float width)
 	{
+		//calculate_layout(canvas, view, FlexLayoutMode::preferred_height, width);
 		return 0.0f;
 	}
 
@@ -121,8 +95,11 @@ namespace uicore
 		}
 	}
 
-	void FlexLayout::calculate_layout(const CanvasPtr &canvas, View *view)
+	void FlexLayout::calculate_layout(const CanvasPtr &canvas, View *view, FlexLayoutMode new_layout_mode, float new_layout_width)
 	{
+		layout_mode = new_layout_mode;
+		layout_width = new_layout_width;
+
 		create_items(canvas, view);
 		create_lines(canvas, view);
 		flex_lines(canvas, view);
@@ -148,9 +125,6 @@ namespace uicore
 		else if (computed_wrap.is_keyword("wrap-reverse"))
 			wrap = FlexWrap::nowrap;
 
-		container_main_size = (direction == FlexDirection::row) ? view->geometry().content_width : view->geometry().content_height;
-		container_cross_size = (direction == FlexDirection::column) ? view->geometry().content_width : view->geometry().content_height;
-
 		if (direction == FlexDirection::row)
 			create_row_items(canvas, view);
 		else
@@ -160,6 +134,28 @@ namespace uicore
 	void FlexLayout::create_row_items(const CanvasPtr &canvas, View *view)
 	{
 		items.clear();
+
+		if (layout_mode == FlexLayoutMode::normal)
+		{
+			container_main_size = view->geometry().content_width;
+			container_cross_size = view->geometry().content_height;
+			known_container_main_size = true;
+			known_container_cross_size = true;
+		}
+		else
+		{
+			if (layout_mode == FlexLayoutMode::preferred_height)
+			{
+				container_main_size = layout_width;
+				known_container_main_size = true;
+				known_container_cross_size = false;
+			}
+			else
+			{
+				known_container_main_size = false;
+				known_container_cross_size = false;
+			}
+		}
 
 		for (const std::shared_ptr<View> &subview : view->subviews())
 		{
@@ -274,6 +270,28 @@ namespace uicore
 	void FlexLayout::create_column_items(const CanvasPtr &canvas, View *view)
 	{
 		items.clear();
+
+		if (layout_mode == FlexLayoutMode::normal)
+		{
+			container_main_size = view->geometry().content_height;
+			container_cross_size = view->geometry().content_width;
+			known_container_main_size = true;
+			known_container_cross_size = true;
+		}
+		else
+		{
+			if (layout_mode == FlexLayoutMode::preferred_height)
+			{
+				container_cross_size = layout_width;
+				known_container_main_size = false;
+				known_container_cross_size = true;
+			}
+			else
+			{
+				known_container_main_size = false;
+				known_container_cross_size = false;
+			}
+		}
 
 		for (const std::shared_ptr<View> &subview : view->subviews())
 		{
@@ -391,7 +409,7 @@ namespace uicore
 	{
 		lines.clear();
 
-		if (wrap == FlexWrap::nowrap || infinite_container_main_size) // single-line
+		if (wrap == FlexWrap::nowrap || !known_container_main_size) // single-line
 		{
 			FlexLayoutLine line(items.begin(), items.end());
 
@@ -544,11 +562,14 @@ namespace uicore
 						}
 					}
 
-					for (auto &item : line)
+					if (scaled_flex_factor_sum != 0.0f)
 					{
-						if (!item.frozen)
+						for (auto &item : line)
 						{
-							item.used_main_size = item.flex_base_size - std::abs(remaining_free_space * (item.scaled_flex_shrink / scaled_flex_factor_sum));
+							if (!item.frozen)
+							{
+								item.used_main_size = item.flex_base_size - std::abs(remaining_free_space * (item.scaled_flex_shrink / scaled_flex_factor_sum));
+							}
 						}
 					}
 				}
@@ -570,9 +591,9 @@ namespace uicore
 							clamped_size = std::min(clamped_size, item.max_main_size);
 
 						if (clamped_size < unclamped_size)
-							item.flex_violation = FlexViolation::max_violation;
-						else if (clamped_size > unclamped_size)
 							item.flex_violation = FlexViolation::min_violation;
+						else if (clamped_size > unclamped_size)
+							item.flex_violation = FlexViolation::max_violation;
 						else
 							item.flex_violation = FlexViolation::none;
 
@@ -589,6 +610,7 @@ namespace uicore
 					if (!item.frozen)
 					{
 						bool freeze = 
+							total_violation == 0.0f ||
 							(total_violation >= 0.0f && item.flex_violation == FlexViolation::max_violation) ||
 							(total_violation <= 0.0f && item.flex_violation == FlexViolation::min_violation);
 						if (freeze)
@@ -636,7 +658,7 @@ namespace uicore
 
 	void FlexLayout::calculate_lines_cross_size(const CanvasPtr &canvas, View *view)
 	{
-		if (wrap == FlexWrap::nowrap && definite_container_cross_size)
+		if (wrap == FlexWrap::nowrap && known_container_cross_size)
 		{
 			for (auto &line : lines)
 			{
@@ -708,7 +730,7 @@ namespace uicore
 			}
 		}
 
-		if (view->style_cascade().computed_value("align-content").is_keyword("stretch") && definite_container_cross_size)
+		if (view->style_cascade().computed_value("align-content").is_keyword("stretch") && known_container_cross_size && lines.size() > 0)
 		{
 			float total_cross_size = 0.0f;
 			for (auto &line : lines)
@@ -870,7 +892,7 @@ namespace uicore
 					pos += item.main_noncontent_end;
 				}
 			}
-			else if (justify_content.is_keyword("space-between"))
+			else if (justify_content.is_keyword("space-between") && item_count > 1)
 			{
 				float space_extra = space_available / (float)(item_count - 1);
 				float pos = 0.0f;
@@ -887,7 +909,7 @@ namespace uicore
 					pos += space_extra;
 				}
 			}
-			else if (justify_content.is_keyword("space-around"))
+			else if (justify_content.is_keyword("space-around") && item_count > 0)
 			{
 				float space_extra = space_available / (float)item_count;
 				float pos = space_extra / 2.0f;
@@ -995,7 +1017,7 @@ namespace uicore
 			total_cross_size += line.cross_size;
 		}
 
-		if (!definite_container_cross_size)
+		if (!known_container_cross_size)
 			container_cross_size = total_cross_size;
 
 		if (wrap != FlexWrap::nowrap)
@@ -1017,11 +1039,11 @@ namespace uicore
 			{
 				line_pos = (container_cross_size - total_cross_size) * 0.5f;
 			}
-			else if (align_content.is_keyword("space-between"))
+			else if (align_content.is_keyword("space-between") && lines.size() > 1)
 			{
 				line_extra = free_space / (lines.size() - 1.0f);
 			}
-			else if (align_content.is_keyword("space-around"))
+			else if (align_content.is_keyword("space-around") && lines.size() > 0)
 			{
 				line_extra = free_space / (float)lines.size();
 				line_pos = line_extra * 0.5f;

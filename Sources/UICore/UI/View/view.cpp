@@ -45,8 +45,7 @@
 #include "UICore/Core/Text/text.h"
 #include "view_impl.h"
 #include "view_action_impl.h"
-#include "vbox_layout.h"
-#include "hbox_layout.h"
+#include "flex_layout.h"
 #include "custom_layout.h"
 #include <algorithm>
 
@@ -736,15 +735,9 @@ namespace uicore
 
 	ViewLayout *ViewImpl::active_layout(View *self)
 	{
-		if (self->style_cascade().computed_value("layout").is_keyword("flex") && self->style_cascade().computed_value("flex-direction").is_keyword("column"))
+		if (self->style_cascade().computed_value("layout").is_keyword("flex"))
 		{
-			static VBoxLayout vbox;
-			return &vbox;
-		}
-		else if (self->style_cascade().computed_value("layout").is_keyword("flex") && self->style_cascade().computed_value("flex-direction").is_keyword("row"))
-		{
-			static HBoxLayout hbox;
-			return &hbox;
+			return &flex;
 		}
 		else
 		{

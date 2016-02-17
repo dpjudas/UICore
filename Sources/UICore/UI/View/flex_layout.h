@@ -128,6 +128,13 @@ namespace uicore
 		wrap_reverse
 	};
 
+	enum class FlexLayoutMode
+	{
+		normal,
+		preferred_width,
+		preferred_height
+	};
+
 	class FlexLayout : public ViewLayout
 	{
 	public:
@@ -138,7 +145,7 @@ namespace uicore
 		void layout_subviews(const CanvasPtr &canvas, View *view) override;
 
 	private:
-		void calculate_layout(const CanvasPtr &canvas, View *view);
+		void calculate_layout(const CanvasPtr &canvas, View *view, FlexLayoutMode mode = FlexLayoutMode::normal, float layout_width = 0.0f);
 
 		void create_items(const CanvasPtr &canvas, View *view);
 		void create_row_items(const CanvasPtr &canvas, View *view);
@@ -152,17 +159,17 @@ namespace uicore
 		void main_axis_alignment(const CanvasPtr &canvas, View *view);
 		void cross_axis_alignment(const CanvasPtr &canvas, View *view);
 
+		FlexLayoutMode layout_mode = FlexLayoutMode::normal;
+		float layout_width = 0.0f;
+
 		FlexDirection direction = FlexDirection::row;
 		FlexWrap wrap = FlexWrap::nowrap;
 
 		float container_main_size = 0.0f;
 		float container_cross_size = 0.0f;
 
-		bool definite_container_main_size = false;
-		bool definite_container_cross_size = false;
-
-		float infinite_container_main_size = false;
-		float infinite_container_cross_size = false;
+		bool known_container_main_size = false;
+		bool known_container_cross_size = false;
 
 		std::vector<FlexLayoutItem> items;
 		std::vector<FlexLayoutLine> lines;

@@ -34,6 +34,7 @@
 #include "UICore/Display/Window/cursor_description.h"
 #include "../Animation/animation_group.h"
 #include "view_layout.h"
+#include "flex_layout.h"
 #include <map>
 
 namespace uicore
@@ -145,6 +146,8 @@ namespace uicore
 		bool is_cursor_inherited = true;
 
 		ViewLayoutCache layout_cache;
+
+		FlexLayout flex;
 
 	private:
 		unsigned int find_prev_tab_index_helper(unsigned int tab_index) const;
