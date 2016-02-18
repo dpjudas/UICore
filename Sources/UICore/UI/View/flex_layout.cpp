@@ -980,6 +980,8 @@ namespace uicore
 					{
 						item.cross_noncontent_end = line.cross_size - item.cross_noncontent_start + item.used_cross_size;
 					}
+
+					item.used_cross_pos = item.cross_noncontent_start;
 				}
 				else
 				{
