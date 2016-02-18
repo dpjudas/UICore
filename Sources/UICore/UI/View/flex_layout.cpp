@@ -484,12 +484,12 @@ namespace uicore
 					{
 						item.used_main_size = item.flex_preferred_main_size;
 						item.frozen = true;
-						initial_space_needed += item.flex_preferred_main_size;
+						initial_space_needed += item.main_noncontent_start + item.flex_preferred_main_size + item.main_noncontent_end;
 					}
 					else
 					{
 						item.frozen = false;
-						initial_space_needed += item.flex_base_size;
+						initial_space_needed += item.main_noncontent_start + item.flex_base_size + item.main_noncontent_end;
 						unfrozen_count++;
 					}
 				}
@@ -507,12 +507,12 @@ namespace uicore
 					{
 						item.used_main_size = item.flex_preferred_main_size;
 						item.frozen = true;
-						initial_space_needed += item.flex_preferred_main_size;
+						initial_space_needed += item.main_noncontent_start + item.flex_preferred_main_size + item.main_noncontent_end;
 					}
 					else
 					{
 						item.frozen = false;
-						initial_space_needed += item.flex_base_size;
+						initial_space_needed += item.main_noncontent_start + item.flex_base_size + item.main_noncontent_end;
 						unfrozen_count++;
 					}
 				}
@@ -530,14 +530,17 @@ namespace uicore
 				float flex_factor_sum = 0.0f;
 				for (auto &item : line)
 				{
+					if (restarted_layout && item.collapsed)
+						continue;
+
 					if (!item.frozen)
 					{
-						remaining_space_needed += item.flex_base_size;
+						remaining_space_needed += item.main_noncontent_start + item.flex_base_size + item.main_noncontent_end;
 						flex_factor_sum += use_grow_factor ? item.flex_grow : item.flex_shrink;
 					}
 					else
 					{
-						remaining_space_needed += item.used_main_size;
+						remaining_space_needed += item.main_noncontent_start + item.used_main_size + item.main_noncontent_end;
 					}
 				}
 
@@ -877,10 +880,10 @@ namespace uicore
 			else if (justify_content.is_keyword("flex-end"))
 			{
 				float pos = container_main_size;
-				auto it = line.begin();
-				while (it != line.end())
+				auto it = line.end();
+				while (it != line.begin())
 				{
-					auto &item = *(++it);
+					auto &item = *(--it);
 					if (item.collapsed)
 						continue;
 
