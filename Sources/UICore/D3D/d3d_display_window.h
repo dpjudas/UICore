@@ -33,6 +33,7 @@
 #include "UICore/Display/Platform/Win32/win32_window.h"
 #include "UICore/Core/System/comptr.h"
 #include <mutex>
+#include <deque>
 
 namespace uicore
 {
@@ -72,8 +73,8 @@ namespace uicore
 		const ComPtr<ID3D11DeviceContext> &get_device_context() const { return device_context; }
 		D3D_FEATURE_LEVEL get_feature_level() const { return feature_level; }
 		const ComPtr<IDXGISwapChain> &get_swap_chain() const { return swap_chain; }
-		const ComPtr<ID3D11Texture2D> &get_back_buffer() const { return back_buffer; }
-		const ComPtr<ID3D11RenderTargetView> &get_back_buffer_rtv() const { return back_buffer_rtv; }
+		const ComPtr<ID3D11Texture2D> &get_back_buffer() const { return back_buffers.front(); }
+		const ComPtr<ID3D11RenderTargetView> &get_back_buffer_rtv() const { return back_buffer_rtvs.front(); }
 		const ComPtr<ID3D11Debug> &get_debug() const { return debug; }
 		const ComPtr<ID3D11InfoQueue> &get_info_queue() const { return info_queue; }
 
@@ -139,8 +140,11 @@ namespace uicore
 		ComPtr<IDXGISwapChain> swap_chain;
 		ComPtr<ID3D11Debug> debug;
 		ComPtr<ID3D11InfoQueue> info_queue;
-		ComPtr<ID3D11Texture2D> back_buffer;
-		ComPtr<ID3D11RenderTargetView> back_buffer_rtv;
+
+		bool no_redirection_bitmap = false;
+		int flipping_buffers = 0;
+		std::deque<ComPtr<ID3D11Texture2D>> back_buffers;
+		std::deque<ComPtr<ID3D11RenderTargetView>> back_buffer_rtvs;
 
 		bool use_fake_front_buffer = false;
 		ComPtr<ID3D11Texture2D> fake_front_buffer;

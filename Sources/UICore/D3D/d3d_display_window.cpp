@@ -54,11 +54,13 @@ namespace uicore
 		OSVERSIONINFOEX version_info = { 0 };
 		version_info.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
 		GetVersionEx((OSVERSIONINFO*)&version_info);
-		bool no_redirection_bitmap = version_info.dwMajorVersion > 6 || (version_info.dwMajorVersion == 6 && version_info.dwMinorVersion > 1);
+		no_redirection_bitmap = false;// version_info.dwMajorVersion > 6 || (version_info.dwMajorVersion == 6 && version_info.dwMinorVersion > 1);
 
 		window.create(this, description, no_redirection_bitmap);
 
 		use_fake_front_buffer = description.is_update_supported();
+
+		flipping_buffers = description.flipping_buffers();
 
 		D3D_FEATURE_LEVEL request_levels[] = { /*D3D_FEATURE_LEVEL_11_1, */D3D_FEATURE_LEVEL_11_0, D3D_FEATURE_LEVEL_10_1, D3D_FEATURE_LEVEL_10_0 };
 		DXGI_SWAP_CHAIN_DESC swap_chain_description;
@@ -409,26 +411,39 @@ namespace uicore
 	void D3DDisplayWindow::backing_flip(int interval)
 	{
 		if (use_fake_front_buffer)
-			device_context->CopyResource(fake_front_buffer, back_buffer);
+			device_context->CopyResource(fake_front_buffer, get_back_buffer());
 
 		//D3DGraphicContext *gc_provider = static_cast<D3DGraphicContext*>(gc.get());
 		if (interval != -1)
 			current_interval_setting = interval;
 
-		// Use SwapChain1 swapping semantics, if available:
-		ComPtr<IDXGISwapChain1> swap_chain1;
-		HRESULT result = swap_chain->QueryInterface(IID_IDXGISwapChain1, (void**)swap_chain1.output_variable());
-		if (SUCCEEDED(result))
+		if (no_redirection_bitmap)
 		{
-			DXGI_PRESENT_PARAMETERS present_params = { 0 };
-			present_params.DirtyRectsCount = 0;
-			result = swap_chain1->Present1(current_interval_setting, 0, &present_params);
-			D3DTarget::throw_if_failed("SwapChain1.Present failed", result);
+			// Use SwapChain1 swapping semantics, if available:
+			ComPtr<IDXGISwapChain1> swap_chain1;
+			HRESULT result = swap_chain->QueryInterface(IID_IDXGISwapChain1, (void**)swap_chain1.output_variable());
+			if (SUCCEEDED(result))
+			{
+				DXGI_PRESENT_PARAMETERS present_params = { 0 };
+				present_params.DirtyRectsCount = 0;
+				result = swap_chain1->Present1(current_interval_setting, 0, &present_params);
+				D3DTarget::throw_if_failed("SwapChain1.Present failed", result);
+			}
+			else
+			{
+				swap_chain->Present(current_interval_setting, 0);
+			}
 		}
 		else
 		{
 			swap_chain->Present(current_interval_setting, 0);
 		}
+
+		back_buffers.push_front(back_buffers.back());
+		back_buffers.pop_back();
+
+		back_buffer_rtvs.push_front(back_buffer_rtvs.back());
+		back_buffer_rtvs.pop_back();
 
 		log_debug_messages();
 	}
@@ -444,8 +459,8 @@ namespace uicore
 			src_box.bottom = rect.bottom;
 			src_box.front = 0;
 			src_box.back = 1;
-			device_context->CopySubresourceRegion(fake_front_buffer, 0, rect.left, rect.top, 0, back_buffer, 0, &src_box);
-			device_context->CopyResource(back_buffer, fake_front_buffer);
+			device_context->CopySubresourceRegion(fake_front_buffer, 0, rect.left, rect.top, 0, get_back_buffer(), 0, &src_box);
+			device_context->CopyResource(get_back_buffer(), fake_front_buffer);
 			swap_chain->Present(current_interval_setting, 0);
 			log_debug_messages();
 		}
@@ -512,30 +527,40 @@ namespace uicore
 	{
 		release_swap_chain_buffers();
 
-		HRESULT result = swap_chain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)back_buffer.output_variable());
-		D3DTarget::throw_if_failed("Unable to get back buffer", result);
+		int num_buffers = no_redirection_bitmap ? flipping_buffers : 1;
 
-		if (use_fake_front_buffer)
+		for (int i = 0; i < num_buffers; i++)
 		{
-			D3D11_TEXTURE2D_DESC texture_desc;
-			back_buffer->GetDesc(&texture_desc);
-			texture_desc.Usage = D3D11_USAGE_DEFAULT;
-			texture_desc.CPUAccessFlags = 0;
-			texture_desc.MiscFlags = 0;
-			texture_desc.BindFlags = 0;
-			result = device->CreateTexture2D(&texture_desc, 0, fake_front_buffer.output_variable());
-			D3DTarget::throw_if_failed("Unable to create front buffer", result);
-		}
+			ComPtr<ID3D11Texture2D> back_buffer;
+			ComPtr<ID3D11RenderTargetView> back_buffer_rtv;
+			HRESULT result = swap_chain->GetBuffer(i, __uuidof(ID3D11Texture2D), (void**)back_buffer.output_variable());
+			D3DTarget::throw_if_failed("Unable to get swap chain buffer", result);
 
-		result = device->CreateRenderTargetView(back_buffer, 0, back_buffer_rtv.output_variable());
-		D3DTarget::throw_if_failed("Unable to create back buffer render target view", result);
+			if (use_fake_front_buffer && !fake_front_buffer)
+			{
+				D3D11_TEXTURE2D_DESC texture_desc;
+				back_buffer->GetDesc(&texture_desc);
+				texture_desc.Usage = D3D11_USAGE_DEFAULT;
+				texture_desc.CPUAccessFlags = 0;
+				texture_desc.MiscFlags = 0;
+				texture_desc.BindFlags = 0;
+				result = device->CreateTexture2D(&texture_desc, 0, fake_front_buffer.output_variable());
+				D3DTarget::throw_if_failed("Unable to create front buffer", result);
+			}
+
+			result = device->CreateRenderTargetView(back_buffer, 0, back_buffer_rtv.output_variable());
+			D3DTarget::throw_if_failed("Unable to create back buffer render target view", result);
+
+			back_buffers.push_back(back_buffer);
+			back_buffer_rtvs.push_back(back_buffer_rtv);
+		}
 	}
 
 	void D3DDisplayWindow::release_swap_chain_buffers()
 	{
-		back_buffer_rtv.clear();
+		back_buffers.clear();
+		back_buffer_rtvs.clear();
 		fake_front_buffer.clear();
-		back_buffer.clear();
 	}
 
 	void D3DDisplayWindow::on_window_resized()
