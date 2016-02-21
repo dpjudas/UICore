@@ -302,13 +302,7 @@ namespace uicore
 	{
 		if (!impl->layout_cache.preferred_width_calculated)
 		{
-			float width = 0.0f;
-			if (!style_cascade().computed_value("width").is_keyword("auto"))
-				width = style_cascade().computed_value("width").number();
-			else
-				width = calculate_preferred_width(canvas);
-
-			impl->layout_cache.preferred_width = width;
+			impl->layout_cache.preferred_width = calculate_preferred_width(canvas);
 			impl->layout_cache.preferred_width_calculated = true;
 		}
 		return impl->layout_cache.preferred_width;
@@ -320,12 +314,7 @@ namespace uicore
 		if (it != impl->layout_cache.preferred_height.end())
 			return it->second;
 
-		float height = 0.0f;
-		if (!style_cascade().computed_value("height").is_keyword("auto"))
-			height = style_cascade().computed_value("height").number();
-		else
-			height = calculate_preferred_height(canvas, width);
-
+		float height = calculate_preferred_height(canvas, width);
 		impl->layout_cache.preferred_height[width] = height;
 		return height;
 	}

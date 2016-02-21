@@ -51,6 +51,7 @@ public:
 			line-height: 32px;
 			width: 750px;
 			margin: 15px auto;
+			flex: none;
 			)");
 
 		add_text(text);
@@ -65,6 +66,7 @@ public:
 		style()->set(R"(
 			width: 750px;
 			margin: 8px auto;
+			flex: none;
 			)");
 
 		add_text(text);
