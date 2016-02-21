@@ -62,12 +62,12 @@ namespace uicore
 		impl->thumb->add_subview(impl->thumb_grip);
 		impl->thumb->add_subview(spacer2);
 
-		impl->button_decrement->style()->set("flex: 0 0 main-size");
-		impl->button_increment->style()->set("flex: 0 0 main-size");
-		impl->track->style()->set("flex: 1 1 main-size");
+		impl->button_decrement->style()->set("flex: 0 0 auto");
+		impl->button_increment->style()->set("flex: 0 0 auto");
+		impl->track->style()->set("flex: 1 1 auto");
 		impl->thumb->style()->set("position: absolute");
-		spacer1->style()->set("flex: 1 1 main-size");
-		spacer2->style()->set("flex: 1 1 main-size");
+		spacer1->style()->set("flex: 1 1 auto");
+		spacer2->style()->set("flex: 1 1 auto");
 
 		impl->button_decrement->style()->set("width: 17px; height: 17px");
 		impl->button_increment->style()->set("width: 17px; height: 17px");

@@ -41,12 +41,12 @@ namespace uicore
 		style()->set("flex-direction: row");
 
 		impl->image_view = std::make_shared<ImageView>();
-		impl->image_view->style()->set("flex: 0 0 main-size");
+		impl->image_view->style()->set("flex: 0 0 auto");
 		add_subview(impl->image_view);
 
 		impl->label = std::make_shared<LabelView>();
 		impl->label->style()->set("margin: auto");
-		impl->label->style()->set("flex: 1 1 main-size");
+		impl->label->style()->set("flex: 1 1 auto");
 		add_subview(impl->label);
 
 		slots.connect(sig_pointer_press(), impl.get(), &ButtonViewImpl::on_pointer_press);

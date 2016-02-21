@@ -121,9 +121,9 @@ namespace uicore
 		if (computed_wrap.is_keyword("nowrap"))
 			wrap = FlexWrap::nowrap;
 		else if (computed_wrap.is_keyword("wrap"))
-			wrap = FlexWrap::nowrap;
+			wrap = FlexWrap::wrap;
 		else if (computed_wrap.is_keyword("wrap-reverse"))
-			wrap = FlexWrap::nowrap;
+			wrap = FlexWrap::wrap_reverse;
 
 		if (direction == FlexDirection::row)
 			create_row_items(canvas, view);
@@ -250,7 +250,7 @@ namespace uicore
 
 			if (item.view->style_cascade().computed_value("flex-basis").is_length())
 				item.flex_base_size = item.view->style_cascade().computed_value("flex-basis").number();
-			else if (item.definite_main_size)
+			else if (item.definite_main_size && item.view->style_cascade().computed_value("flex-basis").is_keyword("auto"))
 				item.flex_base_size = item.main_size;
 			else
 				item.flex_base_size = item.view->preferred_width(canvas);
@@ -463,6 +463,30 @@ namespace uicore
 
 	void FlexLayout::flex_lines(const CanvasPtr &canvas, View *view)
 	{
+		if (!known_container_main_size)
+		{
+			container_main_size = 0.0f;
+			for (auto &line : lines)
+			{
+				for (auto &item : line)
+				{
+					if (restarted_layout && item.collapsed)
+					{
+						item.used_main_size = 0.0f;
+						item.frozen = true;
+					}
+					else
+					{
+						item.used_main_size = item.flex_preferred_main_size;
+						item.frozen = true;
+					}
+
+					container_main_size += item.main_noncontent_start + item.flex_preferred_main_size + item.main_noncontent_end;
+				}
+			}
+			return;
+		}
+
 		for (auto &line : lines)
 		{
 			int unfrozen_count = 0;

@@ -87,7 +87,6 @@ public:
 	FlexExampleView()
 	{
 		set_hidden();
-		style()->set("flex: 1 1"); // To do: remove this line
 	}
 };
 
@@ -158,7 +157,8 @@ public:
 
 		auto container1 = example->add_subview<FlexContainerView>(R"(
 			flex-direction: column;
-			justify-content: flex-start
+			justify-content: flex-start;
+			height: 500px;
 			)");
 
 		auto container2 = example->add_subview<FlexContainerView>(R"(
@@ -197,12 +197,12 @@ public:
 		example->add_subview<FlexParagraph>("Moving items to the left or right also depends on the orientation of the main axis. If flex-direction is set to row, then you set justify-content, otherwise if it's set to column you set align-items.");
 
 		auto container1 = example->add_subview<FlexContainerView>(R"(
-			flex-direction: column;
+			flex-direction: row;
 			justify-content: flex-end
 			)");
 
 		auto container2 = example->add_subview<FlexContainerView>(R"(
-			flex-direction: row;
+			flex-direction: column;
 			align-items: flex-end
 			)");
 
@@ -252,10 +252,9 @@ public:
 		example->add_subview<FlexHeadline>("Wrap flex items into multiple rows");
 
 		auto container = example->add_subview<FlexContainerView>(R"(
-			flex-direction: row;
+			flex-flow: row wrap;
 			align-items: center;
 			justify-content: center;
-			flex-flow: row wrap;
 			align-content: flex-end
 			)", 12);
 
@@ -269,10 +268,9 @@ public:
 		example->add_subview<FlexHeadline>("Wrap flex items into multiple columns");
 
 		auto container = example->add_subview<FlexContainerView>(R"(
-			flex-direction: column;
+			flex-flow: column wrap;
 			align-items: center;
 			justify-content: center;
-			flex-flow: column wrap;
 			align-content: stretch
 			)", 8);
 
@@ -304,9 +302,12 @@ public:
 		example->add_subview<FlexHeadline>("Pin an element to one side of the flex container");
 		example->add_subview<FlexParagraph>("You can control the align-items value for individual elements with align-self. You can also use margins to move individual elements up or down or left of right. e.g. on a column layout you can move an individual flex item all the way to the left of the container by setting margin-right: auto.");
 
-		auto container = example->add_subview<FlexContainerView>("flex-direction: column");
+		auto container = example->add_subview<FlexContainerView>(R"(
+			flex-direction: column;
+			align-items: center
+			)");
 		container->boxes[1]->style()->set("align-self: flex-start");
-		container->boxes[2]->style()->set("align-self: flex-end");
+		container->boxes[2]->style()->set("margin-left: auto");
 
 		auto button = panel->add_subview<FlexPanelButton>("Pin an element to one side of the flex container");
 		button->func_clicked() = [=] { for (auto &v : examples->subviews()) v->set_hidden(v != example); };

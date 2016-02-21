@@ -76,7 +76,7 @@ namespace uicore
 		impl->scroll_x->set_horizontal();
 		impl->scroll_y->set_vertical();
 
-		impl->content_container->style()->set("flex: 1 1 main-size");
+		impl->content_container->style()->set("flex: 1 1 auto");
 
 		impl->content_container->set_content_clipped(true);
 		impl->content_container->add_subview(impl->content);
