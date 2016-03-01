@@ -27,6 +27,7 @@
 */
 
 #include "UICore/precomp.h"
+#include "UICore/Display/2D/canvas.h"
 #include "flex_layout.h"
 #include <algorithm>
 #include <cmath>
@@ -75,7 +76,10 @@ namespace uicore
 			{
 				for (auto &item : line)
 				{
-					Rectf box = Rectf::xywh(item.used_main_pos, item.used_cross_pos, item.used_main_size, item.used_cross_size);
+					auto tl = canvas->grid_fit(Pointf(item.used_main_pos, item.used_cross_pos));
+					auto br = canvas->grid_fit(Pointf(item.used_main_pos + item.used_main_size, item.used_cross_pos + item.used_cross_size));
+					Rectf box = Rectf(tl.x, tl.y, br.x, br.y);
+
 					item.view->set_geometry(ViewGeometry::from_content_box(item.view->style_cascade(), box));
 					item.view->layout_children(canvas);
 				}
@@ -87,7 +91,10 @@ namespace uicore
 			{
 				for (auto &item : line)
 				{
-					Rectf box = Rectf::xywh(item.used_cross_pos, item.used_main_pos, item.used_cross_size, item.used_main_size);
+					auto tl = canvas->grid_fit(Pointf(item.used_cross_pos, item.used_main_pos));
+					auto br = canvas->grid_fit(Pointf(item.used_cross_pos + item.used_cross_size, item.used_main_pos + item.used_main_size));
+					Rectf box = Rectf(tl.x, tl.y, br.x, br.y);
+
 					item.view->set_geometry(ViewGeometry::from_content_box(item.view->style_cascade(), box));
 					item.view->layout_children(canvas);
 				}
