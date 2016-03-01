@@ -70,7 +70,7 @@ namespace uicore
 		LineBreakMode line_break_mode() const;
 		void set_line_break_mode(LineBreakMode value);
 
-		void layout_subviews(const CanvasPtr &canvas) override;
+		void layout_children(const CanvasPtr &canvas) override;
 
 	protected:
 		void render_content(const CanvasPtr &canvas) override;

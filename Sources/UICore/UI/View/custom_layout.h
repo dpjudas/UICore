@@ -39,6 +39,6 @@ namespace uicore
 		float preferred_height(const CanvasPtr &canvas, View *view, float width) override { return 0.0f; }
 		float first_baseline_offset(const CanvasPtr &canvas, View *view, float width) override { return 0.0f; }
 		float last_baseline_offset(const CanvasPtr &canvas, View *view, float width) override { return 0.0f; }
-		void layout_subviews(const CanvasPtr &canvas, View *view) override { for (const auto &subview : view->subviews()) subview->layout_subviews(canvas); }
+		void layout_children(const CanvasPtr &canvas, View *view) override { for (const auto &child : view->children()) child->layout_children(canvas); }
 	};
 }

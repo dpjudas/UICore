@@ -37,9 +37,9 @@ namespace uicore
 	class ScrollViewContentContainer : public View
 	{
 	public:
-		void layout_subviews(const CanvasPtr &canvas) override
+		void layout_children(const CanvasPtr &canvas) override
 		{
-			for (auto &view : subviews())
+			for (auto &view : children())
 			{
 				// To do: maybe we need a mode to specify if the X axis is locked or infinite
 				float width = geometry().content_width; //view->preferred_width(canvas);
@@ -49,7 +49,7 @@ namespace uicore
 				geometry.content_y = 0.0f;
 				view->set_geometry(geometry);
 
-				view->layout_subviews(canvas); // Maybe this should be handled in View?
+				view->layout_children(canvas); // Maybe this should be handled in View?
 			}
 		}
 	};
@@ -79,11 +79,11 @@ namespace uicore
 		impl->content_container->style()->set("flex: 1 1 auto");
 
 		impl->content_container->set_content_clipped(true);
-		impl->content_container->add_subview(impl->content);
+		impl->content_container->add_child(impl->content);
 
-		add_subview(impl->content_container);
-		add_subview(impl->scroll_x);
-		add_subview(impl->scroll_y);
+		add_child(impl->content_container);
+		add_child(impl->scroll_x);
+		add_child(impl->scroll_y);
 
 		slots.connect(impl->scroll_x->sig_scroll(), [this]() {
 			Pointf pos = content_offset();
@@ -165,7 +165,7 @@ namespace uicore
 		impl->content->set_view_transform(Mat4f::translate(-offset.x, -offset.y, 0.0f));
 	}
 	
-	void ScrollView::layout_subviews(const CanvasPtr &canvas)
+	void ScrollView::layout_children(const CanvasPtr &canvas)
 	{
 		bool x_scroll_needed = false;
 		bool y_scroll_needed = false;
@@ -216,9 +216,9 @@ namespace uicore
 		
 		impl->content_container->set_geometry(ViewGeometry::from_margin_box(impl->content_container->style_cascade(), Rectf(0.0f, 0.0f, content_view_width, content_view_height)));
 
-		impl->scroll_x->layout_subviews(canvas);
-		impl->scroll_y->layout_subviews(canvas);
-		impl->content_container->layout_subviews(canvas);
+		impl->scroll_x->layout_children(canvas);
+		impl->scroll_y->layout_children(canvas);
+		impl->content_container->layout_children(canvas);
 	}
 	
 	float ScrollView::calculate_preferred_width(const CanvasPtr &canvas)

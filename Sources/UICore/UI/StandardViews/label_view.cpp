@@ -62,9 +62,9 @@ namespace uicore
 	{
 	}
 
-	void LabelView::layout_subviews(const CanvasPtr &canvas)
+	void LabelView::layout_children(const CanvasPtr &canvas)
 	{
-		View::layout_subviews(canvas);
+		View::layout_children(canvas);
 		impl->font = style_cascade().get_font();	// Reset the font on new layout
 	}
 

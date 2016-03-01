@@ -46,8 +46,8 @@ namespace uicore
 		impl->track = std::make_shared<View>();
 		impl->thumb = std::make_shared<View>();
 
-		add_subview(impl->track);
-		add_subview(impl->thumb);
+		add_child(impl->track);
+		add_child(impl->thumb);
 	
 		slots.connect(sig_pointer_press(), impl.get(), &SliderViewImpl::on_pointer_track_press);
 		slots.connect(sig_pointer_release(), impl.get(), &SliderViewImpl::on_pointer_track_release);
@@ -179,9 +179,9 @@ namespace uicore
 		impl->_lock_to_ticks = lock;
 	}
 
-	void SliderView::layout_subviews(const CanvasPtr &canvas)
+	void SliderView::layout_children(const CanvasPtr &canvas)
 	{
-		View::layout_subviews(canvas);
+		View::layout_children(canvas);
 
 		auto track_geometry = impl->track->geometry();
 

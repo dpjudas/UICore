@@ -42,12 +42,12 @@ namespace uicore
 
 		impl->image_view = std::make_shared<ImageView>();
 		impl->image_view->style()->set("flex: 0 0 auto");
-		add_subview(impl->image_view);
+		add_child(impl->image_view);
 
 		impl->label = std::make_shared<LabelView>();
 		impl->label->style()->set("margin: auto");
 		impl->label->style()->set("flex: 1 1 auto");
-		add_subview(impl->label);
+		add_child(impl->label);
 
 		slots.connect(sig_pointer_press(), impl.get(), &ButtonViewImpl::on_pointer_press);
 		slots.connect(sig_pointer_release(), impl.get(), &ButtonViewImpl::on_pointer_release);
@@ -106,8 +106,8 @@ namespace uicore
 		impl->label->remove_from_super();
 		impl->image_view->remove_from_super();
 
-		add_subview(impl->label);
-		add_subview(impl->image_view);
+		add_child(impl->label);
+		add_child(impl->image_view);
 	}
 
 	void ButtonView::move_label_after_image()
@@ -115,7 +115,7 @@ namespace uicore
 		impl->label->remove_from_super();
 		impl->image_view->remove_from_super();
 
-		add_subview(impl->image_view);
-		add_subview(impl->label);
+		add_child(impl->image_view);
+		add_child(impl->label);
 	}
 }

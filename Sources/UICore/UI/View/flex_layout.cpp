@@ -65,7 +65,7 @@ namespace uicore
 		return 0.0f;
 	}
 
-	void FlexLayout::layout_subviews(const CanvasPtr &canvas, View *view)
+	void FlexLayout::layout_children(const CanvasPtr &canvas, View *view)
 	{
 		calculate_layout(canvas, view);
 
@@ -77,7 +77,7 @@ namespace uicore
 				{
 					Rectf box = Rectf::xywh(item.used_main_pos, item.used_cross_pos, item.used_main_size, item.used_cross_size);
 					item.view->set_geometry(ViewGeometry::from_content_box(item.view->style_cascade(), box));
-					item.view->layout_subviews(canvas);
+					item.view->layout_children(canvas);
 				}
 			}
 		}
@@ -89,7 +89,7 @@ namespace uicore
 				{
 					Rectf box = Rectf::xywh(item.used_cross_pos, item.used_main_pos, item.used_cross_size, item.used_main_size);
 					item.view->set_geometry(ViewGeometry::from_content_box(item.view->style_cascade(), box));
-					item.view->layout_subviews(canvas);
+					item.view->layout_children(canvas);
 				}
 			}
 		}
@@ -160,15 +160,15 @@ namespace uicore
 			}
 		}
 
-		for (const std::shared_ptr<View> &subview : view->subviews())
+		for (const std::shared_ptr<View> &child : view->children())
 		{
-			if (!subview->is_static_position_and_visible())
+			if (!child->is_static_position_and_visible())
 				continue;
 
-			const auto &item_style = subview->style_cascade();
+			const auto &item_style = child->style_cascade();
 
 			FlexLayoutItem item;
-			item.view = subview.get();
+			item.view = child.get();
 
 			// Definite sizes:
 
@@ -226,22 +226,22 @@ namespace uicore
 
 			// Non-content sizes:
 
-			item.main_noncontent_start += subview->style_cascade().computed_value("margin-left").number();
-			item.main_noncontent_start += subview->style_cascade().computed_value("border-left-width").number();
-			item.main_noncontent_start += subview->style_cascade().computed_value("padding-left").number();
-			item.main_noncontent_end += subview->style_cascade().computed_value("padding-right").number();
-			item.main_noncontent_end += subview->style_cascade().computed_value("border-right-width").number();
-			item.main_noncontent_end += subview->style_cascade().computed_value("margin-right").number();
+			item.main_noncontent_start += child->style_cascade().computed_value("margin-left").number();
+			item.main_noncontent_start += child->style_cascade().computed_value("border-left-width").number();
+			item.main_noncontent_start += child->style_cascade().computed_value("padding-left").number();
+			item.main_noncontent_end += child->style_cascade().computed_value("padding-right").number();
+			item.main_noncontent_end += child->style_cascade().computed_value("border-right-width").number();
+			item.main_noncontent_end += child->style_cascade().computed_value("margin-right").number();
 
 			item.main_auto_margin_start = item_style.computed_value("margin-left").is_keyword("auto");
 			item.main_auto_margin_end = item_style.computed_value("margin-right").is_keyword("auto");
 
-			item.cross_noncontent_start += subview->style_cascade().computed_value("margin-top").number();
-			item.cross_noncontent_start += subview->style_cascade().computed_value("border-top-width").number();
-			item.cross_noncontent_start += subview->style_cascade().computed_value("padding-top").number();
-			item.cross_noncontent_end += subview->style_cascade().computed_value("padding-bottom").number();
-			item.cross_noncontent_end += subview->style_cascade().computed_value("border-bottom-width").number();
-			item.cross_noncontent_end += subview->style_cascade().computed_value("margin-bottom").number();
+			item.cross_noncontent_start += child->style_cascade().computed_value("margin-top").number();
+			item.cross_noncontent_start += child->style_cascade().computed_value("border-top-width").number();
+			item.cross_noncontent_start += child->style_cascade().computed_value("padding-top").number();
+			item.cross_noncontent_end += child->style_cascade().computed_value("padding-bottom").number();
+			item.cross_noncontent_end += child->style_cascade().computed_value("border-bottom-width").number();
+			item.cross_noncontent_end += child->style_cascade().computed_value("margin-bottom").number();
 
 			item.cross_auto_margin_start = item_style.computed_value("margin-top").is_keyword("auto");
 			item.cross_auto_margin_end = item_style.computed_value("margin-bottom").is_keyword("auto");
@@ -299,15 +299,15 @@ namespace uicore
 			}
 		}
 
-		for (const std::shared_ptr<View> &subview : view->subviews())
+		for (const std::shared_ptr<View> &child : view->children())
 		{
-			if (!subview->is_static_position_and_visible())
+			if (!child->is_static_position_and_visible())
 				continue;
 
-			const auto &item_style = subview->style_cascade();
+			const auto &item_style = child->style_cascade();
 
 			FlexLayoutItem item;
-			item.view = subview.get();
+			item.view = child.get();
 
 			// Definite sizes:
 
@@ -365,22 +365,22 @@ namespace uicore
 
 			// Non-content sizes:
 
-			item.main_noncontent_start += subview->style_cascade().computed_value("margin-top").number();
-			item.main_noncontent_start += subview->style_cascade().computed_value("border-top-width").number();
-			item.main_noncontent_start += subview->style_cascade().computed_value("padding-top").number();
-			item.main_noncontent_end += subview->style_cascade().computed_value("padding-bottom").number();
-			item.main_noncontent_end += subview->style_cascade().computed_value("border-bottom-width").number();
-			item.main_noncontent_end += subview->style_cascade().computed_value("margin-bottom").number();
+			item.main_noncontent_start += child->style_cascade().computed_value("margin-top").number();
+			item.main_noncontent_start += child->style_cascade().computed_value("border-top-width").number();
+			item.main_noncontent_start += child->style_cascade().computed_value("padding-top").number();
+			item.main_noncontent_end += child->style_cascade().computed_value("padding-bottom").number();
+			item.main_noncontent_end += child->style_cascade().computed_value("border-bottom-width").number();
+			item.main_noncontent_end += child->style_cascade().computed_value("margin-bottom").number();
 
 			item.main_auto_margin_start = item_style.computed_value("margin-top").is_keyword("auto");
 			item.main_auto_margin_end = item_style.computed_value("margin-bottom").is_keyword("auto");
 
-			item.cross_noncontent_start += subview->style_cascade().computed_value("margin-left").number();
-			item.cross_noncontent_start += subview->style_cascade().computed_value("border-left-width").number();
-			item.cross_noncontent_start += subview->style_cascade().computed_value("padding-left").number();
-			item.cross_noncontent_end += subview->style_cascade().computed_value("padding-right").number();
-			item.cross_noncontent_end += subview->style_cascade().computed_value("border-right-width").number();
-			item.cross_noncontent_end += subview->style_cascade().computed_value("margin-right").number();
+			item.cross_noncontent_start += child->style_cascade().computed_value("margin-left").number();
+			item.cross_noncontent_start += child->style_cascade().computed_value("border-left-width").number();
+			item.cross_noncontent_start += child->style_cascade().computed_value("padding-left").number();
+			item.cross_noncontent_end += child->style_cascade().computed_value("padding-right").number();
+			item.cross_noncontent_end += child->style_cascade().computed_value("border-right-width").number();
+			item.cross_noncontent_end += child->style_cascade().computed_value("margin-right").number();
 
 			item.cross_auto_margin_start = item_style.computed_value("margin-left").is_keyword("auto");
 			item.cross_auto_margin_end = item_style.computed_value("margin-right").is_keyword("auto");

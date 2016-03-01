@@ -67,7 +67,7 @@ namespace uicore
 
 		std::function<void()> &func_value_changed();
 
-		void layout_subviews(const CanvasPtr &canvas) override;
+		void layout_children(const CanvasPtr &canvas) override;
 
 	private:
 		std::shared_ptr<SliderViewImpl> impl;

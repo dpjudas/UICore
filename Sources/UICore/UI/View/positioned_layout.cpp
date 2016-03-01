@@ -32,31 +32,31 @@
 
 namespace uicore
 {
-	void PositionedLayout::layout_subviews(const CanvasPtr &canvas, View *view)
+	void PositionedLayout::layout_children(const CanvasPtr &canvas, View *view)
 	{
-		for (const std::shared_ptr<View> &subview : view->subviews())
+		for (const std::shared_ptr<View> &child : view->children())
 		{
-			if (subview->hidden())
+			if (child->hidden())
 			{
 				continue;
 			}
-			else if (subview->style_cascade().computed_value("position").is_keyword("absolute"))
+			else if (child->style_cascade().computed_value("position").is_keyword("absolute"))
 			{
 				// To do: decide how we determine the containing box used for absolute positioning. For now, use the parent content box.
-				layout_from_containing_box(canvas, subview.get(), view->geometry().content_box());
+				layout_from_containing_box(canvas, child.get(), view->geometry().content_box());
 			}
-			else if (subview->style_cascade().computed_value("position").is_keyword("fixed"))
+			else if (child->style_cascade().computed_value("position").is_keyword("fixed"))
 			{
 				Rectf offset_initial_containing_box;
-				View *current = view->superview();
+				View *current = view->parent();
 				if (current)
 				{
 					Pointf offset(view->geometry().content_x, view->geometry().content_y);
 					while (true)
 					{
 						offset = offset + Pointf(current->geometry().content_x, current->geometry().content_y);
-						View *superview = current->superview();
-						if (!superview)
+						View *parent = current->parent();
+						if (!parent)
 						{
 							offset_initial_containing_box = current->geometry().content_box();
 							offset_initial_containing_box.set_position(offset_initial_containing_box.position() - offset);
@@ -69,10 +69,10 @@ namespace uicore
 					offset_initial_containing_box = view->geometry().content_box();
 				}
 
-				layout_from_containing_box(canvas, subview.get(), offset_initial_containing_box);
+				layout_from_containing_box(canvas, child.get(), offset_initial_containing_box);
 			}
 
-			layout_subviews(canvas, subview.get());
+			layout_children(canvas, child.get());
 		}
 	}
 
@@ -152,6 +152,6 @@ namespace uicore
 	void PositionedLayout::layout_from_containing_box(const CanvasPtr &canvas, View *view, const Rectf &containing_box)
 	{
 		view->set_geometry(get_geometry(canvas, view, containing_box));
-		view->layout_subviews(canvas);
+		view->layout_children(canvas);
 	}
 }

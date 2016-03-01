@@ -88,25 +88,25 @@ namespace uicore
 		SlotContainer slots;
 
 		/// Parent view node or nullptr if the view is the current root node
-		View *superview() const;
+		View *parent() const;
 
 		/// List of all immediate child views
-		const std::vector<std::shared_ptr<View>> &subviews() const;
+		const std::vector<std::shared_ptr<View>> &children() const;
 
 		/// Add a child view
-		void add_subview(const std::shared_ptr<View> &view);
+		void add_child(const std::shared_ptr<View> &view);
 
 		template<typename T, typename... Types>
-		std::shared_ptr<T> add_subview(Types &&... args)
+		std::shared_ptr<T> add_child(Types &&... args)
 		{
-			auto subview = std::make_shared<T>(std::forward<Types>(args)...);
-			add_subview(subview);
-			return subview;
+			auto child = std::make_shared<T>(std::forward<Types>(args)...);
+			add_child(child);
+			return child;
 		}
 
-		std::shared_ptr<View> add_subview()
+		std::shared_ptr<View> add_child()
 		{
-			return add_subview<View>();
+			return add_child<View>();
 		}
 
 		/// Remove view from parent
@@ -132,7 +132,7 @@ namespace uicore
 		/// Hides a view from layout and rendering
 		void set_hidden(bool value = true);
 
-		/// Test if view should participate in static layout calculations (layout_subviews)
+		/// Test if view should participate in static layout calculations (layout_children)
 		bool is_static_position_and_visible() const;
 
 		/// Test if view geometry needs to be recalculated
@@ -146,7 +146,7 @@ namespace uicore
 
 		/// Sets the view position and size
 		///
-		/// This function should only be called by layout_subviews.
+		/// This function should only be called by layout_children.
 		void set_geometry(const ViewGeometry &geometry);
 
 		/// Gets the current canvas used to render this view
@@ -189,8 +189,8 @@ namespace uicore
 		/// Calculates the offset to the last baseline
 		float last_baseline_offset(const CanvasPtr &canvas, float width);
 
-		/// Sets the view geometry for all subviews of this view
-		virtual void layout_subviews(const CanvasPtr &canvas);
+		/// Sets the view geometry for all children of this view
+		virtual void layout_children(const CanvasPtr &canvas);
 
 		/// Tree in view hierachy
 		const ViewTree *view_tree() const;
@@ -239,7 +239,7 @@ namespace uicore
 		void set_cursor(const CursorDescription &cursor);
 		void set_cursor(StandardCursor type);
 
-		/// Specify that the cursor icon is inherited from the super view
+		/// Specify that the cursor icon is inherited from the parent view
 		void set_inherit_cursor();
 
 		/// Window activated event
@@ -310,10 +310,10 @@ namespace uicore
 		virtual void render_content(const CanvasPtr &canvas) { }
 
 		/// Child view was added to this view
-		virtual void subview_added(const std::shared_ptr<View> &view) { }
+		virtual void child_added(const std::shared_ptr<View> &view) { }
 
 		/// Child view was removed from this view
-		virtual void subview_removed(const std::shared_ptr<View> &view) { }
+		virtual void child_removed(const std::shared_ptr<View> &view) { }
 
 		/// Calculates the preferred width of this view
 		virtual float calculate_preferred_width(const CanvasPtr &canvas);

@@ -52,15 +52,15 @@ namespace uicore
 		auto spacer1 = std::make_shared<View>();
 		auto spacer2 = std::make_shared<View>();
 
-		add_subview(impl->button_decrement);
-		add_subview(impl->track);
-		add_subview(impl->button_increment);
+		add_child(impl->button_decrement);
+		add_child(impl->track);
+		add_child(impl->button_increment);
 
-		impl->track->add_subview(impl->thumb);
+		impl->track->add_child(impl->thumb);
 
-		impl->thumb->add_subview(spacer1);
-		impl->thumb->add_subview(impl->thumb_grip);
-		impl->thumb->add_subview(spacer2);
+		impl->thumb->add_child(spacer1);
+		impl->thumb->add_child(impl->thumb_grip);
+		impl->thumb->add_child(spacer2);
 
 		impl->button_decrement->style()->set("flex: 0 0 auto");
 		impl->button_increment->style()->set("flex: 0 0 auto");
@@ -266,9 +266,9 @@ namespace uicore
 		impl->update_pos(this, new_pos, impl->min_pos, impl->max_pos);
 	}
 
-	void ScrollBarView::layout_subviews(const CanvasPtr &canvas)
+	void ScrollBarView::layout_children(const CanvasPtr &canvas)
 	{
-		View::layout_subviews(canvas);
+		View::layout_children(canvas);
 
 		auto track_geometry = impl->track->geometry();
 

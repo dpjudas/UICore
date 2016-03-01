@@ -60,8 +60,8 @@ namespace uicore
 	{
 		impl->clear();
 
-		std::vector<std::shared_ptr<View>> subviews_copy = subviews();
-		for (auto &view : subviews_copy)
+		std::vector<std::shared_ptr<View>> children_copy = children();
+		for (auto &view : children_copy)
 			view->remove_from_super();
 	}
 
@@ -72,20 +72,20 @@ namespace uicore
 		set_needs_render();
 	}
 
-	void TextBlockView::add_subview(const std::shared_ptr<View> &view, float baseline_offset)
+	void TextBlockView::add_child(const std::shared_ptr<View> &view, float baseline_offset)
 	{
-		View::add_subview(view);
+		View::add_child(view);
 		impl->set_last_baseline_offset(baseline_offset);
 	}
 
-	void TextBlockView::subview_added(const std::shared_ptr<View> &view)
+	void TextBlockView::child_added(const std::shared_ptr<View> &view)
 	{
-		impl->add_subview(view);
+		impl->add_child(view);
 	}
 
-	void TextBlockView::subview_removed(const std::shared_ptr<View> &view)
+	void TextBlockView::child_removed(const std::shared_ptr<View> &view)
 	{
-		impl->remove_subview(view);
+		impl->remove_child(view);
 	}
 
 	void TextBlockView::render_content(const CanvasPtr &canvas)
@@ -113,9 +113,9 @@ namespace uicore
 		return impl->last_baseline_offset(canvas, width);
 	}
 
-	void TextBlockView::layout_subviews(const CanvasPtr &canvas)
+	void TextBlockView::layout_children(const CanvasPtr &canvas)
 	{
-		View::layout_subviews(canvas);
+		View::layout_children(canvas);
 		impl->layout_views(canvas, geometry().content_width);
 	}
 }

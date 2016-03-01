@@ -87,8 +87,8 @@ namespace uicore
 
 		void inverse_bubble(EventUI *e);
 
-		View *_superview = nullptr;
-		std::vector<std::shared_ptr<View>> _subviews;
+		View *_parent = nullptr;
+		std::vector<std::shared_ptr<View>> _children;
 
 		std::vector<std::shared_ptr<ViewAction>> _actions;
 		ViewAction *_active_action = nullptr;

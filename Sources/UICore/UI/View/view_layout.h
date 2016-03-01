@@ -40,6 +40,6 @@ namespace uicore
 		virtual float preferred_height(const CanvasPtr &canvas, View *view, float width) = 0;
 		virtual float first_baseline_offset(const CanvasPtr &canvas, View *view, float width) = 0;
 		virtual float last_baseline_offset(const CanvasPtr &canvas, View *view, float width) = 0;
-		virtual void layout_subviews(const CanvasPtr &canvas, View *view) = 0;
+		virtual void layout_children(const CanvasPtr &canvas, View *view) = 0;
 	};
 }

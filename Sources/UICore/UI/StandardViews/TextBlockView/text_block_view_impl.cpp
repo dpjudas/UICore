@@ -64,7 +64,7 @@ namespace uicore
 		text += more_text;
 	}
 
-	void TextBlockViewImpl::add_subview(const std::shared_ptr<View> &view, float baseline_offset, int id)
+	void TextBlockViewImpl::add_child(const std::shared_ptr<View> &view, float baseline_offset, int id)
 	{
 		SpanObject object;
 		object.type = SpanObjectType::view;
@@ -82,7 +82,7 @@ namespace uicore
 		objects.back().baseline_offset = baseline_offset;
 	}
 
-	void TextBlockViewImpl::remove_subview(const std::shared_ptr<View> &view)
+	void TextBlockViewImpl::remove_child(const std::shared_ptr<View> &view)
 	{
 		for (auto it = objects.begin(); it != objects.end(); ++it)
 		{

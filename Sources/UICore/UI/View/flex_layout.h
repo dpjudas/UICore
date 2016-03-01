@@ -142,7 +142,7 @@ namespace uicore
 		float preferred_height(const CanvasPtr &canvas, View *view, float width) override;
 		float first_baseline_offset(const CanvasPtr &canvas, View *view, float width) override;
 		float last_baseline_offset(const CanvasPtr &canvas, View *view, float width) override;
-		void layout_subviews(const CanvasPtr &canvas, View *view) override;
+		void layout_children(const CanvasPtr &canvas, View *view) override;
 
 	private:
 		void calculate_layout(const CanvasPtr &canvas, View *view, FlexLayoutMode mode = FlexLayoutMode::normal, float layout_width = 0.0f);

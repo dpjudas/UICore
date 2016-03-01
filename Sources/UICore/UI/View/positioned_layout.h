@@ -35,7 +35,7 @@ namespace uicore
 	class PositionedLayout
 	{
 	public:
-		static void layout_subviews(const CanvasPtr &canvas, View *view);
+		static void layout_children(const CanvasPtr &canvas, View *view);
 		static ViewGeometry get_geometry(const CanvasPtr &canvas, View *view, const Rectf &containing_box);
 
 	private:

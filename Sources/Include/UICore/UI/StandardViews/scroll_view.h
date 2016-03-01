@@ -62,7 +62,7 @@ namespace uicore
 		Pointf content_offset() const;
 		void set_content_offset(const Pointf &offset, bool animated = false);
 		
-		void layout_subviews(const CanvasPtr &canvas) override;
+		void layout_children(const CanvasPtr &canvas) override;
 
 	protected:
 		float calculate_preferred_width(const CanvasPtr &canvas) override;

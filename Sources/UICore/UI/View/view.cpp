@@ -58,10 +58,10 @@ namespace uicore
 
 	View::~View()
 	{
-		for (auto &subview : subviews())
+		for (auto &child : children())
 		{
-			subview->impl->_superview = nullptr;
-			subview->impl->update_style_cascade();
+			child->impl->_parent = nullptr;
+			child->impl->update_style_cascade();
 		}
 
 		for (auto &action : actions())
@@ -118,7 +118,7 @@ namespace uicore
 
 	void ViewImpl::set_state_cascade_siblings(const std::string &name, bool value)
 	{
-		for (std::shared_ptr<View> &view : _subviews)
+		for (std::shared_ptr<View> &view : _children)
 		{
 			ViewImpl *impl = view->impl.get();
 			if (impl->states[name].inherited)
@@ -131,50 +131,50 @@ namespace uicore
 		}
 	}
 
-	View *View::superview() const
+	View *View::parent() const
 	{
-		return impl->_superview;
+		return impl->_parent;
 	}
 
-	const std::vector<std::shared_ptr<View>> &View::subviews() const
+	const std::vector<std::shared_ptr<View>> &View::children() const
 	{
-		return impl->_subviews;
+		return impl->_children;
 	}
 
-	void View::add_subview(const std::shared_ptr<View> &view)
+	void View::add_child(const std::shared_ptr<View> &view)
 	{
 		if (view)
 		{
 			view->remove_from_super();
 
-			impl->_subviews.push_back(view);
-			view->impl->_superview = this;
+			impl->_children.push_back(view);
+			view->impl->_parent = this;
 			view->impl->update_style_cascade();
 			view->set_needs_layout();
 			set_needs_layout();
 
-			subview_added(view);
+			child_added(view);
 		}
 	}
 
 	void View::remove_from_super()
 	{
-		View *super = impl->_superview;
+		View *super = impl->_parent;
 		if (super)
 		{
 			std::shared_ptr<View> view_ptr = shared_from_this();
 
 			// To do: clear owner_view, focus_view, if it is this view or a child
 
-			auto it = std::find_if(super->impl->_subviews.begin(), super->impl->_subviews.end(), [&](const std::shared_ptr<View> &view) { return view.get() == this; });
-			if (it != super->impl->_subviews.end())
-				super->impl->_subviews.erase(it);
-			impl->_superview = nullptr;
+			auto it = std::find_if(super->impl->_children.begin(), super->impl->_children.end(), [&](const std::shared_ptr<View> &view) { return view.get() == this; });
+			if (it != super->impl->_children.end())
+				super->impl->_children.erase(it);
+			impl->_parent = nullptr;
 			impl->update_style_cascade();
 
 			super->set_needs_layout();
 
-			subview_removed(view_ptr);
+			child_removed(view_ptr);
 		}
 	}
 
@@ -222,7 +222,7 @@ namespace uicore
 		impl->needs_layout = true;
 		impl->layout_cache.clear();
 
-		View *super = superview();
+		View *super = parent();
 		if (super)
 			super->set_needs_layout();
 		else
@@ -361,14 +361,14 @@ namespace uicore
 		return impl->active_layout(this)->last_baseline_offset(canvas, this, width);
 	}
 
-	void View::layout_subviews(const CanvasPtr &canvas)
+	void View::layout_children(const CanvasPtr &canvas)
 	{
-		return impl->active_layout(this)->layout_subviews(canvas, this);
+		return impl->active_layout(this)->layout_children(canvas, this);
 	}
 
 	ViewTree *View::view_tree()
 	{
-		View *super = superview();
+		View *super = parent();
 		if (super)
 			return super->view_tree();
 		else
@@ -377,7 +377,7 @@ namespace uicore
 
 	const ViewTree *View::view_tree() const
 	{
-		View *super = superview();
+		View *super = parent();
 		if (super)
 			return super->view_tree();
 		else
@@ -395,9 +395,9 @@ namespace uicore
 
 	std::shared_ptr<View> View::find_view_at(const Pointf &pos) const
 	{
-		for (unsigned int cnt = impl->_subviews.size(); cnt > 0; --cnt)	// Search the subviews in reverse order, as we want to search the view that was "last drawn" first
+		for (unsigned int cnt = impl->_children.size(); cnt > 0; --cnt)	// Search the children in reverse order, as we want to search the view that was "last drawn" first
 		{
-			const std::shared_ptr<View> &child = impl->_subviews[cnt-1];
+			const std::shared_ptr<View> &child = impl->_children[cnt-1];
 			if (child->geometry().border_box().contains(pos) && !child->hidden())
 			{
 				Pointf child_content_pos(pos.x - child->geometry().content_x, pos.y - child->geometry().content_y);
@@ -550,7 +550,7 @@ namespace uicore
 	{
 		if (impl->is_cursor_inherited)
 		{
-			View *super = superview();
+			View *super = parent();
 			if (super)
 				super->update_cursor(window);
 			else
@@ -588,16 +588,16 @@ namespace uicore
 
 	Pointf View::to_root_pos(const Pointf &pos)
 	{
-		if (superview())
-			return superview()->to_root_pos(geometry().content_box().position() + Vec2f(view_transform() * Vec4f(pos, 0.0f, 1.0f)));
+		if (parent())
+			return parent()->to_root_pos(geometry().content_box().position() + Vec2f(view_transform() * Vec4f(pos, 0.0f, 1.0f)));
 		else
 			return pos;
 	}
 
 	Pointf View::from_root_pos(const Pointf &pos)
 	{
-		if (superview())
-			return superview()->from_root_pos(Vec2f(Mat4f::inverse(view_transform()) * Vec4f(pos, 0.0f, 1.0f)) - geometry().content_box().position());
+		if (parent())
+			return parent()->from_root_pos(Vec2f(Mat4f::inverse(view_transform()) * Vec4f(pos, 0.0f, 1.0f)) - geometry().content_box().position());
 		else
 			return pos;
 	}
@@ -707,10 +707,10 @@ namespace uicore
 				if (!e->propagation_stopped())
 					e->_current_target->impl->process_event(e->_current_target.get(), e, false);
 
-				while (e->_current_target->superview() && !e->propagation_stopped())
+				while (e->_current_target->parent() && !e->propagation_stopped())
 				{
 					e->_phase = EventUIPhase::bubbling;
-					e->_current_target = e->_current_target->superview()->shared_from_this();
+					e->_current_target = e->_current_target->parent()->shared_from_this();
 					e->_current_target->impl->process_event(e->_current_target.get(), e, false);
 				}
 			}
@@ -781,7 +781,7 @@ namespace uicore
 		}
 
 		Rectf clip_box = canvas->clip();
-		for (std::shared_ptr<View> &view : _subviews)
+		for (std::shared_ptr<View> &view : _children)
 		{
 			if (!view->hidden())
 			{
@@ -828,8 +828,8 @@ namespace uicore
 
 		std::stable_sort(matches.begin(), matches.end(), [](const std::pair<Style *, size_t> &a, const std::pair<Style *, size_t> &b) { return a.second != b.second ? a.second > b.second : a.first > b.first; });
 
-		if (_superview)
-			style_cascade.parent = &_superview->style_cascade();
+		if (_parent)
+			style_cascade.parent = &_parent->style_cascade();
 		else
 			style_cascade.parent = nullptr;
 
@@ -975,9 +975,9 @@ namespace uicore
 
 	void ViewImpl::inverse_bubble(EventUI *e)
 	{
-		if (_superview)
+		if (_parent)
 		{
-			std::shared_ptr<View> super = _superview->shared_from_this();
+			std::shared_ptr<View> super = _parent->shared_from_this();
 			super->impl->inverse_bubble(e);
 			if (!e->propagation_stopped())
 			{
@@ -992,17 +992,17 @@ namespace uicore
 	unsigned int ViewImpl::find_next_tab_index(unsigned int start_index) const
 	{
 		unsigned int next_index = tab_index > start_index ? tab_index : 0;
-		for (const auto &subview : _subviews)
+		for (const auto &child : _children)
 		{
-			if (subview->hidden()) continue;
+			if (child->hidden()) continue;
 
-			unsigned int next_subview_index = subview->impl->find_next_tab_index(start_index);
-			if (next_subview_index != 0)
+			unsigned int next_child_index = child->impl->find_next_tab_index(start_index);
+			if (next_child_index != 0)
 			{
 				if (next_index != 0)
-					next_index = uicore::min(next_index, next_subview_index);
+					next_index = uicore::min(next_index, next_child_index);
 				else
-					next_index = next_subview_index;
+					next_index = next_child_index;
 			}
 		}
 		return next_index;
@@ -1019,17 +1019,17 @@ namespace uicore
 	unsigned int ViewImpl::find_prev_tab_index_helper(unsigned int start_index) const
 	{
 		unsigned int prev_index = tab_index < start_index ? tab_index : 0;
-		for (const auto &subview : _subviews)
+		for (const auto &child : _children)
 		{
-			if (subview->hidden()) continue;
+			if (child->hidden()) continue;
 
-			unsigned int prev_subview_index = subview->impl->find_prev_tab_index_helper(start_index);
-			if (prev_subview_index != 0)
+			unsigned int prev_child_index = child->impl->find_prev_tab_index_helper(start_index);
+			if (prev_child_index != 0)
 			{
 				if (prev_index != 0)
-					prev_index = uicore::max(prev_index, prev_subview_index);
+					prev_index = uicore::max(prev_index, prev_child_index);
 				else
-					prev_index = prev_subview_index;
+					prev_index = prev_child_index;
 			}
 		}
 		return prev_index;
@@ -1038,10 +1038,10 @@ namespace uicore
 	unsigned int ViewImpl::find_highest_tab_index() const
 	{
 		unsigned int index = tab_index;
-		for (const auto &subview : _subviews)
+		for (const auto &child : _children)
 		{
-			if (!subview->hidden())
-				index = uicore::max(subview->impl->find_highest_tab_index(), index);
+			if (!child->hidden())
+				index = uicore::max(child->impl->find_highest_tab_index(), index);
 		}
 		return index;
 	}
@@ -1049,68 +1049,68 @@ namespace uicore
 	View *ViewImpl::find_next_with_tab_index(unsigned int search_index, const ViewImpl *search_from, bool also_search_ancestors) const
 	{
 		bool search_from_found = search_from ? false : true;
-		for (const auto &subview : _subviews)
+		for (const auto &child : _children)
 		{
-			if (subview->hidden())
+			if (child->hidden())
 				continue;
 
 			if (search_from_found)
 			{
-				if (subview->tab_index() == search_index && subview->focus_policy() == FocusPolicy::accept)
+				if (child->tab_index() == search_index && child->focus_policy() == FocusPolicy::accept)
 				{
-					return subview.get();
+					return child.get();
 				}
 				else
 				{
-					View *next = subview->impl->find_next_with_tab_index(search_index, nullptr, false);
+					View *next = child->impl->find_next_with_tab_index(search_index, nullptr, false);
 					if (next)
 						return next;
 				}
 			}
-			else if (subview->impl.get() == search_from)
+			else if (child->impl.get() == search_from)
 			{
 				search_from_found = true;
 			}
 		}
 
-		if (!also_search_ancestors || !_superview)
+		if (!also_search_ancestors || !_parent)
 			return nullptr;
 
-		return _superview->impl->find_next_with_tab_index(search_index, this, true);
+		return _parent->impl->find_next_with_tab_index(search_index, this, true);
 	}
 
 	View *ViewImpl::find_prev_with_tab_index(unsigned int search_index, const ViewImpl *search_from, bool also_search_ancestors) const
 	{
 		bool search_from_found = search_from ? false : true;
-		for (auto it = _subviews.crbegin(); it != _subviews.crend(); ++it)
+		for (auto it = _children.crbegin(); it != _children.crend(); ++it)
 		{
-			const auto &subview = *it;
+			const auto &child = *it;
 
-			if (subview->hidden()) continue;
+			if (child->hidden()) continue;
 
 			if (search_from_found)
 			{
-				if (subview->tab_index() == search_index && subview->focus_policy() == FocusPolicy::accept)
+				if (child->tab_index() == search_index && child->focus_policy() == FocusPolicy::accept)
 				{
-					return subview.get();
+					return child.get();
 				}
 				else
 				{
-					View *next = subview->impl->find_prev_with_tab_index(search_index, nullptr, false);
+					View *next = child->impl->find_prev_with_tab_index(search_index, nullptr, false);
 					if (next)
 						return next;
 				}
 			}
-			else if (subview->impl.get() == search_from)
+			else if (child->impl.get() == search_from)
 			{
 				search_from_found = true;
 			}
 		}
 
-		if (!also_search_ancestors || !_superview)
+		if (!also_search_ancestors || !_parent)
 			return nullptr;
 
-		return _superview->impl->find_prev_with_tab_index(search_index, this, true);
+		return _parent->impl->find_prev_with_tab_index(search_index, this, true);
 	}
 
 }

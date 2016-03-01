@@ -105,9 +105,9 @@ namespace uicore
 
 		void clear();
 		void add_text(const std::string &text, const std::shared_ptr<Style> &style, int id = -1);
-		void add_subview(const std::shared_ptr<View> &view, float baseline_offset = 0.0f, int id = -1);
+		void add_child(const std::shared_ptr<View> &view, float baseline_offset = 0.0f, int id = -1);
 		void set_last_baseline_offset(float baseline_offset);
-		void remove_subview(const std::shared_ptr<View> &view);
+		void remove_child(const std::shared_ptr<View> &view);
 
 		void render_content(const CanvasPtr &canvas, float width);
 		void layout_views(const CanvasPtr &canvas, float width);
