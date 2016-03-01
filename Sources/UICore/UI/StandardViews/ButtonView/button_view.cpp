@@ -103,8 +103,8 @@ namespace uicore
 
 	void ButtonView::move_label_before_image()
 	{
-		impl->label->remove_from_super();
-		impl->image_view->remove_from_super();
+		impl->label->remove_from_parent();
+		impl->image_view->remove_from_parent();
 
 		add_child(impl->label);
 		add_child(impl->image_view);
@@ -112,8 +112,8 @@ namespace uicore
 
 	void ButtonView::move_label_after_image()
 	{
-		impl->label->remove_from_super();
-		impl->image_view->remove_from_super();
+		impl->label->remove_from_parent();
+		impl->image_view->remove_from_parent();
 
 		add_child(impl->image_view);
 		add_child(impl->label);

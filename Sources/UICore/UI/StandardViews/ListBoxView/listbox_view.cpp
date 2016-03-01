@@ -62,7 +62,7 @@ namespace uicore
 		
 		auto views = content_view()->children();
 		while (!views.empty())
-			views.back()->remove_from_super();
+			views.back()->remove_from_parent();
 		
 		for (auto &item : items)
 		{

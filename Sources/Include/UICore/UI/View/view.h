@@ -110,7 +110,7 @@ namespace uicore
 		}
 
 		/// Remove view from parent
-		void remove_from_super();
+		void remove_from_parent();
 
 		/// Add an action recognizer
 		void add_action(const std::shared_ptr<ViewAction> &action);

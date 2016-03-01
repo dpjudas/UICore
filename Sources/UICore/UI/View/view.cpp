@@ -145,7 +145,7 @@ namespace uicore
 	{
 		if (view)
 		{
-			view->remove_from_super();
+			view->remove_from_parent();
 
 			impl->_children.push_back(view);
 			view->impl->_parent = this;
@@ -157,7 +157,7 @@ namespace uicore
 		}
 	}
 
-	void View::remove_from_super()
+	void View::remove_from_parent()
 	{
 		View *super = impl->_parent;
 		if (super)

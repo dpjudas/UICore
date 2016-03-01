@@ -62,7 +62,7 @@ namespace uicore
 
 		std::vector<std::shared_ptr<View>> children_copy = children();
 		for (auto &view : children_copy)
-			view->remove_from_super();
+			view->remove_from_parent();
 	}
 
 	void TextBlockView::add_text(const std::string &text, const std::string &text_class)
