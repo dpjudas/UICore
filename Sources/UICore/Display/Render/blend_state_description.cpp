@@ -165,18 +165,18 @@ namespace uicore
 		return impl->logic_op_enabled;
 	}
 
-	LogicOp BlendStateDescription::get_logic_op() const
+	LogicOp BlendStateDescription::logic_op() const
 	{
 		return impl->logic_op;
 	}
 
-	void BlendStateDescription::get_blend_equation(BlendEquation &out_color, BlendEquation &out_alpha) const
+	void BlendStateDescription::blend_equation(BlendEquation &out_color, BlendEquation &out_alpha) const
 	{
 		out_color = impl->equation_color;
 		out_alpha = impl->equation_alpha;
 	}
 
-	void BlendStateDescription::get_blend_function(BlendFunc &out_src, BlendFunc &out_dest, BlendFunc &out_src_alpha, BlendFunc &out_dest_alpha) const
+	void BlendStateDescription::blend_function(BlendFunc &out_src, BlendFunc &out_dest, BlendFunc &out_src_alpha, BlendFunc &out_dest_alpha) const
 	{
 		out_src = impl->func_src;
 		out_dest = impl->func_dest;
@@ -184,7 +184,7 @@ namespace uicore
 		out_dest_alpha = impl->func_dest_alpha;
 	}
 
-	void BlendStateDescription::get_color_write(bool &out_red, bool &out_green, bool &out_blue, bool &out_alpha) const
+	void BlendStateDescription::color_write(bool &out_red, bool &out_green, bool &out_blue, bool &out_alpha) const
 	{
 		out_red = impl->write_red;
 		out_green = impl->write_green;

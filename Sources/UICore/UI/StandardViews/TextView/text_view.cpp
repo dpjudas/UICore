@@ -339,7 +339,7 @@ namespace uicore
 	FontPtr &TextViewImpl::get_font(const CanvasPtr &canvas)
 	{
 		if (!font)
-			font = textfield->style_cascade().get_font();
+			font = textfield->style_cascade().font();
 		return font;
 	}
 
@@ -666,7 +666,7 @@ namespace uicore
 			{
 				for (int i = 0; i < steps; i++)
 				{
-					if (!stay_on_line && utf8_reader.get_position() == text_lines[pos.y].size() && pos.y + 1 != text_lines.size())
+					if (!stay_on_line && utf8_reader.position() == text_lines[pos.y].size() && pos.y + 1 != text_lines.size())
 					{
 						pos.y++;
 						utf8_reader = UTF8_Reader(text_lines[pos.y].data(), text_lines[pos.y].length());
@@ -682,7 +682,7 @@ namespace uicore
 			{
 				for (int i = 0; i < -steps; i++)
 				{
-					if (!stay_on_line && utf8_reader.get_position() == 0 && pos.y != 0)
+					if (!stay_on_line && utf8_reader.position() == 0 && pos.y != 0)
 					{
 						pos.y--;
 						utf8_reader = UTF8_Reader(text_lines[pos.y].data(), text_lines[pos.y].length());
@@ -695,7 +695,7 @@ namespace uicore
 				}
 			}
 
-			pos.x = utf8_reader.get_position();
+			pos.x = utf8_reader.position();
 		}
 
 		if (shift)
@@ -779,7 +779,7 @@ namespace uicore
 			UTF8_Reader utf8_reader(text_lines[cursor_pos.y].data(), text_lines[cursor_pos.y].length());
 			utf8_reader.set_position(cursor_pos.x);
 			utf8_reader.prev();
-			int new_cursor_pos = utf8_reader.get_position();
+			int new_cursor_pos = utf8_reader.position();
 
 			text_lines[cursor_pos.y].erase(text_lines[cursor_pos.y].begin() + new_cursor_pos, text_lines[cursor_pos.y].begin() + cursor_pos.x);
 			cursor_pos.x = new_cursor_pos;
@@ -831,7 +831,7 @@ namespace uicore
 
 			UTF8_Reader utf8_reader(text_lines[cursor_pos.y].data(), text_lines[cursor_pos.y].length());
 			utf8_reader.set_position(cursor_pos.x);
-			text_lines[cursor_pos.y].erase(text_lines[cursor_pos.y].begin() + cursor_pos.x, text_lines[cursor_pos.y].begin() + cursor_pos.x + utf8_reader.get_char_length());
+			text_lines[cursor_pos.y].erase(text_lines[cursor_pos.y].begin() + cursor_pos.x, text_lines[cursor_pos.y].begin() + cursor_pos.x + utf8_reader.char_length());
 
 			textfield->set_needs_render();
 		}
@@ -859,7 +859,7 @@ namespace uicore
 		ViewTree *tree = textfield->view_tree();
 		if (tree)
 		{
-			DisplayWindowPtr window = tree->get_display_window();
+			DisplayWindowPtr window = tree->display_window();
 			if (window)
 			{
 				if (selection.start() != selection.end())
@@ -875,7 +875,7 @@ namespace uicore
 		ViewTree *tree = textfield->view_tree();
 		if (tree)
 		{
-			DisplayWindowPtr window = tree->get_display_window();
+			DisplayWindowPtr window = tree->display_window();
 			if (window)
 				add(window->clipboard_text());
 		}

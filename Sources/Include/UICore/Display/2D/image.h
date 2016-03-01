@@ -67,7 +67,7 @@ namespace uicore
 		virtual Colorf color() const = 0;
 
 		/// \brief Returns translation hot-spot.
-		virtual void get_alignment(Origin &origin, float &x, float &y) const = 0;
+		virtual void alignment(Origin &origin, float &x, float &y) const = 0;
 
 		/// \brief Return the texture of the image
 		virtual TextureGroupImage texture() const = 0;

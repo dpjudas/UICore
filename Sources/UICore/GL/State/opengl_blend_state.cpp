@@ -62,15 +62,15 @@ namespace uicore
 
 			BlendEquation equation_color, equation_alpha;
 			BlendFunc src, dest, src_alpha, dest_alpha;
-			desc.get_blend_equation(equation_color, equation_alpha);
-			desc.get_blend_function(src, dest, src_alpha, dest_alpha);
+			desc.blend_equation(equation_color, equation_alpha);
+			desc.blend_function(src, dest, src_alpha, dest_alpha);
 
 			desc.is_blending_enabled() ? glEnable(GL_BLEND) : glDisable(GL_BLEND);
 
 			if (glColorMask)
 			{
 				bool red, green, blue, alpha;
-				desc.get_color_write(red, green, blue, alpha);
+				desc.color_write(red, green, blue, alpha);
 				glColorMask(red, green, blue, alpha);
 			}
 
@@ -114,7 +114,7 @@ namespace uicore
 			desc.is_logic_op_enabled() ? glEnable(GL_COLOR_LOGIC_OP) : glDisable(GL_COLOR_LOGIC_OP);
 
 			if (glLogicOp)
-				glLogicOp(OpenGL::to_enum(desc.get_logic_op()));
+				glLogicOp(OpenGL::to_enum(desc.logic_op()));
 
 		}
 

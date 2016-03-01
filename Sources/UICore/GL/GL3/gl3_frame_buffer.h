@@ -44,8 +44,8 @@ namespace uicore
 		~GL3FrameBuffer();
 
 		GLuint get_handle();
-		Size get_size() const override;
-		FrameBufferBindTarget get_bind_target() const override;
+		Size size() const override;
+		FrameBufferBindTarget bind_target() const override;
 		GL3GraphicContext *get_gc_provider() { return gc_provider; }
 
 		void attach_color(int attachment_index, const RenderBufferPtr &render_buffer) override;
@@ -102,7 +102,7 @@ namespace uicore
 
 		int count_color_attachments = 0;
 		GLuint handle = 0;
-		FrameBufferBindTarget bind_target = framebuffer_draw;
+		FrameBufferBindTarget _bind_target = framebuffer_draw;
 
 		GL3GraphicContext *gc_provider;
 	};

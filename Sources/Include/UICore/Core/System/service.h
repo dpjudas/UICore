@@ -44,7 +44,7 @@ namespace uicore
 		~Service();
 
 		/// \brief Returns the service name.
-		const std::string &get_service_name() const;
+		const std::string &service_name() const;
 
 		/// \brief Process command line and run service.
 		int main(int argc, char **argv);

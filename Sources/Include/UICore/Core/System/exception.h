@@ -52,11 +52,11 @@ namespace uicore
 
 		/// \brief Returns the call stack present when the exception object was created.
 		/** <p>On Linux, to obtain function names, remember to link with the -rdynamic flag </p>*/
-		std::vector<std::string> get_stack_trace() const;
+		std::vector<std::string> stack_trace() const;
 
 		/// \brief Returns the message and call stack present when the exception object was created, formatted using newlines.
 		/** <p>On Linux, to obtain function names, remember to link with the -rdynamic flag </p>*/
-		std::string get_message_and_stack_trace() const;
+		std::string message_and_stack_trace() const;
 
 	private:
 		enum { max_frames = 32 };

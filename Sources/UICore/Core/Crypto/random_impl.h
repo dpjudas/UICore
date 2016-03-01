@@ -40,9 +40,9 @@ namespace uicore
 		Random_Impl(int cache_size);
 		~Random_Impl();
 
-		void get_random_bytes(unsigned char *out_dest_ptr, int num_bytes) override;
-		void get_random_bytes_nzero(unsigned char *out_dest_ptr, int num_bytes) override;
-		bool get_random_bool() override;
+		void random_bytes(unsigned char *out_dest_ptr, int num_bytes) override;
+		void random_bytes_nzero(unsigned char *out_dest_ptr, int num_bytes) override;
+		bool random_bool() override;
 
 	private:
 		void fill_random_pool();
@@ -53,7 +53,7 @@ namespace uicore
 #ifdef WIN32
 		HCRYPTPROV hProvider;
 #endif
-		unsigned char random_bool;
+		unsigned char _random_bool;
 		int random_bool_bits_free;
 	};
 }

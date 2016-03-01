@@ -148,16 +148,16 @@ namespace uicore
 		Vec2<Type> s;
 
 		/// \brief Returns the width of the quad.
-		Type get_width() const;
+		Type width() const;
 
 		/// \brief Returns the height of the quad.
-		Type get_height() const;
+		Type height() const;
 
 		/// \brief Returns the size of the rectangle.
-		Sizex<Type> get_size() const { return Sizex<Type>(get_width(), get_height()); }
+		Sizex<Type> size() const { return Sizex<Type>(width(), height()); }
 
 		/// \brief Returns the bounding box of the quad as a Rect
-		Rect get_bounds() const;
+		Rect bounds() const;
 
 		/// \brief Rotates the Quad
 		///

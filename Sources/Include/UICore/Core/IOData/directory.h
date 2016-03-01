@@ -71,7 +71,7 @@ namespace uicore
 		/// \brief Get current directory.
 		///
 		/// \return the current directory path.
-		static std::string get_current();
+		static std::string current();
 
 		/// \brief Returns the current user's roaming application data directory.
 		///
@@ -87,7 +87,7 @@ namespace uicore
 		/// \param create_dirs_if_missing = If true, function will create all missing directories in the path.
 		///
 		/// \return the current user's roaming application data directory.
-		static std::string get_appdata(const std::string &company_name, const std::string &application_name, const std::string &version, bool create_dirs_if_missing = true);
+		static std::string appdata(const std::string &company_name, const std::string &application_name, const std::string &version, bool create_dirs_if_missing = true);
 
 		/// \brief Returns the current user's local (nonroaming) application data directory.
 		///
@@ -103,7 +103,7 @@ namespace uicore
 		/// \param create_dirs_if_missing = If true, function will create all missing directories in the path.
 		///
 		/// \return the current user's local (nonroaming) application data directory.
-		static std::string get_local_appdata(const std::string &company_name, const std::string &application_name, const std::string &version, bool create_dirs_if_missing = true);
+		static std::string local_appdata(const std::string &company_name, const std::string &application_name, const std::string &version, bool create_dirs_if_missing = true);
 
 		/// \brief Returns the application resource data directory.
 		///
@@ -124,6 +124,6 @@ namespace uicore
 		/// \param data_dir_name = Data directory name.
 		///
 		/// \return the application resource data directory.
-		static std::string get_resourcedata(const std::string &application_name, const std::string &data_dir_name = "Resources");
+		static std::string resourcedata(const std::string &application_name, const std::string &data_dir_name = "Resources");
 	};
 }

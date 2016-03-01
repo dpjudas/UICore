@@ -57,7 +57,7 @@ namespace uicore
 
 	std::shared_ptr<DisplayWindow> DisplayWindow::create(const DisplayWindowDescription &description)
 	{
-		auto target = DisplayTarget::get_current_target();
+		auto target = DisplayTarget::current_target();
 		if (!target)
 			throw Exception("No display target set");
 

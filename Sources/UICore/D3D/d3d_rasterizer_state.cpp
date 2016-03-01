@@ -36,21 +36,21 @@ namespace uicore
 	{
 		float factor = 0.0f;
 		float units = 0.0f;
-		desc.get_polygon_offset(factor, units);
+		desc.polygon_offset(factor, units);
 
 		D3D11_RASTERIZER_DESC d3d_desc;
-		d3d_desc.FrontCounterClockwise = (desc.get_front_face() == face_counter_clockwise) ? TRUE : FALSE;
+		d3d_desc.FrontCounterClockwise = (desc.front_face() == face_counter_clockwise) ? TRUE : FALSE;
 		d3d_desc.DepthBias = factor;
 		d3d_desc.SlopeScaledDepthBias = units;
 		d3d_desc.DepthBiasClamp = FLT_MAX;
 		d3d_desc.DepthClipEnable = TRUE;
-		d3d_desc.ScissorEnable = desc.get_enable_scissor() ? TRUE : FALSE;
+		d3d_desc.ScissorEnable = desc.enable_scissor() ? TRUE : FALSE;
 		d3d_desc.MultisampleEnable = FALSE;
-		d3d_desc.AntialiasedLineEnable = desc.get_enable_line_antialiasing() ? TRUE : FALSE;
+		d3d_desc.AntialiasedLineEnable = desc.enable_line_antialiasing() ? TRUE : FALSE;
 
-		if (desc.get_culled())
+		if (desc.culled())
 		{
-			switch (desc.get_face_cull_mode())
+			switch (desc.face_cull_mode())
 			{
 			case cull_front: d3d_desc.CullMode = D3D11_CULL_FRONT; break;
 			case cull_back: d3d_desc.CullMode = D3D11_CULL_BACK; break;
@@ -62,7 +62,7 @@ namespace uicore
 			d3d_desc.CullMode = D3D11_CULL_NONE;
 		}
 
-		switch (desc.get_face_fill_mode())
+		switch (desc.face_fill_mode())
 		{
 		case fill_point: throw Exception("Point fill mode not supported by D3D target");
 		case fill_line: d3d_desc.FillMode = D3D11_FILL_WIREFRAME; break;

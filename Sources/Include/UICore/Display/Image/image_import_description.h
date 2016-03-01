@@ -50,7 +50,7 @@ namespace uicore
 		~ImageImportDescription();
 
 		/// \brief Returns the premultiply alpha setting
-		bool get_premultiply_alpha() const;
+		bool premultiply_alpha() const;
 
 		/// \brief Returns the flip vertical setting
 		bool flip_vertical() const;

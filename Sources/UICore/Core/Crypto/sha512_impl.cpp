@@ -45,7 +45,7 @@ namespace uicore
 		reset();
 	}
 
-	std::string SHA512_Impl::get_hash(bool uppercase) const
+	std::string SHA512_Impl::hash(bool uppercase) const
 	{
 		if (calculated == false)
 			throw Exception("SHA-512 hash has not been calculated yet!");
@@ -90,7 +90,7 @@ namespace uicore
 		return digest;
 	}
 
-	void SHA512_Impl::get_hash(unsigned char *out_hash) const
+	void SHA512_Impl::hash(unsigned char *out_hash) const
 	{
 		if (calculated == false)
 			throw Exception("SHA-512 hash has not been calculated yet!");
@@ -276,7 +276,7 @@ namespace uicore
 				sha384->add(key_data, key_size);
 				sha384->calculate();
 				key_chunk_filled = SHA384::hash_size;
-				sha384->get_hash(hmac_key_chunk);
+				sha384->hash(hmac_key_chunk);
 			}
 			else if (sha_type == cl_sha_512)
 			{
@@ -284,7 +284,7 @@ namespace uicore
 				sha512->add(key_data, key_size);
 				sha512->calculate();
 				key_chunk_filled = SHA512::hash_size;
-				sha512->get_hash(hmac_key_chunk);
+				sha512->hash(hmac_key_chunk);
 			}
 			else if (sha_type == cl_sha_512_224)
 			{
@@ -292,7 +292,7 @@ namespace uicore
 				sha512_224->add(key_data, key_size);
 				sha512_224->calculate();
 				key_chunk_filled = SHA512_224::hash_size;
-				sha512_224->get_hash(hmac_key_chunk);
+				sha512_224->hash(hmac_key_chunk);
 			}
 			else if (sha_type == cl_sha_512_256)
 			{
@@ -300,7 +300,7 @@ namespace uicore
 				sha512_256->add(key_data, key_size);
 				sha512_256->calculate();
 				key_chunk_filled = SHA512_256::hash_size;
-				sha512_256->get_hash(hmac_key_chunk);
+				sha512_256->hash(hmac_key_chunk);
 			}
 			else
 			{
@@ -399,7 +399,7 @@ namespace uicore
 			}
 
 			unsigned char temp_hash[SHA512::hash_size];
-			get_hash(temp_hash);
+			hash(temp_hash);
 			reset();
 			add(hmac_key_chunk, block_size);	// Add the outer HMAC
 			add(temp_hash, hash_size);

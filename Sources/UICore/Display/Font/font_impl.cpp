@@ -49,7 +49,7 @@ namespace uicore
 		font_family = std::static_pointer_cast<FontFamily_Impl>(new_font_family);
 
 		selected_description = description.clone();
-		selected_line_height = description.get_line_height();
+		selected_line_height = description.line_height();
 	}
 
 	void Font_Impl::select_font_family(const CanvasPtr &canvas)
@@ -62,7 +62,7 @@ namespace uicore
 		{
 			// Copy the required font, setting a scalable font size
 			FontDescription new_selected = selected_description.clone();
-			if (selected_description.get_height() >= selected_height_threshold)
+			if (selected_description.height() >= selected_height_threshold)
 				new_selected.set_height(256.0f);	// A reasonable scalable size
 
 			selected_pixel_ratio = pixel_ratio;
@@ -79,14 +79,14 @@ namespace uicore
 
 			// Determine if pathfont method is required. TODO: This feels a bit hacky
 			selected_pathfont = font_engine->is_automatic_recreation_allowed();
-			if (selected_description.get_height() < selected_height_threshold)
+			if (selected_description.height() < selected_height_threshold)
 				selected_pathfont = false;
 
 			// Deterimine if font scaling is required
-			float font_engine_desc_height = font_engine->get_desc().get_height();
+			float font_engine_desc_height = font_engine->get_desc().height();
 			if (font_engine_desc_height == 0.0f)
 				font_engine_desc_height = 1.0f;
-			scaled_height = selected_description.get_height() / font_engine_desc_height;
+			scaled_height = selected_description.height() / font_engine_desc_height;
 			if ((scaled_height >= 0.9999f) && (scaled_height <= 1.0001f))	// Allow for floating point accuracy issues when determining when scaling is not required
 				scaled_height = 1.0f;
 
@@ -98,7 +98,7 @@ namespace uicore
 			}
 			else if (scaled_height == 1.0f)
 			{
-				if (font_engine->get_desc().get_subpixel())
+				if (font_engine->get_desc().subpixel())
 				{
 					font_draw_subpixel.init(glyph_cache, font_engine);
 					font_draw = &font_draw_subpixel;
@@ -160,8 +160,8 @@ namespace uicore
 			UTF8_Reader reader(textline.data(), textline.length());
 			while (!reader.is_end())
 			{
-				unsigned int glyph = reader.get_char();
-				std::string::size_type glyph_pos = reader.get_position();
+				unsigned int glyph = reader.character();
+				std::string::size_type glyph_pos = reader.position();
 				reader.next();
 
 				GlyphMetrics metrics = font_draw->get_metrics(canvas, glyph);
@@ -210,7 +210,7 @@ namespace uicore
 			UTF8_Reader reader(textline.data(), textline.length());
 			while (!reader.is_end())
 			{
-				unsigned int glyph = reader.get_char();
+				unsigned int glyph = reader.character();
 				reader.next();
 
 				GlyphMetrics metrics = font_draw->get_metrics(canvas, glyph);
@@ -281,7 +281,7 @@ namespace uicore
 		UTF8_Reader reader(string.data(), string.length());
 		while (!reader.is_end())
 		{
-			unsigned int glyph = reader.get_char();
+			unsigned int glyph = reader.character();
 			reader.next();
 
 			if (glyph == '\n')
@@ -322,7 +322,7 @@ namespace uicore
 
 	void Font_Impl::set_height(float value)
 	{
-		if (selected_description.get_height() != value)
+		if (selected_description.height() != value)
 		{
 			selected_description.set_height(value);
 			font_engine = nullptr;
@@ -331,7 +331,7 @@ namespace uicore
 
 	void Font_Impl::set_weight(FontWeight value)
 	{
-		if (selected_description.get_weight() != value)
+		if (selected_description.weight() != value)
 		{
 			selected_description.set_weight(value);
 			font_engine = nullptr;
@@ -346,7 +346,7 @@ namespace uicore
 
 	void Font_Impl::set_style(FontStyle setting)
 	{
-		if (selected_description.get_style() != setting)
+		if (selected_description.style() != setting)
 		{
 			selected_description.set_style(setting);
 			font_engine = nullptr;

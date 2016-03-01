@@ -81,14 +81,14 @@ namespace uicore
 		D3DProgramObject(const ComPtr<ID3D11Device> &device, const ComPtr<ID3D11DeviceContext> &device_context);
 		~D3DProgramObject();
 
-		std::string get_info_log() const override;
-		std::vector<ShaderObjectPtr> get_shaders() const override;
-		int get_attribute_location(const std::string &name) const override;
-		int get_uniform_location(const std::string &name) const override;
+		std::string info_log() const override;
+		std::vector<ShaderObjectPtr> shaders() const override;
+		int attribute_location(const std::string &name) const override;
+		int uniform_location(const std::string &name) const override;
 
-		int get_uniform_buffer_size(int block_index) const override;
-		int get_uniform_buffer_index(const std::string &block_name) const override;
-		int get_storage_buffer_index(const std::string &name) const override;
+		int uniform_buffer_size(int block_index) const override;
+		int uniform_buffer_index(const std::string &block_name) const override;
+		int storage_buffer_index(const std::string &name) const override;
 
 		DataBufferPtr &get_shader_bytecode(ShaderType shader_type);
 		D3DShaderObject *get_shader_provider(ShaderType shader_type);
@@ -134,6 +134,6 @@ namespace uicore
 	private:
 		ComPtr<ID3D11Device> device;
 		ComPtr<ID3D11DeviceContext> device_context;
-		ShaderObjectPtr shaders[(int)ShaderType::num_types];
+		ShaderObjectPtr _shaders[(int)ShaderType::num_types];
 	};
 }

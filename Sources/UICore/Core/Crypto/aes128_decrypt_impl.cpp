@@ -41,7 +41,7 @@ namespace uicore
 		reset();
 	}
 
-	DataBufferPtr AES128_Decrypt_Impl::get_data() const
+	DataBufferPtr AES128_Decrypt_Impl::data() const
 	{
 		return databuffer;
 	}

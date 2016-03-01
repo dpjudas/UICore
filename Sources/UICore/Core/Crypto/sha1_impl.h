@@ -39,8 +39,8 @@ namespace uicore
 	public:
 		SHA1_Impl();
 
-		std::string get_hash(bool uppercase = false) const override;
-		void get_hash(unsigned char out_hash[20]) const override;
+		std::string hash(bool uppercase = false) const override;
+		void hash(unsigned char out_hash[20]) const override;
 
 		void reset() override;
 		void set_hmac(const void *key_data, int key_size) override;

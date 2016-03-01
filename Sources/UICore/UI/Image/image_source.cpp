@@ -38,7 +38,7 @@ namespace uicore
 	{
 	public:
 		ImageSourceCallback(const std::function<ImagePtr(const CanvasPtr &)> &cb_get_image) : cb_get_image(cb_get_image) { }
-		ImagePtr get_image(const CanvasPtr &canvas) override { return cb_get_image(canvas); }
+		ImagePtr image(const CanvasPtr &canvas) override { return cb_get_image(canvas); }
 
 		std::function<ImagePtr(const CanvasPtr &)> cb_get_image;
 	};

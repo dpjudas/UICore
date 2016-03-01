@@ -42,15 +42,15 @@ namespace uicore
 		DepthStencilStateDescription clone() const;
 
 		bool is_stencil_test_enabled() const;
-		void get_stencil_compare_front(CompareFunction &out_front, int &out_front_ref, int &out_front_mask) const;
-		void get_stencil_compare_back(CompareFunction &out_back, int &out_back_ref, int &out_back_mask) const;
-		void get_stencil_write_mask(unsigned char &out_front_facing_mask, unsigned char &out_back_facing_mask) const;
-		void get_stencil_op_front(StencilOp &out_fail_front, StencilOp &out_pass_depth_fail_front, StencilOp &out_pass_depth_pass_front) const;
-		void get_stencil_op_back(StencilOp &out_fail_back, StencilOp &out_pass_depth_fail_back, StencilOp &out_pass_depth_pass_back) const;
+		void stencil_compare_front(CompareFunction &out_front, int &out_front_ref, int &out_front_mask) const;
+		void stencil_compare_back(CompareFunction &out_back, int &out_back_ref, int &out_back_mask) const;
+		void stencil_write_mask(unsigned char &out_front_facing_mask, unsigned char &out_back_facing_mask) const;
+		void stencil_op_front(StencilOp &out_fail_front, StencilOp &out_pass_depth_fail_front, StencilOp &out_pass_depth_pass_front) const;
+		void stencil_op_back(StencilOp &out_fail_back, StencilOp &out_pass_depth_fail_back, StencilOp &out_pass_depth_pass_back) const;
 
 		bool is_depth_test_enabled() const;
 		bool is_depth_write_enabled() const;
-		CompareFunction get_depth_compare_function() const;
+		CompareFunction depth_compare_function() const;
 
 		/// \brief Enables/disables stencil testing.
 		void enable_stencil_test(bool enabled);

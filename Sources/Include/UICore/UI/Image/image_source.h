@@ -41,7 +41,7 @@ namespace uicore
 	class ImageSource
 	{
 	public:
-		virtual ImagePtr get_image(const CanvasPtr &canvas) = 0;
+		virtual ImagePtr image(const CanvasPtr &canvas) = 0;
 		static std::shared_ptr<ImageSource> from_resource(const std::string &resource_name);
 		static std::shared_ptr<ImageSource> from_callback(const std::function<ImagePtr(const CanvasPtr &)> &get_image_callback);
 		static std::shared_ptr<ImageSource> from_image(const ImagePtr &image);

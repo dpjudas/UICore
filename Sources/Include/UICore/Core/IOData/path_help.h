@@ -178,7 +178,7 @@ namespace uicore
 		/// \param fullname The full path name to use
 		/// \param path_type The path type
 		/// \return The drive or share name*/
-		static std::string get_location(
+		static std::string location(
 			const std::string &fullname,
 			PathType path_type = path_type_file);
 
@@ -189,7 +189,7 @@ namespace uicore
 		/// \return The base path
 		///
 		/// If (path_type == path_type_virtual) or not using windows, then this function returns the path (excluding filename)
-		static std::string get_basepath(
+		static std::string basepath(
 			const std::string &fullname,
 			PathType path_type = path_type_file);
 
@@ -205,7 +205,7 @@ namespace uicore
 		/** param: fullname = The full path to use (including filename)
 			param: path_type = The path type
 			\return The full path including the location (excluding filename)*/
-		static std::string get_fullpath(
+		static std::string fullpath(
 			const std::string &fullname,
 			PathType path_type = path_type_file);
 
@@ -213,7 +213,7 @@ namespace uicore
 		/** param: fullname = The full path to use
 			param: path_type = The path type
 			\return The filename*/
-		static std::string get_filename(
+		static std::string filename(
 			const std::string &fullname,
 			PathType path_type = path_type_file);
 
@@ -221,7 +221,7 @@ namespace uicore
 		/** param: fullname = The full path to use
 			param: path_type = The path type
 			\return The filename (excluding the extension)*/
-		static std::string get_basename(
+		static std::string basename(
 			const std::string &fullname,
 			PathType path_type = path_type_file);
 
@@ -230,7 +230,7 @@ namespace uicore
 			param: fullname = The full path to use
 			param: path_type = The path type
 			\return The extension*/
-		static std::string get_extension(
+		static std::string extension(
 			const std::string &fullname,
 			PathType path_type = path_type_file);
 
@@ -239,7 +239,7 @@ namespace uicore
 			param: filename = The filename to use
 			param: path_type = The path type
 			\return The full name*/
-		static std::string get_fullname(
+		static std::string fullname(
 			const std::string &fullpath,
 			const std::string &filename,
 			PathType path_type = path_type_file);
@@ -250,7 +250,7 @@ namespace uicore
 			param: extension = The filename extension to use
 			param: path_type = The path type
 			\return The full name*/
-		static std::string get_fullname(
+		static std::string fullname(
 			const std::string &fullpath,
 			const std::string &filename,
 			const std::string &extension,
@@ -263,7 +263,7 @@ namespace uicore
 			param: extension = The filename extension to use
 			param: path_type = The path type
 			\return The full name*/
-		static std::string get_fullname(
+		static std::string fullname(
 			const std::string &location,
 			const std::string &basepath,
 			const std::string &filename,

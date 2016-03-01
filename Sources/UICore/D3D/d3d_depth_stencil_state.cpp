@@ -36,21 +36,21 @@ namespace uicore
 	{
 		CompareFunction front, back;
 		int front_ref, front_mask, back_ref, back_mask;
-		desc.get_stencil_compare_front(front, front_ref, front_mask);
-		desc.get_stencil_compare_back(back, back_ref, back_mask);
+		desc.stencil_compare_front(front, front_ref, front_mask);
+		desc.stencil_compare_back(back, back_ref, back_mask);
 
 		unsigned char front_write_mask, back_write_mask;
-		desc.get_stencil_write_mask(front_write_mask, back_write_mask);
+		desc.stencil_write_mask(front_write_mask, back_write_mask);
 
 		StencilOp fail_front, pass_depth_fail_front, pass_depth_pass_front;
 		StencilOp fail_back, pass_depth_fail_back, pass_depth_pass_back;
-		desc.get_stencil_op_front(fail_front, pass_depth_fail_front, pass_depth_pass_front);
-		desc.get_stencil_op_back(fail_back, pass_depth_fail_back, pass_depth_pass_back);
+		desc.stencil_op_front(fail_front, pass_depth_fail_front, pass_depth_pass_front);
+		desc.stencil_op_back(fail_back, pass_depth_fail_back, pass_depth_pass_back);
 
 		D3D11_DEPTH_STENCIL_DESC d3d_desc;
 		d3d_desc.DepthEnable = desc.is_depth_test_enabled() ? TRUE : FALSE;
 		d3d_desc.DepthWriteMask = desc.is_depth_write_enabled() ? D3D11_DEPTH_WRITE_MASK_ALL : D3D11_DEPTH_WRITE_MASK_ZERO;
-		d3d_desc.DepthFunc = to_d3d_compare_func(desc.get_depth_compare_function());
+		d3d_desc.DepthFunc = to_d3d_compare_func(desc.depth_compare_function());
 		d3d_desc.StencilEnable = desc.is_stencil_test_enabled();
 		d3d_desc.StencilReadMask = D3D11_DEFAULT_STENCIL_READ_MASK; // To do: should this use the write masks instead?
 		d3d_desc.StencilWriteMask = front_write_mask | back_write_mask;

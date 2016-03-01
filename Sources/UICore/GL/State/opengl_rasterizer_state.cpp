@@ -53,9 +53,9 @@ namespace uicore
 		{
 			changed_desc = false;
 
-			desc.get_culled() ? glEnable(GL_CULL_FACE) : glDisable(GL_CULL_FACE);
-			desc.get_enable_line_antialiasing() ? glEnable(GL_LINE_SMOOTH) : glDisable(GL_LINE_SMOOTH);
-			switch (desc.get_face_cull_mode())
+			desc.culled() ? glEnable(GL_CULL_FACE) : glDisable(GL_CULL_FACE);
+			desc.enable_line_antialiasing() ? glEnable(GL_LINE_SMOOTH) : glDisable(GL_LINE_SMOOTH);
+			switch (desc.face_cull_mode())
 			{
 			case cull_front:
 				glCullFace(GL_FRONT);
@@ -68,23 +68,23 @@ namespace uicore
 				break;
 			}
 			if (glPolygonMode)
-				glPolygonMode(GL_FRONT_AND_BACK, OpenGL::to_enum(desc.get_face_fill_mode()));
+				glPolygonMode(GL_FRONT_AND_BACK, OpenGL::to_enum(desc.face_fill_mode()));
 
-			desc.get_front_face() == face_counter_clockwise ? glFrontFace(GL_CCW) : glFrontFace(GL_CW);
+			desc.front_face() == face_counter_clockwise ? glFrontFace(GL_CCW) : glFrontFace(GL_CW);
 
 			// Note, enabled in GraphicContextImpl::set_scissor()
-			if (!desc.get_enable_scissor())
+			if (!desc.enable_scissor())
 				glDisable(GL_SCISSOR_TEST);
 
 			if (glPointSize)
-				glPointSize((GLfloat)desc.get_point_size());
+				glPointSize((GLfloat)desc.point_size());
 			if (glPointParameterf)
-				glPointParameterf(GL_POINT_FADE_THRESHOLD_SIZE, (GLfloat)desc.get_point_fade_treshold_size());
+				glPointParameterf(GL_POINT_FADE_THRESHOLD_SIZE, (GLfloat)desc.point_fade_treshold_size());
 			desc.is_point_size() ? glEnable(GL_VERTEX_PROGRAM_POINT_SIZE) : glDisable(GL_VERTEX_PROGRAM_POINT_SIZE);
 
 			if (glPointParameterf)
 			{
-				switch (desc.get_point_sprite_origin())
+				switch (desc.point_sprite_origin())
 				{
 				case origin_upper_left:
 					glPointParameterf(GL_POINT_SPRITE_COORD_ORIGIN, GL_UPPER_LEFT);
@@ -95,15 +95,15 @@ namespace uicore
 				}
 			}
 #ifndef __ANDROID__
-			desc.get_antialiased() ? glEnable(GL_POLYGON_SMOOTH) : glDisable(GL_POLYGON_SMOOTH);
-			desc.get_offset_point() ? glEnable(GL_POLYGON_OFFSET_POINT) : glDisable(GL_POLYGON_OFFSET_POINT);
-			desc.get_offset_line() ? glEnable(GL_POLYGON_OFFSET_LINE) : glDisable(GL_POLYGON_OFFSET_LINE);
+			desc.antialiased() ? glEnable(GL_POLYGON_SMOOTH) : glDisable(GL_POLYGON_SMOOTH);
+			desc.offset_point() ? glEnable(GL_POLYGON_OFFSET_POINT) : glDisable(GL_POLYGON_OFFSET_POINT);
+			desc.offset_line() ? glEnable(GL_POLYGON_OFFSET_LINE) : glDisable(GL_POLYGON_OFFSET_LINE);
 #endif
-			desc.get_offset_fill() ? glEnable(GL_POLYGON_OFFSET_FILL) : glDisable(GL_POLYGON_OFFSET_FILL);
+			desc.offset_fill() ? glEnable(GL_POLYGON_OFFSET_FILL) : glDisable(GL_POLYGON_OFFSET_FILL);
 			if (glPolygonOffset)
 			{
 				float factor, units;
-				desc.get_polygon_offset(factor, units);
+				desc.polygon_offset(factor, units);
 				glPolygonOffset(factor, units);
 			}
 		}

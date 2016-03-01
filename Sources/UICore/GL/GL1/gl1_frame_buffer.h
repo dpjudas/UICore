@@ -46,8 +46,8 @@ namespace uicore
 		GL1FrameBuffer(GL1GraphicContext *gc_provider);
 		~GL1FrameBuffer();
 
-		Size get_size() const override;
-		FrameBufferBindTarget get_bind_target() const override;
+		Size size() const override;
+		FrameBufferBindTarget bind_target() const override;
 
 		void attach_color(int attachment_index, const RenderBufferPtr &render_buffer) override;
 		void attach_color(int attachment_index, const Texture1DPtr &texture, int level) override;

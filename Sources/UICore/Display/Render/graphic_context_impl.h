@@ -143,7 +143,7 @@ namespace uicore
 			}
 			else
 			{
-				return write_frame_buffer()->get_size();
+				return write_frame_buffer()->size();
 			}
 		}
 

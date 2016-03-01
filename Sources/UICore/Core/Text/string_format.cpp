@@ -97,7 +97,7 @@ namespace uicore
 			create_arg(arg_value, arg_start, size - arg_start);
 	}
 
-	const std::string &StringFormat::get_result() const
+	const std::string &StringFormat::result() const
 	{
 		return string;
 	}

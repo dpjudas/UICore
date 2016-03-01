@@ -46,7 +46,7 @@ namespace uicore
 		/// This is the databuffer used internally to store the encrypted data.
 		/// You may call "set_size()" to clear the buffer, inbetween calls to "add()"
 		/// You may call "set_capacity()" to optimise storage requirements before the add() call
-		virtual DataBufferPtr get_data() const = 0;
+		virtual DataBufferPtr data() const = 0;
 
 		static const int iv_size = 16;
 		static const int key_size = 24;

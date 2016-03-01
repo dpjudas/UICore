@@ -78,7 +78,7 @@ int main(int argc, char **argv)
 		}
 		catch (uicore::Exception &exception)
 		{
-			std::cout << "Exception caught: " + exception.get_message_and_stack_trace() << std::endl;
+			std::cout << "Exception caught: " + exception.message_and_stack_trace() << std::endl;
 			retval = -1;
 		}
 	}

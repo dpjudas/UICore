@@ -41,7 +41,7 @@ namespace uicore
 	{
 	public:
 		/// \brief Returns the currently selected display target
-		static const std::shared_ptr<DisplayTargetProvider> &get_current_target();
+		static const std::shared_ptr<DisplayTargetProvider> &current_target();
 
 		/// \brief Sets the currently selected display target.
 		static void set_current_target(const std::shared_ptr<DisplayTargetProvider> &target);

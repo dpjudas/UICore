@@ -54,7 +54,7 @@ namespace uicore
 		{
 			dimensions = init.orig_texture->dimensions;
 
-			TextureFormat_GL tf = OpenGL::get_textureformat(init.texture_format);
+			TextureFormat_GL tf = OpenGL::textureformat(init.texture_format);
 			if (!tf.valid)
 				throw Exception("Texture format not supported by OpenGL");
 
@@ -109,7 +109,7 @@ namespace uicore
 	{
 		create_initial(texture_dimensions);
 
-		TextureFormat_GL tf = OpenGL::get_textureformat(texture_format);
+		TextureFormat_GL tf = OpenGL::textureformat(texture_format);
 		if (!tf.valid)
 			throw Exception("Texture format not supported by OpenGL");
 
@@ -296,7 +296,7 @@ namespace uicore
 
 		TextureStateTracker state_tracker(texture_type, handle);
 
-		TextureFormat_GL tf = OpenGL::get_textureformat(texture_format);
+		TextureFormat_GL tf = OpenGL::textureformat(texture_format);
 		if (tf.valid)
 		{
 			auto buffer = PixelBuffer::create(width(), height(), texture_format);
@@ -325,7 +325,7 @@ namespace uicore
 		if (src_rect.left < 0 || src_rect.top < 0 || src_rect.right > src->width() || src_rect.bottom > src->height())
 			throw Exception("Rectangle out of bounds");
 
-		TextureFormat_GL tf = OpenGL::get_textureformat(src->format());
+		TextureFormat_GL tf = OpenGL::textureformat(src->format());
 		bool conv_needed = !tf.valid;
 
 		PixelBufferPtr src_converted;
@@ -336,7 +336,7 @@ namespace uicore
 		else
 		{
 			src_converted = src;
-			tf = OpenGL::get_textureformat(src_converted->format());
+			tf = OpenGL::textureformat(src_converted->format());
 		}
 
 		OpenGL::set_active(gc);
@@ -444,7 +444,7 @@ namespace uicore
 		OpenGL::set_active(static_cast<GL3GraphicContext*>(gc));
 		TextureStateTracker state_tracker(texture_type, handle);
 
-		TextureFormat_GL tf = OpenGL::get_textureformat(texture_format);
+		TextureFormat_GL tf = OpenGL::textureformat(texture_format);
 		if (!tf.valid)
 			throw Exception("Texture format not supported by OpenGL");
 

@@ -51,14 +51,14 @@ namespace uicore
 		dispose();
 	}
 
-	Size GL1FrameBuffer::get_size() const
+	Size GL1FrameBuffer::size() const
 	{
 		if (!selected_surface)
 			return Size();
 		return selected_surface->size();
 	}
 
-	FrameBufferBindTarget GL1FrameBuffer::get_bind_target() const
+	FrameBufferBindTarget GL1FrameBuffer::bind_target() const
 	{
 		return framebuffer_draw;
 	}

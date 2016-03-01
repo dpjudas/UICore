@@ -116,6 +116,6 @@ namespace uicore
 		void render_border(const CanvasPtr &canvas, const ViewGeometry &geometry) const;
 		
 		/// Font used by this style cascade
-		FontPtr get_font() const;
+		FontPtr font() const;
 	};
 }

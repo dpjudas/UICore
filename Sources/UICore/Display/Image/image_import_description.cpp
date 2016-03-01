@@ -42,7 +42,7 @@ namespace uicore
 	{
 	}
 
-	bool ImageImportDescription::get_premultiply_alpha() const
+	bool ImageImportDescription::premultiply_alpha() const
 	{
 		return impl->premultiply_alpha;
 	}

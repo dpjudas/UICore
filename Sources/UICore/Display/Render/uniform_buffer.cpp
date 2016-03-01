@@ -47,6 +47,6 @@ namespace uicore
 
 	std::shared_ptr<UniformBuffer> UniformBuffer::create(const GraphicContextPtr &gc, const ProgramObjectPtr &program, const std::string &name, int num_blocks, BufferUsage usage)
 	{
-		return create(gc, program->get_uniform_buffer_size(name) * num_blocks, usage);
+		return create(gc, program->uniform_buffer_size(name) * num_blocks, usage);
 	}
 }

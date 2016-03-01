@@ -88,7 +88,7 @@ namespace uicore
 		return handle;
 	}
 
-	Size GL3FrameBuffer::get_size() const
+	Size GL3FrameBuffer::size() const
 	{
 		bool size_set = false;
 		Size size;
@@ -146,14 +146,14 @@ namespace uicore
 		return size;
 	}
 
-	FrameBufferBindTarget GL3FrameBuffer::get_bind_target() const
+	FrameBufferBindTarget GL3FrameBuffer::bind_target() const
 	{
-		return bind_target;
+		return _bind_target;
 	}
 
 	void GL3FrameBuffer::attach_color(int attachment_index, const RenderBufferPtr &render_buffer)
 	{
-		FrameBufferStateTracker tracker(bind_target, handle, gc_provider);
+		FrameBufferStateTracker tracker(_bind_target, handle, gc_provider);
 		bool replaced_object = attach_object(GL_COLOR_ATTACHMENT0 + attachment_index, render_buffer);
 
 		if (!replaced_object)
@@ -164,7 +164,7 @@ namespace uicore
 
 	void GL3FrameBuffer::attach_color(int attachment_index, const Texture1DPtr &texture, int level)
 	{
-		FrameBufferStateTracker tracker(bind_target, handle, gc_provider);
+		FrameBufferStateTracker tracker(_bind_target, handle, gc_provider);
 		bool replaced_object = attach_object(GL_COLOR_ATTACHMENT0 + attachment_index, texture, level, 0, 0);
 
 		if (!replaced_object)
@@ -175,7 +175,7 @@ namespace uicore
 
 	void GL3FrameBuffer::attach_color(int attachment_index, const Texture1DArrayPtr &texture, int array_index, int level)
 	{
-		FrameBufferStateTracker tracker(bind_target, handle, gc_provider);
+		FrameBufferStateTracker tracker(_bind_target, handle, gc_provider);
 		bool replaced_object = attach_object(GL_COLOR_ATTACHMENT0 + attachment_index, texture, level, array_index, 0);
 
 		if (!replaced_object)
@@ -186,7 +186,7 @@ namespace uicore
 
 	void GL3FrameBuffer::attach_color(int attachment_index, const Texture2DPtr &texture, int level)
 	{
-		FrameBufferStateTracker tracker(bind_target, handle, gc_provider);
+		FrameBufferStateTracker tracker(_bind_target, handle, gc_provider);
 		bool replaced_object = attach_object(GL_COLOR_ATTACHMENT0 + attachment_index, texture, level, 0, 0);
 
 		if (!replaced_object)
@@ -197,7 +197,7 @@ namespace uicore
 
 	void GL3FrameBuffer::attach_color(int attachment_index, const Texture2DArrayPtr &texture, int array_index, int level)
 	{
-		FrameBufferStateTracker tracker(bind_target, handle, gc_provider);
+		FrameBufferStateTracker tracker(_bind_target, handle, gc_provider);
 		bool replaced_object = attach_object(GL_COLOR_ATTACHMENT0 + attachment_index, texture, level, array_index, 0);
 
 		if (!replaced_object)
@@ -208,7 +208,7 @@ namespace uicore
 
 	void GL3FrameBuffer::attach_color(int attachment_index, const Texture3DPtr &texture, int depth, int level)
 	{
-		FrameBufferStateTracker tracker(bind_target, handle, gc_provider);
+		FrameBufferStateTracker tracker(_bind_target, handle, gc_provider);
 		bool replaced_object = attach_object(GL_COLOR_ATTACHMENT0 + attachment_index, texture, level, depth, 0);
 
 		if (!replaced_object)
@@ -219,7 +219,7 @@ namespace uicore
 
 	void GL3FrameBuffer::attach_color(int attachment_index, const TextureCubePtr &texture, TextureSubtype subtype, int level)
 	{
-		FrameBufferStateTracker tracker(bind_target, handle, gc_provider);
+		FrameBufferStateTracker tracker(_bind_target, handle, gc_provider);
 		bool replaced_object = attach_object(GL_COLOR_ATTACHMENT0 + attachment_index, texture, level, 0, decode_texture_subtype(subtype));
 
 		if (!replaced_object)
@@ -230,7 +230,7 @@ namespace uicore
 
 	void GL3FrameBuffer::detach_color(int attachment_index)
 	{
-		FrameBufferStateTracker tracker(bind_target, handle, gc_provider);
+		FrameBufferStateTracker tracker(_bind_target, handle, gc_provider);
 		detach_object(GL_COLOR_ATTACHMENT0 + attachment_index);
 
 		count_color_attachments--;
@@ -238,84 +238,84 @@ namespace uicore
 
 	void GL3FrameBuffer::attach_stencil(const RenderBufferPtr &render_buffer)
 	{
-		FrameBufferStateTracker tracker(bind_target, handle, gc_provider);
+		FrameBufferStateTracker tracker(_bind_target, handle, gc_provider);
 		attach_object(GL_STENCIL_ATTACHMENT, render_buffer);
 	}
 
 	void GL3FrameBuffer::attach_stencil(const Texture2DPtr &texture, int level)
 	{
-		FrameBufferStateTracker tracker(bind_target, handle, gc_provider);
+		FrameBufferStateTracker tracker(_bind_target, handle, gc_provider);
 		attach_object(GL_STENCIL_ATTACHMENT, texture, level, 0, 0);
 	}
 
 	void GL3FrameBuffer::attach_stencil(const TextureCubePtr &texture, TextureSubtype subtype, int level)
 	{
-		FrameBufferStateTracker tracker(bind_target, handle, gc_provider);
+		FrameBufferStateTracker tracker(_bind_target, handle, gc_provider);
 		attach_object(GL_STENCIL_ATTACHMENT, texture, level, 0, decode_texture_subtype(subtype));
 	}
 
 	void GL3FrameBuffer::detach_stencil()
 	{
-		FrameBufferStateTracker tracker(bind_target, handle, gc_provider);
+		FrameBufferStateTracker tracker(_bind_target, handle, gc_provider);
 		detach_object(GL_STENCIL_ATTACHMENT);
 	}
 
 	void GL3FrameBuffer::attach_depth(const RenderBufferPtr &render_buffer)
 	{
-		FrameBufferStateTracker tracker(bind_target, handle, gc_provider);
+		FrameBufferStateTracker tracker(_bind_target, handle, gc_provider);
 		attach_object(GL_DEPTH_ATTACHMENT, render_buffer);
 	}
 
 	void GL3FrameBuffer::attach_depth(const Texture2DPtr &texture, int level)
 	{
-		FrameBufferStateTracker tracker(bind_target, handle, gc_provider);
+		FrameBufferStateTracker tracker(_bind_target, handle, gc_provider);
 		attach_object(GL_DEPTH_ATTACHMENT, texture, level, 0, 0);
 	}
 
 	void GL3FrameBuffer::attach_depth(const TextureCubePtr &texture, TextureSubtype subtype, int level)
 	{
-		FrameBufferStateTracker tracker(bind_target, handle, gc_provider);
+		FrameBufferStateTracker tracker(_bind_target, handle, gc_provider);
 		attach_object(GL_DEPTH_ATTACHMENT, texture, level, 0, decode_texture_subtype(subtype));
 	}
 
 	void GL3FrameBuffer::detach_depth()
 	{
-		FrameBufferStateTracker tracker(bind_target, handle, gc_provider);
+		FrameBufferStateTracker tracker(_bind_target, handle, gc_provider);
 		detach_object(GL_DEPTH_ATTACHMENT);
 	}
 
 	void GL3FrameBuffer::attach_depth_stencil(const RenderBufferPtr &render_buffer)
 	{
-		FrameBufferStateTracker tracker(bind_target, handle, gc_provider);
+		FrameBufferStateTracker tracker(_bind_target, handle, gc_provider);
 		attach_object(GL_DEPTH_STENCIL_ATTACHMENT, render_buffer);
 	}
 
 	void GL3FrameBuffer::attach_depth_stencil(const Texture2DPtr &texture, int level)
 	{
-		FrameBufferStateTracker tracker(bind_target, handle, gc_provider);
+		FrameBufferStateTracker tracker(_bind_target, handle, gc_provider);
 		attach_object(GL_DEPTH_STENCIL_ATTACHMENT, texture, level, 0, 0);
 	}
 
 	void GL3FrameBuffer::attach_depth_stencil(const TextureCubePtr &texture, TextureSubtype subtype, int level)
 	{
-		FrameBufferStateTracker tracker(bind_target, handle, gc_provider);
+		FrameBufferStateTracker tracker(_bind_target, handle, gc_provider);
 		attach_object(GL_DEPTH_STENCIL_ATTACHMENT, texture, level, 0, decode_texture_subtype(subtype));
 	}
 
 	void GL3FrameBuffer::detach_depth_stencil()
 	{
-		FrameBufferStateTracker tracker(bind_target, handle, gc_provider);
+		FrameBufferStateTracker tracker(_bind_target, handle, gc_provider);
 		detach_object(GL_DEPTH_STENCIL_ATTACHMENT);
 	}
 
 	void GL3FrameBuffer::set_bind_target(FrameBufferBindTarget target)
 	{
-		bind_target = target;
+		_bind_target = target;
 	}
 
 	void GL3FrameBuffer::check_framebuffer_complete()
 	{
-		FrameBufferStateTracker tracker(bind_target, handle, gc_provider);
+		FrameBufferStateTracker tracker(_bind_target, handle, gc_provider);
 
 		int error_code = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 		if (error_code != GL_FRAMEBUFFER_COMPLETE)
@@ -453,10 +453,10 @@ namespace uicore
 		if (!gl_render_buffer)
 			throw Exception("Invalid render buffer");
 
-		FrameBufferStateTracker tracker_draw(bind_target, handle, gc_provider);
+		FrameBufferStateTracker tracker_draw(_bind_target, handle, gc_provider);
 
 		GLenum target = GL_DRAW_FRAMEBUFFER;
-		if (bind_target == framebuffer_read)
+		if (_bind_target == framebuffer_read)
 			target = GL_READ_FRAMEBUFFER;
 
 		GLuint render_buffer_handle = gl_render_buffer->get_handle();
@@ -494,7 +494,7 @@ namespace uicore
 		GLuint texture_handle = gl_texture_provider->get_handle();
 
 		GLenum target = GL_DRAW_FRAMEBUFFER;
-		if (bind_target == framebuffer_read)
+		if (_bind_target == framebuffer_read)
 			target = GL_READ_FRAMEBUFFER;
 
 		if (!texture_target)
@@ -524,7 +524,7 @@ namespace uicore
 		int internal_attachment_offset = decode_internal_attachment_offset(opengl_attachment);
 
 		GLenum target = GL_DRAW_FRAMEBUFFER;
-		if (bind_target == framebuffer_read)
+		if (_bind_target == framebuffer_read)
 			target = GL_READ_FRAMEBUFFER;
 
 		if (attached_renderbuffers[internal_attachment_offset])

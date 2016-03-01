@@ -70,7 +70,7 @@ namespace uicore
 		const FontPtr &get_font()
 		{
 			if (!font)
-				font = style_cascade.get_font();
+				font = style_cascade.font();
 			return font;
 		}
 

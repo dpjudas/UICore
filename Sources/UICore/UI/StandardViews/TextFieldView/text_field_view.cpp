@@ -424,7 +424,7 @@ namespace uicore
 	const FontPtr &TextFieldViewImpl::get_font()
 	{
 		if (!font)
-			font = textfield->style_cascade().get_font();
+			font = textfield->style_cascade().font();
 		return font;
 	}
 
@@ -689,7 +689,7 @@ namespace uicore
 					utf8_reader.prev();
 			}
 
-			pos = utf8_reader.get_position();
+			pos = utf8_reader.position();
 		}
 
 		if (shift)
@@ -761,7 +761,7 @@ namespace uicore
 			UTF8_Reader utf8_reader(text.data(), text.length());
 			utf8_reader.set_position(cursor_pos);
 			utf8_reader.prev();
-			int new_cursor_pos = utf8_reader.get_position();
+			int new_cursor_pos = utf8_reader.position();
 
 			text.erase(text.begin() + new_cursor_pos, text.begin() + cursor_pos);
 			cursor_pos = new_cursor_pos;
@@ -788,7 +788,7 @@ namespace uicore
 
 			UTF8_Reader utf8_reader(text.data(), text.length());
 			utf8_reader.set_position(cursor_pos);
-			text.erase(text.begin() + cursor_pos, text.begin() + cursor_pos + utf8_reader.get_char_length());
+			text.erase(text.begin() + cursor_pos, text.begin() + cursor_pos + utf8_reader.char_length());
 
 			textfield->set_needs_render();
 		}
@@ -809,7 +809,7 @@ namespace uicore
 			ViewTree *tree = textfield->view_tree();
 			if (tree)
 			{
-				DisplayWindowPtr window = tree->get_display_window();
+				DisplayWindowPtr window = tree->display_window();
 				if (window)
 				{
 					if (selection.length() > 0)
@@ -826,7 +826,7 @@ namespace uicore
 		ViewTree *tree = textfield->view_tree();
 		if (tree)
 		{
-			DisplayWindowPtr window = tree->get_display_window();
+			DisplayWindowPtr window = tree->display_window();
 			if (window)
 				add(window->clipboard_text());
 		}

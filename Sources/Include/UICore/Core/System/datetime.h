@@ -50,52 +50,52 @@ namespace uicore
 		~DateTime();
 
 		/// \brief Get current system time in local time zone.
-		static DateTime get_current_local_time();
+		static DateTime current_local_time();
 
 		/// \brief Get current system time in UTC.
-		static DateTime get_current_utc_time();
+		static DateTime current_utc_time();
 
 		/// \brief Converts a time tick value (number of 100-nanosecond intervals since January 1, 1601 UTC) to a date time in the local time zone.
-		static DateTime get_local_time_from_ticks(int64_t ticks);
+		static DateTime local_time_from_ticks(int64_t ticks);
 
 		/// \brief Converts a time tick value (number of 100-nanosecond intervals since January 1, 1601 UTC) to a date time in UTC.
-		static DateTime get_utc_time_from_ticks(int64_t ticks);
+		static DateTime utc_time_from_ticks(int64_t ticks);
 
 		static DateTime from_short_date_string(const std::string &value);
 
 		bool is_null() const;
-		unsigned short get_year() const;
+		unsigned short year() const;
 
 		/// \brief Returns the month number in range 1-12.
 		///
 		/// \return 1 = Jan ... 12 = December
-		unsigned char get_month() const;
-		unsigned char get_day() const;
-		unsigned char get_hour() const;
-		unsigned char get_minutes() const;
-		unsigned char get_seconds() const;
-		unsigned int get_nanoseconds() const;
-		TimeZone get_timezone() const;
+		unsigned char month() const;
+		unsigned char day() const;
+		unsigned char hour() const;
+		unsigned char minutes() const;
+		unsigned char seconds() const;
+		unsigned int nanoseconds() const;
+		TimeZone timezone() const;
 
 		/// \brief Returns the ISO 8601 week number of the date.
 		///
 		/// \return Week number: 1-53.
-		unsigned char get_week() const;
+		unsigned char week() const;
 
 		/// \brief Returns the difference in days between two dates.
 		/// This function is only accurate for the next few millenniums.
 		/// \return Number of days between dates. Returns a negative value if 'other' is before 'this'.
-		int get_difference_in_days(const DateTime &other) const;
+		int difference_in_days(const DateTime &other) const;
 
 		/// \brief Get the day of the week
 		///
 		/// \return 0 = Sunday ... 6 = Saturday
-		unsigned int get_day_of_week() const;
+		unsigned int day_of_week() const;
 
 		/// \brief Returns the number of days in the given month.
 		///
 		/// \return number of days: 28-31.
-		static int get_days_in_month(int month, int year);
+		static int days_in_month(int month, int year);
 
 		void set_null();
 		void set_date(int year, int month, int day, int hour = 0, int minute = 0, int seconds = 0, int nanoseconds = 0, TimeZone timezone = utc_timezone);
@@ -152,18 +152,18 @@ namespace uicore
 		void throw_if_invalid_date(int year, int month, int day, int hour, int minute, int seconds, int nanoseconds) const;
 		void throw_if_null() const;
 
-		int get_day_number() const;
+		int day_number() const;
 		void set_date_from_daynumber(int g);
 
-		unsigned short year;
-		unsigned char month;
-		unsigned char day;
-		unsigned char hour;
-		unsigned char minute;
-		unsigned char seconds;
-		unsigned int nanoseconds;
+		unsigned short _year;
+		unsigned char _month;
+		unsigned char _day;
+		unsigned char _hour;
+		unsigned char _minute;
+		unsigned char _seconds;
+		unsigned int _nanoseconds;
 
-		TimeZone timezone;
+		TimeZone _timezone;
 		static const int64_t ticks_from_1601_to_1900;
 	};
 }

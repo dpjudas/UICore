@@ -42,8 +42,8 @@ namespace uicore
 	public:
 		SHA512_Impl(cl_sha_type new_sha_type);
 
-		std::string get_hash(bool uppercase = false) const override;
-		void get_hash(unsigned char *out_hash) const override;
+		std::string hash(bool uppercase = false) const override;
+		void hash(unsigned char *out_hash) const override;
 
 		void reset() override;
 		void set_hmac(const void *key_data, int key_size) override;

@@ -39,14 +39,14 @@ namespace uicore
 {
 	namespace
 	{
-		std::shared_ptr<DisplayTargetProvider> current_target;
+		std::shared_ptr<DisplayTargetProvider> _current_target;
 	}
 
-	const std::shared_ptr<DisplayTargetProvider> &DisplayTarget::get_current_target()
+	const std::shared_ptr<DisplayTargetProvider> &DisplayTarget::current_target()
 	{
 		SetupDisplay::start();
 
-		if (!current_target)
+		if (!_current_target)
 		{
 #ifdef WIN32
 			D3DTarget::set_current();
@@ -55,11 +55,11 @@ namespace uicore
 #endif
 		}
 
-		return current_target;
+		return _current_target;
 	}
 
 	void DisplayTarget::set_current_target(const std::shared_ptr<DisplayTargetProvider> &target)
 	{
-		current_target = target;
+		_current_target = target;
 	}
 }

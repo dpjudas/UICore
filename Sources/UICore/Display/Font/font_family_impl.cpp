@@ -162,18 +162,18 @@ namespace uicore
 		{
 			if (cache.pixel_ratio != pixel_ratio)
 				continue;
-			if (desc.get_style() != cache.engine->get_desc().get_style())
+			if (desc.style() != cache.engine->get_desc().style())
 				continue;
-			if (desc.get_weight() != cache.engine->get_desc().get_weight())
+			if (desc.weight() != cache.engine->get_desc().weight())
 				continue;
-			if (desc.get_subpixel() != cache.engine->get_desc().get_subpixel())
+			if (desc.subpixel() != cache.engine->get_desc().subpixel())
 				continue;
-			if (desc.get_anti_alias() != cache.engine->get_desc().get_anti_alias())
+			if (desc.anti_alias() != cache.engine->get_desc().anti_alias())
 				continue;
 
 			if (cache.engine->is_automatic_recreation_allowed())
 			{
-				if (desc.get_height() != cache.engine->get_desc().get_height())
+				if (desc.height() != cache.engine->get_desc().height())
 					continue;
 			}
 
@@ -191,9 +191,9 @@ namespace uicore
 		// Find find an exact match using style and weight
 		for (auto &definitions : font_definitions)
 		{
-			if (desc.get_style() != definitions.desc.get_style())
+			if (desc.style() != definitions.desc.style())
 				continue;
-			if (desc.get_weight() != definitions.desc.get_weight())
+			if (desc.weight() != definitions.desc.weight())
 				continue;
 
 			font_definition = definitions;

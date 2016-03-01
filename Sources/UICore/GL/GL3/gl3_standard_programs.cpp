@@ -547,7 +547,7 @@ namespace uicore
 			color_only_program->bind_frag_data_location(0, "cl_FragColor");
 
 		if (!color_only_program->try_link())
-			throw Exception("Unable to link the standard shader program: 'color only' Error:" + color_only_program->get_info_log());
+			throw Exception("Unable to link the standard shader program: 'color only' Error:" + color_only_program->info_log());
 
 		auto single_texture_program = provider->create_program();
 		single_texture_program->attach(vertex_single_texture_shader);
@@ -560,7 +560,7 @@ namespace uicore
 			single_texture_program->bind_frag_data_location(0, "cl_FragColor");
 
 		if (!single_texture_program->try_link())
-			throw Exception("Unable to link the standard shader program: 'single texture' Error:" + single_texture_program->get_info_log());
+			throw Exception("Unable to link the standard shader program: 'single texture' Error:" + single_texture_program->info_log());
 		single_texture_program->set_uniform1i("Texture0", 0);
 
 		auto sprite_program = provider->create_program();
@@ -575,7 +575,7 @@ namespace uicore
 			sprite_program->bind_frag_data_location(0, "cl_FragColor");
 
 		if (!sprite_program->try_link())
-			throw Exception("Unable to link the standard shader program: 'sprite' Error:" + sprite_program->get_info_log());
+			throw Exception("Unable to link the standard shader program: 'sprite' Error:" + sprite_program->info_log());
 
 		sprite_program->set_uniform1i("Texture0", 0);
 		sprite_program->set_uniform1i("Texture1", 1);
@@ -603,7 +603,7 @@ namespace uicore
 			path_program->bind_frag_data_location(0, "cl_FragColor");
 
 		if (!path_program->try_link())
-			throw Exception("Unable to link the standard shader program: 'path' Error:" + path_program->get_info_log());
+			throw Exception("Unable to link the standard shader program: 'path' Error:" + path_program->info_log());
 		path_program->set_uniform1i("mask_texture", 0);
 		path_program->set_uniform1i("instance_data", 1);
 		path_program->set_uniform1i("image_texture", 2);

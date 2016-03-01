@@ -46,12 +46,12 @@ namespace uicore
 #endif
 
 	DateTime::DateTime()
-		: year(0), month(0), day(0), hour(0), minute(0), seconds(0), nanoseconds(0), timezone(utc_timezone)
+		: _year(0), _month(0), _day(0), _hour(0), _minute(0), _seconds(0), _nanoseconds(0), _timezone(utc_timezone)
 	{
 	}
 
 	DateTime::DateTime(int year, int month, int day, int hour, int minute, int seconds, int nanoseconds, TimeZone timezone)
-		: year(year), month(month), day(day), hour(hour), minute(minute), seconds(seconds), nanoseconds(nanoseconds), timezone(timezone)
+		: _year(year), _month(month), _day(day), _hour(hour), _minute(minute), _seconds(seconds), _nanoseconds(nanoseconds), _timezone(timezone)
 	{
 		throw_if_invalid_date(year, month, day, hour, minute, seconds, nanoseconds);
 	}
@@ -60,25 +60,25 @@ namespace uicore
 	{
 	}
 
-	DateTime DateTime::get_current_local_time()
+	DateTime DateTime::current_local_time()
 	{
-		return get_current_utc_time().to_local();
+		return current_utc_time().to_local();
 	}
 
-	DateTime DateTime::get_current_utc_time()
+	DateTime DateTime::current_utc_time()
 	{
 #ifdef WIN32
 		SYSTEMTIME system_time;
 		GetSystemTime(&system_time);
 		DateTime datetime;
-		datetime.timezone = utc_timezone;
-		datetime.year = system_time.wYear;
-		datetime.month = system_time.wMonth;
-		datetime.day = system_time.wDay;
-		datetime.hour = system_time.wHour;
-		datetime.minute = system_time.wMinute;
-		datetime.seconds = system_time.wSecond;
-		datetime.nanoseconds = system_time.wMilliseconds * 1000000;
+		datetime._timezone = utc_timezone;
+		datetime._year = system_time.wYear;
+		datetime._month = system_time.wMonth;
+		datetime._day = system_time.wDay;
+		datetime._hour = system_time.wHour;
+		datetime._minute = system_time.wMinute;
+		datetime._seconds = system_time.wSecond;
+		datetime._nanoseconds = system_time.wMilliseconds * 1000000;
 		return datetime;
 #else
 		time_t unix_ticks = 0;
@@ -86,19 +86,19 @@ namespace uicore
 		if (unix_ticks == -1)
 			throw Exception("Failed to get current UTC time");
 		int64_t ticks = ticks_from_1601_to_1900 + ((int64_t) unix_ticks) * 10000000;
-		return DateTime::get_utc_time_from_ticks(ticks);
+		return DateTime::utc_time_from_ticks(ticks);
 #endif
 	}
 
-	DateTime DateTime::get_local_time_from_ticks(int64_t ticks)
+	DateTime DateTime::local_time_from_ticks(int64_t ticks)
 	{
-		return get_utc_time_from_ticks(ticks).to_local();
+		return utc_time_from_ticks(ticks).to_local();
 	}
 
-	DateTime DateTime::get_utc_time_from_ticks(int64_t ticks)
+	DateTime DateTime::utc_time_from_ticks(int64_t ticks)
 	{
 		DateTime datetime;
-		datetime.timezone = utc_timezone;
+		datetime._timezone = utc_timezone;
 #ifdef WIN32
 		SYSTEMTIME system_time;
 		FILETIME file_time;
@@ -107,18 +107,18 @@ namespace uicore
 		BOOL result = FileTimeToSystemTime(&file_time, &system_time);
 		if (result == FALSE)
 			throw Exception("FileTimeToSystemTime failed");
-		datetime.year = system_time.wYear;
-		datetime.month = system_time.wMonth;
-		datetime.day = system_time.wDay;
-		datetime.hour = system_time.wHour;
-		datetime.minute = system_time.wMinute;
-		datetime.seconds = system_time.wSecond;
-		datetime.nanoseconds = system_time.wMilliseconds * 1000000;
+		datetime._year = system_time.wYear;
+		datetime._month = system_time.wMonth;
+		datetime._day = system_time.wDay;
+		datetime._hour = system_time.wHour;
+		datetime._minute = system_time.wMinute;
+		datetime._seconds = system_time.wSecond;
+		datetime._nanoseconds = system_time.wMilliseconds * 1000000;
 		result = SystemTimeToFileTime(&system_time, &file_time);
 		if (result == FALSE)
 			throw Exception("SystemTimeToFileTime failed");
 		int64_t new_ticks = (((int64_t)file_time.dwHighDateTime) << 32) + file_time.dwLowDateTime;
-		datetime.nanoseconds += (ticks - new_ticks) * 100;
+		datetime._nanoseconds += (ticks - new_ticks) * 100;
 #else
 		tm tm_utc;
 		memset(&tm_utc, 0, sizeof(tm));
@@ -140,7 +140,7 @@ namespace uicore
 	int64_t DateTime::to_ticks() const
 	{
 		throw_if_null();
-		if (timezone == local_timezone)
+		if (_timezone == local_timezone)
 		{
 			return to_utc().to_ticks();
 		}
@@ -149,18 +149,18 @@ namespace uicore
 #ifdef WIN32
 			SYSTEMTIME system_time;
 			FILETIME file_time;
-			system_time.wYear = year;
-			system_time.wMonth = month;
-			system_time.wDay = day;
-			system_time.wHour = hour;
-			system_time.wMinute = minute;
-			system_time.wSecond = seconds;
-			system_time.wMilliseconds = nanoseconds / 1000000;
+			system_time.wYear = _year;
+			system_time.wMonth = _month;
+			system_time.wDay = _day;
+			system_time.wHour = _hour;
+			system_time.wMinute = _minute;
+			system_time.wSecond = _seconds;
+			system_time.wMilliseconds = _nanoseconds / 1000000;
 			BOOL result = SystemTimeToFileTime(&system_time, &file_time);
 			if (result == FALSE)
 				throw Exception("SystemTimeToFileTime failed");
 			int64_t ticks = (((int64_t)file_time.dwHighDateTime) << 32) + file_time.dwLowDateTime;
-			ticks += (nanoseconds % 1000000) / 100;
+			ticks += (_nanoseconds % 1000000) / 100;
 			return ticks;
 #else
 			int64_t ticks;
@@ -230,7 +230,7 @@ namespace uicore
 	DateTime DateTime::to_utc() const
 	{
 		throw_if_null();
-		if (timezone == utc_timezone)
+		if (_timezone == utc_timezone)
 		{
 			return *this;
 		}
@@ -239,13 +239,13 @@ namespace uicore
 #ifdef WIN32
 			SYSTEMTIME local_time;
 			SYSTEMTIME system_time;
-			local_time.wYear = year;
-			local_time.wMonth = month;
-			local_time.wDay = day;
-			local_time.wHour = hour;
-			local_time.wMinute = minute;
-			local_time.wSecond = seconds;
-			local_time.wMilliseconds = nanoseconds / 1000000;
+			local_time.wYear = _year;
+			local_time.wMonth = _month;
+			local_time.wDay = _day;
+			local_time.wHour = _hour;
+			local_time.wMinute = _minute;
+			local_time.wSecond = _seconds;
+			local_time.wMilliseconds = _nanoseconds / 1000000;
 #if _MSC_VER
 			BOOL result = TzSpecificLocalTimeToSystemTime(0, &local_time, &system_time);
 #else
@@ -255,25 +255,25 @@ namespace uicore
 				throw Exception("TzSpecificLocalTimeToSystemTime failed");
 
 			DateTime datetime;
-			datetime.timezone = utc_timezone;
-			datetime.year = system_time.wYear;
-			datetime.month = system_time.wMonth;
-			datetime.day = system_time.wDay;
-			datetime.hour = system_time.wHour;
-			datetime.minute = system_time.wMinute;
-			datetime.seconds = system_time.wSecond;
-			datetime.nanoseconds = system_time.wMilliseconds * 1000000;
-			datetime.nanoseconds += (nanoseconds % 1000000);
+			datetime._timezone = utc_timezone;
+			datetime._year = system_time.wYear;
+			datetime._month = system_time.wMonth;
+			datetime._day = system_time.wDay;
+			datetime._hour = system_time.wHour;
+			datetime._minute = system_time.wMinute;
+			datetime._seconds = system_time.wSecond;
+			datetime._nanoseconds = system_time.wMilliseconds * 1000000;
+			datetime._nanoseconds += (_nanoseconds % 1000000);
 			return datetime;
 #else
 			tm tm_local;
 			memset(&tm_local, 0, sizeof(tm));
-			tm_local.tm_year = year-1900;
-			tm_local.tm_mon = month-1;
-			tm_local.tm_mday = day;
-			tm_local.tm_hour = hour;
-			tm_local.tm_min = minute;
-			tm_local.tm_sec = seconds;
+			tm_local.tm_year = _year-1900;
+			tm_local.tm_mon = _month-1;
+			tm_local.tm_mday = _day;
+			tm_local.tm_hour = _hour;
+			tm_local.tm_min = _minute;
+			tm_local.tm_sec = _seconds;
 			tm_local.tm_isdst = -1;
 			time_t unix_ticks = mktime(&tm_local);
 			if (unix_ticks == -1)
@@ -285,14 +285,14 @@ namespace uicore
 				throw Exception("gmtime_r failed");
 
 			DateTime datetime;
-			datetime.timezone = utc_timezone;
-			datetime.year = result->tm_year+1900;
-			datetime.month = result->tm_mon+1;
-			datetime.day = result->tm_mday;
-			datetime.hour = result->tm_hour;
-			datetime.minute = result->tm_min;
-			datetime.seconds = result->tm_sec;
-			datetime.nanoseconds = nanoseconds;
+			datetime._timezone = utc_timezone;
+			datetime._year = result->tm_year+1900;
+			datetime._month = result->tm_mon+1;
+			datetime._day = result->tm_mday;
+			datetime._hour = result->tm_hour;
+			datetime._minute = result->tm_min;
+			datetime._seconds = result->tm_sec;
+			datetime._nanoseconds = nanoseconds;
 			return datetime;
 #endif
 		}
@@ -301,7 +301,7 @@ namespace uicore
 	DateTime DateTime::to_local() const
 	{
 		throw_if_null();
-		if (timezone == local_timezone)
+		if (_timezone == local_timezone)
 		{
 			return *this;
 		}
@@ -310,27 +310,27 @@ namespace uicore
 #ifdef WIN32
 			SYSTEMTIME local_time;
 			SYSTEMTIME system_time;
-			system_time.wYear = year;
-			system_time.wMonth = month;
-			system_time.wDay = day;
-			system_time.wHour = hour;
-			system_time.wMinute = minute;
-			system_time.wSecond = seconds;
-			system_time.wMilliseconds = nanoseconds / 1000000;
+			system_time.wYear = _year;
+			system_time.wMonth = _month;
+			system_time.wDay = _day;
+			system_time.wHour = _hour;
+			system_time.wMinute = _minute;
+			system_time.wSecond = _seconds;
+			system_time.wMilliseconds = _nanoseconds / 1000000;
 			BOOL result = SystemTimeToTzSpecificLocalTime(0, &system_time, &local_time);
 			if (result == FALSE)
 				throw Exception("SystemTimeToTzSpecificLocalTime failed");
 
 			DateTime datetime;
-			datetime.timezone = local_timezone;
-			datetime.year = local_time.wYear;
-			datetime.month = local_time.wMonth;
-			datetime.day = local_time.wDay;
-			datetime.hour = local_time.wHour;
-			datetime.minute = local_time.wMinute;
-			datetime.seconds = local_time.wSecond;
-			datetime.nanoseconds = local_time.wMilliseconds * 1000000;
-			datetime.nanoseconds += (nanoseconds % 1000000);
+			datetime._timezone = local_timezone;
+			datetime._year = local_time.wYear;
+			datetime._month = local_time.wMonth;
+			datetime._day = local_time.wDay;
+			datetime._hour = local_time.wHour;
+			datetime._minute = local_time.wMinute;
+			datetime._seconds = local_time.wSecond;
+			datetime._nanoseconds = local_time.wMilliseconds * 1000000;
+			datetime._nanoseconds += (_nanoseconds % 1000000);
 			return datetime;
 #else
 
@@ -382,14 +382,14 @@ namespace uicore
 				break;
 			}
 
-			unix_ticks += day - 1;
+			unix_ticks += _day - 1;
 
 			unix_ticks *= 24;	// Hours in day
-			unix_ticks += hour;
+			unix_ticks += _hour;
 			unix_ticks *= 60;	// Minutes per hour
-			unix_ticks += minute;
+			unix_ticks += _minute;
 			unix_ticks *= 60;	// Seconds per minute
-			unix_ticks += seconds;
+			unix_ticks += _seconds;
 
 			tm tm_local;
 			memset(&tm_local, 0, sizeof(tm));
@@ -399,14 +399,14 @@ namespace uicore
 				throw Exception("localtime_r failed");
 
 			DateTime datetime;
-			datetime.timezone = local_timezone;
-			datetime.year = result->tm_year+1900;
-			datetime.month = result->tm_mon+1;
-			datetime.day = result->tm_mday;
-			datetime.hour = result->tm_hour;
-			datetime.minute = result->tm_min;
-			datetime.seconds = result->tm_sec;
-			datetime.nanoseconds = nanoseconds;
+			datetime._timezone = local_timezone;
+			datetime._year = result->tm_year+1900;
+			datetime._month = result->tm_mon+1;
+			datetime._day = result->tm_mday;
+			datetime._hour = result->tm_hour;
+			datetime._minute = result->tm_min;
+			datetime._seconds = result->tm_sec;
+			datetime._nanoseconds = nanoseconds;
 			return datetime;
 #endif
 		}
@@ -414,73 +414,73 @@ namespace uicore
 
 	bool DateTime::is_null() const
 	{
-		return (year == 0);
+		return (_year == 0);
 	}
 
-	unsigned short DateTime::get_year() const
+	unsigned short DateTime::year() const
 	{
 		throw_if_null();
-		return year;
+		return _year;
 	}
 
-	unsigned char DateTime::get_month() const
+	unsigned char DateTime::month() const
 	{
 		throw_if_null();
-		return month;
+		return _month;
 	}
 
-	unsigned char DateTime::get_day() const
+	unsigned char DateTime::day() const
 	{
 		throw_if_null();
-		return day;
+		return _day;
 	}
 
-	unsigned char DateTime::get_hour() const
+	unsigned char DateTime::hour() const
 	{
 		throw_if_null();
-		return hour;
+		return _hour;
 	}
 
-	unsigned char DateTime::get_minutes() const
+	unsigned char DateTime::minutes() const
 	{
 		throw_if_null();
-		return minute;
+		return _minute;
 	}
 
-	unsigned char DateTime::get_seconds() const
+	unsigned char DateTime::seconds() const
 	{
 		throw_if_null();
-		return seconds;
+		return _seconds;
 	}
 
-	unsigned int DateTime::get_nanoseconds() const
+	unsigned int DateTime::nanoseconds() const
 	{
 		throw_if_null();
-		return nanoseconds;
+		return _nanoseconds;
 	}
 
-	DateTime::TimeZone DateTime::get_timezone() const
+	DateTime::TimeZone DateTime::timezone() const
 	{
 		throw_if_null();
-		return timezone;
+		return _timezone;
 	}
 
-	unsigned char DateTime::get_week() const
+	unsigned char DateTime::week() const
 	{
 		throw_if_null();
-		int day_of_week = 1 + ((get_day_of_week() + 6) % 7);
+		int day_of_week_val = 1 + ((day_of_week() + 6) % 7);
 		DateTime dt = *this;
-		DateTime nearest_thursday = dt.add_days(4 - day_of_week);
-		DateTime jan1(nearest_thursday.year, 1, 1);
-		int days = jan1.get_difference_in_days(nearest_thursday);
+		DateTime nearest_thursday = dt.add_days(4 - day_of_week_val);
+		DateTime jan1(nearest_thursday._year, 1, 1);
+		int days = jan1.difference_in_days(nearest_thursday);
 		int week = 1 + days / 7; // Count of Thursdays 
 		return week;
 	}
 
-	unsigned int DateTime::get_day_of_week() const
+	unsigned int DateTime::day_of_week() const
 	{
 		throw_if_null();
-		if (year < 1600)
+		if (_year < 1600)
 			throw Exception("Unsupported date specified");
 
 		int century_anchor_days[4] =
@@ -491,9 +491,9 @@ namespace uicore
 			3  // 1900: Wednesday
 		};
 
-		int century_value = year / 100;
+		int century_value = _year / 100;
 		int century_day = century_anchor_days[century_value % 4];
-		int y = year % 100;
+		int y = _year % 100;
 		int a = y / 12;
 		int b = y % 12;
 		int c = b / 4;
@@ -501,8 +501,8 @@ namespace uicore
 		int doomsday = (century_day + d % 7) % 7; // Doomsday of this year
 
 		int month_doomsdays[12] = { 3, 7, 7, 4, 2, 6, 4, 1, 5, 3, 7, 5 }; // Days in each month that are doomsdays
-		bool leap_year = (year % 4) == 0; // Leap years are every 4th year
-		if ((year % 100) == 0 && (year % 400) != 0) // Except for those divisible by 100 unless they are also divisible by 400
+		bool leap_year = (_year % 4) == 0; // Leap years are every 4th year
+		if ((_year % 100) == 0 && (_year % 400) != 0) // Except for those divisible by 100 unless they are also divisible by 400
 			leap_year = false;
 		if (leap_year)
 		{
@@ -510,20 +510,20 @@ namespace uicore
 			month_doomsdays[1] = 8;
 		}
 
-		int day_of_week = (doomsday + day - month_doomsdays[month - 1]) % 7;
+		int day_of_week = (doomsday + _day - month_doomsdays[_month - 1]) % 7;
 		if (day_of_week < 0)
 			day_of_week += 7;
 		return day_of_week;
 	}
 
-	int DateTime::get_difference_in_days(const DateTime &other) const
+	int DateTime::difference_in_days(const DateTime &other) const
 	{
-		int day1 = get_day_number();
-		int day2 = other.get_day_number();
+		int day1 = day_number();
+		int day2 = other.day_number();
 		return day2 - day1;
 	}
 
-	int DateTime::get_days_in_month(int month, int year)
+	int DateTime::days_in_month(int month, int year)
 	{
 		if (month < 1 || month > 12)
 			throw Exception("Invalid month specified");
@@ -545,27 +545,27 @@ namespace uicore
 
 	void DateTime::set_null()
 	{
-		year = 0;
-		month = 0;
-		day = 0;
-		hour = 0;
-		minute = 0;
-		seconds = 0;
-		nanoseconds = 0;
-		timezone = utc_timezone;
+		_year = 0;
+		_month = 0;
+		_day = 0;
+		_hour = 0;
+		_minute = 0;
+		_seconds = 0;
+		_nanoseconds = 0;
+		_timezone = utc_timezone;
 	}
 
 	void DateTime::set_date(int new_year, int new_month, int new_day, int new_hour, int new_minute, int new_seconds, int new_nanoseconds, TimeZone new_timezone)
 	{
 		throw_if_invalid_date(new_year, new_month, new_day, new_hour, new_minute, new_seconds, new_nanoseconds);
-		year = new_year;
-		month = new_month;
-		day = new_day;
-		hour = new_hour;
-		minute = new_minute;
-		seconds = new_seconds;
-		nanoseconds = new_nanoseconds;
-		timezone = new_timezone;
+		_year = new_year;
+		_month = new_month;
+		_day = new_day;
+		_hour = new_hour;
+		_minute = new_minute;
+		_seconds = new_seconds;
+		_nanoseconds = new_nanoseconds;
+		_timezone = new_timezone;
 	}
 
 	void DateTime::set_year(int new_year)
@@ -573,7 +573,7 @@ namespace uicore
 		if (is_null())
 			set_date(new_year, 1, 1, 0, 0, 0, 0);
 		else
-			set_date(new_year, month, day, hour, minute, seconds, nanoseconds, timezone);
+			set_date(new_year, _month, _day, _hour, _minute, _seconds, _nanoseconds, _timezone);
 	}
 
 	void DateTime::set_month(int new_month)
@@ -581,7 +581,7 @@ namespace uicore
 		if (is_null())
 			set_date(1900, new_month, 1, 0, 0, 0, 0);
 		else
-			set_date(year, new_month, day, hour, minute, seconds, nanoseconds, timezone);
+			set_date(_year, new_month, _day, _hour, _minute, _seconds, _nanoseconds, _timezone);
 	}
 
 	void DateTime::set_day(int new_day)
@@ -589,7 +589,7 @@ namespace uicore
 		if (is_null())
 			set_date(1900, 1, new_day, 0, 0, 0, 0);
 		else
-			set_date(year, month, new_day, hour, minute, seconds, nanoseconds, timezone);
+			set_date(_year, _month, new_day, _hour, _minute, _seconds, _nanoseconds, _timezone);
 	}
 
 	void DateTime::set_hour(int new_hour)
@@ -597,7 +597,7 @@ namespace uicore
 		if (is_null())
 			set_date(1900, 1, 1, new_hour, 0, 0, 0);
 		else
-			set_date(year, month, day, new_hour, minute, seconds, nanoseconds, timezone);
+			set_date(_year, _month, _day, new_hour, _minute, _seconds, _nanoseconds, _timezone);
 	}
 
 	void DateTime::set_minutes(int new_minutes)
@@ -605,7 +605,7 @@ namespace uicore
 		if (is_null())
 			set_date(1900, 1, 1, 0, new_minutes, 0, 0);
 		else
-			set_date(year, month, day, hour, new_minutes, seconds, nanoseconds, timezone);
+			set_date(_year, _month, _day, _hour, new_minutes, _seconds, _nanoseconds, _timezone);
 	}
 
 	void DateTime::set_seconds(int new_seconds)
@@ -613,7 +613,7 @@ namespace uicore
 		if (is_null())
 			set_date(1900, 1, 1, 0, 0, new_seconds, 0);
 		else
-			set_date(year, month, day, hour, minute, new_seconds, nanoseconds, timezone);
+			set_date(_year, _month, _day, _hour, _minute, new_seconds, _nanoseconds, _timezone);
 	}
 
 	void DateTime::set_nanoseconds(int new_nanoseconds)
@@ -621,7 +621,7 @@ namespace uicore
 		if (is_null())
 			set_date(1900, 1, 1, 0, 0, 0, new_nanoseconds);
 		else
-			set_date(year, month, day, hour, minute, seconds, new_nanoseconds, timezone);
+			set_date(_year, _month, _day, _hour, _minute, _seconds, new_nanoseconds, _timezone);
 	}
 
 	void DateTime::set_timezone(TimeZone new_timezone)
@@ -629,13 +629,13 @@ namespace uicore
 		if (is_null())
 			set_date(1900, 1, 1, 0, 0, 0, 0, new_timezone);
 		else
-			set_date(year, month, day, hour, minute, seconds, nanoseconds, new_timezone);
+			set_date(_year, _month, _day, _hour, _minute, _seconds, _nanoseconds, new_timezone);
 	}
 
 	DateTime &DateTime::add_years(int years)
 	{
 		throw_if_null();
-		year += years;
+		_year += years;
 		return *this;
 	}
 
@@ -647,22 +647,22 @@ namespace uicore
 		{
 			while (days > 0)
 			{
-				int days_in_month = DateTime::get_days_in_month(month, year);
-				int days_left_in_current_month = days_in_month - day;
+				int days_in_month = DateTime::days_in_month(_month, _year);
+				int days_left_in_current_month = days_in_month - _day;
 
 				if (days <= days_left_in_current_month)
 				{
-					day += days;
+					_day += days;
 					break;
 				}
 
 				days -= (days_left_in_current_month + 1);
-				day = 1;
-				month++;
-				if (month > 12)
+				_day = 1;
+				_month++;
+				if (_month > 12)
 				{
-					year++;
-					month = 1;
+					_year++;
+					_month = 1;
 				}
 			}
 		}
@@ -672,29 +672,29 @@ namespace uicore
 
 			while (days > 0)
 			{
-				int prev_month = month - 1;
-				int prev_month_year = year;
+				int prev_month = _month - 1;
+				int prev_month_year = _year;
 				if (prev_month < 1)
 				{
 					prev_month = 12;
 					prev_month_year--;
 				}
 
-				int days_left_in_current_month = day;
+				int days_left_in_current_month = _day;
 				if (days < days_left_in_current_month)
 				{
-					day -= days;
+					_day -= days;
 					break;
 				}
 
-				int days_in_prev_month = DateTime::get_days_in_month(prev_month, prev_month_year);
+				int days_in_prev_month = DateTime::days_in_month(prev_month, prev_month_year);
 				days -= days_left_in_current_month;
-				day = days_in_prev_month;
-				month--;
-				if (month < 1)
+				_day = days_in_prev_month;
+				_month--;
+				if (_month < 1)
 				{
-					year--;
-					month = 12;
+					_year--;
+					_month = 12;
 				}
 			}
 
@@ -707,13 +707,13 @@ namespace uicore
 	{
 		throw_if_null();
 		int years = months / 12;
-		year += years;
+		_year += years;
 		int months_left = months - (years * 12);
-		month += months_left;
-		if (month > 12)
+		_month += months_left;
+		if (_month > 12)
 		{
-			month -= 12;
-			year++;
+			_month -= 12;
+			_year++;
 		}
 
 		return *this;
@@ -750,10 +750,10 @@ namespace uicore
 	{
 		throw_if_null();
 		StringFormat format("%1-%2-%3");
-		format.set_arg(1, get_year(), 4);
-		format.set_arg(2, get_month(), 2);
-		format.set_arg(3, get_day(), 2);
-		return format.get_result();
+		format.set_arg(1, year(), 4);
+		format.set_arg(2, month(), 2);
+		format.set_arg(3, day(), 2);
+		return format.result();
 	}
 
 	DateTime DateTime::from_short_date_string(const std::string &value)
@@ -861,13 +861,13 @@ namespace uicore
 		throw_if_null();
 		// 2008-04-01
 		StringFormat format("%1-%2-%3 %4:%5:%6");
-		format.set_arg(1, get_year(), 4);
-		format.set_arg(2, get_month(), 2);
-		format.set_arg(3, get_day(), 2);
-		format.set_arg(4, get_hour(), 2);
-		format.set_arg(5, get_minutes(), 2);
-		format.set_arg(6, get_seconds(), 2);
-		return format.get_result();
+		format.set_arg(1, year(), 4);
+		format.set_arg(2, month(), 2);
+		format.set_arg(3, day(), 2);
+		format.set_arg(4, hour(), 2);
+		format.set_arg(5, minutes(), 2);
+		format.set_arg(6, seconds(), 2);
+		return format.result();
 	}
 
 	std::string DateTime::to_long_time_string() const
@@ -875,10 +875,10 @@ namespace uicore
 		throw_if_null();
 		// hh:mm:ss
 		StringFormat format("%1:%2:%3");
-		format.set_arg(1, get_hour(), 2);
-		format.set_arg(2, get_minutes(), 2);
-		format.set_arg(3, get_seconds(), 2);
-		return format.get_result();
+		format.set_arg(1, hour(), 2);
+		format.set_arg(2, minutes(), 2);
+		format.set_arg(3, seconds(), 2);
+		return format.result();
 	}
 
 	std::string DateTime::to_short_time_string() const
@@ -886,9 +886,9 @@ namespace uicore
 		throw_if_null();
 		// hh:mm
 		StringFormat format("%1:%2");
-		format.set_arg(1, get_hour(), 2);
-		format.set_arg(2, get_minutes(), 2);
-		return format.get_result();
+		format.set_arg(1, hour(), 2);
+		format.set_arg(2, minutes(), 2);
+		return format.result();
 	}
 
 	std::string DateTime::to_string() const
@@ -923,14 +923,14 @@ namespace uicore
 		};
 
 		StringFormat format("%1 %2 %3 %4:%5:%6 %7");
-		format.set_arg(1, days[get_day_of_week()]);
-		format.set_arg(2, months[get_month() - 1]);
-		format.set_arg(3, get_day());
-		format.set_arg(4, get_hour(), 2);
-		format.set_arg(5, get_minutes(), 2);
-		format.set_arg(6, get_seconds(), 2);
-		format.set_arg(7, get_year());
-		return format.get_result();
+		format.set_arg(1, days[day_of_week()]);
+		format.set_arg(2, months[month() - 1]);
+		format.set_arg(3, day());
+		format.set_arg(4, hour(), 2);
+		format.set_arg(5, minutes(), 2);
+		format.set_arg(6, seconds(), 2);
+		format.set_arg(7, year());
+		return format.result();
 	}
 
 	bool DateTime::operator <(const DateTime &other) const
@@ -996,13 +996,13 @@ namespace uicore
 			throw Exception("DateTime object is null");
 	}
 
-	int DateTime::get_day_number() const
+	int DateTime::day_number() const
 	{
 		// see http://alcor.concordia.ca/~gpkatch/gdate-algorithm.html
-		int m = month;
-		int y = year;
+		int m = _month;
+		int y = _year;
 		m = (m + 9) % 12;
 		y = y - m / 10;
-		return 365 * y + y / 4 - y / 100 + y / 400 + (m * 306 + 5) / 10 + (day - 1);
+		return 365 * y + y / 4 - y / 100 + y / 400 + (m * 306 + 5) / 10 + (_day - 1);
 	}
 }

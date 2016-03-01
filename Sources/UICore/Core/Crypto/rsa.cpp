@@ -42,7 +42,7 @@ namespace uicore
 
 	DataBufferPtr RSA::encrypt(int block_type, Random &random, const DataBufferPtr &in_public_exponent, const DataBufferPtr &in_modulus, const SecretPtr &in_data)
 	{
-		return RSA_Impl::encrypt(block_type, random, in_public_exponent->data(), in_public_exponent->size(), in_modulus->data(), in_modulus->size(), in_data->get_data(), in_data->get_size());
+		return RSA_Impl::encrypt(block_type, random, in_public_exponent->data(), in_public_exponent->size(), in_modulus->data(), in_modulus->size(), in_data->data(), in_data->size());
 	}
 
 	SecretPtr RSA::decrypt(const SecretPtr &in_private_exponent, const DataBufferPtr &in_modulus, const DataBufferPtr &in_data)

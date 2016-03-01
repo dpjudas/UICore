@@ -43,7 +43,7 @@ namespace uicore
 		reset();
 	}
 
-	std::string SHA256_Impl::get_hash(bool uppercase) const
+	std::string SHA256_Impl::hash(bool uppercase) const
 	{
 		if (calculated == false)
 			throw Exception("SHA-256 hash has not been calculated yet!");
@@ -70,7 +70,7 @@ namespace uicore
 		return digest;
 	}
 
-	void SHA256_Impl::get_hash(unsigned char *out_hash) const
+	void SHA256_Impl::hash(unsigned char *out_hash) const
 	{
 		if (calculated == false)
 			throw Exception("SHA-256 hash has not been calculated yet!");
@@ -188,7 +188,7 @@ namespace uicore
 				sha224->add(key_data, key_size);
 				sha224->calculate();
 				key_chunk_filled = SHA224::hash_size;
-				sha224->get_hash(hmac_key_chunk);
+				sha224->hash(hmac_key_chunk);
 			}
 			else if (sha_type == cl_sha_256)
 			{
@@ -196,7 +196,7 @@ namespace uicore
 				sha256->add(key_data, key_size);
 				sha256->calculate();
 				key_chunk_filled = SHA256::hash_size;
-				sha256->get_hash(hmac_key_chunk);
+				sha256->hash(hmac_key_chunk);
 			}
 			else
 			{
@@ -278,7 +278,7 @@ namespace uicore
 			}
 
 			unsigned char temp_hash[SHA256::hash_size];
-			get_hash(temp_hash);
+			hash(temp_hash);
 			reset();
 			add(hmac_key_chunk, block_size);	// Add the outer HMAC
 			add(temp_hash, hash_size);

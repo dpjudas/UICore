@@ -40,7 +40,7 @@ namespace uicore
 		GLuint last_render_buffer = 0;
 		glGetIntegerv(GL_RENDERBUFFER_BINDING, (GLint *)&last_render_buffer);
 
-		TextureFormat_GL tf = OpenGL::get_textureformat(texture_format);
+		TextureFormat_GL tf = OpenGL::textureformat(texture_format);
 		if (!tf.valid)
 			throw Exception("Texture format not supported by OpenGL");
 

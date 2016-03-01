@@ -40,10 +40,10 @@ namespace uicore
 	{
 	public:
 		/// \brief Get the current time (since system boot), in milliseconds.
-		static uint64_t get_time();
+		static uint64_t time();
 
 		/// \brief Get the current time microseconds.
-		static uint64_t get_microseconds();
+		static uint64_t microseconds();
 
 		enum CPU_ExtensionX86 { mmx, mmx_ex, _3d_now, _3d_now_ex, sse, sse2, sse3, ssse3, sse4_a, sse4_1, sse4_2, xop, avx, aes, fma3, fma4 };
 		enum CPU_ExtensionPPC { altivec };
@@ -52,7 +52,7 @@ namespace uicore
 		static bool detect_cpu_extension(CPU_ExtensionPPC ext);
 
 		/// \brief Return the number of CPU cores
-		static int get_num_cores();
+		static int num_cores();
 
 		/// \brief Allocates aligned memory
 		static void *aligned_alloc(size_t size, size_t alignment = 16);
@@ -65,7 +65,7 @@ namespace uicore
 
 		/// \brief Returns the function names and lines for the specified stack frame addresses
 		/** <p>On Linux, to obtain function names, remember to link with the -rdynamic flag </p>*/
-		static std::vector<std::string> get_stack_frames_text(void **frames, int num_frames);
+		static std::vector<std::string> stack_frames_text(void **frames, int num_frames);
 
 		/// \brief Sleep for 'millis' milliseconds.
 		///
@@ -88,6 +88,6 @@ namespace uicore
 			from <tt>/proc/self/exe</tt> under GNU/Linux and from
 			GetModuleFileName() on Win32.</p>
 			\return full dirname of the executable, trailing slash is included*/
-		static std::string get_exe_path();
+		static std::string exe_path();
 	};
 }

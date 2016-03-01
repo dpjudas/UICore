@@ -64,7 +64,7 @@ namespace uicore
 		/// \param intersect = On Return: true if the lines intersect, false if the lines are parallel
 		/// \param range = Rounding error delta, to use to judge whether of not the lines intersect
 		/// \return The point
-		Vec3<Type> get_intersection(const Line3x<Type> &second, bool &intersect, Type range = (Type) 0.5) const;
+		Vec3<Type> intersection(const Line3x<Type> &second, bool &intersect, Type range = (Type) 0.5) const;
 
 		/// \brief = operator.
 		Line3x<Type> &operator = (const Line3x<Type>& copy) { p = copy.p; q = copy.q; return *this; }
@@ -99,7 +99,7 @@ namespace uicore
 		/// \param second = The second line to use
 		/// \param intersect = On Return: true if the lines intersect, false if the lines are parallel
 		/// \return The point
-		Vec2<Type> get_intersection(const Line2x<Type> &second, bool &intersect) const;
+		Vec2<Type> intersection(const Line2x<Type> &second, bool &intersect) const;
 
 		/// \brief Return [<0, 0, >0] if the Point P is right, on or left of the line trough A,B
 		///

@@ -186,21 +186,21 @@ namespace uicore
 			int_attributes.push_back(minor_version);
 
 			int_attributes.push_back(0x2093);	// WGL_CONTEXT_LAYER_PLANE_ARB
-			int_attributes.push_back(gldesc.get_layer_plane());
+			int_attributes.push_back(gldesc.layer_plane());
 			int_attributes.push_back(0x2094);	// WGL_CONTEXT_FLAGS_ARB
 			int flags = 0;
-			if (gldesc.get_debug())
+			if (gldesc.debug())
 				flags |= 0x1;	// WGL_CONTEXT_DEBUG_BIT_ARB
-			if (gldesc.get_forward_compatible())	// WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB
+			if (gldesc.forward_compatible())	// WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB
 				flags |= 0x2;
 			int_attributes.push_back(flags);
 
 			int_attributes.push_back(0x9126);	// WGL_CONTEXT_PROFILE_MASK_ARB
 			flags = 0;
-			if (gldesc.get_core_profile())
+			if (gldesc.core_profile())
 				flags |= 0x1;	// WGL_CONTEXT_CORE_PROFILE_BIT_ARB
 
-			if (gldesc.get_compatibility_profile())	// WGL_CONTEXT_COMPATIBILITY_PROFILE_BIT_ARB
+			if (gldesc.compatibility_profile())	// WGL_CONTEXT_COMPATIBILITY_PROFILE_BIT_ARB
 				flags |= 0x2;
 			int_attributes.push_back(flags);
 

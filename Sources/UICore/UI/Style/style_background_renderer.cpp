@@ -97,7 +97,7 @@ namespace uicore
 		ImagePtr image;
 
 		if (layer_image.is_url())
-			image = ImageSource::from_resource(layer_image.text())->get_image(canvas);
+			image = ImageSource::from_resource(layer_image.text())->image(canvas);
 
 		if (image)
 		{
@@ -213,8 +213,8 @@ namespace uicore
 			}
 
 			bool intersect = false;
-			brush.start_point = Line2f(center, center + Vec2f(dx, dy)).get_intersection(Line2f(corner1, corner1 + Vec2f(-dy, dx)), intersect);
-			brush.end_point = Line2f(center, center + Vec2f(dx, dy)).get_intersection(Line2f(corner2, corner2 + Vec2f(-dy, dx)), intersect);
+			brush.start_point = Line2f(center, center + Vec2f(dx, dy)).intersection(Line2f(corner1, corner1 + Vec2f(-dy, dx)), intersect);
+			brush.end_point = Line2f(center, center + Vec2f(dx, dy)).intersection(Line2f(corner2, corner2 + Vec2f(-dy, dx)), intersect);
 		}
 		else if (prop_angle.is_keyword("top-left"))
 		{

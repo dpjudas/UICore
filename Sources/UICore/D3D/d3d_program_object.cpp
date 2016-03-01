@@ -44,22 +44,22 @@ namespace uicore
 	{
 	}
 
-	std::string D3DProgramObject::get_info_log() const
+	std::string D3DProgramObject::info_log() const
 	{
 		return std::string();
 	}
 
-	std::vector<ShaderObjectPtr> D3DProgramObject::get_shaders() const
+	std::vector<ShaderObjectPtr> D3DProgramObject::shaders() const
 	{
 		return std::vector<ShaderObjectPtr>();
 	}
 
-	int D3DProgramObject::get_attribute_location(const std::string &name) const
+	int D3DProgramObject::attribute_location(const std::string &name) const
 	{
 		return -1;
 	}
 
-	int D3DProgramObject::get_uniform_location(const std::string &name) const
+	int D3DProgramObject::uniform_location(const std::string &name) const
 	{
 		std::map<std::string, int>::const_iterator it = uniform_names.find(name);
 		if (it != uniform_names.end())
@@ -68,12 +68,12 @@ namespace uicore
 			return -1;
 	}
 
-	int D3DProgramObject::get_uniform_buffer_size(int block_index) const
+	int D3DProgramObject::uniform_buffer_size(int block_index) const
 	{
 		return 0;
 	}
 
-	int D3DProgramObject::get_uniform_buffer_index(const std::string &block_name) const
+	int D3DProgramObject::uniform_buffer_index(const std::string &block_name) const
 	{
 		std::map<std::string, int>::const_iterator it = uniform_block_names.find(block_name);
 		if (it != uniform_block_names.end())
@@ -82,7 +82,7 @@ namespace uicore
 			return -1;
 	}
 
-	int D3DProgramObject::get_storage_buffer_index(const std::string &block_name) const
+	int D3DProgramObject::storage_buffer_index(const std::string &block_name) const
 	{
 		std::map<std::string, int>::const_iterator it = storage_block_names.find(block_name);
 		if (it != storage_block_names.end())
@@ -98,20 +98,20 @@ namespace uicore
 
 	D3DShaderObject *D3DProgramObject::get_shader_provider(ShaderType shader_type)
 	{
-		if (shaders[(int)shader_type])
-			return static_cast<D3DShaderObject*>(shaders[(int)shader_type].get());
+		if (_shaders[(int)shader_type])
+			return static_cast<D3DShaderObject*>(_shaders[(int)shader_type].get());
 		else
 			return 0;
 	}
 
 	void D3DProgramObject::attach(const ShaderObjectPtr &obj)
 	{
-		shaders[(int)obj->shader_type()] = obj;
+		_shaders[(int)obj->shader_type()] = obj;
 	}
 
 	void D3DProgramObject::detach(const ShaderObjectPtr &obj)
 	{
-		shaders[(int)obj->shader_type()].reset();
+		_shaders[(int)obj->shader_type()].reset();
 	}
 
 	void D3DProgramObject::bind_attribute_location(int index, const std::string &name)
@@ -142,9 +142,9 @@ namespace uicore
 	{
 		for (int j = 0; j < (int)ShaderType::num_types; j++)
 		{
-			if (shaders[j])
+			if (_shaders[j])
 			{
-				D3DShaderObject *shader_provider = static_cast<D3DShaderObject*>(shaders[j].get());
+				D3DShaderObject *shader_provider = static_cast<D3DShaderObject*>(_shaders[j].get());
 
 				std::map<std::string, int>::iterator it, it2;
 				for (it = shader_provider->sampler_locations.begin(); it != shader_provider->sampler_locations.end(); ++it)

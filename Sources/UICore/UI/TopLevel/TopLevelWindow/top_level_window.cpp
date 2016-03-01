@@ -44,7 +44,7 @@ namespace uicore
 	{
 	}
 
-	DisplayWindowPtr TopLevelWindow::get_display_window()
+	DisplayWindowPtr TopLevelWindow::display_window()
 	{
 		return impl->window;
 	}
@@ -93,7 +93,7 @@ namespace uicore
 		impl->window->hide();
 	}
 
-	CanvasPtr TopLevelWindow::get_canvas() const
+	CanvasPtr TopLevelWindow::canvas() const
 	{
 		return impl->canvas;
 	}

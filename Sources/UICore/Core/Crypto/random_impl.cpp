@@ -58,7 +58,7 @@ namespace uicore
 #endif
 	}
 
-	void Random_Impl::get_random_bytes(unsigned char *out_dest_ptr, int num_bytes)
+	void Random_Impl::random_bytes(unsigned char *out_dest_ptr, int num_bytes)
 	{
 		while (num_bytes > 0)
 		{
@@ -80,7 +80,7 @@ namespace uicore
 		}
 	}
 
-	void Random_Impl::get_random_bytes_nzero(unsigned char *out_dest_ptr, int num_bytes)
+	void Random_Impl::random_bytes_nzero(unsigned char *out_dest_ptr, int num_bytes)
 	{
 		while (num_bytes > 0)
 		{
@@ -124,15 +124,15 @@ namespace uicore
 
 	}
 
-	bool Random_Impl::get_random_bool()
+	bool Random_Impl::random_bool()
 	{
 		if (!random_bool_bits_free)
 		{
-			get_random_bytes(&random_bool, 1);
+			random_bytes(&_random_bool, 1);
 			random_bool_bits_free = 8;
 		}
 		random_bool_bits_free--;
 
-		return ((random_bool >> random_bool_bits_free) & 1);
+		return ((_random_bool >> random_bool_bits_free) & 1);
 	}
 }

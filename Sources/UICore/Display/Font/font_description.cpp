@@ -56,57 +56,57 @@ namespace uicore
 			throw Exception("is null");
 	}
 
-	float FontDescription::get_height() const
+	float FontDescription::height() const
 	{
 		return impl->height;
 	}
 
-	float FontDescription::get_line_height() const
+	float FontDescription::line_height() const
 	{
 		return impl->line_height;
 	}
 
-	float FontDescription::get_average_width() const
+	float FontDescription::average_width() const
 	{
 		return impl->average_width;
 	}
 
-	float FontDescription::get_escapement() const
+	float FontDescription::escapement() const
 	{
 		return impl->escapement;
 	}
 
-	float FontDescription::get_orientation() const
+	float FontDescription::orientation() const
 	{
 		return impl->orientation;
 	}
 
-	FontWeight FontDescription::get_weight() const
+	FontWeight FontDescription::weight() const
 	{
 		return impl->weight;
 	}
 
-	FontStyle FontDescription::get_style() const
+	FontStyle FontDescription::style() const
 	{
 		return impl->style;
 	}
 
-	bool FontDescription::get_anti_alias() const
+	bool FontDescription::anti_alias() const
 	{
 		return impl->anti_alias;
 	}
 
-	bool FontDescription::get_subpixel() const
+	bool FontDescription::subpixel() const
 	{
 		return impl->subpixel;
 	}
 
-	FontDescription::Charset FontDescription::get_charset() const
+	FontDescription::Charset FontDescription::charset() const
 	{
 		return impl->charset;
 	}
 
-	std::string FontDescription::get_unique_id() const
+	std::string FontDescription::unique_id() const
 	{
 		StringFormat format("%1-%2-%3-%4-%5-%6-%7-%8-%9");
 		format.set_arg(1, impl->anti_alias ? 1 : 0);
@@ -118,7 +118,7 @@ namespace uicore
 		format.set_arg(7, static_cast<int>(impl->weight));
 		format.set_arg(8, static_cast<int>(impl->style));
 		format.set_arg(9, impl->charset);
-		return format.get_result();
+		return format.result();
 	}
 
 	bool FontDescription::operator==(const FontDescription &other) const

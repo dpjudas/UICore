@@ -39,8 +39,8 @@ namespace uicore
 	public:
 		MD5_Impl();
 
-		std::string get_hash(bool uppercase = false) const override;
-		void get_hash(unsigned char out_hash[16]) const override;
+		std::string hash(bool uppercase = false) const override;
+		void hash(unsigned char out_hash[16]) const override;
 		void reset() override;
 		void add(const void *data, int size) override;
 		void add(const DataBufferPtr &data) override { add(data->data(), data->size()); }

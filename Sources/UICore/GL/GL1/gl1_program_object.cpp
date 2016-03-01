@@ -68,37 +68,37 @@ namespace uicore
 
 	}
 
-	std::vector<ShaderObjectPtr> GL1ProgramObject::get_shaders() const
+	std::vector<ShaderObjectPtr> GL1ProgramObject::shaders() const
 	{
-		return shaders;
+		return _shaders;
 	}
 
-	std::string GL1ProgramObject::get_info_log() const
+	std::string GL1ProgramObject::info_log() const
 	{
 		return std::string("Not implemented");
 	}
 
-	int GL1ProgramObject::get_uniform_location(const std::string &name) const
+	int GL1ProgramObject::uniform_location(const std::string &name) const
 	{
 		return -1;
 	}
 
-	int GL1ProgramObject::get_attribute_location(const std::string &name) const
+	int GL1ProgramObject::attribute_location(const std::string &name) const
 	{
 		return -1;
 	}
 
-	int GL1ProgramObject::get_uniform_buffer_size(int block_index) const
+	int GL1ProgramObject::uniform_buffer_size(int block_index) const
 	{
 		return 0;
 	}
 
-	int GL1ProgramObject::get_uniform_buffer_index(const std::string &block_name) const
+	int GL1ProgramObject::uniform_buffer_index(const std::string &block_name) const
 	{
 		return -1;
 	}
 
-	int GL1ProgramObject::get_storage_buffer_index(const std::string &name) const
+	int GL1ProgramObject::storage_buffer_index(const std::string &name) const
 	{
 		return -1;
 	}
@@ -106,17 +106,17 @@ namespace uicore
 	void GL1ProgramObject::attach(const ShaderObjectPtr &obj)
 	{
 		throw_if_disposed();
-		shaders.push_back(obj);
+		_shaders.push_back(obj);
 	}
 
 	void GL1ProgramObject::detach(const ShaderObjectPtr &obj)
 	{
 		throw_if_disposed();
-		for (std::vector<ShaderObject>::size_type i = 0; i < shaders.size(); i++)
+		for (std::vector<ShaderObject>::size_type i = 0; i < _shaders.size(); i++)
 		{
-			if (shaders[i] == obj)
+			if (_shaders[i] == obj)
 			{
-				shaders.erase(shaders.begin() + i);
+				_shaders.erase(_shaders.begin() + i);
 				break;
 			}
 		}

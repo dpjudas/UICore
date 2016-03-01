@@ -64,19 +64,19 @@ namespace uicore
 
 	void FontEngine_Win32::load_font(const FontDescription &desc, const std::string &typeface_name, float pixel_ratio)
 	{
-		float device_font_size = std::abs(desc.get_height()) * pixel_ratio;
-		float device_average_width = desc.get_average_width() * pixel_ratio;
+		float device_font_size = std::abs(desc.height()) * pixel_ratio;
+		float device_average_width = desc.average_width() * pixel_ratio;
 
 		handle = CreateFont(
 			-device_font_size,
 			device_average_width,
-			static_cast<int>(desc.get_escapement() * 10.0f + 0.5f),
-			static_cast<int>(desc.get_orientation() * 10.0f + 0.5f),
-			static_cast<int>(desc.get_weight()),
-			desc.get_style() == FontStyle::italic ? TRUE : FALSE,
+			static_cast<int>(desc.escapement() * 10.0f + 0.5f),
+			static_cast<int>(desc.orientation() * 10.0f + 0.5f),
+			static_cast<int>(desc.weight()),
+			desc.style() == FontStyle::italic ? TRUE : FALSE,
 			FALSE,
 			FALSE,
-			decode_charset(desc.get_charset()),
+			decode_charset(desc.charset()),
 			OUT_DEFAULT_PRECIS,
 			CLIP_DEFAULT_PRECIS,
 			DEFAULT_QUALITY,
@@ -105,7 +105,7 @@ namespace uicore
 			metrics.tmDescent / pixel_ratio,
 			metrics.tmInternalLeading / pixel_ratio,
 			metrics.tmExternalLeading / pixel_ratio,
-			desc.get_line_height(),		// Calculated in FontMetrics as tmHeight + tmExternalLeading if not specified
+			desc.line_height(),		// Calculated in FontMetrics as tmHeight + tmExternalLeading if not specified
 			pixel_ratio);
 
 		font_description = desc.clone();
@@ -127,13 +127,13 @@ namespace uicore
 
 	FontPixelBuffer FontEngine_Win32::get_font_glyph(int glyph)
 	{
-		if (font_description.get_subpixel())
+		if (font_description.subpixel())
 		{
 			return get_font_glyph_subpixel(glyph);
 		}
 		else
 		{
-			return get_font_glyph_standard(glyph, font_description.get_anti_alias());
+			return get_font_glyph_standard(glyph, font_description.anti_alias());
 		}
 	}
 

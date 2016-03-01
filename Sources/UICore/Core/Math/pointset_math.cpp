@@ -232,7 +232,7 @@ namespace uicore
 		Line2f line_b(ki_mid, ki_norm);
 
 		bool did_intersect;
-		smalldisc.position = line_a.get_intersection(line_b, did_intersect);
+		smalldisc.position = line_a.intersection(line_b, did_intersect);
 
 		// Since (i,j,k) are all on the circle, just get distance to one of them
 		smalldisc.radius = smalldisc.position.distance(points[i]);

@@ -68,7 +68,7 @@ namespace uicore
 		handles.push_back(impl->notify_handle);
 		for (int i = 0; i < count; i++)
 		{
-			handles.push_back(events[i]->get_socket_handle()->wait_handle);
+			handles.push_back(events[i]->socket_handle()->wait_handle);
 		}
 
 		DWORD result = WaitForMultipleObjects(handles.size(), &handles[0], FALSE, timeout > 0 ? timeout : INFINITE);
@@ -79,7 +79,7 @@ namespace uicore
 
 		for (int i = 0; i < count; i++)
 		{
-			events[i]->get_socket_handle()->reset_wait_handle();
+			events[i]->socket_handle()->reset_wait_handle();
 		}
 
 		ResetEvent(impl->notify_handle);
@@ -147,7 +147,7 @@ namespace uicore
 
 		for (int i = 0; i < count; i++)
 		{
-			events[i]->get_socket_handle()->begin_wait(rfds, wfds, max_fd);
+			events[i]->socket_handle()->begin_wait(rfds, wfds, max_fd);
 		}
 
 		timeval tv;
@@ -161,7 +161,7 @@ namespace uicore
 
 		for (int i = 0; i < count; i++)
 		{
-			events[i]->get_socket_handle()->end_wait(rfds, wfds);
+			events[i]->socket_handle()->end_wait(rfds, wfds);
 		}
 
 		impl->reset_notify();

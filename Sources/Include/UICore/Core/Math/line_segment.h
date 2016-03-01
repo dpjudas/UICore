@@ -68,7 +68,7 @@ namespace uicore
 		/// \brief Get the midpoint of this line
 		///
 		/// \return The midpoint
-		Vec3<Type> get_midpoint() const { return Vec3<Type>((q.x + p.x) / ((Type)2), (q.y + p.y) / ((Type)2), (q.z + p.z) / ((Type)2)); };
+		Vec3<Type> midpoint() const { return Vec3<Type>((q.x + p.x) / ((Type)2), (q.y + p.y) / ((Type)2), (q.z + p.z) / ((Type)2)); };
 
 		/// \brief Calculate the distance from a line segment to a point
 		///
@@ -108,7 +108,7 @@ namespace uicore
 		/// \brief Get the midpoint of this line
 		///
 		/// \return The midpoint
-		Vec2<Type> get_midpoint() const { return Vec2<Type>((q.x + p.x) / ((Type)2), (q.y + p.y) / ((Type)2)); };
+		Vec2<Type> midpoint() const { return Vec2<Type>((q.x + p.x) / ((Type)2), (q.y + p.y) / ((Type)2)); };
 
 		/// \brief Return the distance from a point to a line.
 		///
@@ -133,7 +133,7 @@ namespace uicore
 		/// \param second = Second line.
 		/// \param intersect = On Return: The intercept. If the lines are parallel, this contains this line's first point
 		/// \return true if the lines intersect, false if the lines are parallel
-		Vec2<Type> get_intersection(const LineSegment2x<Type> &second, bool &intersect) const;
+		Vec2<Type> intersection(const LineSegment2x<Type> &second, bool &intersect) const;
 
 		/// \brief Return [<0, 0, >0] if the Point P is right, on or left of the line trough A,B
 		///

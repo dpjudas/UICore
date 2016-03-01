@@ -60,8 +60,8 @@ namespace uicore
 		void show(WindowShowType type = WindowShowType::show);
 		void hide();
 
-		DisplayWindowPtr get_display_window() override;
-		CanvasPtr get_canvas() const override;
+		DisplayWindowPtr display_window() override;
+		CanvasPtr canvas() const override;
 
 	protected:
 		void set_needs_render() override;

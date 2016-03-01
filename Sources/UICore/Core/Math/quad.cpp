@@ -34,21 +34,21 @@
 namespace uicore
 {
 	template<typename Type>
-	Type Quadx<Type>::get_width() const
+	Type Quadx<Type>::width() const
 	{
 		return max(max(max(p.x, q.x), r.x), s.x)
 			- min(min(min(p.x, q.x), r.x), s.x);
 	}
 
 	template<typename Type>
-	Type Quadx<Type>::get_height() const
+	Type Quadx<Type>::height() const
 	{
 		return max(max(max(p.y, q.y), r.y), s.y)
 			- min(min(min(p.y, q.y), r.y), s.y);
 	}
 
 	template<typename Type>
-	Rect Quadx<Type>::get_bounds() const
+	Rect Quadx<Type>::bounds() const
 	{
 		return Rect(
 			min(min(min(p.x, q.x), r.x), s.x),
@@ -90,14 +90,14 @@ namespace uicore
 	template<typename Type>
 	Vec2<Type> Quadx<Type>::center() const
 	{
-		Rect r = get_bounds();
+		Rect r = bounds();
 		return Vec2<Type>((r.left + r.right) / 2, (r.top + r.bottom) / 2);
 	}
 
 	template<typename Type>
 	Quadx<Type> &Quadx<Type>::apply_alignment(Origin origin, Type x, Type y)
 	{
-		Vec2<Type> offset = Vec2<Type>::calc_origin(origin, get_size());
+		Vec2<Type> offset = Vec2<Type>::calc_origin(origin, size());
 		offset.x -= x;
 		offset.y -= y;
 

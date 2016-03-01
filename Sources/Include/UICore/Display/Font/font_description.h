@@ -102,36 +102,36 @@ namespace uicore
 		void throw_if_null() const;
 
 		/// \brief Returns the font height
-		float get_height() const;
+		float height() const;
 
 		/// \brief Returns the distance between each line
-		float get_line_height() const;
+		float line_height() const;
 
 		/// \brief Returns the font average width
 		///
 		/// 0.0f = Use default
-		float get_average_width() const;
+		float average_width() const;
 
 		/// \brief Returns the font escapement
-		float get_escapement() const;
+		float escapement() const;
 
 		/// \brief Returns the font orientation
-		float get_orientation() const;
+		float orientation() const;
 
 		/// \brief Returns the font weight
-		FontWeight get_weight() const;
+		FontWeight weight() const;
 
 		/// \brief Returns the font style
-		FontStyle get_style() const;
+		FontStyle style() const;
 
 		/// \brief Get the font anti-alias setting (defaults to true)
-		bool get_anti_alias() const;
+		bool anti_alias() const;
 
 		/// \brief Get the font subpixel rendering setting (defaults to true)
-		bool get_subpixel() const;
+		bool subpixel() const;
 
 		/// \biref Get the font charset
-		Charset get_charset() const;
+		Charset charset() const;
 
 		/// \brief Returns true if the font is identical
 		/// Line_height is excluded.
@@ -141,7 +141,7 @@ namespace uicore
 		///
 		/// This is useful for placing font descriptions in a map.
 		/// Line_height is excluded.
-		std::string get_unique_id() const;
+		std::string unique_id() const;
 
 		/// \brief Copy assignment operator (does not copy the description, use clone() if you want that)
 		FontDescription &operator =(const FontDescription &copy);

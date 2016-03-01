@@ -148,7 +148,7 @@ namespace uicore
 #endif
 	}
 
-	std::vector<std::string> System::get_stack_frames_text(void **frames, int num_frames)
+	std::vector<std::string> System::stack_frames_text(void **frames, int num_frames)
 	{
 #ifdef WIN32
 		static std::recursive_mutex mutex;
@@ -285,11 +285,11 @@ namespace uicore
 		// For sleep less than 30ms (except 0), we perform a spinlock to increase the accuracy of sleep() to avoid the win32 scheduler misunderstanding the sleep hint
 		if ((msecs < 30) && (msecs >0))
 		{
-			uint64_t time_start = get_time();
+			uint64_t time_start = time();
 			do
 			{
 				Sleep(0);
-			} while ((get_time() - time_start) < msecs);
+			} while ((time() - time_start) < msecs);
 		}
 		else
 		{
@@ -304,7 +304,7 @@ namespace uicore
 #endif
 	}
 
-	int System::get_num_cores()
+	int System::num_cores()
 	{
 #ifdef WIN32
 		SYSTEM_INFO system_info;

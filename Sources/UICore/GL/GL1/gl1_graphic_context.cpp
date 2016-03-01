@@ -425,7 +425,7 @@ namespace uicore
 				set_active();
 				framebuffer_bound ? framebuffer_provider->set_state(selected_state.rasterizer) : selected_state.rasterizer.apply();
 
-				scissor_enabled = gl1_state->desc.get_enable_scissor();
+				scissor_enabled = gl1_state->desc.enable_scissor();
 			}
 		}
 		else

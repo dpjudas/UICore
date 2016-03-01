@@ -41,22 +41,22 @@ namespace uicore
 		RasterizerStateDescription();
 		RasterizerStateDescription clone() const;
 
-		bool get_culled() const;
-		bool get_enable_line_antialiasing() const;
-		CullMode get_face_cull_mode() const;
-		FillMode get_face_fill_mode() const;
-		FaceSide get_front_face() const;
-		bool get_enable_scissor() const;
+		bool culled() const;
+		bool enable_line_antialiasing() const;
+		CullMode face_cull_mode() const;
+		FillMode face_fill_mode() const;
+		FaceSide front_face() const;
+		bool enable_scissor() const;
 
-		bool get_antialiased() const;
-		bool get_offset_point() const;
-		bool get_offset_line() const;
-		bool get_offset_fill() const;
-		void get_polygon_offset(float &out_factor, float &out_units) const;
-		float get_point_size() const;
-		float get_point_fade_treshold_size() const;
+		bool antialiased() const;
+		bool offset_point() const;
+		bool offset_line() const;
+		bool offset_fill() const;
+		void polygon_offset(float &out_factor, float &out_units) const;
+		float point_size() const;
+		float point_fade_treshold_size() const;
 		bool is_point_size() const;
-		PointSpriteOrigin get_point_sprite_origin() const;
+		PointSpriteOrigin point_sprite_origin() const;
 
 		/// \brief Enables/disables polygon cull clipping.
 		void set_culled(bool value);

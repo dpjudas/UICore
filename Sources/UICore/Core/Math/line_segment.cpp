@@ -105,7 +105,7 @@ namespace uicore
 		*/
 
 	template<typename Type>
-	Vec2<Type> LineSegment2x<Type>::get_intersection(const LineSegment2x<Type> &second, bool &intersect) const
+	Vec2<Type> LineSegment2x<Type>::intersection(const LineSegment2x<Type> &second, bool &intersect) const
 	{
 		Type denominator = ((q.x - p.x)*(second.q.y - second.p.y) - (q.y - p.y)*(second.q.x - second.p.x));
 

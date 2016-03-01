@@ -48,19 +48,19 @@ namespace uicore
 		///
 		/// out_dest_ptr = Where to write to
 		/// num_bytes = Number of bytes to copy
-		virtual void get_random_bytes(unsigned char *out_dest_ptr, int num_bytes) = 0;
+		virtual void random_bytes(unsigned char *out_dest_ptr, int num_bytes) = 0;
 
 		/// \brief Get the random bytes excluding bytes containing 0
 		///
 		/// out_dest_ptr = Where to write to
 		/// num_bytes = Number of bytes to copy
-		virtual void get_random_bytes_nzero(unsigned char *out_dest_ptr, int num_bytes) = 0;
+		virtual void random_bytes_nzero(unsigned char *out_dest_ptr, int num_bytes) = 0;
 
 		/// \brief Get the random boolean
 		///
 		/// out_dest_ptr = Where to write to
 		/// num_bytes = Number of bytes to copy
-		virtual bool get_random_bool() = 0;
+		virtual bool random_bool() = 0;
 	};
 
 	typedef std::shared_ptr<Random> RandomPtr;

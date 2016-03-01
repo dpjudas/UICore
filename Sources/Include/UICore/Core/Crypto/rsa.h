@@ -75,7 +75,7 @@ namespace uicore
 		/// \param random = Random number generator
 		/// \param in_public_exponent = Public exponent
 		/// \param in_modulus = Modulus
-		/// \param in_data = Data to encrypt (maximum length is in_modulus.get_size() - 11)
+		/// \param in_data = Data to encrypt (maximum length is in_modulus.size() - 11)
 		/// \return Encrypted data
 		static DataBufferPtr encrypt(int block_type, Random &random, const DataBufferPtr &in_public_exponent, const DataBufferPtr &in_modulus, const SecretPtr &in_data);
 
@@ -99,7 +99,7 @@ namespace uicore
 		///
 		/// \param in_private_exponent = Private exponent
 		/// \param in_modulus = Modulus
-		/// \param in_data = Data to decrypt (length equals in_modulus.get_size())
+		/// \param in_data = Data to decrypt (length equals in_modulus.size())
 		/// \return Decrypted data
 		static SecretPtr decrypt(const SecretPtr &in_private_exponent, const DataBufferPtr &in_modulus, const DataBufferPtr &in_data);
 

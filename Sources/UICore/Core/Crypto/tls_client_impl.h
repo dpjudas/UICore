@@ -240,11 +240,11 @@ namespace uicore
 		TLSClient_Impl();
 		~TLSClient_Impl();
 
-		const void *get_decrypted_data() const override;
-		int get_decrypted_data_available() const override;
+		const void *decrypted_data() const override;
+		int decrypted_data_available() const override;
 
-		const void *get_encrypted_data() const override;
-		int get_encrypted_data_available() const override;
+		const void *encrypted_data() const override;
+		int encrypted_data_available() const override;
 
 		int encrypt(const void *data, int size) override;
 		int decrypt(const void *data, int size) override;

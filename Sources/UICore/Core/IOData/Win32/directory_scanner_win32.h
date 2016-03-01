@@ -40,10 +40,10 @@ namespace uicore
 
 		bool scan(const std::string &pathname) override;
 		bool scan(const std::string &pathname, const std::string &pattern) override;
-		std::string get_directory_path() override;
-		int get_size() override;
-		std::string get_name() override;
-		std::string get_pathname() override;
+		std::string directory_path() override;
+		int size() override;
+		std::string name() override;
+		std::string pathname() override;
 		bool is_directory() override;
 		bool is_hidden() override;
 		bool is_readable() override;
@@ -56,6 +56,6 @@ namespace uicore
 		WIN32_FIND_DATA fileinfo;
 		HANDLE handle;
 		bool first_next;
-		std::string directory_path;
+		std::string _directory_path;
 	};
 }

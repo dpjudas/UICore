@@ -45,10 +45,10 @@ namespace uicore
 		bool is_end();
 
 		/// \brief Get the character at the current position
-		unsigned int get_char();
+		unsigned int character();
 
 		/// \brief Returns the length of the current character
-		std::string::size_type get_char_length();
+		std::string::size_type char_length();
 
 		/// \brief Moves position to the previous character
 		void prev();
@@ -60,7 +60,7 @@ namespace uicore
 		void move_to_leadbyte();
 
 		/// \brief Get the current position of the reader
-		std::string::size_type get_position();
+		std::string::size_type position();
 
 		/// \brief Set the current position of the reader
 		void set_position(std::string::size_type position);

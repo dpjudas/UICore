@@ -47,28 +47,28 @@ namespace uicore
 		virtual ~OpenGLContextDescription();
 
 		/// \brief Returns selected major version number
-		int get_version_major() const;
+		int version_major() const;
 
 		/// \brief Returns selected minor version number
-		int get_version_minor() const;
+		int version_minor() const;
 
 		/// \brief Returns true if allowed lower versions than the selected version
-		bool get_allow_lower_versions() const;
+		bool allow_lower_versions() const;
 
 		/// \brief Returns true if the debug flag is set
-		bool get_debug() const;
+		bool debug() const;
 
 		/// \brief Returns true if the forward compatible flag is set
-		bool get_forward_compatible() const;
+		bool forward_compatible() const;
 
 		/// \brief Returns true if the core profile flag is set
-		bool get_core_profile() const;
+		bool core_profile() const;
 
 		/// \brief Returns true if the compatibility profile flag is set
-		bool get_compatibility_profile() const;
+		bool compatibility_profile() const;
 
 		/// \brief Returns the layer plane value
-		int get_layer_plane() const;
+		int layer_plane() const;
 
 		/// \brief Select the OpenGL version number
 		///

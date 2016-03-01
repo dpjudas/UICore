@@ -77,7 +77,7 @@ namespace uicore
 
 	bool DisplayMessageQueue_Win32::process(int timeout_ms)
 	{
-		auto time_start = System::get_time();
+		auto time_start = System::time();
 		while (true)
 		{
 			while (true)
@@ -95,7 +95,7 @@ namespace uicore
 				}
 			}
 
-			auto time_now = System::get_time();
+			auto time_now = System::time();
 			int64_t time_remaining_ms = timeout_ms - (time_now - time_start);
 
 			if (time_remaining_ms <= 0)

@@ -47,7 +47,7 @@ namespace uicore
 		return current_position >= length;
 	}
 
-	unsigned int UTF8_Reader::get_char()
+	unsigned int UTF8_Reader::character()
 	{
 		if (current_position >= length)
 			return 0;
@@ -78,7 +78,7 @@ namespace uicore
 
 	}
 
-	std::string::size_type UTF8_Reader::get_char_length()
+	std::string::size_type UTF8_Reader::char_length()
 	{
 		if (current_position < length)
 		{
@@ -114,7 +114,7 @@ namespace uicore
 
 	void UTF8_Reader::next()
 	{
-		current_position += get_char_length();
+		current_position += char_length();
 
 	}
 
@@ -134,7 +134,7 @@ namespace uicore
 
 	}
 
-	std::string::size_type UTF8_Reader::get_position()
+	std::string::size_type UTF8_Reader::position()
 	{
 		return current_position;
 	}

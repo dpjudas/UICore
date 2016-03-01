@@ -42,8 +42,8 @@ namespace uicore
 		D3DFrameBuffer(const ComPtr<ID3D11Device> &device);
 		~D3DFrameBuffer();
 
-		Size get_size() const override;
-		FrameBufferBindTarget get_bind_target() const override;
+		Size size() const override;
+		FrameBufferBindTarget bind_target() const override;
 
 		ComPtr<ID3D11Device> &get_device() { return device; }
 		std::vector<ID3D11RenderTargetView*> get_views(ID3D11DepthStencilView *&out_dsv);
@@ -98,6 +98,6 @@ namespace uicore
 		std::vector<AttachedBuffer> color_buffers;
 		AttachedBuffer depth_buffer;
 		AttachedBuffer stencil_buffer;
-		FrameBufferBindTarget bind_target;
+		FrameBufferBindTarget _bind_target;
 	};
 }

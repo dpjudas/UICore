@@ -56,7 +56,7 @@ namespace uicore
 		auto md5 = MD5::create();
 		md5->add(data, size);
 		md5->calculate();
-		return md5->get_hash(uppercase);
+		return md5->hash(uppercase);
 	}
 
 	std::string HashFunctions::md5(const std::string &data, bool uppercase)
@@ -74,7 +74,7 @@ namespace uicore
 		auto md5 = MD5::create();
 		md5->add(data, size);
 		md5->calculate();
-		md5->get_hash(out_hash);
+		md5->hash(out_hash);
 	}
 
 	void HashFunctions::md5(const DataBufferPtr &data, unsigned char out_hash[16])
@@ -93,7 +93,7 @@ namespace uicore
 		auto sha1 = SHA1::create();
 		sha1->add(data, size);
 		sha1->calculate();
-		return sha1->get_hash(uppercase);
+		return sha1->hash(uppercase);
 	}
 
 	std::string HashFunctions::sha1(const std::string &data, bool uppercase)
@@ -111,7 +111,7 @@ namespace uicore
 		auto sha1 = SHA1::create();
 		sha1->add(data, size);
 		sha1->calculate();
-		sha1->get_hash(out_hash);
+		sha1->hash(out_hash);
 	}
 
 	void HashFunctions::sha1(const DataBufferPtr &data, unsigned char out_hash[20])
@@ -129,7 +129,7 @@ namespace uicore
 		auto sha224 = SHA224::create();
 		sha224->add(data, size);
 		sha224->calculate();
-		return sha224->get_hash(uppercase);
+		return sha224->hash(uppercase);
 	}
 
 	std::string HashFunctions::sha224(const std::string &data, bool uppercase)
@@ -147,7 +147,7 @@ namespace uicore
 		auto sha224 = SHA224::create();
 		sha224->add(data, size);
 		sha224->calculate();
-		sha224->get_hash(out_hash);
+		sha224->hash(out_hash);
 	}
 
 	void HashFunctions::sha224(const DataBufferPtr &data, unsigned char out_hash[28])
@@ -165,7 +165,7 @@ namespace uicore
 		auto sha256 = SHA256::create();
 		sha256->add(data, size);
 		sha256->calculate();
-		return sha256->get_hash(uppercase);
+		return sha256->hash(uppercase);
 	}
 
 	std::string HashFunctions::sha256(const std::string &data, bool uppercase)
@@ -183,7 +183,7 @@ namespace uicore
 		auto sha256 = SHA256::create();
 		sha256->add(data, size);
 		sha256->calculate();
-		sha256->get_hash(out_hash);
+		sha256->hash(out_hash);
 	}
 
 	void HashFunctions::sha256(const DataBufferPtr &data, unsigned char out_hash[32])
@@ -202,7 +202,7 @@ namespace uicore
 		auto sha384 = SHA384::create();
 		sha384->add(data, size);
 		sha384->calculate();
-		return sha384->get_hash(uppercase);
+		return sha384->hash(uppercase);
 	}
 
 	std::string HashFunctions::sha384(const std::string &data, bool uppercase)
@@ -220,7 +220,7 @@ namespace uicore
 		auto sha384 = SHA384::create();
 		sha384->add(data, size);
 		sha384->calculate();
-		sha384->get_hash(out_hash);
+		sha384->hash(out_hash);
 	}
 
 	void HashFunctions::sha384(const DataBufferPtr &data, unsigned char out_hash[48])
@@ -238,7 +238,7 @@ namespace uicore
 		auto sha512 = SHA512::create();
 		sha512->add(data, size);
 		sha512->calculate();
-		return sha512->get_hash(uppercase);
+		return sha512->hash(uppercase);
 	}
 
 	std::string HashFunctions::sha512(const std::string &data, bool uppercase)
@@ -256,7 +256,7 @@ namespace uicore
 		auto sha512 = SHA512::create();
 		sha512->add(data, size);
 		sha512->calculate();
-		sha512->get_hash(out_hash);
+		sha512->hash(out_hash);
 	}
 
 	void HashFunctions::sha512(const DataBufferPtr &data, unsigned char out_hash[64])
@@ -274,7 +274,7 @@ namespace uicore
 		auto sha512_224 = SHA512_224::create();
 		sha512_224->add(data, size);
 		sha512_224->calculate();
-		return sha512_224->get_hash(uppercase);
+		return sha512_224->hash(uppercase);
 	}
 
 	std::string HashFunctions::sha512_224(const std::string &data, bool uppercase)
@@ -292,7 +292,7 @@ namespace uicore
 		auto sha512_224 = SHA512_224::create();
 		sha512_224->add(data, size);
 		sha512_224->calculate();
-		sha512_224->get_hash(out_hash);
+		sha512_224->hash(out_hash);
 	}
 
 	void HashFunctions::sha512_224(const DataBufferPtr &data, unsigned char out_hash[28])
@@ -310,7 +310,7 @@ namespace uicore
 		auto sha512_256 = SHA512_256::create();
 		sha512_256->add(data, size);
 		sha512_256->calculate();
-		return sha512_256->get_hash(uppercase);
+		return sha512_256->hash(uppercase);
 	}
 
 	std::string HashFunctions::sha512_256(const std::string &data, bool uppercase)
@@ -328,7 +328,7 @@ namespace uicore
 		auto sha512_256 = SHA512_256::create();
 		sha512_256->add(data, size);
 		sha512_256->calculate();
-		sha512_256->get_hash(out_hash);
+		sha512_256->hash(out_hash);
 	}
 
 	void HashFunctions::sha512_256(const DataBufferPtr &data, unsigned char out_hash[32])

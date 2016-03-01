@@ -41,7 +41,7 @@ namespace uicore
 		reset();
 	}
 
-	DataBufferPtr AES192_Encrypt_Impl::get_data() const
+	DataBufferPtr AES192_Encrypt_Impl::data() const
 	{
 		return databuffer;
 	}

@@ -55,21 +55,21 @@ namespace uicore
 		bool get_validate_status() const;
 
 		/// \brief Returns the current info log for the program object.
-		std::string get_info_log() const override;
+		std::string info_log() const override;
 
 		/// \brief Returns the shaders used in this program.
-		std::vector<ShaderObjectPtr> get_shaders() const override;
+		std::vector<ShaderObjectPtr> shaders() const override;
 
 		/// \brief Returns the location of a named active attribute.
-		int get_attribute_location(const std::string &name) const override;
+		int attribute_location(const std::string &name) const override;
 
 		/// \brief Returns the location of a named uniform variable.
-		int get_uniform_location(const std::string &name) const override;
+		int uniform_location(const std::string &name) const override;
 
-		using ProgramObject::get_uniform_buffer_size;
-		int get_uniform_buffer_size(int block_index) const override;
-		int get_uniform_buffer_index(const std::string &block_name) const override;
-		int get_storage_buffer_index(const std::string &name) const override;
+		using ProgramObject::uniform_buffer_size;
+		int uniform_buffer_size(int block_index) const override;
+		int uniform_buffer_index(const std::string &block_name) const override;
+		int storage_buffer_index(const std::string &name) const override;
 
 		/// \brief Add shader to program object.
 		void attach(const ShaderObjectPtr &obj) override;
@@ -118,7 +118,7 @@ namespace uicore
 		void on_dispose() override;
 
 		GLuint handle = 0;
-		std::vector<ShaderObjectPtr> shaders;
+		std::vector<ShaderObjectPtr> _shaders;
 	};
 
 	class ProgramObjectStateTracker

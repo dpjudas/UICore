@@ -184,7 +184,7 @@ namespace uicore
 		image_renderer.render();
 	}
 
-	FontPtr StyleCascade::get_font() const
+	FontPtr StyleCascade::font() const
 	{
 		auto font_size = computed_value("font-size");
 		auto line_height = computed_value("line-height");

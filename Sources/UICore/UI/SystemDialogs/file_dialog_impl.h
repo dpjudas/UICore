@@ -133,7 +133,7 @@ namespace uicore
 
 			ViewTree *tree = owner->view_tree();
 			if (tree)
-                ofn.hwndOwner = tree->get_display_window()->handle().hwnd;
+                ofn.hwndOwner = tree->display_window()->handle().hwnd;
 			else
 				ofn.hwndOwner = 0;
 

@@ -138,6 +138,6 @@ namespace uicore
 	void StandardPrograms::link(ProgramObjectPtr &program, const std::string &error_message)
 	{
 		if (!program->try_link())
-			throw Exception(string_format("%1: %2", error_message, program->get_info_log()));
+			throw Exception(string_format("%1: %2", error_message, program->info_log()));
 	}
 }

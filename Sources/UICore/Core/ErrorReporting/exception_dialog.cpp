@@ -49,7 +49,7 @@ namespace uicore
 		}
 		catch (Exception &e)
 		{
-			ExceptionDialog_Impl::show(e.get_message_and_stack_trace());
+			ExceptionDialog_Impl::show(e.message_and_stack_trace());
 		}
 		catch (std::exception &e)
 		{
@@ -96,7 +96,7 @@ namespace uicore
 			DispatchMessage(&msg);
 		}
 
-		//MessageBox(0, Text::to_utf16(e.get_message_and_stack_trace()).c_str(), L"Unhandled Exception", MB_OK|MB_ICONERROR);
+		//MessageBox(0, Text::to_utf16(e.message_and_stack_trace()).c_str(), L"Unhandled Exception", MB_OK|MB_ICONERROR);
 	}
 
 	ExceptionDialog_Impl::ExceptionDialog_Impl(const std::string &message_and_stack_trace, HWND owner)

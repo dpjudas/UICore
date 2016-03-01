@@ -152,7 +152,7 @@ namespace uicore
 		/// Gets the current canvas used to render this view
 		///
 		/// This function may return a null canvas if the view does not have a canvas attached to it yet.
-		CanvasPtr get_canvas() const;
+		CanvasPtr canvas() const;
 
 		/// Signals this view needs to be rendered again
 		void set_needs_render();

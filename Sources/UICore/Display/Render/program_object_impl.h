@@ -41,30 +41,30 @@ namespace uicore
 	public:
 		using ProgramObject::set_uniform_buffer_index;
 		using ProgramObject::set_storage_buffer_index;
-		using ProgramObject::get_storage_buffer_index;
-		using ProgramObject::get_uniform_buffer_size;
+		using ProgramObject::storage_buffer_index;
+		using ProgramObject::uniform_buffer_size;
 
 		void link() override
 		{
 			bool result = try_link();
 			if (!result)
-				throw Exception("Shader linking failed: " + get_info_log());
+				throw Exception("Shader linking failed: " + info_log());
 		}
 
 		void set_uniform_buffer_index(const std::string &block_name, int bind_index) override
 		{
-			set_uniform_buffer_index(get_uniform_buffer_index(block_name), bind_index);
+			set_uniform_buffer_index(uniform_buffer_index(block_name), bind_index);
 		}
 
 		void set_storage_buffer_index(const std::string &block_name, int bind_index) override
 		{
-			set_storage_buffer_index(get_storage_buffer_index(block_name), bind_index);
+			set_storage_buffer_index(storage_buffer_index(block_name), bind_index);
 		}
 
-		int get_uniform_buffer_size(const std::string &block_name) const override
+		int uniform_buffer_size(const std::string &block_name) const override
 		{
-			int block_index = get_uniform_buffer_index(block_name);
-			return get_uniform_buffer_size(block_index);
+			int block_index = uniform_buffer_index(block_name);
+			return uniform_buffer_size(block_index);
 		}
 	};
 }

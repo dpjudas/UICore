@@ -61,11 +61,11 @@ namespace uicore
 
 				StencilOp fail_front, pass_depth_fail_front, pass_depth_pass_front;
 				StencilOp fail_back, pass_depth_fail_back, pass_depth_pass_back;
-				desc.get_stencil_compare_front(front, front_ref, front_mask);
-				desc.get_stencil_compare_back(back, back_ref, back_mask);
-				desc.get_stencil_write_mask(front_facing_mask, back_facing_mask);
-				desc.get_stencil_op_front(fail_front, pass_depth_fail_front, pass_depth_pass_front);
-				desc.get_stencil_op_back(fail_back, pass_depth_fail_back, pass_depth_pass_back);
+				desc.stencil_compare_front(front, front_ref, front_mask);
+				desc.stencil_compare_back(back, back_ref, back_mask);
+				desc.stencil_write_mask(front_facing_mask, back_facing_mask);
+				desc.stencil_op_front(fail_front, pass_depth_fail_front, pass_depth_pass_front);
+				desc.stencil_op_back(fail_back, pass_depth_fail_back, pass_depth_pass_back);
 
 				desc.is_stencil_test_enabled() ? glEnable(GL_STENCIL_TEST) : glDisable(GL_STENCIL_TEST);
 
@@ -79,7 +79,7 @@ namespace uicore
 			}
 			desc.is_depth_test_enabled() ? glEnable(GL_DEPTH_TEST) : glDisable(GL_DEPTH_TEST);
 			glDepthMask(desc.is_depth_write_enabled() ? 1 : 0);
-			glDepthFunc(OpenGL::to_enum(desc.get_depth_compare_function()));
+			glDepthFunc(OpenGL::to_enum(desc.depth_compare_function()));
 
 		}
 	}

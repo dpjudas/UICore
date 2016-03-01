@@ -48,12 +48,12 @@ namespace uicore
 		/// \brief Get the key size
 		///
 		/// \return The key size
-		virtual unsigned int get_size() const = 0;
+		virtual unsigned int size() const = 0;
 
 		/// \brief Get the key data
 		///
 		/// \return The key
-		virtual unsigned char *get_data() const = 0;
+		virtual unsigned char *data() const = 0;
 	};
 
 	typedef std::shared_ptr<Secret> SecretPtr;

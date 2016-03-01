@@ -108,7 +108,7 @@ namespace uicore
 		auto program_object = load(gc, vertex_filename, fragment_filename);
 
 		if (!program_object->try_link())
-			throw Exception(string_format("Unable to link program object: %1", program_object->get_info_log()));
+			throw Exception(string_format("Unable to link program object: %1", program_object->info_log()));
 
 		return program_object;
 	}
@@ -118,7 +118,7 @@ namespace uicore
 		auto program_object = load(gc, vertex_filename, geometry_filename, fragment_filename);
 
 		if (!program_object->try_link())
-			throw Exception(string_format("Unable to link program object: %1", program_object->get_info_log()));
+			throw Exception(string_format("Unable to link program object: %1", program_object->info_log()));
 
 		return program_object;
 	}
@@ -128,7 +128,7 @@ namespace uicore
 		auto program_object = load(gc, vertex_file, fragment_file);
 
 		if (!program_object->try_link())
-			throw Exception(string_format("Unable to link program object: %1", program_object->get_info_log()));
+			throw Exception(string_format("Unable to link program object: %1", program_object->info_log()));
 
 		return program_object;
 	}
@@ -138,7 +138,7 @@ namespace uicore
 		auto program_object = load(gc, vertex_file, geometry_file, fragment_file);
 
 		if (!program_object->try_link())
-			throw Exception(string_format("Unable to link program object: %1", program_object->get_info_log()));
+			throw Exception(string_format("Unable to link program object: %1", program_object->info_log()));
 
 		return program_object;
 	}

@@ -229,11 +229,11 @@ namespace uicore
 			set_needs_render();
 	}
 
-	CanvasPtr View::get_canvas() const
+	CanvasPtr View::canvas() const
 	{
 		const ViewTree *tree = view_tree();
 		if (tree)
-			return tree->get_canvas();
+			return tree->canvas();
 		else
 			return nullptr;
 	}

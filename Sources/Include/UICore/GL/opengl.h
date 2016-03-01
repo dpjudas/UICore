@@ -85,7 +85,7 @@ namespace uicore
 		static cl_tls_variable GLFunctions *functions;
 
 		/// \brief Returns the opengl texture format
-		static TextureFormat_GL get_textureformat(TextureFormat format);
+		static TextureFormat_GL textureformat(TextureFormat format);
 
 		/// \brief Sets the thread's OpenGL context to the one used by the graphic context.
 		static void set_active(const GraphicContextPtr &gc);

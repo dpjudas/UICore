@@ -84,9 +84,9 @@ namespace uicore
 			OpenGLCreationHelper helper(handle, device_context);
 			helper.set_multisampling_pixel_format(desc);
 
-			int gl_major = opengl_desc.get_version_major();
-			int gl_minor = opengl_desc.get_version_minor();
-			if (opengl_desc.get_allow_lower_versions() == false)
+			int gl_major = opengl_desc.version_major();
+			int gl_minor = opengl_desc.version_minor();
+			if (opengl_desc.allow_lower_versions() == false)
 			{
 				opengl_context = helper.create_opengl3_context(share_context, gl_major, gl_minor, opengl_desc);
 				if (!opengl_context)
@@ -143,15 +143,15 @@ namespace uicore
 			}
 
 			bool use_gl3;
-			int desc_version_major = opengl_desc.get_version_major();
-			int desc_version_minor = opengl_desc.get_version_minor();
+			int desc_version_major = opengl_desc.version_major();
+			int desc_version_minor = opengl_desc.version_minor();
 
 			// Do not attempt GL3, if not requested that version
 			if (desc_version_major < 3)
 			{
 				use_gl3 = false;
 			}
-			else if (!opengl_desc.get_allow_lower_versions())	// Else, if we do not allow lower versions, only attempt GL3
+			else if (!opengl_desc.allow_lower_versions())	// Else, if we do not allow lower versions, only attempt GL3
 			{
 				use_gl3 = true;
 			}

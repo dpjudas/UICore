@@ -43,7 +43,7 @@ namespace uicore
 	///  {
 	///      while (scanner.next())
 	///      {
-	///          auto name = scanner.get_name();
+	///          auto name = scanner.name();
 	///      }
 	///  }
 	///
@@ -55,19 +55,19 @@ namespace uicore
 
 		/// \brief Gets the directory being scanned.
 		/** \return Directory being scanned. (including the trailing slash)*/
-		virtual std::string get_directory_path() = 0;
+		virtual std::string directory_path() = 0;
 
 		/// \brief Gets the name of the current file.
 		/** \return The name of the current found file.*/
-		virtual std::string get_name() = 0;
+		virtual std::string name() = 0;
 
 		/// \brief Gets the size of the current file.
 		/** \return The size of the current found file.*/
-		virtual int get_size() = 0;
+		virtual int size() = 0;
 
 		/// \brief Gets the pathname of the current file.
 		/** \return The name of the current found file, including the directory path.*/
-		virtual std::string get_pathname() = 0;
+		virtual std::string pathname() = 0;
 
 		/// \brief Returns true if the current file is a directory.
 		/** \return True if filename is a directory.*/

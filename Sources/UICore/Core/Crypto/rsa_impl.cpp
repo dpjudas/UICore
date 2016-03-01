@@ -166,13 +166,13 @@ namespace uicore
 		int piter;
 
 		auto random_key = Secret::create(prime_len);
-		unsigned char *random_bytes_ptr = random_key->get_data();	// Ready to write to
+		unsigned char *random_bytes_ptr = random_key->data();	// Ready to write to
 
 		const int max_prime_gen_attempts = 10;
 
 		for (piter = 0; piter < max_prime_gen_attempts; piter++)
 		{
-			random.get_random_bytes(random_bytes_ptr, prime_len);
+			random.random_bytes(random_bytes_ptr, prime_len);
 
 			random_bytes_ptr[0] |= 0xC0; // set two high-order bits
 			random_bytes_ptr[prime_len - 1] |= 0x01; // set low-order bit
@@ -224,7 +224,7 @@ namespace uicore
 			memset(emsg, 0xff, length);
 			break;
 		case 2:
-			random.get_random_bytes_nzero((unsigned char *)emsg, length);	// generate random pad
+			random.random_bytes_nzero((unsigned char *)emsg, length);	// generate random pad
 			break;
 		default:
 			// We do not support 0 because it is not used and it makes the decode more difficult to code
@@ -269,7 +269,7 @@ namespace uicore
 		auto buffer = Secret::create(outlen);
 
 		if (outlen > 0)
-			memmove(buffer->get_data(), emsg + (ix + 1), outlen);
+			memmove(buffer->data(), emsg + (ix + 1), outlen);
 
 		return buffer;
 	}
@@ -280,7 +280,7 @@ namespace uicore
 
 		auto key = Secret::create(k);
 
-		char *buf = (char *)key->get_data();
+		char *buf = (char *)key->data();
 
 		// Encode according to PKCS #1 v1.5
 		pkcs1v15_encode(block_type, random, msg, mlen, buf, k);
@@ -288,7 +288,7 @@ namespace uicore
 		// Convert encoded message to a big number for encryption
 		BigInt mrep;
 
-		mrep.read_unsigned_octets(key->get_data(), key->get_size());
+		mrep.read_unsigned_octets(key->data(), key->size());
 
 		// Now, encrypt...
 		rsaep(&mrep, e, modulus, &mrep);
@@ -316,8 +316,8 @@ namespace uicore
 		rsadp(&mrep, d, modulus, &mrep);
 
 		auto key_buffer = Secret::create(k);
-		mrep.to_unsigned_octets(key_buffer->get_data(), k);
-		return pkcs1v15_decode((char *)key_buffer->get_data(), k);
+		mrep.to_unsigned_octets(key_buffer->data(), k);
+		return pkcs1v15_decode((char *)key_buffer->data(), k);
 	}
 
 	DataBufferPtr RSA_Impl::encrypt(int block_type, Random &random, const void *in_public_exponent, unsigned int in_public_exponent_size, const void *in_modulus, unsigned int in_modulus_size, const void *in_data, unsigned int in_data_size)
@@ -334,7 +334,7 @@ namespace uicore
 	SecretPtr RSA_Impl::decrypt(const SecretPtr &in_private_exponent, const void *in_modulus, unsigned int in_modulus_size, const void *in_data, unsigned int in_data_size)
 	{
 		BigInt exponent;
-		exponent.read_unsigned_octets((const unsigned char *)in_private_exponent->get_data(), in_private_exponent->get_size());
+		exponent.read_unsigned_octets((const unsigned char *)in_private_exponent->data(), in_private_exponent->size());
 
 		BigInt modulus;
 		modulus.read_unsigned_octets((const unsigned char *)in_modulus, in_modulus_size);
@@ -349,7 +349,7 @@ namespace uicore
 		rsa_private_key.public_exponent.to_unsigned_octets((unsigned char *)out_public_exponent->data(), out_public_exponent->size());
 
 		out_private_exponent = Secret::create(rsa_private_key.private_exponent.unsigned_octet_size());
-		rsa_private_key.private_exponent.to_unsigned_octets(out_private_exponent->get_data(), out_private_exponent->get_size());
+		rsa_private_key.private_exponent.to_unsigned_octets(out_private_exponent->data(), out_private_exponent->size());
 
 		out_modulus = DataBuffer::create(rsa_private_key.modulus.unsigned_octet_size());
 		rsa_private_key.modulus.to_unsigned_octets((unsigned char *)out_modulus->data(), out_modulus->size());

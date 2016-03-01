@@ -51,7 +51,7 @@ namespace uicore
 	{
 	}
 
-	const std::string &Service::get_service_name() const
+	const std::string &Service::service_name() const
 	{
 		return impl->service_name;
 	}

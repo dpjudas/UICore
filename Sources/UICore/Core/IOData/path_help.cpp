@@ -74,8 +74,8 @@ namespace uicore
 #endif
 			}
 
-			std::string base_location = get_location(base_path, path_type_file);
-			std::string relative_location = get_location(relative_path, path_type_file);
+			std::string base_location = location(base_path, path_type_file);
+			std::string relative_location = location(relative_path, path_type_file);
 			if (relative_location.empty() || Text::equal_caseless(relative_location, base_location))
 			{
 				if (is_absolute(relative, path_type))
@@ -138,8 +138,8 @@ namespace uicore
 
 		if (path_type == path_type_file)
 		{
-			std::string base_location = get_location(base, path_type_file);
-			std::string absolute_location = get_location(absolute, path_type_file);
+			std::string base_location = location(base, path_type_file);
+			std::string absolute_location = location(absolute, path_type_file);
 
 			if (is_relative(base, path_type))
 			{
@@ -222,8 +222,8 @@ namespace uicore
 #endif
 			}
 
-			base_location = get_location(base, path_type_file);
-			absolute_location = get_location(absolute, path_type_file);
+			base_location = location(base, path_type_file);
+			absolute_location = location(absolute, path_type_file);
 			if (!Text::equal_caseless(absolute_location, base_location))
 				return absolute_path;
 		}
@@ -347,8 +347,8 @@ namespace uicore
 		if (input_path.empty())
 			return std::string();
 
-		std::string location = get_location(input_path, path_type);
-		std::string path = input_path.substr(location.length());
+		std::string path_location = location(input_path, path_type);
+		std::string path = input_path.substr(path_location.length());
 
 		bool ends_in_slash = false;
 
@@ -455,7 +455,7 @@ namespace uicore
 		if (!elements.empty() && !ends_in_slash)
 			normalized_path = normalized_path.substr(0, normalized_path.length() - 1);
 
-		return location + normalized_path;
+		return path_location + normalized_path;
 	}
 
 	std::string PathHelp::add_trailing_slash(const std::string &path, PathType path_type)
@@ -492,12 +492,12 @@ namespace uicore
 		return path;
 	}
 
-	std::string PathHelp::get_location(
+	std::string PathHelp::location(
 		const std::string &fullname,
 		PathType path_type)
 	{
 #ifdef WIN32
-		std::string path = get_fullpath(fullname, path_type);
+		std::string path = fullpath(fullname, path_type);
 		if (path_type == path_type_file && path.length() >= 2)
 		{
 			if (path[1] == ':')
@@ -516,11 +516,11 @@ namespace uicore
 		return std::string();
 	}
 
-	std::string PathHelp::get_basepath(
+	std::string PathHelp::basepath(
 		const std::string &fullname,
 		PathType path_type)
 	{
-		std::string path = get_fullpath(fullname, path_type);
+		std::string path = fullpath(fullname, path_type);
 #ifdef WIN32
 		if (path_type == path_type_file && path.length() >= 2)
 		{
@@ -544,23 +544,23 @@ namespace uicore
 		const std::string &fullname,
 		PathType path_type)
 	{
-		std::string basepath = get_basepath(fullname, path_type);
+		std::string base = basepath(fullname, path_type);
 		std::vector<std::string> result;
 		if (path_type == path_type_file)
 		{
 			std::string::size_type start_pos = 0, end_pos = 0;
 			while (true)
 			{
-				end_pos = basepath.find_first_of("/\\", start_pos);
+				end_pos = base.find_first_of("/\\", start_pos);
 
 				if (end_pos == std::string::npos)
 				{
-					if (start_pos != basepath.length())
-						result.push_back(basepath.substr(start_pos));
+					if (start_pos != base.length())
+						result.push_back(base.substr(start_pos));
 					break;
 				}
 
-				result.push_back(basepath.substr(start_pos, end_pos - start_pos));
+				result.push_back(base.substr(start_pos, end_pos - start_pos));
 				start_pos = end_pos + 1;
 			}
 		}
@@ -569,22 +569,22 @@ namespace uicore
 			std::string::size_type start_pos = 0, end_pos = 0;
 			while (true)
 			{
-				end_pos = basepath.find_first_of('/', start_pos);
+				end_pos = base.find_first_of('/', start_pos);
 				if (end_pos == std::string::npos)
 				{
-					if (start_pos != basepath.length())
-						result.push_back(basepath.substr(start_pos));
+					if (start_pos != base.length())
+						result.push_back(base.substr(start_pos));
 					break;
 				}
 
-				result.push_back(basepath.substr(start_pos, end_pos - start_pos));
+				result.push_back(base.substr(start_pos, end_pos - start_pos));
 				start_pos = end_pos + 1;
 			}
 		}
 		return result;
 	}
 
-	std::string PathHelp::get_fullpath(
+	std::string PathHelp::fullpath(
 		const std::string &filename,
 		PathType path_type)
 	{
@@ -611,7 +611,7 @@ namespace uicore
 		}
 	}
 
-	std::string PathHelp::get_filename(
+	std::string PathHelp::filename(
 		const std::string &fullname,
 		PathType path_type)
 	{
@@ -637,31 +637,31 @@ namespace uicore
 		}
 	}
 
-	std::string PathHelp::get_basename(
+	std::string PathHelp::basename(
 		const std::string &fullname,
 		PathType path_type)
 	{
-		std::string filename = get_filename(fullname, path_type);
-		std::string::size_type pos = filename.find_last_of('.');
+		std::string file = filename(fullname, path_type);
+		std::string::size_type pos = file.find_last_of('.');
 		if (pos == std::string::npos)
-			return filename;
+			return file;
 #ifndef WIN32
 		// Files beginning with a dot is not a filename extension in Unix.
 		// This is different from Windows where it is considered the extension.
 		if (path_type == path_type_file && pos == 0)
-			return filename;
+			return file;
 #endif
 		if (path_type == path_type_virtual && pos == 0)
-			return filename;
-		return filename.substr(0, pos);
+			return file;
+		return file.substr(0, pos);
 	}
 
-	std::string PathHelp::get_extension(
+	std::string PathHelp::extension(
 		const std::string &fullname,
 		PathType path_type)
 	{
-		std::string filename = get_filename(fullname, path_type);
-		std::string::size_type pos = filename.find_last_of('.');
+		std::string file = filename(fullname, path_type);
+		std::string::size_type pos = file.find_last_of('.');
 		if (pos == std::string::npos)
 			return std::string();
 #ifndef WIN32
@@ -672,10 +672,10 @@ namespace uicore
 #endif
 		if (path_type == path_type_virtual && pos == 0)
 			return std::string();
-		return filename.substr(pos + 1);
+		return file.substr(pos + 1);
 	}
 
-	std::string PathHelp::get_fullname(
+	std::string PathHelp::fullname(
 		const std::string &fullpath,
 		const std::string &filename,
 		PathType path_type)
@@ -683,7 +683,7 @@ namespace uicore
 		return add_trailing_slash(fullpath, path_type) + filename;
 	}
 
-	std::string PathHelp::get_fullname(
+	std::string PathHelp::fullname(
 		const std::string &fullpath,
 		const std::string &filename,
 		const std::string &extension,
@@ -697,7 +697,7 @@ namespace uicore
 			return add_trailing_slash(fullpath, path_type) + filename;
 	}
 
-	std::string PathHelp::get_fullname(
+	std::string PathHelp::fullname(
 		const std::string &location,
 		const std::string &basepath,
 		const std::string &filename,

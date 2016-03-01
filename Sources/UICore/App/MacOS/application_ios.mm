@@ -102,7 +102,7 @@ void cl_runloop_callout()
 				console_name = cl_main_args[0];
 
 			clan::ConsoleWindow console(console_name, 80, 160);
-			clan::Console::write_line("Exception caught: " + exception.get_message_and_stack_trace());
+			clan::Console::write_line("Exception caught: " + exception.message_and_stack_trace());
 			console.display_close_message();
 		}
 

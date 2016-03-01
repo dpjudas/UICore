@@ -40,8 +40,8 @@ namespace uicore
 		Secret_Impl(unsigned int key_length);
 		~Secret_Impl();
 
-		unsigned int get_size() const override { return key_length; }
-		unsigned char *get_data() const override { return key; }
+		unsigned int size() const override { return key_length; }
+		unsigned char *data() const override { return key; }
 
 	private:
 		Secret_Impl(const Secret_Impl &) = delete;

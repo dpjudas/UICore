@@ -60,10 +60,10 @@ namespace uicore
 		virtual ~EarClipTriangulator();
 
 		/// \brief Returns a list of the vertices added to the triangulator.
-		std::vector<Pointf> get_vertices();
+		std::vector<Pointf> vertices();
 
 		/// \brief Returns the number of vertices in the triangulator.
-		int get_vertice_count();
+		int vertice_count();
 
 		/// \brief Determine the orientation of the vertices in the triangulator.
 		PolygonOrientation calculate_polygon_orientation();

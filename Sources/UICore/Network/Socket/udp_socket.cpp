@@ -46,7 +46,7 @@ namespace uicore
 				throw Exception("Invalid socket handle");
 		}
 
-		SocketHandle *get_socket_handle() override { return this; }
+		SocketHandle *socket_handle() override { return this; }
 
 		void bind(const SocketName &endpoint) override;
 		void send(const void *data, int size, const SocketName &endpoint) override;
@@ -136,7 +136,7 @@ namespace uicore
 			close();
 		}
 
-		SocketHandle *get_socket_handle() override { return this; }
+		SocketHandle *socket_handle() override { return this; }
 
 		void bind(const SocketName &endpoint) override;
 		void send(const void *data, int size, const SocketName &endpoint) override;

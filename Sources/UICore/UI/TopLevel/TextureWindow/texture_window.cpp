@@ -58,12 +58,12 @@ namespace uicore
 		impl->clear_background_enable = enable;
 	}
 
-	CanvasPtr TextureWindow::get_canvas() const
+	CanvasPtr TextureWindow::canvas() const
 	{
 		return impl->canvas;
 	}
 
-	DisplayWindowPtr TextureWindow::get_display_window()
+	DisplayWindowPtr TextureWindow::display_window()
 	{
 		return impl->display_window;
 	}
@@ -102,7 +102,7 @@ namespace uicore
 		impl->set_window(window, enable_automatic_events, transform_mouse_matrix);
 	}
 
-	Rectf TextureWindow::get_viewport() const
+	Rectf TextureWindow::viewport() const
 	{
 		return impl->canvas_rect;
 	}

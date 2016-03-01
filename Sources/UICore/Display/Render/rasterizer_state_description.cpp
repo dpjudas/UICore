@@ -146,68 +146,68 @@ namespace uicore
 		return copy;
 	}
 
-	bool RasterizerStateDescription::get_culled() const
+	bool RasterizerStateDescription::culled() const
 	{
 		return impl->culled;
 	}
 
-	bool RasterizerStateDescription::get_enable_line_antialiasing() const
+	bool RasterizerStateDescription::enable_line_antialiasing() const
 	{
 		return impl->line_antialiasing;
 	}
 
-	CullMode RasterizerStateDescription::get_face_cull_mode() const
+	CullMode RasterizerStateDescription::face_cull_mode() const
 	{
 		return impl->face_cull_mode;
 	}
 
-	FillMode RasterizerStateDescription::get_face_fill_mode() const
+	FillMode RasterizerStateDescription::face_fill_mode() const
 	{
 		return impl->face_fill_mode;
 	}
 
-	FaceSide RasterizerStateDescription::get_front_face() const
+	FaceSide RasterizerStateDescription::front_face() const
 	{
 		return impl->front_face;
 	}
 
-	bool RasterizerStateDescription::get_enable_scissor() const
+	bool RasterizerStateDescription::enable_scissor() const
 	{
 		return impl->enable_scissor;
 	}
 
-	bool RasterizerStateDescription::get_antialiased() const
+	bool RasterizerStateDescription::antialiased() const
 	{
 		return impl->is_antialiased;
 	}
 
-	bool RasterizerStateDescription::get_offset_point() const
+	bool RasterizerStateDescription::offset_point() const
 	{
 		return impl->is_offset_point;
 	}
 
-	bool RasterizerStateDescription::get_offset_line() const
+	bool RasterizerStateDescription::offset_line() const
 	{
 		return impl->is_offset_line;
 	}
 
-	bool RasterizerStateDescription::get_offset_fill() const
+	bool RasterizerStateDescription::offset_fill() const
 	{
 		return impl->is_offset_fill;
 	}
 
-	void RasterizerStateDescription::get_polygon_offset(float &out_factor, float &out_units) const
+	void RasterizerStateDescription::polygon_offset(float &out_factor, float &out_units) const
 	{
 		out_factor = impl->offset_factor;
 		out_units = impl->offset_units;
 	}
 
-	float RasterizerStateDescription::get_point_size() const
+	float RasterizerStateDescription::point_size() const
 	{
 		return impl->pen_point_size;
 	}
 
-	float RasterizerStateDescription::get_point_fade_treshold_size() const
+	float RasterizerStateDescription::point_fade_treshold_size() const
 	{
 		return impl->pen_point_fade_treshold_size;
 	}
@@ -217,7 +217,7 @@ namespace uicore
 		return impl->pen_vertex_shader_point_sizes;
 	}
 
-	PointSpriteOrigin RasterizerStateDescription::get_point_sprite_origin() const
+	PointSpriteOrigin RasterizerStateDescription::point_sprite_origin() const
 	{
 		return impl->pen_point_sprite_origin;
 	}

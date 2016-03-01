@@ -48,7 +48,7 @@ namespace uicore
 		void set_viewport(const Rectf &rect);
 
 		/// \brief Returns the position and size within the canvas
-		Rectf get_viewport() const;
+		Rectf viewport() const;
 
 		void set_background_color(const Colorf &background_color = Colorf::transparent);
 		void set_clear_background(bool enable = true);
@@ -78,8 +78,8 @@ namespace uicore
 		void on_mouse_up(const uicore::InputEvent &);
 		void on_mouse_move(const uicore::InputEvent &);
 
-		DisplayWindowPtr get_display_window() override;
-		CanvasPtr get_canvas() const override;
+		DisplayWindowPtr display_window() override;
+		CanvasPtr canvas() const override;
 
 	protected:
 		void set_needs_render() override;

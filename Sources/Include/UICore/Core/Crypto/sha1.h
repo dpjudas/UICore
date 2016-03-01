@@ -43,12 +43,12 @@ namespace uicore
 		static const int hash_size = 20;
 
 		/// \brief Returns the calculated hash.
-		virtual std::string get_hash(bool uppercase = false) const = 0;
+		virtual std::string hash(bool uppercase = false) const = 0;
 
 		/// \brief Get hash
 		///
 		/// \param out_hash = where to write to
-		virtual void get_hash(unsigned char out_hash[hash_size]) const = 0;
+		virtual void hash(unsigned char out_hash[hash_size]) const = 0;
 
 		/// \brief Resets the hash generator.
 		virtual void reset() = 0;

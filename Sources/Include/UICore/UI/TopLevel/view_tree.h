@@ -51,10 +51,10 @@ namespace uicore
 		/// Gets the display window used
 		///
 		/// This may return a null DisplayWindow
-		virtual DisplayWindowPtr get_display_window() = 0;
+		virtual DisplayWindowPtr display_window() = 0;
 
 		/// Gets the current canvas used to render
-		virtual CanvasPtr get_canvas() const = 0;
+		virtual CanvasPtr canvas() const = 0;
 
 		/// Retrieves the root of the view tree
 		const std::shared_ptr<View> &root_view() const;

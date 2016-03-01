@@ -41,16 +41,16 @@ namespace uicore
 		static std::shared_ptr<TLSClient> create();
 
 		/// \brief Return a pointer to decrypted data available for consumption.
-		virtual const void *get_decrypted_data() const = 0;
+		virtual const void *decrypted_data() const = 0;
 
 		/// \brief Returns how much decrypted data is available.
-		virtual int get_decrypted_data_available() const = 0;
+		virtual int decrypted_data_available() const = 0;
 
 		/// \brief Return a pointer to encrypted data available for consumption.
-		virtual const void *get_encrypted_data() const = 0;
+		virtual const void *encrypted_data() const = 0;
 
 		/// \brief Returns how much encrypted data is available.
-		virtual int get_encrypted_data_available() const = 0;
+		virtual int encrypted_data_available() const = 0;
 
 		/// \brief Adds data to be encrypted.
 		virtual int encrypt(const void *data, int size) = 0;

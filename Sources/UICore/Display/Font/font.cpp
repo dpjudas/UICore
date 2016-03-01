@@ -67,7 +67,7 @@ namespace uicore
 
 	std::shared_ptr<Font> Font::create(const FontDescription &desc, const std::string &ttf_filename)
 	{
-		std::string new_filename = PathHelp::get_filename(ttf_filename, PathHelp::path_type_file);
+		std::string new_filename = PathHelp::filename(ttf_filename, PathHelp::path_type_file);
 
 		auto font_family = FontFamily::create(new_filename);
 		font_family->add(desc, ttf_filename);
@@ -80,11 +80,11 @@ namespace uicore
 		UTF8_Reader reader(text.data(), text.length());
 		while (!reader.is_end())
 		{
-			unsigned int glyph = reader.get_char();
+			unsigned int glyph = reader.character();
 			GlyphMetrics char_abc = metrics(canvas, glyph);
 
 			if (x + char_abc.advance.width > width)
-				return reader.get_position();
+				return reader.position();
 
 			x += char_abc.advance.width;
 			reader.next();
@@ -98,17 +98,17 @@ namespace uicore
 		float x = 0.0f;
 		UTF8_Reader reader(text.data(), text.length());
 		reader.set_position(text.length());
-		while (reader.get_position() != 0)
+		while (reader.position() != 0)
 		{
 			reader.prev();
 
-			unsigned int glyph = reader.get_char();
+			unsigned int glyph = reader.character();
 			GlyphMetrics char_abc = metrics(canvas, glyph);
 
 			if (x + char_abc.advance.width > width)
 			{
 				reader.next();
-				return reader.get_position();
+				return reader.position();
 			}
 
 			x += char_abc.advance.width;
@@ -152,15 +152,15 @@ namespace uicore
 					{
 						utf8_reader.set_position(seek_center);
 						utf8_reader.move_to_leadbyte();
-						if (seek_center != utf8_reader.get_position())
+						if (seek_center != utf8_reader.position())
 							utf8_reader.next();
-						seek_center = utf8_reader.get_position();
+						seek_center = utf8_reader.position();
 						if (seek_center == seek_end)
 							break;
 
 						utf8_reader.set_position(seek_start);
 						utf8_reader.next();
-						if (utf8_reader.get_position() == seek_end)
+						if (utf8_reader.position() == seek_end)
 							break;
 
 						Sizef text_size = measure_text(canvas, lines[i].substr(0, seek_center)).bbox_size;

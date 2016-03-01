@@ -53,7 +53,7 @@ namespace uicore
 		const FontPtr &get_font(LabelView *view)
 		{
 			if (!font)
-				font = view->style_cascade().get_font();
+				font = view->style_cascade().font();
 			return font;
 		}
 	};
@@ -65,7 +65,7 @@ namespace uicore
 	void LabelView::layout_children(const CanvasPtr &canvas)
 	{
 		View::layout_children(canvas);
-		impl->font = style_cascade().get_font();	// Reset the font on new layout
+		impl->font = style_cascade().font();	// Reset the font on new layout
 	}
 
 	std::string LabelView::text() const

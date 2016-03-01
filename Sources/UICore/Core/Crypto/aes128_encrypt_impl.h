@@ -45,7 +45,7 @@ namespace uicore
 		/// This is the databuffer used internally to store the encrypted data.
 		/// You may call "set_size()" to clear the buffer, inbetween calls to "add()"
 		/// You may call "set_capacity()" to optimise storage requirements before the add() call
-		DataBufferPtr get_data() const override;
+		DataBufferPtr data() const override;
 
 		/// \brief Resets the encryption
 		void reset() override;

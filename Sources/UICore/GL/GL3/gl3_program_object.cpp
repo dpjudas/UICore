@@ -87,13 +87,13 @@ namespace uicore
 		return (status != GL_FALSE);
 	}
 
-	std::vector<ShaderObjectPtr> GL3ProgramObject::get_shaders() const
+	std::vector<ShaderObjectPtr> GL3ProgramObject::shaders() const
 	{
 		throw_if_disposed();
-		return shaders;
+		return _shaders;
 	}
 
-	std::string GL3ProgramObject::get_info_log() const
+	std::string GL3ProgramObject::info_log() const
 	{
 		throw_if_disposed();
 		OpenGL::set_active();
@@ -114,21 +114,21 @@ namespace uicore
 		return result;
 	}
 
-	int GL3ProgramObject::get_uniform_location(const std::string &name) const
+	int GL3ProgramObject::uniform_location(const std::string &name) const
 	{
 		throw_if_disposed();
 		OpenGL::set_active();
 		return glGetUniformLocation(handle, name.c_str());
 	}
 
-	int GL3ProgramObject::get_attribute_location(const std::string &name) const
+	int GL3ProgramObject::attribute_location(const std::string &name) const
 	{
 		throw_if_disposed();
 		OpenGL::set_active();
 		return glGetAttribLocation(handle, name.c_str());
 	}
 
-	int GL3ProgramObject::get_uniform_buffer_size(int block_index) const
+	int GL3ProgramObject::uniform_buffer_size(int block_index) const
 	{
 		throw_if_disposed();
 		OpenGL::set_active();
@@ -142,7 +142,7 @@ namespace uicore
 		return uniformBlockSize;
 	}
 
-	int GL3ProgramObject::get_uniform_buffer_index(const std::string &block_name) const
+	int GL3ProgramObject::uniform_buffer_index(const std::string &block_name) const
 	{
 		throw_if_disposed();
 		OpenGL::set_active();
@@ -153,7 +153,7 @@ namespace uicore
 		return glGetUniformBlockIndex(handle, block_name.c_str());
 	}
 
-	int GL3ProgramObject::get_storage_buffer_index(const std::string &name) const
+	int GL3ProgramObject::storage_buffer_index(const std::string &name) const
 	{
 		throw_if_disposed();
 		OpenGL::set_active();
@@ -167,7 +167,7 @@ namespace uicore
 	void GL3ProgramObject::attach(const ShaderObjectPtr &obj)
 	{
 		throw_if_disposed();
-		shaders.push_back(obj);
+		_shaders.push_back(obj);
 		OpenGL::set_active();
 		glAttachShader(handle, (GLuint)static_cast<GL3ShaderObject*>(obj.get())->get_handle());
 	}
@@ -175,11 +175,11 @@ namespace uicore
 	void GL3ProgramObject::detach(const ShaderObjectPtr &obj)
 	{
 		throw_if_disposed();
-		for (std::vector<ShaderObject>::size_type i = 0; i < shaders.size(); i++)
+		for (std::vector<ShaderObject>::size_type i = 0; i < _shaders.size(); i++)
 		{
-			if (shaders[i] == obj)
+			if (_shaders[i] == obj)
 			{
-				shaders.erase(shaders.begin() + i);
+				_shaders.erase(_shaders.begin() + i);
 				break;
 			}
 		}

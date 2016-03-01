@@ -56,12 +56,12 @@ namespace uicore
 {
 	// Win32 implementation of System functions:
 
-	uint64_t System::get_time()
+	uint64_t System::time()
 	{
-		return (get_microseconds() / 1000);
+		return (microseconds() / 1000);
 	}
 
-	uint64_t System::get_microseconds()
+	uint64_t System::microseconds()
 	{
 		static LARGE_INTEGER perf_counter;
 		static double perf_frequency;
@@ -83,7 +83,7 @@ namespace uicore
 		return (uint64_t)(((1000000.0 * quad_part) / perf_frequency) + 0.5);
 	}
 
-	std::string System::get_exe_path()
+	std::string System::exe_path()
 	{
 		WCHAR exe_filename[_MAX_PATH];
 		DWORD len = GetModuleFileName(NULL, exe_filename, _MAX_PATH);

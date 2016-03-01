@@ -455,7 +455,7 @@ namespace uicore
 				selected_rasterizer_state.set(gl3_state->desc);
 				OpenGL::set_active(this);
 				selected_rasterizer_state.apply();
-				scissor_enabled = gl3_state->desc.get_enable_scissor();
+				scissor_enabled = gl3_state->desc.enable_scissor();
 			}
 		}
 		else
@@ -502,9 +502,9 @@ namespace uicore
 
 	std::shared_ptr<PixelBuffer> GL3GraphicContext::pixeldata(const Rect& rect, TextureFormat texture_format, bool clamp) const
 	{
-		TextureFormat_GL tf = OpenGL::get_textureformat(texture_format);
+		TextureFormat_GL tf = OpenGL::textureformat(texture_format);
 		if (!tf.valid)
-			throw Exception("Unsupported texture format passed to GraphicContext::get_pixeldata");
+			throw Exception("Unsupported texture format passed to GraphicContext::pixeldata");
 
 		auto pbuf = PixelBuffer::create(rect.width(), rect.height(), texture_format);
 		OpenGL::set_active(this);

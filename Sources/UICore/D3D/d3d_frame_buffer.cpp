@@ -38,7 +38,7 @@
 namespace uicore
 {
 	D3DFrameBuffer::D3DFrameBuffer(const ComPtr<ID3D11Device> &device)
-		: device(device), bind_target(framebuffer_draw)
+		: device(device), _bind_target(framebuffer_draw)
 	{
 	}
 
@@ -46,7 +46,7 @@ namespace uicore
 	{
 	}
 
-	Size D3DFrameBuffer::get_size() const
+	Size D3DFrameBuffer::size() const
 	{
 		Size size;
 		for (size_t i = 0; i < color_buffers.size(); i++)
@@ -63,9 +63,9 @@ namespace uicore
 		return size;
 	}
 
-	FrameBufferBindTarget D3DFrameBuffer::get_bind_target() const
+	FrameBufferBindTarget D3DFrameBuffer::bind_target() const
 	{
-		return bind_target;
+		return _bind_target;
 	}
 
 	std::vector<ID3D11RenderTargetView*> D3DFrameBuffer::get_views(ID3D11DepthStencilView *&out_dsv)
@@ -213,6 +213,6 @@ namespace uicore
 
 	void D3DFrameBuffer::set_bind_target(FrameBufferBindTarget target)
 	{
-		bind_target = target;
+		_bind_target = target;
 	}
 }

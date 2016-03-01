@@ -64,7 +64,7 @@ namespace uicore
 
 		while (!reader.is_end())
 		{
-			unsigned int glyph = reader.get_char();
+			unsigned int glyph = reader.character();
 			reader.next();
 
 			if (glyph == '\n')

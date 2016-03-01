@@ -148,7 +148,7 @@ namespace uicore
 
 	}
 
-	TextureFormat_GL OpenGL::get_textureformat(TextureFormat format)
+	TextureFormat_GL OpenGL::textureformat(TextureFormat format)
 	{
 		TextureFormat_GL tf;
 		tf.valid = true;

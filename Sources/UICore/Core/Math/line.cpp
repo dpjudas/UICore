@@ -35,7 +35,7 @@
 namespace uicore
 {
 	template<typename Type>
-	Vec2<Type> Line2x<Type>::get_intersection(const Line2x<Type> &second, bool &intersect) const
+	Vec2<Type> Line2x<Type>::intersection(const Line2x<Type> &second, bool &intersect) const
 	{
 		Type denominator = (q.x - p.x) * (second.q.y - second.p.y) - (second.q.x - second.p.x) * (q.y - p.y);
 		if (denominator == ((Type)0))
@@ -54,7 +54,7 @@ namespace uicore
 	}
 
 	template<typename Type>
-	Vec3<Type> Line3x<Type>::get_intersection(const Line3x<Type> &second, bool &intersect, Type range) const
+	Vec3<Type> Line3x<Type>::intersection(const Line3x<Type> &second, bool &intersect, Type range) const
 	{
 		Type denominator = (q.x - p.x) * (second.q.y - second.p.y) - (second.q.x - second.p.x) * (q.y - p.y);
 		if (denominator == ((Type)0))

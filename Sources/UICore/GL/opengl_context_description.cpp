@@ -41,39 +41,39 @@ namespace uicore
 	{
 	}
 
-	int OpenGLContextDescription::get_version_major() const
+	int OpenGLContextDescription::version_major() const
 	{
 		return impl->version_major;
 	}
 
-	int OpenGLContextDescription::get_version_minor() const
+	int OpenGLContextDescription::version_minor() const
 	{
 		return impl->version_minor;
 	}
 
-	bool OpenGLContextDescription::get_allow_lower_versions() const
+	bool OpenGLContextDescription::allow_lower_versions() const
 	{
 		return impl->allow_lower_versions;
 	}
 
-	bool OpenGLContextDescription::get_debug() const
+	bool OpenGLContextDescription::debug() const
 	{
 		return impl->debug_flag;
 	}
-	bool OpenGLContextDescription::get_forward_compatible() const
+	bool OpenGLContextDescription::forward_compatible() const
 	{
 		return impl->forward_compatible_flag;
 	}
-	bool OpenGLContextDescription::get_core_profile() const
+	bool OpenGLContextDescription::core_profile() const
 	{
 		return impl->core_profile_flag;
 	}
-	bool OpenGLContextDescription::get_compatibility_profile() const
+	bool OpenGLContextDescription::compatibility_profile() const
 	{
 		return impl->compatibility_profile_flag;
 	}
 
-	int OpenGLContextDescription::get_layer_plane() const
+	int OpenGLContextDescription::layer_plane() const
 	{
 		return impl->layer_plane;
 	}

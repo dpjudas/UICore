@@ -49,10 +49,10 @@ namespace uicore
 		void get_images(const CanvasPtr &canvas)
 		{
 			if (!canvas_image && image)
-				canvas_image = image->get_image(canvas);
+				canvas_image = image->image(canvas);
 
 			if (!canvas_highlighted_image && highlighted_image)
-				canvas_highlighted_image = highlighted_image->get_image(canvas);
+				canvas_highlighted_image = highlighted_image->image(canvas);
 		}
 	};
 

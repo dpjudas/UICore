@@ -98,7 +98,7 @@ namespace uicore
 		void close() override { TCPSocket::close(); }
 		int write(const void *data, int size) override;
 		int read(void *data, int size) override;
-		SocketHandle *get_socket_handle() override { return this; }
+		SocketHandle *socket_handle() override { return this; }
 	};
 
 #else
@@ -176,7 +176,7 @@ namespace uicore
 		void close() override { TCPSocket::close(); }
 		int write(const void *data, int size) override;
 		int read(void *data, int size) override;
-		SocketHandle *get_socket_handle() override { return this; }
+		SocketHandle *socket_handle() override { return this; }
 	};
 
 #endif
@@ -188,7 +188,7 @@ namespace uicore
 
 		void close() override { TCPSocket::close(); }
 		std::shared_ptr<TCPConnection> accept(SocketName &end_point) override;
-		SocketHandle *get_socket_handle() override { return this; }
+		SocketHandle *socket_handle() override { return this; }
 	};
 
 }

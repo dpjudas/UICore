@@ -45,11 +45,11 @@ namespace uicore
 		static BlendStateDescription opaque();
 
 		bool is_blending_enabled() const;
-		void get_blend_equation(BlendEquation &out_color, BlendEquation &out_alpha) const;
-		void get_blend_function(BlendFunc &out_src, BlendFunc &out_dest, BlendFunc &out_src_alpha, BlendFunc &out_dest_alpha) const;
-		void get_color_write(bool &out_red, bool &out_green, bool &out_blue, bool &out_alpha) const;
+		void blend_equation(BlendEquation &out_color, BlendEquation &out_alpha) const;
+		void blend_function(BlendFunc &out_src, BlendFunc &out_dest, BlendFunc &out_src_alpha, BlendFunc &out_dest_alpha) const;
+		void color_write(bool &out_red, bool &out_green, bool &out_blue, bool &out_alpha) const;
 		bool is_logic_op_enabled() const;
-		LogicOp get_logic_op() const;
+		LogicOp logic_op() const;
 
 		/// \brief Enable/Disable blending
 		void enable_blending(bool value);

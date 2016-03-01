@@ -76,7 +76,7 @@ namespace uicore
 			while (scanner->next())
 			{
 				if (!scanner->is_directory())
-					items.push_back(return_full_path_names ? scanner->get_pathname() : scanner->get_name());
+					items.push_back(return_full_path_names ? scanner->pathname() : scanner->name());
 			}
 		}
 
@@ -92,8 +92,8 @@ namespace uicore
 		{
 			while (scanner->next())
 			{
-				if (scanner->is_directory() && scanner->get_name() != "." && scanner->get_name() != "..")
-					items.push_back(return_full_path_names ? scanner->get_pathname() : scanner->get_name());
+				if (scanner->is_directory() && scanner->name() != "." && scanner->name() != "..")
+					items.push_back(return_full_path_names ? scanner->pathname() : scanner->name());
 			}
 		}
 
@@ -150,10 +150,10 @@ namespace uicore
 			while (scan_successful)
 			{
 				// if found subdirectory, try remove it, also checking for "." and "..", because they are unremovable
-				if (scanner->is_directory() && delete_sub_directories && scanner->get_name() != "." && scanner->get_name() != "..")
+				if (scanner->is_directory() && delete_sub_directories && scanner->name() != "." && scanner->name() != "..")
 				{
 					// FIXME: directory scanner locks directory, so it can't be removed, this is workaround
-					std::string sub_dir_path = scanner->get_pathname();
+					std::string sub_dir_path = scanner->pathname();
 					scan_successful = scanner->next();
 
 					// delete files in subdirectory
@@ -163,10 +163,10 @@ namespace uicore
 				else if (!scanner->is_directory() && delete_files)
 				{
 #ifdef WIN32
-					if (DeleteFile(Text::to_utf16(scanner->get_pathname()).c_str()) == 0)
+					if (DeleteFile(Text::to_utf16(scanner->pathname()).c_str()) == 0)
 						return false;
 #else
-					if (::remove(scanner->get_pathname().c_str()) != 0)
+					if (::remove(scanner->pathname().c_str()) != 0)
 						return false;
 #endif
 					scan_successful = scanner->next();
@@ -204,7 +204,7 @@ namespace uicore
 #endif
 	}
 
-	std::string Directory::get_current()
+	std::string Directory::current()
 	{
 #ifdef WIN32
 		DWORD len = GetCurrentDirectory(0, NULL);
@@ -224,7 +224,7 @@ namespace uicore
 	}
 
 #ifndef __APPLE__
-	std::string Directory::get_appdata(const std::string &company_name, const std::string &application_name, const std::string &version, bool create_dirs_if_missing)
+	std::string Directory::appdata(const std::string &company_name, const std::string &application_name, const std::string &version, bool create_dirs_if_missing)
 	{
 		std::string configuration_path;
 
@@ -253,7 +253,7 @@ namespace uicore
 		return configuration_path;
 	}
 
-	std::string Directory::get_local_appdata(const std::string &company_name, const std::string &application_name, const std::string &version, bool create_dirs_if_missing)
+	std::string Directory::local_appdata(const std::string &company_name, const std::string &application_name, const std::string &version, bool create_dirs_if_missing)
 	{
 		std::string configuration_path;
 
@@ -266,9 +266,9 @@ namespace uicore
 		NSArray *paths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES);
 		NSString *libraryDirectory = [paths objectAtIndex:0];
 		const char *s = [libraryDirectory UTF8String];
-		throw Exception("Congratulations, you got the task to implement Directory::get_local_appdata on this platform.");
+		throw Exception("Congratulations, you got the task to implement Directory::local_appdata on this platform.");
 #else
-		return get_appdata(company_name, application_name, version, create_dirs_if_missing);
+		return appdata(company_name, application_name, version, create_dirs_if_missing);
 #endif
 
 		if (!company_name.empty())
@@ -284,10 +284,10 @@ namespace uicore
 		return configuration_path;
 	}
 
-	std::string Directory::get_resourcedata(const std::string &application_name, const std::string &data_dir_name)
+	std::string Directory::resourcedata(const std::string &application_name, const std::string &data_dir_name)
 	{
 #if defined(WIN32)
-		std::string exe_path = System::get_exe_path();
+		std::string exe_path = System::exe_path();
 		if (!data_dir_name.empty())
 			exe_path += data_dir_name + '\\';
 		return exe_path;
@@ -313,7 +313,7 @@ namespace uicore
 		
 		return resource_path;
 #else
-		std::string exe_path = System::get_exe_path();
+		std::string exe_path = System::exe_path();
 		if (exe_path.length() > 1)
 		{
 			std::string::size_type pos = exe_path.rfind('/', exe_path.length() - 2);

@@ -52,7 +52,7 @@ namespace uicore
 		float scale_x() const override { return _scale_x; }
 		float scale_y() const override { return _scale_y; }
 		Colorf color() const override { return _color; }
-		void get_alignment(Origin &origin, float &x, float &y) const override;
+		void alignment(Origin &origin, float &x, float &y) const override;
 		TextureGroupImage texture() const override;
 		Sizef size() const override;
 		float width() const override;
@@ -146,7 +146,7 @@ namespace uicore
 		return TextureGroupImage(_texture, _texture_rect);
 	}
 
-	void ImageImpl::get_alignment(Origin &origin, float &x, float &y) const
+	void ImageImpl::alignment(Origin &origin, float &x, float &y) const
 	{
 		origin = _translation_origin;
 		x = _translation_hotspot.x;

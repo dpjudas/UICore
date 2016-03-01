@@ -42,7 +42,7 @@ namespace uicore
 		reset();
 	}
 
-	std::string SHA1_Impl::get_hash(bool uppercase) const
+	std::string SHA1_Impl::hash(bool uppercase) const
 	{
 		if (calculated == false)
 			throw Exception("SHA-1 hash has not been calculated yet!");
@@ -57,7 +57,7 @@ namespace uicore
 		return digest;
 	}
 
-	void SHA1_Impl::get_hash(unsigned char out_hash[20]) const
+	void SHA1_Impl::hash(unsigned char out_hash[20]) const
 	{
 		if (calculated == false)
 			throw Exception("SHA-1 hash has not been calculated yet!");
@@ -136,7 +136,7 @@ namespace uicore
 			sha1->add(key_data, key_size);
 			sha1->calculate();
 			key_chunk_filled = SHA1::hash_size;
-			sha1->get_hash(hmac_key_chunk);
+			sha1->hash(hmac_key_chunk);
 		}
 		else
 		{
@@ -199,7 +199,7 @@ namespace uicore
 		if (hmac_enabled)
 		{
 			unsigned char temp_hash[SHA1::hash_size];
-			get_hash(temp_hash);
+			hash(temp_hash);
 			reset();
 			add(hmac_key_chunk, block_size);	// Add the outer HMAC
 			add(temp_hash, SHA1::hash_size);

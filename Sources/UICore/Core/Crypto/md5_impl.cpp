@@ -41,7 +41,7 @@ namespace uicore
 		reset();
 	}
 
-	std::string MD5_Impl::get_hash(bool uppercase) const
+	std::string MD5_Impl::hash(bool uppercase) const
 	{
 		if (calculated == false)
 			throw Exception("MD5 hash has not been calculated yet!");
@@ -56,7 +56,7 @@ namespace uicore
 		return digest;
 	}
 
-	void MD5_Impl::get_hash(unsigned char out_hash[16]) const
+	void MD5_Impl::hash(unsigned char out_hash[16]) const
 	{
 		if (calculated == false)
 			throw Exception("MD5 hash has not been calculated yet!");
@@ -130,7 +130,7 @@ namespace uicore
 			md5->add(key_data, key_size);
 			md5->calculate();
 			key_chunk_filled = MD5::hash_size;
-			md5->get_hash(hmac_key_chunk);
+			md5->hash(hmac_key_chunk);
 		}
 		else
 		{
@@ -195,7 +195,7 @@ namespace uicore
 		if (hmac_enabled)
 		{
 			unsigned char temp_hash[MD5::hash_size];
-			get_hash(temp_hash);
+			hash(temp_hash);
 			reset();
 			add(hmac_key_chunk, block_size);	// Add the outer HMAC
 			add(temp_hash, MD5::hash_size);

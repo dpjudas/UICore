@@ -104,7 +104,7 @@ namespace uicore
 	{
 		uint64_t last_time = current_time;
 
-		current_time = System::get_microseconds();
+		current_time = System::microseconds();
 
 		if (current_time < last_time)		// Old cpu's may report time travelling on early multicore processors (iirc)
 			last_time = current_time;
@@ -166,7 +166,7 @@ namespace uicore
 
 	void GameTime_Impl::reset()
 	{
-		start_time = System::get_microseconds();
+		start_time = System::microseconds();
 		current_time = start_time;
 		last_tick_time = start_time;
 		time_elapsed = 0.0f;

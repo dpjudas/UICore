@@ -14,7 +14,7 @@ namespace uicore
 	class NetworkEvent
 	{
 	protected:
-		virtual SocketHandle *get_socket_handle() = 0;
+		virtual SocketHandle *socket_handle() = 0;
 
 		friend class NetworkConditionVariable;
 	};

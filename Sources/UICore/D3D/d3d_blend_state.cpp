@@ -35,13 +35,13 @@ namespace uicore
 	D3DBlendState::D3DBlendState(const ComPtr<ID3D11Device> &device, const BlendStateDescription &desc)
 	{
 		BlendEquation blend_op_color, blend_op_alpha;
-		desc.get_blend_equation(blend_op_color, blend_op_alpha);
+		desc.blend_equation(blend_op_color, blend_op_alpha);
 
 		BlendFunc src_blend, dest_blend, src_blend_alpha, dest_blend_alpha;
-		desc.get_blend_function(src_blend, dest_blend, src_blend_alpha, dest_blend_alpha);
+		desc.blend_function(src_blend, dest_blend, src_blend_alpha, dest_blend_alpha);
 
 		bool red, green, blue, alpha;
-		desc.get_color_write(red, green, blue, alpha);
+		desc.color_write(red, green, blue, alpha);
 
 		D3D11_BLEND_DESC d3d_desc;
 		d3d_desc.AlphaToCoverageEnable = FALSE;

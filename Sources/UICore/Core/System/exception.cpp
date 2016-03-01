@@ -48,16 +48,16 @@ namespace uicore
 		return buffer.c_str();
 	}
 
-	std::vector<std::string> Exception::get_stack_trace() const
+	std::vector<std::string> Exception::stack_trace() const
 	{
-		return System::get_stack_frames_text(frames, num_frames);
+		return System::stack_frames_text(frames, num_frames);
 	}
 
-	std::string Exception::get_message_and_stack_trace() const
+	std::string Exception::message_and_stack_trace() const
 	{
-		std::vector<std::string> stack_trace = get_stack_trace();
+		std::vector<std::string> st = stack_trace();
 		std::string text = message;
-		for (auto & elem : stack_trace)
+		for (auto & elem : st)
 		{
 #ifdef WIN32
 			text += string_format("\r\n    at %1", elem);

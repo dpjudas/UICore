@@ -43,12 +43,12 @@ namespace uicore
 	{
 	}
 
-	std::vector<Pointf> EarClipTriangulator::get_vertices()
+	std::vector<Pointf> EarClipTriangulator::vertices()
 	{
 		return impl->get_vertices();
 	}
 
-	int EarClipTriangulator::get_vertice_count()
+	int EarClipTriangulator::vertice_count()
 	{
 		return impl->get_vertice_count();
 	}

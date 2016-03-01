@@ -82,12 +82,12 @@ namespace uicore
 		static std::shared_ptr<FrameBuffer> create(const GraphicContextPtr &context);
 
 		/// \brief Get the minumum size of all the frame buffer attachments
-		virtual Size get_size() const = 0;
+		virtual Size size() const = 0;
 
 		/// \brief Get the bind target of the framebuffer
 		///
 		/// \return The bind target
-		virtual FrameBufferBindTarget get_bind_target() const = 0;
+		virtual FrameBufferBindTarget bind_target() const = 0;
 
 		/// \brief Attach color buffer
 		virtual void attach_color(int attachment_index, const RenderBufferPtr &render_buffer) = 0;
