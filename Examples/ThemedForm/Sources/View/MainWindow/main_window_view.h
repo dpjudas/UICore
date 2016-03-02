@@ -24,6 +24,10 @@ public:
 		auto headline = add_child<ThemeHeadlineView>();
 		headline->add_text("Form example with themed views");
 
+		auto p = add_child<ThemeParagraphView>();
+		p->style()->set("margin-top: 0");
+		p->add_text("This is an example of how to create a form using themed UICore standard views.");
+
 		auto button = add_child<ThemeButtonView>();
 		button->label()->set_text("Test Button");
 		button->style()->set("margin-right: auto");
