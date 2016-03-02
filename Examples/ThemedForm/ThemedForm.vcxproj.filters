@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Model">
+      <UniqueIdentifier>{aca4acde-ed05-4df7-9879-de7a86afacfb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controller">
+      <UniqueIdentifier>{03cef0b6-e1b2-4854-afde-a3a0cbabd9bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="View">
+      <UniqueIdentifier>{b6a5a23e-bc74-41e1-a2f9-7a8fc012e08a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controller\Application">
+      <UniqueIdentifier>{9433d89f-97e2-4c5f-af46-e7985cedb86c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controller\MainWindow">
+      <UniqueIdentifier>{fd301a38-2349-472c-be85-7d9ad71bb82b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="View\MainWindow">
+      <UniqueIdentifier>{6947515a-7ba2-47ea-b917-dcec5fb40ca4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="View\Theme">
+      <UniqueIdentifier>{68392425-f4e7-4d7a-b2e6-91113b7f4344}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Sources\precomp.cpp" />
+    <ClCompile Include="Sources\Controller\Application\application_controller.cpp">
+      <Filter>Controller\Application</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Controller\MainWindow\main_window_controller.cpp">
+      <Filter>Controller\MainWindow</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Model\app_model.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Sources\precomp.h" />
+    <ClInclude Include="Sources\Controller\Application\application_controller.h">
+      <Filter>Controller\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Controller\MainWindow\main_window_controller.h">
+      <Filter>Controller\MainWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\View\MainWindow\main_window_view.h">
+      <Filter>View\MainWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Model\app_model.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\View\Theme\theme_button_view.h">
+      <Filter>View\Theme</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\View\Theme\theme_checkbox_view.h">
+      <Filter>View\Theme</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\View\Theme\theme_image_view.h">
+      <Filter>View\Theme</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\View\Theme\theme_label_view.h">
+      <Filter>View\Theme</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\View\Theme\theme_listbox_view.h">
+      <Filter>View\Theme</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\View\Theme\theme_scroll_view.h">
+      <Filter>View\Theme</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\View\Theme\theme_slider_view.h">
+      <Filter>View\Theme</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\View\Theme\theme_spin_view.h">
+      <Filter>View\Theme</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\View\Theme\theme_text_view.h">
+      <Filter>View\Theme</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\View\Theme\theme_text_block_view.h">
+      <Filter>View\Theme</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\View\Theme\theme_form_view.h">
+      <Filter>View\Theme</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\View\Theme\theme_text_field_view.h">
+      <Filter>View\Theme</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\View\Theme\theme_radio_button_view.h">
+      <Filter>View\Theme</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
