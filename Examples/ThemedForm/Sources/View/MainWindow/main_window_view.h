@@ -22,6 +22,7 @@ public:
 	MainWindowView()
 	{
 		auto headline = add_child<ThemeHeadlineView>();
+		headline->style()->set("margin-top: 0");
 		headline->add_text("Form example with themed views");
 
 		auto p = add_child<ThemeParagraphView>();
@@ -33,6 +34,6 @@ public:
 		button->style()->set("margin-right: auto");
 
 		auto slider = add_child<ThemeSliderView>();
-		slider->style()->set("width: 300px; margin-right: auto");
+		slider->style()->set("width: 300px; margin-right: auto; margin-top: 5px");
 	}
 };
