@@ -1,7 +1,7 @@
 
 #pragma once
 
-class ThemeFormView : public uicore::RowView
+class ThemeFormView : public uicore::ColumnView
 {
 public:
 	ThemeFormView()

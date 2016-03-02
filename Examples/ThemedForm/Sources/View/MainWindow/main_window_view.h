@@ -24,6 +24,11 @@ public:
 		auto headline = add_child<ThemeHeadlineView>();
 		headline->add_text("Form example with themed views");
 
+		auto button = add_child<ThemeButtonView>();
+		button->label()->set_text("Test Button");
+		button->style()->set("margin-right: auto");
+
 		auto slider = add_child<ThemeSliderView>();
+		slider->style()->set("width: 300px; margin-right: auto");
 	}
 };
