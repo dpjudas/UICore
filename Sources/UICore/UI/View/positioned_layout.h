@@ -32,6 +32,8 @@
 
 namespace uicore
 {
+	class StyleGetValue;
+
 	class PositionedLayout
 	{
 	public:
@@ -40,5 +42,6 @@ namespace uicore
 
 	private:
 		static void layout_from_containing_box(const CanvasPtr &canvas, View *view, const Rectf &containing_box);
+		static float resolve_percentage(StyleGetValue &computed_value, float size);
 	};
 }

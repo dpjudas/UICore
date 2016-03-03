@@ -82,33 +82,37 @@ namespace uicore
 		bool definite_right = !view->style_cascade().computed_value("right").is_keyword("auto");
 		bool definite_width = !view->style_cascade().computed_value("width").is_keyword("auto");
 
+		float computed_left = resolve_percentage(view->style_cascade().computed_value("left"), containing_box.width());
+		float computed_right = resolve_percentage(view->style_cascade().computed_value("right"), containing_box.width());
+		float computed_width = resolve_percentage(view->style_cascade().computed_value("width"), containing_box.width());
+
 		float x = 0.0f;
 		float width = 0.0f;
 
 		if (definite_left && definite_right)
 		{
-			x = view->style_cascade().computed_value("left").number();
-			width = uicore::max(containing_box.width() - view->style_cascade().computed_value("right").number() - x, 0.0f);
+			x = computed_left;
+			width = uicore::max(containing_box.width() - computed_right - x, 0.0f);
 		}
 		else if (definite_left && definite_width)
 		{
-			x = view->style_cascade().computed_value("left").number();
-			width = view->style_cascade().computed_value("width").number();
+			x = computed_left;
+			width = computed_width;
 		}
 		else if (definite_right && definite_width)
 		{
-			width = view->style_cascade().computed_value("width").number();
-			x = containing_box.width() - view->style_cascade().computed_value("right").number() - width;
+			width = computed_width;
+			x = containing_box.width() - computed_right - width;
 		}
 		else if (definite_left)
 		{
-			x = view->style_cascade().computed_value("left").number();
+			x = computed_left;
 			width = view->preferred_width(canvas);
 		}
 		else if (definite_right)
 		{
 			width = view->preferred_width(canvas);
-			x = containing_box.width() - view->style_cascade().computed_value("right").number() - width;
+			x = containing_box.width() - computed_right - width;
 		}
 		else if (definite_width)
 		{
@@ -125,38 +129,42 @@ namespace uicore
 		bool definite_bottom = !view->style_cascade().computed_value("bottom").is_keyword("auto");
 		bool definite_height = !view->style_cascade().computed_value("height").is_keyword("auto");
 
+		float computed_top = resolve_percentage(view->style_cascade().computed_value("top"), containing_box.height());
+		float computed_bottom = resolve_percentage(view->style_cascade().computed_value("bottom"), containing_box.height());
+		float computed_height = resolve_percentage(view->style_cascade().computed_value("height"), containing_box.height());
+
 		float y = 0.0f;
 		float height = 0.0f;
 
 		if (definite_top && definite_bottom)
 		{
-			y = view->style_cascade().computed_value("top").number();
-			height = uicore::max(containing_box.height() - view->style_cascade().computed_value("bottom").number() - y, 0.0f);
+			y = computed_top;
+			height = uicore::max(containing_box.height() - computed_bottom - y, 0.0f);
 		}
 		else if (definite_top && definite_height)
 		{
-			y = view->style_cascade().computed_value("top").number();
-			height = view->style_cascade().computed_value("height").number();
+			y = computed_top;
+			height = computed_height;
 		}
 		else if (definite_bottom && definite_height)
 		{
-			height = view->style_cascade().computed_value("height").number();
-			y = containing_box.height() - view->style_cascade().computed_value("bottom").number() - height;
+			height = computed_height;
+			y = containing_box.height() - computed_bottom - height;
 		}
 		else if (definite_top)
 		{
-			y = view->style_cascade().computed_value("top").number();
+			y = computed_top;
 			height = view->preferred_height(canvas, width);
 		}
 		else if (definite_bottom)
 		{
 			height = view->preferred_height(canvas, width);
-			y = containing_box.height() - view->style_cascade().computed_value("bottom").number() - height;
+			y = containing_box.height() - computed_bottom - height;
 		}
 		else if (definite_height)
 		{
 			y = 0.0f;
-			height = view->style_cascade().computed_value("height").number();
+			height = computed_height;
 		}
 		else
 		{
@@ -165,6 +173,14 @@ namespace uicore
 		}
 
 		return ViewGeometry::from_content_box(view->style_cascade(), Rectf::xywh(x, y, width, height));
+	}
+
+	float PositionedLayout::resolve_percentage(StyleGetValue &computed_value, float size)
+	{
+		if (computed_value.is_percentage())
+			return computed_value.number() * size / 100.0f;
+		else
+			return computed_value.number();
 	}
 
 	void PositionedLayout::layout_from_containing_box(const CanvasPtr &canvas, View *view, const Rectf &containing_box)
