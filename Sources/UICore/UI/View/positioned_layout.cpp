@@ -44,7 +44,7 @@ namespace uicore
 			else if (child->style_cascade().computed_value("position").is_keyword("absolute"))
 			{
 				// To do: decide how we determine the containing box used for absolute positioning. For now, use the parent padding box.
-				layout_from_containing_box(canvas, child.get(), view->geometry().padding_box());
+				layout_from_containing_box(canvas, child.get(), view->geometry().padding_box().translate(-view->geometry().content_pos()));
 			}
 			else if (child->style_cascade().computed_value("position").is_keyword("fixed"))
 			{
@@ -173,6 +173,9 @@ namespace uicore
 			y = 0.0f;
 			height = view->preferred_height(canvas, width);
 		}
+
+		x += containing_box.left;
+		y += containing_box.top;
 
 		auto tl = canvas->grid_fit(Pointf(x, y));
 		auto br = canvas->grid_fit(Pointf(x + width, y + height));
