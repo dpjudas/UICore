@@ -314,13 +314,8 @@ namespace uicore
 
 	float TextView::calculate_preferred_height(const CanvasPtr &canvas, float width)
 	{
-		if (style_cascade().computed_value("height").is_keyword("auto"))
-		{
-			FontPtr font = impl->get_font(canvas);
-			return font->font_metrics(canvas).line_height() * impl->preferred_size.height;
-		}
-		else
-			return style_cascade().computed_value("height").number();
+		FontPtr font = impl->get_font(canvas);
+		return font->font_metrics(canvas).line_height() * impl->preferred_size.height;
 	}
 
 	float TextView::calculate_first_baseline_offset(const CanvasPtr &canvas, float width)
