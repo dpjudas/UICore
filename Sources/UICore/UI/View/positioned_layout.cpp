@@ -43,8 +43,8 @@ namespace uicore
 			}
 			else if (child->style_cascade().computed_value("position").is_keyword("absolute"))
 			{
-				// To do: decide how we determine the containing box used for absolute positioning. For now, use the parent content box.
-				layout_from_containing_box(canvas, child.get(), view->geometry().content_box());
+				// To do: decide how we determine the containing box used for absolute positioning. For now, use the parent padding box.
+				layout_from_containing_box(canvas, child.get(), view->geometry().padding_box());
 			}
 			else if (child->style_cascade().computed_value("position").is_keyword("fixed"))
 			{
