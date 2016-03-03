@@ -27,6 +27,7 @@
 */
 
 #include "UICore/precomp.h"
+#include "UICore/Display/2D/canvas.h"
 #include "positioned_layout.h"
 #include <algorithm>
 
@@ -172,7 +173,10 @@ namespace uicore
 			height = view->preferred_height(canvas, width);
 		}
 
-		return ViewGeometry::from_content_box(view->style_cascade(), Rectf::xywh(x, y, width, height));
+		auto tl = canvas->grid_fit(Pointf(x, y));
+		auto br = canvas->grid_fit(Pointf(x + width, y + height));
+		Rectf box = Rectf(tl.x, tl.y, br.x, br.y);
+		return ViewGeometry::from_content_box(view->style_cascade(), box);
 	}
 
 	float PositionedLayout::resolve_percentage(StyleGetValue &computed_value, float size)
