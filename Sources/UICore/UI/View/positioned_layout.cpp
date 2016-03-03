@@ -108,7 +108,8 @@ namespace uicore
 		else if (definite_left)
 		{
 			x = computed_left;
-			width = view->preferred_width(canvas);
+			width = containing_box.width() - x;
+			// width = std::max(containing_box.width() - x, view->minimum_width(canvas)); // To do: shrink-to-fit from CSS 2.1
 		}
 		else if (definite_right)
 		{
