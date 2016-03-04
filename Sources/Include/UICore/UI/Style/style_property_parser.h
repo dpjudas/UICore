@@ -101,12 +101,7 @@ namespace uicore
 		static void debug_parse_error(const std::string &name, const std::vector<StyleToken> &tokens);
 
 	private:
-		struct ColorType
-		{
-			const std::string::value_type *name;
-			int color;
-		};
-		static ColorType colors[];
+
 	};
 
 	/// Sets the default value for a property

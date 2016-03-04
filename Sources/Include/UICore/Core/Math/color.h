@@ -571,16 +571,6 @@ namespace uicore
 		static Color gray80;
 		static Color gray90;
 
-		/// \brief Find and returns the static color matching a string.
-		///
-		/// \param name Name of color to match, eg. "blue".
-		///
-		/// \return Reference to matching static color, or transparent (rgba(0,0,0,0)) if there was no match.
-		static Color find_color(const std::string &name);
-
-		/// \brief Returns the names of static colors defined.
-		static std::vector<std::string> &get_names();
-
 		/// \brief Set alpha color component, in the range 0-255.
 		void set_alpha(unsigned char value) { a = value; }
 
@@ -706,13 +696,10 @@ namespace uicore
 
 		/// \brief Constructs a color.
 		///
-		/// Color components are specified in the range 0 to 255.\n
-		/// An alpha value of 0 means complete transparency, while 255 means completely opaque (solid).
-		///
 		/// \param hexstr The colors rgba components as a hexadecimal string of the format "#rrggbbaa", where the '#' and "aa" parts are optional.
 		Colorf(const std::string &hexstr)
 		{
-			*this = (Colorf)Color::find_color(hexstr);
+			Colorf::find_color(hexstr, *this);
 		}
 
 		/// \brief Get Red
@@ -773,6 +760,14 @@ namespace uicore
 		{
 			return Color(*this);
 		}
+
+		/// \brief Find and returns the static color matching a string.
+		///
+		/// \param name Name of color to match, eg. "blue".
+		///
+		/// \param out_color =  Matching static color, or transparent (rgba(0,0,0,0)) if there was no match.
+		/// \return false = No match found
+		static bool find_color(const std::string &name, Colorf &out_color);
 
 		/// \brief <img src="../../img/colors/aliceblue-chip.png" width=16 height=16 > rgb(240, 248, 255).
 		static Colorf aliceblue;
