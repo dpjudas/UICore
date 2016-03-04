@@ -35,5 +35,15 @@ public:
 
 		auto slider = add_child<ThemeSliderView>();
 		slider->style()->set("width: 300px; margin-right: auto; margin-top: 5px");
+
+		auto absolute = add_child<View>();
+		absolute->style()->set(R"(
+			position: absolute;
+			right: 10%;
+			top: 10%;
+			width: 80%;
+			height: 80%;
+			background: rgba(160,255,160,0.5);
+			)");
 	}
 };

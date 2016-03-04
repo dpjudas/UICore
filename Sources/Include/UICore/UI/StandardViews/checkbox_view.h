@@ -34,13 +34,13 @@
 
 namespace uicore
 {
-	class CheckBoxView_Impl;
+	class CheckBoxBaseView_Impl;
 
-	class CheckBoxView : public View
+	class CheckBoxBaseView : public View
 	{
 	public:
 
-		CheckBoxView();
+		CheckBoxBaseView();
 
 		bool disabled() const;
 		void set_disabled();
@@ -60,7 +60,7 @@ namespace uicore
 		std::function<void()> &func_state_changed();
 
 	private:
-		std::shared_ptr<CheckBoxView_Impl> impl;
+		std::shared_ptr<CheckBoxBaseView_Impl> impl;
 
 	};
 

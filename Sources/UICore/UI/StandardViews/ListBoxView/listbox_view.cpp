@@ -34,29 +34,29 @@
 
 namespace uicore
 {
-	ListBoxView::ListBoxView() : impl(new ListBoxViewImpl())
+	ListBoxBaseView::ListBoxBaseView() : impl(new ListBoxBaseViewImpl())
 	{
 		impl->listbox = this;
 		content_view()->style()->set("flex-direction: column");
 		
 		set_focus_policy(FocusPolicy::accept);
 
-		slots.connect(sig_key_press(), impl.get(), &ListBoxViewImpl::on_key_press);
-		slots.connect(content_view()->sig_pointer_press(), impl.get(), &ListBoxViewImpl::on_pointer_press);
-		slots.connect(content_view()->sig_pointer_release(), impl.get(), &ListBoxViewImpl::on_pointer_release);
+		slots.connect(sig_key_press(), impl.get(), &ListBoxBaseViewImpl::on_key_press);
+		slots.connect(content_view()->sig_pointer_press(), impl.get(), &ListBoxBaseViewImpl::on_pointer_press);
+		slots.connect(content_view()->sig_pointer_release(), impl.get(), &ListBoxBaseViewImpl::on_pointer_release);
 
 	}
 
-	ListBoxView::~ListBoxView()
+	ListBoxBaseView::~ListBoxBaseView()
 	{
 	}
 	
-	std::function<void()> &ListBoxView::func_selection_changed()
+	std::function<void()> &ListBoxBaseView::func_selection_changed()
 	{
 		return impl->func_selection_changed;
 	}
 	
-	void ListBoxView::set_items(const std::vector<std::shared_ptr<View>> &items)
+	void ListBoxBaseView::set_items(const std::vector<std::shared_ptr<View>> &items)
 	{
 		impl->selected_item = -1;
 		
@@ -67,19 +67,19 @@ namespace uicore
 		for (auto &item : items)
 		{
 			content_view()->add_child(item);
-			slots.connect(item->sig_pointer_enter(), impl.get(), &ListBoxViewImpl::on_pointer_enter);
-			slots.connect(item->sig_pointer_leave(), impl.get(), &ListBoxViewImpl::on_pointer_leave);
+			slots.connect(item->sig_pointer_enter(), impl.get(), &ListBoxBaseViewImpl::on_pointer_enter);
+			slots.connect(item->sig_pointer_leave(), impl.get(), &ListBoxBaseViewImpl::on_pointer_leave);
 
 		}
 
 	}
 	
-	int ListBoxView::selected_item() const
+	int ListBoxBaseView::selected_item() const
 	{
 		return impl->selected_item;
 	}
 	
-	void ListBoxView::set_selected_item(int index)
+	void ListBoxBaseView::set_selected_item(int index)
 	{
 		if (index == impl->selected_item)
 			return;
@@ -98,7 +98,7 @@ namespace uicore
 			auto new_selected_item = content_view()->children().at(index);
 			new_selected_item->set_state("selected", true);
 			
-			// To do: call set_content_offset() if new_selected_item is not within range (maybe add a helper on ScrollView for this?)
+			// To do: call set_content_offset() if new_selected_item is not within range (maybe add a helper on ScrollBaseView for this?)
 		}
 		
 		impl->selected_item = index;

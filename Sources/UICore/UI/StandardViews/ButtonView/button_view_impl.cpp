@@ -36,7 +36,7 @@
 namespace uicore
 {
 
-	void ButtonViewImpl::update_state()
+	void ButtonBaseViewImpl::update_state()
 	{
 		bool target_hot = false;
 		bool target_disabled = false;
@@ -60,7 +60,7 @@ namespace uicore
 		button->set_state_cascade("disabled", target_disabled);
 	}
 
-	void ButtonViewImpl::on_pointer_press(PointerEvent &e)
+	void ButtonBaseViewImpl::on_pointer_press(PointerEvent &e)
 	{
 		if (_state_disabled)
 			return;
@@ -68,7 +68,7 @@ namespace uicore
 		update_state();
 	}
 
-	void ButtonViewImpl::on_pointer_release(PointerEvent &e)
+	void ButtonBaseViewImpl::on_pointer_release(PointerEvent &e)
 	{
 		_state_pressed = false;
 		if (_state_disabled)

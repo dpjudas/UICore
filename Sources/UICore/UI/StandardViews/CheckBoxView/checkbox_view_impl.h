@@ -33,14 +33,14 @@
 namespace uicore
 {
 
-	class CheckBoxView_Impl
+	class CheckBoxBaseView_Impl
 	{
 	public:
 		void on_pointer_press(PointerEvent &e);
 		void on_pointer_release(PointerEvent &e);
 		void update_state();
 
-		CheckBoxView *checkbox = nullptr;
+		CheckBoxBaseView *checkbox = nullptr;
 		bool _state_disabled = false;
 		bool _state_hot = false;
 		bool _state_pressed = false;

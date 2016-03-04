@@ -40,7 +40,7 @@
 
 namespace uicore
 {
-	void CheckBoxView_Impl::update_state()
+	void CheckBoxBaseView_Impl::update_state()
 	{
 		bool target_checked = false;
 		bool target_checked_hot = false;
@@ -101,7 +101,7 @@ namespace uicore
 		checkbox->set_state_cascade("unchecked_disabled", target_unchecked_disabled);
 	}
 
-	void CheckBoxView_Impl::on_pointer_press(PointerEvent &e)
+	void CheckBoxBaseView_Impl::on_pointer_press(PointerEvent &e)
 	{
 		if (_state_disabled)
 			return;
@@ -109,7 +109,7 @@ namespace uicore
 		update_state();
 	}
 
-	void CheckBoxView_Impl::on_pointer_release(PointerEvent &e)
+	void CheckBoxBaseView_Impl::on_pointer_release(PointerEvent &e)
 	{
 		_state_pressed = false;
 		if (_state_disabled)

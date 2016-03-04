@@ -38,7 +38,7 @@ namespace uicore
 
 	/////////////////////////////////////////////////////////////////////////
 
-	class ImageViewImpl
+	class ImageBaseViewImpl
 	{
 	public:
 		std::shared_ptr<ImageSource> image;
@@ -56,16 +56,16 @@ namespace uicore
 		}
 	};
 
-	ImageView::ImageView() : impl(std::make_shared<ImageViewImpl>())
+	ImageBaseView::ImageBaseView() : impl(std::make_shared<ImageBaseViewImpl>())
 	{
 	}
 
-	std::shared_ptr<ImageSource> ImageView::image()
+	std::shared_ptr<ImageSource> ImageBaseView::image()
 	{
 		return impl->image;
 	}
 
-	void ImageView::set_image(const std::shared_ptr<ImageSource> &image)
+	void ImageBaseView::set_image(const std::shared_ptr<ImageSource> &image)
 	{
 		impl->image = image;
 		impl->canvas_image = nullptr;
@@ -73,17 +73,17 @@ namespace uicore
 		set_needs_layout();
 	}
 
-	void ImageView::set_image(const ImagePtr &image)
+	void ImageBaseView::set_image(const ImagePtr &image)
 	{
 		set_image(ImageSource::from_image(image));
 	}
 
-	std::shared_ptr<ImageSource> ImageView::highlighted_image()
+	std::shared_ptr<ImageSource> ImageBaseView::highlighted_image()
 	{
 		return impl->highlighted_image;
 	}
 
-	void ImageView::set_highlighted_image(const std::shared_ptr<ImageSource> &image)
+	void ImageBaseView::set_highlighted_image(const std::shared_ptr<ImageSource> &image)
 	{
 		impl->highlighted_image = image;
 		impl->canvas_highlighted_image = nullptr;
@@ -91,12 +91,12 @@ namespace uicore
 		set_needs_layout();
 	}
 
-	void ImageView::set_highlighted_image(const ImagePtr &image)
+	void ImageBaseView::set_highlighted_image(const ImagePtr &image)
 	{
 		set_highlighted_image(ImageSource::from_image(image));
 	}
 
-	void ImageView::render_content(const CanvasPtr &canvas)
+	void ImageBaseView::render_content(const CanvasPtr &canvas)
 	{
 		impl->get_images(canvas);
 
@@ -113,7 +113,7 @@ namespace uicore
 		}
 	}
 
-	float ImageView::calculate_preferred_width(const CanvasPtr &canvas)
+	float ImageBaseView::calculate_preferred_width(const CanvasPtr &canvas)
 	{
 		impl->get_images(canvas);
 
@@ -123,7 +123,7 @@ namespace uicore
 			return 0.0f;
 	}
 
-	float ImageView::calculate_preferred_height(const CanvasPtr &canvas, float width)
+	float ImageBaseView::calculate_preferred_height(const CanvasPtr &canvas, float width)
 	{
 		impl->get_images(canvas);
 

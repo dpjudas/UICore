@@ -36,7 +36,7 @@
 
 namespace uicore
 {
-	void ListBoxViewImpl::on_key_press(KeyEvent &e)
+	void ListBoxBaseViewImpl::on_key_press(KeyEvent &e)
 	{
 		if (listbox->content_view()->children().empty())
 			return;
@@ -55,7 +55,7 @@ namespace uicore
 		}
 	}
 
-	void ListBoxViewImpl::on_pointer_press(PointerEvent &e)
+	void ListBoxBaseViewImpl::on_pointer_press(PointerEvent &e)
 	{
 		last_selected_item = selected_item;
 
@@ -63,7 +63,7 @@ namespace uicore
 		listbox->set_selected_item(index);
 	}
 
-	void ListBoxViewImpl::on_pointer_release(PointerEvent &e)
+	void ListBoxBaseViewImpl::on_pointer_release(PointerEvent &e)
 	{
 		if (e.phase() != EventUIPhase::bubbling)
 			return;
@@ -82,7 +82,7 @@ namespace uicore
 		}
 	}
 
-	int ListBoxViewImpl::get_selection_index(PointerEvent &e)
+	int ListBoxBaseViewImpl::get_selection_index(PointerEvent &e)
 	{
 		int index = 0;
 		for (auto &view : listbox->content_view()->children())
@@ -95,7 +95,7 @@ namespace uicore
 
 	}
 
-	void ListBoxViewImpl::set_hot_item(int index)
+	void ListBoxBaseViewImpl::set_hot_item(int index)
 	{
 		if ((index == hot_item) || (index == selected_item))		// Selected item state has priority
 			return;
@@ -115,12 +115,12 @@ namespace uicore
 		hot_item = index;
 	}
 
-	void ListBoxViewImpl::on_pointer_enter(PointerEvent &e)
+	void ListBoxBaseViewImpl::on_pointer_enter(PointerEvent &e)
 	{
 		set_hot_item(get_selection_index(e));
 	}
 
-	void ListBoxViewImpl::on_pointer_leave(PointerEvent &e)
+	void ListBoxBaseViewImpl::on_pointer_leave(PointerEvent &e)
 	{
 		set_hot_item(-1);
 	}

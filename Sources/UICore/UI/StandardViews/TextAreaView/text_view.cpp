@@ -47,7 +47,7 @@
 
 namespace uicore
 {
-	TextView::TextView() : impl(new TextViewImpl())
+	TextAreaBaseView::TextAreaBaseView() : impl(new TextAreaBaseViewImpl())
 	{
 		impl->textfield = this;
 		impl->text_lines.resize(1);
@@ -57,15 +57,15 @@ namespace uicore
 		set_cursor(StandardCursor::ibeam);
 		set_content_clipped(true);
 
-		slots.connect(sig_key_press(), impl.get(), &TextViewImpl::on_key_press);
-		slots.connect(sig_key_release(), impl.get(), &TextViewImpl::on_key_release);
-		slots.connect(sig_pointer_press(), impl.get(), &TextViewImpl::on_pointer_press);
-		slots.connect(sig_pointer_release(), impl.get(), &TextViewImpl::on_pointer_release);
-		slots.connect(sig_pointer_move(), impl.get(), &TextViewImpl::on_pointer_move);
-		slots.connect(sig_focus_gained(), impl.get(), &TextViewImpl::on_focus_gained);
-		slots.connect(sig_focus_lost(), impl.get(), &TextViewImpl::on_focus_lost);
-		slots.connect(sig_activated(), impl.get(), &TextViewImpl::on_activated);
-		slots.connect(sig_deactivated(), impl.get(), &TextViewImpl::on_deactivated);
+		slots.connect(sig_key_press(), impl.get(), &TextAreaBaseViewImpl::on_key_press);
+		slots.connect(sig_key_release(), impl.get(), &TextAreaBaseViewImpl::on_key_release);
+		slots.connect(sig_pointer_press(), impl.get(), &TextAreaBaseViewImpl::on_pointer_press);
+		slots.connect(sig_pointer_release(), impl.get(), &TextAreaBaseViewImpl::on_pointer_release);
+		slots.connect(sig_pointer_move(), impl.get(), &TextAreaBaseViewImpl::on_pointer_move);
+		slots.connect(sig_focus_gained(), impl.get(), &TextAreaBaseViewImpl::on_focus_gained);
+		slots.connect(sig_focus_lost(), impl.get(), &TextAreaBaseViewImpl::on_focus_lost);
+		slots.connect(sig_activated(), impl.get(), &TextAreaBaseViewImpl::on_activated);
+		slots.connect(sig_deactivated(), impl.get(), &TextAreaBaseViewImpl::on_deactivated);
 
 		impl->scroll_timer->func_expired() = [&]()
 		{
@@ -76,16 +76,16 @@ namespace uicore
 		};
 	}
 
-	TextView::~TextView()
+	TextAreaBaseView::~TextAreaBaseView()
 	{
 	}
 
-	Size TextView::preferred_size() const
+	Size TextAreaBaseView::preferred_size() const
 	{
 		return impl->preferred_size;
 	}
 
-	void TextView::set_preferred_size(Size num_characters)
+	void TextAreaBaseView::set_preferred_size(Size num_characters)
 	{
 		if (impl->preferred_size != num_characters)
 		{
@@ -94,7 +94,7 @@ namespace uicore
 		}
 	}
 
-	std::string TextView::text() const
+	std::string TextAreaBaseView::text() const
 	{
 		size_t length = 0;
 		for (const auto &line : impl->text_lines) length += line.length() + 1;
@@ -111,7 +111,7 @@ namespace uicore
 		return all_text;
 	}
 
-	void TextView::set_text(const std::string &text)
+	void TextAreaBaseView::set_text(const std::string &text)
 	{
 		impl->text_lines = Text::split(text, "\n", false);
 		if (impl->text_lines.empty())
@@ -127,23 +127,23 @@ namespace uicore
 		set_needs_render();
 	}
 
-	std::string TextView::placeholder() const
+	std::string TextAreaBaseView::placeholder() const
 	{
 		return impl->placeholder;
 	}
 
-	void TextView::set_placeholder(const std::string &value)
+	void TextAreaBaseView::set_placeholder(const std::string &value)
 	{
 		impl->placeholder = value;
 		set_needs_render();
 	}
 
-	TextAlignment TextView::text_alignment() const
+	TextAlignment TextAreaBaseView::text_alignment() const
 	{
 		return impl->alignment;
 	}
 
-	void TextView::set_text_alignment(TextAlignment alignment)
+	void TextAreaBaseView::set_text_alignment(TextAlignment alignment)
 	{
 		if (impl->alignment != alignment)
 		{
@@ -152,12 +152,12 @@ namespace uicore
 		}
 	}
 
-	bool TextView::is_read_only() const
+	bool TextAreaBaseView::is_read_only() const
 	{
 		return impl->readonly;
 	}
 
-	void TextView::set_read_only(bool value)
+	void TextAreaBaseView::set_read_only(bool value)
 	{
 		if (impl->readonly != value)
 		{
@@ -166,22 +166,22 @@ namespace uicore
 		}
 	}
 
-	std::string TextView::selection() const
+	std::string TextAreaBaseView::selection() const
 	{
 		return impl->get_all_selected_text();
 	}
 
-	Vec2i TextView::selection_start() const
+	Vec2i TextAreaBaseView::selection_start() const
 	{
 		return impl->selection.start();
 	}
 
-	Vec2i TextView::selection_end() const
+	Vec2i TextAreaBaseView::selection_end() const
 	{
 		return impl->selection.end();
 	}
 
-	void TextView::set_selection(Vec2i head, Vec2i tail)
+	void TextAreaBaseView::set_selection(Vec2i head, Vec2i tail)
 	{
 		// Bounds check: (to do: should we throw an out of bounds exception instead?)
 		head.y = std::max(std::min(head.y, (int)impl->text_lines.size() - 1), 0);
@@ -194,59 +194,59 @@ namespace uicore
 		set_needs_render();
 	}
 
-	void TextView::clear_selection()
+	void TextAreaBaseView::clear_selection()
 	{
 		set_selection(Vec2i(), Vec2i());
 	}
 
-	void TextView::delete_selected_text()
+	void TextAreaBaseView::delete_selected_text()
 	{
 		if (impl->selection.start() != impl->selection.end())
 			impl->del();
 	}
 
-	void TextView::select_all()
+	void TextAreaBaseView::select_all()
 	{
 		set_selection(Vec2i(0, 0), Vec2i(impl->text_lines.back().size(), impl->text_lines.size() - 1));
 	}
 
-	Vec2i TextView::cursor_pos() const
+	Vec2i TextAreaBaseView::cursor_pos() const
 	{
 		return impl->cursor_pos;
 	}
 
-	void TextView::set_cursor_pos(Vec2i pos)
+	void TextAreaBaseView::set_cursor_pos(Vec2i pos)
 	{
 		impl->cursor_pos = pos;
 		set_needs_render();
 	}
 
-	void TextView::set_cursor_drawing_enabled(bool value)
+	void TextAreaBaseView::set_cursor_drawing_enabled(bool value)
 	{
 		impl->cursor_drawing_enabled_when_parent_focused = value;
 	}
 
-	Signal<void(KeyEvent &)> &TextView::sig_before_edit_changed()
+	Signal<void(KeyEvent &)> &TextAreaBaseView::sig_before_edit_changed()
 	{
 		return impl->sig_before_edit_changed;
 	}
 
-	Signal<void(KeyEvent &)> &TextView::sig_after_edit_changed()
+	Signal<void(KeyEvent &)> &TextAreaBaseView::sig_after_edit_changed()
 	{
 		return impl->sig_after_edit_changed;
 	}
 
-	Signal<void()> &TextView::sig_selection_changed()
+	Signal<void()> &TextAreaBaseView::sig_selection_changed()
 	{
 		return impl->selection.sig_selection_changed;
 	}
 
-	Signal<void(KeyEvent &)> &TextView::sig_enter_pressed()
+	Signal<void(KeyEvent &)> &TextAreaBaseView::sig_enter_pressed()
 	{
 		return impl->sig_enter_pressed;
 	}
 
-	void TextView::render_content(const CanvasPtr &canvas)
+	void TextAreaBaseView::render_content(const CanvasPtr &canvas)
 	{
 		FontPtr font = impl->get_font(canvas);
 		FontMetrics font_metrics = font->font_metrics(canvas);
@@ -306,39 +306,39 @@ namespace uicore
 		}
 	}
 
-	float TextView::calculate_preferred_width(const CanvasPtr &canvas)
+	float TextAreaBaseView::calculate_preferred_width(const CanvasPtr &canvas)
 	{
 		FontPtr font = impl->get_font(canvas);
 		return font->measure_text(canvas, "X").advance.width * impl->preferred_size.width;
 	}
 
-	float TextView::calculate_preferred_height(const CanvasPtr &canvas, float width)
+	float TextAreaBaseView::calculate_preferred_height(const CanvasPtr &canvas, float width)
 	{
 		FontPtr font = impl->get_font(canvas);
 		return font->font_metrics(canvas).line_height() * impl->preferred_size.height;
 	}
 
-	float TextView::calculate_first_baseline_offset(const CanvasPtr &canvas, float width)
+	float TextAreaBaseView::calculate_first_baseline_offset(const CanvasPtr &canvas, float width)
 	{
 		FontPtr font = impl->get_font(canvas);
 		return font->font_metrics(canvas).baseline_offset();
 	}
 
-	float TextView::calculate_last_baseline_offset(const CanvasPtr &canvas, float width)
+	float TextAreaBaseView::calculate_last_baseline_offset(const CanvasPtr &canvas, float width)
 	{
 		return first_baseline_offset(canvas, width);
 	}
 
 	/////////////////////////////////////////////////////////////////////////
 
-	FontPtr &TextViewImpl::get_font(const CanvasPtr &canvas)
+	FontPtr &TextAreaBaseViewImpl::get_font(const CanvasPtr &canvas)
 	{
 		if (!font)
 			font = textfield->style_cascade().font();
 		return font;
 	}
 
-	void TextViewImpl::start_blink()
+	void TextAreaBaseViewImpl::start_blink()
 	{
 		blink_timer->func_expired() = [&]()
 		{
@@ -351,14 +351,14 @@ namespace uicore
 		textfield->set_needs_render();
 	}
 
-	void TextViewImpl::stop_blink()
+	void TextAreaBaseViewImpl::stop_blink()
 	{
 		blink_timer->stop();
 		cursor_blink_visible = false;
 		textfield->set_needs_render();
 	}
 
-	void TextViewImpl::on_focus_gained(FocusChangeEvent &e)
+	void TextAreaBaseViewImpl::on_focus_gained(FocusChangeEvent &e)
 	{
 		start_blink();
 		cursor_blink_visible = true;
@@ -366,7 +366,7 @@ namespace uicore
 		ignore_mouse_events = true;
 	}
 
-	void TextViewImpl::on_focus_lost(FocusChangeEvent &e)
+	void TextAreaBaseViewImpl::on_focus_lost(FocusChangeEvent &e)
 	{
 		if (mouse_selecting)
 		{
@@ -377,7 +377,7 @@ namespace uicore
 		selection.reset();
 	}
 
-	void TextViewImpl::on_activated(ActivationChangeEvent &e)
+	void TextAreaBaseViewImpl::on_activated(ActivationChangeEvent &e)
 	{
 		if (textfield->has_focus())
 		{
@@ -385,7 +385,7 @@ namespace uicore
 		}
 	}
 
-	void TextViewImpl::on_deactivated(ActivationChangeEvent &e)
+	void TextAreaBaseViewImpl::on_deactivated(ActivationChangeEvent &e)
 	{
 		if (mouse_selecting)
 		{
@@ -395,7 +395,7 @@ namespace uicore
 		stop_blink();
 	}
 
-	void TextViewImpl::on_key_press(KeyEvent &e)
+	void TextAreaBaseViewImpl::on_key_press(KeyEvent &e)
 	{
 		if (e.key() == Key::key_return)
 		{
@@ -504,11 +504,11 @@ namespace uicore
 		sig_after_edit_changed(e);
 	}
 
-	void TextViewImpl::on_key_release(KeyEvent &e)
+	void TextAreaBaseViewImpl::on_key_release(KeyEvent &e)
 	{
 	}
 
-	void TextViewImpl::on_pointer_press(PointerEvent &e)
+	void TextAreaBaseViewImpl::on_pointer_press(PointerEvent &e)
 	{
 		if (textfield->has_focus())
 		{
@@ -523,7 +523,7 @@ namespace uicore
 
 	}
 
-	void TextViewImpl::on_pointer_release(PointerEvent &e)
+	void TextAreaBaseViewImpl::on_pointer_release(PointerEvent &e)
 	{
 		if (!mouse_selecting)
 			return;
@@ -544,7 +544,7 @@ namespace uicore
 		}
 	}
 
-	void TextViewImpl::on_pointer_move(PointerEvent &e)
+	void TextAreaBaseViewImpl::on_pointer_move(PointerEvent &e)
 	{
 		if (!mouse_selecting)
 			return;
@@ -572,12 +572,12 @@ namespace uicore
 
 	}
 
-	void TextViewImpl::select_all()
+	void TextAreaBaseViewImpl::select_all()
 	{
 		selection.set_head_and_tail(Vec2i(), Vec2i(text_lines.back().size(), text_lines.size()));
 	}
 
-	void TextViewImpl::move_line(int steps, bool ctrl, bool shift, bool stay_on_line)
+	void TextAreaBaseViewImpl::move_line(int steps, bool ctrl, bool shift, bool stay_on_line)
 	{
 		// To do: if ctrl is down it scrolls up and down instead of moving cursor
 		// To do: allow cursor_pos.x to be out of bounds and only clamped into range when move or add/del/backspace is called
@@ -626,7 +626,7 @@ namespace uicore
 		textfield->set_needs_render();
 	}
 
-	void TextViewImpl::move(int steps, bool ctrl, bool shift, bool stay_on_line)
+	void TextAreaBaseViewImpl::move(int steps, bool ctrl, bool shift, bool stay_on_line)
 	{
 		Vec2i pos = cursor_pos;
 
@@ -709,7 +709,7 @@ namespace uicore
 		textfield->set_needs_render();
 	}
 
-	void TextViewImpl::home(bool ctrl, bool shift)
+	void TextAreaBaseViewImpl::home(bool ctrl, bool shift)
 	{
 		Vec2i pos = cursor_pos;
 
@@ -735,7 +735,7 @@ namespace uicore
 		textfield->set_needs_render();
 	}
 
-	void TextViewImpl::end(bool ctrl, bool shift)
+	void TextAreaBaseViewImpl::end(bool ctrl, bool shift)
 	{
 		Vec2i pos = cursor_pos;
 
@@ -761,7 +761,7 @@ namespace uicore
 		textfield->set_needs_render();
 	}
 
-	void TextViewImpl::backspace()
+	void TextAreaBaseViewImpl::backspace()
 	{
 		if (selection.start() != selection.end())
 		{
@@ -795,7 +795,7 @@ namespace uicore
 		}
 	}
 
-	void TextViewImpl::del()
+	void TextAreaBaseViewImpl::del()
 	{
 		if (selection.start() != selection.end())
 		{
@@ -841,7 +841,7 @@ namespace uicore
 		}
 	}
 
-	void TextViewImpl::cut()
+	void TextAreaBaseViewImpl::cut()
 	{
 		copy();
 		if (selection.start() == selection.end())
@@ -849,7 +849,7 @@ namespace uicore
 		del();
 	}
 
-	void TextViewImpl::copy()
+	void TextAreaBaseViewImpl::copy()
 	{
 		ViewTree *tree = textfield->view_tree();
 		if (tree)
@@ -865,7 +865,7 @@ namespace uicore
 		}
 	}
 
-	void TextViewImpl::paste()
+	void TextAreaBaseViewImpl::paste()
 	{
 		ViewTree *tree = textfield->view_tree();
 		if (tree)
@@ -876,7 +876,7 @@ namespace uicore
 		}
 	}
 
-	void TextViewImpl::undo()
+	void TextAreaBaseViewImpl::undo()
 	{
 		/*
 		if (undo_buffer.empty())
@@ -899,7 +899,7 @@ namespace uicore
 		*/
 	}
 
-	void TextViewImpl::redo()
+	void TextAreaBaseViewImpl::redo()
 	{
 		/*
 		if (redo_buffer.empty())
@@ -922,7 +922,7 @@ namespace uicore
 		*/
 	}
 
-	void TextViewImpl::save_undo()
+	void TextAreaBaseViewImpl::save_undo()
 	{
 		/*
 		redo_buffer.clear();
@@ -940,7 +940,7 @@ namespace uicore
 		*/
 	}
 
-	void TextViewImpl::add(std::string new_text)
+	void TextAreaBaseViewImpl::add(std::string new_text)
 	{
 		if (selection.start() != selection.end())
 			del();
@@ -969,7 +969,7 @@ namespace uicore
 		textfield->set_needs_render();
 	}
 
-	std::string TextViewImpl::get_all_selected_text() const
+	std::string TextAreaBaseViewImpl::get_all_selected_text() const
 	{
 		Vec2i start = selection.start();
 		Vec2i end = selection.end();
@@ -998,7 +998,7 @@ namespace uicore
 		}
 	}
 
-	std::string TextViewImpl::get_text_before_selection(size_t line_index) const
+	std::string TextAreaBaseViewImpl::get_text_before_selection(size_t line_index) const
 	{
 		Vec2i start = selection.start();
 
@@ -1010,7 +1010,7 @@ namespace uicore
 			return std::string();
 	}
 
-	std::string TextViewImpl::get_selected_text(size_t line_index) const
+	std::string TextAreaBaseViewImpl::get_selected_text(size_t line_index) const
 	{
 		Vec2i start = selection.start();
 		Vec2i end = selection.end();
@@ -1027,7 +1027,7 @@ namespace uicore
 			return text_lines[line_index];
 	}
 
-	std::string TextViewImpl::get_text_after_selection(size_t line_index) const
+	std::string TextAreaBaseViewImpl::get_text_after_selection(size_t line_index) const
 	{
 		Vec2i end = selection.end();
 
@@ -1039,7 +1039,7 @@ namespace uicore
 			return std::string();
 	}
 
-	int TextViewImpl::find_next_break_character(int search_start, int line) const
+	int TextAreaBaseViewImpl::find_next_break_character(int search_start, int line) const
 	{
 		if (search_start == text_lines[line].size())
 			return search_start;
@@ -1050,7 +1050,7 @@ namespace uicore
 		return pos;
 	}
 
-	int TextViewImpl::find_previous_break_character(int search_start, int line) const
+	int TextAreaBaseViewImpl::find_previous_break_character(int search_start, int line) const
 	{
 		if (search_start == 0)
 			return 0;
@@ -1060,7 +1060,7 @@ namespace uicore
 		return pos;
 	}
 
-	Vec2i TextViewImpl::get_character_index(const Pointf &pos)
+	Vec2i TextAreaBaseViewImpl::get_character_index(const Pointf &pos)
 	{
 		return Vec2i();
 		/*
@@ -1078,5 +1078,5 @@ namespace uicore
 		*/
 	}
 
-	const std::string TextViewImpl::break_characters = " ::;,.-";
+	const std::string TextAreaBaseViewImpl::break_characters = " ::;,.-";
 }

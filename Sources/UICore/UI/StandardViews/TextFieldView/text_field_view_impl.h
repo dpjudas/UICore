@@ -35,7 +35,7 @@
 
 namespace uicore
 {
-	class TextFieldViewSelection
+	class TextFieldBaseViewSelection
 	{
 	public:
 		void reset()
@@ -84,7 +84,7 @@ namespace uicore
 		size_t selection_tail = 0;
 	};
 
-	class TextFieldViewImpl
+	class TextFieldBaseViewImpl
 	{
 	public:
 		void on_key_press(KeyEvent &e);
@@ -115,7 +115,7 @@ namespace uicore
 
 		void save_undo();
 
-		TextFieldView *textfield = nullptr;
+		TextFieldBaseView *textfield = nullptr;
 
 		TextAlignment alignment = TextAlignment::left;
 
@@ -142,7 +142,7 @@ namespace uicore
 		std::string input_mask;
 		std::string decimal_char = std::string(".");
 
-		TextFieldViewSelection selection;
+		TextFieldBaseViewSelection selection;
 		size_t cursor_pos = 0;
 
 		float scroll_pos = 0.0f;

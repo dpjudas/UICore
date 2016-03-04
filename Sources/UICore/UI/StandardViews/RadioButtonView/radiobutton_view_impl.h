@@ -33,7 +33,7 @@
 namespace uicore
 {
 
-	class RadioButtonView_Impl
+	class RadioButtonBaseView_Impl
 	{
 	public:
 		void on_pointer_press(PointerEvent &e);
@@ -41,7 +41,7 @@ namespace uicore
 		void update_state();
 		void release_group_checked();
 
-		RadioButtonView *radio = nullptr;
+		RadioButtonBaseView *radio = nullptr;
 		bool _state_disabled = false;
 		bool _state_hot = false;
 		bool _state_pressed = false;

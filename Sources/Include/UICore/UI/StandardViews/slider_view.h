@@ -33,12 +33,12 @@
 
 namespace uicore
 {
-	class SliderViewImpl;
+	class SliderBaseViewImpl;
 
-	class SliderView : public View
+	class SliderBaseView : public View
 	{
 	public:
-		SliderView();
+		SliderBaseView();
 
 		std::shared_ptr<View> track() const;
 		std::shared_ptr<View> thumb() const;
@@ -70,6 +70,6 @@ namespace uicore
 		void layout_children(const CanvasPtr &canvas) override;
 
 	private:
-		std::shared_ptr<SliderViewImpl> impl;
+		std::shared_ptr<SliderBaseViewImpl> impl;
 	};
 }

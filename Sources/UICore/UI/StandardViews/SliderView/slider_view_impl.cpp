@@ -39,7 +39,7 @@
 
 namespace uicore
 {
-	void SliderViewImpl::update_state()
+	void SliderBaseViewImpl::update_state()
 	{
 		bool target_hot = false;
 		bool target_disabled = false;
@@ -63,7 +63,7 @@ namespace uicore
 		slider->set_state_cascade("disabled", target_disabled);
 	}
 
-	void SliderViewImpl::update_pos(SliderView *view, int new_pos, int new_min, int new_max)
+	void SliderBaseViewImpl::update_pos(SliderBaseView *view, int new_pos, int new_min, int new_max)
 	{
 		bool changed = new_min != _min_position || new_max != _max_position || new_pos != _position;
 		if (changed)
@@ -75,11 +75,11 @@ namespace uicore
 		}
 	}
 
-	void SliderViewImpl::on_focus_gained(FocusChangeEvent &e)
+	void SliderBaseViewImpl::on_focus_gained(FocusChangeEvent &e)
 	{
 	}
 
-	void SliderViewImpl::on_focus_lost(FocusChangeEvent &e)
+	void SliderBaseViewImpl::on_focus_lost(FocusChangeEvent &e)
 	{
 		if (_state_disabled)
 			return;
@@ -87,12 +87,12 @@ namespace uicore
 		scroll_timer->stop();
 	}
 
-	void SliderViewImpl::on_activated(ActivationChangeEvent &e)
+	void SliderBaseViewImpl::on_activated(ActivationChangeEvent &e)
 	{
 
 	}
 
-	void SliderViewImpl::on_deactivated(ActivationChangeEvent &e)
+	void SliderBaseViewImpl::on_deactivated(ActivationChangeEvent &e)
 	{
 		if (_state_disabled)
 			return;
@@ -101,7 +101,7 @@ namespace uicore
 		scroll_timer->stop();
 	}
 
-	void SliderViewImpl::on_pointer_track_press(PointerEvent &e)
+	void SliderBaseViewImpl::on_pointer_track_press(PointerEvent &e)
 	{
 		if (_state_disabled)
 			return;
@@ -138,7 +138,7 @@ namespace uicore
 		scroll_timer_expired();
 	}
 
-	void SliderViewImpl::on_pointer_track_release(PointerEvent &e)
+	void SliderBaseViewImpl::on_pointer_track_release(PointerEvent &e)
 	{
 		if (_state_disabled)
 			return;
@@ -146,7 +146,7 @@ namespace uicore
 		scroll_timer->stop();
 	}
 
-	void SliderViewImpl::on_pointer_thumb_press(PointerEvent &e)
+	void SliderBaseViewImpl::on_pointer_thumb_press(PointerEvent &e)
 	{
 		if (_state_disabled)
 			return;
@@ -158,7 +158,7 @@ namespace uicore
 		mouse_drag_start_pos = e.pos(track.get());
 	}
 
-	void SliderViewImpl::on_pointer_thumb_release(PointerEvent &e)
+	void SliderBaseViewImpl::on_pointer_thumb_release(PointerEvent &e)
 	{
 		_state_pressed = false;
 		if (_state_disabled)
@@ -168,7 +168,7 @@ namespace uicore
 		scroll_timer->stop();
 	}
 
-	void SliderViewImpl::on_pointer_move(PointerEvent &e)
+	void SliderBaseViewImpl::on_pointer_move(PointerEvent &e)
 	{
 		if (_state_disabled)
 			return;
@@ -218,7 +218,7 @@ namespace uicore
 		}
 	}
 	
-	void SliderViewImpl::scroll_timer_expired()
+	void SliderBaseViewImpl::scroll_timer_expired()
 	{
 		if (_state_disabled)
 			return;

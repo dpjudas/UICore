@@ -30,7 +30,7 @@
 
 namespace uicore
 {
-	class ListBoxViewImpl
+	class ListBoxBaseViewImpl
 	{
 	public:
 		void on_key_press(KeyEvent &e);
@@ -41,7 +41,7 @@ namespace uicore
 
 		void set_hot_item(int index);
 
-		ListBoxView *listbox = nullptr;
+		ListBoxBaseView *listbox = nullptr;
 		int selected_item = -1;
 		int hot_item = -1;
 		int last_selected_item = -1;

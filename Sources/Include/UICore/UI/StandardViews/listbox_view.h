@@ -33,13 +33,13 @@
 
 namespace uicore
 {
-	class ListBoxViewImpl;
+	class ListBoxBaseViewImpl;
 
-	class ListBoxView : public ScrollView
+	class ListBoxBaseView : public ScrollBaseView
 	{
 	public:
-		ListBoxView();
-		~ListBoxView();
+		ListBoxBaseView();
+		~ListBoxBaseView();
 		
 		void set_items(const std::vector<std::shared_ptr<View>> &items);
 		
@@ -61,6 +61,6 @@ namespace uicore
 		std::function<void()> &func_selection_changed();
 
 	private:
-		std::unique_ptr<ListBoxViewImpl> impl;
+		std::unique_ptr<ListBoxBaseViewImpl> impl;
 	};
 }

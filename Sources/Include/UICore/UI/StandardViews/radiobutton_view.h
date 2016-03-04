@@ -34,14 +34,14 @@
 
 namespace uicore
 {
-	class RadioButtonView_Impl;
+	class RadioButtonBaseView_Impl;
 
 	/// \brief Radio button component.
-	class RadioButtonView : public View
+	class RadioButtonBaseView : public View
 	{
 	public:
 
-		RadioButtonView();
+		RadioButtonBaseView();
 
 		bool disabled() const;
 		void set_disabled();
@@ -79,9 +79,9 @@ namespace uicore
 		std::function<void()> &func_selected();
 
 	private:
-		std::shared_ptr<RadioButtonView_Impl> impl;
+		std::shared_ptr<RadioButtonBaseView_Impl> impl;
 
-		friend class RadioButtonView_Impl;
+		friend class RadioButtonBaseView_Impl;
 	};
 
 }

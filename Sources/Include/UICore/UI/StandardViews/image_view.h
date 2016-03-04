@@ -36,12 +36,12 @@ namespace uicore
 	class Canvas;
 	class Image;
 	typedef std::shared_ptr<Image> ImagePtr;
-	class ImageViewImpl;
+	class ImageBaseViewImpl;
 
-	class ImageView : public View
+	class ImageBaseView : public View
 	{
 	public:
-		ImageView();
+		ImageBaseView();
 
 		std::shared_ptr<ImageSource> image();
 		void set_image(const std::shared_ptr<ImageSource> &image);
@@ -75,6 +75,6 @@ namespace uicore
 		float calculate_preferred_height(const CanvasPtr &canvas, float width) override;
 
 	private:
-		std::shared_ptr<ImageViewImpl> impl;
+		std::shared_ptr<ImageBaseViewImpl> impl;
 	};
 }

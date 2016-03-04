@@ -39,7 +39,7 @@
 
 namespace uicore
 {
-	SliderView::SliderView() : impl(std::make_shared<SliderViewImpl>())
+	SliderBaseView::SliderBaseView() : impl(std::make_shared<SliderBaseViewImpl>())
 	{
 		impl->slider = this;
 
@@ -49,43 +49,43 @@ namespace uicore
 		add_child(impl->track);
 		add_child(impl->thumb);
 	
-		slots.connect(sig_pointer_press(), impl.get(), &SliderViewImpl::on_pointer_track_press);
-		slots.connect(sig_pointer_release(), impl.get(), &SliderViewImpl::on_pointer_track_release);
+		slots.connect(sig_pointer_press(), impl.get(), &SliderBaseViewImpl::on_pointer_track_press);
+		slots.connect(sig_pointer_release(), impl.get(), &SliderBaseViewImpl::on_pointer_track_release);
 
-		slots.connect(impl->thumb->sig_pointer_press(), impl.get(), &SliderViewImpl::on_pointer_thumb_press);
-		slots.connect(impl->thumb->sig_pointer_release(), impl.get(), &SliderViewImpl::on_pointer_thumb_release);
+		slots.connect(impl->thumb->sig_pointer_press(), impl.get(), &SliderBaseViewImpl::on_pointer_thumb_press);
+		slots.connect(impl->thumb->sig_pointer_release(), impl.get(), &SliderBaseViewImpl::on_pointer_thumb_release);
 
 		slots.connect(impl->thumb->sig_pointer_enter(), [&](PointerEvent &e) {impl->_state_hot = true;  impl->update_state(); });
 		slots.connect(impl->thumb->sig_pointer_leave(), [&](PointerEvent &e) {impl->_state_hot = false;  impl->update_state(); });
 
-		slots.connect(impl->thumb->sig_pointer_move(), impl.get(), &SliderViewImpl::on_pointer_move);
+		slots.connect(impl->thumb->sig_pointer_move(), impl.get(), &SliderBaseViewImpl::on_pointer_move);
 
-		slots.connect(sig_focus_gained(), impl.get(), &SliderViewImpl::on_focus_gained);
-		slots.connect(sig_focus_lost(), impl.get(), &SliderViewImpl::on_focus_lost);
-		slots.connect(sig_activated(), impl.get(), &SliderViewImpl::on_activated);
-		slots.connect(sig_activated(), impl.get(), &SliderViewImpl::on_deactivated);
+		slots.connect(sig_focus_gained(), impl.get(), &SliderBaseViewImpl::on_focus_gained);
+		slots.connect(sig_focus_lost(), impl.get(), &SliderBaseViewImpl::on_focus_lost);
+		slots.connect(sig_activated(), impl.get(), &SliderBaseViewImpl::on_activated);
+		slots.connect(sig_activated(), impl.get(), &SliderBaseViewImpl::on_deactivated);
 
-		impl->scroll_timer->func_expired() = uicore::bind_member(impl.get(), &SliderViewImpl::scroll_timer_expired);
+		impl->scroll_timer->func_expired() = uicore::bind_member(impl.get(), &SliderBaseViewImpl::scroll_timer_expired);
 
 		set_vertical();
 	}
 
-	bool SliderView::disabled() const
+	bool SliderBaseView::disabled() const
 	{
 		return impl->_state_disabled;
 	}
 
-	void SliderView::set_disabled()
+	void SliderBaseView::set_disabled()
 	{
 		if (!impl->_state_disabled)
 		{
 			impl->_state_disabled = true;
 			impl->update_state();
-			impl->mouse_down_mode = SliderViewImpl::mouse_down_none;
+			impl->mouse_down_mode = SliderBaseViewImpl::mouse_down_none;
 			impl->scroll_timer->stop();
 		}
 	}
-	void SliderView::set_enabled()
+	void SliderBaseView::set_enabled()
 	{
 		if (impl->_state_disabled)
 		{
@@ -94,27 +94,27 @@ namespace uicore
 		}
 	}
 
-	std::shared_ptr<View> SliderView::track() const
+	std::shared_ptr<View> SliderBaseView::track() const
 	{
 		return impl->track;
 	}
 
-	std::shared_ptr<View> SliderView::thumb() const
+	std::shared_ptr<View> SliderBaseView::thumb() const
 	{
 		return impl->thumb;
 	}
 
-	bool SliderView::vertical() const
+	bool SliderBaseView::vertical() const
 	{
 		return impl->_vertical;
 	}
 
-	bool SliderView::horizontal() const
+	bool SliderBaseView::horizontal() const
 	{
 		return !impl->_vertical;
 	}
 
-	void SliderView::set_vertical()
+	void SliderBaseView::set_vertical()
 	{
 		impl->_vertical = true;
 		impl->thumb->style()->set("position: absolute; top: 0px; left: auto");
@@ -122,27 +122,27 @@ namespace uicore
 
 	}
 
-	void SliderView::set_horizontal()
+	void SliderBaseView::set_horizontal()
 	{
 		impl->_vertical = false;
 		impl->thumb->style()->set("position: absolute; left: 0px; top: auto");
 		set_needs_layout();
 	}
 
-	int SliderView::max_position() const
+	int SliderBaseView::max_position() const
 	{
 		return impl->_max_position;
 	}
-	int SliderView::position() const
+	int SliderBaseView::position() const
 	{
 		return impl->_position;
 	}
-	int SliderView::min_position() const
+	int SliderBaseView::min_position() const
 	{
 		return impl->_min_position;
 	}
 
-	void SliderView::set_max_position(int value)
+	void SliderBaseView::set_max_position(int value)
 	{
 		int new_min = std::min(impl->_min_position, value);
 		int new_max = value;
@@ -150,13 +150,13 @@ namespace uicore
 		impl->update_pos(this, new_pos, new_min, new_max);
 
 	}
-	void SliderView::set_position(int value)
+	void SliderBaseView::set_position(int value)
 	{
 		int new_pos = std::max(std::min(value, impl->_max_position), impl->_min_position);
 		impl->update_pos(this, new_pos, impl->_min_position, impl->_max_position);
 	}
 
-	void SliderView::set_min_position(int value)
+	void SliderBaseView::set_min_position(int value)
 	{
 		int new_min = value;
 		int new_max = std::max(impl->_max_position, value);
@@ -164,22 +164,22 @@ namespace uicore
 		impl->update_pos(this, new_pos, new_min, new_max);
 	}
 
-	void SliderView::set_tick_count(int tick_count)
+	void SliderBaseView::set_tick_count(int tick_count)
 	{
 		impl->_tick_count = tick_count;
 		set_needs_layout();
 	}
-	void SliderView::set_page_step(int page_step)
+	void SliderBaseView::set_page_step(int page_step)
 	{
 		impl->_page_step = page_step;
 		set_needs_layout();
 	}
-	void SliderView::set_lock_to_ticks(bool lock)
+	void SliderBaseView::set_lock_to_ticks(bool lock)
 	{
 		impl->_lock_to_ticks = lock;
 	}
 
-	void SliderView::layout_children(const CanvasPtr &canvas)
+	void SliderBaseView::layout_children(const CanvasPtr &canvas)
 	{
 		View::layout_children(canvas);
 
@@ -201,7 +201,7 @@ namespace uicore
 		}
 	}
 
-	std::function<void()> &SliderView::func_value_changed()
+	std::function<void()> &SliderBaseView::func_value_changed()
 	{
 		return impl->_func_value_changed;
 	}

@@ -34,7 +34,7 @@
 
 namespace uicore
 {
-	class ScrollViewContentContainer : public View
+	class ScrollBaseViewContentContainer : public View
 	{
 	public:
 		void layout_children(const CanvasPtr &canvas) override
@@ -54,20 +54,20 @@ namespace uicore
 		}
 	};
 
-	class ScrollViewImpl
+	class ScrollBaseViewImpl
 	{
 	public:
-		ScrollView *view = nullptr;
-		std::shared_ptr<ScrollBarView> scroll_x = std::make_shared<ScrollBarView>();
-		std::shared_ptr<ScrollBarView> scroll_y = std::make_shared<ScrollBarView>();
-		std::shared_ptr<ScrollViewContentContainer> content_container = std::make_shared<ScrollViewContentContainer>();
+		ScrollBaseView *view = nullptr;
+		std::shared_ptr<ScrollBarBaseView> scroll_x = std::make_shared<ScrollBarBaseView>();
+		std::shared_ptr<ScrollBarBaseView> scroll_y = std::make_shared<ScrollBarBaseView>();
+		std::shared_ptr<ScrollBaseViewContentContainer> content_container = std::make_shared<ScrollBaseViewContentContainer>();
 		std::shared_ptr<View> content = std::make_shared<View>();
 		ContentOverflow overflow_x = ContentOverflow::hidden;
 		ContentOverflow overflow_y = ContentOverflow::automatic;
 		Pointf content_offset;
 	};
 
-	ScrollView::ScrollView() : impl(new ScrollViewImpl())
+	ScrollBaseView::ScrollBaseView() : impl(new ScrollBaseViewImpl())
 	{
 		impl->view = this;
 		
@@ -98,36 +98,36 @@ namespace uicore
 		});
 	}
 
-	ScrollView::~ScrollView()
+	ScrollBaseView::~ScrollBaseView()
 	{
 	}
 
-	std::shared_ptr<View> ScrollView::content_view() const
+	std::shared_ptr<View> ScrollBaseView::content_view() const
 	{
 		return impl->content;
 	}
 
-	std::shared_ptr<ScrollBarView> ScrollView::scrollbar_x_view() const
+	std::shared_ptr<ScrollBarBaseView> ScrollBaseView::scrollbar_x_view() const
 	{
 		return impl->scroll_x;
 	}
 
-	std::shared_ptr<ScrollBarView> ScrollView::scrollbar_y_view() const
+	std::shared_ptr<ScrollBarBaseView> ScrollBaseView::scrollbar_y_view() const
 	{
 		return impl->scroll_y;
 	}
 	
-	ContentOverflow ScrollView::overflow_x() const
+	ContentOverflow ScrollBaseView::overflow_x() const
 	{
 		return impl->overflow_x;
 	}
 	
-	ContentOverflow ScrollView::overflow_y() const
+	ContentOverflow ScrollBaseView::overflow_y() const
 	{
 		return impl->overflow_y;
 	}
 	
-	void ScrollView::set_overflow_x(ContentOverflow value)
+	void ScrollBaseView::set_overflow_x(ContentOverflow value)
 	{
 		if (impl->overflow_x == value)
 			return;
@@ -136,7 +136,7 @@ namespace uicore
 		set_needs_layout();
 	}
 	
-	void ScrollView::set_overflow_y(ContentOverflow value)
+	void ScrollBaseView::set_overflow_y(ContentOverflow value)
 	{
 		if (impl->overflow_y == value)
 			return;
@@ -145,18 +145,18 @@ namespace uicore
 		set_needs_layout();
 	}
 	
-	void ScrollView::set_overflow(ContentOverflow value_x, ContentOverflow value_y)
+	void ScrollBaseView::set_overflow(ContentOverflow value_x, ContentOverflow value_y)
 	{
 		set_overflow_x(value_x);
 		set_overflow_y(value_y);
 	}
 	
-	Pointf ScrollView::content_offset() const
+	Pointf ScrollBaseView::content_offset() const
 	{
 		return impl->content_offset;
 	}
 	
-	void ScrollView::set_content_offset(const Pointf &offset, bool animated)
+	void ScrollBaseView::set_content_offset(const Pointf &offset, bool animated)
 	{
 		if (impl->content_offset == offset)
 			return;
@@ -165,7 +165,7 @@ namespace uicore
 		impl->content->set_view_transform(Mat4f::translate(-offset.x, -offset.y, 0.0f));
 	}
 	
-	void ScrollView::layout_children(const CanvasPtr &canvas)
+	void ScrollBaseView::layout_children(const CanvasPtr &canvas)
 	{
 		bool x_scroll_needed = false;
 		bool y_scroll_needed = false;
@@ -221,7 +221,7 @@ namespace uicore
 		impl->content_container->layout_children(canvas);
 	}
 	
-	float ScrollView::calculate_preferred_width(const CanvasPtr &canvas)
+	float ScrollBaseView::calculate_preferred_width(const CanvasPtr &canvas)
 	{
 		float width = impl->content_container->preferred_width(canvas);
 		if (impl->overflow_x == ContentOverflow::scroll)
@@ -229,7 +229,7 @@ namespace uicore
 		return width;
 	}
 	
-	float ScrollView::calculate_preferred_height(const CanvasPtr &canvas, float width)
+	float ScrollBaseView::calculate_preferred_height(const CanvasPtr &canvas, float width)
 	{
 		float height = impl->content_container->preferred_height(canvas, width);
 		if (impl->overflow_y == ContentOverflow::scroll)
@@ -237,12 +237,12 @@ namespace uicore
 		return height;
 	}
 	
-	float ScrollView::calculate_first_baseline_offset(const CanvasPtr &canvas, float width)
+	float ScrollBaseView::calculate_first_baseline_offset(const CanvasPtr &canvas, float width)
 	{
 		return impl->content_container->first_baseline_offset(canvas, width);
 	}
 	
-	float ScrollView::calculate_last_baseline_offset(const CanvasPtr &canvas, float width)
+	float ScrollBaseView::calculate_last_baseline_offset(const CanvasPtr &canvas, float width)
 	{
 		return impl->content_container->last_baseline_offset(canvas, width);
 	}

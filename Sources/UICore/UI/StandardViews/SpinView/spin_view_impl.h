@@ -34,7 +34,7 @@
 namespace uicore
 {
 
-	class SpinView_Impl
+	class SpinBaseView_Impl
 	{
 	public:
 
@@ -57,7 +57,7 @@ namespace uicore
 			mouse_down_button_incr,
 		} mouse_down_mode = mouse_down_none;
 
-		SpinView *spin = nullptr;
+		SpinBaseView *spin = nullptr;
 
 		std::shared_ptr<View> button_decrement;
 		std::shared_ptr<View> button_increment;

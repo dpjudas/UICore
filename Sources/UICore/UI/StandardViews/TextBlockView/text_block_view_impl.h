@@ -96,12 +96,12 @@ namespace uicore
 		float advance_width = 0.0f;
 	};
 
-	class TextBlockViewImpl
+	class TextBlockBaseViewImpl
 	{
 	public:
-		TextBlockViewImpl();
+		TextBlockBaseViewImpl();
 
-		TextBlockView *view = nullptr;
+		TextBlockBaseView *view = nullptr;
 
 		void clear();
 		void add_text(const std::string &text, const std::shared_ptr<Style> &style, int id = -1);

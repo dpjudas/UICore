@@ -34,7 +34,7 @@ namespace uicore
 {
 	class Image;
 
-	class ProgressView : public View
+	class ProgressBaseView : public View
 	{
 	public:
 		float progress() const;

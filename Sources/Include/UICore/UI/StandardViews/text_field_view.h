@@ -34,13 +34,13 @@
 namespace uicore
 {
 	class Font;
-	class TextFieldViewImpl;
+	class TextFieldBaseViewImpl;
 
-	class TextFieldView : public View
+	class TextFieldBaseView : public View
 	{
 	public:
-		TextFieldView();
-		~TextFieldView();
+		TextFieldBaseView();
+		~TextFieldBaseView();
 
 		int preferred_size() const;
 		void set_preferred_size(int num_characters);
@@ -105,6 +105,6 @@ namespace uicore
 		float calculate_last_baseline_offset(const CanvasPtr &canvas, float width) override;
 
 	private:
-		std::unique_ptr<TextFieldViewImpl> impl;
+		std::unique_ptr<TextFieldBaseViewImpl> impl;
 	};
 }

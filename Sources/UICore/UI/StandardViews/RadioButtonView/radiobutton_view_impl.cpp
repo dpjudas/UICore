@@ -40,7 +40,7 @@
 
 namespace uicore
 {
-	void RadioButtonView_Impl::update_state()
+	void RadioButtonBaseView_Impl::update_state()
 	{
 		bool target_checked = false;
 		bool target_checked_hot = false;
@@ -101,7 +101,7 @@ namespace uicore
 		radio->set_state_cascade("unchecked_disabled", target_unchecked_disabled);
 	}
 
-	void RadioButtonView_Impl::on_pointer_press(PointerEvent &e)
+	void RadioButtonBaseView_Impl::on_pointer_press(PointerEvent &e)
 	{
 		if (_state_disabled)
 			return;
@@ -109,7 +109,7 @@ namespace uicore
 		update_state();
 	}
 
-	void RadioButtonView_Impl::on_pointer_release(PointerEvent &e)
+	void RadioButtonBaseView_Impl::on_pointer_release(PointerEvent &e)
 	{
 		_state_pressed = false;
 		if (_state_disabled)
@@ -129,7 +129,7 @@ namespace uicore
 		update_state();
 	}
 
-	void RadioButtonView_Impl::release_group_checked()
+	void RadioButtonBaseView_Impl::release_group_checked()
 	{
 		auto view = radio->parent();
 		if (view)
@@ -139,7 +139,7 @@ namespace uicore
 			{
 				if (view.get() != radio)
 				{
-					RadioButtonView *alt_radio = dynamic_cast<RadioButtonView*>(view.get());
+					RadioButtonBaseView *alt_radio = dynamic_cast<RadioButtonBaseView*>(view.get());
 					if (alt_radio)
 					{
 						if (alt_radio->impl->_group == _group)

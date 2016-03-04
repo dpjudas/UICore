@@ -40,18 +40,18 @@
 
 namespace uicore
 {
-	RadioButtonView::RadioButtonView() : impl(new RadioButtonView_Impl())
+	RadioButtonBaseView::RadioButtonBaseView() : impl(new RadioButtonBaseView_Impl())
 	{
 		impl->radio = this;
 
-		slots.connect(sig_pointer_press(), impl.get(), &RadioButtonView_Impl::on_pointer_press);
-		slots.connect(sig_pointer_release(), impl.get(), &RadioButtonView_Impl::on_pointer_release);
+		slots.connect(sig_pointer_press(), impl.get(), &RadioButtonBaseView_Impl::on_pointer_press);
+		slots.connect(sig_pointer_release(), impl.get(), &RadioButtonBaseView_Impl::on_pointer_release);
 
 		slots.connect(sig_pointer_enter(), [&](PointerEvent &e) {impl->_state_hot = true;  impl->update_state(); });
 		slots.connect(sig_pointer_leave(), [&](PointerEvent &e) {impl->_state_hot = false;  impl->update_state(); });
 	}
 
-	void RadioButtonView::set_disabled()
+	void RadioButtonBaseView::set_disabled()
 	{
 		if (!impl->_state_disabled)
 		{
@@ -59,7 +59,7 @@ namespace uicore
 			impl->update_state();
 		}
 	}
-	void RadioButtonView::set_enabled()
+	void RadioButtonBaseView::set_enabled()
 	{
 		if (impl->_state_disabled)
 		{
@@ -68,32 +68,32 @@ namespace uicore
 		}
 	}
 
-	bool RadioButtonView::disabled() const
+	bool RadioButtonBaseView::disabled() const
 	{
 		return impl->_state_disabled;
 	}
 
-	int RadioButtonView::radio_id() const
+	int RadioButtonBaseView::radio_id() const
 	{
 		return impl->_id;
 	}
 
-	bool RadioButtonView::selected() const
+	bool RadioButtonBaseView::selected() const
 	{
 		return impl->_state_selected;
 	}
 
-	std::string RadioButtonView::group_name() const
+	std::string RadioButtonBaseView::group_name() const
 	{
 		return impl->_group;
 	}
 
-	void RadioButtonView::set_radio_id(int id)
+	void RadioButtonBaseView::set_radio_id(int id)
 	{
 		impl->_id = id;
 	}
 
-	void RadioButtonView::set_selected(bool selected)
+	void RadioButtonBaseView::set_selected(bool selected)
 	{
 		if (impl->_state_selected != selected)
 		{
@@ -106,12 +106,12 @@ namespace uicore
 		}
 	}
 
-	void RadioButtonView::set_group_name(const std::string &str)
+	void RadioButtonBaseView::set_group_name(const std::string &str)
 	{
 		impl->_group = str;
 	}
 
-	std::function<void()> &RadioButtonView::func_selected()
+	std::function<void()> &RadioButtonBaseView::func_selected()
 	{
 		return impl->_func_selected;
 	}

@@ -30,21 +30,21 @@
 
 namespace uicore
 {
-	class ButtonViewImpl
+	class ButtonBaseViewImpl
 	{
 	public:
 		void on_pointer_press(PointerEvent &e);
 		void on_pointer_release(PointerEvent &e);
 		void update_state();
 
-		ButtonView *button = nullptr;
+		ButtonBaseView *button = nullptr;
 		bool _state_disabled = false;
 		bool _state_hot = false;
 		bool _state_pressed = false;
 
 		std::function<void()> _func_clicked;
 
-		std::shared_ptr<LabelView> label;
-		std::shared_ptr<ImageView> image_view;
+		std::shared_ptr<LabelBaseView> label;
+		std::shared_ptr<ImageBaseView> image_view;
 	};
 }

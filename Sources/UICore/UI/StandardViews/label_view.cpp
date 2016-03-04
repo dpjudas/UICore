@@ -42,7 +42,7 @@
 
 namespace uicore
 {
-	class LabelViewImpl
+	class LabelBaseViewImpl
 	{
 	public:
 		std::string _text;
@@ -50,7 +50,7 @@ namespace uicore
 		FontPtr font;
 		LineBreakMode _line_break_mode = LineBreakMode::truncating_tail;
 
-		const FontPtr &get_font(LabelView *view)
+		const FontPtr &get_font(LabelBaseView *view)
 		{
 			if (!font)
 				font = view->style_cascade().font();
@@ -58,49 +58,49 @@ namespace uicore
 		}
 	};
 
-	LabelView::LabelView() : impl(new LabelViewImpl())
+	LabelBaseView::LabelBaseView() : impl(new LabelBaseViewImpl())
 	{
 	}
 
-	void LabelView::layout_children(const CanvasPtr &canvas)
+	void LabelBaseView::layout_children(const CanvasPtr &canvas)
 	{
 		View::layout_children(canvas);
 		impl->font = style_cascade().font();	// Reset the font on new layout
 	}
 
-	std::string LabelView::text() const
+	std::string LabelBaseView::text() const
 	{
 		return impl->_text;
 	}
 
-	void LabelView::set_text(const std::string &value)
+	void LabelBaseView::set_text(const std::string &value)
 	{
 		impl->_text = value;
 		set_needs_layout();
 	}
 
-	TextAlignment LabelView::text_alignment() const
+	TextAlignment LabelBaseView::text_alignment() const
 	{
 		return impl->text_alignment;
 	}
 
-	void LabelView::set_text_alignment(TextAlignment alignment)
+	void LabelBaseView::set_text_alignment(TextAlignment alignment)
 	{
 		impl->text_alignment = alignment;
 	}
 
-	LineBreakMode LabelView::line_break_mode() const
+	LineBreakMode LabelBaseView::line_break_mode() const
 	{
 		return impl->_line_break_mode;
 	}
 
-	void LabelView::set_line_break_mode(LineBreakMode value)
+	void LabelBaseView::set_line_break_mode(LineBreakMode value)
 	{
 		impl->_line_break_mode = value;
 		set_needs_layout();
 	}
 
-	void LabelView::render_content(const CanvasPtr &canvas)
+	void LabelBaseView::render_content(const CanvasPtr &canvas)
 	{
 		FontPtr font = impl->get_font(this);
 		FontMetrics font_metrics = font->font_metrics(canvas);
@@ -158,25 +158,25 @@ namespace uicore
 		}
 	}
 
-	float LabelView::calculate_preferred_width(const CanvasPtr &canvas)
+	float LabelBaseView::calculate_preferred_width(const CanvasPtr &canvas)
 	{
 		FontPtr font = impl->get_font(this);
 		return font->measure_text(canvas, impl->_text).advance.width + 1.0f;
 	}
 
-	float LabelView::calculate_preferred_height(const CanvasPtr &canvas, float width)
+	float LabelBaseView::calculate_preferred_height(const CanvasPtr &canvas, float width)
 	{
 		FontPtr font = impl->get_font(this);
 		return font->font_metrics(canvas).line_height();
 	}
 
-	float LabelView::calculate_first_baseline_offset(const CanvasPtr &canvas, float width)
+	float LabelBaseView::calculate_first_baseline_offset(const CanvasPtr &canvas, float width)
 	{
 		FontPtr font = impl->get_font(this);
 		return font->font_metrics(canvas).baseline_offset();
 	}
 
-	float LabelView::calculate_last_baseline_offset(const CanvasPtr &canvas, float width)
+	float LabelBaseView::calculate_last_baseline_offset(const CanvasPtr &canvas, float width)
 	{
 		return first_baseline_offset(canvas, width);
 	}

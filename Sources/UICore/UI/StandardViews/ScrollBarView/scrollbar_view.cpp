@@ -40,12 +40,12 @@
 namespace uicore
 {
 
-	ScrollBarView::ScrollBarView(bool render_button_arrows) : impl(std::make_shared<ScrollBarViewImpl>())
+	ScrollBarBaseView::ScrollBarBaseView(bool render_button_arrows) : impl(std::make_shared<ScrollBarBaseViewImpl>())
 	{
 		impl->scrollbar = this;
 
-		impl->button_decrement = std::make_shared<ScrollBarButtonView>(render_button_arrows);
-		impl->button_increment = std::make_shared<ScrollBarButtonView>(render_button_arrows);
+		impl->button_decrement = std::make_shared<ScrollBarButtonBaseView>(render_button_arrows);
+		impl->button_increment = std::make_shared<ScrollBarButtonBaseView>(render_button_arrows);
 		impl->track = std::make_shared<View>();
 		impl->thumb = std::make_shared<View>();
 		impl->thumb_grip = std::make_shared<View>();
@@ -72,23 +72,23 @@ namespace uicore
 		impl->button_decrement->style()->set("width: 17px; height: 17px");
 		impl->button_increment->style()->set("width: 17px; height: 17px");
 
-		slots.connect(impl->track->sig_pointer_press(), impl.get(), &ScrollBarViewImpl::on_pointer_track_press);
-		slots.connect(impl->track->sig_pointer_release(), impl.get(), &ScrollBarViewImpl::on_pointer_track_release);
+		slots.connect(impl->track->sig_pointer_press(), impl.get(), &ScrollBarBaseViewImpl::on_pointer_track_press);
+		slots.connect(impl->track->sig_pointer_release(), impl.get(), &ScrollBarBaseViewImpl::on_pointer_track_release);
 
-		slots.connect(impl->thumb->sig_pointer_press(), impl.get(), &ScrollBarViewImpl::on_pointer_thumb_press);
-		slots.connect(impl->thumb->sig_pointer_release(), impl.get(), &ScrollBarViewImpl::on_pointer_thumb_release);
+		slots.connect(impl->thumb->sig_pointer_press(), impl.get(), &ScrollBarBaseViewImpl::on_pointer_thumb_press);
+		slots.connect(impl->thumb->sig_pointer_release(), impl.get(), &ScrollBarBaseViewImpl::on_pointer_thumb_release);
 
-		slots.connect(impl->button_decrement->sig_pointer_press(), impl.get(), &ScrollBarViewImpl::on_pointer_decrement_press);
-		slots.connect(impl->button_decrement->sig_pointer_release(), impl.get(), &ScrollBarViewImpl::on_pointer_decrement_release);
-		slots.connect(impl->button_increment->sig_pointer_press(), impl.get(), &ScrollBarViewImpl::on_pointer_increment_press);
-		slots.connect(impl->button_increment->sig_pointer_release(), impl.get(), &ScrollBarViewImpl::on_pointer_increment_release);
+		slots.connect(impl->button_decrement->sig_pointer_press(), impl.get(), &ScrollBarBaseViewImpl::on_pointer_decrement_press);
+		slots.connect(impl->button_decrement->sig_pointer_release(), impl.get(), &ScrollBarBaseViewImpl::on_pointer_decrement_release);
+		slots.connect(impl->button_increment->sig_pointer_press(), impl.get(), &ScrollBarBaseViewImpl::on_pointer_increment_press);
+		slots.connect(impl->button_increment->sig_pointer_release(), impl.get(), &ScrollBarBaseViewImpl::on_pointer_increment_release);
 
-		slots.connect(impl->thumb->sig_pointer_move(), impl.get(), &ScrollBarViewImpl::on_pointer_move);
+		slots.connect(impl->thumb->sig_pointer_move(), impl.get(), &ScrollBarBaseViewImpl::on_pointer_move);
 
-		slots.connect(sig_focus_gained(), impl.get(), &ScrollBarViewImpl::on_focus_gained);
-		slots.connect(sig_focus_lost(), impl.get(), &ScrollBarViewImpl::on_focus_lost);
-		slots.connect(sig_activated(), impl.get(), &ScrollBarViewImpl::on_activated);
-		slots.connect(sig_activated(), impl.get(), &ScrollBarViewImpl::on_deactivated);
+		slots.connect(sig_focus_gained(), impl.get(), &ScrollBarBaseViewImpl::on_focus_gained);
+		slots.connect(sig_focus_lost(), impl.get(), &ScrollBarBaseViewImpl::on_focus_lost);
+		slots.connect(sig_activated(), impl.get(), &ScrollBarBaseViewImpl::on_activated);
+		slots.connect(sig_activated(), impl.get(), &ScrollBarBaseViewImpl::on_deactivated);
 
 		slots.connect(impl->track->sig_pointer_enter(), [&](PointerEvent &e) {impl->_state_track_hot = true;  impl->update_track_state(); });
 		slots.connect(impl->track->sig_pointer_leave(), [&](PointerEvent &e) {impl->_state_track_hot = false;  impl->update_track_state(); });
@@ -105,47 +105,47 @@ namespace uicore
 		slots.connect(impl->button_increment->sig_pointer_enter(), [&](PointerEvent &e) {impl->_state_increment_hot = true;  impl->update_increment_state(); });
 		slots.connect(impl->button_increment->sig_pointer_leave(), [&](PointerEvent &e) {impl->_state_increment_hot = false;  impl->update_increment_state(); });
 
-		impl->scroll_timer->func_expired() = uicore::bind_member(impl.get(), &ScrollBarViewImpl::scroll_timer_expired);
+		impl->scroll_timer->func_expired() = uicore::bind_member(impl.get(), &ScrollBarBaseViewImpl::scroll_timer_expired);
 
 		set_vertical();
 	}
 
-	std::shared_ptr<View> ScrollBarView::button_decrement() const
+	std::shared_ptr<View> ScrollBarBaseView::button_decrement() const
 	{
 		return impl->button_decrement;
 	}
 
-	std::shared_ptr<View> ScrollBarView::button_increment() const
+	std::shared_ptr<View> ScrollBarBaseView::button_increment() const
 	{
 		return impl->button_increment;
 	}
 
-	std::shared_ptr<View> ScrollBarView::track() const
+	std::shared_ptr<View> ScrollBarBaseView::track() const
 	{
 		return impl->track;
 	}
 
-	std::shared_ptr<View> ScrollBarView::thumb() const
+	std::shared_ptr<View> ScrollBarBaseView::thumb() const
 	{
 		return impl->thumb;
 	}
 
-	std::shared_ptr<View> ScrollBarView::thumb_grip() const
+	std::shared_ptr<View> ScrollBarBaseView::thumb_grip() const
 	{
 		return impl->thumb_grip;
 	}
 
-	bool ScrollBarView::vertical() const
+	bool ScrollBarBaseView::vertical() const
 	{
 		return style_cascade().computed_value("flex-direction").is_keyword("column");
 	}
 
-	bool ScrollBarView::horizontal() const
+	bool ScrollBarBaseView::horizontal() const
 	{
 		return !vertical();
 	}
 
-	void ScrollBarView::set_vertical()
+	void ScrollBarBaseView::set_vertical()
 	{
 		style()->set("flex-direction: column");
 		impl->button_decrement->style()->set("flex-direction: column");
@@ -157,7 +157,7 @@ namespace uicore
 		impl->button_increment->set_direction(ScrollBarButtonDirection::down);
 	}
 
-	void ScrollBarView::set_horizontal()
+	void ScrollBarBaseView::set_horizontal()
 	{
 		style()->set("flex-direction: row");
 		impl->button_decrement->style()->set("flex-direction: row");
@@ -169,47 +169,47 @@ namespace uicore
 		impl->button_increment->set_direction(ScrollBarButtonDirection::right);
 	}
 
-	double ScrollBarView::line_step() const
+	double ScrollBarBaseView::line_step() const
 	{
 		return impl->line_step;
 	}
 
-	double ScrollBarView::page_step() const
+	double ScrollBarBaseView::page_step() const
 	{
 		return impl->page_step;
 	}
 
-	void ScrollBarView::set_line_step(double value)
+	void ScrollBarBaseView::set_line_step(double value)
 	{
 		impl->line_step = value;
 	}
 
-	void ScrollBarView::set_page_step(double value)
+	void ScrollBarBaseView::set_page_step(double value)
 	{
 		impl->page_step = value;
 	}
 
-	double ScrollBarView::min_position() const
+	double ScrollBarBaseView::min_position() const
 	{
 		return impl->min_pos;
 	}
 
-	double ScrollBarView::max_position() const
+	double ScrollBarBaseView::max_position() const
 	{
 		return impl->max_pos;
 	}
 
-	double ScrollBarView::position() const
+	double ScrollBarBaseView::position() const
 	{
 		return impl->pos;
 	}
 
-	bool ScrollBarView::disabled() const
+	bool ScrollBarBaseView::disabled() const
 	{
 		return impl->_state_disabled;
 	}
 
-	void ScrollBarView::set_disabled()
+	void ScrollBarBaseView::set_disabled()
 	{
 		if (!impl->_state_disabled)
 		{
@@ -219,12 +219,12 @@ namespace uicore
 			impl->update_increment_state();
 			impl->update_decrement_state();
 
-			impl->mouse_down_mode = ScrollBarViewImpl::mouse_down_none;
+			impl->mouse_down_mode = ScrollBarBaseViewImpl::mouse_down_none;
 			impl->scroll_timer->stop();
 
 		}
 	}
-	void ScrollBarView::set_enabled()
+	void ScrollBarBaseView::set_enabled()
 	{
 		if (impl->_state_disabled)
 		{
@@ -236,7 +236,7 @@ namespace uicore
 		}
 	}
 
-	void ScrollBarView::set_min_position(double value)
+	void ScrollBarBaseView::set_min_position(double value)
 	{
 		double new_min = value;
 		double new_max = std::max(impl->max_pos, value);
@@ -244,7 +244,7 @@ namespace uicore
 		impl->update_pos(this, new_pos, new_min, new_max);
 	}
 
-	void ScrollBarView::set_max_position(double value)
+	void ScrollBarBaseView::set_max_position(double value)
 	{
 		double new_min = std::min(impl->min_pos, value);
 		double new_max = value;
@@ -252,7 +252,7 @@ namespace uicore
 		impl->update_pos(this, new_pos, new_min, new_max);
 	}
 
-	void ScrollBarView::set_range(double min_value, double max_value)
+	void ScrollBarBaseView::set_range(double min_value, double max_value)
 	{
 		double new_min = min_value;
 		double new_max = max_value;
@@ -260,13 +260,13 @@ namespace uicore
 		impl->update_pos(this, new_pos, new_min, new_max);
 	}
 
-	void ScrollBarView::set_position(double value)
+	void ScrollBarBaseView::set_position(double value)
 	{
 		double new_pos = std::max(std::min(value, impl->max_pos), impl->min_pos);
 		impl->update_pos(this, new_pos, impl->min_pos, impl->max_pos);
 	}
 
-	void ScrollBarView::layout_children(const CanvasPtr &canvas)
+	void ScrollBarBaseView::layout_children(const CanvasPtr &canvas)
 	{
 		View::layout_children(canvas);
 
@@ -292,7 +292,7 @@ namespace uicore
 		}
 	}
 
-	Signal<void()> &ScrollBarView::sig_scroll()
+	Signal<void()> &ScrollBarBaseView::sig_scroll()
 	{
 		return impl->sig_scroll;
 	}

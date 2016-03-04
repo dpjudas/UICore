@@ -35,13 +35,13 @@
 
 namespace uicore
 {
-	class TextViewImpl;
+	class TextAreaBaseViewImpl;
 
-	class TextView : public View
+	class TextAreaBaseView : public View
 	{
 	public:
-		TextView();
-		~TextView();
+		TextAreaBaseView();
+		~TextAreaBaseView();
 
 		Size preferred_size() const;
 		void set_preferred_size(Size num_characters);
@@ -83,6 +83,6 @@ namespace uicore
 		float calculate_last_baseline_offset(const CanvasPtr &canvas, float width) override;
 
 	private:
-		std::unique_ptr<TextViewImpl> impl;
+		std::unique_ptr<TextAreaBaseViewImpl> impl;
 	};
 }

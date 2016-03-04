@@ -41,7 +41,7 @@
 
 namespace uicore
 {
-	SpinView::SpinView() : impl(std::make_shared<SpinView_Impl>())
+	SpinBaseView::SpinBaseView() : impl(std::make_shared<SpinBaseView_Impl>())
 	{
 		impl->spin = this;
 
@@ -51,41 +51,41 @@ namespace uicore
 		add_child(impl->button_decrement);
 		add_child(impl->button_increment);
 
-		slots.connect(impl->button_decrement->sig_pointer_press(), impl.get(), &SpinView_Impl::on_pointer_decrement_press);
-		slots.connect(impl->button_decrement->sig_pointer_release(), impl.get(), &SpinView_Impl::on_pointer_decrement_release);
-		slots.connect(impl->button_increment->sig_pointer_press(), impl.get(), &SpinView_Impl::on_pointer_increment_press);
-		slots.connect(impl->button_increment->sig_pointer_release(), impl.get(), &SpinView_Impl::on_pointer_increment_release);
+		slots.connect(impl->button_decrement->sig_pointer_press(), impl.get(), &SpinBaseView_Impl::on_pointer_decrement_press);
+		slots.connect(impl->button_decrement->sig_pointer_release(), impl.get(), &SpinBaseView_Impl::on_pointer_decrement_release);
+		slots.connect(impl->button_increment->sig_pointer_press(), impl.get(), &SpinBaseView_Impl::on_pointer_increment_press);
+		slots.connect(impl->button_increment->sig_pointer_release(), impl.get(), &SpinBaseView_Impl::on_pointer_increment_release);
 
-		slots.connect(sig_focus_gained(), impl.get(), &SpinView_Impl::on_focus_gained);
-		slots.connect(sig_focus_lost(), impl.get(), &SpinView_Impl::on_focus_lost);
-		slots.connect(sig_activated(), impl.get(), &SpinView_Impl::on_activated);
-		slots.connect(sig_activated(), impl.get(), &SpinView_Impl::on_deactivated);
+		slots.connect(sig_focus_gained(), impl.get(), &SpinBaseView_Impl::on_focus_gained);
+		slots.connect(sig_focus_lost(), impl.get(), &SpinBaseView_Impl::on_focus_lost);
+		slots.connect(sig_activated(), impl.get(), &SpinBaseView_Impl::on_activated);
+		slots.connect(sig_activated(), impl.get(), &SpinBaseView_Impl::on_deactivated);
 
 		slots.connect(impl->button_decrement->sig_pointer_enter(), [&](PointerEvent &e) {impl->_state_decrement_hot = true;  impl->update_decrement_state(); });
 		slots.connect(impl->button_decrement->sig_pointer_leave(), [&](PointerEvent &e) {impl->_state_decrement_hot = false;  impl->update_decrement_state(); });
 		slots.connect(impl->button_increment->sig_pointer_enter(), [&](PointerEvent &e) {impl->_state_increment_hot = true;  impl->update_increment_state(); });
 		slots.connect(impl->button_increment->sig_pointer_leave(), [&](PointerEvent &e) {impl->_state_increment_hot = false;  impl->update_increment_state(); });
 
-		impl->timer->func_expired() = uicore::bind_member(impl.get(), &SpinView_Impl::timer_expired);
+		impl->timer->func_expired() = uicore::bind_member(impl.get(), &SpinBaseView_Impl::timer_expired);
 	}
 
-	std::shared_ptr<View> SpinView::button_decrement() const
+	std::shared_ptr<View> SpinBaseView::button_decrement() const
 	{
 		return impl->button_decrement;
 	}
 
-	std::shared_ptr<View> SpinView::button_increment() const
+	std::shared_ptr<View> SpinBaseView::button_increment() const
 	{
 		return impl->button_increment;
 	}
 
 
-	bool SpinView::disabled() const
+	bool SpinBaseView::disabled() const
 	{
 		return impl->_state_disabled;
 	}
 
-	void SpinView::set_disabled()
+	void SpinBaseView::set_disabled()
 	{
 		if (!impl->_state_disabled)
 		{
@@ -93,12 +93,12 @@ namespace uicore
 			impl->update_increment_state();
 			impl->update_decrement_state();
 
-			impl->mouse_down_mode = SpinView_Impl::mouse_down_none;
+			impl->mouse_down_mode = SpinBaseView_Impl::mouse_down_none;
 			impl->timer->stop();
 
 		}
 	}
-	void SpinView::set_enabled()
+	void SpinBaseView::set_enabled()
 	{
 		if (impl->_state_disabled)
 		{
@@ -108,19 +108,19 @@ namespace uicore
 		}
 	}
 
-	double SpinView::value() const
+	double SpinBaseView::value() const
 	{
 		return impl->_value;
 	}
-	double SpinView::minimum() const
+	double SpinBaseView::minimum() const
 	{
 		return impl->_minimum;
 	}
-	double SpinView::maximum() const
+	double SpinBaseView::maximum() const
 	{
 		return impl->_maximum;
 	}
-	void SpinView::set_value(double value)
+	void SpinBaseView::set_value(double value)
 	{
 		if (impl->_value != value)
 		{
@@ -128,7 +128,7 @@ namespace uicore
 		}
 
 	}
-	void SpinView::set_ranges(double min, double max)
+	void SpinBaseView::set_ranges(double min, double max)
 	{
 		if ((impl->_minimum != min) || (impl->_maximum != max))
 		{
@@ -138,7 +138,7 @@ namespace uicore
 
 	}
 
-	void SpinView::set_step_size(double step_size)
+	void SpinBaseView::set_step_size(double step_size)
 	{
 		if (impl->_step_size != step_size)
 		{
@@ -146,7 +146,7 @@ namespace uicore
 		}
 
 	}
-	void SpinView::set_number_of_decimal_places(int decimal_places)
+	void SpinBaseView::set_number_of_decimal_places(int decimal_places)
 	{
 		if (impl->_decimal_places != decimal_places)
 		{
@@ -155,7 +155,7 @@ namespace uicore
 
 	}
 
-	std::function<void()> &SpinView::func_value_changed()
+	std::function<void()> &SpinBaseView::func_value_changed()
 	{
 		return impl->_func_value_changed;
 	}

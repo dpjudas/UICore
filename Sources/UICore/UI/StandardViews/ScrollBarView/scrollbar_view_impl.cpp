@@ -39,11 +39,11 @@
 
 namespace uicore
 {
-	ScrollBarButtonView::ScrollBarButtonView(bool render_button_arrows) : _render_button_arrows(render_button_arrows)
+	ScrollBarButtonBaseView::ScrollBarButtonBaseView(bool render_button_arrows) : _render_button_arrows(render_button_arrows)
 	{
 	}
 
-	void ScrollBarButtonView::render_content(const CanvasPtr &canvas)
+	void ScrollBarButtonBaseView::render_content(const CanvasPtr &canvas)
 	{
 		if (!_render_button_arrows)
 			return;
@@ -83,7 +83,7 @@ namespace uicore
 		path->fill(canvas, Colorf(134, 137, 153));
 	}
 
-	void ScrollBarButtonView::set_direction(ScrollBarButtonDirection new_dir)
+	void ScrollBarButtonBaseView::set_direction(ScrollBarButtonDirection new_dir)
 	{
 		if (new_dir != direction)
 		{
@@ -92,24 +92,24 @@ namespace uicore
 		}
 	}
 
-	void ScrollBarViewImpl::update_thumb_state()
+	void ScrollBarBaseViewImpl::update_thumb_state()
 	{
 		set_standard_state(thumb.get(), _state_disabled, _state_thumb_hot, _state_thumb_pressed);
 	}
-	void ScrollBarViewImpl::update_track_state()
+	void ScrollBarBaseViewImpl::update_track_state()
 	{
 		set_standard_state(track.get(), _state_disabled, _state_track_hot, _state_track_pressed);
 	}
-	void ScrollBarViewImpl::update_decrement_state()
+	void ScrollBarBaseViewImpl::update_decrement_state()
 	{
 		set_standard_state(button_decrement.get(), _state_disabled, _state_decrement_hot, _state_decrement_pressed);
 	}
-	void ScrollBarViewImpl::update_increment_state()
+	void ScrollBarBaseViewImpl::update_increment_state()
 	{
 		set_standard_state(button_increment.get(), _state_disabled, _state_increment_hot, _state_increment_pressed);
 	}
 
-	void ScrollBarViewImpl::set_standard_state(View *view, bool state_disabled, bool state_hot, bool state_pressed)
+	void ScrollBarBaseViewImpl::set_standard_state(View *view, bool state_disabled, bool state_hot, bool state_pressed)
 	{
 		bool target_hot = false;
 		bool target_disabled = false;
@@ -133,27 +133,27 @@ namespace uicore
 		view->set_state_cascade("disabled", target_disabled);
 	}
 
-	void ScrollBarViewImpl::on_focus_gained(FocusChangeEvent &e)
+	void ScrollBarBaseViewImpl::on_focus_gained(FocusChangeEvent &e)
 	{
 	}
 
-	void ScrollBarViewImpl::on_focus_lost(FocusChangeEvent &e)
-	{
-		mouse_down_mode = mouse_down_none;
-		scroll_timer->stop();
-	}
-
-	void ScrollBarViewImpl::on_activated(ActivationChangeEvent &e)
-	{
-	}
-
-	void ScrollBarViewImpl::on_deactivated(ActivationChangeEvent &e)
+	void ScrollBarBaseViewImpl::on_focus_lost(FocusChangeEvent &e)
 	{
 		mouse_down_mode = mouse_down_none;
 		scroll_timer->stop();
 	}
 
-	void ScrollBarViewImpl::on_pointer_track_press(PointerEvent &e)
+	void ScrollBarBaseViewImpl::on_activated(ActivationChangeEvent &e)
+	{
+	}
+
+	void ScrollBarBaseViewImpl::on_deactivated(ActivationChangeEvent &e)
+	{
+		mouse_down_mode = mouse_down_none;
+		scroll_timer->stop();
+	}
+
+	void ScrollBarBaseViewImpl::on_pointer_track_press(PointerEvent &e)
 	{
 		if (_state_disabled)
 			return;
@@ -188,7 +188,7 @@ namespace uicore
 
 	}
 
-	void ScrollBarViewImpl::on_pointer_track_release(PointerEvent &e)
+	void ScrollBarBaseViewImpl::on_pointer_track_release(PointerEvent &e)
 	{
 		if (_state_disabled)
 			return;
@@ -197,7 +197,7 @@ namespace uicore
 
 	}
 
-	void ScrollBarViewImpl::on_pointer_thumb_press(PointerEvent &e)
+	void ScrollBarBaseViewImpl::on_pointer_thumb_press(PointerEvent &e)
 	{
 		if (_state_disabled)
 			return;
@@ -211,7 +211,7 @@ namespace uicore
 		e.stop_propagation(); // prevent track press reacting to this event
 	}
 
-	void ScrollBarViewImpl::on_pointer_thumb_release(PointerEvent &e)
+	void ScrollBarBaseViewImpl::on_pointer_thumb_release(PointerEvent &e)
 	{
 		if (_state_disabled)
 			return;
@@ -222,7 +222,7 @@ namespace uicore
 		e.stop_propagation(); // prevent track release reacting to this event
 	}
 
-	void ScrollBarViewImpl::on_pointer_decrement_press(PointerEvent &e)
+	void ScrollBarBaseViewImpl::on_pointer_decrement_press(PointerEvent &e)
 	{
 		if (_state_disabled)
 			return;
@@ -233,7 +233,7 @@ namespace uicore
 		scroll_timer_expired();
 	}
 
-	void ScrollBarViewImpl::on_pointer_decrement_release(PointerEvent &e)
+	void ScrollBarBaseViewImpl::on_pointer_decrement_release(PointerEvent &e)
 	{
 		if (_state_disabled)
 			return;
@@ -243,7 +243,7 @@ namespace uicore
 		scroll_timer->stop();
 	}
 
-	void ScrollBarViewImpl::on_pointer_increment_press(PointerEvent &e)
+	void ScrollBarBaseViewImpl::on_pointer_increment_press(PointerEvent &e)
 	{
 		if (_state_disabled)
 			return;
@@ -254,7 +254,7 @@ namespace uicore
 		scroll_timer_expired();
 	}
 
-	void ScrollBarViewImpl::on_pointer_increment_release(PointerEvent &e)
+	void ScrollBarBaseViewImpl::on_pointer_increment_release(PointerEvent &e)
 	{
 		if (_state_disabled)
 			return;
@@ -264,7 +264,7 @@ namespace uicore
 		scroll_timer->stop();
 	}
 
-	void ScrollBarViewImpl::on_pointer_move(PointerEvent &e)
+	void ScrollBarBaseViewImpl::on_pointer_move(PointerEvent &e)
 	{
 		if (_state_disabled)
 			return;
@@ -303,7 +303,7 @@ namespace uicore
 		}
 	}
 
-	void ScrollBarViewImpl::scroll_timer_expired()
+	void ScrollBarBaseViewImpl::scroll_timer_expired()
 	{
 		if (_state_disabled)
 			return;
@@ -337,7 +337,7 @@ namespace uicore
 		scroll_timer->start(300, false);
 	}
 
-	void ScrollBarViewImpl::update_pos(ScrollBarView *view, double new_pos, double new_min, double new_max)
+	void ScrollBarBaseViewImpl::update_pos(ScrollBarBaseView *view, double new_pos, double new_min, double new_max)
 	{
 		bool changed = new_min != min_pos || new_max != max_pos || new_pos != pos;
 		if (changed)

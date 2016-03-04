@@ -34,16 +34,16 @@
 
 namespace uicore
 {
-	class ButtonViewImpl;
+	class ButtonBaseViewImpl;
 
-	class ButtonView : public View
+	class ButtonBaseView : public View
 	{
 	public:
-		ButtonView();
-		~ButtonView();
+		ButtonBaseView();
+		~ButtonBaseView();
 
-		std::shared_ptr<LabelView> label();
-		std::shared_ptr<ImageView> image_view();
+		std::shared_ptr<LabelBaseView> label();
+		std::shared_ptr<ImageBaseView> image_view();
 
 		bool disabled() const;
 		void set_disabled();
@@ -55,6 +55,6 @@ namespace uicore
 		std::function<void()> &func_clicked();
 
 	private:
-		std::unique_ptr<ButtonViewImpl> impl;
+		std::unique_ptr<ButtonBaseViewImpl> impl;
 	};
 }

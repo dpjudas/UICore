@@ -31,7 +31,7 @@
 
 namespace uicore
 {
-	class SliderViewImpl
+	class SliderBaseViewImpl
 	{
 	public:
 
@@ -56,7 +56,7 @@ namespace uicore
 			mouse_down_thumb_drag
 		} mouse_down_mode = mouse_down_none;
 
-		SliderView *slider = nullptr;
+		SliderBaseView *slider = nullptr;
 
 		std::shared_ptr<View> track;
 		std::shared_ptr<View> thumb;
@@ -80,7 +80,7 @@ namespace uicore
 		bool _state_hot = false;
 		bool _state_pressed = false;
 
-		void update_pos(SliderView *view, int new_pos, int new_min, int new_max);
+		void update_pos(SliderBaseView *view, int new_pos, int new_min, int new_max);
 		void update_state();
 
 	};

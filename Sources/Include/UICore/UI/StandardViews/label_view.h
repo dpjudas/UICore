@@ -54,12 +54,12 @@ namespace uicore
 		truncating_middle
 	};
 
-	class LabelViewImpl;
+	class LabelBaseViewImpl;
 
-	class LabelView : public View
+	class LabelBaseView : public View
 	{
 	public:
-		LabelView();
+		LabelBaseView();
 
 		std::string text() const;
 		void set_text(const std::string &value);
@@ -80,7 +80,7 @@ namespace uicore
 		float calculate_last_baseline_offset(const CanvasPtr &canvas, float width) override;
 
 	private:
-		std::shared_ptr<LabelViewImpl> impl;
+		std::shared_ptr<LabelBaseViewImpl> impl;
 	};
 
 }

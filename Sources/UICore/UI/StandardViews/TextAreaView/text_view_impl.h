@@ -35,7 +35,7 @@
 
 namespace uicore
 {
-	class TextViewSelection
+	class TextAreaBaseViewSelection
 	{
 	public:
 		void reset()
@@ -80,7 +80,7 @@ namespace uicore
 		Vec2i selection_tail;
 	};
 
-	class TextViewImpl
+	class TextAreaBaseViewImpl
 	{
 	public:
 		void on_key_press(KeyEvent &e);
@@ -112,7 +112,7 @@ namespace uicore
 
 		void save_undo();
 
-		TextView *textfield = nullptr;
+		TextAreaBaseView *textfield = nullptr;
 
 		TextAlignment alignment = TextAlignment::left;
 
@@ -130,7 +130,7 @@ namespace uicore
 		bool readonly = false;
 		bool cursor_drawing_enabled_when_parent_focused = false;
 
-		TextViewSelection selection;
+		TextAreaBaseViewSelection selection;
 		Vec2f cursor_pos;
 
 		Vec2f scroll_pos;

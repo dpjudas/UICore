@@ -35,22 +35,22 @@
 namespace uicore
 {
 
-	ButtonView::ButtonView() : impl(new ButtonViewImpl())
+	ButtonBaseView::ButtonBaseView() : impl(new ButtonBaseViewImpl())
 	{
 		impl->button = this;
 		style()->set("flex-direction: row");
 
-		impl->image_view = std::make_shared<ImageView>();
+		impl->image_view = std::make_shared<ImageBaseView>();
 		impl->image_view->style()->set("flex: 0 0 auto");
 		add_child(impl->image_view);
 
-		impl->label = std::make_shared<LabelView>();
+		impl->label = std::make_shared<LabelBaseView>();
 		impl->label->style()->set("margin: auto");
 		impl->label->style()->set("flex: 1 1 auto");
 		add_child(impl->label);
 
-		slots.connect(sig_pointer_press(), impl.get(), &ButtonViewImpl::on_pointer_press);
-		slots.connect(sig_pointer_release(), impl.get(), &ButtonViewImpl::on_pointer_release);
+		slots.connect(sig_pointer_press(), impl.get(), &ButtonBaseViewImpl::on_pointer_press);
+		slots.connect(sig_pointer_release(), impl.get(), &ButtonBaseViewImpl::on_pointer_release);
 
 		slots.connect(sig_pointer_enter(), [&](PointerEvent &e) {impl->_state_hot = true;  impl->update_state(); });
 		slots.connect(sig_pointer_leave(), [&](PointerEvent &e) {impl->_state_hot = false;  impl->update_state(); });
@@ -60,21 +60,21 @@ namespace uicore
 		slots.connect(impl->image_view->sig_pointer_leave(), [&](PointerEvent &e) {impl->_state_hot = false;  impl->update_state(); });
 	}
 
-	ButtonView::~ButtonView()
+	ButtonBaseView::~ButtonBaseView()
 	{
 	}
 
-	std::function<void()> &ButtonView::func_clicked()
+	std::function<void()> &ButtonBaseView::func_clicked()
 	{
 		return impl->_func_clicked;
 	}
 
-	bool ButtonView::disabled() const
+	bool ButtonBaseView::disabled() const
 	{
 		return impl->_state_disabled;
 	}
 
-	void ButtonView::set_disabled()
+	void ButtonBaseView::set_disabled()
 	{
 		if (!impl->_state_disabled)
 		{
@@ -82,7 +82,7 @@ namespace uicore
 			impl->update_state();
 		}
 	}
-	void ButtonView::set_enabled()
+	void ButtonBaseView::set_enabled()
 	{
 		if (impl->_state_disabled)
 		{
@@ -91,17 +91,17 @@ namespace uicore
 		}
 	}
 
-	std::shared_ptr<LabelView> ButtonView::label()
+	std::shared_ptr<LabelBaseView> ButtonBaseView::label()
 	{
 		return impl->label;
 	}
 
-	std::shared_ptr<ImageView> ButtonView::image_view()
+	std::shared_ptr<ImageBaseView> ButtonBaseView::image_view()
 	{
 		return impl->image_view;
 	}
 
-	void ButtonView::move_label_before_image()
+	void ButtonBaseView::move_label_before_image()
 	{
 		impl->label->remove_from_parent();
 		impl->image_view->remove_from_parent();
@@ -110,7 +110,7 @@ namespace uicore
 		add_child(impl->image_view);
 	}
 
-	void ButtonView::move_label_after_image()
+	void ButtonBaseView::move_label_after_image()
 	{
 		impl->label->remove_from_parent();
 		impl->image_view->remove_from_parent();

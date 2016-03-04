@@ -42,16 +42,16 @@
 namespace uicore
 {
 
-	void SpinView_Impl::update_decrement_state()
+	void SpinBaseView_Impl::update_decrement_state()
 	{
 		set_standard_state(button_decrement.get(), _state_disabled, _state_decrement_hot, _state_decrement_pressed);
 	}
-	void SpinView_Impl::update_increment_state()
+	void SpinBaseView_Impl::update_increment_state()
 	{
 		set_standard_state(button_increment.get(), _state_disabled, _state_increment_hot, _state_increment_pressed);
 	}
 
-	void SpinView_Impl::set_standard_state(View *view, bool state_disabled, bool state_hot, bool state_pressed)
+	void SpinBaseView_Impl::set_standard_state(View *view, bool state_disabled, bool state_hot, bool state_pressed)
 	{
 		bool target_hot = false;
 		bool target_disabled = false;
@@ -75,28 +75,28 @@ namespace uicore
 		view->set_state_cascade("disabled", target_disabled);
 	}
 
-	void SpinView_Impl::on_focus_gained(FocusChangeEvent &e)
+	void SpinBaseView_Impl::on_focus_gained(FocusChangeEvent &e)
 	{
 	}
 
-	void SpinView_Impl::on_focus_lost(FocusChangeEvent &e)
-	{
-		mouse_down_mode = mouse_down_none;
-		timer->stop();
-	}
-
-	void SpinView_Impl::on_activated(ActivationChangeEvent &e)
-	{
-	}
-
-	void SpinView_Impl::on_deactivated(ActivationChangeEvent &e)
+	void SpinBaseView_Impl::on_focus_lost(FocusChangeEvent &e)
 	{
 		mouse_down_mode = mouse_down_none;
 		timer->stop();
 	}
 
+	void SpinBaseView_Impl::on_activated(ActivationChangeEvent &e)
+	{
+	}
 
-	void SpinView_Impl::on_pointer_decrement_press(PointerEvent &e)
+	void SpinBaseView_Impl::on_deactivated(ActivationChangeEvent &e)
+	{
+		mouse_down_mode = mouse_down_none;
+		timer->stop();
+	}
+
+
+	void SpinBaseView_Impl::on_pointer_decrement_press(PointerEvent &e)
 	{
 		if (_state_disabled)
 			return;
@@ -106,7 +106,7 @@ namespace uicore
 		timer_expired();
 	}
 
-	void SpinView_Impl::on_pointer_decrement_release(PointerEvent &e)
+	void SpinBaseView_Impl::on_pointer_decrement_release(PointerEvent &e)
 	{
 		if (_state_disabled)
 			return;
@@ -116,7 +116,7 @@ namespace uicore
 		timer->stop();
 	}
 
-	void SpinView_Impl::on_pointer_increment_press(PointerEvent &e)
+	void SpinBaseView_Impl::on_pointer_increment_press(PointerEvent &e)
 	{
 		if (_state_disabled)
 			return;
@@ -126,7 +126,7 @@ namespace uicore
 		timer_expired();
 	}
 
-	void SpinView_Impl::on_pointer_increment_release(PointerEvent &e)
+	void SpinBaseView_Impl::on_pointer_increment_release(PointerEvent &e)
 	{
 		if (_state_disabled)
 			return;
@@ -136,7 +136,7 @@ namespace uicore
 		timer->stop();
 	}
 
-	void SpinView_Impl::timer_expired()
+	void SpinBaseView_Impl::timer_expired()
 	{
 		if (_state_disabled)
 			return;

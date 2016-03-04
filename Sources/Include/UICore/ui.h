@@ -46,7 +46,7 @@
 #include "UI/StandardViews/slider_view.h"
 #include "UI/StandardViews/text_block_view.h"
 #include "UI/StandardViews/text_field_view.h"
-#include "UI/StandardViews/text_view.h"
+#include "UI/StandardViews/text_area_view.h"
 #include "UI/StandardViews/checkbox_view.h"
 #include "UI/StandardViews/radiobutton_view.h"
 #include "UI/StandardViews/spin_view.h"

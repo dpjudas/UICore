@@ -40,18 +40,18 @@
 
 namespace uicore
 {
-	CheckBoxView::CheckBoxView() : impl(new CheckBoxView_Impl())
+	CheckBoxBaseView::CheckBoxBaseView() : impl(new CheckBoxBaseView_Impl())
 	{
 		impl->checkbox = this;
 
-		slots.connect(sig_pointer_press(), impl.get(), &CheckBoxView_Impl::on_pointer_press);
-		slots.connect(sig_pointer_release(), impl.get(), &CheckBoxView_Impl::on_pointer_release);
+		slots.connect(sig_pointer_press(), impl.get(), &CheckBoxBaseView_Impl::on_pointer_press);
+		slots.connect(sig_pointer_release(), impl.get(), &CheckBoxBaseView_Impl::on_pointer_release);
 
 		slots.connect(sig_pointer_enter(), [&](PointerEvent &e) {impl->_state_hot = true;  impl->update_state(); });
 		slots.connect(sig_pointer_leave(), [&](PointerEvent &e) {impl->_state_hot = false;  impl->update_state(); });
 	}
 
-	void CheckBoxView::set_disabled()
+	void CheckBoxBaseView::set_disabled()
 	{
 		if (!impl->_state_disabled)
 		{
@@ -59,7 +59,7 @@ namespace uicore
 			impl->update_state();
 		}
 	}
-	void CheckBoxView::set_enabled()
+	void CheckBoxBaseView::set_enabled()
 	{
 		if (impl->_state_disabled)
 		{
@@ -68,17 +68,17 @@ namespace uicore
 		}
 	}
 
-	bool CheckBoxView::disabled() const
+	bool CheckBoxBaseView::disabled() const
 	{
 		return impl->_state_disabled;
 	}
 
-	bool CheckBoxView::checked() const
+	bool CheckBoxBaseView::checked() const
 	{
 		return impl->_checked_state;
 	}
 
-	void CheckBoxView::set_check(bool checked_state)
+	void CheckBoxBaseView::set_check(bool checked_state)
 	{
 		if (impl->_checked_state != checked_state)
 		{
@@ -87,7 +87,7 @@ namespace uicore
 		}
 	}
 
-	std::function<void()> &CheckBoxView::func_state_changed()
+	std::function<void()> &CheckBoxBaseView::func_state_changed()
 	{
 		return impl->_func_state_changed;
 	}
