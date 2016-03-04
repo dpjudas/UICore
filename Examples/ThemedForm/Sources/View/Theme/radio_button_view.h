@@ -1,10 +1,10 @@
 
 #pragma once
 
-class ThemeRadioButtonView : public uicore::RadioButtonView
+class RadioButtonView : public uicore::RadioButtonBaseView
 {
 public:
-	ThemeRadioButtonView()
+	RadioButtonView()
 	{
 		style()->set(R"(
 			background-position:center center;

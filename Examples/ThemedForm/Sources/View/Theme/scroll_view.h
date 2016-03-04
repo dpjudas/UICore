@@ -1,10 +1,10 @@
 
 #pragma once
 
-class ThemeScrollView : public uicore::ScrollView
+class ScrollView : public uicore::ScrollBaseView
 {
 public:
-	ThemeScrollView()
+	ScrollView()
 	{
 		scrollbar_x_view()->style()->set("flex: 0 0 auto");
 		scrollbar_x_view()->style()->set("background: rgb(232, 232, 236)");
@@ -96,18 +96,18 @@ public:
 	}
 };
 
-class ThemeVScrollBarView : public uicore::ScrollBarView
+class VScrollBarView : public uicore::ScrollBarBaseView
 {
 public:
-	ThemeVScrollBarView()
+	VScrollBarView()
 	{
 	}
 };
 
-class ThemeHScrollBarView : public uicore::ScrollBarView
+class HScrollBarView : public uicore::ScrollBarBaseView
 {
 public:
-	ThemeHScrollBarView()
+	HScrollBarView()
 	{
 		set_horizontal();
 		style()->set("flex: 0 0 auto");

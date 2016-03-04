@@ -1,10 +1,10 @@
 
 #pragma once
 
-class ThemeFormView : public uicore::ColumnView
+class FormView : public uicore::ColumnView
 {
 public:
-	ThemeFormView()
+	FormView()
 	{
 		style()->set(R"(
 			background: rgb(250,250,250);

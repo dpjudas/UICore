@@ -49,43 +49,43 @@
     <ClInclude Include="Sources\Model\app_model.h">
       <Filter>Model</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\View\Theme\theme_button_view.h">
+    <ClInclude Include="Sources\View\Theme\button_view.h">
       <Filter>View\Theme</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\View\Theme\theme_checkbox_view.h">
+    <ClInclude Include="Sources\View\Theme\checkbox_view.h">
       <Filter>View\Theme</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\View\Theme\theme_image_view.h">
+    <ClInclude Include="Sources\View\Theme\form_view.h">
       <Filter>View\Theme</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\View\Theme\theme_label_view.h">
+    <ClInclude Include="Sources\View\Theme\image_view.h">
       <Filter>View\Theme</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\View\Theme\theme_listbox_view.h">
+    <ClInclude Include="Sources\View\Theme\label_view.h">
       <Filter>View\Theme</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\View\Theme\theme_scroll_view.h">
+    <ClInclude Include="Sources\View\Theme\listbox_view.h">
       <Filter>View\Theme</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\View\Theme\theme_slider_view.h">
+    <ClInclude Include="Sources\View\Theme\radio_button_view.h">
       <Filter>View\Theme</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\View\Theme\theme_spin_view.h">
+    <ClInclude Include="Sources\View\Theme\scroll_view.h">
       <Filter>View\Theme</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\View\Theme\theme_text_view.h">
+    <ClInclude Include="Sources\View\Theme\slider_view.h">
       <Filter>View\Theme</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\View\Theme\theme_text_block_view.h">
+    <ClInclude Include="Sources\View\Theme\spin_view.h">
       <Filter>View\Theme</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\View\Theme\theme_form_view.h">
+    <ClInclude Include="Sources\View\Theme\text_area_view.h">
       <Filter>View\Theme</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\View\Theme\theme_text_field_view.h">
+    <ClInclude Include="Sources\View\Theme\text_block_view.h">
       <Filter>View\Theme</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\View\Theme\theme_radio_button_view.h">
+    <ClInclude Include="Sources\View\Theme\text_field_view.h">
       <Filter>View\Theme</Filter>
     </ClInclude>
   </ItemGroup>

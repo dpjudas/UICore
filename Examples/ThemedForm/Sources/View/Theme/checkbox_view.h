@@ -1,10 +1,10 @@
 
 #pragma once
 
-class ThemeCheckBoxView : public uicore::CheckBoxView
+class CheckBoxView : public uicore::CheckBoxBaseView
 {
 public:
-	ThemeCheckBoxView()
+	CheckBoxView()
 	{
 		style()->set(R"(
 			background-position:center center;

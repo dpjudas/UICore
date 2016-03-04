@@ -1,10 +1,10 @@
 
 #pragma once
 
-class ThemeSliderView : public uicore::SliderView
+class SliderView : public uicore::SliderBaseView
 {
 public:
-	ThemeSliderView()
+	SliderView()
 	{
 		set_horizontal();
 

@@ -1,10 +1,10 @@
 
 #pragma once
 
-class ThemeListBoxView : public uicore::ListBoxView
+class ListBoxView : public uicore::ListBoxBaseView
 {
 public:
-	ThemeListBoxView()
+	ListBoxView()
 	{
 		style()->set(R"(
 			margin: 7px 0;
@@ -15,10 +15,10 @@ public:
 	}
 };
 
-class ThemeListBoxLabelView : public uicore::LabelView
+class ListBoxLabelView : public uicore::LabelBaseView
 {
 public:
-	ThemeListBoxLabelView(const std::string &text = std::string())
+	ListBoxLabelView(const std::string &text = std::string())
 	{
 		style()->set(R"(
 			font: 13px/17px 'Segoe UI';

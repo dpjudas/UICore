@@ -1,10 +1,10 @@
 
 #pragma once
 
-class ThemeButtonView : public uicore::ButtonView
+class ButtonView : public uicore::ButtonBaseView
 {
 public:
-	ThemeButtonView()
+	ButtonView()
 	{
 		style()->set(R"(
 			border-image-slice: 6 6 5 5 fill;

@@ -1,10 +1,10 @@
 
 #pragma once
 
-class ThemeHeadlineView : public uicore::TextBlockView
+class HeadlineView : public uicore::TextBlockBaseView
 {
 public:
-	ThemeHeadlineView()
+	HeadlineView()
 	{
 		style()->set(R"(
 			font-weight: bold;
@@ -15,10 +15,10 @@ public:
 	}
 };
 
-class ThemeParagraphView : public uicore::TextBlockView
+class ParagraphView : public uicore::TextBlockBaseView
 {
 public:
-	ThemeParagraphView()
+	ParagraphView()
 	{
 		style()->set(R"(
 			margin: 10px 0;
