@@ -27,7 +27,7 @@
 */
 
 #include "UICore/precomp.h"
-#include "UICore/UI/StandardViews/text_view.h"
+#include "UICore/UI/StandardViews/text_area_view.h"
 #include "UICore/UI/Style/style.h"
 #include "UICore/UI/TopLevel/view_tree.h"
 #include "UICore/UI/Events/pointer_event.h"
@@ -41,7 +41,7 @@
 #include "UICore/Display/Window/display_window.h"
 #include "UICore/Core/Text/text.h"
 #include "UICore/Core/Text/utf8_reader.h"
-#include "text_view_impl.h"
+#include "text_area_view_impl.h"
 #include <algorithm>
 #include <cmath>
 
