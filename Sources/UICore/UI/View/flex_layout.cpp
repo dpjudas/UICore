@@ -683,6 +683,8 @@ namespace uicore
 					item.flex_preferred_cross_size = item.cross_size;
 				else if (direction == FlexDirection::row)
 					item.flex_preferred_cross_size = item.view->preferred_height(canvas, item.used_main_size);
+				else if (known_container_cross_size)
+					item.flex_preferred_cross_size = std::min(item.view->preferred_width(canvas/*, item.used_main_size*/), container_cross_size);
 				else
 					item.flex_preferred_cross_size = item.view->preferred_width(canvas/*, item.used_main_size*/);
 
@@ -694,10 +696,10 @@ namespace uicore
 				// Maybe by 2037 when W3C actually finished the CSS 3 specifications it will be more clear why this is needed for HTML..
 
 				if (item.definite_min_cross_size)
-				item.flex_preferred_cross_size = std::max(item.flex_preferred_cross_size, item.min_cross_size);
+					item.flex_preferred_cross_size = std::max(item.flex_preferred_cross_size, item.min_cross_size);
 
 				if (item.definite_max_cross_size)
-				item.flex_preferred_cross_size = std::min(item.flex_preferred_cross_size, item.max_cross_size);
+					item.flex_preferred_cross_size = std::min(item.flex_preferred_cross_size, item.max_cross_size);
 			}
 		}
 	}
