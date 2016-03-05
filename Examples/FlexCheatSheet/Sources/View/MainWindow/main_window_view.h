@@ -39,7 +39,7 @@ public:
 	std::vector<std::shared_ptr<FlexRedBoxView>> boxes;
 };
 
-class FlexHeadline : public uicore::TextBlockView
+class FlexHeadline : public uicore::TextBlockBaseView
 {
 public:
 	FlexHeadline(const std::string &text)
@@ -58,7 +58,7 @@ public:
 	}
 };
 
-class FlexParagraph : public uicore::TextBlockView
+class FlexParagraph : public uicore::TextBlockBaseView
 {
 public:
 	FlexParagraph(const std::string &text)
@@ -73,7 +73,7 @@ public:
 	}
 };
 
-class FlexPanelButton : public uicore::ButtonView
+class FlexPanelButton : public uicore::ButtonBaseView
 {
 public:
 	FlexPanelButton(const std::string &text)

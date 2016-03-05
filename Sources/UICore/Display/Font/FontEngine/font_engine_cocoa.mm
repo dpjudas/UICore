@@ -45,7 +45,7 @@ namespace uicore
 		if (name == 0)
 			throw Exception("CFStringCreateWithCString failed");
 		
-		handle = CTFontCreateWithName(name, desc.get_height() * pixel_ratio, 0);
+		handle = CTFontCreateWithName(name, desc.height() * pixel_ratio, 0);
 		
 		CFRelease(name);
 		name = 0;
@@ -55,17 +55,17 @@ namespace uicore
 			throw Exception("CGFontCreateWithFontName failed");
 		}
 		
-		if (desc.get_style() != FontStyle::normal || desc.get_weight() != FontWeight::normal)
+		if (desc.style() != FontStyle::normal || desc.weight() != FontWeight::normal)
 		{
 			// To do: maybe add "-Bold" and such to font name instead. traits seem to be somewhat limited and not well documented
 			
 			CTFontSymbolicTraits traits = 0;
-			if (desc.get_weight() >= FontWeight::bold)
+			if (desc.weight() >= FontWeight::bold)
 				traits |= kCTFontBoldTrait;
-			if (desc.get_style() != FontStyle::normal)
+			if (desc.style() != FontStyle::normal)
 				traits |= kCTFontItalicTrait;
 			
-			CTFontRef new_handle = CTFontCreateCopyWithSymbolicTraits(handle, desc.get_height() * pixel_ratio, 0, traits, kCTFontBoldTrait|kCTFontItalicTrait);
+			CTFontRef new_handle = CTFontCreateCopyWithSymbolicTraits(handle, desc.height() * pixel_ratio, 0, traits, kCTFontBoldTrait|kCTFontItalicTrait);
 			
 			if (new_handle != 0)
 			{
@@ -80,7 +80,7 @@ namespace uicore
 			(CTFontGetDescent(handle)) / pixel_ratio,
 			0.0f,
 			(CTFontGetLeading(handle)) / pixel_ratio,
-			desc.get_line_height(),
+			desc.line_height(),
 			pixel_ratio);
 		
 		font_description = desc.clone();
@@ -109,7 +109,7 @@ namespace uicore
 			throw Exception("CGFontCreateWithDataProvider failed");
 		}
 		
-		handle = CTFontCreateWithGraphicsFont(cg_font, desc.get_height() * pixel_ratio, 0, 0);
+		handle = CTFontCreateWithGraphicsFont(cg_font, desc.height() * pixel_ratio, 0, 0);
 		
 		CFRelease(cg_font);
 		cg_font = 0;
@@ -125,7 +125,7 @@ namespace uicore
 			(CTFontGetDescent(handle)) / pixel_ratio,
 			0.0f,
 			(CTFontGetLeading(handle)) / pixel_ratio,
-			desc.get_line_height(),
+			desc.line_height(),
 			pixel_ratio);
 
 		font_description = desc.clone();
@@ -196,9 +196,9 @@ namespace uicore
 		
 		CGContextRef context = CGBitmapContextCreate(pixelbuffer->data(), pixelbuffer->width(), pixelbuffer->height(), 8, pixelbuffer->width() * 4, colorspace, kCGImageAlphaPremultipliedLast);
 		
-		CGContextSetAllowsFontSmoothing(context, font_description.get_subpixel() || font_description.get_anti_alias());
-		CGContextSetAllowsAntialiasing(context, font_description.get_anti_alias());
-		CGContextSetAllowsFontSubpixelQuantization(context, font_description.get_subpixel());
+		CGContextSetAllowsFontSmoothing(context, font_description.subpixel() || font_description.anti_alias());
+		CGContextSetAllowsAntialiasing(context, font_description.anti_alias());
+		CGContextSetAllowsFontSubpixelQuantization(context, font_description.subpixel());
 		CGContextSetAllowsFontSubpixelPositioning(context, false);
 		CGContextSetFillColorWithColor(context, black);
 		

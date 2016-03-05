@@ -35,12 +35,12 @@
 
 namespace uicore
 {
-	std::string Directory::get_appdata(const std::string &company_name, const std::string &application_name, const std::string &version, bool create_dirs_if_missing)
+	std::string Directory::appdata(const std::string &company_name, const std::string &application_name, const std::string &version, bool create_dirs_if_missing)
 	{
-		return get_local_appdata(company_name, application_name, version, create_dirs_if_missing);
+		return local_appdata(company_name, application_name, version, create_dirs_if_missing);
 	}
 	
-	std::string Directory::get_local_appdata(const std::string &company_name, const std::string &application_name, const std::string &version, bool create_dirs_if_missing)
+	std::string Directory::local_appdata(const std::string &company_name, const std::string &application_name, const std::string &version, bool create_dirs_if_missing)
 	{
 		std::string configuration_path;
 		
@@ -61,7 +61,7 @@ namespace uicore
 		return configuration_path;
 	}
 	
-	std::string Directory::get_resourcedata(const std::string &application_name, const std::string &data_dir_name)
+	std::string Directory::resourcedata(const std::string &application_name, const std::string &data_dir_name)
 	{
 		std::string resource_path = PathHelp::add_trailing_slash([[[NSBundle mainBundle] resourcePath] UTF8String]);
 		return resource_path + data_dir_name;

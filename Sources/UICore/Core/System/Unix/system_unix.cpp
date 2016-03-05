@@ -56,19 +56,19 @@
 namespace uicore
 {
 
-uint64_t System::get_time()
+uint64_t System::time()
 {
-	return (get_microseconds() / 1000);
+	return (microseconds() / 1000);
 }
 
-uint64_t System::get_microseconds()
+uint64_t System::microseconds()
 {
 	timeval tv;
 	gettimeofday(&tv, nullptr);
 	return (uint64_t) tv.tv_sec*(uint64_t) 1000000 + (uint64_t) tv.tv_usec;
 }
 
-std::string System::get_exe_path()
+std::string System::exe_path()
 {
 	char exe_file[PATH_MAX];
 #ifdef __APPLE__

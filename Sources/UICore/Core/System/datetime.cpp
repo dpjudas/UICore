@@ -126,13 +126,13 @@ namespace uicore
 		tm *result = gmtime_r(&unix_ticks, &tm_utc);
 		if (result == nullptr)
 			throw Exception("gmtime_r failed");
-		datetime.year = ((int)result->tm_year)+1900;
-		datetime.month = result->tm_mon+1;
-		datetime.day = result->tm_mday;
-		datetime.hour = result->tm_hour;
-		datetime.minute = result->tm_min;
-		datetime.seconds = result->tm_sec;
-		datetime.nanoseconds = (ticks % 10000000) * 100;
+		datetime._year = ((int)result->tm_year)+1900;
+		datetime._month = result->tm_mon+1;
+		datetime._day = result->tm_mday;
+		datetime._hour = result->tm_hour;
+		datetime._minute = result->tm_min;
+		datetime._seconds = result->tm_sec;
+		datetime._nanoseconds = (ticks % 10000000) * 100;
 #endif
 		return datetime;
 	}
@@ -165,11 +165,11 @@ namespace uicore
 #else
 			int64_t ticks;
 
-			ticks = year - 1601;
+			ticks = _year - 1601;
 			ticks *= 365;	// Days in a year
 
 			// Count number of leap years
-			int current_year = year;
+			int current_year = _year;
 			int num_leaps = 0;
 			for (int cnt=1601; cnt < current_year; cnt++)
 			{
@@ -180,7 +180,7 @@ namespace uicore
 			}
 			ticks += num_leaps;	// Extra days
 
-			switch (month)
+			switch (_month)
 			{
 			case (12):
 				ticks += 30;	// Nov
@@ -211,16 +211,16 @@ namespace uicore
 				break;
 			}
 
-			ticks += day - 1;
+			ticks += _day - 1;
 
 			ticks *= 24;	// Hours in day
-			ticks += hour;
+			ticks += _hour;
 			ticks *= 60;	// Minutes per hour
-			ticks += minute;
+			ticks += _minute;
 			ticks *= 60;	// Seconds per minute
-			ticks += seconds;
+			ticks += _seconds;
 			ticks *= 10000000;	// To ticks
-			ticks += nanoseconds / 100;
+			ticks += _nanoseconds / 100;
 
 			return ticks;
 #endif
@@ -292,7 +292,7 @@ namespace uicore
 			datetime._hour = result->tm_hour;
 			datetime._minute = result->tm_min;
 			datetime._seconds = result->tm_sec;
-			datetime._nanoseconds = nanoseconds;
+			datetime._nanoseconds = _nanoseconds;
 			return datetime;
 #endif
 		}
@@ -336,11 +336,11 @@ namespace uicore
 
 			time_t unix_ticks;
 
-			unix_ticks = year - 1970;
+			unix_ticks = _year - 1970;
 			unix_ticks *= 365;	// Days in a year
 
 			// Count number of leap years
-			int current_year = year;
+			int current_year = _year;
 			int num_leaps = 0;
 			for (int cnt=1970; cnt < current_year; cnt++)
 			{
@@ -351,7 +351,7 @@ namespace uicore
 			}
 			unix_ticks += num_leaps;	// Extra days
 
-			switch (month)
+			switch (_month)
 			{
 			case (12):
 				unix_ticks += 30;	// Nov
@@ -406,7 +406,7 @@ namespace uicore
 			datetime._hour = result->tm_hour;
 			datetime._minute = result->tm_min;
 			datetime._seconds = result->tm_sec;
-			datetime._nanoseconds = nanoseconds;
+			datetime._nanoseconds = _nanoseconds;
 			return datetime;
 #endif
 		}

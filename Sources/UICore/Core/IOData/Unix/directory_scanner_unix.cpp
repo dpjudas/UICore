@@ -89,22 +89,22 @@ DirectoryScanner_Unix::~DirectoryScanner_Unix()
 		closedir(dir_temp);
 }
 
-std::string DirectoryScanner_Unix::get_directory_path()
+std::string DirectoryScanner_Unix::directory_path()
 {
 	return path_name + "/";
 }
 
-int DirectoryScanner_Unix::get_size()
+int DirectoryScanner_Unix::size()
 {
 	return (int)statbuf.st_size;
 }
 
-std::string DirectoryScanner_Unix::get_name()
+std::string DirectoryScanner_Unix::name()
 {
 	return file_name;
 }
 
-std::string DirectoryScanner_Unix::get_pathname()
+std::string DirectoryScanner_Unix::pathname()
 {
 	return path_name + "/" + file_name;
 }

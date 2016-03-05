@@ -47,7 +47,7 @@ namespace uicore
 		UIThreadImpl()
 		{
 			#ifdef __APPLE__
-			resource_path = Directory::get_resourcedata("", resource_path);
+			resource_path = Directory::resourcedata("", resource_path);
 			#else
 			resource_path = "Resources";
 			#endif
