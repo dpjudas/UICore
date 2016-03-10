@@ -60,6 +60,7 @@ namespace uicore
 
 			size = std::min(size, (int)(_buffer->size() - _pos));
 			memcpy(data, _buffer->data() + _pos, size);
+			_pos += size;
 			return size;
 		}
 
