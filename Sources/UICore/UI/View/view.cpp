@@ -890,9 +890,6 @@ namespace uicore
 			case KeyEventType::release: action->key_release(*key); break;
 			}
 		}
-
-		if (e->propagation_stopped())
-			return;
 	}
 
 	void ViewImpl::process_event(View *self, EventUI *e, bool use_capture)
@@ -902,8 +899,6 @@ namespace uicore
 			if (_active_action)
 			{
 				process_action(_active_action, e);
-				if (e->propagation_stopped())
-					return;
 			}
 			else
 			{
@@ -914,6 +909,8 @@ namespace uicore
 						break;
 				}
 			}
+			if (e->propagation_stopped())
+				return;
 			
 		}
 
