@@ -109,10 +109,11 @@ namespace uicore
 	{
 		if (view != hot_view)
 		{
+			auto common_parent = View::common_parent(view.get(), hot_view.get());
 			if (hot_view)
 			{
 				PointerEvent e_exit(PointerEventType::leave, PointerButton::none, e.pos(window_view->root_view()), e.alt_down(), e.shift_down(), e.ctrl_down(), e.cmd_down());
-				View::dispatch_event(hot_view.get(), &e_exit, true);
+				View::dispatch_event(hot_view.get(), common_parent, &e_exit);
 			}
 
 			hot_view = view;
@@ -120,7 +121,7 @@ namespace uicore
 			if (hot_view)
 			{
 				PointerEvent e_enter(PointerEventType::enter, PointerButton::none, e.pos(window_view->root_view()), e.alt_down(), e.shift_down(), e.ctrl_down(), e.cmd_down());
-				View::dispatch_event(hot_view.get(), &e_enter, true);
+				View::dispatch_event(hot_view.get(), common_parent, &e_enter);
 			}
 		}
 
