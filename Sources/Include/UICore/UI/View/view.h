@@ -305,6 +305,13 @@ namespace uicore
 		/// Dispatch event to signals listening for events
 		static void dispatch_event(View *target, EventUI *e, bool no_propagation = false);
 
+		/// Dispatch event to signals listening for events
+		///
+		/// \param until_parent_view = Dispatch until current target is this view, then propagation stops 
+		static void dispatch_event(View *target, const View *until_parent_view, EventUI *e);
+
+		static View *common_parent(View *view1, View *view2);
+
 	protected:
 		/// Renders the content of a view
 		virtual void render_content(const CanvasPtr &canvas) { }

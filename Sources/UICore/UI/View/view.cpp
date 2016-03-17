@@ -48,6 +48,7 @@
 #include "flex_layout.h"
 #include "custom_layout.h"
 #include <algorithm>
+#include <set>
 
 namespace uicore
 {
@@ -697,7 +698,7 @@ namespace uicore
 		}
 		else
 		{
-			target->impl->inverse_bubble(e);
+			target->impl->inverse_bubble(e, nullptr);
 
 			if (!e->propagation_stopped())
 			{
@@ -718,6 +719,59 @@ namespace uicore
 
 		e->_current_target.reset();
 		e->_phase = EventUIPhase::none;
+	}
+
+	void View::dispatch_event(View *target, const View *until_parent_view, EventUI *e)
+	{
+		if (target == until_parent_view)
+			return;
+
+		if (!target->view_tree())
+			return;
+
+		// Make sure root view is not destroyed during event dispatching (needed for dismiss_popup)
+		auto pin_root = target->view_tree()->root_view();
+
+		e->_target = target->shared_from_this();
+
+		target->impl->inverse_bubble(e, until_parent_view);
+
+		if (!e->propagation_stopped())
+		{
+			e->_phase = EventUIPhase::at_target;
+			e->_current_target = e->_target;
+			e->_current_target->impl->process_event(e->_current_target.get(), e, true);
+			if (!e->propagation_stopped())
+				e->_current_target->impl->process_event(e->_current_target.get(), e, false);
+
+			while (e->_current_target->parent() && e->_current_target->parent() != until_parent_view && !e->propagation_stopped())
+			{
+				e->_phase = EventUIPhase::bubbling;
+				e->_current_target = e->_current_target->parent()->shared_from_this();
+				e->_current_target->impl->process_event(e->_current_target.get(), e, false);
+			}
+		}
+
+		e->_current_target.reset();
+		e->_phase = EventUIPhase::none;
+	}
+
+	View *View::common_parent(View *view1, View *view2)
+	{
+		std::set<View *> parents;
+		if ((view1 == nullptr) || (view2 == nullptr))
+			return nullptr;
+
+		for (; view1; view1 = view1->parent())
+		{
+			parents.insert(view1);
+		}
+		for (; view2; view2 = view2->parent())
+		{
+			if (parents.find(view2) != parents.end())
+				return view2;
+		}
+		return nullptr;
 	}
 
 	/////////////////////////////////////////////////////////////////////////
@@ -970,12 +1024,12 @@ namespace uicore
 		}
 	}
 
-	void ViewImpl::inverse_bubble(EventUI *e)
+	void ViewImpl::inverse_bubble(EventUI *e, const View *until_parent_view)
 	{
-		if (_parent)
+		if (_parent && _parent != until_parent_view)
 		{
 			std::shared_ptr<View> super = _parent->shared_from_this();
-			super->impl->inverse_bubble(e);
+			super->impl->inverse_bubble(e, until_parent_view);
 			if (!e->propagation_stopped())
 			{
 				e->_phase = EventUIPhase::capturing;
