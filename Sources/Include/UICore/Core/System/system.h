@@ -40,10 +40,10 @@ namespace uicore
 	{
 	public:
 		/// \brief Get the current time (since system boot), in milliseconds.
-		static uint64_t time();
+		static int64_t time();
 
 		/// \brief Get the current time microseconds.
-		static uint64_t microseconds();
+		static int64_t microseconds();
 
 		enum CPU_ExtensionX86 { mmx, mmx_ex, _3d_now, _3d_now_ex, sse, sse2, sse3, ssse3, sse4_a, sse4_1, sse4_2, xop, avx, aes, fma3, fma4 };
 		enum CPU_ExtensionPPC { altivec };

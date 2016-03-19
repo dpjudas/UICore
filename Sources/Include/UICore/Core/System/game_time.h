@@ -73,10 +73,10 @@ namespace uicore
 		float current_time() const;
 
 		/// \brief Returns the number of microseconds since this class was reset()
-		uint64_t current_time_microseconds() const;
+		int64_t current_time_microseconds() const;
 
 		/// \brief Returns the number of milliseconds since this class was reset()
-		uint64_t current_time_ms() const;
+		int64_t current_time_ms() const;
 
 		/// \brief Increases or decreases tick speed by the specified amount of microseconds per second
 		void set_tick_time_adjustment(int64_t microseconds);

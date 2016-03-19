@@ -47,9 +47,9 @@ namespace uicore
 
 		int64_t tick_time_adjustment = 0;
 
-		uint64_t start_time = 0;
-		uint64_t current_time = 0;
-		uint64_t last_tick_time = 0;
+		int64_t start_time = 0;
+		int64_t current_time = 0;
+		int64_t last_tick_time = 0;
 
 		float time_elapsed = 0.0f;
 		int time_elapsed_ms = 0;
@@ -58,7 +58,7 @@ namespace uicore
 		int ticks_elapsed = 0;
 		float tick_interpolation_time = 0.0f;
 
-		uint64_t update_frame_start_time = 0;
+		int64_t update_frame_start_time = 0;
 		float current_fps = 0.0f;
 
 	private:

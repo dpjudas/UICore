@@ -80,12 +80,12 @@ namespace uicore
 		return (float)timer;
 	}
 
-	uint64_t GameTime::current_time_microseconds() const
+	int64_t GameTime::current_time_microseconds() const
 	{
 		return (impl->current_time - impl->start_time);
 	}
 
-	uint64_t GameTime::current_time_ms() const
+	int64_t GameTime::current_time_ms() const
 	{
 		return (impl->current_time - impl->start_time) / 1000;
 	}
@@ -102,14 +102,14 @@ namespace uicore
 
 	void GameTime_Impl::update()
 	{
-		uint64_t last_time = current_time;
+		int64_t last_time = current_time;
 
 		current_time = System::microseconds();
 
 		if (current_time < last_time)		// Old cpu's may report time travelling on early multicore processors (iirc)
 			last_time = current_time;
 
-		uint64_t microseconds_per_tick = ((uint64_t)(1000000 + tick_time_adjustment)) / ticks_per_second;
+		int64_t microseconds_per_tick = ((int64_t)(1000000 + tick_time_adjustment)) / ticks_per_second;
 
 		ticks_elapsed = (current_time - last_tick_time) / microseconds_per_tick;
 		tick_interpolation_time = (float)(((current_time - last_tick_time) % microseconds_per_tick) / (double)microseconds_per_tick);

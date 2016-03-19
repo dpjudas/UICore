@@ -56,31 +56,27 @@ namespace uicore
 {
 	// Win32 implementation of System functions:
 
-	uint64_t System::time()
+	int64_t System::time()
 	{
 		return (microseconds() / 1000);
 	}
 
-	uint64_t System::microseconds()
+	int64_t System::microseconds()
 	{
 		static LARGE_INTEGER perf_counter;
-		static double perf_frequency;
+		static LONGLONG perf_frequency;
 		static bool first_time = true;
 
 		if (first_time)
 		{
 			LARGE_INTEGER perf_frequency_int64;
 			QueryPerformanceFrequency(&perf_frequency_int64);
-			perf_frequency = (double)perf_frequency_int64.QuadPart;
+			perf_frequency = perf_frequency_int64.QuadPart;
 			first_time = false;
 		}
 
-		// Note on Win32, this looses accuracy after approx 9 days (by 1 to 4 microseconds), due to the precision of a 64bit double.
-		// If you require ultra precision, modify this function to use uicore::BigInt
-
 		QueryPerformanceCounter(&perf_counter);
-		double quad_part = (double)perf_counter.QuadPart;
-		return (uint64_t)(((1000000.0 * quad_part) / perf_frequency) + 0.5);
+		return (int64_t)((perf_counter.QuadPart * 1000000) / perf_frequency);
 	}
 
 	std::string System::exe_path()
