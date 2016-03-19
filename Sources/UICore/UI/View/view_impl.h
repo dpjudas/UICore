@@ -85,7 +85,7 @@ namespace uicore
 
 		void set_state_cascade_siblings(const std::string &name, bool value);
 
-		void inverse_bubble(EventUI *e);
+		void inverse_bubble(EventUI *e, const View *until_parent_view);
 
 		View *_parent = nullptr;
 		std::vector<std::shared_ptr<View>> _children;
