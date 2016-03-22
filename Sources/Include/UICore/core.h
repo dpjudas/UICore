@@ -40,7 +40,6 @@
 #include "Core/System/service.h"
 #include "Core/System/system.h"
 #include "Core/System/registry_key.h"
-#include "Core/System/game_time.h"
 #include "Core/ErrorReporting/crash_reporter.h"
 #include "Core/ErrorReporting/exception_dialog.h"
 #include "Core/Signals/signal.h"
