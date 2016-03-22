@@ -195,7 +195,7 @@ namespace uicore
 		instance_buffer->unlock();
 
 		int gpu_index;
-		VertexArrayVector<Vec4i> gpu_vertices(batch_buffer->get_vertex_buffer(gc, gpu_index));
+		VertexArrayVector<Vec4ui> gpu_vertices(batch_buffer->get_vertex_buffer(gc, gpu_index));
 
 		if (!prim_array[gpu_index])
 		{
@@ -203,7 +203,7 @@ namespace uicore
 			prim_array[gpu_index]->set_attributes(0, gpu_vertices);
 		}
 
-		gpu_vertices.upload_data(gc, 0, vertices.get_vertices(), vertices.get_position());
+		gpu_vertices.upload_data(gc, 0, (Vec4ui*)vertices.get_vertices(), vertices.get_position());
 
 		int block_y = (((mask_blocks.next_block-1) * mask_block_size) / mask_texture_size)* mask_block_size;
 		mask_texture->set_subimage(gc, 0, 0, mask_buffer, Rect(Point(0, 0), Size(mask_texture_size, block_y + mask_block_size)));
@@ -223,11 +223,12 @@ namespace uicore
 
 		if (current_texture)
 			gc->set_texture(2, current_texture);
+		else
+			gc->set_texture(2, mask_texture); // This is just to make sure a texture is always bound (to stop the debug layer in Direct3D to produce a warning)
+
 		gc->draw_primitives(type_triangles, vertices.get_position(), prim_array[gpu_index]);
-		if (current_texture)
-		{
-			gc->reset_texture(2);
-		}
+
+		gc->reset_texture(2);
 		gc->reset_texture(1);
 		gc->reset_texture(0);
 		gc->reset_program_object();

@@ -125,15 +125,19 @@ namespace uicore
 		if (data_size != size)
 			throw Exception("Upload data size does not match vertex array buffer");
 
-		const ComPtr<ID3D11Device> &device = static_cast<D3DGraphicContext*>(gc.get())->get_window()->get_device();
-		ComPtr<ID3D11DeviceContext> device_context;
-		device->GetImmediateContext(device_context.output_variable());
+		auto d3d_window = static_cast<D3DGraphicContext*>(gc.get())->get_window();
+		const auto &device = d3d_window->get_device();
+		const auto &device_context = d3d_window->get_device_context();
+
 		device_context->UpdateSubresource(get_handles(device).buffer, 0, 0, data, 0, 0);
 	}
 
 	void D3DStorageBuffer::copy_from(const GraphicContextPtr &gc, const StagingBufferPtr &buffer, int dest_pos, int src_pos, int copy_size)
 	{
-		const ComPtr<ID3D11Device> &device = static_cast<D3DGraphicContext*>(gc.get())->get_window()->get_device();
+		auto d3d_window = static_cast<D3DGraphicContext*>(gc.get())->get_window();
+		const auto &device = d3d_window->get_device();
+		const auto &device_context = d3d_window->get_device_context();
+
 		ComPtr<ID3D11Buffer> &staging_buffer = static_cast<D3DStagingBuffer*>(buffer.get())->get_buffer(device);
 		int staging_buffer_size = static_cast<D3DStagingBuffer*>(buffer.get())->get_size();
 
@@ -142,9 +146,6 @@ namespace uicore
 
 		if (dest_pos < 0 || copy_size < 0 || dest_pos + copy_size > size || src_pos < 0 || src_pos + copy_size > staging_buffer_size)
 			throw Exception("Out of bounds!");
-
-		ComPtr<ID3D11DeviceContext> device_context;
-		device->GetImmediateContext(device_context.output_variable());
 
 		D3D11_BOX box;
 		box.left = src_pos;
@@ -158,7 +159,10 @@ namespace uicore
 
 	void D3DStorageBuffer::copy_to(const GraphicContextPtr &gc, const StagingBufferPtr &buffer, int dest_pos, int src_pos, int copy_size)
 	{
-		const ComPtr<ID3D11Device> &device = static_cast<D3DGraphicContext*>(gc.get())->get_window()->get_device();
+		auto d3d_window = static_cast<D3DGraphicContext*>(gc.get())->get_window();
+		const auto &device = d3d_window->get_device();
+		const auto &device_context = d3d_window->get_device_context();
+
 		ComPtr<ID3D11Buffer> &staging_buffer = static_cast<D3DStagingBuffer*>(buffer.get())->get_buffer(device);
 		int staging_buffer_size = static_cast<D3DStagingBuffer*>(buffer.get())->get_size();
 
@@ -167,9 +171,6 @@ namespace uicore
 
 		if (dest_pos < 0 || copy_size < 0 || dest_pos + copy_size > staging_buffer_size || src_pos < 0 || src_pos + copy_size > size)
 			throw Exception("Out of bounds!");
-
-		ComPtr<ID3D11DeviceContext> device_context;
-		device->GetImmediateContext(device_context.output_variable());
 
 		D3D11_BOX box;
 		box.left = dest_pos;

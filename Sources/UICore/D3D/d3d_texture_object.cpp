@@ -753,9 +753,6 @@ namespace uicore
 		D3DGraphicContext *gc_provider = static_cast<D3DGraphicContext*>(gc.get());
 		D3DTextureData::DeviceHandles &data_handles = data->get_handles(gc_provider->get_window()->get_device());
 
-		ComPtr<ID3D11DeviceContext> device_context;
-		data_handles.device->GetImmediateContext(device_context.output_variable());
-
 		int array_slice = slice;
 		int z = 0;
 
@@ -798,6 +795,8 @@ namespace uicore
 			throw Exception("out of bounds!");
 
 		int dest_subresource = D3D11CalcSubresource(level, array_slice, mip_levels);
+
+		auto device_context = gc_provider->get_window()->get_device_context();
 
 		D3DStagingTexture *pb_provider = dynamic_cast<D3DStagingTexture*>(source_image.get());
 		if (pb_provider)

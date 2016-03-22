@@ -64,7 +64,8 @@ namespace uicore
 
 		std::vector<std::shared_ptr<DeviceHandles> > handles;
 		D3D11_MAPPED_SUBRESOURCE map_data;
-		ComPtr<ID3D11Device> map_device;
+		const ComPtr<ID3D11Device> *map_device;
+		const ComPtr<ID3D11DeviceContext> *map_device_context;
 		int size = 0;
 	};
 }

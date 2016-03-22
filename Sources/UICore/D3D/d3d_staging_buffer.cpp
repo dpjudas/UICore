@@ -116,22 +116,19 @@ namespace uicore
 
 	void D3DStagingBuffer::lock(const GraphicContextPtr &gc, BufferAccess access)
 	{
-		map_device = static_cast<D3DGraphicContext*>(gc.get())->get_window()->get_device();
+		auto d3d_window = static_cast<D3DGraphicContext*>(gc.get())->get_window();
+		map_device = &d3d_window->get_device();
+		map_device_context = &d3d_window->get_device_context();
 
-		ComPtr<ID3D11DeviceContext> context;
-		map_device->GetImmediateContext(context.output_variable());
-
-		HRESULT result = context->Map(handles.front()->buffer, 0, to_d3d_map_type(access), 0, &map_data);
+		HRESULT result = map_device_context->get()->Map(handles.front()->buffer, 0, to_d3d_map_type(access), 0, &map_data);
 		D3DTarget::throw_if_failed("ID3D11DeviceContext.Map failed", result);
 	}
 
 	void D3DStagingBuffer::unlock()
 	{
-		ComPtr<ID3D11DeviceContext> context;
-		map_device->GetImmediateContext(context.output_variable());
-
-		context->Unmap(get_handles(map_device).buffer, 0);
-		map_device.clear();
+		map_device_context->get()->Unmap(get_handles(*map_device).buffer, 0);
+		map_device = nullptr;
+		map_device_context = nullptr;
 		map_data.pData = 0;
 		map_data.RowPitch = 0;
 		map_data.DepthPitch = 0;

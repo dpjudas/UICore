@@ -341,6 +341,14 @@ namespace uicore
 			for (int i = 0; i < num_current_textures; i++)
 				gc->set_texture(i, current_textures[i]);
 
+#ifdef _DEBUG // Suppress a warning when the D3D debug layer is active (to do: add a boolean on gc that can report if a debug layer is present)
+			if (num_current_textures > 0)
+			{
+				for (int i = num_current_textures; i < max_textures; i++)
+					gc->set_texture(i, current_textures[0]);
+			}
+#endif
+
 			if (use_glyph_program)
 			{
 				gc->set_blend_state(glyph_blend, constant_color);
@@ -354,6 +362,14 @@ namespace uicore
 
 			for (int i = 0; i < num_current_textures; i++)
 				gc->reset_texture(i);
+
+#ifdef _DEBUG // Suppress a warning when the D3D debug layer is active (to do: add a boolean on gc that can report if a debug layer is present)
+			if (num_current_textures > 0)
+			{
+				for (int i = num_current_textures; i < max_textures; i++)
+					gc->reset_texture(i);
+			}
+#endif
 
 			gc->reset_program_object();
 
