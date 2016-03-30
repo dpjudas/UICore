@@ -52,6 +52,40 @@ namespace uicore
 			static WindowManagerImpl impl;
 			return &impl;
 		}
+
+		static Sizef auto_content_size(const std::shared_ptr<View> &root_view, const CanvasPtr &canvas)
+		{
+			auto css_width = root_view->style_cascade().computed_value("width");
+			auto css_height = root_view->style_cascade().computed_value("height");
+			auto css_min_width = root_view->style_cascade().computed_value("min-width");
+			auto css_min_height = root_view->style_cascade().computed_value("min-height");
+			auto css_max_width = root_view->style_cascade().computed_value("max-width");
+			auto css_max_height = root_view->style_cascade().computed_value("max-height");
+
+			float width = 0.0f;
+			if (css_width.is_keyword("auto"))
+				width = root_view->preferred_width(canvas);
+			else
+				width = css_width.number();
+
+			if (css_min_width.is_length())
+				width = std::max(width, css_min_width.number());
+			if (css_max_width.is_length())
+				width = std::min(width, css_max_width.number());
+
+			float height = 0.0f;
+			if (css_height.is_keyword("auto"))
+				height = root_view->preferred_height(canvas, width);
+			else
+				height = css_height.number();
+
+			if (css_min_height.is_length())
+				height = std::max(height, css_min_height.number());
+			if (css_max_height.is_length())
+				height = std::min(height, css_max_height.number());
+
+			return Sizef(width, height);
+		}
 	};
 
 	/////////////////////////////////////////////////////////////////////////
@@ -99,9 +133,8 @@ namespace uicore
 		if (controller->impl->initial_size == Sizef())
 		{
 			CanvasPtr canvas = controller->root_view()->canvas();
-			float width = controller->root_view()->preferred_width(canvas);
-			float height = controller->root_view()->preferred_height(canvas, width);
-			Rectf content_box(0.0f, 0.0f, width, height);
+			Sizef content_size = WindowManagerImpl::auto_content_size(controller->root_view(), canvas);
+			Rectf content_box(content_size);
 			Rectf margin_box = ViewGeometry::from_content_box(controller->root_view()->style_cascade(), content_box).margin_box();
 			display_window->set_size(margin_box.width(), margin_box.height(), true);
 		}
@@ -147,9 +180,8 @@ namespace uicore
 		if (controller->impl->initial_size == Sizef())
 		{
 			CanvasPtr canvas = controller->root_view()->canvas();
-			float width = controller->root_view()->preferred_width(canvas);
-			float height = controller->root_view()->preferred_height(canvas, width);
-			Rectf content_box(screen_pos.x - width * 0.5f, screen_pos.y - height * 0.5f, screen_pos.x + width * 0.5f, screen_pos.y + height * 0.5f);
+			Sizef content_size = WindowManagerImpl::auto_content_size(controller->root_view(), canvas);
+			Rectf content_box(screen_pos.x - content_size.width * 0.5f, screen_pos.y - content_size.height * 0.5f, screen_pos.x + content_size.width * 0.5f, screen_pos.y + content_size.height * 0.5f);
 			Rectf margin_box = ViewGeometry::from_content_box(controller->root_view()->style_cascade(), content_box).margin_box();
 			if (controller_display_window)
 				controller_display_window->set_position(margin_box, true);
@@ -179,6 +211,7 @@ namespace uicore
 		desc.show_sysmenu(false);
 		desc.show_minimize_button(false);
 		desc.show_maximize_button(false);
+		desc.set_allow_resize(false);
 
 		if (controller->impl->initial_size != Sizef())
 			desc.set_size(controller->impl->initial_size, !controller->impl->frame_geometry);
@@ -195,9 +228,9 @@ namespace uicore
 		if (controller->impl->initial_size == Sizef())
 		{
 			CanvasPtr canvas = controller->root_view()->canvas();
-			float width = controller->root_view()->preferred_width(canvas);
-			float height = controller->root_view()->preferred_height(canvas, width);
-			Rectf content_box(screen_pos.x, screen_pos.y, screen_pos.x + width, screen_pos.y + height);
+			Sizef content_size = WindowManagerImpl::auto_content_size(controller->root_view(), canvas);
+
+			Rectf content_box(screen_pos, content_size);
 			Rectf margin_box = ViewGeometry::from_content_box(controller->root_view()->style_cascade(), content_box).margin_box();
 
 			DisplayWindowPtr controller_display_window = controller->impl->window->display_window();
