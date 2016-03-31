@@ -47,7 +47,9 @@ namespace uicore
 		UIThreadImpl()
 		{
 			#ifdef __APPLE__
-			resource_path = Directory::resourcedata("", resource_path);
+			// Use a 'Resources' subfolder in the app bundle on Mac as this allows one
+			// to just add the Resources folder to Xcode's copy resources rule
+			resource_path = Directory::resourcedata("", "Resources");
 			#else
 			resource_path = "Resources";
 			#endif

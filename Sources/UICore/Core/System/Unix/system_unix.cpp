@@ -56,16 +56,16 @@
 namespace uicore
 {
 
-uint64_t System::time()
+int64_t System::time()
 {
 	return (microseconds() / 1000);
 }
 
-uint64_t System::microseconds()
+int64_t System::microseconds()
 {
 	timeval tv;
 	gettimeofday(&tv, nullptr);
-	return (uint64_t) tv.tv_sec*(uint64_t) 1000000 + (uint64_t) tv.tv_usec;
+	return (int64_t) tv.tv_sec*(int64_t) 1000000 + (int64_t) tv.tv_usec;
 }
 
 std::string System::exe_path()
