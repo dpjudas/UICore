@@ -73,7 +73,7 @@ namespace uicore
 		static std::shared_ptr<T> present_popup(View *owner, const Pointf &pos, Types &&... args)
 		{
 			auto controller = std::make_shared<T>(std::forward<Types>(args)...);
-			present_popup(owner, controller);
+			present_popup(owner, pos, controller);
 			return controller;
 		}
 
