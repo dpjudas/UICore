@@ -34,6 +34,8 @@
 #include "UICore/Display/System/timer.h"
 #include "UICore/Display/2D/brush.h"
 #include "UICore/UI/Events/pointer_event.h"
+#include "UICore/UI/Events/focus_change_event.h"
+#include "UICore/UI/Events/activation_change_event.h"
 #include <algorithm>
 #include "slider_view_impl.h"
 
@@ -49,21 +51,21 @@ namespace uicore
 		add_child(impl->track);
 		add_child(impl->thumb);
 	
-		slots.connect(sig_pointer_press(), impl.get(), &SliderBaseViewImpl::on_pointer_track_press);
-		slots.connect(sig_pointer_release(), impl.get(), &SliderBaseViewImpl::on_pointer_track_release);
+		slots.connect(sig_pointer_press(), [this](PointerEvent *e) { impl->on_pointer_track_press(*e); });
+		slots.connect(sig_pointer_release(), [this](PointerEvent *e) { impl->on_pointer_track_release(*e); });
 
-		slots.connect(impl->thumb->sig_pointer_press(), impl.get(), &SliderBaseViewImpl::on_pointer_thumb_press);
-		slots.connect(impl->thumb->sig_pointer_release(), impl.get(), &SliderBaseViewImpl::on_pointer_thumb_release);
+		slots.connect(sig_pointer_press(), [this](PointerEvent *e) { impl->on_pointer_thumb_press(*e); });
+		slots.connect(sig_pointer_release(), [this](PointerEvent *e) { impl->on_pointer_thumb_release(*e); });
 
-		slots.connect(impl->thumb->sig_pointer_enter(), [&](PointerEvent &e) {impl->_state_hot = true;  impl->update_state(); });
-		slots.connect(impl->thumb->sig_pointer_leave(), [&](PointerEvent &e) {impl->_state_hot = false;  impl->update_state(); });
+		slots.connect(sig_pointer_enter(), [&](PointerEvent *e) { impl->_state_hot = true;  impl->update_state(); });
+		slots.connect(sig_pointer_leave(), [&](PointerEvent *e) { impl->_state_hot = false;  impl->update_state(); });
 
-		slots.connect(impl->thumb->sig_pointer_move(), impl.get(), &SliderBaseViewImpl::on_pointer_move);
+		slots.connect(impl->thumb->sig_pointer_move(), [this](PointerEvent *e) { impl->on_pointer_move(*e); });
 
-		slots.connect(sig_focus_gained(), impl.get(), &SliderBaseViewImpl::on_focus_gained);
-		slots.connect(sig_focus_lost(), impl.get(), &SliderBaseViewImpl::on_focus_lost);
-		slots.connect(sig_activated(), impl.get(), &SliderBaseViewImpl::on_activated);
-		slots.connect(sig_activated(), impl.get(), &SliderBaseViewImpl::on_deactivated);
+		slots.connect(sig_focus_gained(), [this](FocusChangeEvent *e) { impl->on_focus_gained(*e); });
+		slots.connect(sig_focus_lost(), [this](FocusChangeEvent *e) { impl->on_focus_lost(*e); });
+		slots.connect(sig_activated(), [this](ActivationChangeEvent *e) { impl->on_activated(*e); });
+		slots.connect(sig_deactivated(), [this](ActivationChangeEvent *e) { impl->on_deactivated(*e); });
 
 		impl->scroll_timer->func_expired() = uicore::bind_member(impl.get(), &SliderBaseViewImpl::scroll_timer_expired);
 
@@ -169,11 +171,13 @@ namespace uicore
 		impl->_tick_count = tick_count;
 		set_needs_layout();
 	}
+
 	void SliderBaseView::set_page_step(int page_step)
 	{
 		impl->_page_step = page_step;
 		set_needs_layout();
 	}
+
 	void SliderBaseView::set_lock_to_ticks(bool lock)
 	{
 		impl->_lock_to_ticks = lock;
@@ -201,9 +205,8 @@ namespace uicore
 		}
 	}
 
-	std::function<void()> &SliderBaseView::func_value_changed()
+	Signal<void()> &SliderBaseView::sig_value_changed()
 	{
-		return impl->_func_value_changed;
+		return impl->sig_value_changed;
 	}
-
 }

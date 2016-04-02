@@ -34,12 +34,13 @@
 #include "UICore/Display/System/timer.h"
 #include "UICore/Display/2D/brush.h"
 #include "UICore/UI/Events/pointer_event.h"
+#include "UICore/UI/Events/focus_change_event.h"
+#include "UICore/UI/Events/activation_change_event.h"
 #include <algorithm>
 #include "scrollbar_view_impl.h"
 
 namespace uicore
 {
-
 	ScrollBarBaseView::ScrollBarBaseView(bool render_button_arrows) : impl(std::make_shared<ScrollBarBaseViewImpl>())
 	{
 		impl->scrollbar = this;
@@ -72,38 +73,38 @@ namespace uicore
 		impl->button_decrement->style()->set("width: 17px; height: 17px");
 		impl->button_increment->style()->set("width: 17px; height: 17px");
 
-		slots.connect(impl->track->sig_pointer_press(), impl.get(), &ScrollBarBaseViewImpl::on_pointer_track_press);
-		slots.connect(impl->track->sig_pointer_release(), impl.get(), &ScrollBarBaseViewImpl::on_pointer_track_release);
+		slots.connect(impl->track->sig_pointer_press(), [this](PointerEvent *e) { impl->on_pointer_track_press(*e); });
+		slots.connect(impl->track->sig_pointer_release(), [this](PointerEvent *e) { impl->on_pointer_track_release(*e); });
 
-		slots.connect(impl->thumb->sig_pointer_press(), impl.get(), &ScrollBarBaseViewImpl::on_pointer_thumb_press);
-		slots.connect(impl->thumb->sig_pointer_release(), impl.get(), &ScrollBarBaseViewImpl::on_pointer_thumb_release);
+		slots.connect(impl->thumb->sig_pointer_press(), [this](PointerEvent *e) { impl->on_pointer_thumb_press(*e); });
+		slots.connect(impl->thumb->sig_pointer_release(), [this](PointerEvent *e) { impl->on_pointer_thumb_release(*e); });
 
-		slots.connect(impl->button_decrement->sig_pointer_press(), impl.get(), &ScrollBarBaseViewImpl::on_pointer_decrement_press);
-		slots.connect(impl->button_decrement->sig_pointer_release(), impl.get(), &ScrollBarBaseViewImpl::on_pointer_decrement_release);
-		slots.connect(impl->button_increment->sig_pointer_press(), impl.get(), &ScrollBarBaseViewImpl::on_pointer_increment_press);
-		slots.connect(impl->button_increment->sig_pointer_release(), impl.get(), &ScrollBarBaseViewImpl::on_pointer_increment_release);
+		slots.connect(impl->button_decrement->sig_pointer_press(), [this](PointerEvent *e) { impl->on_pointer_decrement_press(*e); });
+		slots.connect(impl->button_decrement->sig_pointer_release(), [this](PointerEvent *e) { impl->on_pointer_decrement_release(*e); });
+		slots.connect(impl->button_increment->sig_pointer_press(), [this](PointerEvent *e) { impl->on_pointer_increment_press(*e); });
+		slots.connect(impl->button_increment->sig_pointer_release(), [this](PointerEvent *e) { impl->on_pointer_increment_release(*e); });
 
-		slots.connect(impl->thumb->sig_pointer_move(), impl.get(), &ScrollBarBaseViewImpl::on_pointer_move);
+		slots.connect(impl->thumb->sig_pointer_move(), [this](PointerEvent *e) { impl->on_pointer_move(*e); });
 
-		slots.connect(sig_focus_gained(), impl.get(), &ScrollBarBaseViewImpl::on_focus_gained);
-		slots.connect(sig_focus_lost(), impl.get(), &ScrollBarBaseViewImpl::on_focus_lost);
-		slots.connect(sig_activated(), impl.get(), &ScrollBarBaseViewImpl::on_activated);
-		slots.connect(sig_activated(), impl.get(), &ScrollBarBaseViewImpl::on_deactivated);
+		slots.connect(sig_focus_gained(), [this](FocusChangeEvent *e) { impl->on_focus_gained(*e); });
+		slots.connect(sig_focus_lost(), [this](FocusChangeEvent *e) { impl->on_focus_lost(*e); });
+		slots.connect(sig_activated(), [this](ActivationChangeEvent *e) { impl->on_activated(*e); });
+		slots.connect(sig_deactivated(), [this](ActivationChangeEvent *e) { impl->on_deactivated(*e); });
 
-		slots.connect(impl->track->sig_pointer_enter(), [&](PointerEvent &e) {impl->_state_track_hot = true;  impl->update_track_state(); });
-		slots.connect(impl->track->sig_pointer_leave(), [&](PointerEvent &e) {impl->_state_track_hot = false;  impl->update_track_state(); });
-		slots.connect(impl->thumb->sig_pointer_enter(), [&](PointerEvent &e) {impl->_state_thumb_hot = true;  impl->update_thumb_state(); });
-		slots.connect(impl->thumb->sig_pointer_leave(), [&](PointerEvent &e) {impl->_state_thumb_hot = false;  impl->update_thumb_state(); });
-		slots.connect(impl->thumb_grip->sig_pointer_enter(), [&](PointerEvent &e) {impl->_state_thumb_hot = true;  impl->update_thumb_state(); });
-		slots.connect(impl->thumb_grip->sig_pointer_leave(), [&](PointerEvent &e) {impl->_state_thumb_hot = false;  impl->update_thumb_state(); });
-		slots.connect(spacer1->sig_pointer_enter(), [&](PointerEvent &e) {impl->_state_thumb_hot = true;  impl->update_thumb_state(); });
-		slots.connect(spacer1->sig_pointer_leave(), [&](PointerEvent &e) {impl->_state_thumb_hot = false;  impl->update_thumb_state(); });
-		slots.connect(spacer2->sig_pointer_enter(), [&](PointerEvent &e) {impl->_state_thumb_hot = true;  impl->update_thumb_state(); });
-		slots.connect(spacer2->sig_pointer_leave(), [&](PointerEvent &e) {impl->_state_thumb_hot = false;  impl->update_thumb_state(); });
-		slots.connect(impl->button_decrement->sig_pointer_enter(), [&](PointerEvent &e) {impl->_state_decrement_hot = true;  impl->update_decrement_state(); });
-		slots.connect(impl->button_decrement->sig_pointer_leave(), [&](PointerEvent &e) {impl->_state_decrement_hot = false;  impl->update_decrement_state(); });
-		slots.connect(impl->button_increment->sig_pointer_enter(), [&](PointerEvent &e) {impl->_state_increment_hot = true;  impl->update_increment_state(); });
-		slots.connect(impl->button_increment->sig_pointer_leave(), [&](PointerEvent &e) {impl->_state_increment_hot = false;  impl->update_increment_state(); });
+		slots.connect(impl->track->sig_pointer_enter(), [&](PointerEvent *e) { impl->_state_track_hot = true; impl->update_track_state(); });
+		slots.connect(impl->track->sig_pointer_leave(), [&](PointerEvent *e) { impl->_state_track_hot = false; impl->update_track_state(); });
+		slots.connect(impl->thumb->sig_pointer_enter(), [&](PointerEvent *e) { impl->_state_thumb_hot = true; impl->update_thumb_state(); });
+		slots.connect(impl->thumb->sig_pointer_leave(), [&](PointerEvent *e) { impl->_state_thumb_hot = false; impl->update_thumb_state(); });
+		slots.connect(impl->thumb_grip->sig_pointer_enter(), [&](PointerEvent *e) { impl->_state_thumb_hot = true; impl->update_thumb_state(); });
+		slots.connect(impl->thumb_grip->sig_pointer_leave(), [&](PointerEvent *e) { impl->_state_thumb_hot = false; impl->update_thumb_state(); });
+		slots.connect(spacer1->sig_pointer_enter(), [&](PointerEvent *e) { impl->_state_thumb_hot = true; impl->update_thumb_state(); });
+		slots.connect(spacer1->sig_pointer_leave(), [&](PointerEvent *e) { impl->_state_thumb_hot = false; impl->update_thumb_state(); });
+		slots.connect(spacer2->sig_pointer_enter(), [&](PointerEvent *e) {impl->_state_thumb_hot = true; impl->update_thumb_state(); });
+		slots.connect(spacer2->sig_pointer_leave(), [&](PointerEvent *e) {impl->_state_thumb_hot = false; impl->update_thumb_state(); });
+		slots.connect(impl->button_decrement->sig_pointer_enter(), [&](PointerEvent *e) { impl->_state_decrement_hot = true; impl->update_decrement_state(); });
+		slots.connect(impl->button_decrement->sig_pointer_leave(), [&](PointerEvent *e) { impl->_state_decrement_hot = false; impl->update_decrement_state(); });
+		slots.connect(impl->button_increment->sig_pointer_enter(), [&](PointerEvent *e) { impl->_state_increment_hot = true; impl->update_increment_state(); });
+		slots.connect(impl->button_increment->sig_pointer_leave(), [&](PointerEvent *e) { impl->_state_increment_hot = false;  impl->update_increment_state(); });
 
 		impl->scroll_timer->func_expired() = uicore::bind_member(impl.get(), &ScrollBarBaseViewImpl::scroll_timer_expired);
 
@@ -296,5 +297,4 @@ namespace uicore
 	{
 		return impl->sig_scroll;
 	}
-
 }

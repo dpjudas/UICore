@@ -117,11 +117,8 @@ namespace uicore
 		if (checkbox->geometry().border_box().contains(e.pos(checkbox) + checkbox->geometry().content_box().position()))	// Only allow click when mouse released over component
 		{
 			_checked_state = !_checked_state;
-			if (_func_state_changed)
-				_func_state_changed();
+			sig_changed();
 		}
 		update_state();
 	}
-
 }
-

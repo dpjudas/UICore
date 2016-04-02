@@ -52,7 +52,7 @@ namespace uicore
 		void move_label_before_image();
 		void move_label_after_image();
 
-		std::function<void()> &func_clicked();
+		Signal<void()> &sig_clicked();
 
 	private:
 		std::unique_ptr<ButtonBaseViewImpl> impl;

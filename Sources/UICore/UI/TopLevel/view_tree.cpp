@@ -42,7 +42,7 @@ namespace uicore
 		static void dispatch_activation_change(View *view, ActivationChangeType type)
 		{
 			ActivationChangeEvent change(type);
-			View::dispatch_event(view, &change, true);
+			view->dispatch_event(&change, true);
 			for (const auto &child : view->children())
 			{
 				dispatch_activation_change(child.get(), type);
@@ -91,7 +91,7 @@ namespace uicore
 		if (old_focus_view)
 		{
 			FocusChangeEvent focus_loss(FocusChangeType::lost);
-			View::dispatch_event(old_focus_view, &focus_loss, true);
+			old_focus_view->dispatch_event(&focus_loss, true);
 		}
 
 		impl->focus_view = new_focus_view;
@@ -99,7 +99,7 @@ namespace uicore
 		if (new_focus_view)
 		{
 			FocusChangeEvent focus_gain(FocusChangeType::gained);
-			View::dispatch_event(new_focus_view, &focus_gain, true);
+			new_focus_view->dispatch_event(&focus_gain, true);
 		}
 	}
 

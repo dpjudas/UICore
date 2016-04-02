@@ -70,10 +70,10 @@ namespace uicore
 		void set_cursor_pos(Vec2i pos);
 		void set_cursor_drawing_enabled(bool value);
 
-		Signal<void(KeyEvent &)> &sig_before_edit_changed();
-		Signal<void(KeyEvent &)> &sig_after_edit_changed();
+		Signal<void(KeyEvent *)> &sig_before_edit_changed();
+		Signal<void(KeyEvent *)> &sig_after_edit_changed();
 		Signal<void()> &sig_selection_changed();
-		Signal<void(KeyEvent &)> &sig_enter_pressed();
+		Signal<void(KeyEvent *)> &sig_enter_pressed();
 
 	protected:
 		void render_content(const CanvasPtr &canvas) override;

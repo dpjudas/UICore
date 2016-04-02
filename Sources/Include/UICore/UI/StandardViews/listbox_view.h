@@ -58,7 +58,7 @@ namespace uicore
 		int selected_item() const;
 		void set_selected_item(int index);
 
-		std::function<void()> &func_selection_changed();
+		Signal<void()> &sig_selection_changed();
 
 	private:
 		std::unique_ptr<ListBoxBaseViewImpl> impl;

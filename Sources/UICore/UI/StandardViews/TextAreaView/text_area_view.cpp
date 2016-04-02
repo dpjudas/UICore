@@ -31,6 +31,8 @@
 #include "UICore/UI/Style/style.h"
 #include "UICore/UI/TopLevel/view_tree.h"
 #include "UICore/UI/Events/pointer_event.h"
+#include "UICore/UI/Events/focus_change_event.h"
+#include "UICore/UI/Events/activation_change_event.h"
 #include "UICore/Display/2D/canvas.h"
 #include "UICore/Display/2D/path.h"
 #include "UICore/Display/2D/brush.h"
@@ -57,15 +59,15 @@ namespace uicore
 		set_cursor(StandardCursor::ibeam);
 		set_content_clipped(true);
 
-		slots.connect(sig_key_press(), impl.get(), &TextAreaBaseViewImpl::on_key_press);
-		slots.connect(sig_key_release(), impl.get(), &TextAreaBaseViewImpl::on_key_release);
-		slots.connect(sig_pointer_press(), impl.get(), &TextAreaBaseViewImpl::on_pointer_press);
-		slots.connect(sig_pointer_release(), impl.get(), &TextAreaBaseViewImpl::on_pointer_release);
-		slots.connect(sig_pointer_move(), impl.get(), &TextAreaBaseViewImpl::on_pointer_move);
-		slots.connect(sig_focus_gained(), impl.get(), &TextAreaBaseViewImpl::on_focus_gained);
-		slots.connect(sig_focus_lost(), impl.get(), &TextAreaBaseViewImpl::on_focus_lost);
-		slots.connect(sig_activated(), impl.get(), &TextAreaBaseViewImpl::on_activated);
-		slots.connect(sig_deactivated(), impl.get(), &TextAreaBaseViewImpl::on_deactivated);
+		slots.connect(sig_key_press(), [this](KeyEvent *e) { impl->on_key_press(*e); });
+		slots.connect(sig_key_release(), [this](KeyEvent *e) { impl->on_key_release(*e); });
+		slots.connect(sig_pointer_press(), [this](PointerEvent *e) { impl->on_pointer_press(*e); });
+		slots.connect(sig_pointer_release(), [this](PointerEvent *e) { impl->on_pointer_release(*e); });
+		slots.connect(sig_pointer_move(), [this](PointerEvent *e) { impl->on_pointer_move(*e); });
+		slots.connect(sig_focus_gained(), [this](FocusChangeEvent *e) { impl->on_focus_gained(*e); });
+		slots.connect(sig_focus_lost(), [this](FocusChangeEvent *e) { impl->on_focus_lost(*e); });
+		slots.connect(sig_activated(), [this](ActivationChangeEvent *e) { impl->on_activated(*e); });
+		slots.connect(sig_deactivated(), [this](ActivationChangeEvent *e) { return impl->on_deactivated(*e); });
 
 		impl->scroll_timer->func_expired() = [&]()
 		{
@@ -226,12 +228,12 @@ namespace uicore
 		impl->cursor_drawing_enabled_when_parent_focused = value;
 	}
 
-	Signal<void(KeyEvent &)> &TextAreaBaseView::sig_before_edit_changed()
+	Signal<void(KeyEvent *)> &TextAreaBaseView::sig_before_edit_changed()
 	{
 		return impl->sig_before_edit_changed;
 	}
 
-	Signal<void(KeyEvent &)> &TextAreaBaseView::sig_after_edit_changed()
+	Signal<void(KeyEvent *)> &TextAreaBaseView::sig_after_edit_changed()
 	{
 		return impl->sig_after_edit_changed;
 	}
@@ -241,7 +243,7 @@ namespace uicore
 		return impl->selection.sig_selection_changed;
 	}
 
-	Signal<void(KeyEvent &)> &TextAreaBaseView::sig_enter_pressed()
+	Signal<void(KeyEvent *)> &TextAreaBaseView::sig_enter_pressed()
 	{
 		return impl->sig_enter_pressed;
 	}
@@ -399,14 +401,14 @@ namespace uicore
 	{
 		if (e.key() == Key::key_return)
 		{
-			sig_enter_pressed(e);
+			sig_enter_pressed(&e);
 			if (!e.default_prevented())
 				add("\n");
 			e.stop_propagation();
 			return;
 		}
 
-		sig_before_edit_changed(e);
+		sig_before_edit_changed(&e);
 		if (e.default_prevented())
 		{
 			e.stop_propagation();
@@ -501,7 +503,7 @@ namespace uicore
 			e.stop_propagation();
 		}
 
-		sig_after_edit_changed(e);
+		sig_after_edit_changed(&e);
 	}
 
 	void TextAreaBaseViewImpl::on_key_release(KeyEvent &e)

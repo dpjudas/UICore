@@ -62,7 +62,6 @@ namespace uicore
 		std::shared_ptr<View> button_decrement;
 		std::shared_ptr<View> button_increment;
 
-		Signal<void()> sig_scroll;
 		TimerPtr timer = Timer::create();
 		bool _state_disabled = false;
 		bool _state_increment_hot = false;
@@ -80,10 +79,5 @@ namespace uicore
 		void update_decrement_state();
 
 		void set_standard_state(View *view, bool state_disabled, bool state_hot, bool state_pressed);
-
-		std::function<void()> _func_value_changed;
-
-
 	};
-
 }

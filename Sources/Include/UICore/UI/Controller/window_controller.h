@@ -28,8 +28,8 @@
 
 #pragma once
 
-#include <memory>
 #include "../../Core/Signals/signal.h"
+#include <memory>
 
 namespace uicore
 {

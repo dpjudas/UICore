@@ -74,7 +74,7 @@ namespace uicore
 
 		void render(View *self, const CanvasPtr &canvas, ViewRenderLayer layer);
 		void process_event(View *self, EventUI *e, bool use_capture);
-		void process_action(ViewAction *action, EventUI *e);
+		void process_event_handler(ViewEventHandler *handler, EventUI *e);
 		void update_style_cascade() const;
 
 		unsigned int find_next_tab_index(unsigned int tab_index) const;
@@ -92,6 +92,21 @@ namespace uicore
 
 		std::vector<std::shared_ptr<ViewAction>> _actions;
 		ViewAction *_active_action = nullptr;
+
+		Signal<void(PointerEvent *)> sig_pointer_press;
+		Signal<void(PointerEvent *)> sig_pointer_double_click;
+		Signal<void(PointerEvent *)> sig_pointer_release;
+		Signal<void(PointerEvent *)> sig_pointer_move;
+		Signal<void(PointerEvent *)> sig_pointer_enter;
+		Signal<void(PointerEvent *)> sig_pointer_leave;
+		Signal<void(PointerEvent *)> sig_pointer_proximity_change;
+		Signal<void(ActivationChangeEvent *)> sig_activated;
+		Signal<void(ActivationChangeEvent *)> sig_deactivated;
+		Signal<void(FocusChangeEvent *)> sig_focus_gained;
+		Signal<void(FocusChangeEvent *)> sig_focus_lost;
+		Signal<void(KeyEvent *)> sig_key_press;
+		Signal<void(KeyEvent *)> sig_key_release;
+		Signal<void(CloseEvent *)> sig_close;
 
 		unsigned int tab_index = 0;
 		FocusPolicy focus_policy = FocusPolicy::reject;
@@ -118,22 +133,6 @@ namespace uicore
 		bool exception_encountered = false;
 
 		bool needs_layout = true;
-
-		Signal<void(ActivationChangeEvent &)> _sig_activated[2];
-		Signal<void(ActivationChangeEvent &)> _sig_deactivated[2];
-		Signal<void(CloseEvent &)> _sig_close[2];
-		Signal<void(ResizeEvent &)> _sig_resize[2];
-		Signal<void(FocusChangeEvent &)> _sig_focus_gained[2];
-		Signal<void(FocusChangeEvent &)> _sig_focus_lost[2];
-		Signal<void(PointerEvent &)> _sig_pointer_enter[2];
-		Signal<void(PointerEvent &)> _sig_pointer_leave[2];
-		Signal<void(PointerEvent &)> _sig_pointer_move[2];
-		Signal<void(PointerEvent &)> _sig_pointer_press[2];
-		Signal<void(PointerEvent &)> _sig_pointer_release[2];
-		Signal<void(PointerEvent &)> _sig_pointer_double_click[2];
-		Signal<void(PointerEvent &)> _sig_pointer_proximity_change[2];
-		Signal<void(KeyEvent &)> _sig_key_press[2];
-		Signal<void(KeyEvent &)> _sig_key_release[2];
 
 		ViewTree *view_tree = nullptr;
 

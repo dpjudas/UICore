@@ -65,7 +65,7 @@ namespace uicore
 		void set_page_step(int page_step);
 		void set_lock_to_ticks(bool lock);
 
-		std::function<void()> &func_value_changed();
+		Signal<void()> &sig_value_changed();
 
 		void layout_children(const CanvasPtr &canvas) override;
 

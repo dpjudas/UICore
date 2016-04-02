@@ -46,11 +46,11 @@ namespace uicore
 		bool _state_hot = false;
 		bool _state_pressed = false;
 
-		std::function<void()> _func_selected;
-
 		std::string _group;
 
 		int _id = 0;
 		bool _state_selected = false;
+
+		Signal<void()> sig_selected;
 	};
 }

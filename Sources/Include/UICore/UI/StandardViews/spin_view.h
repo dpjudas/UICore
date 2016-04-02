@@ -88,9 +88,6 @@ namespace uicore
 		/// \param decimal_places = value
 		void set_number_of_decimal_places(int decimal_places);
 
-		/// \brief Func value changed
-		std::function<void()> &func_value_changed();
-
 	private:
 		std::shared_ptr<SpinBaseView_Impl> impl;
 	};

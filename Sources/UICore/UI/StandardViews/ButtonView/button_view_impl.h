@@ -42,9 +42,9 @@ namespace uicore
 		bool _state_hot = false;
 		bool _state_pressed = false;
 
-		std::function<void()> _func_clicked;
-
 		std::shared_ptr<LabelBaseView> label;
 		std::shared_ptr<ImageBaseView> image_view;
+
+		Signal<void()> sig_clicked;
 	};
 }

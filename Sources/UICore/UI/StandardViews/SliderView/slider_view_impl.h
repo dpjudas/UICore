@@ -61,7 +61,6 @@ namespace uicore
 		std::shared_ptr<View> track;
 		std::shared_ptr<View> thumb;
 		Pointf mouse_drag_start_pos;
-		std::function<void()> _func_value_changed;
 		TimerPtr scroll_timer = Timer::create();
 
 		int _min_position = 0;
@@ -80,9 +79,9 @@ namespace uicore
 		bool _state_hot = false;
 		bool _state_pressed = false;
 
+		Signal<void()> sig_value_changed;
+
 		void update_pos(SliderBaseView *view, int new_pos, int new_min, int new_max);
 		void update_state();
-
 	};
-
 }

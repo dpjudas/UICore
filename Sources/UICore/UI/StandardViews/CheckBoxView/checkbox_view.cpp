@@ -44,11 +44,11 @@ namespace uicore
 	{
 		impl->checkbox = this;
 
-		slots.connect(sig_pointer_press(), impl.get(), &CheckBoxBaseView_Impl::on_pointer_press);
-		slots.connect(sig_pointer_release(), impl.get(), &CheckBoxBaseView_Impl::on_pointer_release);
+		slots.connect(sig_pointer_press(), [this](PointerEvent *e) { impl->on_pointer_press(*e); });
+		slots.connect(sig_pointer_release(), [this](PointerEvent *e) { impl->on_pointer_release(*e); });
 
-		slots.connect(sig_pointer_enter(), [&](PointerEvent &e) {impl->_state_hot = true;  impl->update_state(); });
-		slots.connect(sig_pointer_leave(), [&](PointerEvent &e) {impl->_state_hot = false;  impl->update_state(); });
+		slots.connect(sig_pointer_enter(), [this](PointerEvent *e) { impl->_state_hot = true; impl->update_state(); });
+		slots.connect(sig_pointer_leave(), [this](PointerEvent *e) { impl->_state_hot = false; impl->update_state(); });
 	}
 
 	void CheckBoxBaseView::set_disabled()
@@ -87,10 +87,9 @@ namespace uicore
 		}
 	}
 
-	std::function<void()> &CheckBoxBaseView::func_state_changed()
+	Signal<void()> &CheckBoxBaseView::sig_changed()
 	{
-		return impl->_func_state_changed;
+		return impl->sig_changed;
 	}
-
 }
 

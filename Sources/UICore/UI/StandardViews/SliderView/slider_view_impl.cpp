@@ -212,9 +212,8 @@ namespace uicore
 
 		if (last_position != _position)
 		{
-			if (_func_value_changed)
-				_func_value_changed();
 			slider->set_needs_layout();
+			sig_value_changed();
 		}
 	}
 	
@@ -246,9 +245,8 @@ namespace uicore
 
 		if (last_position != _position)
 		{
-			if (_func_value_changed)
-				_func_value_changed();
 			slider->set_needs_layout();
+			sig_value_changed();
 		}
 		scroll_timer->start(100, false);
 

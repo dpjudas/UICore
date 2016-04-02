@@ -603,83 +603,14 @@ namespace uicore
 			return pos;
 	}
 
-	Signal<void(ActivationChangeEvent &)> &View::sig_activated(bool use_capture)
+	void View::dispatch_event(EventUI *e, bool no_propagation)
 	{
-		return impl->_sig_activated[use_capture ? 1 : 0];
-	}
+		EventUI simple_event;
+		if (e == nullptr)
+			e = &simple_event;
 
-	Signal<void(ActivationChangeEvent &)> &View::sig_deactivated(bool use_capture)
-	{
-		return impl->_sig_deactivated[use_capture ? 1 : 0];
-	}
+		View *target = this;
 
-	Signal<void(CloseEvent &)> &View::sig_close(bool use_capture)
-	{
-		return impl->_sig_close[use_capture ? 1 : 0];
-	}
-
-	Signal<void(ResizeEvent &)> &View::sig_resize(bool use_capture)
-	{
-		return impl->_sig_resize[use_capture ? 1 : 0];
-	}
-
-	Signal<void(FocusChangeEvent &)> &View::sig_focus_gained(bool use_capture)
-	{
-		return impl->_sig_focus_gained[use_capture ? 1 : 0];
-	}
-
-	Signal<void(FocusChangeEvent &)> &View::sig_focus_lost(bool use_capture)
-	{
-		return impl->_sig_focus_lost[use_capture ? 1 : 0];
-	}
-
-	Signal<void(PointerEvent &)> &View::sig_pointer_enter(bool use_capture)
-	{
-		return impl->_sig_pointer_enter[use_capture ? 1 : 0];
-	}
-
-	Signal<void(PointerEvent &)> &View::sig_pointer_leave(bool use_capture)
-	{
-		return impl->_sig_pointer_leave[use_capture ? 1 : 0];
-	}
-
-	Signal<void(PointerEvent &)> &View::sig_pointer_move(bool use_capture)
-	{
-		return impl->_sig_pointer_move[use_capture ? 1 : 0];
-	}
-
-	Signal<void(PointerEvent &)> &View::sig_pointer_press(bool use_capture)
-	{
-		return impl->_sig_pointer_press[use_capture ? 1 : 0];
-	}
-
-	Signal<void(PointerEvent &)> &View::sig_pointer_release(bool use_capture)
-	{
-		return impl->_sig_pointer_release[use_capture ? 1 : 0];
-	}
-
-	Signal<void(PointerEvent &)> &View::sig_pointer_double_click(bool use_capture)
-	{
-		return impl->_sig_pointer_double_click[use_capture ? 1 : 0];
-	}
-
-	Signal<void(PointerEvent &)> &View::sig_pointer_proximity_change(bool use_capture)
-	{
-		return impl->_sig_pointer_proximity_change[use_capture ? 1 : 0];
-	}
-
-	Signal<void(KeyEvent &)> &View::sig_key_press(bool use_capture)
-	{
-		return impl->_sig_key_press[use_capture ? 1 : 0];
-	}
-
-	Signal<void(KeyEvent &)> &View::sig_key_release(bool use_capture)
-	{
-		return impl->_sig_key_release[use_capture ? 1 : 0];
-	}
-
-	void View::dispatch_event(View *target, EventUI *e, bool no_propagation)
-	{
 		if (!target->view_tree())
 			return;
 
@@ -721,8 +652,14 @@ namespace uicore
 		e->_phase = EventUIPhase::none;
 	}
 
-	void View::dispatch_event(View *target, const View *until_parent_view, EventUI *e)
+	void View::dispatch_event(EventUI *e, const View *until_parent_view)
 	{
+		EventUI simple_event;
+		if (e == nullptr)
+			e = &simple_event;
+
+		View *target = this;
+
 		if (target == until_parent_view)
 			return;
 
@@ -772,6 +709,76 @@ namespace uicore
 				return view2;
 		}
 		return nullptr;
+	}
+
+	Signal<void(PointerEvent *)> &View::sig_pointer_press()
+	{
+		return impl->sig_pointer_press;
+	}
+
+	Signal<void(PointerEvent *)> &View::sig_pointer_double_click()
+	{
+		return impl->sig_pointer_double_click;
+	}
+
+	Signal<void(PointerEvent *)> &View::sig_pointer_release()
+	{
+		return impl->sig_pointer_release;
+	}
+
+	Signal<void(PointerEvent *)> &View::sig_pointer_move()
+	{
+		return impl->sig_pointer_move;
+	}
+
+	Signal<void(PointerEvent *)> &View::sig_pointer_enter()
+	{
+		return impl->sig_pointer_enter;
+	}
+
+	Signal<void(PointerEvent *)> &View::sig_pointer_leave()
+	{
+		return impl->sig_pointer_leave;
+	}
+
+	Signal<void(PointerEvent *)> &View::sig_pointer_proximity_change()
+	{
+		return impl->sig_pointer_proximity_change;
+	}
+
+	Signal<void(ActivationChangeEvent *)> &View::sig_activated()
+	{
+		return impl->sig_activated;
+	}
+
+	Signal<void(ActivationChangeEvent *)> &View::sig_deactivated()
+	{
+		return impl->sig_deactivated;
+	}
+
+	Signal<void(FocusChangeEvent *)> &View::sig_focus_gained()
+	{
+		return impl->sig_focus_gained;
+	}
+
+	Signal<void(FocusChangeEvent *)> &View::sig_focus_lost()
+	{
+		return impl->sig_focus_lost;
+	}
+
+	Signal<void(KeyEvent *)> &View::sig_key_press()
+	{
+		return impl->sig_key_press;
+	}
+
+	Signal<void(KeyEvent *)> &View::sig_key_release()
+	{
+		return impl->sig_key_release;
+	}
+
+	Signal<void(CloseEvent *)> &View::sig_close()
+	{
+		return impl->sig_close;
 	}
 
 	/////////////////////////////////////////////////////////////////////////
@@ -892,12 +899,8 @@ namespace uicore
 			style_cascade.cascade.push_back(match.first);
 	}
 
-	void ViewImpl::process_action(ViewAction *action, EventUI *e)
+	void ViewImpl::process_event_handler(ViewEventHandler *handler, EventUI *e)
 	{
-		action->any_event(e);
-		if (e->propagation_stopped())
-			return;
-
 		ActivationChangeEvent *activation_change = dynamic_cast<ActivationChangeEvent*>(e);
 		CloseEvent *close = dynamic_cast<CloseEvent*>(e);
 		ResizeEvent *resize = dynamic_cast<ResizeEvent*>(e);
@@ -909,29 +912,29 @@ namespace uicore
 		{
 			switch (activation_change->type())
 			{
-			case ActivationChangeType::activated: action->activated(*activation_change); break;
-			case ActivationChangeType::deactivated: action->deactivated(*activation_change); break;
+			case ActivationChangeType::activated: handler->activated(activation_change); break;
+			case ActivationChangeType::deactivated: handler->deactivated(activation_change); break;
 			}
 		}
 		else if (focus_change)
 		{
 			switch (focus_change->type())
 			{
-			case FocusChangeType::gained: action->focus_gained(*focus_change); break;
-			case FocusChangeType::lost: action->focus_lost(*focus_change); break;
+			case FocusChangeType::gained: handler->focus_gained(focus_change); break;
+			case FocusChangeType::lost: handler->focus_lost(focus_change); break;
 			}
 		}
 		else if (pointer)
 		{
 			switch (pointer->type())
 			{
-			case PointerEventType::enter: action->pointer_enter(*pointer); break;
-			case PointerEventType::leave: action->pointer_leave(*pointer); break;
-			case PointerEventType::move: action->pointer_move(*pointer); break;
-			case PointerEventType::press: action->pointer_press(*pointer); break;
-			case PointerEventType::release: action->pointer_release(*pointer); break;
-			case PointerEventType::double_click: action->pointer_double_click(*pointer); break;
-			case PointerEventType::promixity_change: action->pointer_proximity_change(*pointer); break;
+			case PointerEventType::enter: handler->pointer_enter(pointer); break;
+			case PointerEventType::leave: handler->pointer_leave(pointer); break;
+			case PointerEventType::move: handler->pointer_move(pointer); break;
+			case PointerEventType::press: handler->pointer_press(pointer); break;
+			case PointerEventType::release: handler->pointer_release(pointer); break;
+			case PointerEventType::double_click: handler->pointer_double_click(pointer); break;
+			case PointerEventType::promixity_change: handler->pointer_proximity_change(pointer); break;
 			case PointerEventType::none: break;
 			}
 		}
@@ -940,8 +943,8 @@ namespace uicore
 			switch (key->type())
 			{
 			case KeyEventType::none: break;
-			case KeyEventType::press: action->key_press(*key); break;
-			case KeyEventType::release: action->key_release(*key); break;
+			case KeyEventType::press: handler->key_press(key); break;
+			case KeyEventType::release: handler->key_release(key); break;
 			}
 		}
 	}
@@ -952,76 +955,24 @@ namespace uicore
 		{
 			if (_active_action)
 			{
-				process_action(_active_action, e);
+				process_event_handler(_active_action, e);
 			}
 			else
 			{
 				for (auto &action : _actions)
 				{
-					process_action(action.get(), e);
+					process_event_handler(action.get(), e);
 					if (_active_action || e->propagation_stopped())
 						break;
 				}
 			}
+
 			if (e->propagation_stopped())
 				return;
-			
 		}
 
-		ActivationChangeEvent *activation_change = dynamic_cast<ActivationChangeEvent*>(e);
-		CloseEvent *close = dynamic_cast<CloseEvent*>(e);
-		ResizeEvent *resize = dynamic_cast<ResizeEvent*>(e);
-		FocusChangeEvent *focus_change = dynamic_cast<FocusChangeEvent*>(e);
-		PointerEvent *pointer = dynamic_cast<PointerEvent*>(e);
-		KeyEvent *key = dynamic_cast<KeyEvent*>(e);
-
-		if (activation_change)
-		{
-			switch (activation_change->type())
-			{
-			case ActivationChangeType::activated: self->sig_activated(use_capture)(*activation_change); break;
-			case ActivationChangeType::deactivated: self->sig_deactivated(use_capture)(*activation_change); break;
-			}
-		}
-		else if (close)
-		{
-			self->sig_close(use_capture)(*close);
-		}
-		else if (resize)
-		{
-			self->sig_resize(use_capture)(*resize);
-		}
-		else if (focus_change)
-		{
-			switch (focus_change->type())
-			{
-			case FocusChangeType::gained: self->sig_focus_gained(use_capture)(*focus_change); break;
-			case FocusChangeType::lost: self->sig_focus_lost(use_capture)(*focus_change); break;
-			}
-		}
-		else if (pointer)
-		{
-			switch (pointer->type())
-			{
-			case PointerEventType::enter: self->sig_pointer_enter(use_capture)(*pointer); break;
-			case PointerEventType::leave: self->sig_pointer_leave(use_capture)(*pointer); break;
-			case PointerEventType::move: self->sig_pointer_move(use_capture)(*pointer); break;
-			case PointerEventType::press: self->sig_pointer_press(use_capture)(*pointer); break;
-			case PointerEventType::release: self->sig_pointer_release(use_capture)(*pointer); break;
-			case PointerEventType::double_click: self->sig_pointer_double_click(use_capture)(*pointer); break;
-			case PointerEventType::promixity_change: self->sig_pointer_proximity_change(use_capture)(*pointer); break;
-			case PointerEventType::none: break;
-			}
-		}
-		else if (key)
-		{
-			switch (key->type())
-			{
-			case KeyEventType::none: break;
-			case KeyEventType::press: self->sig_key_press(use_capture)(*key); break;
-			case KeyEventType::release: self->sig_key_release(use_capture)(*key); break;
-			}
-		}
+		if (!use_capture)
+			process_event_handler(self, e);
 	}
 
 	void ViewImpl::inverse_bubble(EventUI *e, const View *until_parent_view)

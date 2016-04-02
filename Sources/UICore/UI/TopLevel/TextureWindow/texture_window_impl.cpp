@@ -98,7 +98,7 @@ namespace uicore
 	void TextureWindow_Impl::on_window_close()
 	{
 		CloseEvent e;
-		View::dispatch_event(window_view->root_view().get(), &e);
+		window_view->root_view()->dispatch_event(&e);
 	}
 
 	void TextureWindow_Impl::window_key_event(KeyEvent &e)
@@ -106,7 +106,7 @@ namespace uicore
 		View *view = window_view->focus_view();
 		if (view)
 		{
-			View::dispatch_event(view, &e);
+			view->dispatch_event(&e);
 		}
 
 		if (!e.default_prevented() && e.type() == KeyEventType::press && e.shift_down() && e.key() == Key::tab)
@@ -128,7 +128,7 @@ namespace uicore
 			if (hot_view)
 			{
 				PointerEvent e_exit(PointerEventType::leave, PointerButton::none, e.pos(window_view->root_view()), e.alt_down(), e.shift_down(), e.ctrl_down(), e.cmd_down());
-				View::dispatch_event(hot_view.get(), common_parent, &e_exit);
+				hot_view->dispatch_event(&e_exit, common_parent);
 			}
 
 			hot_view = view;
@@ -136,7 +136,7 @@ namespace uicore
 			if (hot_view)
 			{
 				PointerEvent e_enter(PointerEventType::enter, PointerButton::none, e.pos(window_view->root_view()), e.alt_down(), e.shift_down(), e.ctrl_down(), e.cmd_down());
-				View::dispatch_event(hot_view.get(), common_parent, &e_enter);
+				hot_view->dispatch_event(&e_enter, common_parent);
 			}
 		}
 
@@ -211,9 +211,9 @@ namespace uicore
 			return;
 
 		if (view)
-			View::dispatch_event(view.get(), &e);
+			view->dispatch_event(&e);
 		else
-			View::dispatch_event(window_view->root_view().get(), &e);
+			window_view->root_view()->dispatch_event(&e);
 	}
 
 	void TextureWindow_Impl::on_key_down(const uicore::InputEvent &e)

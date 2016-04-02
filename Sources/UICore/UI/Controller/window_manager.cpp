@@ -102,6 +102,8 @@ namespace uicore
 
 		std::shared_ptr<TopLevelWindow> window;
 		std::weak_ptr<View> modal_owner;
+
+		SlotContainer slots;
 	};
 
 	/////////////////////////////////////////////////////////////////////////
@@ -126,7 +128,7 @@ namespace uicore
 		controller->impl->window->set_root_view(controller->root_view());
 
 		DisplayWindowPtr display_window = controller->impl->window->display_window();
-		controller->slots.connect(display_window->sig_window_close(), bind_member(controller.get(), &WindowController::dismiss));
+		controller->impl->slots.connect(display_window->sig_window_close(), bind_member(controller.get(), &WindowController::dismiss));
 
 		WindowManagerImpl::instance()->windows[controller.get()] = controller;
 
@@ -173,7 +175,7 @@ namespace uicore
 
 		DisplayWindowPtr controller_display_window = controller->impl->window->display_window();
 		if (controller_display_window)
-			controller->slots.connect(controller_display_window->sig_window_close(), bind_member(controller.get(), &WindowController::dismiss));
+			controller->impl->slots.connect(controller_display_window->sig_window_close(), bind_member(controller.get(), &WindowController::dismiss));
 
 		WindowManagerImpl::instance()->windows[controller.get()] = controller;
 
@@ -221,7 +223,7 @@ namespace uicore
 
 		DisplayWindowPtr owner_display_window = owner->view_tree()->display_window();
 		if (owner_display_window)
-			controller->slots.connect(owner_display_window->sig_lost_focus(), bind_member(controller.get(), &WindowController::dismiss));
+			controller->impl->slots.connect(owner_display_window->sig_lost_focus(), bind_member(controller.get(), &WindowController::dismiss));
 
 		WindowManagerImpl::instance()->windows[controller.get()] = controller;
 

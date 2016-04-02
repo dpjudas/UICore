@@ -44,11 +44,11 @@ namespace uicore
 	{
 		impl->radio = this;
 
-		slots.connect(sig_pointer_press(), impl.get(), &RadioButtonBaseView_Impl::on_pointer_press);
-		slots.connect(sig_pointer_release(), impl.get(), &RadioButtonBaseView_Impl::on_pointer_release);
+		slots.connect(sig_pointer_press(), [this](PointerEvent *e) { impl->on_pointer_press(*e); });
+		slots.connect(sig_pointer_release(), [this](PointerEvent *e) { impl->on_pointer_release(*e); });
 
-		slots.connect(sig_pointer_enter(), [&](PointerEvent &e) {impl->_state_hot = true;  impl->update_state(); });
-		slots.connect(sig_pointer_leave(), [&](PointerEvent &e) {impl->_state_hot = false;  impl->update_state(); });
+		slots.connect(sig_pointer_enter(), [&](PointerEvent *e) { impl->_state_hot = true; impl->update_state(); });
+		slots.connect(sig_pointer_leave(), [&](PointerEvent *e) { impl->_state_hot = false; impl->update_state(); });
 	}
 
 	void RadioButtonBaseView::set_disabled()
@@ -111,10 +111,9 @@ namespace uicore
 		impl->_group = str;
 	}
 
-	std::function<void()> &RadioButtonBaseView::func_selected()
+	Signal<void()> &RadioButtonBaseView::sig_selected()
 	{
-		return impl->_func_selected;
+		return impl->sig_selected;
 	}
-
 }
 

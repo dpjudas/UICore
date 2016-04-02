@@ -92,10 +92,10 @@ namespace uicore
 		void set_input_mask(const std::string &mask);
 		void set_decimal_character(const std::string &decimal_char);
 
-		Signal<void(KeyEvent &)> &sig_before_edit_changed();
-		Signal<void(KeyEvent &)> &sig_after_edit_changed();
+		Signal<void(KeyEvent *)> &sig_before_edit_changed();
+		Signal<void(KeyEvent *)> &sig_after_edit_changed();
 		Signal<void()> &sig_selection_changed();
-		Signal<void()> &sig_enter_pressed();
+		Signal<void(KeyEvent *)> &sig_enter_pressed();
 
 	protected:
 		void render_content(const CanvasPtr &canvas) override;

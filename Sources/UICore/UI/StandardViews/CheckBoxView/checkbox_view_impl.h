@@ -46,7 +46,8 @@ namespace uicore
 		bool _state_pressed = false;
 
 		bool _checked_state = false;
-		std::function<void()> _func_state_changed;
+
+		Signal<void()> sig_changed;
 	};
 }
 

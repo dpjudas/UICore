@@ -35,7 +35,6 @@
 
 namespace uicore
 {
-
 	void ButtonBaseViewImpl::update_state()
 	{
 		bool target_hot = false;
@@ -74,11 +73,8 @@ namespace uicore
 		if (_state_disabled)
 			return;
 		update_state();
-		if (_func_clicked)
-		{
-			if (button->geometry().border_box().contains(e.pos(button) + button->geometry().content_box().position()))	// Only allow click when mouse released over component
-				_func_clicked();
-		}
-	}
 
+		if (button->geometry().border_box().contains(e.pos(button) + button->geometry().content_box().position()))	// Only allow click when mouse released over component
+			sig_clicked();
+	}
 }

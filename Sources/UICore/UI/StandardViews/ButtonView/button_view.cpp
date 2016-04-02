@@ -30,6 +30,7 @@
 #include "UICore/precomp.h"
 #include "UICore/UI/StandardViews/button_view.h"
 #include "UICore/UI/StandardViews/image_view.h"
+#include "UICore/UI/Events/pointer_event.h"
 #include "button_view_impl.h"
 
 namespace uicore
@@ -49,20 +50,15 @@ namespace uicore
 		impl->label->style()->set("flex: 1 1 auto");
 		add_child(impl->label);
 
-		slots.connect(sig_pointer_press(), impl.get(), &ButtonBaseViewImpl::on_pointer_press);
-		slots.connect(sig_pointer_release(), impl.get(), &ButtonBaseViewImpl::on_pointer_release);
+		slots.connect(sig_pointer_press(), [this](PointerEvent *e) { impl->on_pointer_press(*e); });
+		slots.connect(sig_pointer_release(), [this](PointerEvent *e) { impl->on_pointer_release(*e); });
 
-		slots.connect(sig_pointer_enter(), [&](PointerEvent &e) {impl->_state_hot = true;  impl->update_state(); });
-		slots.connect(sig_pointer_leave(), [&](PointerEvent &e) {impl->_state_hot = false;  impl->update_state(); });
+		slots.connect(sig_pointer_enter(), [&](PointerEvent *e) { impl->_state_hot = true; impl->update_state(); });
+		slots.connect(sig_pointer_leave(), [&](PointerEvent *e) { impl->_state_hot = false; impl->update_state(); });
 	}
 
 	ButtonBaseView::~ButtonBaseView()
 	{
-	}
-
-	std::function<void()> &ButtonBaseView::func_clicked()
-	{
-		return impl->_func_clicked;
 	}
 
 	bool ButtonBaseView::disabled() const
@@ -113,5 +109,10 @@ namespace uicore
 
 		add_child(impl->image_view);
 		add_child(impl->label);
+	}
+
+	Signal<void()> &ButtonBaseView::sig_clicked()
+	{
+		return impl->sig_clicked;
 	}
 }

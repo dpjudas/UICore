@@ -28,7 +28,6 @@
 
 #pragma once
 
-#include "UICore/Core/Signals/signal.h"
 #include "UICore/UI/Events/key_event.h"
 #include "UICore/Display/System/timer.h"
 #include "UICore/Display/Font/font.h"
@@ -73,9 +72,11 @@ namespace uicore
 			{
 				selection_head = new_head;
 				selection_tail = new_tail;
-				sig_selection_changed();
 				if (view)
+				{
 					view->set_needs_render();
+					sig_selection_changed();
+				}
 			}
 		}
 
@@ -126,10 +127,6 @@ namespace uicore
 		std::string text;
 		std::string placeholder;
 
-		Signal<void(KeyEvent &)> sig_before_edit_changed;
-		Signal<void(KeyEvent &)> sig_after_edit_changed;
-		Signal<void()> sig_enter_pressed;
-
 		int max_length = -1;
 		bool lowercase = false;
 		bool uppercase = false;
@@ -170,6 +167,10 @@ namespace uicore
 		static const std::string numeric_mode_characters;
 
 		std::vector<Rectf> last_measured_rects;
+
+		Signal<void(KeyEvent *)> sig_before_edit_changed;
+		Signal<void(KeyEvent *)> sig_after_edit_changed;
+		Signal<void(KeyEvent *)> sig_enter_pressed;
 
 		std::string get_text_before_selection() const;
 		std::string get_selected_text() const;

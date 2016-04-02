@@ -28,7 +28,6 @@
 
 #pragma once
 
-#include "UICore/Core/Signals/signal.h"
 #include "UICore/UI/Events/key_event.h"
 #include "UICore/Display/System/timer.h"
 #include "UICore/Display/Font/font.h"
@@ -49,9 +48,11 @@ namespace uicore
 			{
 				selection_head = new_head;
 				selection_tail = new_tail;
-				sig_selection_changed();
 				if (view)
+				{
 					view->set_needs_render();
+					sig_selection_changed();
+				}
 			}
 		}
 
@@ -123,10 +124,6 @@ namespace uicore
 		std::vector<std::string> text_lines;
 		std::string placeholder;
 
-		Signal<void(KeyEvent &)> sig_before_edit_changed;
-		Signal<void(KeyEvent &)> sig_after_edit_changed;
-		Signal<void(KeyEvent &)> sig_enter_pressed;
-
 		bool readonly = false;
 		bool cursor_drawing_enabled_when_parent_focused = false;
 
@@ -157,6 +154,10 @@ namespace uicore
 		static const std::string break_characters;
 
 		std::vector<Rectf> last_measured_rects;
+
+		Signal<void(KeyEvent *)> sig_before_edit_changed;
+		Signal<void(KeyEvent *)> sig_after_edit_changed;
+		Signal<void(KeyEvent *)> sig_enter_pressed;
 
 		std::string get_all_selected_text() const;
 

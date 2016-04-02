@@ -29,7 +29,6 @@
 
 #include "UICore/precomp.h"
 #include "UICore/UI/StandardViews/listbox_view.h"
-#include "UICore/UI/StandardViews/text_field_view.h"
 #include "UICore/UI/Events/pointer_event.h"
 #include "UICore/UI/Events/key_event.h"
 #include "listbox_view_impl.h"
@@ -44,14 +43,12 @@ namespace uicore
 		if (e.key() == Key::up)
 		{
 			listbox->set_selected_item(uicore::max(selected_item - 1, 0));
-			if (func_selection_changed)
-				func_selection_changed();
+			sig_selection_changed();
 		}
 		else if (e.key() == Key::down)
 		{
 			listbox->set_selected_item(uicore::min(selected_item + 1, (int)listbox->content_view()->children().size() - 1));
-			if (func_selection_changed)
-				func_selection_changed();
+			sig_selection_changed();
 		}
 	}
 
@@ -73,8 +70,7 @@ namespace uicore
 		// Only allow click when mouse released over component
 		if (index == selected_item)
 		{
-			if (func_selection_changed)
-				func_selection_changed();
+			sig_selection_changed();
 		}
 		else
 		{

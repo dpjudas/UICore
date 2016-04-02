@@ -298,8 +298,8 @@ namespace uicore
 
 		if (last_position != pos)
 		{
-			sig_scroll();
 			scrollbar->set_needs_layout();
+			sig_scroll();
 		}
 	}
 
@@ -331,8 +331,8 @@ namespace uicore
 
 		if (last_position != pos)
 		{
-			sig_scroll();
 			scrollbar->set_needs_layout();
+			sig_scroll();
 		}
 		scroll_timer->start(300, false);
 	}

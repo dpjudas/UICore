@@ -39,31 +39,19 @@ namespace uicore
 	class CheckBoxBaseView : public View
 	{
 	public:
-
 		CheckBoxBaseView();
 
 		bool disabled() const;
 		void set_disabled();
 		void set_enabled();
 
-		/// \brief Check
-		///
-		/// \return checked state
 		bool checked() const;
-
-		/// \brief Set checked
-		///
-		/// \param enable = bool
 		void set_check(bool checked_state);
 
-		/// \brief Func state changed
-		std::function<void()> &func_state_changed();
+		Signal<void()> &sig_changed();
 
 	private:
 		std::shared_ptr<CheckBoxBaseView_Impl> impl;
 
 	};
-
 }
-
-

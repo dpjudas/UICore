@@ -28,6 +28,7 @@
 
 #pragma once
 
+#include "view_event_handler.h"
 #include <memory>
 
 namespace uicore
@@ -41,7 +42,7 @@ namespace uicore
 	class ViewActionImpl;
 
 	/// Recognizes actions in a view and captures input for the duration of the action
-	class ViewAction : public std::enable_shared_from_this<ViewAction>
+	class ViewAction : public std::enable_shared_from_this<ViewAction>, public ViewEventHandler
 	{
 	public:
 		ViewAction();
@@ -64,48 +65,6 @@ namespace uicore
 
 		/// Returns true if the action is capturing events
 		bool action_active() const;
-
-		/// Handler for any UI event
-		virtual void any_event(EventUI *e) { }
-
-		/// Handler for pointer press events
-		virtual void pointer_press(PointerEvent &e) { }
-
-		/// Handler for pointer double click events
-		virtual void pointer_double_click(PointerEvent &e) { }
-
-		/// Handler for pointer release events
-		virtual void pointer_release(PointerEvent &e) { }
-
-		/// Handler for pointer movement events
-		virtual void pointer_move(PointerEvent &e) { }
-
-		/// Handler for pointer enter events
-		virtual void pointer_enter(PointerEvent &e) { }
-
-		/// Handler for pointer leave events
-		virtual void pointer_leave(PointerEvent &e) { }
-
-		/// Handler for pointer proximity change events
-		virtual void pointer_proximity_change(PointerEvent &e) { }
-
-		/// Handler for when the application is activated
-		virtual void activated(ActivationChangeEvent &e) { }
-
-		/// Handler for when the application is deactivated
-		virtual void deactivated(ActivationChangeEvent &e) { }
-
-		/// Handler for focus gained events
-		virtual void focus_gained(FocusChangeEvent &e) { }
-
-		/// Handler for focus lost events
-		virtual void focus_lost(FocusChangeEvent &e) { }
-
-		/// Handler for key press events
-		virtual void key_press(KeyEvent &e) { }
-
-		/// Handler for key release events
-		virtual void key_release(KeyEvent &e) { }
 
 	private:
 		ViewAction(const ViewAction &) = delete;

@@ -30,6 +30,8 @@
 #include "UICore/precomp.h"
 #include "UICore/UI/StandardViews/listbox_view.h"
 #include "UICore/UI/StandardViews/label_view.h"
+#include "UICore/UI/Events/key_event.h"
+#include "UICore/UI/Events/pointer_event.h"
 #include "listbox_view_impl.h"
 
 namespace uicore
@@ -41,19 +43,13 @@ namespace uicore
 		
 		set_focus_policy(FocusPolicy::accept);
 
-		slots.connect(sig_key_press(), impl.get(), &ListBoxBaseViewImpl::on_key_press);
-		slots.connect(content_view()->sig_pointer_press(), impl.get(), &ListBoxBaseViewImpl::on_pointer_press);
-		slots.connect(content_view()->sig_pointer_release(), impl.get(), &ListBoxBaseViewImpl::on_pointer_release);
-
+		slots.connect(sig_key_press(), [this](KeyEvent *e) { impl->on_key_press(*e); });
+		slots.connect(sig_pointer_press(), [this](PointerEvent *e) { impl->on_pointer_press(*e); });
+		slots.connect(sig_pointer_release(), [this](PointerEvent *e) { impl->on_pointer_release(*e); });
 	}
 
 	ListBoxBaseView::~ListBoxBaseView()
 	{
-	}
-	
-	std::function<void()> &ListBoxBaseView::func_selection_changed()
-	{
-		return impl->func_selection_changed;
 	}
 	
 	void ListBoxBaseView::set_items(const std::vector<std::shared_ptr<View>> &items)
@@ -67,11 +63,9 @@ namespace uicore
 		for (auto &item : items)
 		{
 			content_view()->add_child(item);
-			slots.connect(item->sig_pointer_enter(), impl.get(), &ListBoxBaseViewImpl::on_pointer_enter);
-			slots.connect(item->sig_pointer_leave(), impl.get(), &ListBoxBaseViewImpl::on_pointer_leave);
-
+			slots.connect(item->sig_pointer_enter(), [this](PointerEvent *e) { impl->on_pointer_enter(*e); });
+			slots.connect(item->sig_pointer_leave(), [this](PointerEvent *e) { impl->on_pointer_leave(*e); });
 		}
-
 	}
 	
 	int ListBoxBaseView::selected_item() const
@@ -102,5 +96,10 @@ namespace uicore
 		}
 		
 		impl->selected_item = index;
+	}
+
+	Signal<void()> &ListBoxBaseView::sig_selection_changed()
+	{
+		return impl->sig_selection_changed;
 	}
 }

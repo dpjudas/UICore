@@ -33,10 +33,11 @@
 #include "../../Core/Math/easing.h"
 #include "../../Core/Signals/signal.h"
 #include "../../UI/Events/event.h"
-#include "../View/view_geometry.h"
 #include "../Style/style.h"
 #include "../Style/style_cascade.h"
 #include "../Style/style_get_value.h"
+#include "view_event_handler.h"
+#include "view_geometry.h"
 #include "focus_policy.h"
 #include <vector>
 #include <memory>
@@ -48,6 +49,7 @@ namespace uicore
 	class StyleCascade;
 	class Canvas;
 	typedef std::shared_ptr<Canvas> CanvasPtr;
+	class EventUI;
 	class ActivationChangeEvent;
 	class CloseEvent;
 	class FocusChangeEvent;
@@ -63,7 +65,7 @@ namespace uicore
 	class ViewAction;
 
 	/// View for an area of the user interface
-	class View : public std::enable_shared_from_this<View>
+	class View : public std::enable_shared_from_this<View>, public ViewEventHandler
 	{
 	public:
 		View();
@@ -83,9 +85,6 @@ namespace uicore
 
 		/// Sets the state for this view and all siblings recursively, until a manually set state of the same name is found
 		void set_state_cascade(const std::string &name, bool value);
-
-		/// Slot container helping with automatic disconnection of connected slots when the view is destroyed
-		SlotContainer slots;
 
 		/// Parent view node or nullptr if the view is the current root node
 		View *parent() const;
@@ -242,50 +241,44 @@ namespace uicore
 		/// Specify that the cursor icon is inherited from the parent view
 		void set_inherit_cursor();
 
-		/// Window activated event
-		Signal<void(ActivationChangeEvent &)> &sig_activated(bool use_capture = false);
+		Signal<void(PointerEvent *)> &sig_pointer_press();
+		Signal<void(PointerEvent *)> &sig_pointer_double_click();
+		Signal<void(PointerEvent *)> &sig_pointer_release();
+		Signal<void(PointerEvent *)> &sig_pointer_move();
+		Signal<void(PointerEvent *)> &sig_pointer_enter();
+		Signal<void(PointerEvent *)> &sig_pointer_leave();
+		Signal<void(PointerEvent *)> &sig_pointer_proximity_change();
+		Signal<void(ActivationChangeEvent *)> &sig_activated();
+		Signal<void(ActivationChangeEvent *)> &sig_deactivated();
+		Signal<void(FocusChangeEvent *)> &sig_focus_gained();
+		Signal<void(FocusChangeEvent *)> &sig_focus_lost();
+		Signal<void(KeyEvent *)> &sig_key_press();
+		Signal<void(KeyEvent *)> &sig_key_release();
+		Signal<void(CloseEvent *)> &sig_close();
 
-		/// Window deactivated event
-		Signal<void(ActivationChangeEvent &)> &sig_deactivated(bool use_capture = false);
+		void pointer_press(PointerEvent *e) override { sig_pointer_press()(e); }
+		void pointer_double_click(PointerEvent *e) override { sig_pointer_double_click()(e); }
+		void pointer_release(PointerEvent *e) override { sig_pointer_release()(e); }
+		void pointer_move(PointerEvent *e) override { sig_pointer_move()(e); }
+		void pointer_enter(PointerEvent *e) override { sig_pointer_enter()(e); }
+		void pointer_leave(PointerEvent *e) override { sig_pointer_leave()(e); }
+		void pointer_proximity_change(PointerEvent *e) override { sig_pointer_proximity_change()(e); }
+		void activated(ActivationChangeEvent *e) override { sig_activated()(e); }
+		void deactivated(ActivationChangeEvent *e) override { sig_deactivated()(e); }
+		void focus_gained(FocusChangeEvent *e) override { sig_focus_gained()(e); }
+		void focus_lost(FocusChangeEvent *e) override { sig_focus_lost()(e); }
+		void key_press(KeyEvent *e) override { sig_key_press()(e); }
+		void key_release(KeyEvent *e) override { sig_key_release()(e); }
+		void close(CloseEvent *e) override { sig_close()(e); }
 
-		/// Window close button clicked event
-		Signal<void(CloseEvent &)> &sig_close(bool use_capture = false);
+		/// Dispatch view event
+		///
+		/// \param until_parent_view = Dispatch until current target is this view, then propagation stops 
+		void dispatch_event(EventUI *e, bool no_propagation = false);
+		void dispatch_event(EventUI *e, const View *until_parent_view);
 
-		/// Window resize event
-		Signal<void(ResizeEvent &)> &sig_resize(bool use_capture = false);
-
-		/// View gained focus event
-		Signal<void(FocusChangeEvent &)> &sig_focus_gained(bool use_capture = false);
-
-		/// View lost focus event
-		Signal<void(FocusChangeEvent &)> &sig_focus_lost(bool use_capture = false);
-
-		/// Pointer entering view geometry event
-		Signal<void(PointerEvent &)> &sig_pointer_enter(bool use_capture = false);
-
-		/// Pointer leaving view geometry event
-		Signal<void(PointerEvent &)> &sig_pointer_leave(bool use_capture = false);
-
-		/// Pointer moved above view event
-		Signal<void(PointerEvent &)> &sig_pointer_move(bool use_capture = false);
-
-		/// Pointer button pressed event
-		Signal<void(PointerEvent &)> &sig_pointer_press(bool use_capture = false);
-
-		/// Pointer button released event
-		Signal<void(PointerEvent &)> &sig_pointer_release(bool use_capture = false);
-
-		/// Pointer button double clicked event
-		Signal<void(PointerEvent &)> &sig_pointer_double_click(bool use_capture = false);
-
-		/// Pointer proximity change event
-		Signal<void(PointerEvent &)> &sig_pointer_proximity_change(bool use_capture = false);
-
-		/// Key pressed event
-		Signal<void(KeyEvent &)> &sig_key_press(bool use_capture = false);
-
-		/// Key released event
-		Signal<void(KeyEvent &)> &sig_key_release(bool use_capture = false);
+		/// Find the common parent view for the specified views
+		static View *common_parent(View *view1, View *view2);
 
 		/// Update window cursor to the cursor used by this view
 		void update_cursor(const DisplayWindowPtr &window);
@@ -302,15 +295,8 @@ namespace uicore
 		/// Map from root content to local content coordinates
 		Pointf from_root_pos(const Pointf &pos);
 
-		/// Dispatch event to signals listening for events
-		static void dispatch_event(View *target, EventUI *e, bool no_propagation = false);
-
-		/// Dispatch event to signals listening for events
-		///
-		/// \param until_parent_view = Dispatch until current target is this view, then propagation stops 
-		static void dispatch_event(View *target, const View *until_parent_view, EventUI *e);
-
-		static View *common_parent(View *view1, View *view2);
+		/// Slot container helping with automatic disconnection of connected slots when the view is destroyed
+		SlotContainer slots;
 
 	protected:
 		/// Renders the content of a view

@@ -75,8 +75,7 @@ namespace uicore
 		/// \brief Set group name
 		void set_group_name(const std::string &str);
 
-		/// \brief Func selected
-		std::function<void()> &func_selected();
+		Signal<void()> &sig_selected();
 
 	private:
 		std::shared_ptr<RadioButtonBaseView_Impl> impl;
