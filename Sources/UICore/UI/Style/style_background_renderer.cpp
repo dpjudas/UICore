@@ -53,7 +53,7 @@ namespace uicore
 		int num_layers = style.array_size("background-image");
 
 		StyleGetValue bg_color = style.computed_value("background-color");
-		if (bg_color.is_color() && bg_color.color().a != 0.0f)
+		if (bg_color.is_color() && bg_color.color().w != 0.0f)
 		{
 			auto border_points = get_border_points();
 
@@ -305,7 +305,7 @@ namespace uicore
 		if (style_top.is_keyword("solid"))
 		{
 			Colorf color = style.computed_value("border-top-color").color();
-			if (color.a > 0.0f)
+			if (color.w > 0.0f)
 			{
 				auto border_points = get_border_points();
 				auto padding_points = get_padding_points(border_points);
@@ -765,7 +765,7 @@ namespace uicore
 				continue;
 
 			auto layer_color = style.computed_value("box-shadow-color[" + Text::to_string(index) + "]");
-			if (layer_color.color().a <= 0.0f)
+			if (layer_color.color().w <= 0.0f)
 				continue;
 
 			auto layer_offset_x = style.computed_value("box-shadow-horizontal-offset[" + Text::to_string(index) + "]");
@@ -779,7 +779,7 @@ namespace uicore
 			Pointf shadow_offset(layer_offset_x.number(), layer_offset_y.number());
 			Colorf shadow_color = layer_color.color();
 			Colorf transparent = shadow_color;
-			transparent.a = 0.0f;
+			transparent.w = 0.0f;
 
 			float kappa = 0.552228474f;
 
@@ -943,9 +943,9 @@ namespace uicore
 			float t = step / shadow_blur_radius;
 			float a = (1.0f - t) * (1.0f - t);
 			float final_t = start_t + t * (1.0f - start_t);
-			stops.push_back(BrushGradientStop(Colorf(shadow_color.r, shadow_color.g, shadow_color.b, shadow_color.a * a), final_t));
+			stops.push_back(BrushGradientStop(Colorf(shadow_color.x, shadow_color.y, shadow_color.z, shadow_color.w * a), final_t));
 		}
-		stops.push_back(BrushGradientStop(Colorf(shadow_color.r, shadow_color.g, shadow_color.b, 0.0f), 1.0f));
+		stops.push_back(BrushGradientStop(Colorf(shadow_color.x, shadow_color.y, shadow_color.z, 0.0f), 1.0f));
 		return stops;
 	}
 
@@ -977,18 +977,18 @@ namespace uicore
 	Colorf StyleBackgroundRenderer::get_light_color(const StyleGetValue &border_color) const
 	{
 		Colorf light = border_color.color();
-		light.r = min(1.0f, light.r * 1.2f);
-		light.g = min(1.0f, light.g * 1.2f);
-		light.b = min(1.0f, light.b * 1.2f);
+		light.x = min(1.0f, light.x * 1.2f);
+		light.y = min(1.0f, light.y * 1.2f);
+		light.z = min(1.0f, light.z * 1.2f);
 		return light;
 	}
 
 	Colorf StyleBackgroundRenderer::get_dark_color(const StyleGetValue &border_color) const
 	{
 		Colorf dark = border_color.color();
-		dark.r *= 0.8f;
-		dark.g *= 0.8f;
-		dark.b *= 0.8f;
+		dark.x *= 0.8f;
+		dark.y *= 0.8f;
+		dark.z *= 0.8f;
 		return dark;
 	}
 }

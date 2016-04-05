@@ -656,7 +656,7 @@ namespace uicore
 		for (unsigned int cnt = 0; cnt < num_stops; cnt++)
 		{
 			auto &color = brush.stops[cnt].color;
-			buffer[position++] = Vec4f(color.r * color.a, color.g * color.a, color.b * color.a, color.a);
+			buffer[position++] = Vec4f(color.x * color.w, color.y * color.w, color.z * color.w, color.w);
 			buffer[position++] = Vec4f(brush.stops[cnt].position, 0.0f, 0.0f, 0.0f);
 		}
 		return instance_position;
@@ -689,7 +689,7 @@ namespace uicore
 		for (unsigned int cnt = 0; cnt < num_stops; cnt++)
 		{
 			auto &color = brush.stops[cnt].color;
-			buffer[position++] = Vec4f(color.r * color.a, color.g * color.a, color.b * color.a, color.a);
+			buffer[position++] = Vec4f(color.x * color.w, color.y * color.w, color.z * color.w, color.w);
 			buffer[position++] = Vec4f(brush.stops[cnt].position, 0.0f, 0.0f, 0.0f);
 		}
 		return instance_position;
@@ -746,9 +746,9 @@ namespace uicore
 		Vec4f brush_data2;
 		brush_data1.x = (float)PathShaderDrawMode::solid;
 		brush_data2 = brush.color;
-		brush_data2.r *= brush_data2.a;
-		brush_data2.g *= brush_data2.a;
-		brush_data2.b *= brush_data2.a;
+		brush_data2.x *= brush_data2.w;
+		brush_data2.y *= brush_data2.w;
+		brush_data2.z *= brush_data2.w;
 		buffer[position++] = brush_data1;
 		buffer[position++] = brush_data2;
 		return instance_position;

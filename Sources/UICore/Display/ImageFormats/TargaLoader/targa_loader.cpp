@@ -156,10 +156,10 @@ namespace uicore
 				unsigned int *colormap = reinterpret_cast<unsigned int*>(colormap_data->data());
 				for (int i = 0; i < colormap_length; i++)
 				{
-					palette[i].a = (num_alpha_bits != 0) ? ((colormap[i] >> 24) & 0xff) : 255;
-					palette[i].r = (colormap[i] >> 16) & 0xff;
-					palette[i].g = (colormap[i] >> 8) & 0xff;
-					palette[i].b = colormap[i] & 0xff;
+					palette[i].w = (num_alpha_bits != 0) ? ((colormap[i] >> 24) & 0xff) : 255;
+					palette[i].x = (colormap[i] >> 16) & 0xff;
+					palette[i].y = (colormap[i] >> 8) & 0xff;
+					palette[i].z = colormap[i] & 0xff;
 				}
 			}
 			else if (colormap_entry_size == 24)
@@ -167,10 +167,10 @@ namespace uicore
 				unsigned char *colormap = reinterpret_cast<unsigned char*>(colormap_data->data());
 				for (int i = 0; i < colormap_length; i++)
 				{
-					palette[i].b = colormap[i * 3];
-					palette[i].g = colormap[(i + 1) * 3];
-					palette[i].r = colormap[(i + 2) * 3];
-					palette[i].a = 255;
+					palette[i].z = colormap[i * 3];
+					palette[i].y = colormap[(i + 1) * 3];
+					palette[i].x = colormap[(i + 2) * 3];
+					palette[i].w = 255;
 				}
 			}
 			else if (colormap_entry_size == 16) // 5,5,5,1
@@ -179,10 +179,10 @@ namespace uicore
 				for (int i = 0; i < colormap_length; i++)
 				{
 					int alpha_bit = (num_alpha_bits != 0) ? ((colormap[i] >> 15) & 0x1) : 1;
-					palette[i].a = alpha_bit ? 255 : 1;
-					palette[i].r = ((colormap[i] >> 10) & 0x1f) << 3;
-					palette[i].g = ((colormap[i] >> 5) & 0x1f) << 3;
-					palette[i].b = (colormap[i] & 0x1f) << 3;
+					palette[i].w = alpha_bit ? 255 : 1;
+					palette[i].x = ((colormap[i] >> 10) & 0x1f) << 3;
+					palette[i].y = ((colormap[i] >> 5) & 0x1f) << 3;
+					palette[i].z = (colormap[i] & 0x1f) << 3;
 				}
 			}
 			else

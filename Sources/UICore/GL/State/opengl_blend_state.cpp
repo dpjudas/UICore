@@ -122,7 +122,7 @@ namespace uicore
 		{
 			changed_blend_color = false;
 			if (glBlendColor)
-				glBlendColor(blend_color.r, blend_color.g, blend_color.b, blend_color.a);
+				glBlendColor(blend_color.x, blend_color.y, blend_color.z, blend_color.w);
 		}
 	}
 }

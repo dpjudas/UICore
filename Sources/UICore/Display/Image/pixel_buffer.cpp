@@ -569,12 +569,12 @@ namespace uicore
 				for (int x = 0; x < w; x++)
 				{
 					const float rcp_255 = 1.0f / 255.0f;
-					float red = std::pow(pixels[x].r * rcp_255, gamma);
-					float green = std::pow(pixels[x].g * rcp_255, gamma);
-					float blue = std::pow(pixels[x].b * rcp_255, gamma);
-					pixels[x].r = static_cast<unsigned short>(clamp(red * 255.0f + 0.5f, 0.0f, 255.0f));
-					pixels[x].g = static_cast<unsigned short>(clamp(green * 255.0f + 0.5f, 0.0f, 255.0f));
-					pixels[x].b = static_cast<unsigned short>(clamp(blue * 255.0f + 0.5f, 0.0f, 255.0f));
+					float red = std::pow(pixels[x].x * rcp_255, gamma);
+					float green = std::pow(pixels[x].y * rcp_255, gamma);
+					float blue = std::pow(pixels[x].z * rcp_255, gamma);
+					pixels[x].x = static_cast<unsigned short>(clamp(red * 255.0f + 0.5f, 0.0f, 255.0f));
+					pixels[x].y = static_cast<unsigned short>(clamp(green * 255.0f + 0.5f, 0.0f, 255.0f));
+					pixels[x].z = static_cast<unsigned short>(clamp(blue * 255.0f + 0.5f, 0.0f, 255.0f));
 				}
 			}
 		}
@@ -588,12 +588,12 @@ namespace uicore
 				for (int x = 0; x < w; x++)
 				{
 					const float rcp_65535 = 1.0f / 65535.0f;
-					float red = std::pow(pixels[x].r * rcp_65535, gamma);
-					float green = std::pow(pixels[x].g * rcp_65535, gamma);
-					float blue = std::pow(pixels[x].b * rcp_65535, gamma);
-					pixels[x].r = static_cast<unsigned short>(clamp(red * 65535.0f + 0.5f, 0.0f, 65535.0f));
-					pixels[x].g = static_cast<unsigned short>(clamp(green * 65535.0f + 0.5f, 0.0f, 65535.0f));
-					pixels[x].b = static_cast<unsigned short>(clamp(blue * 65535.0f + 0.5f, 0.0f, 65535.0f));
+					float red = std::pow(pixels[x].x * rcp_65535, gamma);
+					float green = std::pow(pixels[x].y * rcp_65535, gamma);
+					float blue = std::pow(pixels[x].z * rcp_65535, gamma);
+					pixels[x].x = static_cast<unsigned short>(clamp(red * 65535.0f + 0.5f, 0.0f, 65535.0f));
+					pixels[x].y = static_cast<unsigned short>(clamp(green * 65535.0f + 0.5f, 0.0f, 65535.0f));
+					pixels[x].z = static_cast<unsigned short>(clamp(blue * 65535.0f + 0.5f, 0.0f, 65535.0f));
 				}
 			}
 		}
@@ -607,9 +607,9 @@ namespace uicore
 				for (int x = 0; x < w; x++)
 				{
 					Vec4f v = pixels[x].to_float();
-					v.r = std::pow(v.r, gamma);
-					v.g = std::pow(v.g, gamma);
-					v.b = std::pow(v.b, gamma);
+					v.x = std::pow(v.x, gamma);
+					v.y = std::pow(v.y, gamma);
+					v.z = std::pow(v.z, gamma);
 					pixels[x] = Vec4hf(v);
 				}
 			}
@@ -623,9 +623,9 @@ namespace uicore
 				Vec4f *pixels = line<Vec4f>(y);
 				for (int x = 0; x < w; x++)
 				{
-					pixels[x].r = std::pow(pixels[x].r, gamma);
-					pixels[x].g = std::pow(pixels[x].g, gamma);
-					pixels[x].b = std::pow(pixels[x].b, gamma);
+					pixels[x].x = std::pow(pixels[x].x, gamma);
+					pixels[x].y = std::pow(pixels[x].y, gamma);
+					pixels[x].z = std::pow(pixels[x].z, gamma);
 				}
 			}
 		}

@@ -73,10 +73,10 @@ namespace uicore
 		{
 			return string_format(
 				"rgba(%1,%2,%3,%4)",
-				clamp((int)std::round(c.r * 255), 0, 255),
-				clamp((int)std::round(c.g * 255), 0, 255),
-				clamp((int)std::round(c.b * 255), 0, 255),
-				c.a);
+				clamp((int)std::round(c.x * 255), 0, 255),
+				clamp((int)std::round(c.y * 255), 0, 255),
+				clamp((int)std::round(c.z * 255), 0, 255),
+				c.w);
 		}
 
 	private:

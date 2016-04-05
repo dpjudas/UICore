@@ -168,7 +168,7 @@ namespace uicore
 		static StyleGetValue from_url(const char *url) { StyleGetValue v; v._type = StyleValueType::url; v._value.text = url; return v; }
 
 		/// Create style value from a color
-		static StyleGetValue from_color(const Colorf &color) { StyleGetValue v; v._type = StyleValueType::color; v._value.color[0] = color.r; v._value.color[1] = color.g; v._value.color[2] = color.b; v._value.color[3] = color.a; return v; }
+		static StyleGetValue from_color(const Colorf &color) { StyleGetValue v; v._type = StyleValueType::color; v._value.color[0] = color.x; v._value.color[1] = color.y; v._value.color[2] = color.z; v._value.color[3] = color.w; return v; }
 
 	private:
 		StyleValueType _type = StyleValueType::undefined;

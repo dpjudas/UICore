@@ -74,8 +74,8 @@ namespace uicore
 	public:
 		typedef Type datatype;
 
-		union { Type x; Type s; Type r; };
-		union { Type y; Type t; Type g; };
+		Type x;
+		Type y;
 
 		Vec2() : x(0), y(0) { }
 		explicit Vec2(const Type &scalar) : x(scalar), y(scalar) { }

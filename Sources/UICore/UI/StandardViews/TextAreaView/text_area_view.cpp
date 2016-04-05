@@ -301,9 +301,9 @@ namespace uicore
 
 		if (impl->text_lines.size() == 1 && impl->text_lines.front().empty())
 		{
-			color.r = color.r * 0.5f + 0.5f;
-			color.g = color.g * 0.5f + 0.5f;
-			color.b = color.b * 0.5f + 0.5f;
+			color.x = color.x * 0.5f + 0.5f;
+			color.y = color.y * 0.5f + 0.5f;
+			color.z = color.z * 0.5f + 0.5f;
 			font->draw_text(canvas, 0.0f, baseline, impl->placeholder, color);
 		}
 	}

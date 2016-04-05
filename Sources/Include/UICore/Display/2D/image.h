@@ -101,7 +101,7 @@ namespace uicore
 
 		/// \brief Sets the color.
 		virtual void set_color(const Colorf &color) = 0;
-		void set_color(const Color& c) { Colorf color; color.r = c.get_red() / 255.0f; color.g = c.get_green() / 255.0f; color.b = c.get_blue() / 255.0f; color.a = c.get_alpha() / 255.0f; set_color(color); }
+		void set_color(const Color& c) { Colorf color; color.x = c.get_red() / 255.0f; color.y = c.get_green() / 255.0f; color.z = c.get_blue() / 255.0f; color.w = c.get_alpha() / 255.0f; set_color(color); }
 
 		/// \brief Sets translation hotspot.
 		virtual void set_alignment(Origin origin, float x = 0, float y = 0) = 0;

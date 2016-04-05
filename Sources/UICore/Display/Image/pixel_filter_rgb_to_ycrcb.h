@@ -44,10 +44,10 @@ namespace uicore
 		{
 			for (int i = 0; i < num_pixels; i++)
 			{
-				float y = (0.299f * pixels[i].r) + (0.587f * pixels[i].g) + (0.114f * pixels[i].b);
-				float cb = 0.5f - (0.168736f * pixels[i].r) - (0.331264f * pixels[i].g) + (0.5f * pixels[i].b);
-				float cr = 0.5f + (0.5f * pixels[i].r) - (0.418688f * pixels[i].g) - (0.081312f * pixels[i].b);
-				pixels[i] = Vec4f(y, cr, cb, pixels[i].a);
+				float y = (0.299f * pixels[i].x) + (0.587f * pixels[i].y) + (0.114f * pixels[i].z);
+				float cb = 0.5f - (0.168736f * pixels[i].x) - (0.331264f * pixels[i].y) + (0.5f * pixels[i].z);
+				float cr = 0.5f + (0.5f * pixels[i].x) - (0.418688f * pixels[i].y) - (0.081312f * pixels[i].z);
+				pixels[i] = Vec4f(y, cr, cb, pixels[i].w);
 			}
 		}
 	};
@@ -63,7 +63,7 @@ namespace uicore
 				float r = pixels[i].x + 1.402f * (pixels[i].y - 0.5f);
 				float g = pixels[i].x - 0.34414f * (pixels[i].z - 0.5f) - 0.71414f * (pixels[i].y - 0.5f);
 				float b = pixels[i].x + 1.772f * (pixels[i].z - 0.5f);
-				pixels[i] = Vec4f(r, g, b, pixels[i].a);
+				pixels[i] = Vec4f(r, g, b, pixels[i].w);
 			}
 		}
 	};
@@ -108,10 +108,10 @@ namespace uicore
 
 			for (int i = sse_length; i < num_pixels; i++)
 			{
-				float y = (0.299f * pixels[i].r) + (0.587f * pixels[i].g) + (0.114f * pixels[i].b);
-				float cb = 0.5f - (0.168736f * pixels[i].r) - (0.331264f * pixels[i].g) + (0.5f * pixels[i].b);
-				float cr = 0.5f + (0.5f * pixels[i].r) - (0.418688f * pixels[i].g) - (0.081312f * pixels[i].b);
-				pixels[i] = Vec4f(y, cr, cb, pixels[i].a);
+				float y = (0.299f * pixels[i].x) + (0.587f * pixels[i].y) + (0.114f * pixels[i].z);
+				float cb = 0.5f - (0.168736f * pixels[i].x) - (0.331264f * pixels[i].y) + (0.5f * pixels[i].z);
+				float cr = 0.5f + (0.5f * pixels[i].x) - (0.418688f * pixels[i].y) - (0.081312f * pixels[i].z);
+				pixels[i] = Vec4f(y, cr, cb, pixels[i].w);
 			}
 		}
 	};
@@ -155,7 +155,7 @@ namespace uicore
 				float r = pixels[i].x + 1.402f * (pixels[i].y - 0.5f);
 				float g = pixels[i].x - 0.34414f * (pixels[i].z - 0.5f) - 0.71414f * (pixels[i].y - 0.5f);
 				float b = pixels[i].x + 1.772f * (pixels[i].z - 0.5f);
-				pixels[i] = Vec4f(r, g, b, pixels[i].a);
+				pixels[i] = Vec4f(r, g, b, pixels[i].w);
 			}
 		}
 	};

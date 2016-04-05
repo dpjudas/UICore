@@ -186,7 +186,7 @@ namespace uicore
 
 				unsigned char *alpha_entries = reinterpret_cast<unsigned char*>(trns->data());
 				for (int i = 0; i < num_alpha_entries; i++)
-					palette[i].a = alpha_entries[i];
+					palette[i].w = alpha_entries[i];
 			}
 		}
 	}
@@ -479,7 +479,7 @@ namespace uicore
 				{
 					int shift = i % 8;
 					unsigned char value = (input[i / 8] >> shift) & 1;
-					unsigned char alpha = (value != colorkey.r) ? 255 : 0;
+					unsigned char alpha = (value != colorkey.x) ? 255 : 0;
 					value = static_cast<int>(value)* 255;
 					scanline_4ub[i] = Vec4ub(value, value, value, alpha);
 				}
@@ -503,7 +503,7 @@ namespace uicore
 				{
 					int shift = (i % 4) * 2;
 					unsigned char value = (input[i / 4] >> shift) & 3;
-					unsigned char alpha = (value != colorkey.r) ? 255 : 0;
+					unsigned char alpha = (value != colorkey.x) ? 255 : 0;
 					value = (static_cast<int>(value)* 255 + 1) / 2;
 					scanline_4ub[i] = Vec4ub(value, value, value, alpha);
 				}
@@ -527,7 +527,7 @@ namespace uicore
 				{
 					int shift = (i % 2) * 4;
 					unsigned char value = (input[i / 4] >> shift) & 15;
-					unsigned char alpha = (value != colorkey.r) ? 255 : 0;
+					unsigned char alpha = (value != colorkey.x) ? 255 : 0;
 					value = (static_cast<int>(value)* 255 + 8) / 16;
 					scanline_4ub[i] = Vec4ub(value, value, value, alpha);
 				}
@@ -548,7 +548,7 @@ namespace uicore
 				for (int i = 0; i < count; i++)
 				{
 					unsigned char value = input[i];
-					unsigned char alpha = (value != colorkey.r) ? 255 : 0;
+					unsigned char alpha = (value != colorkey.x) ? 255 : 0;
 					scanline_4ub[i] = Vec4ub(value, value, value, alpha);
 				}
 			}
@@ -584,7 +584,7 @@ namespace uicore
 				unsigned char green = input[i * 3 + 1];
 				unsigned char blue = input[i * 3 + 2];
 				unsigned char alpha = 255;
-				if (red == colorkey.r && green == colorkey.g && blue == colorkey.b)
+				if (red == colorkey.x && green == colorkey.y && blue == colorkey.z)
 					alpha = 0;
 				scanline_4ub[i] = Vec4ub(red, green, blue, alpha);
 			}
@@ -684,7 +684,7 @@ namespace uicore
 			for (int i = 0; i < count; i++)
 			{
 				unsigned short value = from_network_order(input[i]);
-				unsigned short alpha = (value != colorkey.r) ? 65535 : 0;
+				unsigned short alpha = (value != colorkey.x) ? 65535 : 0;
 				scanline_4us[i] = Vec4us(value, value, value, alpha);
 			}
 		}
@@ -714,7 +714,7 @@ namespace uicore
 				unsigned short green = from_network_order(input[i * 3 + 1]);
 				unsigned short blue = from_network_order(input[i * 3 + 2]);
 				unsigned short alpha = 65535;
-				if (red == colorkey.r && green == colorkey.g && blue == colorkey.b)
+				if (red == colorkey.x && green == colorkey.y && blue == colorkey.z)
 					alpha = 0;
 				scanline_4us[i] = Vec4us(red, green, blue, alpha);
 			}

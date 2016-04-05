@@ -68,53 +68,53 @@ namespace uicore
 		Color(const std::string &hexstr);
 
 		/// \brief Returns the alpha color component, in the range 0-255.
-		unsigned char get_alpha() const { return a; }
+		unsigned char get_alpha() const { return w; }
 
 		/// \brief Returns the red color component, in the range 0-255.
-		unsigned char get_red() const { return r; }
+		unsigned char get_red() const { return x; }
 
 		/// \brief Returns the green color component, in the range 0-255.
-		unsigned char get_green() const { return g; }
+		unsigned char get_green() const { return y; }
 
 		/// \brief Returns the blue color component, in the range 0-255.
-		unsigned char get_blue() const { return b; }
+		unsigned char get_blue() const { return z; }
 
 		/// \brief Returns the alpha color component, in the range 0-1.
-		float get_alpha_f() const { return float(a) / 255.0f; }
+		float get_alpha_f() const { return float(w) / 255.0f; }
 
 		/// \brief Returns the red color component, in the range 0-1.
-		float get_red_f() const { return float(r) / 255.0f; }
+		float get_red_f() const { return float(x) / 255.0f; }
 
 		/// \brief Returns the green color component, in the range 0-1.
-		float get_green_f() const { return float(g) / 255.0f; }
+		float get_green_f() const { return float(y) / 255.0f; }
 
 		/// \brief Returns the blue color component, in the range 0-1.
-		float get_blue_f() const { return float(b) / 255.0f; }
+		float get_blue_f() const { return float(z) / 255.0f; }
 
 		/// \brief Returns the color in ARGB8888 format.
-		unsigned int get_argb8() const { return (((unsigned int)a) << 24) | (((unsigned int)r) << 16) | (((unsigned int)g) << 8) | (unsigned int)b; }
+		unsigned int get_argb8() const { return (((unsigned int)w) << 24) | (((unsigned int)x) << 16) | (((unsigned int)y) << 8) | (unsigned int)z; }
 
 		/// \brief Returns the color in ABGR8888 format.
-		unsigned int get_abgr8() const { return (((unsigned int)a) << 24) | (((unsigned int)b) << 16) | (((unsigned int)g) << 8) | (unsigned int)r; }
+		unsigned int get_abgr8() const { return (((unsigned int)w) << 24) | (((unsigned int)z) << 16) | (((unsigned int)y) << 8) | (unsigned int)x; }
 
 		/// \brief Returns the color in RGBA8888 format.
-		unsigned int get_rgba8() const { return (((unsigned int)r) << 24) | (((unsigned int)g) << 16) | (((unsigned int)b) << 8) | (unsigned int)a; }
+		unsigned int get_rgba8() const { return (((unsigned int)x) << 24) | (((unsigned int)y) << 16) | (((unsigned int)z) << 8) | (unsigned int)w; }
 
 		/// \brief Returns the color in BGRA8888 format.
-		unsigned int get_bgra8() const { return (((unsigned int)b) << 24) | (((unsigned int)g) << 16) | (((unsigned int)r) << 8) | (unsigned int)a; }
+		unsigned int get_bgra8() const { return (((unsigned int)z) << 24) | (((unsigned int)y) << 16) | (((unsigned int)x) << 8) | (unsigned int)w; }
 
 	// Operations:
 	public:
 		/// \brief Color == Color operator (deep compare)
 		bool operator==(const Color &c) const
 		{
-			return (r == c.r) && (g == c.g) && (b == c.b) && (a == c.a);
+			return (x == c.x) && (y == c.y) && (z == c.z) && (w == c.w);
 		}
 
 		/// \brief Color != Color operator (deep compare)
 		bool operator!=(const Color &c) const
 		{
-			return (r != c.r) || (g != c.g) || (b != c.b) || (a != c.a);
+			return (x != c.x) || (y != c.y) || (z != c.z) || (w != c.w);
 		}
 
 		/// \brief <img src="../../img/colors/aliceblue-chip.png" width=16 height=16 > rgb(240, 248, 255).
@@ -572,32 +572,37 @@ namespace uicore
 		static Color gray90;
 
 		/// \brief Set alpha color component, in the range 0-255.
-		void set_alpha(unsigned char value) { a = value; }
+		void set_alpha(unsigned char value) { w = value; }
 
 		/// \brief Set red color component, in the range 0-255.
-		void set_red(unsigned char value) {  r = value; }
+		void set_red(unsigned char value) {  x = value; }
 
 		/// \brief Set green color component, in the range 0-255.
-		void set_green(unsigned char value) { g = value; }
+		void set_green(unsigned char value) { y = value; }
 
 		/// \brief Set blue color component, in the range 0-255.
-		void set_blue(unsigned char value) { b = value; }
+		void set_blue(unsigned char value) { z = value; }
 
 		/// \brief Set alpha color component, in the range 0-1.
-		void set_alpha_f(float value) { a = (unsigned char) (value*255.0f); }
+		void set_alpha_f(float value) { w = (unsigned char) (value*255.0f); }
 
 		/// \brief Set red color component, in the range 0-1.
-		void set_red_f(float value) { r = (unsigned char) (value*255.0f); }
+		void set_red_f(float value) { x = (unsigned char) (value*255.0f); }
 
 		/// \brief Set green color component, in the range 0-1.
-		void set_green_f(float value) { g = (unsigned char) (value*255.0f); }
+		void set_green_f(float value) { y = (unsigned char) (value*255.0f); }
 
 		/// \brief Set blue color component, in the range 0-1.
-		void set_blue_f(float value) { b = (unsigned char) (value*255.0f); }
+		void set_blue_f(float value) { z = (unsigned char) (value*255.0f); }
 
 		/// \brief Set color based on rgba color components in the range 0-255.
 		void set_color(unsigned char new_red, unsigned char new_green, unsigned char new_blue, unsigned char new_alpha = 255)
-		{ r = new_red; g = new_green; b = new_blue;  a = new_alpha; }
+		{
+			x = new_red;
+			y = new_green;
+			z = new_blue;
+			w = new_alpha;
+		}
 
 		/// \brief Set color based on rgba color components
 		void set_rgba8(unsigned int color);
@@ -614,10 +619,10 @@ namespace uicore
 		/// \brief Set color based on rgba color components in the range 0-1.
 		void set_colorf(float new_red, float new_green, float new_blue, float new_alpha = 1.0f)
 		{
-			r = (unsigned char) (new_red * 255.0f);
-			g = (unsigned char) (new_green * 255.0f);
-			b = (unsigned char) (new_blue * 255.0f);
-			a = (unsigned char) (new_alpha * 255.0f);
+			x = (unsigned char) (new_red * 255.0f);
+			y = (unsigned char) (new_green * 255.0f);
+			z = (unsigned char) (new_blue * 255.0f);
+			w = (unsigned char) (new_alpha * 255.0f);
 		}
 	};
 
@@ -705,54 +710,54 @@ namespace uicore
 		/// \brief Get Red
 		///
 		/// \return red
-		float get_red() const { return r; }
+		float get_red() const { return x; }
 
 		/// \brief Get Green
 		///
 		/// \return green
-		float get_green() const { return g; }
+		float get_green() const { return y; }
 
 		/// \brief Get Blue
 		///
 		/// \return blue
-		float get_blue() const { return b; }
+		float get_blue() const { return z; }
 
 		/// \brief Get Alpha
 		///
 		/// \return alpha
-		float get_alpha() const { return a; }
+		float get_alpha() const { return w; }
 
 		/// \brief Normalize the color by ensuring that all color values lie inbetween (0.0, 1.0)
 		void normalize()
 		{
-			r = (r < 0.0f) ? 0.0f : ((r > 1.0f) ? 1.0f : r);
-			g = (g < 0.0f) ? 0.0f : ((g > 1.0f) ? 1.0f : g);
-			b = (b < 0.0f) ? 0.0f : ((b > 1.0f) ? 1.0f : b);
-			a = (a < 0.0f) ? 0.0f : ((a > 1.0f) ? 1.0f : a);
+			x = (x < 0.0f) ? 0.0f : ((x > 1.0f) ? 1.0f : x);
+			y = (y < 0.0f) ? 0.0f : ((y > 1.0f) ? 1.0f : y);
+			z = (z < 0.0f) ? 0.0f : ((z > 1.0f) ? 1.0f : z);
+			w = (w < 0.0f) ? 0.0f : ((w > 1.0f) ? 1.0f : w);
 		}
 
 		/// \brief Set alpha color component, in the range 0-1.
-		void set_alpha(float value) { a = value; }
+		void set_alpha(float value) { w = value; }
 
 		/// \brief Set red color component, in the range 0-1.
-		void set_red(float value) {  r = value; }
+		void set_red(float value) { x = value; }
 
 		/// \brief Set green color component, in the range 0-1.
-		void set_green(float value) { g= value; }
+		void set_green(float value) { y = value; }
 
 		/// \brief Set blue color component, in the range 0-1.
-		void set_blue(float value) { b = value; }
+		void set_blue(float value) { z = value; }
 
 		/// \brief Color == Color operator (deep compare)
 		bool operator==(const Colorf &c) const
 		{
-			return (r == c.r) && (g == c.g) && (b == c.b) && (a == c.a);
+			return (x == c.x) && (y == c.y) && (z == c.z) && (w == c.w);
 		}
 
 		/// \brief Color != Color operator (deep compare)
 		bool operator!=(const Colorf &c) const
 		{
-			return (r != c.r) || (g != c.g) || (b != c.b) || (a != c.a);
+			return (x != c.x) || (y != c.y) || (z != c.z) || (w != c.w);
 		}
 
 		/// \brief Type conversion operator.

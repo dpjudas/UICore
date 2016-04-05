@@ -145,7 +145,7 @@ namespace uicore
 			Vec4ub *line = (Vec4ub *)(data + alpha_buffer->pitch()*y);
 			for (int x = 0; x < alpha_width; x++)
 			{
-				if (line[x].a > trans_limit * 255)
+				if (line[x].w > trans_limit * 255)
 				{
 					opaque_row[x] = 1;
 					opaque_line = true;
@@ -221,7 +221,7 @@ namespace uicore
 			{
 				if (explored[y*width + x] == 1) continue;
 				explored[y*width + x] = 1;
-				if (data[y*width + x].a <= trans_limit * 255)
+				if (data[y*width + x].w <= trans_limit * 255)
 					continue;
 
 				// Initialize the bounding box to the current pixel
@@ -239,7 +239,7 @@ namespace uicore
 						if (y2 + 1 < height)
 						{
 							explored[(y2 + 1)*width + i] = 1;
-							if (data[(y2 + 1)*width + i].a > trans_limit * 255)
+							if (data[(y2 + 1)*width + i].w > trans_limit * 255)
 							{
 								more = true;
 								y2 = y2 + 1;
@@ -254,7 +254,7 @@ namespace uicore
 						if (x2 + 1 < width)
 						{
 							explored[j*width + x2 + 1] = 1;
-							if (data[j*width + x2 + 1].a > trans_limit * 255)
+							if (data[j*width + x2 + 1].w > trans_limit * 255)
 							{
 								more = true;
 								x2 = x2 + 1;
@@ -264,7 +264,7 @@ namespace uicore
 						if (x1 - 1 >= 0)
 						{
 							explored[j*width + x1 - 1] = 1;
-							if (data[j*width + x1 - 1].a > trans_limit * 255)
+							if (data[j*width + x1 - 1].w > trans_limit * 255)
 							{
 								more = true;
 								x1 = x1 - 1;

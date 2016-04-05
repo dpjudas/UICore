@@ -126,8 +126,8 @@ namespace uicore
 			unsigned short *d = static_cast<unsigned short *>(output);
 			for (int i = 0; i < num_pixels; i++)
 			{
-				Vec4f v = Vec4f(input[i].x * 15.0f + 0.5f, input[i].y * 15.0f + 0.5f, input[i].z * 15.0f + 0.5f, input[i].a * 15.0f + 0.5f);
-				d[i] = (unsigned short)(((int)clamp(v.x, 0, 15) << 12) | ((int)clamp(v.y, 0, 15) << 8) | ((int)clamp(v.z, 0, 15)) << 4 | ((int)clamp(v.a, 0, 15)) << 0);
+				Vec4f v = Vec4f(input[i].x * 15.0f + 0.5f, input[i].y * 15.0f + 0.5f, input[i].z * 15.0f + 0.5f, input[i].w * 15.0f + 0.5f);
+				d[i] = (unsigned short)(((int)clamp(v.x, 0, 15) << 12) | ((int)clamp(v.y, 0, 15) << 8) | ((int)clamp(v.z, 0, 15)) << 4 | ((int)clamp(v.w, 0, 15)) << 0);
 			}
 		}
 	};
@@ -140,8 +140,8 @@ namespace uicore
 			unsigned short *d = static_cast<unsigned short *>(output);
 			for (int i = 0; i < num_pixels; i++)
 			{
-				Vec4f v = Vec4f(input[i].x * 31.0f + 0.5f, input[i].y * 31.0f + 0.5f, input[i].z * 31.0f + 0.5f, input[i].a + 0.5f);
-				d[i] = (unsigned short)(((int)clamp(v.x, 0, 31) << 11) | ((int)clamp(v.y, 0, 31) << 6) | ((int)clamp(v.z, 0, 31)) << 1 | ((int)clamp(v.a, 0, 1)) << 0);
+				Vec4f v = Vec4f(input[i].x * 31.0f + 0.5f, input[i].y * 31.0f + 0.5f, input[i].z * 31.0f + 0.5f, input[i].w + 0.5f);
+				d[i] = (unsigned short)(((int)clamp(v.x, 0, 31) << 11) | ((int)clamp(v.y, 0, 31) << 6) | ((int)clamp(v.z, 0, 31)) << 1 | ((int)clamp(v.w, 0, 1)) << 0);
 			}
 		}
 	};
@@ -154,8 +154,8 @@ namespace uicore
 			uint32_t *d = static_cast<uint32_t *>(output);
 			for (int i = 0; i < num_pixels; i++)
 			{
-				Vec4f v = Vec4f(input[i].x * 1023.0f + 0.5f, input[i].y * 1023.0f + 0.5f, input[i].z * 1023.0f + 0.5f, input[i].a * 3.0f + 0.5f);
-				d[i] = (uint32_t)(((int)clamp(v.x, 0, 1023) << 22) | ((int)clamp(v.y, 0, 1023) << 12) | ((int)clamp(v.z, 0, 1023)) << 2 | ((int)clamp(v.a, 0, 3)) << 0);
+				Vec4f v = Vec4f(input[i].x * 1023.0f + 0.5f, input[i].y * 1023.0f + 0.5f, input[i].z * 1023.0f + 0.5f, input[i].w * 3.0f + 0.5f);
+				d[i] = (uint32_t)(((int)clamp(v.x, 0, 1023) << 22) | ((int)clamp(v.y, 0, 1023) << 12) | ((int)clamp(v.z, 0, 1023)) << 2 | ((int)clamp(v.w, 0, 3)) << 0);
 			}
 		}
 	};

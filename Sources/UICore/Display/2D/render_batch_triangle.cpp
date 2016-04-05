@@ -151,7 +151,7 @@ namespace uicore
 		vertices[position + 5].texcoord = Vec2f(src_left, src_bottom);
 		for (int i = 0; i < 6; i++)
 		{
-			vertices[position + i].color = Vec4f(color.r, color.g, color.b, color.a);
+			vertices[position + i].color = Vec4f(color.x, color.y, color.z, color.w);
 			vertices[position + i].texindex = texindex;
 		}
 		position += 6;
@@ -179,7 +179,7 @@ namespace uicore
 		vertices[position + 5].texcoord = Vec2f(src_left, src_bottom);
 		for (int i = 0; i < 6; i++)
 		{
-			vertices[position + i].color = Vec4f(color.r, color.g, color.b, color.a);
+			vertices[position + i].color = Vec4f(color.x, color.y, color.z, color.w);
 			vertices[position + i].texindex = texindex;
 		}
 		position += 6;
@@ -225,7 +225,7 @@ namespace uicore
 		vertices[position + 5].position = to_position(x1, y2);
 		for (int i = 0; i < 6; i++)
 		{
-			vertices[position + i].color = Vec4f(color.r, color.g, color.b, color.a);
+			vertices[position + i].color = Vec4f(color.x, color.y, color.z, color.w);
 			vertices[position + i].texcoord = Vec2f(0.0f, 0.0f);
 			vertices[position + i].texindex = texindex;
 		}

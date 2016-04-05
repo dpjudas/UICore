@@ -64,41 +64,41 @@ namespace uicore
 
 	void Color::set_rgba8(unsigned int color)
 	{
-		r = (unsigned char)(color >> 24);
-		g = (unsigned char)(color >> 16);
-		b = (unsigned char)(color >> 8);
-		a = (unsigned char)color;
+		x = (unsigned char)(color >> 24);
+		y = (unsigned char)(color >> 16);
+		z = (unsigned char)(color >> 8);
+		w = (unsigned char)color;
 	}
 
 	void Color::set_bgra8(unsigned int color)
 	{
-		b = (unsigned char)(color >> 24);
-		g = (unsigned char)(color >> 16);
-		r = (unsigned char)(color >> 8);
-		a = (unsigned char)color;
+		z = (unsigned char)(color >> 24);
+		y = (unsigned char)(color >> 16);
+		x = (unsigned char)(color >> 8);
+		w = (unsigned char)color;
 	}
 
 	void Color::set_rgb8(unsigned int color)
 	{
-		r = (unsigned char)(color >> 16);
-		g = (unsigned char)(color >> 8);
-		b = (unsigned char)color;
-		a = 0xFF;
+		x = (unsigned char)(color >> 16);
+		y = (unsigned char)(color >> 8);
+		z = (unsigned char)color;
+		w = 0xFF;
 	}
 
 	void Color::set_argb8(unsigned int color)
 	{
-		r = (unsigned char)(color >> 16);
-		g = (unsigned char)(color >> 8);
-		b = (unsigned char)color;
-		a = (unsigned char)(color >> 24);
+		x = (unsigned char)(color >> 16);
+		y = (unsigned char)(color >> 8);
+		z = (unsigned char)color;
+		w = (unsigned char)(color >> 24);
 	}
 
 	Color::Color(const Colorf& color)
-		: Vec4ub(static_cast<unsigned char>(color.r * 255.0f),
-		static_cast<unsigned char>(color.g * 255.0f),
-		static_cast<unsigned char>(color.b * 255.0f),
-		static_cast<unsigned char>(color.a * 255.0f))
+		: Vec4ub(static_cast<unsigned char>(color.x * 255.0f),
+		static_cast<unsigned char>(color.y * 255.0f),
+		static_cast<unsigned char>(color.z * 255.0f),
+		static_cast<unsigned char>(color.w * 255.0f))
 
 	{
 	}

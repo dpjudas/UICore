@@ -352,7 +352,7 @@ namespace uicore
 		if (state)
 		{
 			D3DBlendState *d3d_state = static_cast<D3DBlendState*>(state.get());
-			FLOAT blend_factor[4] = { blend_color.r, blend_color.g, blend_color.b, blend_color.a };
+			FLOAT blend_factor[4] = { blend_color.x, blend_color.y, blend_color.z, blend_color.w };
 			window->get_device_context()->OMSetBlendState(d3d_state->state, blend_factor, sample_mask);
 		}
 		else
@@ -668,7 +668,7 @@ namespace uicore
 		ID3D11RenderTargetView *views[D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT];
 		window->get_device_context()->OMGetRenderTargets(D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT, views, 0);
 
-		FLOAT c[4] = { color.r, color.g, color.b, color.a };
+		FLOAT c[4] = { color.x, color.y, color.z, color.w };
 		for (int i = 0; i < D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT; i++)
 		{
 			if (views[i])

@@ -73,10 +73,10 @@ namespace uicore
 	public:
 		typedef Type datatype;
 
-		union { Type x; Type s; Type r; };
-		union { Type y; Type t; Type g; };
-		union { Type z; Type u; Type b; };
-		union { Type w; Type v; Type a; };
+		Type x;
+		Type y;
+		Type z;
+		Type w;
 
 		Vec4() : x(0), y(0), z(0), w(0) { }
 		explicit Vec4(const Type &scalar) : x(scalar), y(scalar), z(scalar), w(scalar) { }

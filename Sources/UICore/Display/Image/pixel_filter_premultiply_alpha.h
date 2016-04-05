@@ -41,7 +41,7 @@ namespace uicore
 		{
 			for (int i = 0; i < num_pixels; i++)
 			{
-				pixels[i] = Vec4f(pixels[i].r * pixels[i].a, pixels[i].g * pixels[i].a, pixels[i].b * pixels[i].a, pixels[i].a);
+				pixels[i] = Vec4f(pixels[i].x * pixels[i].w, pixels[i].y * pixels[i].w, pixels[i].z * pixels[i].w, pixels[i].w);
 			}
 		}
 	};

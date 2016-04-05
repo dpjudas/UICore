@@ -884,10 +884,10 @@ namespace uicore
 	{
 		set_active();
 		glClearColor(
-			(GLclampf)color.r,
-			(GLclampf)color.g,
-			(GLclampf)color.b,
-			(GLclampf)color.a);
+			(GLclampf)color.x,
+			(GLclampf)color.y,
+			(GLclampf)color.z,
+			(GLclampf)color.w);
 		glClear(GL_COLOR_BUFFER_BIT);
 	}
 
