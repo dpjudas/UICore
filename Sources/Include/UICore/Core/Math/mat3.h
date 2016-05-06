@@ -48,8 +48,6 @@ namespace uicore
 	template<typename Type>
 	class Mat4;
 
-	class Angle;
-
 	/// \brief 3D matrix
 	///
 	/// These matrix templates are defined for: int (Mat3i), float (Mat3f), double (Mat3d)
@@ -134,22 +132,22 @@ namespace uicore
 		/// \brief Create a 3d rotation matrix
 		///
 		/// Matrix is created in the Column-Major matrix format (opengl native)
-		/// \param angle = Angle to rotate by
+		/// \param angle = Angle to rotate by in radians
 		/// \param x = Amount to rotate in the X axis
 		/// \param y = Amount to rotate in the Y axis
 		/// \param z = Amount to rotate in the Z axis
 		/// \param normalize = true = Normalize x,y,z before creating rotation matrix
 		/// \return The matrix (in column-major format)
-		static Mat3<Type> rotate(const Angle &angle, Type x, Type y, Type z, bool normalize = true);
+		static Mat3<Type> rotate(Type angle, Type x, Type y, Type z, bool normalize = true);
 
 		/// \brief Create a 3d rotation matrix
 		///
 		/// Matrix is created in the Column-Major matrix format (opengl native)
-		/// \param angle = Angle to rotate by
+		/// \param angle = Angle to rotate by in radians
 		/// \param rotation = Amount to rotate in the XYZ axes
 		/// \param normalize = true = Normalize x,y,z before creating rotation matrix
 		/// \return The matrix (in column-major format)
-		static Mat3<Type> rotate(const Angle &angle, Vec3<Type> rotation, bool normalize = true)
+		static Mat3<Type> rotate(float angle, Vec3<Type> rotation, bool normalize = true)
 		{
 			return rotate(angle, rotation.x, rotation.y, rotation.z, normalize);
 		}
@@ -159,14 +157,14 @@ namespace uicore
 		/// Matrix is created in the Column-Major matrix format (opengl native)
 		///
 		/// \return The matrix (in column-major format)
-		static Mat3<Type> rotate(const Angle &angle_x, const Angle &angle_y, const Angle &angle_z, EulerOrder order);
+		static Mat3<Type> rotate(Type angle_x, Type angle_y, Type angle_z, EulerOrder order);
 
 		/// \brief Create a 2d rotation matrix
 		///
 		/// Matrix is created in the Column-Major matrix format (opengl native)
-		/// \param angle = Angle to rotate by
+		/// \param angle = Angle to rotate by in radians
 		/// \return The matrix (in column-major format)
-		static Mat3<Type> rotate(const Angle &angle);
+		static Mat3<Type> rotate(Type angle);
 
 		/// \brief Create a 2d scale matrix
 		///

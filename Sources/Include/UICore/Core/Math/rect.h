@@ -206,7 +206,7 @@ namespace uicore
 		///
 		/// \param hotspot Point to rotate around.
 		/// \param angle Angle to rotate.
-		Rectx<Type> rot_bounds(const Vec2<Type> &hotspot, const Angle &angle) const;
+		Rectx<Type> rot_bounds(const Vec2<Type> &hotspot, float angle) const;
 
 		/// \brief Returns another Rectx<Type> containing a rotated version of this one.
 		///
@@ -214,7 +214,7 @@ namespace uicore
 		/// \param x Offsets applied negatively to the hotspot point
 		/// \param y Offsets applied negatively to the hotspot point
 		/// \param angle Angle
-		Rectx<Type> rot_bounds(Origin origin, Type x, Type y, const Angle &angle) const;
+		Rectx<Type> rot_bounds(Origin origin, Type x, Type y, float angle) const;
 
 		/// \brief Returns the center point of the rectangle.
 		Pointx<Type> center() const

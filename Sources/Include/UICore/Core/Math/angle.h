@@ -23,130 +23,48 @@
 **
 **  File Author(s):
 **
-**    Harry Storbacka
+**    Magnus Norddahl
 */
 
 #pragma once
 
 #include <memory>
+#include "pi.h"
 
 namespace uicore
 {
-	class Angle_Impl;
-
-	/// \brief Angle unit
-	enum AngleUnit
-	{
-		angle_degrees,
-		angle_radians
-	};
-
 	/// \brief Euler angle rotation order
-	enum EulerOrder
+	enum class EulerOrder
 	{
-		order_XYZ,
-		order_XZY,
-		order_YZX,
-		order_YXZ,
-		order_ZXY,
-		order_ZYX
+		xyz,
+		xzy,
+		yzx,
+		yxz,
+		zxy,
+		zyx
 	};
 
-	/// \brief Angle class.
-	class Angle
-	{
-	public:
-		/// \brief Constructs a null Angle object.
-		Angle();
+	/// Convert a quantity in radians to degrees
+	inline float degrees(float radians) { return radians * 180.0f * (float)(1.0 / PI); }
+	inline double degrees(double radians) { return radians * 180.0 * (1.0 / PI_D); }
 
-		/// \brief Constructs an Angle object.
-		Angle(float value, AngleUnit unit);
+	/// Convert a quantity in degrees to radians
+	inline float radians(float degrees) { return degrees * PI * (float)(1.0 / 180.0); }
+	inline double radians(double degrees) { return degrees * PI_D * (1.0 / 180.0); }
 
-		/// \brief From radians
-		///
-		/// \param value = value
-		///
-		/// \return Angle
-		static Angle from_radians(float value);
+	/// \brief Converts angle to range [0,360] degrees.
+	float normalize_360(float degrees);
+	double normalize_360(double degrees);
 
-		/// \brief From degrees
-		///
-		/// \param value = value
-		///
-		/// \return Angle
-		static Angle from_degrees(float value);
+	/// \brief Converts angle to range [-180,180] degrees.
+	float normalize_180(float degrees);
+	double normalize_180(double degrees);
 
-		/// \brief Returns the angle as degrees.
-		float to_degrees() const;
+	/// \brief Converts angle to range [0,2*PI] degrees.
+	float normalize_2pi(float radians);
+	double normalize_2pi(double radians);
 
-		/// \brief Returns the angle as radians.
-		float to_radians() const;
-
-		/// \brief Set the angle value in degrees.
-		void set_degrees(float value_degrees);
-
-		/// \brief Set the angle value in radians.
-		void set_radians(float value_radians);
-
-		/// \brief Converts angle to range [0,360] degrees.
-		///
-		/// \return reference to this object
-		Angle &normalize();
-
-		/// \brief Converts angle to range [-180,180] degrees.
-		///
-		/// \return reference to this object
-		Angle &normalize_180();
-
-		/// \brief += operator.
-		void operator += (const Angle &angle);
-
-		/// \brief -= operator.
-		void operator -= (const Angle &angle);
-
-		/// \brief *= operator.
-		void operator *= (const Angle &angle);
-
-		/// \brief /= operator.
-		void operator /= (const Angle &angle);
-
-		/// \brief + operator.
-		Angle operator + (const Angle &angle) const;
-
-		/// \brief - operator.
-		Angle operator - (const Angle &angle) const;
-
-		/// \brief * operator.
-		Angle operator * (const Angle &angle) const;
-
-		/// \brief * operator.
-		Angle operator * (float value) const;
-
-		/// \brief / operator.
-		Angle operator / (const Angle &angle) const;
-
-		/// \brief / operator.
-		Angle operator / (float value) const;
-
-		/// \brief < operator.
-		bool operator < (const Angle &angle) const;
-
-		/// \brief < operator.
-		bool operator <= (const Angle &angle) const;
-
-		/// \brief > operator.
-		bool operator > (const Angle &angle) const;
-
-		/// \brief > operator.
-		bool operator >= (const Angle &angle) const;
-
-		/// \brief == operator.
-		bool operator== (const Angle &angle) const;
-
-		/// \brief != operator.
-		bool operator!= (const Angle &angle) const;
-
-	private:
-		float value_rad;
-	};
+	/// \brief Converts angle to range [-PI,PI] degrees.
+	float normalize_pi(float radians);
+	double normalize_pi(double radians);
 }

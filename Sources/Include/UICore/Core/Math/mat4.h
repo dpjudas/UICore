@@ -65,8 +65,6 @@ namespace uicore
 	template<typename Type>
 	class Quaternionx;
 
-	class Angle;
-
 	/// \brief 4D matrix
 	///
 	/// These matrix templates are defined for: int (Mat4i), float (Mat4f), double (Mat4d)
@@ -178,22 +176,22 @@ namespace uicore
 		/// \brief Create a rotation matrix
 		///
 		/// Matrix is created in the Column-Major matrix format (opengl native)
-		/// \param angle = Angle to rotate by
+		/// \param angle = Angle to rotate by in radians
 		/// \param x = Amount to rotate in the X axis
 		/// \param y = Amount to rotate in the Y axis
 		/// \param z = Amount to rotate in the Z axis
 		/// \param normalize = true = Normalize x,y,z before creating rotation matrix
 		/// \return The matrix (in column-major format)
-		static Mat4<Type> rotate(const Angle &angle, Type x, Type y, Type z, bool normalize = true);
+		static Mat4<Type> rotate(Type angle, Type x, Type y, Type z, bool normalize = true);
 
 		/// \brief Create a rotation matrix
 		///
 		/// Matrix is created in the Column-Major matrix format (opengl native)
-		/// \param angle = Angle to rotate by
+		/// \param angle = Angle to rotate by in radians
 		/// \param rotate = Amount to rotate in the XYZ axes
 		/// \param normalize = true = Normalize x,y,z before creating rotation matrix
 		/// \return The matrix (in column-major format)
-		static Mat4<Type> rotate(const Angle &angle, Vec3<Type> rotation, bool normalize = true)
+		static Mat4<Type> rotate(Type angle, Vec3<Type> rotation, bool normalize = true)
 		{
 			return rotate(angle, rotation.x, rotation.y, rotation.z, normalize);
 		}
@@ -203,7 +201,7 @@ namespace uicore
 		/// Matrix is created in the Column-Major matrix format (opengl native)
 		///
 		/// \return The matrix (in column-major format)
-		static Mat4<Type> rotate(const Angle &angle_x, const Angle &angle_y, const Angle &angle_z, EulerOrder order);
+		static Mat4<Type> rotate(Type angle_x, Type angle_y, Type angle_z, EulerOrder order);
 
 		/// \brief Create a scale matrix
 		///

@@ -46,8 +46,6 @@ namespace uicore
 	template<typename Type>
 	class Mat4;
 
-	class Angle;
-
 	/// \brief 2D matrix
 	///
 	/// These matrix templates are defined for: int (Mat2i), float (Mat2f), double (Mat2d)

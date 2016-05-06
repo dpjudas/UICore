@@ -255,7 +255,7 @@ namespace uicore
 	}
 
 	template<typename Type>
-	Mat4<Type> Mat4<Type>::rotate(const Angle &angle, Type x, Type y, Type z, bool normalize)
+	Mat4<Type> Mat4<Type>::rotate(Type angle, Type x, Type y, Type z, bool normalize)
 	{
 		if (normalize)
 		{
@@ -279,8 +279,8 @@ namespace uicore
 		}
 
 		Mat4<Type> rotate_matrix = null();
-		Type c = cos(angle.to_radians());
-		Type s = sin(angle.to_radians());
+		Type c = cos(angle);
+		Type s = sin(angle);
 		rotate_matrix.matrix[0 + 0 * 4] = (Type)(x*x*(1.0f - c) + c);
 		rotate_matrix.matrix[0 + 1 * 4] = (Type)(x*y*(1.0f - c) - z*s);
 		rotate_matrix.matrix[0 + 2 * 4] = (Type)(x*z*(1.0f - c) + y*s);
@@ -295,7 +295,7 @@ namespace uicore
 	}
 
 	template<typename Type>
-	Mat4<Type> Mat4<Type>::rotate(const Angle &angle_x, const Angle &angle_y, const Angle &angle_z, EulerOrder order)
+	Mat4<Type> Mat4<Type>::rotate(Type angle_x, Type angle_y, Type angle_z, EulerOrder order)
 	{
 		return Mat4<Type>(Mat3<Type>::rotate(angle_x, angle_y, angle_z, order));
 	}
@@ -312,17 +312,17 @@ namespace uicore
 		// Obtain the correct xyz rotation position from the original rotation order
 		switch (order)
 		{
-		case order_XYZ:
+		case EulerOrder::xyz:
 			pos_i = 2; pos_j = 1; pos_k = 0; break;
-		case order_XZY:
+		case EulerOrder::xzy:
 			pos_i = 1; pos_j = 2; pos_k = 0; break;
-		case order_YZX:
+		case EulerOrder::yzx:
 			pos_i = 0; pos_j = 2; pos_k = 1; break;
-		case order_YXZ:
+		case EulerOrder::yxz:
 			pos_i = 2; pos_j = 0; pos_k = 1; break;
-		case order_ZXY:
+		case EulerOrder::zxy:
 			pos_i = 1; pos_j = 0; pos_k = 2; break;
-		case order_ZYX:
+		case EulerOrder::zyx:
 			pos_i = 0; pos_j = 1; pos_k = 2; break;
 		default:
 			throw Exception("Unknown euler order");
@@ -346,22 +346,22 @@ namespace uicore
 		// Swap the xyz value to the specified euler angle
 		switch (order)
 		{
-		case order_XYZ:
+		case EulerOrder::xyz:
 			angles = Vec3<Type>(angles.z, angles.y, angles.x);
 			break;
-		case order_XZY:
+		case EulerOrder::xzy:
 			angles = Vec3<Type>(-angles.z, -angles.x, -angles.y);
 			break;
-		case order_YZX:
+		case EulerOrder::yzx:
 			angles = Vec3<Type>(angles.x, angles.z, angles.y);
 			break;
-		case order_YXZ:
+		case EulerOrder::yxz:
 			angles = Vec3<Type>(-angles.y, -angles.z, -angles.x);
 			break;
-		case order_ZXY:
+		case EulerOrder::zxy:
 			angles = Vec3<Type>(angles.y, angles.x, angles.z);
 			break;
-		case order_ZYX:
+		case EulerOrder::zyx:
 			angles = Vec3<Type>(-angles.x, -angles.y, -angles.z);
 			break;
 		}
@@ -413,7 +413,7 @@ namespace uicore
 
 	// For ints
 	template<>
-	Mat4<int> Mat4<int>::rotate(const Angle &angle, int x, int y, int z, bool normalize)
+	Mat4<int> Mat4<int>::rotate(int angle, int x, int y, int z, bool normalize)
 	{
 		if (normalize)
 		{
@@ -437,8 +437,8 @@ namespace uicore
 		}
 
 		Mat4<int> rotate_matrix = null();
-		float c = cos(angle.to_radians());
-		float s = sin(angle.to_radians());
+		float c = cos(angle);
+		float s = sin(angle);
 		rotate_matrix.matrix[0 + 0 * 4] = (int)floor((x*x*(1.0f - c) + c) + 0.5f);
 		rotate_matrix.matrix[0 + 1 * 4] = (int)floor((x*y*(1.0f - c) - z*s) + 0.5f);
 		rotate_matrix.matrix[0 + 2 * 4] = (int)floor((x*z*(1.0f - c) + y*s) + 0.5f);

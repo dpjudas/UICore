@@ -63,7 +63,7 @@ namespace uicore
 	}
 
 	template<typename Type>
-	Mat3<Type> Mat3<Type>::rotate(const Angle &angle, Type x, Type y, Type z, bool normalize)
+	Mat3<Type> Mat3<Type>::rotate(Type angle, Type x, Type y, Type z, bool normalize)
 	{
 		if (normalize)
 		{
@@ -87,8 +87,8 @@ namespace uicore
 		}
 
 		Mat3<Type> rotate_matrix;
-		Type c = cos(angle.to_radians());
-		Type s = sin(angle.to_radians());
+		Type c = cos(angle);
+		Type s = sin(angle);
 		rotate_matrix.matrix[0 + 0 * 3] = (Type)(x*x*(1.0f - c) + c);
 		rotate_matrix.matrix[0 + 1 * 3] = (Type)(x*y*(1.0f - c) - z*s);
 		rotate_matrix.matrix[0 + 2 * 3] = (Type)(x*z*(1.0f - c) + y*s);
@@ -103,7 +103,7 @@ namespace uicore
 
 	// For ints
 	template<>
-	Mat3<int> Mat3<int>::rotate(const Angle &angle, int x, int y, int z, bool normalize)
+	Mat3<int> Mat3<int>::rotate(int angle, int x, int y, int z, bool normalize)
 	{
 		if (normalize)
 		{
@@ -127,8 +127,8 @@ namespace uicore
 		}
 
 		Mat3<int> rotate_matrix;
-		float c = cos(angle.to_radians());
-		float s = sin(angle.to_radians());
+		float c = cos(angle);
+		float s = sin(angle);
 		rotate_matrix.matrix[0 + 0 * 3] = (int)floor((x*x*(1.0f - c) + c) + 0.5f);
 		rotate_matrix.matrix[0 + 1 * 3] = (int)floor((x*y*(1.0f - c) - z*s) + 0.5f);
 		rotate_matrix.matrix[0 + 2 * 3] = (int)floor((x*z*(1.0f - c) + y*s) + 0.5f);
@@ -142,14 +142,14 @@ namespace uicore
 	}
 
 	template<typename Type>
-	Mat3<Type> Mat3<Type>::rotate(const Angle &angle_x, const Angle &angle_y, const Angle &angle_z, EulerOrder order)
+	Mat3<Type> Mat3<Type>::rotate(Type angle_x, Type angle_y, Type angle_z, EulerOrder order)
 	{
-		float cx = cos(angle_x.to_radians());
-		float sx = sin(angle_x.to_radians());
-		float cy = cos(angle_y.to_radians());
-		float sy = sin(angle_y.to_radians());
-		float cz = cos(angle_z.to_radians());
-		float sz = sin(angle_z.to_radians());
+		float cx = cos(angle_x);
+		float sx = sin(angle_x);
+		float cy = cos(angle_y);
+		float sy = sin(angle_y);
+		float cz = cos(angle_z);
+		float sz = sin(angle_z);
 
 		Mat3<Type> rotation_matrix_x(1.0f, 0.0f, 0.0f, 0.0f, cx, sx, 0.0f, -sx, cx);
 		Mat3<Type> rotation_matrix_y(cy, 0.0f, -sy, 0.0f, 1.0f, 0.0f, sy, 0.0f, cy);
@@ -157,36 +157,35 @@ namespace uicore
 
 		switch (order)
 		{
-		case order_XYZ:
+		case EulerOrder::xyz:
 			return rotation_matrix_z * rotation_matrix_y * rotation_matrix_x;
-		case order_XZY:
+		case EulerOrder::xzy:
 			return rotation_matrix_y * rotation_matrix_z * rotation_matrix_x;
-		case order_YZX:
+		case EulerOrder::yzx:
 			return rotation_matrix_x * rotation_matrix_z * rotation_matrix_y;
-		case order_YXZ:
+		case EulerOrder::yxz:
 			return rotation_matrix_z * rotation_matrix_x * rotation_matrix_y;
-		case order_ZXY:
+		case EulerOrder::zxy:
 			return rotation_matrix_y * rotation_matrix_x * rotation_matrix_z;
-		case order_ZYX:
+		case EulerOrder::zyx:
 			return rotation_matrix_x * rotation_matrix_y * rotation_matrix_z;
 		default:
 			throw Exception("Unknown euler order");
 		}
-
 	}
 
 	template<>
-	Mat3<int> Mat3<int>::rotate(const Angle &angle_x, const Angle &angle_y, const Angle &angle_z, EulerOrder order)
+	Mat3<int> Mat3<int>::rotate(int angle_x, int angle_y, int angle_z, EulerOrder order)
 	{
 		throw Exception("Not supported");
 	}
 
 	template<typename Type>
-	Mat3<Type> Mat3<Type>::rotate(const Angle &angle)
+	Mat3<Type> Mat3<Type>::rotate(Type angle)
 	{
 		Mat3<Type> rotate_matrix;
-		Type c = cos(angle.to_radians());
-		Type s = sin(angle.to_radians());
+		Type c = cos(angle);
+		Type s = sin(angle);
 
 		rotate_matrix.matrix[0 * 3 + 0] = c;
 		rotate_matrix.matrix[0 * 3 + 1] = s;
@@ -199,7 +198,7 @@ namespace uicore
 
 	// For ints
 	template<>
-	Mat3<int> Mat3<int>::rotate(const Angle &angle)
+	Mat3<int> Mat3<int>::rotate(int angle)
 	{
 		throw Exception("Not supported");
 	}

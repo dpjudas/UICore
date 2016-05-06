@@ -42,8 +42,6 @@ namespace uicore
 	template<typename Type>
 	class Vec3;
 
-	class Angle;
-
 	/// \brief 3D line ray
 	///
 	/// A ray has a start point and a direction\n

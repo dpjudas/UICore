@@ -165,7 +165,7 @@ namespace uicore
 		/// \param angle Angle to rotate in degrees.
 		///
 		/// \return reference to this object
-		Quadx<Type> &rotate(const Vec2<Type>  &hotspot, const Angle &angle);
+		Quadx<Type> &rotate(const Vec2<Type> &hotspot, float angle);
 
 		/// \brief Scale the Quad
 		///

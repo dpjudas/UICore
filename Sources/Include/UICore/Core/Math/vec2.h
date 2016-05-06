@@ -61,8 +61,6 @@ namespace uicore
 	template<typename Type>
 	class Pointx;
 
-	class Angle;
-
 	/// \brief 2D vector
 	///
 	/// These vector templates are defined for:\n
@@ -118,7 +116,7 @@ namespace uicore
 		/// \param vector = Vector to use
 		/// \param hotspot The point around which to rotate.
 		/// \param angle = Angle to rotate.
-		static Vec2<Type> rotate(const Vec2<Type>& vector, const Vec2<Type>& hotspot, const Angle &angle);
+		static Vec2<Type> rotate(const Vec2<Type>& vector, const Vec2<Type>& hotspot, Type angle);
 
 		/// \brief Returns the anchor point for the origin within the dimensions of the size structure.
 		///
@@ -166,21 +164,21 @@ namespace uicore
 		/// \param vector = Second vector used to calculate angle.
 		///
 		/// \return The angle between the two vectors
-		Angle angle(const Vec2<Type>& vector) const;
+		Type angle(const Vec2<Type>& vector) const;
 
 		/// \brief Calculate the angle between this vector and an other vector, where the vectors are unit vectors
 		///
 		/// \param vector = Second vector used to calculate angle.
 		///
 		/// \return The angle between the two vectors
-		Angle angle_normed(const Vec2<Type>& vector) const;
+		Type angle_normed(const Vec2<Type>& vector) const;
 
 		/// \brief Calculate the angle of the line joining this point and other point
 		///
 		/// \param point = Second point in the line
 		///
 		/// \return The angle
-		Angle angle_line(const Vec2<Type>& point) const;
+		Type angle_line(const Vec2<Type>& point) const;
 
 		/// \brief Calculate the distance between this vector and an other vector.
 		///
@@ -202,7 +200,7 @@ namespace uicore
 		/// \param angle = Angle to rotate.
 		///
 		/// \return reference to this object
-		Vec2<Type> &rotate(const Vec2<Type>& hotspot, const Angle &angle);
+		Vec2<Type> &rotate(const Vec2<Type>& hotspot, Type angle);
 
 		/// \brief Rounds a value for the datatype
 		///

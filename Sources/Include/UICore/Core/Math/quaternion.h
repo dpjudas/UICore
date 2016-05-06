@@ -52,12 +52,11 @@ namespace uicore
 		explicit Quaternionx(Type real, Type i, Type j, Type k) : w(real), i(i), j(j), k(k) { }
 		explicit Quaternionx(Type real, const Vec3<Type> &imag) : w(real), i(imag.x), j(imag.y), k(imag.z) { }
 		Quaternionx(const Quaternionx<Type> &copy) : w(copy.w), i(copy.i), j(copy.j), k(copy.k) { }
-		explicit Quaternionx(Type euler_x, Type euler_y, Type euler_z, AngleUnit unit, EulerOrder order);
-		explicit Quaternionx(const Vec3<Type> &euler, AngleUnit unit, EulerOrder order);
-		explicit Quaternionx(const Angle &euler_x, const Angle &euler_y, const Angle &euler_z, EulerOrder order);
+		explicit Quaternionx(const Vec3<Type> &euler, EulerOrder order);
+		explicit Quaternionx(Type euler_x, Type euler_y, Type euler_z, EulerOrder order);
 		explicit Quaternionx(const Mat4<Type> &rotation_matrix);
 
-		static Quaternionx<Type> axis_angle(const Angle &angle, const Vec3f &axis);
+		static Quaternionx<Type> axis_angle(Type angle, const Vec3f &axis);
 		static Quaternionx<Type> multiply(const Quaternionx<Type> &quaternion_1, const Quaternionx<Type> &quaternion_2);
 
 		/// \brief Calculates the shortest arc quaternion between two vectors
@@ -88,13 +87,12 @@ namespace uicore
 		/// \brief Get the quaternion magnitude
 		Type magnitude() const;
 
-		void set(Type euler_x, Type euler_y, Type euler_z, AngleUnit unit, EulerOrder order);
-		void set(const Vec3<Type> &euler, AngleUnit unit, EulerOrder order);
-		void set(const Angle &euler_x, const Angle &euler_y, const Angle &euler_z, EulerOrder order);
+		void set(Type euler_x, Type euler_y, Type euler_z, EulerOrder order);
+		void set(const Vec3<Type> &euler, EulerOrder order);
 
-		Quaternionx<Type> &rotate(const Angle &angle, const Vec3f &axis);
+		Quaternionx<Type> &rotate(Type angle, const Vec3f &axis);
 
-		Quaternionx<Type> &rotate(const Angle &euler_x, const Angle &euler_y, const Angle &euler_z, EulerOrder order);
+		Quaternionx<Type> &rotate(Type euler_x, Type euler_y, Type euler_z, EulerOrder order);
 
 		/// \brief Normalizes this quaternion
 		///
@@ -175,10 +173,8 @@ namespace uicore
 
 		explicit Quaternionf(float real, float i, float j, float k) : Quaternionx<float>(real, i, j, k) { }
 		explicit Quaternionf(float real, const Vec3<float> &imag) : Quaternionx<float>(real, imag) { }
-		explicit Quaternionf(float euler_x, float euler_y, float euler_z, AngleUnit unit, EulerOrder order) : Quaternionx<float>(euler_x, euler_y, euler_z, unit, order) { }
-		explicit Quaternionf(const Vec3<float> &euler, AngleUnit unit, EulerOrder order) : Quaternionx<float>(euler, unit, order) { }
-		explicit Quaternionf(const Angle &euler_x, const Angle &euler_y, const Angle &euler_z, EulerOrder order) : Quaternionx<float>(euler_x, euler_y, euler_z, order) { }
-
+		explicit Quaternionf(float euler_x, float euler_y, float euler_z, EulerOrder order) : Quaternionx<float>(euler_x, euler_y, euler_z, order) { }
+		explicit Quaternionf(const Vec3<float> &euler, EulerOrder order) : Quaternionx<float>(euler, order) { }
 	};
 
 	/// \brief Quaternion - Double
@@ -190,8 +186,7 @@ namespace uicore
 		explicit Quaterniond(const Mat4<double> &rotation_matrix) : Quaternionx<double>(rotation_matrix) { }
 		explicit Quaterniond(double real, double i, double j, double k) : Quaternionx<double>(real, i, j, k) { }
 		explicit Quaterniond(double real, const Vec3<double> &imag) : Quaternionx<double>(real, imag) { }
-		explicit Quaterniond(double euler_x, double euler_y, double euler_z, AngleUnit unit, EulerOrder order) : Quaternionx<double>(euler_x, euler_y, euler_z, unit, order) { }
-		explicit Quaterniond(const Vec3<double> &euler, AngleUnit unit, EulerOrder order) : Quaternionx<double>(euler, unit, order) { }
-		explicit Quaterniond(const Angle &euler_x, const Angle &euler_y, const Angle &euler_z, EulerOrder order) : Quaternionx<double>(euler_x, euler_y, euler_z, order) { }
+		explicit Quaterniond(double euler_x, double euler_y, double euler_z, EulerOrder order) : Quaternionx<double>(euler_x, euler_y, euler_z, order) { }
+		explicit Quaterniond(const Vec3<double> &euler, EulerOrder order) : Quaternionx<double>(euler, order) { }
 	};
 }

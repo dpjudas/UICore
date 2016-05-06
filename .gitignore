@@ -83,3 +83,4 @@ xcshareddata
 /Setup/Unix/configure
 /UICore.xcodeproj
 /UICore.VC.db
+/*.opendb

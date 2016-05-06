@@ -45,8 +45,6 @@ namespace uicore
 	template<typename Type>
 	class Rectx;
 
-	class Angle;
-
 	/// \brief 3D line segment
 	///
 	/// A line segment has a start point and an end point\n

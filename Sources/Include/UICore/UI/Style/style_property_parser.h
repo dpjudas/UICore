@@ -117,11 +117,9 @@ namespace uicore
 	public:
 		/// Gets the default value for a given property
 		static const StyleGetValue &default_value(const char *name);
-		static const StyleGetValue &default_value(const std::string &name);
 
 		/// Indicates if this an inherited property or not
 		static bool is_inherited(const char *name);
-		static bool is_inherited(const std::string &name);
 
 		/// Parses a string of styles and sets the values
 		static void parse(StylePropertySetter *setter, const std::string &styles);

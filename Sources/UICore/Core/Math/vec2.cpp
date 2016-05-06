@@ -34,13 +34,13 @@
 namespace uicore
 {
 	template<typename Type>
-	Angle Vec2<Type>::angle(const Vec2<Type>& v) const
+	Type Vec2<Type>::angle(const Vec2<Type>& v) const
 	{
-		return Angle((float)acosf(float(dot(v) / (length()*v.length()))), angle_radians);
+		return (float)acosf(float(dot(v) / (length()*v.length())));
 	}
 
 	template<>
-	Angle Vec2<int>::angle(const Vec2<int>& v) const
+	int Vec2<int>::angle(const Vec2<int>& v) const
 	{
 		float this_x = (float)x;
 		float this_y = (float)y;
@@ -50,17 +50,17 @@ namespace uicore
 		float dot_v = this_x * v_x + this_y * v_y;
 		float this_length = sqrt(this_x * this_x + this_y * this_y);
 		float v_length = sqrt(v_x * v_x + v_y * v_y);
-		return Angle(acosf(dot_v / (this_length * v_length)), angle_radians);
+		return acosf(dot_v / (this_length * v_length));
 	}
 
 	template<typename Type>
-	Angle Vec2<Type>::angle_normed(const Vec2<Type>& v) const
+	Type Vec2<Type>::angle_normed(const Vec2<Type>& v) const
 	{
-		return Angle((float)acosf(float(dot(v))), angle_radians);
+		return acosf(float(dot(v)));
 	}
 
 	template<>
-	Angle Vec2<int>::angle_normed(const Vec2<int>& v) const
+	int Vec2<int>::angle_normed(const Vec2<int>& v) const
 	{
 		float this_x = (float)x;
 		float this_y = (float)y;
@@ -68,24 +68,24 @@ namespace uicore
 		float v_y = (float)v.y;
 
 		float dot_v = this_x * v_x + this_y * v_y;
-		return Angle(acosf(dot_v), angle_radians);
+		return acosf(dot_v);
 	}
 
 	template<typename Type>
-	Angle Vec2<Type>::angle_line(const Vec2<Type>& v) const
+	Type Vec2<Type>::angle_line(const Vec2<Type>& v) const
 	{
-		return Angle(atan2f(v.y - y, v.x - x), angle_radians);
+		return atan2f(v.y - y, v.x - x);
 	}
 
 	template<>
-	Angle Vec2<int>::angle_line(const Vec2<int>& v) const
+	int Vec2<int>::angle_line(const Vec2<int>& v) const
 	{
 		float this_x = (float)x;
 		float this_y = (float)y;
 		float v_x = (float)v.x;
 		float v_y = (float)v.y;
 
-		return Angle(atan2f(v_y - this_y, v_x - this_x), angle_radians);
+		return atan2f(v_y - this_y, v_x - this_x);
 	}
 
 	template<typename Type>
@@ -135,12 +135,12 @@ namespace uicore
 	}
 
 	template<typename Type>
-	Vec2<Type> &Vec2<Type>::rotate(const Vec2<Type>& hotspot, const Angle &angle)
+	Vec2<Type> &Vec2<Type>::rotate(const Vec2<Type>& hotspot, Type angle)
 	{
 		// Move the hotspot to 0,0
 		Vec2<Type> r(x - hotspot.x, y - hotspot.y);
 
-		float radians = angle.to_radians();
+		float radians = angle;
 		float sin_angle = sinf(radians);
 		float cos_angle = cosf(radians);
 
@@ -153,7 +153,7 @@ namespace uicore
 	}
 
 	template<typename Type>
-	Vec2<Type> Vec2<Type>::rotate(const Vec2<Type>& vector, const Vec2<Type>& hotspot, const Angle &angle)
+	Vec2<Type> Vec2<Type>::rotate(const Vec2<Type>& vector, const Vec2<Type>& hotspot, Type angle)
 	{
 		Vec2<Type> dest(vector);
 		dest.rotate(hotspot, angle);

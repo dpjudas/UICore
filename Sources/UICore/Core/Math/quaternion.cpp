@@ -98,7 +98,7 @@ namespace uicore
 			if (Vec3<Type>::dot(axis, axis) < Type(1e-6)) // colinear
 				axis = Vec3<Type>::cross(Vec3<Type>(Type(0), Type(1), Type(0)), v0);
 			axis.normalize();
-			return axis_angle(Angle(180.0f, angle_degrees), axis);
+			return axis_angle(PI, axis);
 		}
 		else
 		{
@@ -118,60 +118,48 @@ namespace uicore
 	}
 
 	template<typename Type>
-	Quaternionx<Type>::Quaternionx(Type euler_x, Type euler_y, Type euler_z, AngleUnit unit, EulerOrder order)
+	Quaternionx<Type>::Quaternionx(const Vec3<Type> &euler, EulerOrder order)
 	{
-		set(euler_x, euler_y, euler_z, unit, order);
+		set(euler, order);
 	}
 
 	template<typename Type>
-	Quaternionx<Type>::Quaternionx(const Vec3<Type> &euler, AngleUnit unit, EulerOrder order)
-	{
-		set(euler.x, euler.y, euler.z, unit, order);
-	}
-
-	template<typename Type>
-	Quaternionx<Type>::Quaternionx(const Angle &euler_x, const Angle &euler_y, const Angle &euler_z, EulerOrder order)
+	Quaternionx<Type>::Quaternionx(Type euler_x, Type euler_y, Type euler_z, EulerOrder order)
 	{
 		set(euler_x, euler_y, euler_z, order);
 	}
 
 	template<typename Type>
-	void Quaternionx<Type>::set(const Vec3<Type> &euler, AngleUnit unit, EulerOrder order)
+	void Quaternionx<Type>::set(const Vec3<Type> &euler, EulerOrder order)
 	{
-		set(euler.x, euler.y, euler.z, unit, order);
+		set(euler.x, euler.y, euler.z, order);
 	}
 
 	template<typename Type>
-	void Quaternionx<Type>::set(const Angle &euler_x, const Angle &euler_y, const Angle &euler_z, EulerOrder order)
+	void Quaternionx<Type>::set(Type euler_x, Type euler_y, Type euler_z, EulerOrder order)
 	{
-		set(euler_x.to_radians(), euler_y.to_radians(), euler_z.to_radians(), angle_radians, order);
-	}
-
-	template<typename Type>
-	void Quaternionx<Type>::set(Type euler_x, Type euler_y, Type euler_z, AngleUnit unit, EulerOrder order)
-	{
-		Quaternionx<Type> q_x = Quaternionx<Type>::axis_angle(Angle(euler_x, unit), Vec3f(1.0f, 0.0f, 0.0f));
-		Quaternionx<Type> q_y = Quaternionx<Type>::axis_angle(Angle(euler_y, unit), Vec3f(0.0f, 1.0f, 0.0f));
-		Quaternionx<Type> q_z = Quaternionx<Type>::axis_angle(Angle(euler_z, unit), Vec3f(0.0f, 0.0f, 1.0f));
+		Quaternionx<Type> q_x = Quaternionx<Type>::axis_angle(euler_x, Vec3f(1.0f, 0.0f, 0.0f));
+		Quaternionx<Type> q_y = Quaternionx<Type>::axis_angle(euler_y, Vec3f(0.0f, 1.0f, 0.0f));
+		Quaternionx<Type> q_z = Quaternionx<Type>::axis_angle(euler_z, Vec3f(0.0f, 0.0f, 1.0f));
 
 		switch (order)
 		{
-		case order_XYZ:
+		case EulerOrder::xyz:
 			*this = Quaternionx<Type>::multiply(Quaternionx<Type>::multiply(q_x, q_y), q_z);
 			break;
-		case order_XZY:
+		case EulerOrder::xzy:
 			*this = Quaternionx<Type>::multiply(Quaternionx<Type>::multiply(q_x, q_z), q_y);
 			break;
-		case order_YZX:
+		case EulerOrder::yzx:
 			*this = Quaternionx<Type>::multiply(Quaternionx<Type>::multiply(q_y, q_z), q_x);
 			break;
-		case order_YXZ:
+		case EulerOrder::yxz:
 			*this = Quaternionx<Type>::multiply(Quaternionx<Type>::multiply(q_y, q_x), q_z);
 			break;
-		case order_ZXY:
+		case EulerOrder::zxy:
 			*this = Quaternionx<Type>::multiply(Quaternionx<Type>::multiply(q_z, q_x), q_y);
 			break;
-		case order_ZYX:
+		case EulerOrder::zyx:
 			*this = Quaternionx<Type>::multiply(Quaternionx<Type>::multiply(q_z, q_y), q_x);
 			break;
 		default:
@@ -239,10 +227,10 @@ namespace uicore
 	}
 
 	template<typename Type>
-	Quaternionx<Type> Quaternionx<Type>::axis_angle(const Angle &angle, const Vec3f &axis)
+	Quaternionx<Type> Quaternionx<Type>::axis_angle(Type angle, const Vec3f &axis)
 	{
 		Type length = axis.length();
-		Type half_angle_radians = angle.to_radians() / (Type) 2.0;
+		Type half_angle_radians = angle / (Type) 2.0;
 		Quaternionx<Type> quaternion;
 		quaternion.w = cos(half_angle_radians);
 		quaternion.x = axis.x * sin(half_angle_radians) / length;
@@ -268,14 +256,14 @@ namespace uicore
 	}
 
 	template<typename Type>
-	Quaternionx<Type> &Quaternionx<Type>::rotate(const Angle &angle, const Vec3f &axis)
+	Quaternionx<Type> &Quaternionx<Type>::rotate(Type angle, const Vec3f &axis)
 	{
 		*this = *this * axis_angle(angle, axis);
 		return *this;
 	}
 
 	template<typename Type>
-	Quaternionx<Type> &Quaternionx<Type>::rotate(const Angle &euler_x, const Angle &euler_y, const Angle &euler_z, EulerOrder order)
+	Quaternionx<Type> &Quaternionx<Type>::rotate(Type euler_x, Type euler_y, Type euler_z, EulerOrder order)
 	{
 		Quaternionx<Type> quaternion(euler_x, euler_y, euler_z, order);
 		*this = *this * quaternion;

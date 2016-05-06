@@ -23,7 +23,7 @@
 **
 **  File Author(s):
 **
-**    Harry Storbacka
+**    Magnus Norddahl
 */
 
 #include "UICore/precomp.h"
@@ -32,145 +32,70 @@
 
 namespace uicore
 {
-	Angle::Angle() : value_rad(0)
+	float normalize_360(float degrees)
 	{
+		degrees = std::fmod(degrees, 360.0f);
+		if (degrees < 0.0f)
+			degrees += 360.0f;
+		return degrees;
 	}
 
-	Angle::Angle(float value, AngleUnit unit)
+	double normalize_360(double degrees)
 	{
-		if (unit == angle_radians)
-		{
-			value_rad = value;
-		}
-		else
-		{
-			value_rad = value * float(PI) / 180.0f;
-		}
+		degrees = std::fmod(degrees, 360.0);
+		if (degrees < 0.0)
+			degrees += 360.0;
+		return degrees;
 	}
 
-	Angle Angle::from_radians(float value)
+	/// \brief Converts angle to range [-180,180] degrees.
+	float normalize_180(float degrees)
 	{
-		return Angle(value, angle_radians);
+		degrees = normalize_360(degrees);
+		if (degrees > 180.0f)
+			degrees -= 360.0f;
+		return degrees;
 	}
 
-	Angle Angle::from_degrees(float value)
+	double normalize_180(double degrees)
 	{
-		return Angle(value, angle_degrees);
+		degrees = normalize_360(degrees);
+		if (degrees > 180.0)
+			degrees -= 360.0;
+		return degrees;
 	}
 
-	float Angle::to_degrees() const
+	/// \brief Converts angle to range [0,2*PI] degrees.
+	float normalize_2pi(float radians)
 	{
-		return value_rad * 180.0f / float(PI);
+		radians = std::fmod(radians, PI * 2.0f);
+		if (radians < 0.0f)
+			radians += PI * 2.0f;
+		return radians;
 	}
 
-	float Angle::to_radians() const
+	double normalize_2pi(double radians)
 	{
-		return value_rad;
+		radians = std::fmod(radians, PI_D * 2.0);
+		if (radians < 0.0)
+			radians += PI * 2.0;
+		return radians;
 	}
 
-	void Angle::set_degrees(float value_degrees)
+	/// \brief Converts angle to range [-PI,PI] degrees.
+	float normalize_pi(float radians)
 	{
-		value_rad = value_degrees * float(PI) / 180.0f;
+		radians = normalize_2pi(radians);
+		if (radians > PI)
+			radians -= PI * 2.0f;
+		return radians;
 	}
 
-	void Angle::set_radians(float value_radians)
+	double normalize_pi(double radians)
 	{
-		value_rad = value_radians;
-	}
-
-	Angle &Angle::normalize()
-	{
-		value_rad = fmod(value_rad, PI*2.0f);
-		if (value_rad < 0.0f)
-			value_rad += PI*2.0f;
-		return *this;
-	}
-
-	Angle &Angle::normalize_180()
-	{
-		normalize();
-		if (value_rad > PI)
-			value_rad -= PI * 2.0f;
-		return *this;
-	}
-
-	void Angle::operator+=(const Angle &angle)
-	{
-		value_rad += angle.value_rad;
-	}
-
-	void Angle::operator-=(const Angle &angle)
-	{
-		value_rad -= angle.value_rad;
-	}
-
-	void Angle::operator*=(const Angle &angle)
-	{
-		value_rad *= angle.value_rad;
-	}
-
-	void Angle::operator/=(const Angle &angle)
-	{
-		value_rad /= angle.value_rad;
-	}
-
-	Angle Angle::operator+(const Angle &angle) const
-	{
-		return Angle(value_rad + angle.value_rad, angle_radians);
-	}
-
-	Angle Angle::operator-(const Angle &angle) const
-	{
-		return Angle(value_rad - angle.value_rad, angle_radians);
-	}
-
-	Angle Angle::operator*(const Angle &angle) const
-	{
-		return Angle(value_rad * angle.value_rad, angle_radians);
-	}
-
-	Angle Angle::operator*(float value) const
-	{
-		return Angle(value_rad * value, angle_radians);
-	}
-
-	Angle Angle::operator/(const Angle &angle) const
-	{
-		return Angle(value_rad / angle.value_rad, angle_radians);
-	}
-
-	Angle Angle::operator/(float value) const
-	{
-		return Angle(value_rad / value, angle_radians);
-	}
-
-	bool Angle::operator<(const Angle &angle) const
-	{
-		return value_rad < angle.value_rad;
-	}
-
-	bool Angle::operator>(const Angle &angle) const
-	{
-		return value_rad > angle.value_rad;
-	}
-
-	bool Angle::operator<=(const Angle &angle) const
-	{
-		return value_rad <= angle.value_rad;
-	}
-
-	bool Angle::operator>=(const Angle &angle) const
-	{
-		return value_rad >= angle.value_rad;
-	}
-
-	bool Angle::operator==(const Angle &angle) const
-	{
-		return value_rad == angle.value_rad;
-	}
-
-	bool Angle::operator!=(const Angle &angle) const
-	{
-		return value_rad != angle.value_rad;
+		radians = normalize_2pi(radians);
+		if (radians > PI)
+			radians -= PI * 2.0;
+		return radians;
 	}
 }

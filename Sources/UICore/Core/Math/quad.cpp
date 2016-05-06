@@ -58,7 +58,7 @@ namespace uicore
 	}
 
 	template<typename Type>
-	Quadx<Type> &Quadx<Type>::rotate(const Vec2<Type> &hotspot, const Angle &angle)
+	Quadx<Type> &Quadx<Type>::rotate(const Vec2<Type> &hotspot, float angle)
 	{
 		p.rotate(hotspot, angle);
 		q.rotate(hotspot, angle);

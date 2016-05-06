@@ -60,8 +60,6 @@ namespace uicore
 	template<typename Type>
 	class Pointx;
 
-	class Angle;
-
 	/// \brief 4D vector
 	///
 	/// These vector templates are defined for:\n
@@ -135,7 +133,7 @@ namespace uicore
 		/// \param angle Angle to rotate
 		/// \param axis Rotation axis.
 		/// \return The rotated vector
-		static Vec4<Type> rotate3(const Vec4<Type>& vector, const Angle &angle, const Vec4<Type>& axis);
+		static Vec4<Type> rotate3(const Vec4<Type>& vector, Type angle, const Vec4<Type>& axis);
 
 		/// \brief Rounds all components on a vector.
 		///
@@ -206,7 +204,7 @@ namespace uicore
 		/// \param vector = Second vector used to calculate angle.
 		///
 		/// \return The angle between the two vectors.
-		Angle angle3(const Vec4<Type>& vector) const;
+		Type angle3(const Vec4<Type>& vector) const;
 
 		/// \brief Calculate the distance between this vector and an other vector (not taking into account the w ordinate).
 		///
@@ -238,7 +236,7 @@ namespace uicore
 		/// \param angle Angle to rotate
 		/// \param axis Rotation axis.
 		/// \return reference to this object
-		Vec4<Type> &rotate3(const Angle &angle, const Vec4<Type>& axis);
+		Vec4<Type> &rotate3(Type angle, const Vec4<Type>& axis);
 
 		/// \brief Rounds all components on this vector.
 		///

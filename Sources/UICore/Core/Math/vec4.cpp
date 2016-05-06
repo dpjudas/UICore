@@ -77,9 +77,9 @@ namespace uicore
 	}
 
 	template<typename Type>
-	Angle Vec4<Type>::angle3(const Vec4<Type>& v) const
+	Type Vec4<Type>::angle3(const Vec4<Type>& v) const
 	{
-		return Angle(acosf(float(dot3(v) / (length3()*v.length3()))), angle_radians);
+		return acosf(float(dot3(v) / (length3()*v.length3())));
 	}
 
 	// For floats
@@ -169,12 +169,12 @@ namespace uicore
 
 	// Same as glRotate[f/d](angle, a);
 	template<typename Type>
-	Vec4<Type> &Vec4<Type>::rotate3(const Angle &angle, const Vec4<Type>& a)
+	Vec4<Type> &Vec4<Type>::rotate3(Type angle, const Vec4<Type>& a)
 	{
 		Vec4<Type> tmp = Vec4<Type>();
 
-		float s = sin(angle.to_radians());
-		float c = cos(angle.to_radians());
+		float s = sin(angle);
+		float c = cos(angle);
 
 		tmp.x = (Type)(x*(a.x*a.x*(1 - c) + c) + y*(a.x*a.y*(1 - c) - a.z*s) + z*(a.x*a.z*(1 - c) + a.y*s));
 		tmp.y = (Type)(x*(a.y*a.x*(1 - c) + a.z*s) + y*(a.y*a.y*(1 - c) + c) + z*(a.y*a.z*(1 - c) - a.x*s));
@@ -184,7 +184,7 @@ namespace uicore
 	}
 
 	template<typename Type>
-	Vec4<Type> Vec4<Type>::rotate3(const Vec4<Type>& vector, const Angle &angle, const Vec4<Type>& a)
+	Vec4<Type> Vec4<Type>::rotate3(const Vec4<Type>& vector, Type angle, const Vec4<Type>& a)
 	{
 		Vec4<Type> dest(vector);
 		dest.rotate3(angle, a);

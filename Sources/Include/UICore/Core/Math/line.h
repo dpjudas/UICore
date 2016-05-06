@@ -42,8 +42,6 @@ namespace uicore
 	template<typename Type>
 	class Vec2;
 
-	class Angle;
-
 	/// \brief 3D line
 	///
 	/// These line templates are defined for: int (Line3), float (Line3f), double (Line3d)
