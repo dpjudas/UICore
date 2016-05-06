@@ -46,14 +46,14 @@ namespace uicore
 		
 		NSArray *paths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES);
 		NSString *libraryDirectory = [paths objectAtIndex:0];
-		configuration_path = PathHelp::add_trailing_slash([libraryDirectory UTF8String]);
+		configuration_path = FilePath::add_trailing_slash([libraryDirectory UTF8String]);
 		
 		if (!company_name.empty())
-			configuration_path += PathHelp::add_trailing_slash(company_name);
+			configuration_path += FilePath::add_trailing_slash(company_name);
 		if (!application_name.empty())
-			configuration_path += PathHelp::add_trailing_slash(application_name);
+			configuration_path += FilePath::add_trailing_slash(application_name);
 		if (!version.empty())
-			configuration_path += PathHelp::add_trailing_slash(version);
+			configuration_path += FilePath::add_trailing_slash(version);
 		
 		if (create_dirs_if_missing)
 			create(configuration_path, true);
@@ -63,7 +63,7 @@ namespace uicore
 	
 	std::string Directory::resourcedata(const std::string &application_name, const std::string &data_dir_name)
 	{
-		std::string resource_path = PathHelp::add_trailing_slash([[[NSBundle mainBundle] resourcePath] UTF8String]);
+		std::string resource_path = FilePath::add_trailing_slash([[[NSBundle mainBundle] resourcePath] UTF8String]);
 		return resource_path + data_dir_name;
 	}
 }

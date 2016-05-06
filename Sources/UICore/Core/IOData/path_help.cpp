@@ -47,200 +47,84 @@
 
 namespace uicore
 {
-	std::string PathHelp::make_absolute(
-		const std::string &base_path,
-		const std::string &relative_path,
-		PathType path_type)
+	std::string FilePath::absolute_path(std::string path)
 	{
-		std::string base = normalize(base_path, path_type);
-		std::string relative = normalize(relative_path, path_type);
-		if (path_type == path_type_file)
-		{
-			if (!is_absolute(base, path_type_file))
-			{
-				// make base_path absolute using current drive and directory
+		path = normalize(path, FilePathType::file_system);
+		if (is_absolute(path, FilePathType::file_system))
+			return path;
+
 #ifdef WIN32
-				WCHAR absolute_base[MAX_PATH];
-				memset(absolute_base, 0, sizeof(WCHAR) * MAX_PATH);
-				if (_wfullpath(absolute_base, Text::to_utf16(base).c_str(), MAX_PATH) == 0)
-					throw Exception(string_format("Unable to make base path absolute: %1", base_path));
-				base = Text::from_utf16(absolute_base);
+		WCHAR absolute_path[MAX_PATH];
+		memset(absolute_path, 0, sizeof(WCHAR) * MAX_PATH);
+		if (_wfullpath(absolute_path, Text::to_utf16(path).c_str(), MAX_PATH) == 0)
+			throw Exception(string_format("Unable to make base path absolute: %1", path));
+		path = Text::from_utf16(absolute_path);
 #else
-				char working_dir[1024];
-				memset(working_dir, 0, 1024);
-				if (getcwd(working_dir, 1024) == nullptr)
-					throw Exception("Unable to get current working directory!");
-				base = add_trailing_slash(working_dir, path_type) + base;
+		char working_dir[1024];
+		memset(working_dir, 0, 1024);
+		if (getcwd(working_dir, 1024) == nullptr)
+			throw Exception("Unable to get current working directory!");
+		path = combine(working_dir, path, FilePathType::file_system);
 #endif
-			}
 
-			std::string base_location = location(base_path, path_type_file);
-			std::string relative_location = location(relative_path, path_type_file);
-			if (relative_location.empty() || Text::equal_caseless(relative_location, base_location))
-			{
-				if (is_absolute(relative, path_type))
-				{
-					if (relative_location.empty())
-						return base_location + relative;
-					else
-						return relative;
-				}
-				std::string absolute = add_trailing_slash(base, path_type) + relative.substr(relative_location.length());
-				return normalize(absolute, path_type);
-			}
-			else
-			{
-#ifdef WIN32
-				if (is_absolute(relative, path_type))
-					return relative;
-
-				if (relative_location.length() == 2 && relative_location[1] == ':')
-				{
-					int drive = 0;
-					if (relative_location[0] >= 'A' && relative_location[0] <= 'Z')
-						drive = relative_location[0] - 'A' + 1;
-					else if (relative_location[0] >= 'a' && relative_location[0] <= 'z')
-						drive = relative_location[0] - 'a' + 1;
-					else
-						throw Exception(string_format("Invalid drive: %1", relative_location));
-					WCHAR working_dir[MAX_PATH];
-					memset(working_dir, 0, sizeof(WCHAR)*MAX_PATH);
-					if (_wgetdcwd(drive, working_dir, MAX_PATH) == 0)
-						throw Exception(string_format("Unable to get current working directory for %1!", relative_location));
-
-					return add_trailing_slash(Text::from_utf16(working_dir), path_type) + relative.substr(relative_location.length());
-				}
-				else
-				{
-					return relative; // UNC path
-				}
-#else
-				throw Exception("Error in PathHelp::make_absolute");
-#endif
-			}
-		}
-		else
-		{
-			if (is_absolute(relative, path_type))
-				return relative;
-			std::string absolute = add_trailing_slash(base, path_type) + relative;
-			return normalize(absolute, path_type);
-		}
+		return path;
 	}
 
-	std::string PathHelp::make_relative(
-		const std::string &base_path,
-		const std::string &absolute_path,
-		PathType path_type)
+	std::string FilePath::location(const std::string &path)
 	{
+#ifdef WIN32
+		if (path.length() >= 2)
+		{
+			if (path[1] == ':')
+			{
+				return path.substr(0, 2);
+			}
+			else if (path[0] == '\\' && path[1] == '\\')
+			{
+				std::string::size_type pos = path.find_first_of("/\\", 2);
+				if (pos == std::string::npos)
+					return path;
+				else
+					return path.substr(0, pos);
+			}
+		}
+#endif
+		return std::string();
+	}
+
+	std::string FilePath::make_absolute(const std::string &base_path, const std::string &relative_path, FilePathType path_type)
+	{
+		std::string path = normalize(combine(base_path, relative_path));
+		if (path_type == FilePathType::file_system)
+			path = absolute_path(path);
+		return path;
+	}
+
+	std::string FilePath::make_relative(const std::string &base_path, const std::string &absolute_path, FilePathType path_type)
+	{
+		if (is_relative(base_path, path_type))
+			throw Exception(string_format("Relative path %1 used as base path for make_relative", base_path));
+
+		if (is_relative(absolute_path))
+			return normalize(combine(base_path, absolute_path), path_type);
+
 		std::string base = add_trailing_slash(normalize(base_path, path_type), path_type);
 		std::string absolute = normalize(absolute_path, path_type);
 
-		if (path_type == path_type_file)
-		{
-			std::string base_location = location(base, path_type_file);
-			std::string absolute_location = location(absolute, path_type_file);
-
-			if (is_relative(base, path_type))
-			{
-#ifdef WIN32
-				if (base_location.length() == 2 && base_location[1] == ':')
-				{
-					int drive = 0;
-					if (base_location[0] >= 'A' && base_location[0] <= 'Z')
-						drive = base_location[0] - 'A' + 1;
-					else if (base_location[0] >= 'a' && base_location[0] <= 'z')
-						drive = base_location[0] - 'a' + 1;
-					else
-						throw Exception(string_format("Invalid drive: %1", base_location));
-					WCHAR working_dir[MAX_PATH];
-					memset(working_dir, 0, sizeof(WCHAR)*MAX_PATH);
-					if (_wgetdcwd(drive, working_dir, MAX_PATH) == 0)
-						throw Exception(string_format("Unable to get current working directory for %1!", base_location));
-
-					base = add_trailing_slash(Text::from_utf16(working_dir), path_type) + base;
-				}
-				else if (base_location.empty())
-				{
-					WCHAR working_dir[MAX_PATH];
-					memset(working_dir, 0, sizeof(WCHAR)*MAX_PATH);
-					if (GetCurrentDirectory(MAX_PATH, working_dir) == FALSE)
-						throw Exception(string_format("Unable to get current working directory for %1!", base_location));
-
-					base = add_trailing_slash(Text::from_utf16(working_dir), path_type) + base;
-				}
-				else
-				{
-					throw Exception(string_format("Error in make_relative with base path: %1", base_path));
-				}
-#else
-				char working_dir[1024];
-				memset(working_dir, 0, 1024);
-				if (getcwd(working_dir, 1024) == nullptr)
-					throw Exception("Unable to get current working directory!");
-				base = add_trailing_slash(working_dir, path_type) + base;
-#endif
-			}
-			if (is_relative(absolute, path_type))
-			{
-#ifdef WIN32
-				if (absolute_location.length() == 2 && absolute_location[1] == ':')
-				{
-					int drive = 0;
-					if (absolute_location[0] >= 'A' && absolute_location[0] <= 'Z')
-						drive = absolute_location[0] - 'A' + 1;
-					else if (absolute_location[0] >= 'a' && absolute_location[0] <= 'z')
-						drive = absolute_location[0] - 'a' + 1;
-					else
-						throw Exception(string_format("Invalid drive: %1", absolute_location));
-					WCHAR working_dir[MAX_PATH];
-					memset(working_dir, 0, sizeof(WCHAR)*MAX_PATH);
-					if (_wgetdcwd(drive, working_dir, MAX_PATH) == 0)
-						throw Exception(string_format("Unable to get current working directory for %1!", absolute_location));
-
-					absolute = add_trailing_slash(Text::from_utf16(working_dir), path_type) + absolute;
-				}
-				else if (absolute_location.empty())
-				{
-					WCHAR working_dir[MAX_PATH];
-					memset(working_dir, 0, sizeof(WCHAR)*MAX_PATH);
-					if (GetCurrentDirectory(MAX_PATH, working_dir) == FALSE)
-						throw Exception(string_format("Unable to get current working directory for %1!", absolute_location));
-
-					absolute = add_trailing_slash(Text::from_utf16(working_dir), path_type) + absolute;
-				}
-				else
-				{
-					throw Exception(string_format("Error in make_relative with absolute path: %1", absolute_path));
-				}
-#else
-				char working_dir[1024];
-				memset(working_dir, 0, 1024);
-				if (getcwd(working_dir, 1024) == nullptr)
-					throw Exception("Unable to get current working directory!");
-				absolute = add_trailing_slash(working_dir, path_type) + absolute;
-#endif
-			}
-
-			base_location = location(base, path_type_file);
-			absolute_location = location(absolute, path_type_file);
-			if (!Text::equal_caseless(absolute_location, base_location))
-				return absolute_path;
-		}
-
-		if (is_relative(base, path_type))
-			throw Exception(string_format("Relative path %1 used as base path for make_relative", base_path));
-		if (is_relative(absolute, path_type))
-			throw Exception(string_format("Relative path %1 used as absolute path for make_relative", absolute_path));
+		std::string location_base = location(base);
+		std::string location_absolute = location(absolute);
+		if (!Text::equal_caseless(location_base, location_absolute))
+			return absolute_path;
 
 		std::string relative;
 		std::string relative_end;
 
 		bool differs = false;
 		std::string::size_type start_pos = 0, end_pos = 0;
+
 		while (true)
 		{
-			if (path_type == path_type_file)
+			if (path_type == FilePathType::file_system)
 			{
 				end_pos = base.find_first_of("\\/", start_pos);
 			}
@@ -257,7 +141,7 @@ namespace uicore
 				std::string absolute_element = absolute.substr(start_pos, end_pos - start_pos + 1);
 
 				bool same_element = false;
-				if (path_type == path_type_file)
+				if (path_type == FilePathType::file_system)
 				{
 #ifdef WIN32
 					same_element = Text::equal_caseless(base_element, absolute_element);
@@ -283,7 +167,7 @@ namespace uicore
 
 			if (differs)
 			{
-				if (path_type_file)
+				if (path_type == FilePathType::file_system)
 				{
 #ifdef WIN32
 					relative += "..\\";
@@ -303,9 +187,9 @@ namespace uicore
 		return relative + relative_end;
 	}
 
-	bool PathHelp::is_absolute(const std::string &path, PathType path_type)
+	bool FilePath::is_absolute(const std::string &path, FilePathType path_type)
 	{
-		if (path_type == path_type_file)
+		if (path_type == FilePathType::file_system)
 		{
 #ifdef WIN32
 			if (path.length() < 3)
@@ -335,19 +219,21 @@ namespace uicore
 		}
 	}
 
-	bool PathHelp::is_relative(const std::string &path, PathType path_type)
+	bool FilePath::is_relative(const std::string &path, FilePathType path_type)
 	{
 		return !is_absolute(path, path_type);
 	}
 
-	std::string PathHelp::normalize(
+	std::string FilePath::normalize(
 		const std::string &input_path,
-		PathType path_type)
+		FilePathType path_type)
 	{
 		if (input_path.empty())
 			return std::string();
 
-		std::string path_location = location(input_path, path_type);
+		std::string path_location;
+		if (path_type == FilePathType::file_system)
+			path_location = location(input_path);
 		std::string path = input_path.substr(path_location.length());
 
 		bool ends_in_slash = false;
@@ -359,7 +245,7 @@ namespace uicore
 			if (input_path.size() == 1)
 			{
 #ifdef WIN32
-				if (path_type == path_type_file)
+				if (path_type == FilePathType::file_system)
 				{
 					return "\\";
 				}
@@ -432,7 +318,7 @@ namespace uicore
 		if (absolute)
 		{
 #ifdef WIN32
-			if (path_type == path_type_file)
+			if (path_type == FilePathType::file_system)
 				normalized_path += "\\";
 			else
 				normalized_path += "/";
@@ -444,7 +330,7 @@ namespace uicore
 		for (auto & element : elements)
 		{
 #ifdef WIN32
-			if (path_type == path_type_file)
+			if (path_type == FilePathType::file_system)
 				normalized_path += element + "\\";
 			else
 				normalized_path += element + "/";
@@ -458,11 +344,11 @@ namespace uicore
 		return path_location + normalized_path;
 	}
 
-	std::string PathHelp::add_trailing_slash(const std::string &path, PathType path_type)
+	std::string FilePath::add_trailing_slash(const std::string &path, FilePathType path_type)
 	{
 		if (path.empty())
 			return path;
-		if (path_type == path_type_file)
+		if (path_type == FilePathType::file_system)
 		{
 #ifdef WIN32
 			if (path[path.length() - 1] != '/' && path[path.length() - 1] != '\\')
@@ -481,7 +367,7 @@ namespace uicore
 		}
 	}
 
-	std::string PathHelp::remove_trailing_slash(const std::string &path)
+	std::string FilePath::remove_trailing_slash(const std::string &path)
 	{
 		if (path.empty())
 			return path;
@@ -492,233 +378,102 @@ namespace uicore
 		return path;
 	}
 
-	std::string PathHelp::location(
-		const std::string &fullname,
-		PathType path_type)
+	std::string FilePath::basepath(const std::string &path, FilePathType path_type)
 	{
 #ifdef WIN32
-		std::string path = fullpath(fullname, path_type);
-		if (path_type == path_type_file && path.length() >= 2)
+		if (path_type == FilePathType::file_system)
 		{
-			if (path[1] == ':')
-				return path.substr(0, 2);
-
-			if (path[0] == '\\' && path[1] == '\\')
-			{
-				std::string::size_type pos = path.find_first_of("/\\", 2);
-				if (pos == std::string::npos)
-					return path;
-				else
-					return path.substr(0, pos);
-			}
-		}
-#endif
-		return std::string();
-	}
-
-	std::string PathHelp::basepath(
-		const std::string &fullname,
-		PathType path_type)
-	{
-		std::string path = fullpath(fullname, path_type);
-#ifdef WIN32
-		if (path_type == path_type_file && path.length() >= 2)
-		{
-			if (path[1] == ':')
-				return path.substr(2);
-
-			if (path[0] == '\\' && path[1] == '\\')
-			{
-				std::string::size_type pos = path.find_first_of("/\\", 2);
-				if (pos == std::string::npos)
-					return std::string();
-				else
-					return path.substr(pos);
-			}
-		}
-#endif
-		return path;
-	}
-
-	std::vector<std::string> PathHelp::split_basepath(
-		const std::string &fullname,
-		PathType path_type)
-	{
-		std::string base = basepath(fullname, path_type);
-		std::vector<std::string> result;
-		if (path_type == path_type_file)
-		{
-			std::string::size_type start_pos = 0, end_pos = 0;
-			while (true)
-			{
-				end_pos = base.find_first_of("/\\", start_pos);
-
-				if (end_pos == std::string::npos)
-				{
-					if (start_pos != base.length())
-						result.push_back(base.substr(start_pos));
-					break;
-				}
-
-				result.push_back(base.substr(start_pos, end_pos - start_pos));
-				start_pos = end_pos + 1;
-			}
-		}
-		else
-		{
-			std::string::size_type start_pos = 0, end_pos = 0;
-			while (true)
-			{
-				end_pos = base.find_first_of('/', start_pos);
-				if (end_pos == std::string::npos)
-				{
-					if (start_pos != base.length())
-						result.push_back(base.substr(start_pos));
-					break;
-				}
-
-				result.push_back(base.substr(start_pos, end_pos - start_pos));
-				start_pos = end_pos + 1;
-			}
-		}
-		return result;
-	}
-
-	std::string PathHelp::fullpath(
-		const std::string &filename,
-		PathType path_type)
-	{
-		if (path_type == path_type_file)
-		{
-
-			std::string::size_type pos = filename.find_last_of("/\\");
-			if (pos == std::string::npos)
-			{
-#ifdef WIN32
-				if (filename.length() >= 2 && filename[1] == ':')
-					return filename.substr(0, 2);
-#endif
+			auto last_slash = path.find_last_of("/\\");
+			if (last_slash != std::string::npos)
+				return path.substr(0, last_slash + 1);
+			else
 				return std::string();
-			}
-			return filename.substr(0, pos + 1);
 		}
-		else
-		{
-			std::string::size_type pos = filename.find_last_of('/');
-			if (pos == std::string::npos)
-				return std::string();
-			return filename.substr(0, pos + 1);
-		}
-	}
-
-	std::string PathHelp::filename(
-		const std::string &fullname,
-		PathType path_type)
-	{
-		if (path_type == path_type_file)
-		{
-			std::string::size_type pos = fullname.find_last_of("/\\");
-			if (pos == std::string::npos)
-			{
-#ifdef WIN32
-				if (fullname.length() >= 2 && fullname[1] == ':')
-					return fullname.substr(2);
 #endif
-				return fullname;
-			}
-			return fullname.substr(pos + 1);
-		}
+
+		auto last_slash = path.find_last_of('/');
+		if (last_slash != std::string::npos)
+			return path.substr(0, last_slash + 1);
 		else
-		{
-			std::string::size_type pos = fullname.find_last_of('/');
-			if (pos == std::string::npos)
-				return fullname;
-			return fullname.substr(pos + 1);
-		}
+			return std::string();
 	}
 
-	std::string PathHelp::basename(
-		const std::string &fullname,
-		PathType path_type)
+	std::string FilePath::filename(const std::string &path, FilePathType path_type)
 	{
-		std::string file = filename(fullname, path_type);
+#ifdef WIN32
+		if (path_type == FilePathType::file_system)
+		{
+			auto last_slash = path.find_last_of("/\\");
+			if (last_slash != std::string::npos)
+				return path.substr(last_slash + 1);
+			else
+				return path;
+		}
+#endif
+
+		auto last_slash = path.find_last_of('/');
+		if (last_slash != std::string::npos)
+			return path.substr(last_slash + 1);
+		else
+			return path;
+	}
+
+	std::string FilePath::filename_without_extension(const std::string &path, FilePathType path_type)
+	{
+		std::string file = filename(path, path_type);
 		std::string::size_type pos = file.find_last_of('.');
 		if (pos == std::string::npos)
 			return file;
 #ifndef WIN32
 		// Files beginning with a dot is not a filename extension in Unix.
 		// This is different from Windows where it is considered the extension.
-		if (path_type == path_type_file && pos == 0)
+		if (path_type == FilePathType::file_system && pos == 0)
 			return file;
 #endif
-		if (path_type == path_type_virtual && pos == 0)
+		if (path_type == FilePathType::slashes && pos == 0)
 			return file;
 		return file.substr(0, pos);
 	}
 
-	std::string PathHelp::extension(
-		const std::string &fullname,
-		PathType path_type)
+	std::string FilePath::extension(const std::string &path, FilePathType path_type)
 	{
-		std::string file = filename(fullname, path_type);
+		std::string file = filename(path, path_type);
 		std::string::size_type pos = file.find_last_of('.');
 		if (pos == std::string::npos)
 			return std::string();
 #ifndef WIN32
 		// Files beginning with a dot is not a filename extension in Unix.
 		// This is different from Windows where it is considered the extension.
-		if (path_type == path_type_file && pos == 0)
+		if (path_type == FilePathType::file_system && pos == 0)
 			return std::string();
 #endif
-		if (path_type == path_type_virtual && pos == 0)
+		if (path_type == FilePathType::slashes && pos == 0)
 			return std::string();
 		return file.substr(pos + 1);
 	}
 
-	std::string PathHelp::fullname(
-		const std::string &fullpath,
-		const std::string &filename,
-		PathType path_type)
+	bool FilePath::has_extension(const std::string &path, const std::string &test_extension, FilePathType path_type)
 	{
-		return add_trailing_slash(fullpath, path_type) + filename;
+		return Text::equal_caseless(extension(path, path_type), test_extension);
 	}
 
-	std::string PathHelp::fullname(
-		const std::string &fullpath,
-		const std::string &filename,
-		const std::string &extension,
-		PathType path_type)
-	{
-		if (!extension.empty() && extension[0] == '.')
-			return add_trailing_slash(fullpath, path_type) + filename + extension;
-		else if (!extension.empty())
-			return add_trailing_slash(fullpath, path_type) + filename + "." + extension;
-		else
-			return add_trailing_slash(fullpath, path_type) + filename;
-	}
-
-	std::string PathHelp::fullname(
-		const std::string &location,
-		const std::string &basepath,
-		const std::string &filename,
-		const std::string &extension,
-		PathType path_type)
-	{
-		std::string fullname = location;
-		fullname += add_trailing_slash(basepath, path_type);
-		fullname += filename;
-		if (!extension.empty() && extension[0] == '.')
-			fullname += extension;
-		else if (!extension.empty())
-			fullname += "." + extension;
-		return fullname;
-	}
-
-	std::string PathHelp::combine(const std::string &part1, const std::string &part2, PathType path_type)
+	std::string FilePath::combine(const std::string &part1, const std::string &part2, FilePathType path_type)
 	{
 		if (!part1.empty())
+		{
+			// Absolute paths always override the base path
+			if (is_absolute(part2, path_type))
+				return part2;
+
+			// Drive letters also override the base path
+			if (path_type == FilePathType::file_system && !location(part2).empty())
+				return part2;
+
 			return add_trailing_slash(part1, path_type) + part2;
+		}
 		else
+		{
 			return part2;
+		}
 	}
 }

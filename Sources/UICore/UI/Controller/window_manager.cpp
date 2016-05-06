@@ -143,8 +143,8 @@ namespace uicore
 
 		if (!controller->impl->icon_images.empty())
 		{
-			display_window->set_large_icon(ImageFile::load(PathHelp::combine(UIThread::resource_path(), controller->impl->icon_images.front())));
-			display_window->set_small_icon(ImageFile::load(PathHelp::combine(UIThread::resource_path(), controller->impl->icon_images.back())));
+			display_window->set_large_icon(ImageFile::load(FilePath::combine(UIThread::resource_path(), controller->impl->icon_images.front())));
+			display_window->set_small_icon(ImageFile::load(FilePath::combine(UIThread::resource_path(), controller->impl->icon_images.back())));
 		}
 
 		controller->impl->window->show(WindowShowType::show);
@@ -191,8 +191,8 @@ namespace uicore
 
 		if (!controller->impl->icon_images.empty())
 		{
-			controller_display_window->set_large_icon(ImageFile::load(PathHelp::combine(UIThread::resource_path(), controller->impl->icon_images.front())));
-			controller_display_window->set_small_icon(ImageFile::load(PathHelp::combine(UIThread::resource_path(), controller->impl->icon_images.back())));
+			controller_display_window->set_large_icon(ImageFile::load(FilePath::combine(UIThread::resource_path(), controller->impl->icon_images.front())));
+			controller_display_window->set_small_icon(ImageFile::load(FilePath::combine(UIThread::resource_path(), controller->impl->icon_images.back())));
 		}
 
 		controller->impl->window->show(WindowShowType::show);
@@ -313,8 +313,8 @@ namespace uicore
 			DisplayWindowPtr display_window = impl->window->display_window();
 			if (display_window && !icon_images.empty())
 			{
-				display_window->set_large_icon(ImageFile::load(PathHelp::combine(UIThread::resource_path(), icon_images.front())));
-				display_window->set_small_icon(ImageFile::load(PathHelp::combine(UIThread::resource_path(), icon_images.back())));
+				display_window->set_large_icon(ImageFile::load(FilePath::combine(UIThread::resource_path(), icon_images.front())));
+				display_window->set_small_icon(ImageFile::load(FilePath::combine(UIThread::resource_path(), icon_images.back())));
 			}
 		}
 	}

@@ -67,7 +67,7 @@ namespace uicore
 
 	std::shared_ptr<Font> Font::create(const FontDescription &desc, const std::string &ttf_filename)
 	{
-		std::string new_filename = PathHelp::filename(ttf_filename, PathHelp::path_type_file);
+		std::string new_filename = FilePath::filename_without_extension(ttf_filename);
 
 		auto font_family = FontFamily::create(new_filename);
 		font_family->add(desc, ttf_filename);

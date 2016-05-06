@@ -109,7 +109,7 @@ namespace uicore
 		if (!family)
 			family = FontFamily::create(family_name);
 
-		family->add(font_desc, PathHelp::combine(UIThreadImpl::instance()->resource_path, src));
+		family->add(font_desc, FilePath::combine(UIThreadImpl::instance()->resource_path, src));
 	}
 
 	std::string UIThread::resource_path()
@@ -126,7 +126,7 @@ namespace uicore
 	{
 		auto &images = UIThreadImpl::instance()->images;
 		if (images.find(name) == images.end())
-			images[name] = Image::create(canvas, PathHelp::combine(UIThreadImpl::instance()->resource_path, name));
+			images[name] = Image::create(canvas, FilePath::combine(UIThreadImpl::instance()->resource_path, name));
 		return images[name];
 	}
 

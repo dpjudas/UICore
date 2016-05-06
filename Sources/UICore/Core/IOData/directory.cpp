@@ -105,7 +105,7 @@ namespace uicore
 		if (dir_name.empty())
 			return false;
 
-		std::string full_path = PathHelp::add_trailing_slash(dir_name);
+		std::string full_path = FilePath::add_trailing_slash(dir_name);
 
 		bool result = true;
 		if (recursive)
@@ -137,7 +137,7 @@ namespace uicore
 		if (dir_name.empty())
 			return false;
 
-		std::string full_path = PathHelp::add_trailing_slash(dir_name);
+		std::string full_path = FilePath::add_trailing_slash(dir_name);
 
 		if (delete_files || delete_sub_directories)
 		{
@@ -232,20 +232,20 @@ namespace uicore
 		TCHAR app_data[MAX_PATH];
 		if (FAILED(SHGetFolderPath(NULL, CSIDL_APPDATA, NULL, SHGFP_TYPE_DEFAULT, app_data)))
 			throw Exception("SHGetFolderPath failed!");
-		configuration_path = PathHelp::add_trailing_slash(Text::from_utf16(app_data));
+		configuration_path = FilePath::add_trailing_slash(Text::from_utf16(app_data));
 #else
 		struct passwd *pwd = getpwuid(getuid());
 		if (pwd == nullptr || pwd->pw_dir == nullptr)
 			throw Exception("getpwuid failed!");
-		configuration_path = PathHelp::add_trailing_slash(pwd->pw_dir) + ".";
+		configuration_path = FilePath::add_trailing_slash(pwd->pw_dir) + ".";
 #endif
 
 		if (!company_name.empty())
-			configuration_path += PathHelp::add_trailing_slash(company_name);
+			configuration_path += FilePath::add_trailing_slash(company_name);
 		if (!application_name.empty())
-			configuration_path += PathHelp::add_trailing_slash(application_name);
+			configuration_path += FilePath::add_trailing_slash(application_name);
 		if (!version.empty())
-			configuration_path += PathHelp::add_trailing_slash(version);
+			configuration_path += FilePath::add_trailing_slash(version);
 
 		if (create_dirs_if_missing)
 			create(configuration_path, true);
@@ -261,7 +261,7 @@ namespace uicore
 		TCHAR app_data[MAX_PATH];
 		if (FAILED(SHGetFolderPath(NULL, CSIDL_LOCAL_APPDATA, NULL, SHGFP_TYPE_DEFAULT, app_data)))
 			throw Exception("SHGetFolderPath failed!");
-		configuration_path = PathHelp::add_trailing_slash(Text::from_utf16(app_data));
+		configuration_path = FilePath::add_trailing_slash(Text::from_utf16(app_data));
 #elif defined(__APPLE__)
 		NSArray *paths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES);
 		NSString *libraryDirectory = [paths objectAtIndex:0];
@@ -272,11 +272,11 @@ namespace uicore
 #endif
 
 		if (!company_name.empty())
-			configuration_path += PathHelp::add_trailing_slash(company_name);
+			configuration_path += FilePath::add_trailing_slash(company_name);
 		if (!application_name.empty())
-			configuration_path += PathHelp::add_trailing_slash(application_name);
+			configuration_path += FilePath::add_trailing_slash(application_name);
 		if (!version.empty())
-			configuration_path += PathHelp::add_trailing_slash(version);
+			configuration_path += FilePath::add_trailing_slash(version);
 
 		if (create_dirs_if_missing)
 			create(configuration_path, true);
@@ -306,7 +306,7 @@ namespace uicore
 			throw Exception("Bundle resource path is too long!");
 		}
 		
-		std::string resource_path = PathHelp::combine(buffer, data_dir_name);
+		std::string resource_path = FilePath::combine(buffer, data_dir_name);
 		
 		CFRelease(str);
 		CFRelease(url);

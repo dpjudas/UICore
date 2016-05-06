@@ -186,7 +186,7 @@ namespace uicore
 						offset += filename.length() + 1;
 						if (filename.empty())
 							break;
-						filenames.push_back(PathHelp::combine(path, filename));
+						filenames.push_back(FilePath::combine(path, filename));
 					}
 				}
 				else
