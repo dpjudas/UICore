@@ -105,7 +105,7 @@ namespace uicore
 			Type s = std::sqrt((1 + d) * 2);
 			Type rcp_s = Type(1) / s;
 			Vec3<Type> c = Vec3<Type>::cross(v0, v1);
-			Quaternionx<Type> q(s * Type(0.5), c * rcp_s);
+			Quaternionx<Type> q(Vec4<Type>(c * rcp_s, s * Type(0.5)));
 			q.normalize();
 			return q;
 		}
@@ -118,25 +118,13 @@ namespace uicore
 	}
 
 	template<typename Type>
-	Quaternionx<Type>::Quaternionx(const Vec3<Type> &euler, EulerOrder order)
+	Quaternionx<Type> Quaternionx<Type>::euler(const Vec3<Type> &angles, EulerOrder order)
 	{
-		set(euler, order);
+		return euler(angles.x, angles.y, angles.z, order);
 	}
 
 	template<typename Type>
-	Quaternionx<Type>::Quaternionx(Type euler_x, Type euler_y, Type euler_z, EulerOrder order)
-	{
-		set(euler_x, euler_y, euler_z, order);
-	}
-
-	template<typename Type>
-	void Quaternionx<Type>::set(const Vec3<Type> &euler, EulerOrder order)
-	{
-		set(euler.x, euler.y, euler.z, order);
-	}
-
-	template<typename Type>
-	void Quaternionx<Type>::set(Type euler_x, Type euler_y, Type euler_z, EulerOrder order)
+	Quaternionx<Type> Quaternionx<Type>::euler(Type euler_x, Type euler_y, Type euler_z, EulerOrder order)
 	{
 		Quaternionx<Type> q_x = Quaternionx<Type>::axis_angle(euler_x, Vec3f(1.0f, 0.0f, 0.0f));
 		Quaternionx<Type> q_y = Quaternionx<Type>::axis_angle(euler_y, Vec3f(0.0f, 1.0f, 0.0f));
@@ -145,23 +133,17 @@ namespace uicore
 		switch (order)
 		{
 		case EulerOrder::xyz:
-			*this = Quaternionx<Type>::multiply(Quaternionx<Type>::multiply(q_x, q_y), q_z);
-			break;
+			return Quaternionx<Type>::multiply(Quaternionx<Type>::multiply(q_x, q_y), q_z);
 		case EulerOrder::xzy:
-			*this = Quaternionx<Type>::multiply(Quaternionx<Type>::multiply(q_x, q_z), q_y);
-			break;
+			return Quaternionx<Type>::multiply(Quaternionx<Type>::multiply(q_x, q_z), q_y);
 		case EulerOrder::yzx:
-			*this = Quaternionx<Type>::multiply(Quaternionx<Type>::multiply(q_y, q_z), q_x);
-			break;
+			return Quaternionx<Type>::multiply(Quaternionx<Type>::multiply(q_y, q_z), q_x);
 		case EulerOrder::yxz:
-			*this = Quaternionx<Type>::multiply(Quaternionx<Type>::multiply(q_y, q_x), q_z);
-			break;
+			return Quaternionx<Type>::multiply(Quaternionx<Type>::multiply(q_y, q_x), q_z);
 		case EulerOrder::zxy:
-			*this = Quaternionx<Type>::multiply(Quaternionx<Type>::multiply(q_z, q_x), q_y);
-			break;
+			return Quaternionx<Type>::multiply(Quaternionx<Type>::multiply(q_z, q_x), q_y);
 		case EulerOrder::zyx:
-			*this = Quaternionx<Type>::multiply(Quaternionx<Type>::multiply(q_z, q_y), q_x);
-			break;
+			return Quaternionx<Type>::multiply(Quaternionx<Type>::multiply(q_z, q_y), q_x);
 		default:
 			throw Exception("Unknown euler order");
 		}
@@ -183,10 +165,10 @@ namespace uicore
 	{
 		Quaternionx<Type> result;
 
-		result.i = m.matrix[(4 * 0) + 0] * i + m.matrix[(4 * 0) + 1] * j + m.matrix[(4 * 0) + 2] * k + m.matrix[(4 * 0) + 3] * w;
-		result.j = m.matrix[(4 * 1) + 0] * i + m.matrix[(4 * 1) + 1] * j + m.matrix[(4 * 1) + 2] * k + m.matrix[(4 * 1) + 3] * w;
-		result.k = m.matrix[(4 * 2) + 0] * i + m.matrix[(4 * 2) + 1] * j + m.matrix[(4 * 2) + 2] * k + m.matrix[(4 * 2) + 3] * w;
-		result.w = m.matrix[(4 * 3) + 0] * i + m.matrix[(4 * 3) + 1] * j + m.matrix[(4 * 3) + 2] * k + m.matrix[(4 * 3) + 3] * w;
+		result.x = m.matrix[(4 * 0) + 0] * x + m.matrix[(4 * 0) + 1] * y + m.matrix[(4 * 0) + 2] * z + m.matrix[(4 * 0) + 3] * w;
+		result.y = m.matrix[(4 * 1) + 0] * x + m.matrix[(4 * 1) + 1] * y + m.matrix[(4 * 1) + 2] * z + m.matrix[(4 * 1) + 3] * w;
+		result.z = m.matrix[(4 * 2) + 0] * x + m.matrix[(4 * 2) + 1] * y + m.matrix[(4 * 2) + 2] * z + m.matrix[(4 * 2) + 3] * w;
+		result.w = m.matrix[(4 * 3) + 0] * x + m.matrix[(4 * 3) + 1] * y + m.matrix[(4 * 3) + 2] * z + m.matrix[(4 * 3) + 3] * w;
 
 		return result;
 	}
@@ -243,9 +225,9 @@ namespace uicore
 	template<typename Type>
 	Quaternionx<Type> &Quaternionx<Type>::inverse()
 	{
-		i = -i;
-		j = -j;
-		k = -k;
+		x = -x;
+		y = -y;
+		z = -z;
 		return *this;
 	}
 
@@ -265,7 +247,7 @@ namespace uicore
 	template<typename Type>
 	Quaternionx<Type> &Quaternionx<Type>::rotate(Type euler_x, Type euler_y, Type euler_z, EulerOrder order)
 	{
-		Quaternionx<Type> quaternion(euler_x, euler_y, euler_z, order);
+		Quaternionx<Type> quaternion = euler(euler_x, euler_y, euler_z, order);
 		*this = *this * quaternion;
 		return *this;
 	}
@@ -274,10 +256,10 @@ namespace uicore
 	Quaternionx<Type> Quaternionx<Type>::lerp(const Quaternionx<Type> &quaternion_initial, const Quaternionx<Type> &quaternion_final, Type lerp_time)
 	{
 		Quaternionx<Type> quaternion(
-			quaternion_initial.w * (((Type) 1.0) - lerp_time) + quaternion_final.w * lerp_time,
 			quaternion_initial.x * (((Type) 1.0) - lerp_time) + quaternion_final.x * lerp_time,
 			quaternion_initial.y * (((Type) 1.0) - lerp_time) + quaternion_final.y * lerp_time,
-			quaternion_initial.z * (((Type) 1.0) - lerp_time) + quaternion_final.z * lerp_time
+			quaternion_initial.z * (((Type) 1.0) - lerp_time) + quaternion_final.z * lerp_time,
+			quaternion_initial.w * (((Type) 1.0) - lerp_time) + quaternion_final.w * lerp_time
 			);
 		quaternion.normalize();
 		return quaternion;
