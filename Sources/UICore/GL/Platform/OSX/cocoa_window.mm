@@ -125,9 +125,10 @@
 			break;
 
 		default:
-            [super sendEvent:theEvent];
             break;
 	}
+	
+	[super sendEvent:theEvent]; // Needed or windowShouldClose won't fire (maybe move event handling to CocoaView?)
 }
 
 - (BOOL) acceptsFirstResponder
