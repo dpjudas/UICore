@@ -146,10 +146,10 @@ namespace uicore
 		bool found_char = CTFontGetGlyphsForCharacters(handle, &c, &cgglyph, 1);
 		
 		CGSize advance;
-		CTFontGetAdvancesForGlyphs(handle, kCTFontDefaultOrientation, &cgglyph, &advance, 1);
+		CTFontGetAdvancesForGlyphs(handle, kCTFontOrientationDefault, &cgglyph, &advance, 1);
 		
 		CGRect cg_bbox;
-		CTFontGetBoundingRectsForGlyphs(handle, kCTFontDefaultOrientation, &cgglyph, &cg_bbox, 1);
+		CTFontGetBoundingRectsForGlyphs(handle, kCTFontOrientationDefault, &cgglyph, &cg_bbox, 1);
         
         // Black box in bitmap coordinates:
         
@@ -254,10 +254,10 @@ namespace uicore
 		bool found_char = CTFontGetGlyphsForCharacters(handle, &c, &cgglyph, 1);
 		
 		CGSize advance;
-		CTFontGetAdvancesForGlyphs(handle, kCTFontDefaultOrientation, &cgglyph, &advance, 1);
+		CTFontGetAdvancesForGlyphs(handle, kCTFontOrientationDefault, &cgglyph, &advance, 1);
 		
 		CGRect cg_bbox;
-		CTFontGetBoundingRectsForGlyphs(handle, kCTFontDefaultOrientation, &cgglyph, &cg_bbox, 1);
+		CTFontGetBoundingRectsForGlyphs(handle, kCTFontOrientationDefault, &cgglyph, &cg_bbox, 1);
 		
 		// Glyph metrics:
 		
