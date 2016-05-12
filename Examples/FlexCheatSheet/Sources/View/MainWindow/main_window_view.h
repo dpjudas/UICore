@@ -132,7 +132,7 @@ public:
 			)");
 
 		auto button = panel->add_child<FlexPanelButton>("Put flex items into a row");
-		button->func_clicked() = [=] { for (auto &v : examples->children()) v->set_hidden(v != example); };
+		slots.connect(button->sig_clicked(), [=] { for (auto &v : examples->children()) v->set_hidden(v != example); });
 
 		example->set_hidden(false);
 	}
@@ -148,7 +148,7 @@ public:
 			)");
 
 		auto button = panel->add_child<FlexPanelButton>("Put flex items into a column");
-		button->func_clicked() = [=] { for (auto &v : examples->children()) v->set_hidden(v != example); };
+		slots.connect(button->sig_clicked(), [=] { for (auto &v : examples->children()) v->set_hidden(v != example); });
 	}
 
 	void add_example3()
@@ -169,7 +169,7 @@ public:
 			)");
 
 		auto button = panel->add_child<FlexPanelButton>("Move flex items to the top");
-		button->func_clicked() = [=] { for (auto &v : examples->children()) v->set_hidden(v != example); };
+		slots.connect(button->sig_clicked(), [=] { for (auto &v : examples->children()) v->set_hidden(v != example); });
 	}
 
 	void add_example4()
@@ -189,7 +189,7 @@ public:
 			)");
 
 		auto button = panel->add_child<FlexPanelButton>("Move flex items to the left");
-		button->func_clicked() = [=] { for (auto &v : examples->children()) v->set_hidden(v != example); };
+		slots.connect(button->sig_clicked(), [=] { for (auto &v : examples->children()) v->set_hidden(v != example); });
 	}
 
 	void add_example5()
@@ -209,7 +209,7 @@ public:
 			)");
 
 		auto button = panel->add_child<FlexPanelButton>("Move flex items to the right");
-		button->func_clicked() = [=] { for (auto &v : examples->children()) v->set_hidden(v != example); };
+		slots.connect(button->sig_clicked(), [=] { for (auto &v : examples->children()) v->set_hidden(v != example); });
 	}
 
 	void add_example6()
@@ -231,7 +231,7 @@ public:
 			)");
 
 		auto button = panel->add_child<FlexPanelButton>("Center everything");
-		button->func_clicked() = [=] { for (auto &v : examples->children()) v->set_hidden(v != example); };
+		slots.connect(button->sig_clicked(), [=] { for (auto &v : examples->children()) v->set_hidden(v != example); });
 	}
 
 	void add_example7()
@@ -245,7 +245,7 @@ public:
 		container->boxes[1]->style()->set("flex: 1 0 0");
 
 		auto button = panel->add_child<FlexPanelButton>("Grow a flex item X times as big as other flex items");
-		button->func_clicked() = [=] { for (auto &v : examples->children()) v->set_hidden(v != example); };
+		slots.connect(button->sig_clicked(), [=] { for (auto &v : examples->children()) v->set_hidden(v != example); });
 	}
 
 	void add_example8()
@@ -261,7 +261,7 @@ public:
 			)", 12);
 
 		auto button = panel->add_child<FlexPanelButton>("Wrap flex items into multiple rows");
-		button->func_clicked() = [=] { for (auto &v : examples->children()) v->set_hidden(v != example); };
+		slots.connect(button->sig_clicked(), [=] { for (auto &v : examples->children()) v->set_hidden(v != example); });
 	}
 
 	void add_example9()
@@ -277,7 +277,7 @@ public:
 			)", 8);
 
 		auto button = panel->add_child<FlexPanelButton>("Wrap flex items into multiple columns");
-		button->func_clicked() = [=] { for (auto &v : examples->children()) v->set_hidden(v != example); };
+		slots.connect(button->sig_clicked(), [=] { for (auto &v : examples->children()) v->set_hidden(v != example); });
 	}
 
 	void add_example10()
@@ -295,7 +295,7 @@ public:
 			)", 8);
 
 		auto button = panel->add_child<FlexPanelButton>("Remove the space from wrapped rows or columns");
-		button->func_clicked() = [=] { for (auto &v : examples->children()) v->set_hidden(v != example); };
+		slots.connect(button->sig_clicked(), [=] { for (auto &v : examples->children()) v->set_hidden(v != example); });
 	}
 
 	void add_example11()
@@ -312,7 +312,7 @@ public:
 		container->boxes[2]->style()->set("margin-left: auto");
 
 		auto button = panel->add_child<FlexPanelButton>("Pin an element to one side of the flex container");
-		button->func_clicked() = [=] { for (auto &v : examples->children()) v->set_hidden(v != example); };
+		slots.connect(button->sig_clicked(), [=] { for (auto &v : examples->children()) v->set_hidden(v != example); });
 	}
 
 	std::shared_ptr<uicore::ColumnView> panel;

@@ -447,6 +447,7 @@ namespace uicore
 			XmlToken opening_node;
 			switch (cur_node->type())
 			{
+			default: break;
 			case XmlNodeType::element: opening_node.type = XmlTokenType::element; break;
 			case XmlNodeType::text: opening_node.type = XmlTokenType::text; break;
 			case XmlNodeType::cdata: opening_node.type = XmlTokenType::cdata; break;
