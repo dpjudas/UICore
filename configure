@@ -1,9 +1,0 @@
-#!/bin/bash
-
-if [[ "$OSTYPE" == "darwin"* ]]; then
-	clang++ -std=c++11 Setup/Xcode/configure.cpp -o Setup/Xcode/configure
-	Setup/Xcode/configure
-else
-	g++ -std=c++11 Setup/Unix/configure.cpp -o Setup/Unix/configure
-	Setup/Unix/configure
-fi
