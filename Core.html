@@ -3,26 +3,14 @@
     <head>
         <meta charset="utf-8">
         <meta name="description" content="Core Module Reference">
-        <title>Core Module Reference - ClanLib SDK</title>
-        <script type="text/javascript" src="/js/external/jquery-1.10.2.min.js"></script>	
-        <script type="text/javascript" src="/js/analytics.js"></script> 
+        <title>Core Module Reference - UICore SDK</title>
+        <!--<script type="text/javascript" src="/js/external/jquery-1.10.2.min.js"></script>-->
         <script type="text/javascript" src="dynsections.js"></script>
         <link href="doxygen.css" rel="stylesheet" type="text/css" />
         <link href="doxygen-extra.css" rel="stylesheet" type="text/css"/>
     </head>
     <body>
         <div id="page-wrapper">
-            <div id="page-header-wrapper">
-                <div id="page-header">
-                    <a id="page-header-logo" href="/"></a>
-                    <div id="page-header-menu">
-                        <a class="page-header-menu-item" href="/index.html">Overview</a>
-                        <a class="page-header-menu-item" href="/download.html">Download</a>
-                        <a class="page-header-menu-item active" href="/documentation.html">Documentation</a>
-                        <a class="page-header-menu-item" href="/contact.html">Contact</a>
-                    </div>
-                </div>
-            </div>
             <div id="page-body-wrapper">
                 <div id="page-body">
                     <div id="doxygen">
@@ -35,170 +23,164 @@
 <div class="title">Core Module Reference </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>The clanCore library is the base library used by all other ClanLib libraries. It provides a basic framework with common functionality needed by almost all types of applications.</p>
-<h2>Platform abstraction</h2>
+<div class="textblock"><h2>Platform abstraction</h2>
 <ul>
 <li>
-clan::System - General system helper functions </li>
+<a class="el" href="classuicore_1_1System.html" title="General system helper functions. ">uicore::System</a> - General system helper functions </li>
 <li>
-clan::RegistryKey - C++ class for accessing the Windows registry </li>
+<a class="el" href="classuicore_1_1RegistryKey.html" title="Registry key class. ">uicore::RegistryKey</a> - C++ class for accessing the Windows registry </li>
 <li>
-clan::ComPtr - Smart pointer template for Component Object Model (COM) objects </li>
+<a class="el" href="classuicore_1_1ComPtr.html" title="ComPtr. ">uicore::ComPtr</a> - Smart pointer template for Component Object Model (COM) objects </li>
 </ul>
 <h2>General utility classes</h2>
 <ul>
 <li>
-clan::Exception - Base class for all exceptions thrown by ClanLib </li>
+<a class="el" href="classuicore_1_1Exception.html" title="Top-level exception class. ">uicore::Exception</a> - Base class for all exceptions thrown by ClanLib </li>
 <li>
-clan::DataBuffer - General purpose memory buffer class </li>
+<a class="el" href="classuicore_1_1DataBuffer.html" title="General purpose data buffer. ">uicore::DataBuffer</a> - General purpose memory buffer class </li>
 <li>
-clan::DisposableObject - Helper for objects that may outlive their disposable resources </li>
+<a class="el" href="classuicore_1_1DisposableObject.html" title="DisposableObject. ">uicore::DisposableObject</a> - Helper for objects that may outlive their disposable resources </li>
 <li>
-clan::UserDataOwner - Allows storing any std::shared_ptr as user data on an object </li>
+uicore::UserDataOwner - Allows storing any std::shared_ptr as user data on an object </li>
 <li>
-clan::DateTime - Date/time handling class </li>
+<a class="el" href="classuicore_1_1DateTime.html" title="Date/Time class. ">uicore::DateTime</a> - Date/time handling class </li>
 </ul>
 <h2>Signals</h2>
 <ul>
 <li>
-clan::Signal </li>
+<a class="el" href="classuicore_1_1Signal.html">uicore::Signal</a> </li>
 <li>
-clan::SlotContainer </li>
+<a class="el" href="classuicore_1_1SlotContainer.html">uicore::SlotContainer</a> </li>
 </ul>
 <h2>Math</h2>
 <ul>
 <li>
-clan::VecXx (clan::Vec4i, clan::Vec3f, clan::Vec2ub, etc) - Vector templates for 2D, 3D and 4D </li>
+uicore::VecXx (<a class="el" href="namespaceuicore.html#accad8f8638c3e6fc739e5da01b87032c">uicore::Vec4i</a>, <a class="el" href="namespaceuicore.html#aa28bdf1326b169e168423f6194d44fbf">uicore::Vec3f</a>, <a class="el" href="namespaceuicore.html#a4b4158778cee20f48f386bff39d96482">uicore::Vec2ub</a>, etc) - Vector templates for 2D, 3D and 4D </li>
 <li>
-clan::HalfFloat, clan::VecXhf - Half-float converters </li>
+<a class="el" href="classuicore_1_1HalfFloat.html">uicore::HalfFloat</a>, uicore::VecXhf - Half-float converters </li>
 <li>
-clan::MatXx (clan::Mat4f, clan::Mat3f, etc) - Matrix templates </li>
+uicore::MatXx (<a class="el" href="namespaceuicore.html#a1f503afa8a4f5bfaf0ece9ec337da9b0">uicore::Mat4f</a>, <a class="el" href="namespaceuicore.html#a33eecf3d3da30051a84c92e0ee4ea039">uicore::Mat3f</a>, etc) - Matrix templates </li>
 <li>
-clan::Quaternionf, clan::Quaterniond - Quaternion rotation/orientation classes </li>
+<a class="el" href="namespaceuicore.html#ad1f55975a22d74c90504cbf200627222">uicore::Quaternionf</a>, <a class="el" href="namespaceuicore.html#af0054141f4cd3d03de4910cb507149d7">uicore::Quaterniond</a> - Quaternion rotation/orientation classes </li>
 <li>
-clan::Rect, clan::Rectf, clan::Rectd - 2D (left,top,right,bottom) rectangle structure </li>
+<a class="el" href="classuicore_1_1Rect.html" title="2D (left,top,right,bottom) rectangle structure - Integer ">uicore::Rect</a>, <a class="el" href="classuicore_1_1Rectf.html" title="2D (left,top,right,bottom) rectangle structure - Float ">uicore::Rectf</a>, <a class="el" href="classuicore_1_1Rectd.html" title="2D (left,top,right,bottom) rectangle structure - Double ">uicore::Rectd</a> - 2D (left,top,right,bottom) rectangle structure </li>
 <li>
-clan::Point, clan::Pointf, clan::Pointd - 2D (x,y) point structure </li>
+<a class="el" href="classuicore_1_1Point.html" title="2D (x,y) point structure - Integer ">uicore::Point</a>, <a class="el" href="classuicore_1_1Pointf.html" title="2D (x,y) point structure - Float ">uicore::Pointf</a>, <a class="el" href="classuicore_1_1Pointd.html" title="2D (x,y) point structure - Double ">uicore::Pointd</a> - 2D (x,y) point structure </li>
 <li>
-clan::Size, clan::Sizef, clan::Sized - 2D (width,height) size structure </li>
+<a class="el" href="classuicore_1_1Size.html" title="2D (width,height) size structure - Integer ">uicore::Size</a>, <a class="el" href="classuicore_1_1Sizef.html" title="2D (width,height) size structure - Float ">uicore::Sizef</a>, <a class="el" href="classuicore_1_1Sized.html" title="2D (width,height) size structure - Double ">uicore::Sized</a> - 2D (width,height) size structure </li>
 </ul>
 <h2>Text</h2>
 <p>All strings are assumed to be UTF-8, unless otherwise specified. std::string is used as the main string class.</p>
 <ul>
 <li>
-clan::StringHelp - Misc string helper functions </li>
+uicore::StringHelp - Misc string helper functions </li>
 <li>
-clan::UTF8_Reader - Converts UTF-8 to 32-bit unicode characters </li>
+<a class="el" href="classuicore_1_1UTF8__Reader.html" title="UTF8 reader helper functions. ">uicore::UTF8_Reader</a> - Converts UTF-8 to 32-bit unicode characters </li>
 <li>
-clan::StringFormat, clan::string_format - String formatting class and functions </li>
+<a class="el" href="classuicore_1_1StringFormat.html" title="String formatting class. ">uicore::StringFormat</a>, <a class="el" href="namespaceuicore.html#a7fb30d0d1ab0e6de41f746e505eccc0b" title="See uicore::StringFormat for details. ">uicore::string_format</a> - String formatting class and functions </li>
 <li>
-clan::Console - Read from/write to console windows </li>
+uicore::Console - Read from/write to console windows </li>
 </ul>
 <h2>XML</h2>
 <ul>
 <li>
-clan::XMLTokenizer - Breaks a XML file into tokens </li>
+uicore::XMLTokenizer - Breaks a XML file into tokens </li>
 <li>
-clan::XMLWriter - Writes a XML file based on tokens </li>
+uicore::XMLWriter - Writes a XML file based on tokens </li>
 <li>
-clan::DomDocument - DOM Document class </li>
+uicore::DomDocument - DOM Document class </li>
 <li>
-clan::DomNode, clan::DomElement, clan::DomText - Main node types </li>
+uicore::DomNode, uicore::DomElement, uicore::DomText - Main node types </li>
 <li>
-clan::XPathEvaluator - Evaluate the result of xpath expressions </li>
+uicore::XPathEvaluator - Evaluate the result of xpath expressions </li>
 </ul>
 <h2>JSON</h2>
-<p>The clan::JsonValue class allows you to parse or generate JSON strings.</p>
+<p>The <a class="el" href="classuicore_1_1JsonValue.html">uicore::JsonValue</a> class allows you to parse or generate JSON strings.</p>
 <h2>I/O devices</h2>
 <ul>
 <li>
-clan::IODevice - Input/Output stream abstraction </li>
+<a class="el" href="classuicore_1_1IODevice.html">uicore::IODevice</a> - Input/Output stream abstraction </li>
 <li>
-clan::File - Class for opening files </li>
+<a class="el" href="classuicore_1_1File.html">uicore::File</a> - Class for opening files </li>
 <li>
-clan::MemoryDevice - IODevice for memory buffers </li>
+<a class="el" href="classuicore_1_1MemoryDevice.html">uicore::MemoryDevice</a> - IODevice for memory buffers </li>
 </ul>
 <h2>File systems</h2>
 <ul>
 <li>
-clan::FileSystem - Virtual file system support </li>
+uicore::FileSystem - Virtual file system support </li>
 <li>
-clan::DirectoryListing - List files in a virtual file system </li>
+uicore::DirectoryListing - List files in a virtual file system </li>
 <li>
-clan::DirectoryScanner - List files outside of clan::FileSystem </li>
+<a class="el" href="classuicore_1_1DirectoryScanner.html" title="Directory scanning class. ">uicore::DirectoryScanner</a> - List files outside of uicore::FileSystem </li>
 <li>
-clan::PathHelp - Helper class for working with path strings </li>
+uicore::PathHelp - Helper class for working with path strings </li>
 <li>
-clan::Directory - Perform basic directory based file operations </li>
+<a class="el" href="classuicore_1_1Directory.html" title="Directory utility class. ">uicore::Directory</a> - Perform basic directory based file operations </li>
 <li>
-clan::HTMLUrl - Parsing HTML URLs and breaking them down into their basic components </li>
+uicore::HTMLUrl - Parsing HTML URLs and breaking them down into their basic components </li>
 </ul>
 <h2>Zip files</h2>
 <ul>
 <li>
-clan::ZipArchive - Create, open or modify a zip file </li>
+uicore::ZipArchive - Create, open or modify a zip file </li>
 <li>
-clan::ZipReader - Low level class for reading zip files sequentially </li>
+uicore::ZipReader - Low level class for reading zip files sequentially </li>
 <li>
-clan::ZipWriter - Write zip files sequentially </li>
+uicore::ZipWriter - Write zip files sequentially </li>
 <li>
-clan::ZLibCompression - Deflate algorithm compressor / decompressor </li>
+<a class="el" href="classuicore_1_1ZLibCompression.html" title="Deflate compressor. ">uicore::ZLibCompression</a> - Deflate algorithm compressor / decompressor </li>
 </ul>
 <h2>Resource management</h2>
 <ul>
 <li>
-clan::ResourceManager - Class holding all resource caches, which in turn holds all resources </li>
+uicore::ResourceManager - Class holding all resource caches, which in turn holds all resources </li>
 <li>
-clan::ResourceObject - Class that can hold resources of any type, with casting support to specific types </li>
+uicore::ResourceObject - Class that can hold resources of any type, with casting support to specific types </li>
 <li>
-clan::Resource&lt;Type&gt; - Proxy to a resource of a specific type </li>
+uicore::Resource&lt;Type&gt; - Proxy to a resource of a specific type </li>
 <li>
-clan::ResourceContainer - Helper class for resource caches. Helps storing resources </li>
+uicore::ResourceContainer - Helper class for resource caches. Helps storing resources </li>
 <li>
-clan::XMLResourceManager - ResourceManager with standard resource caches using XML resources </li>
+uicore::XMLResourceManager - ResourceManager with standard resource caches using XML resources </li>
 <li>
-clan::XMLResourceDocument - Document class for the ClanLib XML resource format </li>
+uicore::XMLResourceDocument - Document class for the ClanLib XML resource format </li>
 <li>
-clan::XMLResourceNode - Resource node in a ClanLib XML resource file </li>
+uicore::XMLResourceNode - Resource node in a ClanLib XML resource file </li>
 </ul>
 <h2>Crypto</h2>
 <ul>
 <li>
-clan::SHA1, clan::SHA224, clan::SHA256, clan::SHA384, clan::SHA512, clan::SHA512_224, clan::SHA512_256 - SHA Hashing functions </li>
+<a class="el" href="classuicore_1_1SHA1.html" title="SHA-1 hash function class. ">uicore::SHA1</a>, <a class="el" href="classuicore_1_1SHA224.html" title="SHA-224 hash function class. ">uicore::SHA224</a>, <a class="el" href="classuicore_1_1SHA256.html" title="SHA-256 hash function class. ">uicore::SHA256</a>, <a class="el" href="classuicore_1_1SHA384.html" title="SHA-384 hash function class. ">uicore::SHA384</a>, <a class="el" href="classuicore_1_1SHA512.html" title="SHA-512 hash function class. ">uicore::SHA512</a>, <a class="el" href="classuicore_1_1SHA512__224.html" title="SHA-512_224 hash function class. ">uicore::SHA512_224</a>, <a class="el" href="classuicore_1_1SHA512__256.html" title="SHA-512_256 hash function class. ">uicore::SHA512_256</a> - SHA Hashing functions </li>
 <li>
-clan::MD5 - MD5 Hashing function </li>
+<a class="el" href="classuicore_1_1MD5.html" title="MD5 hash function class. ">uicore::MD5</a> - MD5 Hashing function </li>
 <li>
-clan::RSA - RSA encryption/decryption </li>
+<a class="el" href="classuicore_1_1RSA.html" title="RSA class. ">uicore::RSA</a> - RSA encryption/decryption </li>
 <li>
-clan::Random - Uses the operating system cryptographically secure pseudorandom number generator </li>
+<a class="el" href="classuicore_1_1Random.html" title="Random class. ">uicore::Random</a> - Uses the operating system cryptographically secure pseudorandom number generator </li>
 <li>
-clan::AES128_Encrypt, clan::AES128_Decrypt - AES-128 encryption/decryption running in Cipher Block Chaining mode </li>
+<a class="el" href="classuicore_1_1AES128__Encrypt.html" title="AES-128 encryption class (running in Cipher Block Chaining mode) ">uicore::AES128_Encrypt</a>, <a class="el" href="classuicore_1_1AES128__Decrypt.html" title="AES-128 decryption class (running in Cipher Block Chaining mode) ">uicore::AES128_Decrypt</a> - AES-128 encryption/decryption running in Cipher Block Chaining mode </li>
 <li>
-clan::AES192_Encrypt, clan::AES192_Decrypt - AES-192 encryption/decryption running in Cipher Block Chaining mode </li>
+<a class="el" href="classuicore_1_1AES192__Encrypt.html" title="AES-192 encryption class (running in Cipher Block Chaining mode) ">uicore::AES192_Encrypt</a>, <a class="el" href="classuicore_1_1AES192__Decrypt.html" title="AES-192 decryption class (running in Cipher Block Chaining mode) ">uicore::AES192_Decrypt</a> - AES-192 encryption/decryption running in Cipher Block Chaining mode </li>
 <li>
-clan::AES256_Encrypt, clan::AES256_Decrypt - AES-256 encryption/decryption running in Cipher Block Chaining mode </li>
+<a class="el" href="classuicore_1_1AES256__Encrypt.html" title="AES-256 encryption class (running in Cipher Block Chaining mode) ">uicore::AES256_Encrypt</a>, <a class="el" href="classuicore_1_1AES256__Decrypt.html" title="AES-256 decryption class (running in Cipher Block Chaining mode) ">uicore::AES256_Decrypt</a> - AES-256 encryption/decryption running in Cipher Block Chaining mode </li>
 <li>
-clan::Secret - Key class </li>
+<a class="el" href="classuicore_1_1Secret.html" title="Key class. ">uicore::Secret</a> - Key class </li>
 <li>
-clan::TLSClient - TLS protocol handling for a TLS client </li>
+<a class="el" href="classuicore_1_1TLSClient.html" title="Transport Layer Security (TLS) client class. ">uicore::TLSClient</a> - TLS protocol handling for a TLS client </li>
 </ul>
 <h2>Error reporting</h2>
 <ul>
 <li>
-clan::CrashReporter - Generates crash reports when the application crashes, or when requested </li>
+<a class="el" href="classuicore_1_1CrashReporter.html" title="Generates crash reports (aka. minidumps or core dumps) when the application crashes, or when requested. ">uicore::CrashReporter</a> - Generates crash reports when the application crashes, or when requested </li>
 <li>
-clan::DetectHang - Calls the crash reporter if the constructing thread hangs for more than 30 seconds </li>
+<a class="el" href="classuicore_1_1DetectHang.html" title="Calls CrashReporter::invoke if the constructing thread does not call RunLoop::process for more than 3...">uicore::DetectHang</a> - Calls the crash reporter if the constructing thread hangs for more than 30 seconds </li>
 <li>
-clan::ExceptionDialog - Displays a modal dialog with exception details </li>
+<a class="el" href="classuicore_1_1ExceptionDialog.html" title="Displays a modal dialog with exception details. ">uicore::ExceptionDialog</a> - Displays a modal dialog with exception details </li>
 </ul>
 </div></div><!-- contents -->
 
                     </div>
-                </div>
-            </div>
-            <div id="page-footer-wrapper">
-                <div id="page-footer">
-                    <div id="page-footer-copyright">&copy; ClanLib.org</div>
                 </div>
             </div>
         </div>

@@ -3,26 +3,14 @@
     <head>
         <meta charset="utf-8">
         <meta name="description" content="Display Module Reference">
-        <title>Display Module Reference - ClanLib SDK</title>
-        <script type="text/javascript" src="/js/external/jquery-1.10.2.min.js"></script>	
-        <script type="text/javascript" src="/js/analytics.js"></script> 
+        <title>Display Module Reference - UICore SDK</title>
+        <!--<script type="text/javascript" src="/js/external/jquery-1.10.2.min.js"></script>-->
         <script type="text/javascript" src="dynsections.js"></script>
         <link href="doxygen.css" rel="stylesheet" type="text/css" />
         <link href="doxygen-extra.css" rel="stylesheet" type="text/css"/>
     </head>
     <body>
         <div id="page-wrapper">
-            <div id="page-header-wrapper">
-                <div id="page-header">
-                    <a id="page-header-logo" href="/"></a>
-                    <div id="page-header-menu">
-                        <a class="page-header-menu-item" href="/index.html">Overview</a>
-                        <a class="page-header-menu-item" href="/download.html">Download</a>
-                        <a class="page-header-menu-item active" href="/documentation.html">Documentation</a>
-                        <a class="page-header-menu-item" href="/contact.html">Contact</a>
-                    </div>
-                </div>
-            </div>
             <div id="page-body-wrapper">
                 <div id="page-body">
                     <div id="doxygen">
@@ -38,135 +26,130 @@
 <div class="textblock"><h2>Window and Input</h2>
 <ul>
 <li>
-clan::DisplayWindow - Top-level window class </li>
+<a class="el" href="classuicore_1_1DisplayWindow.html" title="Top-level window class. ">uicore::DisplayWindow</a> - Top-level window class </li>
 <li>
-clan::DisplayWindowDescription - Allows you to setup a more advanced description when creating a display window </li>
+<a class="el" href="classuicore_1_1DisplayWindowDescription.html" title="Display window description class. ">uicore::DisplayWindowDescription</a> - Allows you to setup a more advanced description when creating a display window </li>
 <li>
-clan::Cursor - Mouse cursor class </li>
+<a class="el" href="classuicore_1_1Cursor.html" title="Mouse cursor class. ">uicore::Cursor</a> - Mouse cursor class </li>
 <li>
-clan::CursorDescription - Allows you to setup a more advanced description when creating a mouse cursor </li>
+<a class="el" href="classuicore_1_1CursorDescription.html" title="This class contains everything to construct a cursor - its data, default settings etc...">uicore::CursorDescription</a> - Allows you to setup a more advanced description when creating a mouse cursor </li>
 <li>
-clan::InputDevice - Interface for keyboards, mice and game controllers </li>
+<a class="el" href="classuicore_1_1InputDevice.html" title="InputDevice. ">uicore::InputDevice</a> - Interface for keyboards, mice and game controllers </li>
 <li>
-clan::InputEvent - Describes an input event, such as key down, key up, mouse movement, etc </li>
+<a class="el" href="classuicore_1_1InputEvent.html" title="Input event class. ">uicore::InputEvent</a> - Describes an input event, such as key down, key up, mouse movement, etc </li>
 <li>
-clan::InputCode - This enumeration contains all the input IDs for well-known buttons </li>
+<a class="el" href="namespaceuicore.html#a921d5d18baa7f9f78671c4f85fb52c4f">uicore::InputCode</a> - This enumeration contains all the input IDs for well-known buttons </li>
 </ul>
 <h2>2D Graphics</h2>
 <ul>
 <li>
-clan::Canvas - Main 2D drawing class </li>
+<a class="el" href="classuicore_1_1Canvas.html" title="2D Graphics Canvas ">uicore::Canvas</a> - Main 2D drawing class </li>
 <li>
-clan::Image - 2D image </li>
+<a class="el" href="classuicore_1_1Image.html" title="Image class. ">uicore::Image</a> - 2D image </li>
 <li>
-clan::Sprite - More advanced version of a 2D image with multiple frames for animation </li>
+uicore::Sprite - More advanced version of a 2D image with multiple frames for animation </li>
 <li>
-clan::Path - Describes a 2D path </li>
+<a class="el" href="classuicore_1_1Path.html">uicore::Path</a> - Describes a 2D path </li>
 <li>
-clan::Color, clan::Colorf - Specifies a color using red, green, blue and alpha components </li>
+<a class="el" href="classuicore_1_1Color.html" title="Color description class. ">uicore::Color</a>, <a class="el" href="classuicore_1_1Colorf.html" title="Floating point color description class (for float). ">uicore::Colorf</a> - Specifies a color using red, green, blue and alpha components </li>
 <li>
-clan::ColorHSLi, clan::ColorHSLf - Specifies a color using hue, saturation, lightness and alpha components </li>
+<a class="el" href="namespaceuicore.html#a8cddc5cbfe2590556f31342ee186cd80">uicore::ColorHSLi</a>, <a class="el" href="namespaceuicore.html#acb0b019ae4d5a31c6a9ac2a541c798f4">uicore::ColorHSLf</a> - Specifies a color using hue, saturation, lightness and alpha components </li>
 <li>
-clan::ColorHSVi, clan::ColorHSVf - Specifies a color using hue, saturation, value and alpha components </li>
+<a class="el" href="namespaceuicore.html#a112d36dc7cd9663f5d0637d7de372bc4">uicore::ColorHSVi</a>, <a class="el" href="namespaceuicore.html#a97384b19d60c0c5dffaf3e4a6a664342">uicore::ColorHSVf</a> - Specifies a color using hue, saturation, value and alpha components </li>
 <li>
-clan::Gradient - Describes a linear gradient </li>
+uicore::Gradient - Describes a linear gradient </li>
 <li>
-clan::SpanLayout - Draw rich text with word wrapping, images, fonts and colors </li>
+uicore::SpanLayout - Draw rich text with word wrapping, images, fonts and colors </li>
 <li>
-clan::TextureGroup, clan::Subtexture - Calibrates which images end up in which atlas textures </li>
+<a class="el" href="classuicore_1_1TextureGroup.html" title="Dynamic atlas texture class. ">uicore::TextureGroup</a>, uicore::Subtexture - Calibrates which images end up in which atlas textures </li>
 </ul>
 <h2>Fonts</h2>
 <ul>
 <li>
-clan::Font - Font class for System / TrueType / OpenType fonts and fonts using sprite image frames as glyphs </li>
+<a class="el" href="classuicore_1_1Font.html" title="Font class. ">uicore::Font</a> - Font class for System / TrueType / OpenType fonts and fonts using sprite image frames as glyphs </li>
 <li>
-clan::FontDescription - Allows you to setup a more advanced description when creating a font </li>
+<a class="el" href="classuicore_1_1FontDescription.html" title="Font description class. ">uicore::FontDescription</a> - Allows you to setup a more advanced description when creating a font </li>
 <li>
-clan::FontMetrics - The metrics of a font </li>
+<a class="el" href="classuicore_1_1FontMetrics.html" title="Font metrics class. ">uicore::FontMetrics</a> - The metrics of a font </li>
 </ul>
 <h2>Image Pixels</h2>
 <ul>
 <li>
-clan::PixelBuffer - Buffer containing image pixels (in CPU or GPU memory) </li>
+<a class="el" href="classuicore_1_1PixelBuffer.html" title="Pixel data container. ">uicore::PixelBuffer</a> - Buffer containing image pixels (in CPU or GPU memory) </li>
 <li>
-clan::PixelBufferSet - Set of images that combined form a complete texture </li>
+<a class="el" href="classuicore_1_1PixelBufferSet.html" title="Set of images that combined form a complete texture. ">uicore::PixelBufferSet</a> - Set of images that combined form a complete texture </li>
 <li>
-clan::PixelConverter - Pixel format converter class </li>
+<a class="el" href="classuicore_1_1PixelConverter.html" title="Pixel format converter class. ">uicore::PixelConverter</a> - Pixel format converter class </li>
 <li>
-clan::TextureFormat - Enumeration for all the pixel formats supported </li>
+<a class="el" href="namespaceuicore.html#a0c1cce01d6aac515586b1f9a0a4e4af3" title="Texture format. ">uicore::TextureFormat</a> - Enumeration for all the pixel formats supported </li>
 <li>
-clan::IconSet - Set of images for rendering an icon at different sizes </li>
+<a class="el" href="classuicore_1_1IconSet.html" title="Icon set class. ">uicore::IconSet</a> - Set of images for rendering an icon at different sizes </li>
 <li>
-clan::PerlinNoise - Perlin Noise Generator </li>
+<a class="el" href="classuicore_1_1PerlinNoise.html" title="Perlin Noise Generator class. ">uicore::PerlinNoise</a> - Perlin Noise Generator </li>
 </ul>
 <h2>3D Graphics</h2>
 <ul>
 <li>
-clan::GraphicContext - Main immediate drawing class </li>
+<a class="el" href="classuicore_1_1GraphicContext.html" title="Interface to drawing graphics. ">uicore::GraphicContext</a> - Main immediate drawing class </li>
 <li>
-clan::Texture - Texture object base class </li>
+<a class="el" href="classuicore_1_1Texture.html" title="Texture object class. ">uicore::Texture</a> - Texture object base class </li>
 <li>
-clan::Texture1D, clan::Texture1DArray - One dimensional textures </li>
+<a class="el" href="classuicore_1_1Texture1D.html" title="1D texture object class. ">uicore::Texture1D</a>, <a class="el" href="classuicore_1_1Texture1DArray.html" title="1D texture array object class. ">uicore::Texture1DArray</a> - One dimensional textures </li>
 <li>
-clan::Texture2D, clan::Texture2DArray - Two dimensional textures </li>
+<a class="el" href="classuicore_1_1Texture2D.html" title="2D texture object class. ">uicore::Texture2D</a>, <a class="el" href="classuicore_1_1Texture2DArray.html" title="2D texture array object class. ">uicore::Texture2DArray</a> - Two dimensional textures </li>
 <li>
-clan::Texture3D - Three dimensional textures </li>
+<a class="el" href="classuicore_1_1Texture3D.html" title="3D texture object class. ">uicore::Texture3D</a> - Three dimensional textures </li>
 <li>
-clan::TextureCube, clan::TextureCubeArray - Cube textures </li>
+<a class="el" href="classuicore_1_1TextureCube.html" title="2D texture cube object class. ">uicore::TextureCube</a>, <a class="el" href="classuicore_1_1TextureCubeArray.html" title="2D texture cube array object class. ">uicore::TextureCubeArray</a> - Cube textures </li>
 <li>
-clan::UniformBuffer, clan::UniformVector&lt;T&gt; - GPU buffer for uniform variables </li>
+<a class="el" href="classuicore_1_1UniformBuffer.html" title="Uniform Buffer. ">uicore::UniformBuffer</a>, <a class="el" href="classuicore_1_1UniformVector.html" title="Typed access to an uniform buffer. ">uicore::UniformVector</a>&lt;T&gt; - GPU buffer for uniform variables </li>
 <li>
-clan::VertexArrayBuffer, clan::VertexArrayVector&lt;T&gt; - GPU buffer for vertex attributes </li>
+<a class="el" href="classuicore_1_1VertexArrayBuffer.html" title="Vertex Array Buffer. ">uicore::VertexArrayBuffer</a>, <a class="el" href="classuicore_1_1VertexArrayVector.html" title="Typed access to a vertex array buffer. ">uicore::VertexArrayVector</a>&lt;T&gt; - GPU buffer for vertex attributes </li>
 <li>
-clan::ElementArrayBuffer, clan::ElementArrayVector&lt;T&gt; - GPU buffer for element indices </li>
+<a class="el" href="classuicore_1_1ElementArrayBuffer.html" title="Element Array Buffer. ">uicore::ElementArrayBuffer</a>, <a class="el" href="classuicore_1_1ElementArrayVector.html" title="Typed access to a element array buffer. ">uicore::ElementArrayVector</a>&lt;T&gt; - GPU buffer for element indices </li>
 <li>
-clan::StorageBuffer, clan::StorageVector&lt;T&gt; - GPU buffer for shader storage (aka. Unordered Access View) </li>
+<a class="el" href="classuicore_1_1StorageBuffer.html" title="Storage Buffer. ">uicore::StorageBuffer</a>, <a class="el" href="classuicore_1_1StorageVector.html" title="Typed access to a storage buffer. ">uicore::StorageVector</a>&lt;T&gt; - GPU buffer for shader storage (aka. Unordered Access View) </li>
 <li>
-clan::TransferBuffer, clan::TransferTexture, clan::TransferVector - CPU/GPU memory transfer buffers </li>
+uicore::TransferBuffer, uicore::TransferTexture, uicore::TransferVector - CPU/GPU memory transfer buffers </li>
 <li>
-clan::BlendState, clan::BlendStateDescription - Blending state setup </li>
+<a class="el" href="classuicore_1_1BlendState.html">uicore::BlendState</a>, <a class="el" href="classuicore_1_1BlendStateDescription.html" title="Blend state description. ">uicore::BlendStateDescription</a> - Blending state setup </li>
 <li>
-clan::DepthStencilState, clan::DepthStencilStateDescription - Depth and stencil state setup </li>
+<a class="el" href="classuicore_1_1DepthStencilState.html">uicore::DepthStencilState</a>, <a class="el" href="classuicore_1_1DepthStencilStateDescription.html" title="DepthStencil state description. ">uicore::DepthStencilStateDescription</a> - Depth and stencil state setup </li>
 <li>
-clan::RasterizerState, clan::RasterizerStateDescription - Rasterizer state setup </li>
+<a class="el" href="classuicore_1_1RasterizerState.html">uicore::RasterizerState</a>, <a class="el" href="classuicore_1_1RasterizerStateDescription.html" title="Rasterizer state description. ">uicore::RasterizerStateDescription</a> - Rasterizer state setup </li>
 <li>
-clan::FrameBuffer, clan::RenderBuffer - Frame buffer setup </li>
+<a class="el" href="classuicore_1_1FrameBuffer.html" title="Frame-buffer object class. ">uicore::FrameBuffer</a>, <a class="el" href="classuicore_1_1RenderBuffer.html" title="Render target buffer object class. ">uicore::RenderBuffer</a> - Frame buffer setup </li>
 <li>
-clan::ProgramObject, clan::ShaderObject - Shader programs </li>
+<a class="el" href="classuicore_1_1ProgramObject.html" title="Program Object. ">uicore::ProgramObject</a>, <a class="el" href="classuicore_1_1ShaderObject.html" title="Shader Object. ">uicore::ShaderObject</a> - Shader programs </li>
 <li>
-clan::PrimitivesArray - Vertex buffer objects </li>
+<a class="el" href="classuicore_1_1PrimitivesArray.html" title="Primitives array description. ">uicore::PrimitivesArray</a> - Vertex buffer objects </li>
 <li>
-clan::OcclusionQuery - Occlusion queries </li>
+<a class="el" href="classuicore_1_1OcclusionQuery.html" title="Graphics occlusion query class. ">uicore::OcclusionQuery</a> - Occlusion queries </li>
 <li>
-clan::RenderBatcher - Interface for participating in render batching </li>
+uicore::RenderBatcher - Interface for participating in render batching </li>
 </ul>
 <h2>Shader Effects</h2>
 <ul>
 <li>
-clan::ShaderEffect - High level class for running shaders </li>
+uicore::ShaderEffect - High level class for running shaders </li>
 <li>
-clan::ShaderEffectDescription - Allows you to setup a more advanced description when creating a shader effect </li>
+uicore::ShaderEffectDescription - Allows you to setup a more advanced description when creating a shader effect </li>
 </ul>
 <h2>Resources</h2>
 <ul>
 <li>
-clan::DisplayCache - Resource cache interface for clanDisplay resources </li>
+uicore::DisplayCache - Resource cache interface for uicoreDisplay resources </li>
 </ul>
 <h2>Thread run-loop</h2>
 <ul>
 <li>
-clan::RunLoop - Application loop helper </li>
+<a class="el" href="classuicore_1_1RunLoop.html" title="Main thread message pump processing. ">uicore::RunLoop</a> - Application loop helper </li>
 <li>
-clan::Timer - Timer class that invokes a callback on a specified interval </li>
+<a class="el" href="classuicore_1_1Timer.html" title="Timer class that invokes a callback on a specified interval. ">uicore::Timer</a> - Timer class that invokes a callback on a specified interval </li>
 </ul>
 </div></div><!-- contents -->
 
                     </div>
-                </div>
-            </div>
-            <div id="page-footer-wrapper">
-                <div id="page-footer">
-                    <div id="page-footer-copyright">&copy; ClanLib.org</div>
                 </div>
             </div>
         </div>
