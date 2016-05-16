@@ -1,15 +1,14 @@
 
 /*! \page Network Network Module Reference
 
-	<h2>NetGame</h2>
+	<h2>Internet</h2>
 
 	<ul>
-		<li>clan::SocketName - Address and port for an IP end point</li>
-		<li>clan::NetGameClient - Client main class</li>
-		<li>clan::NetGameServer - Server main class</li>
-		<li>clan::NetGameConnection - Represents a connection between a client and the server</li>
-		<li>clan::NetGameEvent, clan::NetGameEventValue - Class for sending or receiving a NetGame network event</li>
-		<li>clan::NetGameEventDispatcher - Helper template classes for calling functions based on an event name</li>
+		<li>uicore::SocketName - Address and port for an IP end point</li>
+		<li>uicore::TCPConnection - TCP/IP connection class</li>
+		<li>uicore::TCPListen - TCP/IP listener for incoming connections</li>
+		<li>uicore::UDPSocket - UDP/IP datagram port class</li>
+		<li>uicore::NetworkConditionVariable - Condition variable that can also be notified by network activity</li>
 	</ul>
 
 */
