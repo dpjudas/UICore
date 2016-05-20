@@ -21,3 +21,8 @@ The build instructions for each platform are as follows:
 - *OS X*: Run ./configure. Make sure you have Xcode and the command line tools installed first. This will generate a Xcode project that you can use to build from the command line or from within Xcode. It will output the include and library files into the Build directory after a successful build.
  
 Only the Linux build has external dependencies at the moment. CMake should detect those and complain if they aren't installed. If you find any bugs in our build scripts, please help out by sending a pull request.
+
+## Documentation
+The latest build of the documentation can be found at https://dpjudas.github.io/UICore
+
+You can also build it manually by running doxygen from the Documentation folder.
