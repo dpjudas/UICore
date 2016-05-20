@@ -74,7 +74,7 @@ namespace uicore
 		bool cursor_visible = false;
 		std::string::size_type cursor_pos = 0;
 		bool cursor_overwrite_mode = false;
-		Colorf cursor_color = Colorf::black;
+		Colorf cursor_color = StandardColorf::black();
 
 		struct InlineBlock
 		{
@@ -204,7 +204,7 @@ namespace uicore
 		void draw_layout_text(const CanvasPtr &canvas, Line &line, LineSegment &segment, float x, float y);
 
 		std::string::size_type sel_start = 0, sel_end = 0;
-		Colorf sel_foreground = Colorf::white, sel_background = Colorf::darkslateblue;
+		Colorf sel_foreground = StandardColorf::white(), sel_background = StandardColorf::darkslateblue();
 
 		std::string text;
 		std::vector<SpanObject> objects;

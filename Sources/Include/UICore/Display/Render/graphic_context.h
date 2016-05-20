@@ -432,7 +432,7 @@ namespace uicore
 		virtual void set_rasterizer_state(const RasterizerStatePtr &state) = 0;
 
 		/// Set active blend state
-		virtual void set_blend_state(const BlendStatePtr &state, const Colorf &blend_color = Colorf::white, unsigned int sample_mask = 0xffffffff) = 0;
+		virtual void set_blend_state(const BlendStatePtr &state, const Colorf &blend_color = StandardColorf::white(), unsigned int sample_mask = 0xffffffff) = 0;
 
 		/// Set active depth stencil state
 		virtual void set_depth_stencil_state(const DepthStencilStatePtr &state, int stencil_ref = 0) = 0;
@@ -534,7 +534,7 @@ namespace uicore
 		virtual void dispatch(int x = 1, int y = 1, int z = 1) = 0;
 
 		/// Clears the whole context using the specified color.
-		virtual void clear(const Colorf &color = Colorf::black) = 0;
+		virtual void clear(const Colorf &color = StandardColorf::black()) = 0;
 
 		/// Clear the stencil buffer
 		///

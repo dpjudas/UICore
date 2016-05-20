@@ -94,8 +94,8 @@ namespace uicore
 		/// \param position = Dest position
 		/// \param text = The text to draw
 		/// \param color = The text color
-		virtual void draw_text(const CanvasPtr &canvas, const Pointf &position, const std::string &text, const Colorf &color = Colorf::white) = 0;
-		void draw_text(const CanvasPtr &canvas, float xpos, float ypos, const std::string &text, const Colorf &color = Colorf::white) { draw_text(canvas, Pointf(xpos, ypos), text, color); }
+		virtual void draw_text(const CanvasPtr &canvas, const Pointf &position, const std::string &text, const Colorf &color = StandardColorf::white()) = 0;
+		void draw_text(const CanvasPtr &canvas, float xpos, float ypos, const std::string &text, const Colorf &color = StandardColorf::white()) { draw_text(canvas, Pointf(xpos, ypos), text, color); }
 
 		/// \brief Gets the glyph metrics
 		///

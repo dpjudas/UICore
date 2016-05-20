@@ -72,7 +72,7 @@ namespace uicore
 	private:
 		void calc_hotspot();
 
-		Colorf _color = Colorf::white;
+		Colorf _color = StandardColorf::white();
 
 		float _scale_x = 1.0f;
 		float _scale_y = 1.0f;

@@ -69,7 +69,7 @@ namespace uicore
 			int texindex;
 		};
 
-		int set_batcher_active(const CanvasPtr &canvas, const Texture2DPtr &texture, bool glyph_program = false, const Colorf &constant_color = Colorf::black);
+		int set_batcher_active(const CanvasPtr &canvas, const Texture2DPtr &texture, bool glyph_program = false, const Colorf &constant_color = StandardColorf::black());
 		int set_batcher_active(const CanvasPtr &canvas);
 		int set_batcher_active(const CanvasPtr &canvas, int num_vertices);
 		void flush(const GraphicContextPtr &gc) override;

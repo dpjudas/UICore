@@ -92,7 +92,7 @@ namespace uicore
 		virtual void clear() = 0;
 
 		/// \brief Add text object
-		virtual void add_text(const std::string &text, const FontPtr &font, const Colorf &color = Colorf::white, int id = -1) = 0;
+		virtual void add_text(const std::string &text, const FontPtr &font, const Colorf &color = StandardColorf::white(), int id = -1) = 0;
 
 		/// \brief Add image object
 		virtual void add_image(const ImagePtr &image, float baseline_offset = 0.0f, int id = -1) = 0;

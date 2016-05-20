@@ -101,7 +101,7 @@ namespace uicore
 		virtual void reset_clip() = 0;
 
 		/// \brief Clears the whole context using the specified color.
-		virtual void clear(const Colorf &color = Colorf::black) = 0;
+		virtual void clear(const Colorf &color = StandardColorf::black()) = 0;
 
 		/// \brief Sets the transform matrix to a new matrix.
 		virtual void set_transform(const Mat4f &matrix) = 0;

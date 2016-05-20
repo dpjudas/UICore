@@ -804,12 +804,12 @@ namespace uicore
 		{
 			if (equals(token.value, "transparent"))
 			{
-				out_color = Colorf::transparent;
+				out_color = StandardColorf::transparent();
 				in_out_pos = pos;
 				return true;
 			}
 
-			if (Colorf::find_color(Text::to_lower(token.value), out_color))
+			if (StandardColorf::parse(Text::to_lower(token.value), out_color))
 			{
 				in_out_pos = pos;
 				return true;

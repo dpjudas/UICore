@@ -52,7 +52,7 @@ namespace uicore
 		DisplayWindowPtr display_window;
 		SlotContainer slots;
 		Mat4f transform_mouse_matrix;
-		Colorf background_color = Colorf::transparent;
+		Colorf background_color = StandardColorf::transparent();
 		bool clear_background_enable = true;
 		bool always_render = false;
 

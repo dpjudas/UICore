@@ -48,7 +48,7 @@ namespace uicore
 		BlendStateDescription desc;
 
 	private:
-		Vec4f blend_color = Colorf::white;
+		Vec4f blend_color = StandardColorf::white();
 		bool changed_desc = true;
 		bool changed_blend_color = true;
 	};

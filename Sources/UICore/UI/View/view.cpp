@@ -836,8 +836,8 @@ namespace uicore
 			{
 				canvas->set_transform(old_transform * Mat4f::translate(translate.x, translate.y, 0));
 				Path::rect(0.0f, 0.0f, _geometry.content_width, _geometry.content_height)->fill(canvas, Colorf(1.0f, 0.2f, 0.2f, 0.5f));
-				Path::line(0.0f, 0.0f, _geometry.content_width, _geometry.content_height)->stroke(canvas, Colorf::black);
-				Path::line(_geometry.content_width, 0.0f, 0.0f, _geometry.content_height)->stroke(canvas, Colorf::black);
+				Path::line(0.0f, 0.0f, _geometry.content_width, _geometry.content_height)->stroke(canvas, StandardColorf::black());
+				Path::line(_geometry.content_width, 0.0f, 0.0f, _geometry.content_height)->stroke(canvas, StandardColorf::black());
 			}
 		}
 
