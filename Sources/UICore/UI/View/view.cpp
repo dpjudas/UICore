@@ -169,19 +169,17 @@ namespace uicore
 			throw Exception("not parent of reference child view");
 		
 		new_child->remove_from_parent();
-		
-		auto prev = ref_child->previous_sibling();
-		if (prev)
-		{
-			new_child->impl->_prev_sibling = prev;
-			prev->impl->_next_sibling = new_child;
-		}
-		
+
+		new_child->impl->_prev_sibling = ref_child->impl->_prev_sibling;
+		new_child->impl->_next_sibling = ref_child;
 		ref_child->impl->_prev_sibling = new_child;
-		
+
+		if (new_child->previous_sibling())
+			new_child->previous_sibling()->impl->_next_sibling = new_child;
+
 		if (impl->_first_child == ref_child)
 			impl->_first_child = new_child;
-		
+
 		new_child->impl->_parent = this;
 		new_child->impl->update_style_cascade();
 		new_child->set_needs_layout();
