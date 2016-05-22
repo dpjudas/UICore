@@ -130,11 +130,10 @@ namespace uicore
 
 	void RadioButtonBaseView_Impl::release_group_checked()
 	{
-		auto view = radio->parent();
-		if (view)
+		auto parent = radio->parent();
+		if (parent)
 		{
-			std::vector<std::shared_ptr<View>> children_copy = view->children();
-			for (auto &view : children_copy)
+			for (auto &view : parent->children())
 			{
 				if (view.get() != radio)
 				{

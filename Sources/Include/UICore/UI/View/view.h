@@ -88,12 +88,56 @@ namespace uicore
 
 		/// Parent view node or nullptr if the view is the current root node
 		View *parent() const;
+		
+		/// Returns the first child view
+		std::shared_ptr<View> first_child() const;
+		
+		/// Returns the last child ivew
+		std::shared_ptr<View> last_child() const;
+		
+		/// Returns the previous sibling view
+		std::shared_ptr<View> previous_sibling() const;
+		
+		/// Returns the next sibling view
+		std::shared_ptr<View> next_sibling() const;
+		
+		/// Inserts a view before the specified reference child
+		std::shared_ptr<View> insert_before(const std::shared_ptr<View> &new_child, const std::shared_ptr<View> &ref_child);
+		
+		/// Replaces a child view with another view
+		std::shared_ptr<View> replace_child(const std::shared_ptr<View> &new_child, const std::shared_ptr<View> &old_child);
 
+		struct Children
+		{
+			Children(const View *v) : view(v) { }
+			
+			struct iterator
+			{
+				iterator() { }
+				iterator(std::shared_ptr<View> v) : _view(v) { }
+				const std::shared_ptr<View> &operator*() const { return _view; }
+				iterator &operator++() { _view = _view->next_sibling(); return *this; }
+				bool operator==(const iterator &other) const { return _view == other._view; }
+				bool operator!=(const iterator &other) const { return _view != other._view; }
+			private:
+				std::shared_ptr<View> _view;
+			};
+			typedef iterator const_iterator;
+			
+			iterator begin() { return view->first_child(); }
+			const_iterator begin() const { return view->first_child(); }
+			iterator end() { return iterator(); }
+			const_iterator end() const { return const_iterator(); }
+
+		private:
+			const View *view;
+		};
+		
 		/// List of all immediate child views
-		const std::vector<std::shared_ptr<View>> &children() const;
+		Children children() const { return this; }
 
 		/// Add a child view
-		void add_child(const std::shared_ptr<View> &view);
+		std::shared_ptr<View> add_child(const std::shared_ptr<View> &view);
 
 		template<typename T, typename... Types>
 		std::shared_ptr<T> add_child(Types &&... args)

@@ -37,6 +37,7 @@ namespace uicore
 {
 	void ListBoxBaseViewImpl::on_key_press(KeyEvent &e)
 	{
+		/*
 		if (listbox->content_view()->children().empty())
 			return;
 
@@ -50,6 +51,7 @@ namespace uicore
 			listbox->set_selected_item(uicore::min(selected_item + 1, (int)listbox->content_view()->children().size() - 1));
 			sig_selection_changed();
 		}
+		*/
 	}
 
 	void ListBoxBaseViewImpl::on_pointer_press(PointerEvent &e)
@@ -81,7 +83,7 @@ namespace uicore
 	int ListBoxBaseViewImpl::get_selection_index(PointerEvent &e)
 	{
 		int index = 0;
-		for (auto &view : listbox->content_view()->children())
+		for (const auto &view : listbox->content_view()->children())
 		{
 			if (view->geometry().border_box().contains(e.pos(listbox->content_view())))
 				return index;
@@ -93,6 +95,7 @@ namespace uicore
 
 	void ListBoxBaseViewImpl::set_hot_item(int index)
 	{
+		/*
 		if ((index == hot_item) || (index == selected_item))		// Selected item state has priority
 			return;
 
@@ -109,6 +112,7 @@ namespace uicore
 		}
 
 		hot_item = index;
+		*/
 	}
 
 	void ListBoxBaseViewImpl::on_pointer_enter(PointerEvent &e)

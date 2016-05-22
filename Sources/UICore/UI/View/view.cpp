@@ -119,7 +119,7 @@ namespace uicore
 
 	void ViewImpl::set_state_cascade_siblings(const std::string &name, bool value)
 	{
-		for (std::shared_ptr<View> &view : _children)
+		for (auto view = _first_child; view != nullptr; view = view->next_sibling())
 		{
 			ViewImpl *impl = view->impl.get();
 			if (impl->states[name].inherited)
@@ -137,46 +137,132 @@ namespace uicore
 		return impl->_parent;
 	}
 
-	const std::vector<std::shared_ptr<View>> &View::children() const
+	std::shared_ptr<View> View::first_child() const
 	{
-		return impl->_children;
+		return impl->_first_child;
 	}
-
-	void View::add_child(const std::shared_ptr<View> &view)
+	
+	std::shared_ptr<View> View::last_child() const
 	{
-		if (view)
+		return impl->_last_child;
+	}
+	
+	std::shared_ptr<View> View::previous_sibling() const
+	{
+		return impl->_prev_sibling.lock();
+	}
+	
+	std::shared_ptr<View> View::next_sibling() const
+	{
+		return impl->_next_sibling;
+	}
+	
+	std::shared_ptr<View> View::insert_before(const std::shared_ptr<View> &new_child, const std::shared_ptr<View> &ref_child)
+	{
+		if (!ref_child)
+			return add_child(new_child);
+		
+		if (!new_child)
+			throw Exception("instance not set to an object");
+		
+		if (ref_child->parent() != this)
+			throw Exception("not parent of reference child view");
+		
+		new_child->remove_from_parent();
+		
+		auto prev = ref_child->previous_sibling();
+		if (prev)
 		{
-			view->remove_from_parent();
-
-			impl->_children.push_back(view);
-			view->impl->_parent = this;
-			view->impl->update_style_cascade();
-			view->set_needs_layout();
-			set_needs_layout();
-
-			child_added(view);
+			new_child->impl->_prev_sibling = prev;
+			prev->impl->_next_sibling = new_child;
 		}
+		
+		ref_child->impl->_prev_sibling = new_child;
+		
+		if (impl->_first_child == ref_child)
+			impl->_first_child = new_child;
+		
+		new_child->impl->_parent = this;
+		new_child->impl->update_style_cascade();
+		new_child->set_needs_layout();
+		set_needs_layout();
+		
+		child_added(new_child);
+	}
+	
+	std::shared_ptr<View> View::replace_child(const std::shared_ptr<View> &new_child, const std::shared_ptr<View> &old_child)
+	{
+		if (!new_child || !old_child)
+			throw Exception("instance not set to an object");
+		
+		if (old_child->parent() != this)
+			throw Exception("not parent of old child node");
+		
+		insert_before(new_child, old_child);
+		old_child->remove_from_parent();
+		
+		return old_child;
+	}
+	
+	std::shared_ptr<View> View::add_child(const std::shared_ptr<View> &new_child)
+	{
+		if (!new_child)
+			throw Exception("instance not set to an object");
+		
+		if (new_child->parent())
+			new_child->remove_from_parent();
+		
+		if (impl->_first_child)
+		{
+			auto last = last_child();
+			last->impl->_next_sibling = new_child;
+			new_child->impl->_prev_sibling = last;
+			impl->_last_child = new_child;
+		}
+		else
+		{
+			impl->_first_child = new_child;
+			impl->_last_child = new_child;
+		}
+		
+		new_child->impl->_parent = this;
+		new_child->impl->update_style_cascade();
+		new_child->set_needs_layout();
+		set_needs_layout();
+		
+		child_added(new_child);
+
+		return new_child;
 	}
 
 	void View::remove_from_parent()
 	{
-		View *super = impl->_parent;
-		if (super)
-		{
-			std::shared_ptr<View> view_ptr = shared_from_this();
-
-			// To do: clear owner_view, focus_view, if it is this view or a child
-
-			auto it = std::find_if(super->impl->_children.begin(), super->impl->_children.end(), [&](const std::shared_ptr<View> &view) { return view.get() == this; });
-			if (it != super->impl->_children.end())
-				super->impl->_children.erase(it);
-			impl->_parent = nullptr;
-			impl->update_style_cascade();
-
-			super->set_needs_layout();
-
-			child_removed(view_ptr);
-		}
+		if (!impl->_parent)
+			return;
+		
+		// To do: clear owner_view, focus_view, if it is this view or a child
+		
+		impl->_parent->set_needs_layout();
+		
+		auto old_child = shared_from_this();
+		
+		if (impl->_parent->impl->_first_child == old_child)
+			impl->_parent->impl->_first_child = old_child->next_sibling();
+		if (impl->_parent->impl->_last_child == old_child)
+			impl->_parent->impl->_last_child = old_child->previous_sibling();
+		
+		auto prev = old_child->previous_sibling();
+		if (prev)
+			prev->impl->_next_sibling = old_child->impl->_next_sibling;
+		if (old_child->impl->_next_sibling)
+			old_child->impl->_next_sibling->impl->_prev_sibling = prev;
+		
+		old_child->impl->_prev_sibling.reset();
+		old_child->impl->_next_sibling.reset();
+		
+		old_child->impl->_parent = nullptr;
+		
+		child_removed(old_child);
 	}
 
 	const std::vector<std::shared_ptr<ViewAction>> &View::actions() const
@@ -396,9 +482,9 @@ namespace uicore
 
 	std::shared_ptr<View> View::find_view_at(const Pointf &pos) const
 	{
-		for (unsigned int cnt = impl->_children.size(); cnt > 0; --cnt)	// Search the children in reverse order, as we want to search the view that was "last drawn" first
+		// Search the children in reverse order, as we want to search the view that was "last drawn" first
+		for (auto child = last_child(); child != nullptr; child = child->previous_sibling())
 		{
-			const std::shared_ptr<View> &child = impl->_children[cnt-1];
 			if (child->geometry().border_box().contains(pos) && !child->hidden())
 			{
 				Pointf child_content_pos(pos.x - child->geometry().content_x, pos.y - child->geometry().content_y);
@@ -842,7 +928,7 @@ namespace uicore
 		}
 
 		Rectf clip_box = canvas->clip();
-		for (std::shared_ptr<View> &view : _children)
+		for (auto view = _first_child; view != nullptr; view = view->next_sibling())
 		{
 			if (!view->hidden())
 			{
@@ -994,7 +1080,7 @@ namespace uicore
 	unsigned int ViewImpl::find_next_tab_index(unsigned int start_index) const
 	{
 		unsigned int next_index = tab_index > start_index ? tab_index : 0;
-		for (const auto &child : _children)
+		for (auto child = _first_child; child != nullptr; child = child->next_sibling())
 		{
 			if (child->hidden()) continue;
 
@@ -1021,7 +1107,7 @@ namespace uicore
 	unsigned int ViewImpl::find_prev_tab_index_helper(unsigned int start_index) const
 	{
 		unsigned int prev_index = tab_index < start_index ? tab_index : 0;
-		for (const auto &child : _children)
+		for (auto child = _first_child; child != nullptr; child = child->next_sibling())
 		{
 			if (child->hidden()) continue;
 
@@ -1040,7 +1126,7 @@ namespace uicore
 	unsigned int ViewImpl::find_highest_tab_index() const
 	{
 		unsigned int index = tab_index;
-		for (const auto &child : _children)
+		for (auto child = _first_child; child != nullptr; child = child->next_sibling())
 		{
 			if (!child->hidden())
 				index = uicore::max(child->impl->find_highest_tab_index(), index);
@@ -1051,7 +1137,7 @@ namespace uicore
 	View *ViewImpl::find_next_with_tab_index(unsigned int search_index, const ViewImpl *search_from, bool also_search_ancestors) const
 	{
 		bool search_from_found = search_from ? false : true;
-		for (const auto &child : _children)
+		for (auto child = _first_child; child != nullptr; child = child->next_sibling())
 		{
 			if (child->hidden())
 				continue;
@@ -1084,10 +1170,8 @@ namespace uicore
 	View *ViewImpl::find_prev_with_tab_index(unsigned int search_index, const ViewImpl *search_from, bool also_search_ancestors) const
 	{
 		bool search_from_found = search_from ? false : true;
-		for (auto it = _children.crbegin(); it != _children.crend(); ++it)
+		for (auto child = _last_child; child != nullptr; child = child->previous_sibling())
 		{
-			const auto &child = *it;
-
 			if (child->hidden()) continue;
 
 			if (search_from_found)

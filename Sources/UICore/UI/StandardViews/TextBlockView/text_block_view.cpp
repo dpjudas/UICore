@@ -60,8 +60,7 @@ namespace uicore
 	{
 		impl->clear();
 
-		std::vector<std::shared_ptr<View>> children_copy = children();
-		for (auto &view : children_copy)
+		for (auto view = last_child(); view != nullptr; view = last_child())
 			view->remove_from_parent();
 	}
 

@@ -56,9 +56,8 @@ namespace uicore
 	{
 		impl->selected_item = -1;
 		
-		auto views = content_view()->children();
-		while (!views.empty())
-			views.back()->remove_from_parent();
+		for (auto view = content_view()->last_child(); view != nullptr; view = content_view()->last_child())
+			view->remove_from_parent();
 		
 		for (auto &item : items)
 		{
@@ -75,6 +74,7 @@ namespace uicore
 	
 	void ListBoxBaseView::set_selected_item(int index)
 	{
+		/*
 		if (index == impl->selected_item)
 			return;
 		
@@ -96,6 +96,7 @@ namespace uicore
 		}
 		
 		impl->selected_item = index;
+		*/
 	}
 
 	Signal<void()> &ListBoxBaseView::sig_selection_changed()
