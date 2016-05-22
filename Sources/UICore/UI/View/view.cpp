@@ -188,6 +188,8 @@ namespace uicore
 		set_needs_layout();
 		
 		child_added(new_child);
+
+		return new_child;
 	}
 	
 	std::shared_ptr<View> View::replace_child(const std::shared_ptr<View> &new_child, const std::shared_ptr<View> &old_child)
