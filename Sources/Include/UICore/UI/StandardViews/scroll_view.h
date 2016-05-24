@@ -60,6 +60,11 @@ namespace uicore
 		void set_overflow_y(ContentOverflow value);
 		void set_overflow(ContentOverflow value_x, ContentOverflow value_y);
 		
+		bool infinite_content_width() const;
+		bool infinite_content_height() const;
+		void set_infinite_content_width(bool enable);
+		void set_infinite_content_height(bool enable);
+		
 		Pointf content_offset() const;
 		void set_content_offset(const Pointf &offset, bool animated = false);
 		

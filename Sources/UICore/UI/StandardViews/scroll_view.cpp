@@ -71,7 +71,7 @@ namespace uicore
 			if (item_style.computed_value("width").is_length())
 				width = item_style.computed_value("width").number();
 			else
-				width = geometry().content_width - noncontent_left - noncontent_right;
+				width = infinite_width ? content->preferred_width(canvas) : geometry().content_width - noncontent_left - noncontent_right;
 			
 			if (item_style.computed_value("min-width").is_length())
 				width = std::max(width, item_style.computed_value("min-width").number());
@@ -84,7 +84,7 @@ namespace uicore
 			if (item_style.computed_value("height").is_length())
 				height = item_style.computed_value("height").number();
 			else
-				height = content->preferred_height(canvas, width);
+				height = infinite_height ? content->preferred_height(canvas, width) : geometry().content_height - noncontent_top - noncontent_bottom;
 			
 			if (item_style.computed_value("min-height").is_length())
 				height = std::max(height, item_style.computed_value("min-height").number());
@@ -154,7 +154,7 @@ namespace uicore
 			if (item_style.computed_value("width").is_length())
 				width = item_style.computed_value("width").number();
 			else
-				width = container_width - noncontent_left - noncontent_right;
+				width = infinite_width ? content->preferred_width(canvas) : container_width - noncontent_left - noncontent_right;
 					
 			if (item_style.computed_value("min-width").is_length())
 				width = std::max(width, item_style.computed_value("min-width").number());
@@ -196,7 +196,7 @@ namespace uicore
 			if (item_style.computed_value("width").is_length())
 				width = item_style.computed_value("width").number();
 			else
-				width = container_width - noncontent_left - noncontent_right;
+				width = infinite_width ? content->preferred_width(canvas) : container_width - noncontent_left - noncontent_right;
 			
 			if (item_style.computed_value("min-width").is_length())
 				width = std::max(width, item_style.computed_value("min-width").number());
@@ -226,7 +226,7 @@ namespace uicore
 			if (item_style.computed_value("width").is_length())
 				width = item_style.computed_value("width").number();
 			else
-				width = container_width - noncontent_left - noncontent_right;
+				width = infinite_width ? content->preferred_width(canvas) : container_width - noncontent_left - noncontent_right;
 			
 			if (item_style.computed_value("min-width").is_length())
 				width = std::max(width, item_style.computed_value("min-width").number());
@@ -273,9 +273,39 @@ namespace uicore
 			content->set_view_transform(Mat4f::translate(-offset.x, -offset.y, 0.0f));
 		}
 		
+		bool infinite_content_width() const
+		{
+			return infinite_width;
+		}
+		
+		bool infinite_content_height() const
+		{
+			return infinite_height;
+		}
+		
+		void set_infinite_content_width(bool enable)
+		{
+			if (infinite_width != enable)
+			{
+				infinite_width = enable;
+				set_needs_layout();
+			}
+		}
+		
+		void set_infinite_content_height(bool enable)
+		{
+			if (infinite_height != enable)
+			{
+				infinite_height = enable;
+				set_needs_layout();
+			}
+		}
+		
 	private:
 		std::shared_ptr<View> content;
 		Pointf _content_offset;
+		bool infinite_width = false;
+		bool infinite_height = true;
 	};
 
 	class ScrollBaseViewImpl
@@ -371,6 +401,28 @@ namespace uicore
 	{
 		set_overflow_x(value_x);
 		set_overflow_y(value_y);
+	}
+	
+	bool ScrollBaseView::infinite_content_width() const
+	{
+		return impl->content_container->infinite_content_width();
+	}
+	
+	bool ScrollBaseView::infinite_content_height() const
+	{
+		return impl->content_container->infinite_content_height();
+	}
+	
+	void ScrollBaseView::set_infinite_content_width(bool enable)
+	{
+		impl->content_container->set_infinite_content_width(enable);
+		set_needs_layout();
+	}
+	
+	void ScrollBaseView::set_infinite_content_height(bool enable)
+	{
+		impl->content_container->set_infinite_content_height(enable);
+		set_needs_layout();
 	}
 	
 	Pointf ScrollBaseView::content_offset() const
