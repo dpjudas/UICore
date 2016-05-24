@@ -29,6 +29,7 @@
 #include "UICore/precomp.h"
 #include "UICore/UI/StandardViews/scroll_view.h"
 #include "UICore/UI/StandardViews/scrollbar_view.h"
+#include "UICore/UI/StandardViews/layout_views.h"
 #include "UICore/UI/Events/pointer_event.h"
 #include <algorithm>
 
@@ -37,21 +38,244 @@ namespace uicore
 	class ScrollBaseViewContentContainer : public View
 	{
 	public:
+		ScrollBaseViewContentContainer()
+		{
+			set_content_clipped(true);
+			set_content_view(std::make_shared<ColumnView>());
+		}
+		
 		void layout_children(const CanvasPtr &canvas) override
 		{
-			for (auto &view : children())
-			{
-				// To do: maybe we need a mode to specify if the X axis is locked or infinite
-				float width = geometry().content_width; //view->preferred_width(canvas);
-				float height = view->preferred_height(canvas, width);
-				ViewGeometry geometry = ViewGeometry::from_content_box(style_cascade(), Rectf(0.0f, 0.0f, width, height));
-				geometry.content_x = 0.0f;
-				geometry.content_y = 0.0f;
-				view->set_geometry(geometry);
+			if (!content)
+				return;
 
-				view->layout_children(canvas); // Maybe this should be handled in View?
+			const auto &item_style = content->style_cascade();
+			
+			float noncontent_left = item_style.computed_value("margin-left").number();
+			noncontent_left += item_style.computed_value("border-left-width").number();
+			noncontent_left += item_style.computed_value("padding-left").number();
+			
+			float noncontent_right = item_style.computed_value("padding-right").number();
+			noncontent_right += item_style.computed_value("border-right-width").number();
+			noncontent_right += item_style.computed_value("margin-right").number();
+			
+			float noncontent_top = item_style.computed_value("margin-top").number();
+			noncontent_top += item_style.computed_value("border-top-width").number();
+			noncontent_top += item_style.computed_value("padding-top").number();
+			
+			float noncontent_bottom = item_style.computed_value("padding-bottom").number();
+			noncontent_bottom += item_style.computed_value("border-bottom-width").number();
+			noncontent_bottom += item_style.computed_value("margin-bottom").number();
+			
+			float width = 0.0f;
+			if (item_style.computed_value("width").is_length())
+				width = item_style.computed_value("width").number();
+			else
+				width = geometry().content_width - noncontent_left - noncontent_right;
+			
+			if (item_style.computed_value("min-width").is_length())
+				width = std::max(width, item_style.computed_value("min-width").number());
+					
+			if (item_style.computed_value("max-width").is_length())
+				width = std::min(width, item_style.computed_value("max-width").number());
+				
+
+			float height = 0.0f;
+			if (item_style.computed_value("height").is_length())
+				height = item_style.computed_value("height").number();
+			else
+				height = content->preferred_height(canvas, width);
+			
+			if (item_style.computed_value("min-height").is_length())
+				height = std::max(height, item_style.computed_value("min-height").number());
+				
+			if (item_style.computed_value("max-height").is_length())
+				height = std::min(height, item_style.computed_value("max-height").number());
+				
+			content->set_geometry(ViewGeometry::from_content_box(item_style, Rectf(noncontent_left, noncontent_top, width, height)));
+				
+			content->layout_children(canvas);
+		}
+		
+		float calculate_preferred_width(const CanvasPtr &canvas) override
+		{
+			if (!content)
+				return 0.0f;
+			
+			const auto &item_style = content->style_cascade();
+			
+			float noncontent_left = item_style.computed_value("margin-left").number();
+			noncontent_left += item_style.computed_value("border-left-width").number();
+			noncontent_left += item_style.computed_value("padding-left").number();
+			
+			float noncontent_right = item_style.computed_value("padding-right").number();
+			noncontent_right += item_style.computed_value("border-right-width").number();
+			noncontent_right += item_style.computed_value("margin-right").number();
+			
+			float width = 0.0f;
+			if (item_style.computed_value("width").is_length())
+				width = item_style.computed_value("width").number();
+			else
+				width = content->preferred_width(canvas);
+			
+			if (item_style.computed_value("min-width").is_length())
+				width = std::max(width, item_style.computed_value("min-width").number());
+				
+			if (item_style.computed_value("max-width").is_length())
+				width = std::min(width, item_style.computed_value("max-width").number());
+				
+			return width + noncontent_left + noncontent_right;
+		}
+		
+		float calculate_preferred_height(const CanvasPtr &canvas, float container_width) override
+		{
+			if (!content)
+				return 0.0f;
+			
+			const auto &item_style = content->style_cascade();
+			
+			float noncontent_left = item_style.computed_value("margin-left").number();
+			noncontent_left += item_style.computed_value("border-left-width").number();
+			noncontent_left += item_style.computed_value("padding-left").number();
+			
+			float noncontent_right = item_style.computed_value("padding-right").number();
+			noncontent_right += item_style.computed_value("border-right-width").number();
+			noncontent_right += item_style.computed_value("margin-right").number();
+			
+			float noncontent_top = item_style.computed_value("margin-top").number();
+			noncontent_top += item_style.computed_value("border-top-width").number();
+			noncontent_top += item_style.computed_value("padding-top").number();
+			
+			float noncontent_bottom = item_style.computed_value("padding-bottom").number();
+			noncontent_bottom += item_style.computed_value("border-bottom-width").number();
+			noncontent_bottom += item_style.computed_value("margin-bottom").number();
+			
+			float width = 0.0f;
+			if (item_style.computed_value("width").is_length())
+				width = item_style.computed_value("width").number();
+			else
+				width = container_width - noncontent_left - noncontent_right;
+					
+			if (item_style.computed_value("min-width").is_length())
+				width = std::max(width, item_style.computed_value("min-width").number());
+						
+			if (item_style.computed_value("max-width").is_length())
+				width = std::min(width, item_style.computed_value("max-width").number());
+			
+			float height = 0.0f;
+			if (item_style.computed_value("height").is_length())
+				height = item_style.computed_value("height").number();
+			else
+				height = content->preferred_height(canvas, width);
+					
+			if (item_style.computed_value("min-height").is_length())
+				height = std::max(height, item_style.computed_value("min-height").number());
+						
+			if (item_style.computed_value("max-height").is_length())
+				height = std::min(height, item_style.computed_value("max-height").number());
+			
+			return height;
+		}
+		
+		float calculate_first_baseline_offset(const CanvasPtr &canvas, float container_width) override
+		{
+			if (!content)
+				return 0.0f;
+			
+			const auto &item_style = content->style_cascade();
+			
+			float noncontent_left = item_style.computed_value("margin-left").number();
+			noncontent_left += item_style.computed_value("border-left-width").number();
+			noncontent_left += item_style.computed_value("padding-left").number();
+			
+			float noncontent_right = item_style.computed_value("padding-right").number();
+			noncontent_right += item_style.computed_value("border-right-width").number();
+			noncontent_right += item_style.computed_value("margin-right").number();
+			
+			float width = 0.0f;
+			if (item_style.computed_value("width").is_length())
+				width = item_style.computed_value("width").number();
+			else
+				width = container_width - noncontent_left - noncontent_right;
+			
+			if (item_style.computed_value("min-width").is_length())
+				width = std::max(width, item_style.computed_value("min-width").number());
+				
+			if (item_style.computed_value("max-width").is_length())
+				width = std::min(width, item_style.computed_value("max-width").number());
+			
+			return content->first_baseline_offset(canvas, width);
+		}
+		
+		float calculate_last_baseline_offset(const CanvasPtr &canvas, float container_width) override
+		{
+			if (!content)
+				return 0.0f;
+			
+			const auto &item_style = content->style_cascade();
+			
+			float noncontent_left = item_style.computed_value("margin-left").number();
+			noncontent_left += item_style.computed_value("border-left-width").number();
+			noncontent_left += item_style.computed_value("padding-left").number();
+			
+			float noncontent_right = item_style.computed_value("padding-right").number();
+			noncontent_right += item_style.computed_value("border-right-width").number();
+			noncontent_right += item_style.computed_value("margin-right").number();
+			
+			float width = 0.0f;
+			if (item_style.computed_value("width").is_length())
+				width = item_style.computed_value("width").number();
+			else
+				width = container_width - noncontent_left - noncontent_right;
+			
+			if (item_style.computed_value("min-width").is_length())
+				width = std::max(width, item_style.computed_value("min-width").number());
+				
+			if (item_style.computed_value("max-width").is_length())
+				width = std::min(width, item_style.computed_value("max-width").number());
+					
+			return content->last_baseline_offset(canvas, width);
+		}
+		
+		std::shared_ptr<View> content_view() const
+		{
+			return content;
+		}
+		
+		void set_content_view(std::shared_ptr<View> view)
+		{
+			if (view == content)
+				return;
+
+			if (content)
+				content->remove_from_parent();
+				
+			content = view;
+				
+			if (content)
+			{
+				add_child(content);
+				content->set_view_transform(Mat4f::translate(-_content_offset.x, -_content_offset.y, 0.0f));
 			}
 		}
+		
+		Pointf content_offset() const
+		{
+			return _content_offset;
+		}
+		
+		void set_content_offset(const Pointf &offset, bool animated)
+		{
+			if (_content_offset == offset)
+				return;
+			
+			_content_offset = offset;
+			content->set_view_transform(Mat4f::translate(-offset.x, -offset.y, 0.0f));
+		}
+		
+	private:
+		std::shared_ptr<View> content;
+		Pointf _content_offset;
 	};
 
 	class ScrollBaseViewImpl
@@ -61,10 +285,8 @@ namespace uicore
 		std::shared_ptr<ScrollBarBaseView> scroll_x = std::make_shared<ScrollBarBaseView>();
 		std::shared_ptr<ScrollBarBaseView> scroll_y = std::make_shared<ScrollBarBaseView>();
 		std::shared_ptr<ScrollBaseViewContentContainer> content_container = std::make_shared<ScrollBaseViewContentContainer>();
-		std::shared_ptr<View> content = std::make_shared<View>();
 		ContentOverflow overflow_x = ContentOverflow::hidden;
 		ContentOverflow overflow_y = ContentOverflow::automatic;
-		Pointf content_offset;
 	};
 
 	ScrollBaseView::ScrollBaseView() : impl(new ScrollBaseViewImpl())
@@ -75,11 +297,6 @@ namespace uicore
 		impl->scroll_y->set_hidden();
 		impl->scroll_x->set_horizontal();
 		impl->scroll_y->set_vertical();
-
-		impl->content_container->style()->set("flex: 1 1 auto");
-
-		impl->content_container->set_content_clipped(true);
-		impl->content_container->add_child(impl->content);
 
 		add_child(impl->content_container);
 		add_child(impl->scroll_x);
@@ -104,7 +321,12 @@ namespace uicore
 
 	std::shared_ptr<View> ScrollBaseView::content_view() const
 	{
-		return impl->content;
+		return impl->content_container->content_view();
+	}
+	
+	void ScrollBaseView::set_content_view(std::shared_ptr<View> view)
+	{
+		impl->content_container->set_content_view(view);
 	}
 
 	std::shared_ptr<ScrollBarBaseView> ScrollBaseView::scrollbar_x_view() const
@@ -153,16 +375,12 @@ namespace uicore
 	
 	Pointf ScrollBaseView::content_offset() const
 	{
-		return impl->content_offset;
+		return impl->content_container->content_offset();
 	}
 	
 	void ScrollBaseView::set_content_offset(const Pointf &offset, bool animated)
 	{
-		if (impl->content_offset == offset)
-			return;
-		
-		impl->content_offset = offset;
-		impl->content->set_view_transform(Mat4f::translate(-offset.x, -offset.y, 0.0f));
+		impl->content_container->set_content_offset(offset, animated);
 	}
 	
 	void ScrollBaseView::layout_children(const CanvasPtr &canvas)

@@ -52,6 +52,7 @@ namespace uicore
 		std::shared_ptr<ScrollBarBaseView> scrollbar_y_view() const;
 		
 		std::shared_ptr<View> content_view() const;
+		void set_content_view(std::shared_ptr<View> view);
 		
 		ContentOverflow overflow_x() const;
 		ContentOverflow overflow_y() const;
