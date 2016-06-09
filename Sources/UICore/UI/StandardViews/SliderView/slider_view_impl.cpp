@@ -103,7 +103,7 @@ namespace uicore
 
 	void SliderBaseViewImpl::on_pointer_track_press(PointerEvent &e)
 	{
-		if (_state_disabled)
+		if (_state_disabled || e.button() != PointerButton::left)
 			return;
 		if (e.target() == thumb)	// Thumb control handled elsewhere
 			return;
@@ -140,7 +140,7 @@ namespace uicore
 
 	void SliderBaseViewImpl::on_pointer_track_release(PointerEvent &e)
 	{
-		if (_state_disabled)
+		if (_state_disabled || e.button() != PointerButton::left)
 			return;
 		mouse_down_mode = mouse_down_none;
 		scroll_timer->stop();

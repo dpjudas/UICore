@@ -103,7 +103,7 @@ namespace uicore
 
 	void CheckBoxBaseView_Impl::on_pointer_press(PointerEvent &e)
 	{
-		if (_state_disabled)
+		if (_state_disabled || e.button() != PointerButton::left)
 			return;
 		_state_pressed = true;
 		update_state();
@@ -112,7 +112,7 @@ namespace uicore
 	void CheckBoxBaseView_Impl::on_pointer_release(PointerEvent &e)
 	{
 		_state_pressed = false;
-		if (_state_disabled)
+		if (_state_disabled || e.button() != PointerButton::left)
 			return;
 		if (checkbox->geometry().border_box().contains(e.pos(checkbox) + checkbox->geometry().content_box().position()))	// Only allow click when mouse released over component
 		{

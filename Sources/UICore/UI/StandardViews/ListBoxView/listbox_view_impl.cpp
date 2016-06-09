@@ -56,6 +56,9 @@ namespace uicore
 
 	void ListBoxBaseViewImpl::on_pointer_press(PointerEvent &e)
 	{
+		if (e.button() != PointerButton::left)
+			return;
+
 		last_selected_item = selected_item;
 
 		int index = get_selection_index(e);
@@ -64,7 +67,7 @@ namespace uicore
 
 	void ListBoxBaseViewImpl::on_pointer_release(PointerEvent &e)
 	{
-		if (e.phase() != EventUIPhase::bubbling)
+		if (e.phase() != EventUIPhase::bubbling || e.button() != PointerButton::left)
 			return;
 
 		int index = get_selection_index(e);
