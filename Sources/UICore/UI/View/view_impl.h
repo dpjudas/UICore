@@ -60,19 +60,12 @@ namespace uicore
 		}
 	};
 
-	enum class ViewRenderLayer
-	{
-		background,
-		border,
-		content
-	};
-
 	class ViewImpl
 	{
 	public:
 		ViewLayout *active_layout(View *self);
 
-		void render(View *self, const CanvasPtr &canvas, ViewRenderLayer layer);
+		void render(View *self, const CanvasPtr &canvas);
 		void process_event(View *self, EventUI *e, bool use_capture);
 		void process_event_handler(ViewEventHandler *handler, EventUI *e);
 		void update_style_cascade() const;

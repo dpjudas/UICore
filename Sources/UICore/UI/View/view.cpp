@@ -882,12 +882,10 @@ namespace uicore
 		}
 	}
 
-	void ViewImpl::render(View *self, const CanvasPtr &canvas, ViewRenderLayer layer)
+	void ViewImpl::render(View *self, const CanvasPtr &canvas)
 	{
-		if (layer == ViewRenderLayer::background)
-			style_cascade.render_background(canvas, _geometry);
-		else if (layer == ViewRenderLayer::border)
-			style_cascade.render_border(canvas, _geometry);
+		style_cascade.render_background(canvas, _geometry);
+		style_cascade.render_border(canvas, _geometry);
 
 		Mat4f old_transform = canvas->transform();
 		Pointf translate = _geometry.content_pos();
@@ -903,28 +901,25 @@ namespace uicore
 			canvas->push_clip(Rectf(std::min(tl_point.x, br_point.x), std::min(tl_point.y, br_point.y), std::max(tl_point.x, br_point.x), std::max(tl_point.y, br_point.y)));
 		}
 
-		if (layer == ViewRenderLayer::content)
+		if (!self->render_exception_encountered())
 		{
-			if (!self->render_exception_encountered())
+			bool success = UIThread::try_catch([&]
 			{
-				bool success = UIThread::try_catch([&]
-				{
-					self->render_content(canvas);
-				});
+				self->render_content(canvas);
+			});
 
-				if (!success)
-				{
-					exception_encountered = true;
-				}
-			}
-
-			if (self->render_exception_encountered())
+			if (!success)
 			{
-				canvas->set_transform(old_transform * Mat4f::translate(translate.x, translate.y, 0));
-				Path::rect(0.0f, 0.0f, _geometry.content_width, _geometry.content_height)->fill(canvas, Colorf(1.0f, 0.2f, 0.2f, 0.5f));
-				Path::line(0.0f, 0.0f, _geometry.content_width, _geometry.content_height)->stroke(canvas, StandardColorf::black());
-				Path::line(_geometry.content_width, 0.0f, 0.0f, _geometry.content_height)->stroke(canvas, StandardColorf::black());
+				exception_encountered = true;
 			}
+		}
+
+		if (self->render_exception_encountered())
+		{
+			canvas->set_transform(old_transform * Mat4f::translate(translate.x, translate.y, 0));
+			Path::rect(0.0f, 0.0f, _geometry.content_width, _geometry.content_height)->fill(canvas, Colorf(1.0f, 0.2f, 0.2f, 0.5f));
+			Path::line(0.0f, 0.0f, _geometry.content_width, _geometry.content_height)->stroke(canvas, StandardColorf::black());
+			Path::line(_geometry.content_width, 0.0f, 0.0f, _geometry.content_height)->stroke(canvas, StandardColorf::black());
 		}
 
 		Rectf clip_box = canvas->clip();
@@ -939,7 +934,7 @@ namespace uicore
 				Rectf transformed_border_box(std::min(tl_point.x, br_point.x), std::min(tl_point.y, br_point.y), std::max(tl_point.x, br_point.x), std::max(tl_point.y, br_point.y));
 				if (clip_box.is_overlapped(transformed_border_box))
 				{
-					view->impl->render(view.get(), canvas, layer);
+					view->impl->render(view.get(), canvas);
 				}
 			}
 		}
