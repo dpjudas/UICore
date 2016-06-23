@@ -346,6 +346,11 @@ namespace uicore
 		}
 	}
 
+	void View::set_margin_geometry(const Rectf &margin_box)
+	{
+		set_geometry(ViewGeometry::from_margin_box(style_cascade(), margin_box));
+	}
+
 	bool View::render_exception_encountered() const
 	{
 		return impl->exception_encountered;
@@ -383,6 +388,30 @@ namespace uicore
 			impl->content_clipped = clipped;
 			set_needs_render();
 		}
+	}
+
+	float View::preferred_margin_width(const CanvasPtr &canvas)
+	{
+		float margin_left = style_cascade().computed_value("margin-left").number();
+		float margin_right = style_cascade().computed_value("margin-right").number();
+		auto width = style_cascade().computed_value("width");
+		if (width.is_length())
+			return margin_left + width.number() + margin_right;
+		else
+			return margin_left + preferred_width(canvas) + margin_right;
+	}
+
+	float View::preferred_margin_height(const CanvasPtr &canvas, float margin_box_width)
+	{
+		float margin_left = style_cascade().computed_value("margin-left").number();
+		float margin_right = style_cascade().computed_value("margin-right").number();
+		float margin_top = style_cascade().computed_value("margin-left").number();
+		float margin_bottom = style_cascade().computed_value("margin-right").number();
+		auto width = style_cascade().computed_value("width");
+		if (width.is_length())
+			return margin_left + width.number() + margin_right;
+		else
+			return margin_top + preferred_height(canvas, margin_box_width - margin_left - margin_right) + margin_bottom;
 	}
 
 	float View::preferred_width(const CanvasPtr &canvas)

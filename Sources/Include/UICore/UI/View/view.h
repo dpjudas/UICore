@@ -192,6 +192,11 @@ namespace uicore
 		/// This function should only be called by layout_children.
 		void set_geometry(const ViewGeometry &geometry);
 
+		/// Sets the view position and size using simplified layout rules
+		///
+		/// This function should only be called by layout_children.
+		void set_margin_geometry(const Rectf &margin_box);
+
 		/// Gets the current canvas used to render this view
 		///
 		/// This function may return a null canvas if the view does not have a canvas attached to it yet.
@@ -219,6 +224,12 @@ namespace uicore
 
 		/// Specifies if content should be clipped during rendering
 		void set_content_clipped(bool clipped);
+
+		/// Calculates the preferred margin box width using simplified layout rules
+		float preferred_margin_width(const CanvasPtr &canvas);
+
+		/// Calculates the perferred margin box height using simplified layout rules
+		float preferred_margin_height(const CanvasPtr &canvas, float margin_box_width);
 
 		/// Calculates the preferred width of this view
 		float preferred_width(const CanvasPtr &canvas);

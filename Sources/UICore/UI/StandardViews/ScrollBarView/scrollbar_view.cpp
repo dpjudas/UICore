@@ -56,8 +56,7 @@ namespace uicore
 		add_child(impl->button_decrement);
 		add_child(impl->track);
 		add_child(impl->button_increment);
-
-		impl->track->add_child(impl->thumb);
+		add_child(impl->thumb);
 
 		impl->thumb->add_child(spacer1);
 		impl->thumb->add_child(impl->thumb_grip);
@@ -66,7 +65,6 @@ namespace uicore
 		impl->button_decrement->style()->set("flex: 0 0 auto");
 		impl->button_increment->style()->set("flex: 0 0 auto");
 		impl->track->style()->set("flex: 1 1 auto");
-		impl->thumb->style()->set("position: absolute");
 		spacer1->style()->set("flex: 1 1 auto");
 		spacer2->style()->set("flex: 1 1 auto");
 
@@ -138,7 +136,7 @@ namespace uicore
 
 	bool ScrollBarBaseView::vertical() const
 	{
-		return style_cascade().computed_value("flex-direction").is_keyword("column");
+		return impl->_vertical;
 	}
 
 	bool ScrollBarBaseView::horizontal() const
@@ -148,7 +146,10 @@ namespace uicore
 
 	void ScrollBarBaseView::set_vertical()
 	{
-		style()->set("flex-direction: column");
+		if (impl->_vertical)
+			return;
+
+		impl->_vertical = true;
 		impl->button_decrement->style()->set("flex-direction: column");
 		impl->button_increment->style()->set("flex-direction: column");
 		impl->track->style()->set("flex-direction: column");
@@ -160,7 +161,10 @@ namespace uicore
 
 	void ScrollBarBaseView::set_horizontal()
 	{
-		style()->set("flex-direction: row");
+		if (!impl->_vertical)
+			return;
+
+		impl->_vertical = false;
 		impl->button_decrement->style()->set("flex-direction: row");
 		impl->button_increment->style()->set("flex-direction: row");
 		impl->track->style()->set("flex-direction: row");
@@ -269,13 +273,35 @@ namespace uicore
 
 	void ScrollBarBaseView::layout_children(const CanvasPtr &canvas)
 	{
-		View::layout_children(canvas);
+		// Place buttons and track:
+		if (vertical())
+		{
+			float width = geometry().content_width;
+			float height = geometry().content_height;
+			float incr_height = impl->button_increment->preferred_margin_height(canvas, width);
+			float decr_height = impl->button_decrement->preferred_margin_height(canvas, width);
+			float track_height = std::max(height - incr_height - decr_height, 0.0f);
+			impl->button_decrement->set_margin_geometry(Rectf::xywh(0.0f, 0.0f, width, decr_height));
+			impl->button_increment->set_margin_geometry(Rectf::xywh(0.0f, height - incr_height, width, incr_height));
+			impl->track->set_margin_geometry(Rectf::xywh(0.0f, incr_height, width, std::max(height - incr_height - decr_height, 0.0f)));
+		}
+		else
+		{
+			float width = geometry().content_width;
+			float height = geometry().content_height;
+			float incr_width = impl->button_increment->preferred_margin_width(canvas);
+			float decr_width = impl->button_decrement->preferred_margin_width(canvas);
+			float track_width = std::max(width - incr_width - decr_width, 0.0f);
+			impl->button_decrement->set_margin_geometry(Rectf::xywh(0.0f, 0.0f, decr_width, height));
+			impl->button_increment->set_margin_geometry(Rectf::xywh(width - incr_width, 0.0f, incr_width, height));
+			impl->track->set_margin_geometry(Rectf::xywh(incr_width, 0.0f, std::max(width - incr_width - decr_width, 0.0f), height));
+		}
 
-		auto track_geometry = impl->track->geometry();
-
+		// Place thumb within the track geometry:
+		auto track = impl->track->geometry();
 		if (impl->min_pos == impl->max_pos || impl->page_step == 0.0)
 		{
-			impl->thumb->style()->set("left: 0; top: 0; width: %1px; height: %2px", track_geometry.content_width, track_geometry.content_height);
+			impl->thumb->set_margin_geometry(Rectf::xywh(track.content_x, track.content_y, track.content_width, track.content_height));
 		}
 		else
 		{
@@ -284,13 +310,58 @@ namespace uicore
 
 			if (vertical())
 			{
-				impl->thumb->style()->set("left: 0; top: %1px; width: %2px; height: %3px", (float)thumb_pos, track_geometry.content_width, (float)thumb_length);
+				impl->thumb->set_margin_geometry(Rectf::xywh(track.content_x, track.content_y + (float)thumb_pos, track.content_width, (float)thumb_length));
 			}
 			else
 			{
-				impl->thumb->style()->set("left: %1px; top: 0; width: %2px; height: %3px", (float)thumb_pos, (float)thumb_length, track_geometry.content_height );
+				impl->thumb->set_margin_geometry(Rectf::xywh(track.content_x + (float)thumb_pos, track.content_y, (float)thumb_length, track.content_height));
 			}
 		}
+
+		// Update children layout (to do: maybe View should do this automatically on its own after this call finished?)
+		impl->button_increment->layout_children(canvas);
+		impl->button_decrement->layout_children(canvas);
+		impl->track->layout_children(canvas);
+	}
+
+	float ScrollBarBaseView::calculate_preferred_width(const CanvasPtr &canvas)
+	{
+		float button_incr_size = impl->button_increment->preferred_margin_width(canvas);
+		float button_decr_size = impl->button_decrement->preferred_margin_width(canvas);
+		float track_size = impl->track->preferred_margin_width(canvas);
+		if (impl->_vertical)
+		{
+			return std::max({ button_incr_size, button_decr_size, track_size });
+		}
+		else
+		{
+			return button_incr_size + button_decr_size + track_size;
+		}
+	}
+
+	float ScrollBarBaseView::calculate_preferred_height(const CanvasPtr &canvas, float width)
+	{
+		float button_incr_size = impl->button_increment->preferred_margin_height(canvas, width);
+		float button_decr_size = impl->button_decrement->preferred_margin_height(canvas, width);
+		float track_size = impl->track->preferred_margin_height(canvas, width);
+		if (impl->_vertical)
+		{
+			return button_incr_size + button_decr_size + track_size;
+		}
+		else
+		{
+			return std::max({ button_incr_size, button_decr_size, track_size });
+		}
+	}
+
+	float ScrollBarBaseView::calculate_first_baseline_offset(const CanvasPtr &canvas, float width)
+	{
+		return 0.0f;
+	}
+
+	float ScrollBarBaseView::calculate_last_baseline_offset(const CanvasPtr &canvas, float width)
+	{
+		return 0.0f;
 	}
 
 	Signal<void()> &ScrollBarBaseView::sig_scroll()

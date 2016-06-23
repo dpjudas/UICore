@@ -74,6 +74,10 @@ namespace uicore
 		Signal<void()> &sig_scroll();
 
 		void layout_children(const CanvasPtr &canvas) override;
+		float calculate_preferred_width(const CanvasPtr &canvas) override;
+		float calculate_preferred_height(const CanvasPtr &canvas, float width) override;
+		float calculate_first_baseline_offset(const CanvasPtr &canvas, float width) override;
+		float calculate_last_baseline_offset(const CanvasPtr &canvas, float width) override;
 
 	private:
 		std::shared_ptr<ScrollBarBaseViewImpl> impl;

@@ -146,6 +146,7 @@ namespace uicore
 		bool _state_increment_pressed = false;
 		bool _state_decrement_hot = false;
 		bool _state_decrement_pressed = false;
+		bool _vertical = false;
 
 		Signal<void()> sig_scroll;
 
