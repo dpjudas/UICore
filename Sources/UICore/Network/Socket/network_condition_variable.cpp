@@ -77,12 +77,11 @@ namespace uicore
 		else if (result < WAIT_OBJECT_0 || result > WAIT_OBJECT_0 + count)
 			throw Exception("WaitForMultipleObjects failed");
 
-		for (int i = 0; i < count; i++)
-		{
-			events[i]->socket_handle()->reset_wait_handle();
-		}
-
-		ResetEvent(impl->notify_handle);
+		int event_index = result - WAIT_OBJECT_0;
+		if (event_index < count)
+			events[event_index]->socket_handle()->reset_wait_handle();
+		else
+			ResetEvent(impl->notify_handle);
 
 		return true;
 	}
