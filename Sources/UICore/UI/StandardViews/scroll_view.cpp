@@ -24,6 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    Artem Khomenko
 */
 
 #include "UICore/precomp.h"
@@ -317,6 +318,9 @@ namespace uicore
 		std::shared_ptr<ScrollBaseViewContentContainer> content_container = std::make_shared<ScrollBaseViewContentContainer>();
 		ContentOverflow overflow_x = ContentOverflow::hidden;
 		ContentOverflow overflow_y = ContentOverflow::automatic;
+
+		// The quantity of line_steps to scroll when mouse wheel event is occurred.
+		float num_steps_on_mouse_wheel = 3.0f;
 	};
 
 	ScrollBaseView::ScrollBaseView() : impl(new ScrollBaseViewImpl())
@@ -332,16 +336,49 @@ namespace uicore
 		add_child(impl->scroll_x);
 		add_child(impl->scroll_y);
 
-		slots.connect(impl->scroll_x->sig_scroll(), [this]() {
+		slots.connect(impl->scroll_x->sig_scroll(), [this]()
+		{
 			Pointf pos = content_offset();
 			pos.x = (float)impl->scroll_x->position();
 			set_content_offset(pos);
 		});
 
-		slots.connect(impl->scroll_y->sig_scroll(), [this]() {
+		slots.connect(impl->scroll_y->sig_scroll(), [this]()
+		{
 			Pointf pos = content_offset();
 			pos.y = (float)impl->scroll_y->position();
 			set_content_offset(pos);
+		});
+
+		// Process mouse wheel events. When Shift pressed, scrolls horizontally, otherwise vertically.
+		slots.connect(sig_pointer_press(), [this](PointerEvent *e)
+		{
+			if (e->button() == PointerButton::wheel_down)
+			{
+				auto scroll_bar = e->shift_down() ? impl->scroll_x : impl->scroll_y;
+				if (!scroll_bar->hidden())
+				{
+					double old_pos = scroll_bar->position();
+					scroll_bar->set_position(old_pos + impl->num_steps_on_mouse_wheel * scroll_bar->line_step());
+
+					// If position changed, stop propagation this event to parent, if not - give a chance to underlying views.
+					if (old_pos != scroll_bar->position())
+						e->stop_propagation();
+				}
+			}
+			else if (e->button() == PointerButton::wheel_up)
+			{
+				auto scroll_bar = e->shift_down() ? impl->scroll_x : impl->scroll_y;
+				if (!scroll_bar->hidden())
+				{
+					double old_pos = scroll_bar->position();
+					scroll_bar->set_position(scroll_bar->position() - impl->num_steps_on_mouse_wheel * scroll_bar->line_step());
+
+					// If position changed, stop propagation this event to parent, if not - give a chance to underlying views.
+					if (old_pos != scroll_bar->position())
+						e->stop_propagation();
+				}
+			}
 		});
 	}
 
@@ -463,6 +500,7 @@ namespace uicore
 				x_scroll_height = ViewGeometry::from_content_box(impl->scroll_x->style_cascade(), Rectf(0.0f, 0.0f, 0.0f, impl->scroll_x->preferred_height(canvas, width))).margin_box().height();
 		}
 		
+		// Exclude from the content_box of the space occupied by scrollbars.
 		float content_view_width = width - y_scroll_width;
 		float content_view_height = height - x_scroll_height;
 		
@@ -486,9 +524,13 @@ namespace uicore
 		
 		impl->content_container->set_geometry(ViewGeometry::from_margin_box(impl->content_container->style_cascade(), Rectf(0.0f, 0.0f, content_view_width, content_view_height)));
 
+		// Update scroll_bar's thumb pos.
 		impl->scroll_x->layout_children(canvas);
 		impl->scroll_y->layout_children(canvas);
 		impl->content_container->layout_children(canvas);
+
+		// The position can be changed when user has increased size of view (scrolled to top left), update it.
+		set_content_offset(Pointf(impl->scroll_x->position(), impl->scroll_y->position()));
 	}
 	
 	float ScrollBaseView::calculate_preferred_width(const CanvasPtr &canvas)
