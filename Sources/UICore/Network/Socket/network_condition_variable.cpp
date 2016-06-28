@@ -65,11 +65,11 @@ namespace uicore
 	{
 		std::vector<HANDLE> handles;
 		handles.reserve(count + 1);
-		handles.push_back(impl->notify_handle);
 		for (int i = 0; i < count; i++)
 		{
 			handles.push_back(events[i]->socket_handle()->wait_handle);
 		}
+		handles.push_back(impl->notify_handle);
 
 		DWORD result = WaitForMultipleObjects(handles.size(), &handles[0], FALSE, timeout > 0 ? timeout : INFINITE);
 		if (result == WAIT_TIMEOUT)
