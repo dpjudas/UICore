@@ -26,6 +26,9 @@
     <ClInclude Include="Sources\precomp.h" />
     <ClInclude Include="Sources\View\MainWindow\main_window_view.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Sources\View\MainWindow\main_window.view" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{8D785238-A03C-40CA-9541-C9A091E1EEF9}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
