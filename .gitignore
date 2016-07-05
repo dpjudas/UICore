@@ -85,3 +85,4 @@ xcshareddata
 /UICore.VC.db
 /*.opendb
 /Documentation/Html/
+*.db
