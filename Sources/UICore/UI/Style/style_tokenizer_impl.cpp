@@ -53,6 +53,7 @@ namespace uicore
 		token.type = StyleTokenType::null;
 		token.dimension.clear();
 		token.value.clear();
+		token.offset = pos;
 		if (pos >= doc.length())
 			return;
 		switch (doc[pos])

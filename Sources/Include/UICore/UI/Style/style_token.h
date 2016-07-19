@@ -76,5 +76,8 @@ namespace uicore
 
 		/// Dimension for token value
 		std::string dimension;
+
+		/// Offset where token began
+		size_t offset = 0;
 	};
 }
