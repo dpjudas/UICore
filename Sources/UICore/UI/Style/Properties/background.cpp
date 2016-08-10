@@ -804,6 +804,8 @@ namespace uicore
 					return;
 				}
 
+				background_origins.push_back(background_origin);
+
 				if (pos == tokens.size())
 					break;
 
