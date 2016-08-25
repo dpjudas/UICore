@@ -81,6 +81,8 @@ namespace uicore
 		DisplayWindowPtr display_window() override;
 		CanvasPtr canvas() const override;
 
+		void removing_view(View *view) override;
+
 	protected:
 		void set_needs_render() override;
 
