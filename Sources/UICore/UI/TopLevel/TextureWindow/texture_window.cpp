@@ -151,4 +151,21 @@ namespace uicore
 	{
 		impl->on_mouse_move(e);
 	}
+
+	void TextureWindow::removing_view(View *view)
+	{
+		ViewTree::removing_view(view);
+
+		if (impl->hot_view)
+		{
+			if (impl->hot_view.get() == view || view->has_child(impl->hot_view.get()))
+				impl->hot_view.reset();
+		}
+
+		if (impl->captured_view)
+		{
+			if (impl->captured_view.get() == view || view->has_child(impl->captured_view.get()))
+				impl->captured_view.reset();
+		}
+	}
 }

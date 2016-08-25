@@ -66,6 +66,9 @@ namespace uicore
 		void on_mouse_up(const uicore::InputEvent &);
 		void on_mouse_move(const uicore::InputEvent &);
 
+		std::shared_ptr<View> captured_view;
+		std::shared_ptr<View> hot_view;
+
 	private:
 		void dispatch_hot_event(std::shared_ptr<View> &view, PointerEvent &e);
 		std::shared_ptr<View> get_capture_view(PointerEvent &e, std::shared_ptr<View> &view_above_cursor);
@@ -84,8 +87,6 @@ namespace uicore
 		uicore::InputEvent transform_input_event(const uicore::InputEvent &event) { InputEvent e = event; e.mouse_pos = Vec2f(transform_mouse_matrix.get_transformed_point(Vec3f(e.mouse_pos.x, e.mouse_pos.y, 0))); return e; }
 
 		int capture_down_counter = 0;
-		std::shared_ptr<View> captured_view;
-		std::shared_ptr<View> hot_view;
 
 	};
 }

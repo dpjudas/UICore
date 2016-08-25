@@ -117,10 +117,16 @@ namespace uicore
 	{
 		ViewTree::removing_view(view);
 
-		if (impl->hot_view.get() == view || view->has_child(impl->hot_view.get()))
-			impl->hot_view.reset();
+		if (impl->hot_view)
+		{
+			if (impl->hot_view.get() == view || view->has_child(impl->hot_view.get()))
+				impl->hot_view.reset();
+		}
 
-		if (impl->captured_view.get() == view || view->has_child(impl->captured_view.get()))
-			impl->captured_view.reset();
+		if (impl->captured_view)
+		{
+			if (impl->captured_view.get() == view || view->has_child(impl->captured_view.get()))
+				impl->captured_view.reset();
+		}
 	}
 }
