@@ -268,6 +268,12 @@ namespace uicore
 		/// Find descendant view at the specified content relative position
 		std::shared_ptr<View> find_view_at(const Pointf &pos) const;
 
+		/// Checks if another view is the ancestor of this view
+		bool has_ancestor(const View *ancestor_view) const;
+
+		/// Checks if a view is a child of this view
+		bool has_child(const View *child_view) const;
+
 		/// Focus policy active for this view
 		FocusPolicy focus_policy() const;
 

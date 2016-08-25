@@ -103,6 +103,12 @@ namespace uicore
 		}
 	}
 
+	void ViewTree::removing_view(View *view)
+	{
+		if (impl->focus_view == view || view->has_child(impl->focus_view))
+			set_focus_view(nullptr);
+	}
+
 	void ViewTree::render(const CanvasPtr &canvas, const Rectf &margin_box)
 	{
 		View *view = impl->root.get();

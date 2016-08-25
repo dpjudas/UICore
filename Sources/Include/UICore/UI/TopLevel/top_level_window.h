@@ -69,6 +69,8 @@ namespace uicore
 		Pointf client_to_screen_pos(const Pointf &pos) override;
 		Pointf screen_to_client_pos(const Pointf &pos) override;
 
+		void removing_view(View *view) override;
+
 	private:
 		std::shared_ptr<TopLevelWindow_Impl> impl;
 

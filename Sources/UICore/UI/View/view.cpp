@@ -240,7 +240,9 @@ namespace uicore
 		if (!impl->_parent)
 			return;
 		
-		// To do: clear owner_view, focus_view, if it is this view or a child
+		auto tree = view_tree();
+		if (tree)
+			tree->removing_view(this);
 		
 		impl->_parent->set_needs_layout();
 		
@@ -611,6 +613,21 @@ namespace uicore
 		}
 
 		return std::shared_ptr<View>();
+	}
+
+	bool View::has_ancestor(const View *ancestor_view) const
+	{
+		if (impl->_parent == ancestor_view)
+			return true;
+		else if (impl->_parent)
+			return impl->_parent->has_ancestor(ancestor_view);
+		else
+			return false;
+	}
+
+	bool View::has_child(const View *child_view) const
+	{
+		return child_view->has_ancestor(this);
 	}
 
 	FocusPolicy View::focus_policy() const

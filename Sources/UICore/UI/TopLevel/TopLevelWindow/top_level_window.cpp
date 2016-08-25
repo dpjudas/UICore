@@ -112,4 +112,15 @@ namespace uicore
 	{
 		return impl->window->screen_to_client(Pointf(pos));
 	}
+
+	void TopLevelWindow::removing_view(View *view)
+	{
+		ViewTree::removing_view(view);
+
+		if (impl->hot_view.get() == view || view->has_child(impl->hot_view.get()))
+			impl->hot_view.reset();
+
+		if (impl->captured_view.get() == view || view->has_child(impl->captured_view.get()))
+			impl->captured_view.reset();
+	}
 }

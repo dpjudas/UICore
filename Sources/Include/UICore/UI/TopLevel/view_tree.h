@@ -100,6 +100,9 @@ namespace uicore
 		/// Map from screen to client coordinates
 		virtual Pointf screen_to_client_pos(const Pointf &pos) = 0;
 
+		/// Called just before a view is removed from the tree
+		virtual void removing_view(View *view);
+
 	private:
 		ViewTree(const ViewTree &) = delete;
 		ViewTree &operator=(const ViewTree &) = delete;
