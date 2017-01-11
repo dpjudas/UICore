@@ -153,7 +153,12 @@
     <ClCompile Include="viewc.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="dialog.view" />
+    <None Include="editor_base.view" />
     <None Include="main_window.view" />
+    <None Include="menu.view" />
+    <None Include="theme.view" />
+    <None Include="toolbar.view" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main_window.h" />

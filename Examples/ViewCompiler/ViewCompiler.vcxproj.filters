@@ -5,6 +5,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="main_window.view" />
+    <None Include="theme.view" />
+    <None Include="dialog.view" />
+    <None Include="menu.view" />
+    <None Include="toolbar.view" />
+    <None Include="editor_base.view" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main_window.h" />

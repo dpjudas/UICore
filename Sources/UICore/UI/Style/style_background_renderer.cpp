@@ -662,7 +662,7 @@ namespace uicore
 
 	PathPtr StyleBackgroundRenderer::get_border_area_path(const std::array<Pointf, 2 * 4> &border_points)
 	{
-		float kappa = 0.552228474f;
+		float kappa = 0.551784f;
 
 		// Border area path (to be used for filling)
 
@@ -714,7 +714,7 @@ namespace uicore
 	{
 		// Border path (the path defining the actual border)
 
-		float kappa = 0.552228474f;
+		float kappa = 0.551784f;
 
 		auto border_path = Path::create();
 
@@ -834,7 +834,7 @@ namespace uicore
 			Colorf transparent = shadow_color;
 			transparent.w = 0.0f;
 
-			float kappa = 0.552228474f;
+			float kappa = 0.551784f;
 
 			float top_left_x = get_horizontal_radius(style.computed_value("border-top-left-radius-x"));
 			float top_left_y = get_vertical_radius(style.computed_value("border-top-left-radius-y"));
