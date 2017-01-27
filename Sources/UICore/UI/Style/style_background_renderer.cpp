@@ -342,16 +342,30 @@ namespace uicore
 		if (!get_layer_clip(num_layers - 1).is_keyword("border-box"))
 			return;
 
-		StyleGetValue style_top = style.computed_value("border-top-style");
-		if (style_top.is_keyword("solid"))
+		const char *style_names[4] = { "border-top-style", "border-right-style", "border-bottom-style", "border-left-style" };
+		const char *color_names[4] = { "border-top-color", "border-right-color", "border-bottom-color", "border-left-color" };
+
+		std::array<Pointf, 2 * 4> border_points, padding_points;
+		bool points_calculated = false;
+
+		for (int i = 0; i < 4; i++)
 		{
-			Colorf color = style.computed_value("border-top-color").color();
-			if (color.w > 0.0f)
+			StyleGetValue border_style = style.computed_value(style_names[i]);
+			if (border_style.is_keyword("solid"))
 			{
-				auto border_points = get_border_points();
-				auto padding_points = get_padding_points(border_points);
-				PathPtr border_path = get_border_stroke_path(border_points, padding_points);
-				border_path->fill(canvas, Brush(color));
+				Colorf color = style.computed_value(color_names[i]).color();
+				if (color.w > 0.0f)
+				{
+					if (!points_calculated)
+					{
+						border_points = get_border_points();
+						padding_points = get_padding_points(border_points);
+						points_calculated = true;
+					}
+
+					PathPtr border_path = get_border_stroke_path(border_points, padding_points, i, i + 1);
+					border_path->fill(canvas, Brush(color));
+				}
 			}
 		}
 	}
@@ -710,6 +724,111 @@ namespace uicore
 		return border_area_path;
 	}
 
+	PathPtr StyleBackgroundRenderer::get_border_stroke_path(const std::array<Pointf, 2 * 4> &border_points, const std::array<Pointf, 2 * 4> &padding_points, int start, int end)
+	{
+		// Border path (the path defining the actual border)
+
+		auto border_path = Path::create();
+		const float kappa = 0.551784f;
+
+		bool entire_border = (start + 4 == end);
+
+		for (int i = start; i <= end; i++)
+		{
+			int from_corner = (i * 2 + 7) % 8;
+			int to_corner = (from_corner + 1) % 8;
+
+			if (border_points[from_corner] != border_points[to_corner])
+			{
+				Pointf cp0 = border_points[from_corner];
+				Pointf cp1 = Pointf(mix(border_points[from_corner].x, border_points[to_corner].x, kappa), border_points[from_corner].y);
+				Pointf cp2 = Pointf(border_points[to_corner].x, mix(border_points[from_corner].y, border_points[to_corner].y, kappa));
+				Pointf cp3 = border_points[to_corner];
+
+				if (i == start)
+				{
+					SplitBezier split(cp0, cp1, cp2, cp3, 0.5f);
+					border_path->move_to(split.first[2]);
+					border_path->bezier_to(split.second[0], split.second[1], split.second[2]);
+				}
+				else if (i == end && !entire_border)
+				{
+					SplitBezier split(cp0, cp1, cp2, cp3, 0.5f);
+					border_path->line_to(cp0);
+					border_path->bezier_to(split.first[0], split.first[1], split.first[2]);
+				}
+				else
+				{
+					border_path->line_to(cp0);
+					border_path->bezier_to(cp1, cp2, cp3);
+				}
+			}
+			else
+			{
+				if (i == start)
+					border_path->move_to(border_points[to_corner]);
+				else
+					border_path->line_to(border_points[to_corner]);
+			}
+		}
+
+		if (entire_border)
+		{
+			border_path->close();
+		}
+
+		for (int i = end; i >= start; i--)
+		{
+			int to_corner = (i * 2 + 7) % 8;
+			int from_corner = (to_corner + 1) % 8;
+
+			if (padding_points[from_corner] != padding_points[to_corner])
+			{
+				Pointf cp0 = padding_points[from_corner];
+				Pointf cp1 = Pointf(mix(padding_points[from_corner].x, padding_points[to_corner].x, kappa), padding_points[from_corner].y);
+				Pointf cp2 = Pointf(padding_points[to_corner].x, mix(padding_points[from_corner].y, padding_points[to_corner].y, kappa));
+				Pointf cp3 = padding_points[to_corner];
+
+				if (i == end)
+				{
+					if (!entire_border)
+					{
+						SplitBezier split(cp0, cp1, cp2, cp3, 0.5f);
+						border_path->line_to(split.first[2]);
+						border_path->bezier_to(split.second[0], split.second[1], split.second[2]);
+					}
+					else
+					{
+						border_path->move_to(cp0);
+						border_path->bezier_to(cp1, cp2, cp3);
+					}
+				}
+				else if (i == start && !entire_border)
+				{
+					SplitBezier split(cp0, cp1, cp2, cp3, 0.5f);
+					border_path->line_to(cp0);
+					border_path->bezier_to(split.first[0], split.first[1], split.first[2]);
+				}
+				else
+				{
+					border_path->line_to(cp0);
+					border_path->bezier_to(cp1, cp2, cp3);
+				}
+			}
+			else
+			{
+				if (i == end && entire_border)
+					border_path->move_to(padding_points[to_corner]);
+				else
+					border_path->line_to(padding_points[to_corner]);
+			}
+		}
+
+		border_path->close();
+
+		return border_path;
+	}
+
 	PathPtr StyleBackgroundRenderer::get_border_stroke_path(const std::array<Pointf, 2 * 4> &border_points, const std::array<Pointf, 2 * 4> &padding_points)
 	{
 		// Border path (the path defining the actual border)
@@ -797,6 +916,33 @@ namespace uicore
 		border_path->close();
 
 		return border_path;
+	}
+
+	StyleBackgroundRenderer::SplitBezier::SplitBezier(const Pointf &cp0, const Pointf &cp1, const Pointf &cp2, const Pointf &cp3, float t)
+	{
+		const int num_cp = 4;
+
+		float cp_x[4] = { cp0.x, cp1.x, cp2.x, cp3.x };
+		float cp_y[4] = { cp0.y, cp1.y, cp2.y, cp3.y };
+
+		// Perform deCasteljau iterations:
+		// (linear interpolate between the control points)
+		float a = 1.0f - t;
+		float b = t;
+		int pos = 0;
+		for (int j = num_cp - 1; j > 0; j--)
+		{
+			for (int i = 0; i < j; i++)
+			{
+				cp_x[i] = a * cp_x[i] + b * cp_x[i + 1];
+				cp_y[i] = a * cp_y[i] + b * cp_y[i + 1];
+			}
+			first[pos] = { cp_x[0], cp_y[0] };
+			second[2 - pos] = { cp_x[j], cp_y[j] };
+			pos++;
+		}
+
+		// To do: compare this to http://pomax.github.io/BezierInfo-2/#splitting and figure out what is going wrong here..
 	}
 
 	void StyleBackgroundRenderer::render_box_shadow()

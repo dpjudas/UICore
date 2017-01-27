@@ -30,6 +30,7 @@
 
 #include <array>
 #include <memory>
+#include <UICore/Core/Math/point.h>
 
 namespace uicore
 {
@@ -90,9 +91,18 @@ namespace uicore
 
 		static PathPtr get_border_area_path(const std::array<Pointf, 2 * 4> &border_points);
 		static PathPtr get_border_stroke_path(const std::array<Pointf, 2 * 4> &border_points, const std::array<Pointf, 2 * 4> &padding_points);
+		static PathPtr get_border_stroke_path(const std::array<Pointf, 2 * 4> &border_points, const std::array<Pointf, 2 * 4> &padding_points, int start, int end);
 
 		static std::vector<BrushGradientStop> shadow_blur_stops(const Colorf &shadow_color, float shadow_blur_radius, float start_t);
 		static float mix(float a, float b, float t);
+
+		struct SplitBezier
+		{
+			SplitBezier(const Pointf &cp0, const Pointf &cp1, const Pointf &cp2, const Pointf &cp3, float t);
+
+			Pointf first[3];
+			Pointf second[3];
+		};
 
 		const CanvasPtr &canvas;
 		const ViewGeometry &geometry;
