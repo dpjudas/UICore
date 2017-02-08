@@ -132,14 +132,14 @@ namespace uicore
 
 	bool DisplayMessageQueue_X11::process(int timeout_ms)
 	{
-		auto time_start = System::get_time();
+		auto time_start = System::time();
 		int x11_handle = ConnectionNumber(display);
 
 		while (true)
 		{
 			process_message();
 
-			auto time_now = System::get_time();
+			auto time_now = System::time();
 			int time_remaining_ms = timeout_ms - (time_now - time_start);
 
 			struct timeval tv;

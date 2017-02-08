@@ -198,15 +198,15 @@ OpenGLWindowProvider::OpenGLWindowProvider(OpenGLContextDescription &opengl_desc
 	{
 
 		bool use_gl3;
-		int desc_version_major = opengl_desc.get_version_major();
-		int desc_version_minor = opengl_desc.get_version_minor();
+		int desc_version_major = opengl_desc.version_major();
+		int desc_version_minor = opengl_desc.version_minor();
 
 		// Do not attempt GL3, if not requested that version
 		if (desc_version_major < 3)
 		{
 			use_gl3 = false;
 		}
-		else if (!opengl_desc.get_allow_lower_versions())	// If we do not allow lower versions, only attempt GL3
+		else if (!opengl_desc.allow_lower_versions())	// If we do not allow lower versions, only attempt GL3
 		{
 			use_gl3 = true;
 		}
@@ -703,17 +703,17 @@ GLXContext OpenGLWindowProvider::create_context_glx_1_3_helper(GLXContext shared
 
 	int_attributes.push_back(0x2094);	// GLX_CONTEXT_FLAGS_ARB
 	int flags = 0;
-	if (opengl_desc.get_debug())
+	if (opengl_desc.debug())
 		flags |= 0x1;	// GLX_CONTEXT_DEBUG_BIT_ARB
-	if (opengl_desc.get_forward_compatible())	// GLX_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB
+	if (opengl_desc.forward_compatible())	// GLX_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB
 		flags |= 0x2;
 	int_attributes.push_back(flags);
 
 	int_attributes.push_back(0x9126);	// GLX_CONTEXT_PROFILE_MASK_ARB
 	flags = 0;
-	if (opengl_desc.get_core_profile())
+	if (opengl_desc.core_profile())
 		flags |= 0x1;	// GLX_CONTEXT_CORE_PROFILE_BIT_ARB
-	if (opengl_desc.get_compatibility_profile())	// GLX_CONTEXT_COMPATIBILITY_PROFILE_BIT_ARB
+	if (opengl_desc.compatibility_profile())	// GLX_CONTEXT_COMPATIBILITY_PROFILE_BIT_ARB
 		flags |= 0x2;
 	int_attributes.push_back(flags);
 
@@ -763,9 +763,9 @@ GLXContext OpenGLWindowProvider::create_context_glx_1_3(const DisplayWindowDescr
 
 		GLXContext context_gl3 = nullptr;
 
-		int gl_major = opengl_desc.get_version_major();
-		int gl_minor = opengl_desc.get_version_minor();
-		if (opengl_desc.get_allow_lower_versions() == false)
+		int gl_major = opengl_desc.version_major();
+		int gl_minor = opengl_desc.version_minor();
+		if (opengl_desc.allow_lower_versions() == false)
 		{
 			context_gl3 = create_context_glx_1_3_helper(shared_context, gl_major, gl_minor, desc, glXCreateContextAttribs);
 
@@ -827,7 +827,7 @@ GLXContext OpenGLWindowProvider::create_context_glx_1_3(const DisplayWindowDescr
 
 GLXContext OpenGLWindowProvider::create_context_glx_1_2(const DisplayWindowDescription &desc, GLXContext shared_context)
 {
-	if (opengl_desc.get_allow_lower_versions() == false)
+	if (opengl_desc.allow_lower_versions() == false)
 		throw Exception("GLX 1.2 does not support opengl version selection.");
 
 	GLXContext context;

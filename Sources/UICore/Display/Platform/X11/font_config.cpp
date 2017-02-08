@@ -64,14 +64,14 @@ namespace uicore
 		FcPattern * fc_match = nullptr;
 		try
 		{
-			int weight = static_cast<int>(desc.get_weight());
+			int weight = static_cast<int>(desc.weight());
 
 			// Build font matching pattern.
 			fc_pattern = FcPatternBuild(nullptr,
 				FC_FAMILY, FcTypeString, typeface_name.c_str(),
-				FC_PIXEL_SIZE, FcTypeDouble, (double)std::abs(desc.get_height()),
+				FC_PIXEL_SIZE, FcTypeDouble, (double)std::abs(desc.height()),
 				FC_WEIGHT, FcTypeInteger, (weight > 0) ? (int)(weight * (FC_WEIGHT_HEAVY / 900.0)) : FC_WEIGHT_NORMAL,
-				FC_SLANT, FcTypeInteger, (desc.get_style() == uicore::FontStyle::italic) ? FC_SLANT_ITALIC : ((desc.get_style() == uicore::FontStyle::oblique) ? FC_SLANT_OBLIQUE : FC_SLANT_ROMAN),
+				FC_SLANT, FcTypeInteger, (desc.style() == uicore::FontStyle::italic) ? FC_SLANT_ITALIC : ((desc.style() == uicore::FontStyle::oblique) ? FC_SLANT_OBLIQUE : FC_SLANT_ROMAN),
 				FC_SPACING, FcTypeInteger, FC_PROPORTIONAL,
 				(char*) nullptr
 				);
