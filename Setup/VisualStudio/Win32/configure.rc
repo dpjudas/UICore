@@ -84,6 +84,7 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 // remains consistent on all systems.
 IDR_MAINFRAME           ICON                    "res\\Configure.ico"
 
+
 /////////////////////////////////////////////////////////////////////////////
 //
 // Dialog
@@ -155,6 +156,7 @@ BEGIN
     CONTROL         "Visual C++ .NET 201&5 (14.0)",IDC_RADIO_VC140,"Button",BS_AUTORADIOBUTTON,16,34,281,10
     CONTROL         "Visual C++ .NET 201&5 (14.0) - Android (experimental)",IDC_RADIO_VC140_ANDROID,
                     "Button",BS_AUTORADIOBUTTON,16,45,280,10
+    CONTROL         "Visual C++ .NET 201&7 (15.0)",IDC_RADIO_VC150,"Button",BS_AUTORADIOBUTTON,16,56,281,10
 END
 
 
@@ -245,6 +247,17 @@ BEGIN
     BEGIN
         VALUE "Translation", 0x409, 1200
     END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// AFX_DIALOG_LAYOUT
+//
+
+IDD_TARGET_PAGE AFX_DIALOG_LAYOUT
+BEGIN
+    0
 END
 
 

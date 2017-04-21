@@ -155,6 +155,9 @@ INT_PTR CALLBACK PageTarget::dialog_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 
 				}
 				break;
+			case 1500:
+				CheckRadioButton(hWnd, IDC_RADIO_VC150, IDC_RADIO_VC150, IDC_RADIO_VC150);
+				break;
 
 			default:
 				CheckRadioButton(hWnd, IDC_RADIO_VC120, IDC_RADIO_VC120, IDC_RADIO_VC120);
@@ -206,6 +209,11 @@ INT_PTR PageTarget::on_notify(HWND hWnd, NMHDR *header)
 		{
 			target_version = 1400;
 			target_android = true;
+		}
+		if (IsDlgButtonChecked(hWnd, IDC_RADIO_VC150) == BST_CHECKED)
+		{
+			target_version = 1500;
+			target_android = false;
 		}
 
 		include_x64 = (SendMessage(GetDlgItem(hWnd, IDC_CHECK_INCLUDE_X64), BM_GETCHECK, 0, 0) == BST_CHECKED);
