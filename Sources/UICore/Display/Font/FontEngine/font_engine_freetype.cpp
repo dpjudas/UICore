@@ -85,8 +85,8 @@ FontEngine_Freetype::FontEngine_Freetype(const FontDescription &description, Dat
 {
 	font_description = description.clone();
 
-	float average_width = description.get_average_width();
-	float height = description.get_height();
+	float average_width = description.average_width();
+	float height = description.height();
 
 	// Ensure width and height are positive
 	if (average_width < 0.0f) average_width = -average_width;
@@ -107,7 +107,7 @@ FontEngine_Freetype::FontEngine_Freetype(const FontDescription &description, Dat
 		throw Exception("Freetype error: Font file could not be opened or read, or is corrupted.");
 	}
 
-	int pixel_width = (int)std::round(description.get_average_width() * pixel_ratio);
+	int pixel_width = (int)std::round(description.average_width() * pixel_ratio);
 	int pixel_height = (int)std::round(height * pixel_ratio);
 
 	FT_Set_Pixel_Sizes(face, pixel_width, pixel_height);
@@ -128,13 +128,13 @@ FontEngine_Freetype::~FontEngine_Freetype()
 
 FontPixelBuffer FontEngine_Freetype::get_font_glyph(int glyph)
 {
-	if (font_description.get_subpixel())
+	if (font_description.subpixel())
 	{
 		return get_font_glyph_subpixel(glyph);
 	}
 	else
 	{
-		return get_font_glyph_standard(glyph, font_description.get_anti_alias());
+		return get_font_glyph_standard(glyph, font_description.anti_alias());
 	}
 }
 
@@ -548,7 +548,7 @@ void FontEngine_Freetype::calculate_font_metrics()
 		descent / pixel_ratio,
 		internal_leading / pixel_ratio,
 		external_leading / pixel_ratio,
-		font_description.get_line_height(),		// Calculated in FontMetrics as height + metrics.tmExternalLeading if not specified
+		font_description.line_height(),		// Calculated in FontMetrics as height + metrics.tmExternalLeading if not specified
 		pixel_ratio
 		);
 }

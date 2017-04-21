@@ -58,7 +58,7 @@ namespace uicore
 
 		XEvent event;
 
-		auto start_time = System::get_time();
+		auto start_time = System::time();
 		while (true)
 		{
 			if (XCheckTypedWindowEvent(handle.display, handle.window, SelectionNotify, &event))
@@ -66,7 +66,7 @@ namespace uicore
 
 			// Allow target application half a second of time to respond to this event.
 			// TODO What is the correct way to do this?
-			if ((System::get_time() - start_time) >= 500)
+			if ((System::time() - start_time) >= 500)
 			{
 				return std::string();
 			}
