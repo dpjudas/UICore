@@ -250,7 +250,7 @@ namespace uicore
 
 		if (desc.owner())
 		{
-			DisplayWindowPtr owner = desc.owner();
+			std::shared_ptr<DisplayWindow> owner = desc.owner();
 			XSetTransientForHint(handle.display, handle.window, owner->handle().window);
 		}
 
@@ -1223,7 +1223,7 @@ namespace uicore
 		clipboard.set_clipboard_text(text);
 	}
 
-	void X11Window::set_clipboard_image(const PixelBufferPtr &buf)
+	void X11Window::set_clipboard_image(const std::shared_ptr<PixelBuffer> &buf)
 	{
 		throw Exception("Todo: X11Window::set_clipboard_image");
 	}
@@ -1233,7 +1233,7 @@ namespace uicore
 		return clipboard.get_clipboard_text();
 	}
 
-	PixelBufferPtr X11Window::get_clipboard_image() const
+	std::shared_ptr<PixelBuffer> X11Window::get_clipboard_image() const
 	{
 		throw Exception("Todo: X11Window::get_clipboard_image");
 	}
@@ -1352,7 +1352,7 @@ namespace uicore
 		return current_window_events;
 	}
 
-	void X11Window::set_large_icon(const PixelBufferPtr &image)
+	void X11Window::set_large_icon(const std::shared_ptr<PixelBuffer> &image)
 	{
 		unsigned int size = (image->width() * image->height()) + 2; // header is 2 ints
 		unsigned long* data = (unsigned long*)malloc(size * sizeof(unsigned long));
@@ -1362,7 +1362,7 @@ namespace uicore
 		data[1] = image->height();
 
 		// icon data is expected as ARGB
-		PixelBufferPtr transformed_image = image->to_format(tf_bgra8);
+		std::shared_ptr<PixelBuffer> transformed_image = image->to_format(tf_bgra8);
 
 		// on 64bit systems, the destination buffer is 64 bit per pixel
 		// thus, we have to copy each pixel individually (no memcpy)
@@ -1390,7 +1390,7 @@ namespace uicore
 
 	}
 
-	void X11Window::set_small_icon(const PixelBufferPtr &image)
+	void X11Window::set_small_icon(const std::shared_ptr<PixelBuffer> &image)
 	{
 		set_large_icon(image);
 	}

@@ -94,7 +94,7 @@ namespace uicore
 		return data_ptr;
 	}
 
-	void GL3BufferObject::lock(const GraphicContextPtr &gc, BufferAccess access)
+	void GL3BufferObject::lock(const std::shared_ptr<GraphicContext> &gc, BufferAccess access)
 	{
 		throw_if_disposed();
 		lock_gc = gc;
@@ -132,7 +132,7 @@ namespace uicore
 		lock_gc.reset();
 	}
 
-	void GL3BufferObject::upload_data(const GraphicContextPtr &gc, int offset, const void *data, int size)
+	void GL3BufferObject::upload_data(const std::shared_ptr<GraphicContext> &gc, int offset, const void *data, int size)
 	{
 		throw_if_disposed();
 		OpenGL::set_active(gc);
@@ -144,12 +144,12 @@ namespace uicore
 		glBindBuffer(target, last_buffer);
 	}
 
-	void GL3BufferObject::upload_data(const GraphicContextPtr &gc, const void *data, int size)
+	void GL3BufferObject::upload_data(const std::shared_ptr<GraphicContext> &gc, const void *data, int size)
 	{
 		upload_data(gc, 0, data, size);
 	}
 
-	void GL3BufferObject::copy_from(const GraphicContextPtr &gc, const StagingBufferPtr &buffer, int dest_pos, int src_pos, int size)
+	void GL3BufferObject::copy_from(const std::shared_ptr<GraphicContext> &gc, const std::shared_ptr<StagingBuffer> &buffer, int dest_pos, int src_pos, int size)
 	{
 		throw_if_disposed();
 		OpenGL::set_active(gc);
@@ -163,7 +163,7 @@ namespace uicore
 		glBindBuffer(GL_COPY_READ_BUFFER, 0);
 	}
 
-	void GL3BufferObject::copy_to(const GraphicContextPtr &gc, const StagingBufferPtr &buffer, int dest_pos, int src_pos, int size)
+	void GL3BufferObject::copy_to(const std::shared_ptr<GraphicContext> &gc, const std::shared_ptr<StagingBuffer> &buffer, int dest_pos, int src_pos, int size)
 	{
 		throw_if_disposed();
 		OpenGL::set_active(gc);

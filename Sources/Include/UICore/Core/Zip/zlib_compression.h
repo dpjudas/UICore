@@ -50,11 +50,11 @@ namespace uicore
 		// \param raw Skips header if true
 		// \param compression_level Compression level in range 0-9. 0 = no compression, 1 = best speed, 6 = default, 9 = best compression.
 		// \param mode Compression strategy
-		static DataBufferPtr compress(const DataBufferPtr &data, bool raw = true, int compression_level = 6, CompressionMode mode = default_strategy);
+		static std::shared_ptr<DataBuffer> compress(const std::shared_ptr<DataBuffer> &data, bool raw = true, int compression_level = 6, CompressionMode mode = default_strategy);
 
 		// \brief Decompress data
 		// \param data Data to compress
 		// \param raw Skips header if true
-		static DataBufferPtr decompress(const DataBufferPtr &data, bool raw = true);
+		static std::shared_ptr<DataBuffer> decompress(const std::shared_ptr<DataBuffer> &data, bool raw = true);
 	};
 }

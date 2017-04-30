@@ -445,7 +445,7 @@ namespace uicore
 		return std::make_shared<GL3StagingTexture>(data, size, direction, format, usage);
 	}
 
-	void GL3GraphicContext::set_rasterizer_state(const RasterizerStatePtr &state)
+	void GL3GraphicContext::set_rasterizer_state(const std::shared_ptr<RasterizerState> &state)
 	{
 		if (state)
 		{
@@ -464,7 +464,7 @@ namespace uicore
 		}
 	}
 
-	void GL3GraphicContext::set_blend_state(const BlendStatePtr &state, const Colorf &blend_color, unsigned int sample_mask)
+	void GL3GraphicContext::set_blend_state(const std::shared_ptr<BlendState> &state, const Colorf &blend_color, unsigned int sample_mask)
 	{
 		if (state)
 		{
@@ -482,7 +482,7 @@ namespace uicore
 		}
 	}
 
-	void GL3GraphicContext::set_depth_stencil_state(const DepthStencilStatePtr &state, int stencil_ref)
+	void GL3GraphicContext::set_depth_stencil_state(const std::shared_ptr<DepthStencilState> &state, int stencil_ref)
 	{
 		if (state)
 		{
@@ -526,7 +526,7 @@ namespace uicore
 		return pbuf;
 	}
 
-	void GL3GraphicContext::set_uniform_buffer(int index, const UniformBufferPtr &buffer)
+	void GL3GraphicContext::set_uniform_buffer(int index, const std::shared_ptr<UniformBuffer> &buffer)
 	{
 		if (buffer)
 		{
@@ -540,7 +540,7 @@ namespace uicore
 		}
 	}
 
-	void GL3GraphicContext::set_storage_buffer(int index, const StorageBufferPtr &buffer)
+	void GL3GraphicContext::set_storage_buffer(int index, const std::shared_ptr<StorageBuffer> &buffer)
 	{
 		if (buffer)
 		{
@@ -554,7 +554,7 @@ namespace uicore
 		}
 	}
 
-	void GL3GraphicContext::set_texture(int unit_index, const TexturePtr &texture)
+	void GL3GraphicContext::set_texture(int unit_index, const std::shared_ptr<Texture> &texture)
 	{
 		if (texture)
 		{
@@ -592,7 +592,7 @@ namespace uicore
 		}
 	}
 
-	void GL3GraphicContext::set_image_texture(int unit_index, const TexturePtr &texture)
+	void GL3GraphicContext::set_image_texture(int unit_index, const std::shared_ptr<Texture> &texture)
 	{
 		if (texture)
 		{
@@ -607,7 +607,7 @@ namespace uicore
 		}
 	}
 
-	bool GL3GraphicContext::is_frame_buffer_owner(const FrameBufferPtr &fb)
+	bool GL3GraphicContext::is_frame_buffer_owner(const std::shared_ptr<FrameBuffer> &fb)
 	{
 		GL3FrameBuffer *fb_provider = dynamic_cast<GL3FrameBuffer *>(fb.get());
 		if (fb_provider)
@@ -616,7 +616,7 @@ namespace uicore
 			return false;
 	}
 
-	void GL3GraphicContext::set_frame_buffer(const FrameBufferPtr &draw_buffer, const FrameBufferPtr &read_buffer)
+	void GL3GraphicContext::set_frame_buffer(const std::shared_ptr<FrameBuffer> &draw_buffer, const std::shared_ptr<FrameBuffer> &read_buffer)
 	{
 		_write_frame_buffer = draw_buffer;
 		_read_frame_buffer = read_buffer;
@@ -670,7 +670,7 @@ namespace uicore
 		set_program_object(standard_programs.get_program_object(standard_program));
 	}
 
-	void GL3GraphicContext::set_program_object(const ProgramObjectPtr &program)
+	void GL3GraphicContext::set_program_object(const std::shared_ptr<ProgramObject> &program)
 	{
 		_program_object = program;
 
@@ -688,7 +688,7 @@ namespace uicore
 		}
 	}
 
-	bool GL3GraphicContext::is_primitives_array_owner(const PrimitivesArrayPtr &prim_array)
+	bool GL3GraphicContext::is_primitives_array_owner(const std::shared_ptr<PrimitivesArray> &prim_array)
 	{
 		GL3PrimitivesArray *prim_array_provider = dynamic_cast<GL3PrimitivesArray *>(prim_array.get());
 		if (prim_array_provider)
@@ -697,14 +697,14 @@ namespace uicore
 			return false;
 	}
 
-	void GL3GraphicContext::draw_primitives(PrimitivesType type, int num_vertices, const PrimitivesArrayPtr &primitives_array)
+	void GL3GraphicContext::draw_primitives(PrimitivesType type, int num_vertices, const std::shared_ptr<PrimitivesArray> &primitives_array)
 	{
 		set_primitives_array(primitives_array);
 		draw_primitives_array(type, 0, num_vertices);
 		reset_primitives_array();
 	}
 
-	void GL3GraphicContext::set_primitives_array(const PrimitivesArrayPtr &primitives_array)
+	void GL3GraphicContext::set_primitives_array(const std::shared_ptr<PrimitivesArray> &primitives_array)
 	{
 		if (primitives_array)
 		{
@@ -732,7 +732,7 @@ namespace uicore
 		glDrawArraysInstanced(OpenGL::to_enum(type), offset, num_vertices, instance_count);
 	}
 
-	void GL3GraphicContext::set_primitives_elements(const ElementArrayBufferPtr &array_provider)
+	void GL3GraphicContext::set_primitives_elements(const std::shared_ptr<ElementArrayBuffer> &array_provider)
 	{
 		if (array_provider)
 		{
@@ -761,7 +761,7 @@ namespace uicore
 	void GL3GraphicContext::draw_primitives_elements(
 		PrimitivesType type,
 		int count,
-		const ElementArrayBufferPtr &array_provider,
+		const std::shared_ptr<ElementArrayBuffer> &array_provider,
 		VertexAttributeDataType indices_type,
 		size_t offset)
 	{
@@ -774,7 +774,7 @@ namespace uicore
 	void GL3GraphicContext::draw_primitives_elements_instanced(
 		PrimitivesType type,
 		int count,
-		const ElementArrayBufferPtr &array_provider,
+		const std::shared_ptr<ElementArrayBuffer> &array_provider,
 		VertexAttributeDataType indices_type,
 		size_t offset,
 		int instance_count)

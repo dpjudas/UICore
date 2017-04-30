@@ -63,7 +63,7 @@ namespace uicore
 		if (tree_node->node_type == XmlNodeType::element)
 		{
 			std::string str;
-			XmlNodePtr cur = first_child();
+			std::shared_ptr<XmlNode> cur = first_child();
 			while (cur)
 			{
 				if (cur->is_text() || cur->is_cdata_section() || cur->is_element())
@@ -145,7 +145,7 @@ namespace uicore
 		return get_tree_node()->node_type;
 	}
 
-	XmlNodePtr XmlNodeImpl::parent() const
+	std::shared_ptr<XmlNode> XmlNodeImpl::parent() const
 	{
 		const XmlTreeNode *tree_node = get_tree_node();
 		if (tree_node->parent != cl_null_node_index)
@@ -161,7 +161,7 @@ namespace uicore
 		}
 	}
 
-	XmlNodePtr XmlNodeImpl::first_child() const
+	std::shared_ptr<XmlNode> XmlNodeImpl::first_child() const
 	{
 		const XmlTreeNode *tree_node = get_tree_node();
 		if (tree_node->first_child != cl_null_node_index)
@@ -174,7 +174,7 @@ namespace uicore
 		}
 	}
 
-	XmlNodePtr XmlNodeImpl::last_child() const
+	std::shared_ptr<XmlNode> XmlNodeImpl::last_child() const
 	{
 		const XmlTreeNode *tree_node = get_tree_node();
 		if (tree_node->last_child != cl_null_node_index)
@@ -187,7 +187,7 @@ namespace uicore
 		}
 	}
 
-	XmlNodePtr XmlNodeImpl::first_attribute() const
+	std::shared_ptr<XmlNode> XmlNodeImpl::first_attribute() const
 	{
 		const XmlTreeNode *tree_node = get_tree_node();
 		if (tree_node->first_attribute != cl_null_node_index)
@@ -200,7 +200,7 @@ namespace uicore
 		}
 	}
 
-	XmlNodePtr XmlNodeImpl::previous_sibling() const
+	std::shared_ptr<XmlNode> XmlNodeImpl::previous_sibling() const
 	{
 		const XmlTreeNode *tree_node = get_tree_node();
 		if (tree_node->previous_sibling != cl_null_node_index)
@@ -213,7 +213,7 @@ namespace uicore
 		}
 	}
 
-	XmlNodePtr XmlNodeImpl::next_sibling() const
+	std::shared_ptr<XmlNode> XmlNodeImpl::next_sibling() const
 	{
 		const XmlTreeNode *tree_node = get_tree_node();
 		if (tree_node->next_sibling != cl_null_node_index)
@@ -226,7 +226,7 @@ namespace uicore
 		}
 	}
 
-	XmlDocumentPtr XmlNodeImpl::owner_document() const
+	std::shared_ptr<XmlDocument> XmlNodeImpl::owner_document() const
 	{
 		return _owner_document;
 	}
@@ -236,7 +236,7 @@ namespace uicore
 		return get_tree_node()->first_attribute != cl_null_node_index;
 	}
 
-	XmlNodePtr XmlNodeImpl::insert_before(const XmlNodePtr &new_child, const XmlNodePtr &ref_child)
+	std::shared_ptr<XmlNode> XmlNodeImpl::insert_before(const std::shared_ptr<XmlNode> &new_child, const std::shared_ptr<XmlNode> &ref_child)
 	{
 		if (!ref_child)
 		{
@@ -271,7 +271,7 @@ namespace uicore
 		}
 	}
 
-	XmlNodePtr XmlNodeImpl::replace_child(const XmlNodePtr &new_child, const XmlNodePtr &old_child)
+	std::shared_ptr<XmlNode> XmlNodeImpl::replace_child(const std::shared_ptr<XmlNode> &new_child, const std::shared_ptr<XmlNode> &old_child)
 	{
 		if (new_child && old_child)
 		{
@@ -304,7 +304,7 @@ namespace uicore
 		}
 	}
 
-	XmlNodePtr XmlNodeImpl::remove_child(const XmlNodePtr &old_child)
+	std::shared_ptr<XmlNode> XmlNodeImpl::remove_child(const std::shared_ptr<XmlNode> &old_child)
 	{
 		if (old_child)
 		{
@@ -334,7 +334,7 @@ namespace uicore
 		}
 	}
 
-	XmlNodePtr XmlNodeImpl::append_child(const XmlNodePtr &new_child)
+	std::shared_ptr<XmlNode> XmlNodeImpl::append_child(const std::shared_ptr<XmlNode> &new_child)
 	{
 		if (new_child)
 		{
@@ -365,7 +365,7 @@ namespace uicore
 		}
 	}
 
-	XmlNodePtr XmlNodeImpl::remove_attribute(const XmlNodePtr &old_child)
+	std::shared_ptr<XmlNode> XmlNodeImpl::remove_attribute(const std::shared_ptr<XmlNode> &old_child)
 	{
 		if (old_child)
 		{
@@ -393,7 +393,7 @@ namespace uicore
 		}
 	}
 
-	XmlNodePtr XmlNodeImpl::add_attribute(const XmlNodePtr &new_child)
+	std::shared_ptr<XmlNode> XmlNodeImpl::add_attribute(const std::shared_ptr<XmlNode> &new_child)
 	{
 		if (new_child)
 		{
@@ -420,12 +420,12 @@ namespace uicore
 		}
 	}
 
-	XmlNodePtr XmlNodeImpl::clone(bool deep) const
+	std::shared_ptr<XmlNode> XmlNodeImpl::clone(bool deep) const
 	{
 		return owner_document()->import_node(const_cast<XmlNodeImpl*>(this)->shared_from_this(), deep);
 	}
 
-	XmlNodePtr XmlNodeImpl::named_item(const XmlString &name) const
+	std::shared_ptr<XmlNode> XmlNodeImpl::named_item(const XmlString &name) const
 	{
 		auto node = first_child();
 		while (node)
@@ -436,7 +436,7 @@ namespace uicore
 		return nullptr;
 	}
 
-	XmlNodePtr XmlNodeImpl::named_item(const XmlString &namespace_uri, const XmlString &local_name) const
+	std::shared_ptr<XmlNode> XmlNodeImpl::named_item(const XmlString &namespace_uri, const XmlString &local_name) const
 	{
 		auto node = first_child();
 		while (node)
@@ -556,7 +556,7 @@ namespace uicore
 		}
 	}
 
-	XmlNodePtr XmlNodeImpl::attribute_node(const XmlString &name) const
+	std::shared_ptr<XmlNode> XmlNodeImpl::attribute_node(const XmlString &name) const
 	{
 		for (auto attr = first_attribute(); attr; attr = attr->next_sibling())
 		{
@@ -566,7 +566,7 @@ namespace uicore
 		return nullptr;
 	}
 
-	XmlNodePtr XmlNodeImpl::attribute_node(const XmlString &namespace_uri, const XmlString &local_name) const
+	std::shared_ptr<XmlNode> XmlNodeImpl::attribute_node(const XmlString &namespace_uri, const XmlString &local_name) const
 	{
 		for (auto attr = first_attribute(); attr; attr = attr->next_sibling())
 		{

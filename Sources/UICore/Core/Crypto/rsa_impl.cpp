@@ -239,7 +239,7 @@ namespace uicore
 		memcpy(emsg, msg, mlen);
 	}
 
-	SecretPtr RSA_Impl::pkcs1v15_decode(const char *emsg, int emlen)
+	std::shared_ptr<Secret> RSA_Impl::pkcs1v15_decode(const char *emsg, int emlen)
 	{
 		int    ix, outlen;
 
@@ -274,7 +274,7 @@ namespace uicore
 		return buffer;
 	}
 
-	DataBufferPtr RSA_Impl::pkcs1v15_encrypt(int block_type, Random &random, const char *msg, int mlen, const BigInt *e, const BigInt *modulus)
+	std::shared_ptr<DataBuffer> RSA_Impl::pkcs1v15_encrypt(int block_type, Random &random, const char *msg, int mlen, const BigInt *e, const BigInt *modulus)
 	{
 		int k = modulus->unsigned_octet_size();	// length of modulus, in bytes
 
@@ -299,7 +299,7 @@ namespace uicore
 		return buffer;
 	}
 
-	SecretPtr RSA_Impl::pkcs1v15_decrypt(const char *msg, int mlen, const BigInt *d, const BigInt *modulus)
+	std::shared_ptr<Secret> RSA_Impl::pkcs1v15_decrypt(const char *msg, int mlen, const BigInt *d, const BigInt *modulus)
 	{
 		int     k;
 
@@ -320,7 +320,7 @@ namespace uicore
 		return pkcs1v15_decode((char *)key_buffer->data(), k);
 	}
 
-	DataBufferPtr RSA_Impl::encrypt(int block_type, Random &random, const void *in_public_exponent, unsigned int in_public_exponent_size, const void *in_modulus, unsigned int in_modulus_size, const void *in_data, unsigned int in_data_size)
+	std::shared_ptr<DataBuffer> RSA_Impl::encrypt(int block_type, Random &random, const void *in_public_exponent, unsigned int in_public_exponent_size, const void *in_modulus, unsigned int in_modulus_size, const void *in_data, unsigned int in_data_size)
 	{
 		BigInt exponent;
 		exponent.read_unsigned_octets((const unsigned char *)in_public_exponent, in_public_exponent_size);
@@ -331,7 +331,7 @@ namespace uicore
 		return pkcs1v15_encrypt(block_type, random, (const char *)in_data, in_data_size, &exponent, &modulus);
 	}
 
-	SecretPtr RSA_Impl::decrypt(const SecretPtr &in_private_exponent, const void *in_modulus, unsigned int in_modulus_size, const void *in_data, unsigned int in_data_size)
+	std::shared_ptr<Secret> RSA_Impl::decrypt(const std::shared_ptr<Secret> &in_private_exponent, const void *in_modulus, unsigned int in_modulus_size, const void *in_data, unsigned int in_data_size)
 	{
 		BigInt exponent;
 		exponent.read_unsigned_octets((const unsigned char *)in_private_exponent->data(), in_private_exponent->size());
@@ -342,7 +342,7 @@ namespace uicore
 		return pkcs1v15_decrypt((const char *)in_data, in_data_size, &exponent, &modulus);
 	}
 
-	void RSA_Impl::create_keypair(Random &random, SecretPtr &out_private_exponent, DataBufferPtr &out_public_exponent, DataBufferPtr &out_modulus, int key_size_in_bits, int public_exponent_value)
+	void RSA_Impl::create_keypair(Random &random, std::shared_ptr<Secret> &out_private_exponent, std::shared_ptr<DataBuffer> &out_public_exponent, std::shared_ptr<DataBuffer> &out_modulus, int key_size_in_bits, int public_exponent_value)
 	{
 		create(random, key_size_in_bits, public_exponent_value);
 		out_public_exponent = DataBuffer::create(rsa_private_key.public_exponent.unsigned_octet_size());

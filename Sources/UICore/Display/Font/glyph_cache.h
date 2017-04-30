@@ -60,7 +60,7 @@ namespace uicore
 		/// \brief The pixel buffer containing the glyph.
 		///
 		/// This maybe a null texture
-		Texture2DPtr texture;
+		std::shared_ptr<Texture2D> texture;
 
 		/// \brief Geometry of the glyph inside the subtexture (excluding the border)
 		Rect geometry;
@@ -84,18 +84,18 @@ namespace uicore
 		virtual ~GlyphCache();
 
 		/// \brief Get a glyph. Returns NULL if the glyph was not found
-		Font_TextureGlyph *get_glyph(const CanvasPtr &canvas, FontEngine *font_engine, unsigned int glyph);
+		Font_TextureGlyph *get_glyph(const std::shared_ptr<Canvas> &canvas, FontEngine *font_engine, unsigned int glyph);
 
-		GlyphMetrics get_metrics(FontEngine *font_engine, const CanvasPtr &canvas, unsigned int glyph);
+		GlyphMetrics get_metrics(FontEngine *font_engine, const std::shared_ptr<Canvas> &canvas, unsigned int glyph);
 
-		void insert_glyph(const CanvasPtr &canvas, unsigned int glyph, TextureGroupImage &sub_texture, const Pointf &offset, const Sizef &size, const GlyphMetrics &glyph_metrics);
-		void insert_glyph(const CanvasPtr &canvas, FontPixelBuffer &pb);
+		void insert_glyph(const std::shared_ptr<Canvas> &canvas, unsigned int glyph, TextureGroupImage &sub_texture, const Pointf &offset, const Sizef &size, const GlyphMetrics &glyph_metrics);
+		void insert_glyph(const std::shared_ptr<Canvas> &canvas, FontPixelBuffer &pb);
 
-		void set_texture_group(const TextureGroupPtr &new_texture_group);
+		void set_texture_group(const std::shared_ptr<TextureGroup> &new_texture_group);
 
 	private:
 		std::vector<std::unique_ptr<Font_TextureGlyph>> glyph_list;
-		TextureGroupPtr texture_group;
+		std::shared_ptr<TextureGroup> texture_group;
 
 		static const int glyph_border_size = 1;
 	};

@@ -40,7 +40,7 @@ namespace uicore
 	{
 	public:
 		/// \brief Constructs an occlusion query object.
-		static std::shared_ptr<OcclusionQuery> create(const GraphicContextPtr &context);
+		static std::shared_ptr<OcclusionQuery> create(const std::shared_ptr<GraphicContext> &context);
 
 		/// \brief Returns the result of the occlusion query.
 		virtual int result() const = 0;
@@ -54,6 +54,4 @@ namespace uicore
 		/// \brief Finish occlusion query.
 		virtual void end() = 0;
 	};
-
-	typedef std::shared_ptr<OcclusionQuery> OcclusionQueryPtr;
 }

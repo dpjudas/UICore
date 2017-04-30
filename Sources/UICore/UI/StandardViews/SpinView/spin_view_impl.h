@@ -62,7 +62,7 @@ namespace uicore
 		std::shared_ptr<View> button_decrement;
 		std::shared_ptr<View> button_increment;
 
-		TimerPtr timer = Timer::create();
+		std::shared_ptr<Timer> timer = Timer::create();
 		bool _state_disabled = false;
 		bool _state_increment_hot = false;
 		bool _state_increment_pressed = false;

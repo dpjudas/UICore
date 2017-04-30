@@ -43,7 +43,7 @@ namespace uicore
 		load_font(desc, typeface_name, pixel_ratio);
 	}
 
-	FontEngine_Win32::FontEngine_Win32(const FontDescription &desc, DataBufferPtr &font_databuffer, float pixel_ratio) : pixel_ratio(pixel_ratio)
+	FontEngine_Win32::FontEngine_Win32(const FontDescription &desc, std::shared_ptr<DataBuffer> &font_databuffer, float pixel_ratio) : pixel_ratio(pixel_ratio)
 	{
 		font_handle.engine = this;
 
@@ -233,7 +233,7 @@ namespace uicore
 
 	FontPixelBuffer FontEngine_Win32::get_font_glyph_gray8(int glyph)
 	{
-		DataBufferPtr glyph_bitmap;
+		std::shared_ptr<DataBuffer> glyph_bitmap;
 		GLYPHMETRICS glyph_metrics = { 0 };
 		MAT2 matrix = { 0 };
 		matrix.eM11.value = 1;
@@ -281,7 +281,7 @@ namespace uicore
 
 	FontPixelBuffer FontEngine_Win32::get_font_glyph_mono(int glyph)
 	{
-		DataBufferPtr glyph_bitmap;
+		std::shared_ptr<DataBuffer> glyph_bitmap;
 		GLYPHMETRICS glyph_metrics = { 0 };
 		MAT2 matrix = { 0 };
 		matrix.eM11.value = 1;
@@ -326,7 +326,7 @@ namespace uicore
 		}
 	}
 
-	bool FontEngine_Win32::try_load_glyph_bitmap(int glyph, UINT format, MAT2 &matrix, DataBufferPtr &glyph_bitmap, GLYPHMETRICS &glyph_metrics)
+	bool FontEngine_Win32::try_load_glyph_bitmap(int glyph, UINT format, MAT2 &matrix, std::shared_ptr<DataBuffer> &glyph_bitmap, GLYPHMETRICS &glyph_metrics)
 	{
 		HDC dc = GetDC(0);
 		HGDIOBJ old_font = SelectObject(dc, handle);
@@ -441,7 +441,7 @@ namespace uicore
 		return charset;
 	}
 
-	void FontEngine_Win32::load_glyph_path(unsigned int glyph_index, const PathPtr &path, GlyphMetrics &out_metrics)
+	void FontEngine_Win32::load_glyph_path(unsigned int glyph_index, const std::shared_ptr<Path> &path, GlyphMetrics &out_metrics)
 	{
 		path->set_fill_mode(PathFillMode::winding);
 
@@ -461,7 +461,7 @@ namespace uicore
 		glyph_index = indices[0];
 		int format = GGO_NATIVE | GGO_UNHINTED | GGO_GLYPH_INDEX;
 
-		DataBufferPtr glyph_buffer;
+		std::shared_ptr<DataBuffer> glyph_buffer;
 		bool result = false;
 		DWORD result_size = GetGlyphOutline(dc, glyph_index, format, &glyph_metrics, 0, 0, &matrix);
 		if (result_size != 0 && result_size != GDI_ERROR)
@@ -565,7 +565,7 @@ namespace uicore
 
 	}
 
-	std::string FontEngine_Win32::get_ttf_typeface_name(DataBufferPtr &font_databuffer)
+	std::string FontEngine_Win32::get_ttf_typeface_name(std::shared_ptr<DataBuffer> &font_databuffer)
 	{
 		if (!font_databuffer || !font_databuffer->size())
 			return std::string();

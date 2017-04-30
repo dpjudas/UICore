@@ -35,11 +35,8 @@
 namespace uicore
 {
 	class Canvas;
-	typedef std::shared_ptr<Canvas> CanvasPtr;
 	class Image;
-	typedef std::shared_ptr<Image> ImagePtr;
 	class Path;
-	typedef std::shared_ptr<Path> PathPtr;
 	class Colorf;
 	class Pointf;
 	class Rectf;
@@ -52,7 +49,7 @@ namespace uicore
 	class StyleBackgroundRenderer
 	{
 	public:
-		StyleBackgroundRenderer(const CanvasPtr &canvas, const ViewGeometry &geometry, const StyleCascade &style);
+		StyleBackgroundRenderer(const std::shared_ptr<Canvas> &canvas, const ViewGeometry &geometry, const StyleCascade &style);
 		void render_background();
 		void render_border();
 
@@ -68,7 +65,7 @@ namespace uicore
 
 		float get_start_x(int index, const Rectf &clip_box, const Rectf &origin_box, const Sizef &image_size);
 		float get_start_y(int index, const Rectf &clip_box, const Rectf &origin_box, const Sizef &image_size);
-		Sizef get_image_size(int index, const ImagePtr &image, Rectf origin_box);
+		Sizef get_image_size(int index, const std::shared_ptr<Image> &image, Rectf origin_box);
 		Rectf get_clip_box(int index);
 		Rectf get_origin_box(int index);
 		StyleGetValue get_layer_clip(int index);
@@ -89,9 +86,9 @@ namespace uicore
 		std::array<Pointf, 2 * 4> get_border_points();
 		std::array<Pointf, 2 * 4> get_padding_points(const std::array<Pointf, 2 * 4> &border_points);
 
-		static PathPtr get_border_area_path(const std::array<Pointf, 2 * 4> &border_points);
-		static PathPtr get_border_stroke_path(const std::array<Pointf, 2 * 4> &border_points, const std::array<Pointf, 2 * 4> &padding_points);
-		static PathPtr get_border_stroke_path(const std::array<Pointf, 2 * 4> &border_points, const std::array<Pointf, 2 * 4> &padding_points, int start, int end);
+		static std::shared_ptr<Path> get_border_area_path(const std::array<Pointf, 2 * 4> &border_points);
+		static std::shared_ptr<Path> get_border_stroke_path(const std::array<Pointf, 2 * 4> &border_points, const std::array<Pointf, 2 * 4> &padding_points);
+		static std::shared_ptr<Path> get_border_stroke_path(const std::array<Pointf, 2 * 4> &border_points, const std::array<Pointf, 2 * 4> &padding_points, int start, int end);
 
 		static std::vector<BrushGradientStop> shadow_blur_stops(const Colorf &shadow_color, float shadow_blur_radius, float start_t);
 		static float mix(float a, float b, float t);
@@ -104,7 +101,7 @@ namespace uicore
 			Pointf second[3];
 		};
 
-		const CanvasPtr &canvas;
+		const std::shared_ptr<Canvas> &canvas;
 		const ViewGeometry &geometry;
 		const StyleCascade &style;
 

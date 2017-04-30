@@ -43,10 +43,10 @@ namespace uicore
 	public:
 		std::shared_ptr<ImageSource> image;
 		std::shared_ptr<ImageSource> highlighted_image;
-		ImagePtr canvas_image;
-		ImagePtr canvas_highlighted_image;
+		std::shared_ptr<Image> canvas_image;
+		std::shared_ptr<Image> canvas_highlighted_image;
 
-		void get_images(const CanvasPtr &canvas)
+		void get_images(const std::shared_ptr<Canvas> &canvas)
 		{
 			if (!canvas_image && image)
 				canvas_image = image->image(canvas);
@@ -73,7 +73,7 @@ namespace uicore
 		set_needs_layout();
 	}
 
-	void ImageBaseView::set_image(const ImagePtr &image)
+	void ImageBaseView::set_image(const std::shared_ptr<Image> &image)
 	{
 		set_image(ImageSource::from_image(image));
 	}
@@ -91,12 +91,12 @@ namespace uicore
 		set_needs_layout();
 	}
 
-	void ImageBaseView::set_highlighted_image(const ImagePtr &image)
+	void ImageBaseView::set_highlighted_image(const std::shared_ptr<Image> &image)
 	{
 		set_highlighted_image(ImageSource::from_image(image));
 	}
 
-	void ImageBaseView::render_content(const CanvasPtr &canvas)
+	void ImageBaseView::render_content(const std::shared_ptr<Canvas> &canvas)
 	{
 		impl->get_images(canvas);
 
@@ -113,7 +113,7 @@ namespace uicore
 		}
 	}
 
-	float ImageBaseView::calculate_preferred_width(const CanvasPtr &canvas)
+	float ImageBaseView::calculate_preferred_width(const std::shared_ptr<Canvas> &canvas)
 	{
 		impl->get_images(canvas);
 
@@ -123,7 +123,7 @@ namespace uicore
 			return 0.0f;
 	}
 
-	float ImageBaseView::calculate_preferred_height(const CanvasPtr &canvas, float width)
+	float ImageBaseView::calculate_preferred_height(const std::shared_ptr<Canvas> &canvas, float width)
 	{
 		impl->get_images(canvas);
 

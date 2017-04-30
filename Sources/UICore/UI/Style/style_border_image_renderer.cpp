@@ -39,7 +39,7 @@
 
 namespace uicore
 {
-	StyleBorderImageRenderer::StyleBorderImageRenderer(const CanvasPtr &canvas, const ViewGeometry &geometry, const StyleCascade &style) : canvas(canvas), geometry(geometry), style(style)
+	StyleBorderImageRenderer::StyleBorderImageRenderer(const std::shared_ptr<Canvas> &canvas, const ViewGeometry &geometry, const StyleCascade &style) : canvas(canvas), geometry(geometry), style(style)
 	{
 	}
 
@@ -48,7 +48,7 @@ namespace uicore
 		if (!style.computed_value("border-image-source").is_url())
 			return;
 
-		ImagePtr image = UIThread::image(canvas, style.computed_value("border-image-source").text());
+		std::shared_ptr<Image> image = UIThread::image(canvas, style.computed_value("border-image-source").text());
 		if (image)
 		{
 			int slice_left = get_left_slice_value(image->width());
@@ -122,7 +122,7 @@ namespace uicore
 		return info;
 	}
 
-	void StyleBorderImageRenderer::draw_area(const ImagePtr &image, float x, float y, float w, float h, int sx, int sy, int sw, int sh, const StyleGetValue &repeat_x, const StyleGetValue &repeat_y)
+	void StyleBorderImageRenderer::draw_area(const std::shared_ptr<Image> &image, float x, float y, float w, float h, int sx, int sy, int sw, int sh, const StyleGetValue &repeat_x, const StyleGetValue &repeat_y)
 	{
 		TileRepeatInfo tile_x = repeat_info(x, w, sw, repeat_x);
 		TileRepeatInfo tile_y = repeat_info(y, h, sh, repeat_y);

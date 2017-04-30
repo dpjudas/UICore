@@ -387,7 +387,7 @@ namespace uicore
 		file->write(text.data(), text.length());
 	}
 
-	DataBufferPtr File::read_all_bytes(const std::string &filename)
+	std::shared_ptr<DataBuffer> File::read_all_bytes(const std::string &filename)
 	{
 		auto file = FileImpl::open_existing(filename);
 
@@ -402,7 +402,7 @@ namespace uicore
 		return buffer;
 	}
 
-	void File::write_all_bytes(const std::string &filename, const DataBufferPtr &data)
+	void File::write_all_bytes(const std::string &filename, const std::shared_ptr<DataBuffer> &data)
 	{
 		auto file = FileImpl::create_always(filename);
 		file->write(data->data(), data->size());

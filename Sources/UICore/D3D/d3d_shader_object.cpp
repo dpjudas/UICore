@@ -61,7 +61,7 @@ namespace uicore
 		: device(device), feature_level(feature_level)
 	{
 		source = init_source;
-		bytecode = DataBufferPtr();
+		bytecode = std::shared_ptr<DataBuffer>();
 		type = new_type;
 	}
 

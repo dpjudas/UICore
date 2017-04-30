@@ -63,11 +63,11 @@ namespace uicore
 		return framebuffer_draw;
 	}
 
-	void GL1FrameBuffer::attach_color(int attachment_index, const RenderBufferPtr &render_buffer) {}
-	void GL1FrameBuffer::attach_color(int attachment_index, const Texture1DPtr &texture, int level) {}
-	void GL1FrameBuffer::attach_color(int attachment_index, const Texture1DArrayPtr &texture, int array_index, int level) {}
+	void GL1FrameBuffer::attach_color(int attachment_index, const std::shared_ptr<RenderBuffer> &render_buffer) {}
+	void GL1FrameBuffer::attach_color(int attachment_index, const std::shared_ptr<Texture1D> &texture, int level) {}
+	void GL1FrameBuffer::attach_color(int attachment_index, const std::shared_ptr<Texture1DArray> &texture, int array_index, int level) {}
 
-	void GL1FrameBuffer::attach_color(int attachment_index, const Texture2DPtr &texture, int level)
+	void GL1FrameBuffer::attach_color(int attachment_index, const std::shared_ptr<Texture2D> &texture, int level)
 	{
 		throw_if_disposed();
 
@@ -119,24 +119,24 @@ namespace uicore
 			}
 		}
 	}
-	void GL1FrameBuffer::attach_color(int attachment_index, const Texture2DArrayPtr &texture, int array_index, int level) {}
-	void GL1FrameBuffer::attach_color(int attachment_index, const Texture3DPtr &texture, int depth, int level) {}
-	void GL1FrameBuffer::attach_color(int attachment_index, const TextureCubePtr &texture, TextureSubtype subtype, int level) {}
+	void GL1FrameBuffer::attach_color(int attachment_index, const std::shared_ptr<Texture2DArray> &texture, int array_index, int level) {}
+	void GL1FrameBuffer::attach_color(int attachment_index, const std::shared_ptr<Texture3D> &texture, int depth, int level) {}
+	void GL1FrameBuffer::attach_color(int attachment_index, const std::shared_ptr<TextureCube> &texture, TextureSubtype subtype, int level) {}
 	void GL1FrameBuffer::detach_color(int attachment_index) {}
 
-	void GL1FrameBuffer::attach_stencil(const RenderBufferPtr &render_buffer) {}
-	void GL1FrameBuffer::attach_stencil(const Texture2DPtr &texture, int level) {}
-	void GL1FrameBuffer::attach_stencil(const TextureCubePtr &texture, TextureSubtype subtype, int level) {}
+	void GL1FrameBuffer::attach_stencil(const std::shared_ptr<RenderBuffer> &render_buffer) {}
+	void GL1FrameBuffer::attach_stencil(const std::shared_ptr<Texture2D> &texture, int level) {}
+	void GL1FrameBuffer::attach_stencil(const std::shared_ptr<TextureCube> &texture, TextureSubtype subtype, int level) {}
 	void GL1FrameBuffer::detach_stencil() {}
 
-	void GL1FrameBuffer::attach_depth(const RenderBufferPtr &render_buffer) {}
-	void GL1FrameBuffer::attach_depth(const Texture2DPtr &texture, int level) {}
-	void GL1FrameBuffer::attach_depth(const TextureCubePtr &texture, TextureSubtype subtype, int level) {}
+	void GL1FrameBuffer::attach_depth(const std::shared_ptr<RenderBuffer> &render_buffer) {}
+	void GL1FrameBuffer::attach_depth(const std::shared_ptr<Texture2D> &texture, int level) {}
+	void GL1FrameBuffer::attach_depth(const std::shared_ptr<TextureCube> &texture, TextureSubtype subtype, int level) {}
 	void GL1FrameBuffer::detach_depth() {}
 
-	void GL1FrameBuffer::attach_depth_stencil(const RenderBufferPtr &render_buffer) {}
-	void GL1FrameBuffer::attach_depth_stencil(const Texture2DPtr &texture, int level) {}
-	void GL1FrameBuffer::attach_depth_stencil(const TextureCubePtr &texture, TextureSubtype subtype, int level) {}
+	void GL1FrameBuffer::attach_depth_stencil(const std::shared_ptr<RenderBuffer> &render_buffer) {}
+	void GL1FrameBuffer::attach_depth_stencil(const std::shared_ptr<Texture2D> &texture, int level) {}
+	void GL1FrameBuffer::attach_depth_stencil(const std::shared_ptr<TextureCube> &texture, TextureSubtype subtype, int level) {}
 	void GL1FrameBuffer::detach_depth_stencil() {}
 
 

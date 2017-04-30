@@ -88,9 +88,9 @@ namespace uicore
 		::Window get_window() const { return handle.window; }
 		int get_screen() const { return handle.screen; }
 
-		const InputDevicePtr &get_keyboard() const { return keyboard; }
-		const InputDevicePtr &get_mouse() const { return mouse; }
-		const std::vector<InputDevicePtr> &get_game_controllers() const { return joysticks; }
+		const std::shared_ptr<InputDevice> &get_keyboard() const { return keyboard; }
+		const std::shared_ptr<InputDevice> &get_mouse() const { return mouse; }
+		const std::vector<std::shared_ptr<InputDevice>> &get_game_controllers() const { return joysticks; }
 
 		std::function<void()> &func_on_resized() { return callback_on_resized; }
 		std::function<bool(XButtonEvent &)> &func_on_clicked() { return callback_on_clicked; }
@@ -99,7 +99,7 @@ namespace uicore
 		bool is_clipboard_image_available() const;
 
 		std::string get_clipboard_text() const;
-		PixelBufferPtr get_clipboard_image() const;
+		std::shared_ptr<PixelBuffer> get_clipboard_image() const;
 
 		const std::vector<int> &get_window_socket_messages() const;
 
@@ -134,10 +134,10 @@ namespace uicore
 		void bring_to_front();
 
 		void set_clipboard_text(const std::string &text);
-		void set_clipboard_image(const PixelBufferPtr &buf);
+		void set_clipboard_image(const std::shared_ptr<PixelBuffer> &buf);
 
-		void set_large_icon(const PixelBufferPtr &image);
-		void set_small_icon(const PixelBufferPtr &image);
+		void set_large_icon(const std::shared_ptr<PixelBuffer> &image);
+		void set_small_icon(const std::shared_ptr<PixelBuffer> &image);
 
 		void process_message(XEvent &event, X11Window *mouse_capture_window);
 		void process_window();
@@ -173,8 +173,8 @@ namespace uicore
 		::Cursor system_cursor;
 		::Cursor hidden_cursor;
 		Pixmap cursor_bitmap;
-		InputDevicePtr keyboard, mouse;
-		std::vector<InputDevicePtr> joysticks;
+		std::shared_ptr<InputDevice> keyboard, mouse;
+		std::vector<std::shared_ptr<InputDevice>> joysticks;
 		DisplayWindowProvider *site;
 		std::function<void()> callback_on_resized;
 		std::function<bool(XButtonEvent &)> callback_on_clicked;

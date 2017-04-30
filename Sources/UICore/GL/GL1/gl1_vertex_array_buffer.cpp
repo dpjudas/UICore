@@ -56,7 +56,7 @@ namespace uicore
 		delete[] data;
 	}
 
-	void GL1VertexArrayBuffer::upload_data(const GraphicContextPtr &gc, int offset, const void *new_data, int new_size)
+	void GL1VertexArrayBuffer::upload_data(const std::shared_ptr<GraphicContext> &gc, int offset, const void *new_data, int new_size)
 	{
 		if ((offset < 0) || (new_size < 0) || ((new_size + offset) > size))
 			throw Exception("Vertex array buffer, invalid size");
@@ -64,14 +64,14 @@ namespace uicore
 		memcpy(data + offset, new_data, new_size);
 	}
 
-	void GL1VertexArrayBuffer::copy_from(const GraphicContextPtr &gc, const StagingBufferPtr &buffer, int dest_pos, int src_pos, int size)
+	void GL1VertexArrayBuffer::copy_from(const std::shared_ptr<GraphicContext> &gc, const std::shared_ptr<StagingBuffer> &buffer, int dest_pos, int src_pos, int size)
 	{
 		buffer->lock(gc, access_read_only);
 		memcpy(this->data + dest_pos, (char *)buffer->data() + src_pos, size);
 		buffer->unlock();
 	}
 
-	void GL1VertexArrayBuffer::copy_to(const GraphicContextPtr &gc, const StagingBufferPtr &buffer, int dest_pos, int src_pos, int size)
+	void GL1VertexArrayBuffer::copy_to(const std::shared_ptr<GraphicContext> &gc, const std::shared_ptr<StagingBuffer> &buffer, int dest_pos, int src_pos, int size)
 	{
 		buffer->upload_data(gc, dest_pos, this->data + src_pos, size);
 	}

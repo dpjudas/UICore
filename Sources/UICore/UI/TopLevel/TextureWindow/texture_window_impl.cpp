@@ -42,12 +42,12 @@
 namespace uicore
 {
 
-	TextureWindow_Impl::TextureWindow_Impl(TextureWindow *view, const CanvasPtr &canvas) : window_view(view), canvas(canvas)
+	TextureWindow_Impl::TextureWindow_Impl(TextureWindow *view, const std::shared_ptr<Canvas> &canvas) : window_view(view), canvas(canvas)
 	{
 		canvas_rect = canvas->size();
 	}
 
-	void TextureWindow_Impl::set_window(const DisplayWindowPtr &window, bool enable_automatic_events, const Mat4f &new_transform_mouse_matrix)
+	void TextureWindow_Impl::set_window(const std::shared_ptr<DisplayWindow> &window, bool enable_automatic_events, const Mat4f &new_transform_mouse_matrix)
 	{
 		slots = SlotContainer();
 		display_window = window;

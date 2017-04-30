@@ -33,7 +33,6 @@
 namespace uicore
 {
 	class IODevice;
-	typedef std::shared_ptr<IODevice> IODevicePtr;
 
 	/// \brief Provider type
 	class ImageFileType
@@ -46,11 +45,11 @@ namespace uicore
 		virtual ~ImageFileType();
 
 		/// \brief Called to load an image with this provider type.
-		virtual PixelBufferPtr load(const std::string &filename, bool srgb) = 0;
-		virtual PixelBufferPtr load(const IODevicePtr &file, bool srgb) = 0;
+		virtual std::shared_ptr<PixelBuffer> load(const std::string &filename, bool srgb) = 0;
+		virtual std::shared_ptr<PixelBuffer> load(const std::shared_ptr<IODevice> &file, bool srgb) = 0;
 
 		/// \brief Called to save a given PixelBuffer to a file
-		virtual void save(PixelBufferPtr buffer, const std::string &filename) = 0;
-		virtual void save(PixelBufferPtr buffer, const IODevicePtr &file) = 0;
+		virtual void save(std::shared_ptr<PixelBuffer> buffer, const std::string &filename) = 0;
+		virtual void save(std::shared_ptr<PixelBuffer> buffer, const std::shared_ptr<IODevice> &file) = 0;
 	};
 }

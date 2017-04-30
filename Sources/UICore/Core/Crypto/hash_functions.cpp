@@ -64,7 +64,7 @@ namespace uicore
 		return md5(data.data(), data.length(), uppercase);
 	}
 
-	std::string HashFunctions::md5(const DataBufferPtr &data, bool uppercase)
+	std::string HashFunctions::md5(const std::shared_ptr<DataBuffer> &data, bool uppercase)
 	{
 		return md5(data->data(), data->size(), uppercase);
 	}
@@ -77,7 +77,7 @@ namespace uicore
 		md5->hash(out_hash);
 	}
 
-	void HashFunctions::md5(const DataBufferPtr &data, unsigned char out_hash[16])
+	void HashFunctions::md5(const std::shared_ptr<DataBuffer> &data, unsigned char out_hash[16])
 	{
 		md5(data->data(), data->size(), out_hash);
 	}
@@ -101,7 +101,7 @@ namespace uicore
 		return sha1(data.data(), data.length(), uppercase);
 	}
 
-	std::string HashFunctions::sha1(const DataBufferPtr &data, bool uppercase)
+	std::string HashFunctions::sha1(const std::shared_ptr<DataBuffer> &data, bool uppercase)
 	{
 		return sha1(data->data(), data->size(), uppercase);
 	}
@@ -114,7 +114,7 @@ namespace uicore
 		sha1->hash(out_hash);
 	}
 
-	void HashFunctions::sha1(const DataBufferPtr &data, unsigned char out_hash[20])
+	void HashFunctions::sha1(const std::shared_ptr<DataBuffer> &data, unsigned char out_hash[20])
 	{
 		sha1(data->data(), data->size(), out_hash);
 	}
@@ -137,7 +137,7 @@ namespace uicore
 		return sha224(data.data(), data.length(), uppercase);
 	}
 
-	std::string HashFunctions::sha224(const DataBufferPtr &data, bool uppercase)
+	std::string HashFunctions::sha224(const std::shared_ptr<DataBuffer> &data, bool uppercase)
 	{
 		return sha224(data->data(), data->size(), uppercase);
 	}
@@ -150,7 +150,7 @@ namespace uicore
 		sha224->hash(out_hash);
 	}
 
-	void HashFunctions::sha224(const DataBufferPtr &data, unsigned char out_hash[28])
+	void HashFunctions::sha224(const std::shared_ptr<DataBuffer> &data, unsigned char out_hash[28])
 	{
 		sha224(data->data(), data->size(), out_hash);
 	}
@@ -173,7 +173,7 @@ namespace uicore
 		return sha256(data.data(), data.length(), uppercase);
 	}
 
-	std::string HashFunctions::sha256(const DataBufferPtr &data, bool uppercase)
+	std::string HashFunctions::sha256(const std::shared_ptr<DataBuffer> &data, bool uppercase)
 	{
 		return sha256(data->data(), data->size(), uppercase);
 	}
@@ -186,7 +186,7 @@ namespace uicore
 		sha256->hash(out_hash);
 	}
 
-	void HashFunctions::sha256(const DataBufferPtr &data, unsigned char out_hash[32])
+	void HashFunctions::sha256(const std::shared_ptr<DataBuffer> &data, unsigned char out_hash[32])
 	{
 		sha256(data->data(), data->size(), out_hash);
 	}
@@ -210,7 +210,7 @@ namespace uicore
 		return sha384(data.data(), data.length(), uppercase);
 	}
 
-	std::string HashFunctions::sha384(const DataBufferPtr &data, bool uppercase)
+	std::string HashFunctions::sha384(const std::shared_ptr<DataBuffer> &data, bool uppercase)
 	{
 		return sha384(data->data(), data->size(), uppercase);
 	}
@@ -223,7 +223,7 @@ namespace uicore
 		sha384->hash(out_hash);
 	}
 
-	void HashFunctions::sha384(const DataBufferPtr &data, unsigned char out_hash[48])
+	void HashFunctions::sha384(const std::shared_ptr<DataBuffer> &data, unsigned char out_hash[48])
 	{
 		sha384(data->data(), data->size(), out_hash);
 	}
@@ -246,7 +246,7 @@ namespace uicore
 		return sha512(data.data(), data.length(), uppercase);
 	}
 
-	std::string HashFunctions::sha512(const DataBufferPtr &data, bool uppercase)
+	std::string HashFunctions::sha512(const std::shared_ptr<DataBuffer> &data, bool uppercase)
 	{
 		return sha512(data->data(), data->size(), uppercase);
 	}
@@ -259,7 +259,7 @@ namespace uicore
 		sha512->hash(out_hash);
 	}
 
-	void HashFunctions::sha512(const DataBufferPtr &data, unsigned char out_hash[64])
+	void HashFunctions::sha512(const std::shared_ptr<DataBuffer> &data, unsigned char out_hash[64])
 	{
 		sha512(data->data(), data->size(), out_hash);
 	}
@@ -282,7 +282,7 @@ namespace uicore
 		return sha512_224(data.data(), data.length(), uppercase);
 	}
 
-	std::string HashFunctions::sha512_224(const DataBufferPtr &data, bool uppercase)
+	std::string HashFunctions::sha512_224(const std::shared_ptr<DataBuffer> &data, bool uppercase)
 	{
 		return sha512_224(data->data(), data->size(), uppercase);
 	}
@@ -295,7 +295,7 @@ namespace uicore
 		sha512_224->hash(out_hash);
 	}
 
-	void HashFunctions::sha512_224(const DataBufferPtr &data, unsigned char out_hash[28])
+	void HashFunctions::sha512_224(const std::shared_ptr<DataBuffer> &data, unsigned char out_hash[28])
 	{
 		sha512_224(data->data(), data->size(), out_hash);
 	}
@@ -318,7 +318,7 @@ namespace uicore
 		return sha512_256(data.data(), data.length(), uppercase);
 	}
 
-	std::string HashFunctions::sha512_256(const DataBufferPtr &data, bool uppercase)
+	std::string HashFunctions::sha512_256(const std::shared_ptr<DataBuffer> &data, bool uppercase)
 	{
 		return sha512_256(data->data(), data->size(), uppercase);
 	}
@@ -331,7 +331,7 @@ namespace uicore
 		sha512_256->hash(out_hash);
 	}
 
-	void HashFunctions::sha512_256(const DataBufferPtr &data, unsigned char out_hash[32])
+	void HashFunctions::sha512_256(const std::shared_ptr<DataBuffer> &data, unsigned char out_hash[32])
 	{
 		sha512_256(data->data(), data->size(), out_hash);
 	}

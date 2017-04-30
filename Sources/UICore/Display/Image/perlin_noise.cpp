@@ -63,7 +63,7 @@ namespace uicore
 	class PerlinNoise_PixelWriter_RGBA8 : public PerlinNoise_PixelWriter
 	{
 	public:
-		PerlinNoise_PixelWriter_RGBA8(const PixelBufferPtr &pbuff)
+		PerlinNoise_PixelWriter_RGBA8(const std::shared_ptr<PixelBuffer> &pbuff)
 			: pitch(pbuff->pitch() / pbuff->bytes_per_pixel()),
 			current_ptr((uint32_t *)pbuff->data()),
 			line_start_ptr(current_ptr)
@@ -95,7 +95,7 @@ namespace uicore
 	class PerlinNoise_PixelWriter_RGB8 : public PerlinNoise_PixelWriter
 	{
 	public:
-		PerlinNoise_PixelWriter_RGB8(const PixelBufferPtr &pbuff)
+		PerlinNoise_PixelWriter_RGB8(const std::shared_ptr<PixelBuffer> &pbuff)
 			: pitch(pbuff->pitch()),
 			current_ptr((uint8_t *)pbuff->data()),
 			line_start_ptr(current_ptr)
@@ -129,7 +129,7 @@ namespace uicore
 	class PerlinNoise_PixelWriter_R8 : public PerlinNoise_PixelWriter
 	{
 	public:
-		PerlinNoise_PixelWriter_R8(const PixelBufferPtr &pbuff)
+		PerlinNoise_PixelWriter_R8(const std::shared_ptr<PixelBuffer> &pbuff)
 			: pitch(pbuff->pitch()),
 			current_ptr((uint8_t *)pbuff->data()),
 			line_start_ptr(current_ptr)
@@ -161,7 +161,7 @@ namespace uicore
 	class PerlinNoise_PixelWriter_R32f : public PerlinNoise_PixelWriter
 	{
 	public:
-		PerlinNoise_PixelWriter_R32f(const PixelBufferPtr &pbuff)
+		PerlinNoise_PixelWriter_R32f(const std::shared_ptr<PixelBuffer> &pbuff)
 			: pitch(pbuff->pitch() / sizeof(float)),
 			current_ptr((float *)pbuff->data()),
 			line_start_ptr(current_ptr)
@@ -189,10 +189,10 @@ namespace uicore
 	public:
 		void set_permutations(const unsigned char *table, unsigned int size) override;
 
-		PixelBufferPtr create_noise4d(float start_x, float end_x, float start_y, float end_y, float z_position, float w_position) override;
-		PixelBufferPtr create_noise3d(float start_x, float end_x, float start_y, float end_y, float z_position) override;
-		PixelBufferPtr create_noise2d(float start_x, float end_x, float start_y, float end_y) override;
-		PixelBufferPtr create_noise1d(float start_x, float end_x) override;
+		std::shared_ptr<PixelBuffer> create_noise4d(float start_x, float end_x, float start_y, float end_y, float z_position, float w_position) override;
+		std::shared_ptr<PixelBuffer> create_noise3d(float start_x, float end_x, float start_y, float end_y, float z_position) override;
+		std::shared_ptr<PixelBuffer> create_noise2d(float start_x, float end_x, float start_y, float end_y) override;
+		std::shared_ptr<PixelBuffer> create_noise1d(float start_x, float end_x) override;
 
 		Size size() const override { return Size(_width, _height); }
 		TextureFormat format() const override { return _texture_format; }
@@ -599,7 +599,7 @@ namespace uicore
 		}
 	}
 
-	PixelBufferPtr PerlinNoise_Impl::create_noise2d(float start_x, float end_x, float start_y, float end_y)
+	std::shared_ptr<PixelBuffer> PerlinNoise_Impl::create_noise2d(float start_x, float end_x, float start_y, float end_y)
 	{
 		setup();
 
@@ -665,7 +665,7 @@ namespace uicore
 		}
 	}
 
-	PixelBufferPtr PerlinNoise_Impl::create_noise1d(float start_x, float end_x)
+	std::shared_ptr<PixelBuffer> PerlinNoise_Impl::create_noise1d(float start_x, float end_x)
 	{
 		setup();
 
@@ -727,7 +727,7 @@ namespace uicore
 		}
 	}
 
-	PixelBufferPtr PerlinNoise_Impl::create_noise3d(float start_x, float end_x, float start_y, float end_y, float z_position)
+	std::shared_ptr<PixelBuffer> PerlinNoise_Impl::create_noise3d(float start_x, float end_x, float start_y, float end_y, float z_position)
 	{
 		setup();
 
@@ -795,7 +795,7 @@ namespace uicore
 		}
 	}
 
-	PixelBufferPtr PerlinNoise_Impl::create_noise4d(float start_x, float end_x, float start_y, float end_y, float z_position, float w_position)
+	std::shared_ptr<PixelBuffer> PerlinNoise_Impl::create_noise4d(float start_x, float end_x, float start_y, float end_y, float z_position, float w_position)
 	{
 		setup();
 

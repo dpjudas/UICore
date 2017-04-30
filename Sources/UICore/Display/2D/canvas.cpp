@@ -32,7 +32,7 @@
 
 namespace uicore
 {
-	std::shared_ptr<Canvas> Canvas::create(const DisplayWindowPtr &window)
+	std::shared_ptr<Canvas> Canvas::create(const std::shared_ptr<DisplayWindow> &window)
 	{
 		return std::make_shared<CanvasImpl>(window);
 	}

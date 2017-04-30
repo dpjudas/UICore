@@ -56,18 +56,18 @@ namespace uicore
 		Size backing_minimum_size(bool client_area = false) const;
 		Size backing_maximum_size(bool client_area = false) const;
 
-		const GraphicContextPtr &gc() const;
+		const std::shared_ptr<GraphicContext> &gc() const;
 
-		const InputDevicePtr &keyboard() const override { return window.get_keyboard(); }
-		const InputDevicePtr &mouse() const override { return window.get_mouse(); }
-		const std::vector<InputDevicePtr> &game_controllers() const override { return window.get_game_controllers(); }
+		const std::shared_ptr<InputDevice> &keyboard() const override { return window.get_keyboard(); }
+		const std::shared_ptr<InputDevice> &mouse() const override { return window.get_mouse(); }
+		const std::vector<std::shared_ptr<InputDevice>> &game_controllers() const override { return window.get_game_controllers(); }
 
 		DisplayWindowHandle handle() const override;
 
 		bool is_clipboard_text_available() const;
 		bool is_clipboard_image_available() const;
 		std::string clipboard_text() const;
-		PixelBufferPtr clipboard_image() const;
+		std::shared_ptr<PixelBuffer> clipboard_image() const;
 
 		const ComPtr<ID3D11Device> &get_device() const { return device; }
 		const ComPtr<ID3D11DeviceContext> &get_device_context() const { return device_context; }
@@ -84,8 +84,8 @@ namespace uicore
 		void capture_mouse(bool capture);
 
 		void show_system_cursor();
-		CursorPtr create_cursor(const CursorDescription &cursor_description);
-		void set_cursor(const CursorPtr &cursor);
+		std::shared_ptr<Cursor> create_cursor(const CursorDescription &cursor_description);
+		void set_cursor(const std::shared_ptr<Cursor> &cursor);
 		void set_cursor(StandardCursor type);
 		void set_cursor_handle(HCURSOR cursor);
 		void hide_system_cursor();
@@ -112,12 +112,12 @@ namespace uicore
 		void update(const Rect &rect);
 
 		void set_clipboard_text(const std::string &text);
-		void set_clipboard_image(const PixelBufferPtr &buf);
+		void set_clipboard_image(const std::shared_ptr<PixelBuffer> &buf);
 
 		void request_repaint();
 
-		void set_large_icon(const PixelBufferPtr &image);
-		void set_small_icon(const PixelBufferPtr &image);
+		void set_large_icon(const std::shared_ptr<PixelBuffer> &image);
+		void set_small_icon(const std::shared_ptr<PixelBuffer> &image);
 
 		void backing_enable_alpha_channel(const Rect &blur_rect);
 		void backing_extend_frame_into_client_area(int left, int top, int right, int bottom);
@@ -132,7 +132,7 @@ namespace uicore
 
 		Win32Window window;
 
-		GraphicContextPtr _gc;
+		std::shared_ptr<GraphicContext> _gc;
 
 		ComPtr<ID3D11Device> device;
 		ComPtr<ID3D11DeviceContext> device_context;

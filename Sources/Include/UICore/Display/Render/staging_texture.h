@@ -67,20 +67,18 @@ namespace uicore
 		/// \param data = data to copy from (May be nullptr)
 		/// \param usage = Buffer Usage
 		/// \param pbuff = The pixelbuffer to copy from
-		static std::shared_ptr<StagingTexture> create(const GraphicContextPtr &gc, int width, int height, StagingDirection direction = StagingDirection::to_gpu, TextureFormat texture_format = tf_rgba8, const void *data = nullptr, BufferUsage usage = usage_stream_draw);
-		static std::shared_ptr<StagingTexture> create(const GraphicContextPtr &gc, const PixelBufferPtr &pbuff, StagingDirection direction = StagingDirection::to_gpu, BufferUsage usage = usage_stream_draw);
+		static std::shared_ptr<StagingTexture> create(const std::shared_ptr<GraphicContext> &gc, int width, int height, StagingDirection direction = StagingDirection::to_gpu, TextureFormat texture_format = tf_rgba8, const void *data = nullptr, BufferUsage usage = usage_stream_draw);
+		static std::shared_ptr<StagingTexture> create(const std::shared_ptr<GraphicContext> &gc, const std::shared_ptr<PixelBuffer> &pbuff, StagingDirection direction = StagingDirection::to_gpu, BufferUsage usage = usage_stream_draw);
 
 		/// \brief Maps buffer into system memory.
 		///
 		/// Locking before accessing data is only required for GPU based buffers.
-		virtual void lock(const GraphicContextPtr &gc, BufferAccess access) = 0;
+		virtual void lock(const std::shared_ptr<GraphicContext> &gc, BufferAccess access) = 0;
 
 		/// \brief Unmaps buffer.
 		virtual void unlock() = 0;
 
 		/// \brief Uploads data to buffer.
-		virtual void upload_data(const GraphicContextPtr &gc, const Rect &dest_rect, const void *data) = 0;
+		virtual void upload_data(const std::shared_ptr<GraphicContext> &gc, const Rect &dest_rect, const void *data) = 0;
 	};
-
-	typedef std::shared_ptr<StagingTexture> StagingTexturePtr;
 }

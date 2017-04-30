@@ -40,8 +40,8 @@ namespace uicore
 	class RenderBatchPoint : public RenderBatcher
 	{
 	public:
-		RenderBatchPoint(const GraphicContextPtr &gc, RenderBatchBuffer *batch_buffer);
-		void draw_point(const CanvasPtr &canvas, Vec2f *line_positions, const Vec4f &point_color, int num_vertices);
+		RenderBatchPoint(const std::shared_ptr<GraphicContext> &gc, RenderBatchBuffer *batch_buffer);
+		void draw_point(const std::shared_ptr<Canvas> &canvas, Vec2f *line_positions, const Vec4f &point_color, int num_vertices);
 
 	private:
 		struct PointVertex
@@ -51,14 +51,14 @@ namespace uicore
 		};
 
 		inline Vec4f to_position(float x, float y) const;
-		void set_batcher_active(const CanvasPtr &canvas, int num_vertices);
-		void flush(const GraphicContextPtr &gc) override;
+		void set_batcher_active(const std::shared_ptr<Canvas> &canvas, int num_vertices);
+		void flush(const std::shared_ptr<GraphicContext> &gc) override;
 		void matrix_changed(const Mat4f &modelview, const Mat4f &projection, TextureImageYAxis image_yaxis, float pixel_ratio) override;
 
 		enum { max_vertices = RenderBatchBuffer::vertex_buffer_size / sizeof(PointVertex) };
 		PointVertex *vertices;
 		RenderBatchBuffer *batch_buffer;
-		PrimitivesArrayPtr prim_array[RenderBatchBuffer::num_vertex_buffers];
+		std::shared_ptr<PrimitivesArray> prim_array[RenderBatchBuffer::num_vertex_buffers];
 		int position = 0;
 		Mat4f modelview_projection_matrix;
 	};

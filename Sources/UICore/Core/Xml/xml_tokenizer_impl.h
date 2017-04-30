@@ -35,14 +35,14 @@ namespace uicore
 	class XmlTokenizerImpl : public XmlTokenizer
 	{
 	public:
-		XmlTokenizerImpl(const IODevicePtr &input);
+		XmlTokenizerImpl(const std::shared_ptr<IODevice> &input);
 
 		bool eat_whitespace() const override;
 		void set_eat_whitespace(bool enable = true) override;
 		void next(XmlToken *out_token) override;
 
 	private:
-		IODevicePtr input;
+		std::shared_ptr<IODevice> input;
 		std::string::size_type pos = 0, size = 0;
 		std::string data;
 		bool _eat_whitespace = true;

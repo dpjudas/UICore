@@ -34,9 +34,7 @@
 namespace uicore
 {
 	class XmlNode;
-	typedef std::shared_ptr<XmlNode> XmlNodePtr;
 	class XmlDocument;
-	typedef std::shared_ptr<XmlDocument> XmlDocumentPtr;
 
 	typedef std::string XmlString;
 
@@ -62,14 +60,14 @@ namespace uicore
 		virtual XmlString local_name() const = 0;
 		virtual XmlString text() const = 0;
 
-		virtual XmlNodePtr parent() const = 0;
-		virtual XmlNodePtr first_child() const = 0;
-		virtual XmlNodePtr last_child() const = 0;
-		virtual XmlNodePtr previous_sibling() const = 0;
-		virtual XmlNodePtr next_sibling() const = 0;
-		virtual XmlNodePtr first_attribute() const = 0;
+		virtual std::shared_ptr<XmlNode> parent() const = 0;
+		virtual std::shared_ptr<XmlNode> first_child() const = 0;
+		virtual std::shared_ptr<XmlNode> last_child() const = 0;
+		virtual std::shared_ptr<XmlNode> previous_sibling() const = 0;
+		virtual std::shared_ptr<XmlNode> next_sibling() const = 0;
+		virtual std::shared_ptr<XmlNode> first_attribute() const = 0;
 
-		virtual XmlDocumentPtr owner_document() const = 0;
+		virtual std::shared_ptr<XmlDocument> owner_document() const = 0;
 
 		bool is_element() const { return type() == XmlNodeType::element; }
 		bool is_attr() const { return type() == XmlNodeType::attribute; }
@@ -87,8 +85,8 @@ namespace uicore
 
 		virtual XmlString attribute(const XmlString &name, const XmlString &default_value = XmlString()) const = 0;
 		virtual XmlString attribute_ns(const XmlString &namespace_uri, const XmlString &local_name, const XmlString &default_value = XmlString()) const = 0;
-		virtual XmlNodePtr attribute_node(const XmlString &name) const = 0;
-		virtual XmlNodePtr attribute_node(const XmlString &namespace_uri, const XmlString &local_name) const = 0;
+		virtual std::shared_ptr<XmlNode> attribute_node(const XmlString &name) const = 0;
+		virtual std::shared_ptr<XmlNode> attribute_node(const XmlString &namespace_uri, const XmlString &local_name) const = 0;
 
 		virtual void set_prefix(const XmlString &prefix) = 0;
 		virtual void set_text(const XmlString &value) = 0;
@@ -98,23 +96,23 @@ namespace uicore
 
 		virtual void remove_attribute(const XmlString &name) = 0;
 		virtual void remove_attribute(const XmlString &namespace_uri, const XmlString &local_name) = 0;
-		virtual XmlNodePtr remove_attribute(const XmlNodePtr &old_attribute) = 0;
-		virtual XmlNodePtr add_attribute(const XmlNodePtr &new_attribute) = 0;
+		virtual std::shared_ptr<XmlNode> remove_attribute(const std::shared_ptr<XmlNode> &old_attribute) = 0;
+		virtual std::shared_ptr<XmlNode> add_attribute(const std::shared_ptr<XmlNode> &new_attribute) = 0;
 
-		virtual XmlNodePtr insert_before(const XmlNodePtr &new_child, const XmlNodePtr &ref_child) = 0;
-		virtual XmlNodePtr replace_child(const XmlNodePtr &new_child, const XmlNodePtr &old_child) = 0;
-		virtual XmlNodePtr remove_child(const XmlNodePtr &old_child) = 0;
-		virtual XmlNodePtr append_child(const XmlNodePtr &new_child) = 0;
+		virtual std::shared_ptr<XmlNode> insert_before(const std::shared_ptr<XmlNode> &new_child, const std::shared_ptr<XmlNode> &ref_child) = 0;
+		virtual std::shared_ptr<XmlNode> replace_child(const std::shared_ptr<XmlNode> &new_child, const std::shared_ptr<XmlNode> &old_child) = 0;
+		virtual std::shared_ptr<XmlNode> remove_child(const std::shared_ptr<XmlNode> &old_child) = 0;
+		virtual std::shared_ptr<XmlNode> append_child(const std::shared_ptr<XmlNode> &new_child) = 0;
 
 		/// \brief Returns a duplicate of this node, i.e., serves as a generic copy constructor for nodes.
 		/// The duplicate node has no parent.
 		/// \param deep If true, recursively clone the subtree under the specified node; if false, clone only the node itself (and its attributes, if it is an Element).
-		virtual XmlNodePtr clone(bool deep) const = 0;
+		virtual std::shared_ptr<XmlNode> clone(bool deep) const = 0;
 
 		/// \brief Returns the first child node with the specified node name.
 		/// Returns null if no child is found.
-		virtual XmlNodePtr named_item(const XmlString &name) const = 0;
-		virtual XmlNodePtr named_item(const XmlString &namespace_uri, const XmlString &local_name) const = 0;
+		virtual std::shared_ptr<XmlNode> named_item(const XmlString &name) const = 0;
+		virtual std::shared_ptr<XmlNode> named_item(const XmlString &namespace_uri, const XmlString &local_name) const = 0;
 
 		/// \brief Searches the node tree upwards for the namespace URI of the given qualified name.
 		virtual XmlString find_namespace_uri(const XmlString &qualified_name) const = 0;

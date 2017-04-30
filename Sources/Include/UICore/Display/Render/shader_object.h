@@ -37,7 +37,6 @@
 namespace uicore
 {
 	class IODevice;
-	typedef std::shared_ptr<IODevice> IODevicePtr;
 
 	/// \brief Shader Type
 	enum class ShaderType : int
@@ -56,16 +55,16 @@ namespace uicore
 	{
 	public:
 		/// \brief Constructs a shader
-		static std::shared_ptr<ShaderObject> create(const GraphicContextPtr &gc, ShaderType type, const std::string &source);
-		static std::shared_ptr<ShaderObject> create(const GraphicContextPtr &gc, ShaderType type, const void *bytecode, int bytecode_size);
+		static std::shared_ptr<ShaderObject> create(const std::shared_ptr<GraphicContext> &gc, ShaderType type, const std::string &source);
+		static std::shared_ptr<ShaderObject> create(const std::shared_ptr<GraphicContext> &gc, ShaderType type, const void *bytecode, int bytecode_size);
 
 		/// \brief Load
-		static std::shared_ptr<ShaderObject> load(const GraphicContextPtr &gc, ShaderType type, const std::string &fullname);
-		static std::shared_ptr<ShaderObject> load(const GraphicContextPtr &gc, ShaderType type, const IODevicePtr &file);
+		static std::shared_ptr<ShaderObject> load(const std::shared_ptr<GraphicContext> &gc, ShaderType type, const std::string &fullname);
+		static std::shared_ptr<ShaderObject> load(const std::shared_ptr<GraphicContext> &gc, ShaderType type, const std::shared_ptr<IODevice> &file);
 
 		/// \brief Load and compile
-		static std::shared_ptr<ShaderObject> load_and_compile(const GraphicContextPtr &gc, ShaderType type, const std::string &filename);
-		static std::shared_ptr<ShaderObject> load_and_compile(const GraphicContextPtr &gc, ShaderType type, const IODevicePtr &file);
+		static std::shared_ptr<ShaderObject> load_and_compile(const std::shared_ptr<GraphicContext> &gc, ShaderType type, const std::string &filename);
+		static std::shared_ptr<ShaderObject> load_and_compile(const std::shared_ptr<GraphicContext> &gc, ShaderType type, const std::shared_ptr<IODevice> &file);
 
 		/// \brief Gets the shader type
 		virtual ShaderType shader_type() const = 0;
@@ -86,6 +85,4 @@ namespace uicore
 		/// If the compiling fails, info_log() will return the compile log
 		virtual bool try_compile() = 0;
 	};
-
-	typedef std::shared_ptr<ShaderObject> ShaderObjectPtr;
 }

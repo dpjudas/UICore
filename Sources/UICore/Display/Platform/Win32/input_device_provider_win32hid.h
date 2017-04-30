@@ -51,13 +51,13 @@ namespace uicore
 		int hat(int index) const override;
 		int button_count() const override;
 
-		void update(const InputDevicePtr &joystick, RAWINPUT *raw_input);
+		void update(const std::shared_ptr<InputDevice> &joystick, RAWINPUT *raw_input);
 
 	private:
 		void on_dispose();
 
 		HANDLE open_device();
-		DataBufferPtr get_preparse_data();
+		std::shared_ptr<DataBuffer> get_preparse_data();
 
 		void find_names(HANDLE device);
 		void find_button_names(HANDLE device, void *preparse_data);

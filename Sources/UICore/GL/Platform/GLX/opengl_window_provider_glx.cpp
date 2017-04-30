@@ -864,22 +864,22 @@ void OpenGLWindowProvider::backing_flip(int interval)
 	OpenGL::check_error();
 }
 
-CursorPtr OpenGLWindowProvider::create_cursor(const CursorDescription &cursor_description)
+std::shared_ptr<Cursor> OpenGLWindowProvider::create_cursor(const CursorDescription &cursor_description)
 {
 	return std::make_shared<CursorProvider_X11>(cursor_description, cursor_description.hotspot());
 }
 
-void OpenGLWindowProvider::set_cursor(const CursorPtr &cursor)
+void OpenGLWindowProvider::set_cursor(const std::shared_ptr<Cursor> &cursor)
 {
 	x11_window.set_cursor(static_cast<CursorProvider_X11 *>(cursor.get()));
 }
 
-void OpenGLWindowProvider::set_large_icon(const PixelBufferPtr &image)
+void OpenGLWindowProvider::set_large_icon(const std::shared_ptr<PixelBuffer> &image)
 {
 	x11_window.set_large_icon(image);
 }
 
-void OpenGLWindowProvider::set_small_icon(const PixelBufferPtr &image)
+void OpenGLWindowProvider::set_small_icon(const std::shared_ptr<PixelBuffer> &image)
 {
 	x11_window.set_small_icon(image);
 }

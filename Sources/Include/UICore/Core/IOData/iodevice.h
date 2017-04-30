@@ -81,6 +81,4 @@ namespace uicore
 	private:
 		bool swap_bytes = false;
 	};
-
-	typedef std::shared_ptr<IODevice> IODevicePtr;
 }

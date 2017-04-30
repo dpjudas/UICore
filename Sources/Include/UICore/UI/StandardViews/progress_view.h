@@ -40,11 +40,11 @@ namespace uicore
 		float progress() const;
 		void set_progress(float value, bool animated = false);
 
-		ImagePtr track_image() const;
-		void set_track_image(const ImagePtr &value);
+		std::shared_ptr<Image> track_image() const;
+		void set_track_image(const std::shared_ptr<Image> &value);
 
-		ImagePtr progress_image() const;
-		void set_progress_image(const ImagePtr &value);
+		std::shared_ptr<Image> progress_image() const;
+		void set_progress_image(const std::shared_ptr<Image> &value);
 
 		Colorf progress_color() const;
 		void set_progress_color(const Colorf &value);

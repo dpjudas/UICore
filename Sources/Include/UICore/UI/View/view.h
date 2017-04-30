@@ -48,7 +48,6 @@ namespace uicore
 	class Style;
 	class StyleCascade;
 	class Canvas;
-	typedef std::shared_ptr<Canvas> CanvasPtr;
 	class EventUI;
 	class ActivationChangeEvent;
 	class CloseEvent;
@@ -60,7 +59,6 @@ namespace uicore
 	class CursorDescription;
 	enum class StandardCursor;
 	class DisplayWindow;
-	typedef std::shared_ptr<DisplayWindow> DisplayWindowPtr;
 	class ViewTree;
 	class ViewAction;
 
@@ -200,7 +198,7 @@ namespace uicore
 		/// Gets the current canvas used to render this view
 		///
 		/// This function may return a null canvas if the view does not have a canvas attached to it yet.
-		CanvasPtr canvas() const;
+		std::shared_ptr<Canvas> canvas() const;
 
 		/// Signals this view needs to be rendered again
 		void set_needs_render();
@@ -226,10 +224,10 @@ namespace uicore
 		void set_content_clipped(bool clipped);
 
 		/// Calculates the preferred margin box width using simplified layout rules
-		float preferred_margin_width(const CanvasPtr &canvas);
+		float preferred_margin_width(const std::shared_ptr<Canvas> &canvas);
 
 		/// Calculates the perferred margin box height using simplified layout rules
-		float preferred_margin_height(const CanvasPtr &canvas, float margin_box_width);
+		float preferred_margin_height(const std::shared_ptr<Canvas> &canvas, float margin_box_width);
 
 		/// The content width used for percentages or other definite calculations
 		float definite_width();
@@ -244,19 +242,19 @@ namespace uicore
 		bool is_height_definite();
 
 		/// Calculates the preferred width of this view
-		float preferred_width(const CanvasPtr &canvas);
+		float preferred_width(const std::shared_ptr<Canvas> &canvas);
 
 		/// Calculates the preferred height of this view
-		float preferred_height(const CanvasPtr &canvas, float width);
+		float preferred_height(const std::shared_ptr<Canvas> &canvas, float width);
 
 		/// Calculates the offset to the first baseline
-		float first_baseline_offset(const CanvasPtr &canvas, float width);
+		float first_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width);
 
 		/// Calculates the offset to the last baseline
-		float last_baseline_offset(const CanvasPtr &canvas, float width);
+		float last_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width);
 
 		/// Sets the view geometry for all children of this view
-		virtual void layout_children(const CanvasPtr &canvas);
+		virtual void layout_children(const std::shared_ptr<Canvas> &canvas);
 
 		/// Tree in view hierachy
 		const ViewTree *view_tree() const;
@@ -354,7 +352,7 @@ namespace uicore
 		static View *common_parent(View *view1, View *view2);
 
 		/// Update window cursor to the cursor used by this view
-		void update_cursor(const DisplayWindowPtr &window);
+		void update_cursor(const std::shared_ptr<DisplayWindow> &window);
 
 		/// Map from local content to screen coordinates
 		Pointf to_screen_pos(const Pointf &pos);
@@ -373,7 +371,7 @@ namespace uicore
 
 	protected:
 		/// Renders the content of a view
-		virtual void render_content(const CanvasPtr &canvas) { }
+		virtual void render_content(const std::shared_ptr<Canvas> &canvas) { }
 
 		/// Child view was added to this view
 		virtual void child_added(const std::shared_ptr<View> &view) { }
@@ -382,16 +380,16 @@ namespace uicore
 		virtual void child_removed(const std::shared_ptr<View> &view) { }
 
 		/// Calculates the preferred width of this view
-		virtual float calculate_preferred_width(const CanvasPtr &canvas);
+		virtual float calculate_preferred_width(const std::shared_ptr<Canvas> &canvas);
 
 		/// Calculates the preferred height of this view
-		virtual float calculate_preferred_height(const CanvasPtr &canvas, float width);
+		virtual float calculate_preferred_height(const std::shared_ptr<Canvas> &canvas, float width);
 
 		/// Calculates the offset to the first baseline
-		virtual float calculate_first_baseline_offset(const CanvasPtr &canvas, float width);
+		virtual float calculate_first_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width);
 
 		/// Calculates the offset to the last baseline
-		virtual float calculate_last_baseline_offset(const CanvasPtr &canvas, float width);
+		virtual float calculate_last_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width);
 
 		/// The content width used for percentages or other definite calculations
 		virtual float calculate_definite_width(bool &out_is_definite);

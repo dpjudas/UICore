@@ -97,7 +97,7 @@ namespace uicore
 		key_ctrl = ctrl_down;
 	}
 
-	void InputDeviceProvider_X11Keyboard::received_keyboard_input(InputDevicePtr &keyboard, XKeyEvent &event)
+	void InputDeviceProvider_X11Keyboard::received_keyboard_input(std::shared_ptr<InputDevice> &keyboard, XKeyEvent &event)
 	{
 		// Is message a down or up event?
 		bool keydown = (event.type == KeyPress);

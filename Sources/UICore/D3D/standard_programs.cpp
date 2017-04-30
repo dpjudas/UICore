@@ -48,17 +48,17 @@ namespace uicore
 		StandardPrograms_Impl() {}
 		~StandardPrograms_Impl() {}
 
-		ProgramObjectPtr color_only_program;
-		ProgramObjectPtr single_texture_program;
-		ProgramObjectPtr sprite_program;
-		ProgramObjectPtr path_program;
+		std::shared_ptr<ProgramObject> color_only_program;
+		std::shared_ptr<ProgramObject> single_texture_program;
+		std::shared_ptr<ProgramObject> sprite_program;
+		std::shared_ptr<ProgramObject> path_program;
 	};
 
 	StandardPrograms::StandardPrograms()
 	{
 	}
 
-	StandardPrograms::StandardPrograms(const GraphicContextPtr &gc) : impl(std::make_shared<StandardPrograms_Impl>())
+	StandardPrograms::StandardPrograms(const std::shared_ptr<GraphicContext> &gc) : impl(std::make_shared<StandardPrograms_Impl>())
 	{
 		auto color_only_program = compile(gc, color_only_vertex, sizeof(color_only_vertex), color_only_fragment, sizeof(color_only_fragment));
 		color_only_program->bind_attribute_location(0, "VertexPosition");
@@ -107,7 +107,7 @@ namespace uicore
 		impl->path_program = path_program;
 	}
 
-	ProgramObjectPtr StandardPrograms::get_program_object(StandardProgram standard_program) const
+	std::shared_ptr<ProgramObject> StandardPrograms::get_program_object(StandardProgram standard_program) const
 	{
 		switch (standard_program)
 		{
@@ -119,7 +119,7 @@ namespace uicore
 		throw Exception("Unsupported standard program");
 	}
 
-	ProgramObjectPtr StandardPrograms::compile(const GraphicContextPtr &gc, const void *vertex_code, int vertex_code_size, const void *fragment_code, int fragment_code_size)
+	std::shared_ptr<ProgramObject> StandardPrograms::compile(const std::shared_ptr<GraphicContext> &gc, const void *vertex_code, int vertex_code_size, const void *fragment_code, int fragment_code_size)
 	{
 		auto vertex_shader = ShaderObject::create(gc, ShaderType::vertex, vertex_code, vertex_code_size);
 		if (!vertex_shader->try_compile())
@@ -135,7 +135,7 @@ namespace uicore
 		return program;
 	}
 
-	void StandardPrograms::link(ProgramObjectPtr &program, const std::string &error_message)
+	void StandardPrograms::link(std::shared_ptr<ProgramObject> &program, const std::string &error_message)
 	{
 		if (!program->try_link())
 			throw Exception(string_format("%1: %2", error_message, program->info_log()));

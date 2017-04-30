@@ -36,10 +36,10 @@ namespace uicore
 	class PNGFormat
 	{
 	public:
-		static PixelBufferPtr load(const std::string &filename, bool srgb = false);
-		static PixelBufferPtr load(const IODevicePtr &device, bool srgb = false);
+		static std::shared_ptr<PixelBuffer> load(const std::string &filename, bool srgb = false);
+		static std::shared_ptr<PixelBuffer> load(const std::shared_ptr<IODevice> &device, bool srgb = false);
 
-		static void save(PixelBufferPtr buffer, const std::string &filename);
-		static void save(PixelBufferPtr buffer, const IODevicePtr &iodev);
+		static void save(std::shared_ptr<PixelBuffer> buffer, const std::string &filename);
+		static void save(std::shared_ptr<PixelBuffer> buffer, const std::shared_ptr<IODevice> &iodev);
 	};
 }

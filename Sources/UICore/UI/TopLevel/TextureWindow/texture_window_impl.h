@@ -38,18 +38,18 @@ namespace uicore
 	class TextureWindow_Impl
 	{
 	public:
-		TextureWindow_Impl(TextureWindow *view, const CanvasPtr &canvas);
+		TextureWindow_Impl(TextureWindow *view, const std::shared_ptr<Canvas> &canvas);
 
-		void set_window(const DisplayWindowPtr &window, bool enable_automatic_events, const Mat4f &new_transform_mouse_matrix);
+		void set_window(const std::shared_ptr<DisplayWindow> &window, bool enable_automatic_events, const Mat4f &new_transform_mouse_matrix);
 
 		void update();
 
 		TextureWindow *window_view;
-		CanvasPtr canvas;
+		std::shared_ptr<Canvas> canvas;
 
 		bool needs_render = false;
 		Rectf canvas_rect;
-		DisplayWindowPtr display_window;
+		std::shared_ptr<DisplayWindow> display_window;
 		SlotContainer slots;
 		Mat4f transform_mouse_matrix;
 		Colorf background_color = StandardColorf::transparent();

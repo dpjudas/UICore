@@ -46,14 +46,14 @@ namespace uicore
 		return doc;
 	}
 
-	std::shared_ptr<XmlDocument> XmlDocument::load(const IODevicePtr &input, bool eat_whitespace)
+	std::shared_ptr<XmlDocument> XmlDocument::load(const std::shared_ptr<IODevice> &input, bool eat_whitespace)
 	{
 		auto doc = XmlDocument::create();
 
 		auto tokenizer = XmlTokenizer::create(input);
 		tokenizer->set_eat_whitespace(eat_whitespace);
 
-		std::vector<XmlNodePtr> node_stack;
+		std::vector<std::shared_ptr<XmlNode>> node_stack;
 		node_stack.push_back(doc);
 
 		XmlToken cur_token;
@@ -137,7 +137,7 @@ namespace uicore
 		}
 	}
 
-	XmlNodePtr XmlDocumentImpl::document_element() const
+	std::shared_ptr<XmlNode> XmlDocumentImpl::document_element() const
 	{
 		for (auto cur = first_child(); cur; cur = cur->next_sibling())
 		{
@@ -147,7 +147,7 @@ namespace uicore
 		return nullptr;
 	}
 
-	XmlNodePtr XmlDocumentImpl::first_child() const
+	std::shared_ptr<XmlNode> XmlDocumentImpl::first_child() const
 	{
 		const XmlTreeNode *tree_node = get_tree_node();
 		if (tree_node->first_child != cl_null_node_index)
@@ -160,7 +160,7 @@ namespace uicore
 		}
 	}
 
-	XmlNodePtr XmlDocumentImpl::last_child() const
+	std::shared_ptr<XmlNode> XmlDocumentImpl::last_child() const
 	{
 		const XmlTreeNode *tree_node = get_tree_node();
 		if (tree_node->last_child != cl_null_node_index)
@@ -173,7 +173,7 @@ namespace uicore
 		}
 	}
 
-	XmlNodePtr XmlDocumentImpl::insert_before(const XmlNodePtr &new_child, const XmlNodePtr &ref_child)
+	std::shared_ptr<XmlNode> XmlDocumentImpl::insert_before(const std::shared_ptr<XmlNode> &new_child, const std::shared_ptr<XmlNode> &ref_child)
 	{
 		if (!ref_child)
 		{
@@ -208,7 +208,7 @@ namespace uicore
 		}
 	}
 
-	XmlNodePtr XmlDocumentImpl::replace_child(const XmlNodePtr &new_child, const XmlNodePtr &old_child)
+	std::shared_ptr<XmlNode> XmlDocumentImpl::replace_child(const std::shared_ptr<XmlNode> &new_child, const std::shared_ptr<XmlNode> &old_child)
 	{
 		if (new_child && old_child)
 		{
@@ -241,7 +241,7 @@ namespace uicore
 		}
 	}
 
-	XmlNodePtr XmlDocumentImpl::remove_child(const XmlNodePtr &old_child)
+	std::shared_ptr<XmlNode> XmlDocumentImpl::remove_child(const std::shared_ptr<XmlNode> &old_child)
 	{
 		if (old_child)
 		{
@@ -271,7 +271,7 @@ namespace uicore
 		}
 	}
 
-	XmlNodePtr XmlDocumentImpl::append_child(const XmlNodePtr &new_child)
+	std::shared_ptr<XmlNode> XmlDocumentImpl::append_child(const std::shared_ptr<XmlNode> &new_child)
 	{
 		if (new_child)
 		{
@@ -302,13 +302,13 @@ namespace uicore
 		}
 	}
 
-	XmlNodePtr XmlDocumentImpl::clone(bool deep) const
+	std::shared_ptr<XmlNode> XmlDocumentImpl::clone(bool deep) const
 	{
 		auto mutable_this = const_cast<XmlDocumentImpl*>(this);
 		return mutable_this->import_node(mutable_this->shared_from_this(), deep);
 	}
 
-	XmlNodePtr XmlDocumentImpl::named_item(const XmlString &name) const
+	std::shared_ptr<XmlNode> XmlDocumentImpl::named_item(const XmlString &name) const
 	{
 		auto node = document_element();
 		if (node && node->name() == name)
@@ -317,7 +317,7 @@ namespace uicore
 			return nullptr;
 	}
 
-	XmlNodePtr XmlDocumentImpl::named_item(const XmlString &namespace_uri, const XmlString &local_name) const
+	std::shared_ptr<XmlNode> XmlDocumentImpl::named_item(const XmlString &namespace_uri, const XmlString &local_name) const
 	{
 		auto node = document_element();
 		if (node && node->namespace_uri() == namespace_uri && node->local_name() == local_name)
@@ -326,7 +326,7 @@ namespace uicore
 			return nullptr;
 	}
 
-	XmlNodePtr XmlDocumentImpl::create_element(const XmlString &tag_name)
+	std::shared_ptr<XmlNode> XmlDocumentImpl::create_element(const XmlString &tag_name)
 	{
 		auto element = allocate_dom_node(allocate_tree_node(XmlNodeType::element));
 		auto tree_node = element->get_tree_node();
@@ -334,7 +334,7 @@ namespace uicore
 		return element;
 	}
 
-	XmlNodePtr XmlDocumentImpl::create_element(const XmlString &namespace_uri, const XmlString &qualified_name)
+	std::shared_ptr<XmlNode> XmlDocumentImpl::create_element(const XmlString &namespace_uri, const XmlString &qualified_name)
 	{
 		auto element = allocate_dom_node(allocate_tree_node(XmlNodeType::element));
 		auto tree_node = element->get_tree_node();
@@ -343,12 +343,12 @@ namespace uicore
 		return element;
 	}
 
-	XmlNodePtr XmlDocumentImpl::create_fragment()
+	std::shared_ptr<XmlNode> XmlDocumentImpl::create_fragment()
 	{
 		return allocate_dom_node(allocate_tree_node(XmlNodeType::document_fragment));
 	}
 
-	XmlNodePtr XmlDocumentImpl::create_text(const XmlString &data)
+	std::shared_ptr<XmlNode> XmlDocumentImpl::create_text(const XmlString &data)
 	{
 		auto text = allocate_dom_node(allocate_tree_node(XmlNodeType::text));
 		auto tree_node = text->get_tree_node();
@@ -356,7 +356,7 @@ namespace uicore
 		return text;
 	}
 
-	XmlNodePtr XmlDocumentImpl::create_comment(const XmlString &data)
+	std::shared_ptr<XmlNode> XmlDocumentImpl::create_comment(const XmlString &data)
 	{
 		auto comment = allocate_dom_node(allocate_tree_node(XmlNodeType::comment));
 		auto tree_node = comment->get_tree_node();
@@ -364,7 +364,7 @@ namespace uicore
 		return comment;
 	}
 
-	XmlNodePtr XmlDocumentImpl::create_cdata(const XmlString &data)
+	std::shared_ptr<XmlNode> XmlDocumentImpl::create_cdata(const XmlString &data)
 	{
 		auto cdata = allocate_dom_node(allocate_tree_node(XmlNodeType::cdata));
 		auto tree_node = cdata->get_tree_node();
@@ -372,7 +372,7 @@ namespace uicore
 		return cdata;
 	}
 
-	XmlNodePtr XmlDocumentImpl::create_attribute(const XmlString &name)
+	std::shared_ptr<XmlNode> XmlDocumentImpl::create_attribute(const XmlString &name)
 	{
 		auto attribute = allocate_dom_node(allocate_tree_node(XmlNodeType::attribute));
 		auto tree_node = attribute->get_tree_node();
@@ -380,7 +380,7 @@ namespace uicore
 		return attribute;
 	}
 
-	XmlNodePtr XmlDocumentImpl::create_attribute(const XmlString &namespace_uri, const XmlString &qualified_name)
+	std::shared_ptr<XmlNode> XmlDocumentImpl::create_attribute(const XmlString &namespace_uri, const XmlString &qualified_name)
 	{
 		auto attribute = allocate_dom_node(allocate_tree_node(XmlNodeType::attribute));
 		auto tree_node = attribute->get_tree_node();
@@ -389,9 +389,9 @@ namespace uicore
 		return attribute;
 	}
 
-	XmlNodePtr XmlDocumentImpl::import_node(const XmlNodePtr &node, bool deep)
+	std::shared_ptr<XmlNode> XmlDocumentImpl::import_node(const std::shared_ptr<XmlNode> &node, bool deep)
 	{
-		XmlNodePtr imported_node;
+		std::shared_ptr<XmlNode> imported_node;
 		switch (node->type())
 		{
 		case XmlNodeType::element:
@@ -434,12 +434,12 @@ namespace uicore
 		return imported_node;
 	}
 
-	void XmlDocumentImpl::save(const IODevicePtr &output, bool insert_whitespace) const
+	void XmlDocumentImpl::save(const std::shared_ptr<IODevice> &output, bool insert_whitespace) const
 	{
 		auto writer = XmlWriter::create(output);
 		writer->set_insert_whitespace(insert_whitespace);
 
-		std::vector<XmlNodePtr> node_stack;
+		std::vector<std::shared_ptr<XmlNode>> node_stack;
 		auto cur_node = first_child();
 		while (cur_node)
 		{
@@ -500,7 +500,7 @@ namespace uicore
 		}
 	}
 
-	XmlString XmlDocumentImpl::find_namespace_uri(const XmlString &qualified_name, const XmlToken &search_token, const XmlNodePtr &search_node)
+	XmlString XmlDocumentImpl::find_namespace_uri(const XmlString &qualified_name, const XmlToken &search_token, const std::shared_ptr<XmlNode> &search_node)
 	{
 		static XmlString xmlns_prefix("xmlns:");
 		XmlString name = qualified_name;

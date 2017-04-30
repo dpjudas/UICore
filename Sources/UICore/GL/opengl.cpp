@@ -286,7 +286,7 @@ namespace uicore
 		return nullptr;
 	}
 
-	void OpenGL::set_active(const GraphicContextPtr &gc)
+	void OpenGL::set_active(const std::shared_ptr<GraphicContext> &gc)
 	{
 		OpenGLTarget::set_active_context(gc);
 	}
@@ -1469,7 +1469,7 @@ namespace uicore
 		}
 	}
 
-	GLuint OpenGL::get_texture_handle(const TexturePtr &texture)
+	GLuint OpenGL::get_texture_handle(const std::shared_ptr<Texture> &texture)
 	{
 		return static_cast<GL3TextureObject*>(texture->texture_object())->get_handle();
 	}

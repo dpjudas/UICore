@@ -43,7 +43,7 @@ using namespace uicore::PathConstants;
 
 namespace uicore
 {
-	PathFillRenderer::PathFillRenderer(const GraphicContextPtr &gc, RenderBatchBuffer *batch_buffer) : batch_buffer(batch_buffer)
+	PathFillRenderer::PathFillRenderer(const std::shared_ptr<GraphicContext> &gc, RenderBatchBuffer *batch_buffer) : batch_buffer(batch_buffer)
 	{
 		BlendStateDescription blend_desc;
 		blend_desc.set_blend_function(blend_one, blend_one_minus_src_alpha, blend_one, blend_one_minus_src_alpha);
@@ -123,7 +123,7 @@ namespace uicore
 		}
 	}
 
-	void PathFillRenderer::fill(const CanvasPtr &canvas, PathFillMode mode, const Brush &brush, const Mat4f &transform)
+	void PathFillRenderer::fill(const std::shared_ptr<Canvas> &canvas, PathFillMode mode, const Brush &brush, const Mat4f &transform)
 	{
 		if (scanlines.empty()) return;
 
@@ -186,7 +186,7 @@ namespace uicore
 		return extent;
 	}
 
-	void PathFillRenderer::flush(const GraphicContextPtr &gc)
+	void PathFillRenderer::flush(const std::shared_ptr<GraphicContext> &gc)
 	{
 		if (!mask_texture) // Nothing to flush
 			return;
@@ -220,7 +220,7 @@ namespace uicore
 		gc->set_texture(0, mask_texture);
 		gc->set_texture(1, instance_texture);
 
-		Texture2DPtr current_texture = instances.get_texture();
+		std::shared_ptr<Texture2D> current_texture = instances.get_texture();
 
 		if (current_texture)
 			gc->set_texture(2, current_texture);
@@ -242,11 +242,11 @@ namespace uicore
 		instance_texture.reset();
 	}
 
-	void PathFillRenderer::initialise_buffers(const CanvasPtr &canvas)
+	void PathFillRenderer::initialise_buffers(const std::shared_ptr<Canvas> &canvas)
 	{
 		if (!mask_texture)
 		{
-			GraphicContextPtr gc = canvas->gc();
+			std::shared_ptr<GraphicContext> gc = canvas->gc();
 			mask_texture = batch_buffer->get_texture_r8(gc);
 			mask_buffer = batch_buffer->get_transfer_r8(gc, mask_buffer_id);
 			instance_texture = batch_buffer->get_texture_rgba32f(gc);
@@ -572,7 +572,7 @@ namespace uicore
 
 	/////////////////////////////////////////////////////////////////////////
 
-	void PathInstanceBuffer::reset(const GraphicContextPtr &gc, Vec4f *new_buffer, int new_max_entries)
+	void PathInstanceBuffer::reset(const std::shared_ptr<GraphicContext> &gc, Vec4f *new_buffer, int new_max_entries)
 	{
 		buffer = new_buffer;
 		max_entries = new_max_entries;
@@ -583,7 +583,7 @@ namespace uicore
 	}
 
 	// Return 0 when buffer is full or requires flushing, else it is the instance offset
-	int PathInstanceBuffer::push(const CanvasPtr &canvas, const Brush &brush, const Mat4f &transform)
+	int PathInstanceBuffer::push(const std::shared_ptr<Canvas> &canvas, const Brush &brush, const Mat4f &transform)
 	{
 		int instance_position;
 		switch (brush.type)
@@ -626,7 +626,7 @@ namespace uicore
 		return instance_position;
 	}
 
-	int PathInstanceBuffer::store_linear(const CanvasPtr &canvas, const Brush &brush, const Mat4f &transform)
+	int PathInstanceBuffer::store_linear(const std::shared_ptr<Canvas> &canvas, const Brush &brush, const Mat4f &transform)
 	{
 		int num_stops = brush.stops.size();
 		int instance_position = next_position(num_stops * 2 + 3);
@@ -663,7 +663,7 @@ namespace uicore
 		return instance_position;
 	}
 
-	int PathInstanceBuffer::store_radial(const CanvasPtr &canvas, const Brush &brush, const Mat4f &transform)
+	int PathInstanceBuffer::store_radial(const std::shared_ptr<Canvas> &canvas, const Brush &brush, const Mat4f &transform)
 	{
 		int num_stops = brush.stops.size();
 		int instance_position = next_position(num_stops * 2 + 3);
@@ -696,7 +696,7 @@ namespace uicore
 		return instance_position;
 	}
 
-	int PathInstanceBuffer::store_image(const CanvasPtr &canvas, const Brush &brush, const Mat4f &transform)
+	int PathInstanceBuffer::store_image(const std::shared_ptr<Canvas> &canvas, const Brush &brush, const Mat4f &transform)
 	{
 		TextureGroupImage subtexture = brush.image->texture();
 		if (!subtexture)
@@ -736,7 +736,7 @@ namespace uicore
 		return instance_position;
 	}
 
-	int PathInstanceBuffer::store_solid(const CanvasPtr &canvas, const Brush &brush, const Mat4f &transform)
+	int PathInstanceBuffer::store_solid(const std::shared_ptr<Canvas> &canvas, const Brush &brush, const Mat4f &transform)
 	{
 		int instance_position = next_position(2);
 		if (!instance_position)

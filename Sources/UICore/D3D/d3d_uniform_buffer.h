@@ -42,9 +42,9 @@ namespace uicore
 
 		ComPtr<ID3D11Buffer> &get_buffer(const ComPtr<ID3D11Device> &device);
 
-		void upload_data(const GraphicContextPtr &gc, const void *data, int size) override;
-		void copy_from(const GraphicContextPtr &gc, const StagingBufferPtr &buffer, int dest_pos, int src_pos, int size) override;
-		void copy_to(const GraphicContextPtr &gc, const StagingBufferPtr &buffer, int dest_pos, int src_pos, int size) override;
+		void upload_data(const std::shared_ptr<GraphicContext> &gc, const void *data, int size) override;
+		void copy_from(const std::shared_ptr<GraphicContext> &gc, const std::shared_ptr<StagingBuffer> &buffer, int dest_pos, int src_pos, int size) override;
+		void copy_to(const std::shared_ptr<GraphicContext> &gc, const std::shared_ptr<StagingBuffer> &buffer, int dest_pos, int src_pos, int size) override;
 
 	private:
 		struct DeviceHandles

@@ -69,11 +69,9 @@ namespace uicore
 		/// \brief Add
 		///
 		/// \param data = Data Buffer
-		virtual void add(const DataBufferPtr &data) = 0;
+		virtual void add(const std::shared_ptr<DataBuffer> &data) = 0;
 
 		/// \brief Finalize hash calculation.
 		virtual void calculate() = 0;
 	};
-
-	typedef std::shared_ptr<MD5> MD5Ptr;
 }

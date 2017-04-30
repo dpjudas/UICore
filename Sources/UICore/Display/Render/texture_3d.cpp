@@ -32,12 +32,12 @@
 
 namespace uicore
 {
-	std::shared_ptr<Texture3D> Texture3D::create(const GraphicContextPtr &context, int width, int height, int depth, TextureFormat texture_format, int levels)
+	std::shared_ptr<Texture3D> Texture3D::create(const std::shared_ptr<GraphicContext> &context, int width, int height, int depth, TextureFormat texture_format, int levels)
 	{
 		return static_cast<GraphicContextImpl*>(context.get())->create_texture_3d(width, height, depth, texture_format, levels);
 	}
 
-	std::shared_ptr<Texture3D> Texture3D::create(const GraphicContextPtr &context, const Vec3i &size, TextureFormat texture_format, int levels)
+	std::shared_ptr<Texture3D> Texture3D::create(const std::shared_ptr<GraphicContext> &context, const Vec3i &size, TextureFormat texture_format, int levels)
 	{
 		return create(context, size.x, size.y, size.z, texture_format, levels);
 	}

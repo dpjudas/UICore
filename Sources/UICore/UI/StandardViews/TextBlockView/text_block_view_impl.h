@@ -67,7 +67,7 @@ namespace uicore
 
 		int id = -1;
 
-		const FontPtr &get_font()
+		const std::shared_ptr<Font> &get_font()
 		{
 			if (!font)
 				font = style_cascade.font();
@@ -75,7 +75,7 @@ namespace uicore
 		}
 
 	private:
-		FontPtr font;
+		std::shared_ptr<Font> font;
 		std::shared_ptr<Style> style;
 	};
 
@@ -109,20 +109,20 @@ namespace uicore
 		void set_last_baseline_offset(float baseline_offset);
 		void remove_child(const std::shared_ptr<View> &view);
 
-		void render_content(const CanvasPtr &canvas, float width);
-		void layout_views(const CanvasPtr &canvas, float width);
+		void render_content(const std::shared_ptr<Canvas> &canvas, float width);
+		void layout_views(const std::shared_ptr<Canvas> &canvas, float width);
 
-		float preferred_width(const CanvasPtr &canvas);
-		float preferred_height(const CanvasPtr &canvas, float width);
-		float first_baseline_offset(const CanvasPtr &canvas, float width);
-		float last_baseline_offset(const CanvasPtr &canvas, float width);
+		float preferred_width(const std::shared_ptr<Canvas> &canvas);
+		float preferred_height(const std::shared_ptr<Canvas> &canvas, float width);
+		float first_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width);
+		float last_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width);
 
 		void set_text_alignment(TextAlignment alignment);
 
 		mutable std::map<std::string, std::shared_ptr<Style>> text_classes;
 
 	private:
-		SpanLineMetrics find_line_metrics(const CanvasPtr &canvas, size_t obj_start, size_t text_start, float width);
+		SpanLineMetrics find_line_metrics(const std::shared_ptr<Canvas> &canvas, size_t obj_start, size_t text_start, float width);
 
 		std::string text;
 		std::vector<SpanObject> objects;

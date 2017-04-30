@@ -43,9 +43,9 @@ namespace uicore
 
 		void *data() override { return data_ptr; }
 
-		void lock(const GraphicContextPtr &gc, BufferAccess access) override {}
+		void lock(const std::shared_ptr<GraphicContext> &gc, BufferAccess access) override {}
 		void unlock() override {}
-		void upload_data(const GraphicContextPtr &gc, int offset, const void *data, int size) override;
+		void upload_data(const std::shared_ptr<GraphicContext> &gc, int offset, const void *data, int size) override;
 
 	private:
 		char *data_ptr = nullptr;

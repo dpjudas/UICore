@@ -1065,7 +1065,7 @@ namespace uicore
 		return false;
 	}
 
-	void Win32Window::set_clipboard_image(const PixelBufferPtr &image)
+	void Win32Window::set_clipboard_image(const std::shared_ptr<PixelBuffer> &image)
 	{
 		BOOL result = OpenClipboard(hwnd);
 		if (result == FALSE)
@@ -1085,12 +1085,12 @@ namespace uicore
 	}
 
 
-	void Win32Window::add_png_to_clipboard(const PixelBufferPtr &image)
+	void Win32Window::add_png_to_clipboard(const std::shared_ptr<PixelBuffer> &image)
 	{
 		auto png_data_buf = DataBuffer::create(1024*8);
 		auto iodev_mem = MemoryDevice::open(png_data_buf);
 		PNGFormat::save(image, iodev_mem);
-		DataBufferPtr png_data = iodev_mem->buffer();
+		std::shared_ptr<DataBuffer> png_data = iodev_mem->buffer();
 
 		unsigned int length = png_data->size();
 		HANDLE handle = GlobalAlloc(GMEM_MOVEABLE, length);
@@ -1122,9 +1122,9 @@ namespace uicore
 		}
 	}
 
-	void Win32Window::add_dib_to_clipboard(const PixelBufferPtr &image)
+	void Win32Window::add_dib_to_clipboard(const std::shared_ptr<PixelBuffer> &image)
 	{
-		PixelBufferPtr bmp_image = create_bitmap_data(image, image->size());
+		std::shared_ptr<PixelBuffer> bmp_image = create_bitmap_data(image, image->size());
 
 		unsigned int length = sizeof(BITMAPV5HEADER) + bmp_image->pitch() * bmp_image->height();
 		HANDLE handle = GlobalAlloc(GMEM_MOVEABLE, length);
@@ -1167,7 +1167,7 @@ namespace uicore
 		}
 	}
 
-	PixelBufferPtr Win32Window::create_bitmap_data(const PixelBufferPtr &image, const Rect &rect)
+	std::shared_ptr<PixelBuffer> Win32Window::create_bitmap_data(const std::shared_ptr<PixelBuffer> &image, const Rect &rect)
 	{
 		if (rect.left < 0 || rect.top < 0 || rect.right > image->width(), rect.bottom > image->height())
 			throw Exception("Rectangle passed to Win32Window::create_bitmap_data() out of bounds");
@@ -1209,9 +1209,9 @@ namespace uicore
 		return bmp_image;
 	}
 
-	HBITMAP Win32Window::create_bitmap(HDC hdc, const PixelBufferPtr &image)
+	HBITMAP Win32Window::create_bitmap(HDC hdc, const std::shared_ptr<PixelBuffer> &image)
 	{
-		PixelBufferPtr bmp_image = create_bitmap_data(image, image->size());
+		std::shared_ptr<PixelBuffer> bmp_image = create_bitmap_data(image, image->size());
 
 		BITMAPV5HEADER bmp_header;
 		memset(&bmp_header, 0, sizeof(BITMAPV5HEADER));
@@ -1226,7 +1226,7 @@ namespace uicore
 		return bitmap;
 	}
 
-	HICON Win32Window::create_icon(const PixelBufferPtr &image) const
+	HICON Win32Window::create_icon(const std::shared_ptr<PixelBuffer> &image) const
 	{
 		HDC hdc = GetDC(hwnd);
 		HBITMAP bitmap = create_bitmap(hdc, image);
@@ -1273,7 +1273,7 @@ namespace uicore
 		pixel_ratio = ratio;
 	}
 
-	PixelBufferPtr Win32Window::get_clipboard_image() const
+	std::shared_ptr<PixelBuffer> Win32Window::get_clipboard_image() const
 	{
 		BOOL result = OpenClipboard(hwnd);
 		if (result == FALSE)
@@ -1304,7 +1304,7 @@ namespace uicore
 				uint8_t *data = reinterpret_cast<uint8_t *>(GlobalLock(handle));
 				size_t size = GlobalSize(handle);
 
-				PixelBufferPtr image = get_argb8888_from_png(data, size);
+				std::shared_ptr<PixelBuffer> image = get_argb8888_from_png(data, size);
 
 				GlobalUnlock(handle);
 				CloseClipboard();
@@ -1319,7 +1319,7 @@ namespace uicore
 				BITMAPV5HEADER *data = reinterpret_cast<BITMAPV5HEADER*>(GlobalLock(handle));
 				size_t size = GlobalSize(handle);
 
-				PixelBufferPtr image;
+				std::shared_ptr<PixelBuffer> image;
 				if (data->bV5Compression == BI_RGB)
 					image = get_argb8888_from_rgb_dib(data, size);
 				else if (data->bV5Compression == BI_BITFIELDS)
@@ -1332,10 +1332,10 @@ namespace uicore
 		}
 
 		CloseClipboard();
-		return PixelBufferPtr();
+		return std::shared_ptr<PixelBuffer>();
 	}
 
-	PixelBufferPtr Win32Window::get_argb8888_from_rgb_dib(BITMAPV5HEADER *bitmapInfo, size_t size) const
+	std::shared_ptr<PixelBuffer> Win32Window::get_argb8888_from_rgb_dib(BITMAPV5HEADER *bitmapInfo, size_t size) const
 	{
 		size_t offsetBitmapBits = bitmapInfo->bV5Size + bitmapInfo->bV5ClrUsed * sizeof(RGBQUAD);
 		char *bitmapBits = reinterpret_cast<char*>(bitmapInfo)+offsetBitmapBits;
@@ -1395,7 +1395,7 @@ namespace uicore
 	}
 
 
-	PixelBufferPtr Win32Window::get_argb8888_from_bitfields_dib(BITMAPV5HEADER *bitmapInfo, size_t size) const
+	std::shared_ptr<PixelBuffer> Win32Window::get_argb8888_from_bitfields_dib(BITMAPV5HEADER *bitmapInfo, size_t size) const
 	{
 		size_t offsetBitmapBits = bitmapInfo->bV5Size + 3 * sizeof(DWORD);
 		char *bitmapBits = reinterpret_cast<char*>(bitmapInfo)+offsetBitmapBits;
@@ -1456,7 +1456,7 @@ namespace uicore
 		return pixelbuffer;
 	}
 
-	void Win32Window::flip_pixelbuffer_vertical(const PixelBufferPtr &pbuf) const
+	void Win32Window::flip_pixelbuffer_vertical(const std::shared_ptr<PixelBuffer> &pbuf) const
 	{
 		uint8_t *data = (uint8_t*)pbuf->data();
 
@@ -1474,7 +1474,7 @@ namespace uicore
 		}
 	}
 
-	PixelBufferPtr Win32Window::get_argb8888_from_png(uint8_t *data, size_t size) const
+	std::shared_ptr<PixelBuffer> Win32Window::get_argb8888_from_png(uint8_t *data, size_t size) const
 	{
 		auto data_buffer = DataBuffer::create(data, size);
 		auto iodev = MemoryDevice::open(data_buffer);
@@ -1488,7 +1488,7 @@ namespace uicore
 		png_clipboard_format = RegisterClipboardFormat(png_format_str);
 	}
 
-	void Win32Window::set_large_icon(const PixelBufferPtr &image)
+	void Win32Window::set_large_icon(const std::shared_ptr<PixelBuffer> &image)
 	{
 		if (large_icon)
 			DestroyIcon(large_icon);
@@ -1498,7 +1498,7 @@ namespace uicore
 		SendMessage(hwnd, WM_SETICON, ICON_BIG, reinterpret_cast<LPARAM>(large_icon));
 	}
 
-	void Win32Window::set_small_icon(const PixelBufferPtr &image)
+	void Win32Window::set_small_icon(const std::shared_ptr<PixelBuffer> &image)
 	{
 		if (small_icon)
 			DestroyIcon(small_icon);
@@ -1752,7 +1752,7 @@ namespace uicore
 		return window_rect;
 	}
 
-	void Win32Window::update_layered(PixelBufferPtr &image)
+	void Win32Window::update_layered(std::shared_ptr<PixelBuffer> &image)
 	{
 		if (!update_window_worker_thread_started)
 		{

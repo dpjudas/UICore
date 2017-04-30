@@ -38,7 +38,7 @@
 
 namespace uicore
 {
-	RenderBatchPath::RenderBatchPath(const GraphicContextPtr &gc, RenderBatchBuffer *batch_buffer) : batch_buffer(batch_buffer), fill_renderer(gc, batch_buffer), stroke_renderer(gc)
+	RenderBatchPath::RenderBatchPath(const std::shared_ptr<GraphicContext> &gc, RenderBatchBuffer *batch_buffer) : batch_buffer(batch_buffer), fill_renderer(gc, batch_buffer), stroke_renderer(gc)
 	{
 	}
 
@@ -49,7 +49,7 @@ namespace uicore
 			modelview_matrix.matrix[0 * 4 + 1] * point.x + modelview_matrix.matrix[1 * 4 + 1] * point.y + modelview_matrix.matrix[3 * 4 + 1]);
 	}
 
-	void RenderBatchPath::fill(const CanvasPtr &canvas, const PathImpl &path, const Brush &brush)
+	void RenderBatchPath::fill(const std::shared_ptr<Canvas> &canvas, const PathImpl &path, const Brush &brush)
 	{
 		static_cast<CanvasImpl*>(canvas.get())->set_batcher(this);
 
@@ -58,7 +58,7 @@ namespace uicore
 		fill_renderer.fill(canvas, path.fill_mode(), brush, modelview_matrix);
 	}
 
-	void RenderBatchPath::stroke(const CanvasPtr &canvas, const PathImpl &path, const Pen &pen)
+	void RenderBatchPath::stroke(const std::shared_ptr<Canvas> &canvas, const PathImpl &path, const Pen &pen)
 	{
 		static_cast<CanvasImpl*>(canvas.get())->set_batcher(this);
 
@@ -66,7 +66,7 @@ namespace uicore
 		render(path, &stroke_renderer);
 	}
 
-	void RenderBatchPath::flush(const GraphicContextPtr &gc)
+	void RenderBatchPath::flush(const std::shared_ptr<GraphicContext> &gc)
 	{
 		fill_renderer.flush(gc);
 	}

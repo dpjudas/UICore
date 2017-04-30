@@ -147,21 +147,21 @@ namespace uicore
 			}
 		}
 
-		RasterizerStatePtr default_rasterizer_state()
+		std::shared_ptr<RasterizerState> default_rasterizer_state()
 		{
 			if (!_default_rasterizer_state)
 				_default_rasterizer_state = create_rasterizer_state(RasterizerStateDescription());
 			return _default_rasterizer_state;
 		}
 
-		BlendStatePtr default_blend_state()
+		std::shared_ptr<BlendState> default_blend_state()
 		{
 			if (!_default_blend_state)
 				_default_blend_state = create_blend_state(BlendStateDescription());
 			return _default_blend_state;
 		}
 
-		DepthStencilStatePtr default_depth_stencil_state()
+		std::shared_ptr<DepthStencilState> default_depth_stencil_state()
 		{
 			if (!_default_depth_stencil_state)
 				_default_depth_stencil_state = create_depth_stencil_state(DepthStencilStateDescription());
@@ -178,9 +178,9 @@ namespace uicore
 		}
 
 	private:
-		RasterizerStatePtr _default_rasterizer_state;
-		BlendStatePtr _default_blend_state;
-		DepthStencilStatePtr _default_depth_stencil_state;
+		std::shared_ptr<RasterizerState> _default_rasterizer_state;
+		std::shared_ptr<BlendState> _default_blend_state;
+		std::shared_ptr<DepthStencilState> _default_depth_stencil_state;
 
 		Slot resize_slot;
 	};

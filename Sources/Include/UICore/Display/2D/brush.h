@@ -96,7 +96,7 @@ namespace uicore
 		float radius_y = 0.0f;
 
 		// Texture
-		ImagePtr image;
+		std::shared_ptr<Image> image;
 		BrushWrapMode wrap_x = BrushWrapMode::wrap;
 		BrushWrapMode wrap_y = BrushWrapMode::wrap;
 		BrushInterpolateMode interpolate = BrushInterpolateMode::linear;

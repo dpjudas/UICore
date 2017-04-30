@@ -290,7 +290,7 @@ namespace uicore
 			recv_in_data_read_pos = 0;
 		}
 
-		DataBufferPtr plaintext;
+		std::shared_ptr<DataBuffer> plaintext;
 		if (security_parameters.is_receive_encrypted)
 			plaintext = decrypt_record(record, record_data_buffer);
 		else
@@ -327,7 +327,7 @@ namespace uicore
 		return true;
 	}
 
-	void TLSClient_Impl::change_cipher_spec_data(DataBufferPtr record_plaintext)
+	void TLSClient_Impl::change_cipher_spec_data(std::shared_ptr<DataBuffer> record_plaintext)
 	{
 		if (conversation_state != cl_tls_state_receive_change_cipher_spec)
 			throw Exception("Unexpected TLS change cipher record received");
@@ -346,7 +346,7 @@ namespace uicore
 		conversation_state = cl_tls_state_receive_finished;
 	}
 
-	void TLSClient_Impl::alert_data(DataBufferPtr record_plaintext)
+	void TLSClient_Impl::alert_data(std::shared_ptr<DataBuffer> record_plaintext)
 	{
 		if (record_plaintext->size() != 2) // To do: theoretically this is not safe - it could be split into two 1 byte records.
 			throw Exception("Invalid TLS content alert message");
@@ -457,7 +457,7 @@ namespace uicore
 		throw Exception(string);
 	}
 
-	void TLSClient_Impl::handshake_data(DataBufferPtr record_plaintext)
+	void TLSClient_Impl::handshake_data(std::shared_ptr<DataBuffer> record_plaintext)
 	{
 		// Copy handshake data into input buffer for easier processing:
 		// "RFC 2246 (5.2.1) multiple client messages of the same ContentType may be coalesced into a single TLSPlaintext record"
@@ -533,7 +533,7 @@ namespace uicore
 		}
 	}
 
-	void TLSClient_Impl::application_data(DataBufferPtr record_plaintext)
+	void TLSClient_Impl::application_data(std::shared_ptr<DataBuffer> record_plaintext)
 	{
 		if (conversation_state != cl_tls_state_connected)
 			throw Exception("Unexpected application data record received");
@@ -744,7 +744,7 @@ namespace uicore
 			const unsigned char *input_ptr = (const unsigned char *) data_ptr + sizeof(TLS_Record);
 			unsigned int input_size = data_size - sizeof(TLS_Record);
 			auto mac = calculate_mac(data_ptr, data_size, nullptr, 0, security_parameters.write_sequence_number, security_parameters.client_write_mac_secret);	// MAC includes the header and sequence number
-			DataBufferPtr encrypted = encrypt_data(input_ptr , input_size, mac->data(), mac->size());
+			std::shared_ptr<DataBuffer> encrypted = encrypt_data(input_ptr , input_size, mac->data(), mac->size());
 
 			// Update the length
 			int new_length = encrypted->size();
@@ -837,7 +837,7 @@ namespace uicore
 
 	}
 
-	void TLSClient_Impl::set_tls_random(unsigned char *dest_ptr, SecretPtr &time_and_random_struct) const
+	void TLSClient_Impl::set_tls_random(unsigned char *dest_ptr, std::shared_ptr<Secret> &time_and_random_struct) const
 	{
 		memcpy(dest_ptr, time_and_random_struct->data(), time_and_random_struct->size());
 	}
@@ -1011,7 +1011,7 @@ namespace uicore
 		pms_ptr[0] = protocol.major;	// Version number
 		pms_ptr[1] = protocol.minor;
 
-		DataBufferPtr wrapped_pre_master_secret = RSA::encrypt(2, *m_Random, server_public_exponent,  server_public_modulus, pre_master_secret);
+		std::shared_ptr<DataBuffer> wrapped_pre_master_secret = RSA::encrypt(2, *m_Random, server_public_exponent,  server_public_modulus, pre_master_secret);
 
 		PRF(security_parameters.master_secret->data(), security_parameters.master_secret->size(), pre_master_secret, "master secret", security_parameters.client_random, security_parameters.server_random);
 
@@ -1070,7 +1070,7 @@ namespace uicore
 		return true;
 	}
 
-	void TLSClient_Impl::PRF(void *output_ptr, unsigned int output_size, const SecretPtr &secret, const char *label_ptr, const SecretPtr &seed_part1, const SecretPtr &seed_part2)
+	void TLSClient_Impl::PRF(void *output_ptr, unsigned int output_size, const std::shared_ptr<Secret> &secret, const char *label_ptr, const std::shared_ptr<Secret> &seed_part1, const std::shared_ptr<Secret> &seed_part2)
 	{
 		const uint8_t *secret_part1 = secret->data();
 		int secret_length = secret->size();
@@ -1225,12 +1225,12 @@ namespace uicore
 		return true;
 	}
 
-	DataBufferPtr TLSClient_Impl::encrypt_data(const void *data_ptr, unsigned int data_size, const void *mac_ptr, unsigned int mac_size)
+	std::shared_ptr<DataBuffer> TLSClient_Impl::encrypt_data(const void *data_ptr, unsigned int data_size, const void *mac_ptr, unsigned int mac_size)
 	{
 		int additional_unpadded_blocks;
 		m_Random->random_bool() ? additional_unpadded_blocks = 1 : additional_unpadded_blocks = 0;
 
-		DataBufferPtr buffer;
+		std::shared_ptr<DataBuffer> buffer;
 		if (security_parameters.bulk_cipher_algorithm == cl_tls_cipher_algorithm_aes128)
 		{
 			auto encrypt = AES128_Encrypt::create();
@@ -1262,7 +1262,7 @@ namespace uicore
 
 	}
 
-	SecretPtr TLSClient_Impl::calculate_mac(const void *data_ptr, unsigned int data_size, const void *data2_ptr, unsigned int data2_size, uint64_t sequence_number, const SecretPtr &mac_secret)
+	std::shared_ptr<Secret> TLSClient_Impl::calculate_mac(const void *data_ptr, unsigned int data_size, const void *data2_ptr, unsigned int data2_size, uint64_t sequence_number, const std::shared_ptr<Secret> &mac_secret)
 	{
 		unsigned char sequence_number_buffer[8];
 
@@ -1317,9 +1317,9 @@ namespace uicore
 		server_handshake_sha1_hash->add(data_ptr, data_size);
 	}
 
-	DataBufferPtr TLSClient_Impl::decrypt_data(const void *data_ptr, unsigned int data_size)
+	std::shared_ptr<DataBuffer> TLSClient_Impl::decrypt_data(const void *data_ptr, unsigned int data_size)
 	{
-		DataBufferPtr buffer;
+		std::shared_ptr<DataBuffer> buffer;
 		if (security_parameters.bulk_cipher_algorithm == cl_tls_cipher_algorithm_aes128)
 		{
 			auto decrypt = AES128_Decrypt::create();
@@ -1351,9 +1351,9 @@ namespace uicore
 
 	}
 
-	DataBufferPtr TLSClient_Impl::decrypt_record(TLS_Record &record, const DataBufferPtr &record_data)
+	std::shared_ptr<DataBuffer> TLSClient_Impl::decrypt_record(TLS_Record &record, const std::shared_ptr<DataBuffer> &record_data)
 	{
-		DataBufferPtr decrypted = decrypt_data(record_data->data(), record_data->size());
+		std::shared_ptr<DataBuffer> decrypted = decrypt_data(record_data->data(), record_data->size());
 
 		unsigned char *decrypted_data = (unsigned char *) decrypted->data();
 

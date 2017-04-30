@@ -40,14 +40,14 @@ namespace uicore
 	class RenderBatchBuffer
 	{
 	public:
-		RenderBatchBuffer(const GraphicContextPtr &gc);
+		RenderBatchBuffer(const std::shared_ptr<GraphicContext> &gc);
 
-		VertexArrayBufferPtr get_vertex_buffer(const GraphicContextPtr &gc, int &out_index);
-		Texture2DPtr get_texture_rgba32f(const GraphicContextPtr &gc);
-		Texture2DPtr get_texture_r8(const GraphicContextPtr &gc);
-		StagingTexturePtr get_transfer_rgba32f(const GraphicContextPtr &gc);
+		std::shared_ptr<VertexArrayBuffer> get_vertex_buffer(const std::shared_ptr<GraphicContext> &gc, int &out_index);
+		std::shared_ptr<Texture2D> get_texture_rgba32f(const std::shared_ptr<GraphicContext> &gc);
+		std::shared_ptr<Texture2D> get_texture_r8(const std::shared_ptr<GraphicContext> &gc);
+		std::shared_ptr<StagingTexture> get_transfer_rgba32f(const std::shared_ptr<GraphicContext> &gc);
 
-		StagingTexturePtr get_transfer_r8(const GraphicContextPtr &gc, int &out_index);
+		std::shared_ptr<StagingTexture> get_transfer_r8(const std::shared_ptr<GraphicContext> &gc, int &out_index);
 		static const int num_vertex_buffers = 4;
 		enum { vertex_buffer_size = 1024 * 1024 };
 		char buffer[vertex_buffer_size];
@@ -59,18 +59,18 @@ namespace uicore
 		static const int num_r8_buffers = 2;
 
 	private:
-		VertexArrayBufferPtr vertex_buffers[num_vertex_buffers];
+		std::shared_ptr<VertexArrayBuffer> vertex_buffers[num_vertex_buffers];
 		int current_vertex_buffer = 0;
 
-		Texture2DPtr textures_rgba32f[num_rgba32f_buffers];
+		std::shared_ptr<Texture2D> textures_rgba32f[num_rgba32f_buffers];
 		int current_rgba32f_texture = 0;
 
-		Texture2DPtr textures_r8[num_r8_buffers];
+		std::shared_ptr<Texture2D> textures_r8[num_r8_buffers];
 		int current_r8_texture = 0;
 
-		StagingTexturePtr transfers_rgba32f[num_rgba32f_buffers];
+		std::shared_ptr<StagingTexture> transfers_rgba32f[num_rgba32f_buffers];
 		int current_rgba32f_transfer = 0;
-		StagingTexturePtr transfers_r8[num_r8_buffers];
+		std::shared_ptr<StagingTexture> transfers_r8[num_r8_buffers];
 		int current_r8_transfer = 0;
 	};
 }

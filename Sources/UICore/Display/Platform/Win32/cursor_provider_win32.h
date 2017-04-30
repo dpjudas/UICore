@@ -35,7 +35,6 @@
 namespace uicore
 {
 	class PixelBuffer;
-	typedef std::shared_ptr<PixelBuffer> PixelBufferPtr;
 	class Point;
 	class Rect;
 	class CursorDescription;
@@ -50,11 +49,11 @@ namespace uicore
 
 	private:
 		static HCURSOR create_cursor(const CursorDescription &cursor_description);
-		static DataBufferPtr create_ico_file(const PixelBufferPtr &image);
-		static DataBufferPtr create_cur_file(const PixelBufferPtr &image, const Rect &rect, const Point &hotspot);
-		static DataBufferPtr create_ani_file(const CursorDescription &cursor_description);
-		static DataBufferPtr create_ico_helper(const PixelBufferPtr &image, const Rect &rect, WORD type, const Point &hotspot);
-		static DataBufferPtr create_ico_helper(const std::vector<PixelBufferPtr> &images, const std::vector<Rect> &rect, WORD type, const std::vector<Point> &hotspots);
+		static std::shared_ptr<DataBuffer> create_ico_file(const std::shared_ptr<PixelBuffer> &image);
+		static std::shared_ptr<DataBuffer> create_cur_file(const std::shared_ptr<PixelBuffer> &image, const Rect &rect, const Point &hotspot);
+		static std::shared_ptr<DataBuffer> create_ani_file(const CursorDescription &cursor_description);
+		static std::shared_ptr<DataBuffer> create_ico_helper(const std::shared_ptr<PixelBuffer> &image, const Rect &rect, WORD type, const Point &hotspot);
+		static std::shared_ptr<DataBuffer> create_ico_helper(const std::vector<std::shared_ptr<PixelBuffer>> &images, const std::vector<Rect> &rect, WORD type, const std::vector<Point> &hotspots);
 		static void set_riff_header(char *data, const char *type, DWORD size);
 
 		struct ANIHeader
@@ -144,7 +143,7 @@ namespace uicore
 				}
 			}
 
-			std::vector<DataBufferPtr> icons;
+			std::vector<std::shared_ptr<DataBuffer>> icons;
 		};
 
 		enum { size_header = 6, size_direntry = 16 };

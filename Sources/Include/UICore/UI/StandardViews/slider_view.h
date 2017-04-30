@@ -67,7 +67,7 @@ namespace uicore
 
 		Signal<void()> &sig_value_changed();
 
-		void layout_children(const CanvasPtr &canvas) override;
+		void layout_children(const std::shared_ptr<Canvas> &canvas) override;
 
 	private:
 		std::shared_ptr<SliderBaseViewImpl> impl;

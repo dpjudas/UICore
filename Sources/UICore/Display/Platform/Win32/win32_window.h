@@ -78,9 +78,9 @@ namespace uicore
 		bool is_clipboard_image_available() const;
 		bool is_layered() const { return window_desc.is_layered(); }
 
-		const InputDevicePtr &get_keyboard() const { return keyboard; }
-		const InputDevicePtr &get_mouse() const { return mouse; }
-		const std::vector<InputDevicePtr> &get_game_controllers() const { return joysticks; }
+		const std::shared_ptr<InputDevice> &get_keyboard() const { return keyboard; }
+		const std::shared_ptr<InputDevice> &get_mouse() const { return mouse; }
+		const std::vector<std::shared_ptr<InputDevice>> &get_game_controllers() const { return joysticks; }
 
 	public:
 		void create(DisplayWindowProvider *site, const DisplayWindowDescription &description, bool no_redirection_bitmap);
@@ -94,8 +94,8 @@ namespace uicore
 		void hide_system_cursor();
 		void set_cursor_handle(HCURSOR cursor);
 
-		void set_large_icon(const PixelBufferPtr &image);
-		void set_small_icon(const PixelBufferPtr &image);
+		void set_large_icon(const std::shared_ptr<PixelBuffer> &image);
+		void set_small_icon(const std::shared_ptr<PixelBuffer> &image);
 
 		void set_title(const std::string &new_title);
 		void set_enabled(bool enable);
@@ -121,18 +121,18 @@ namespace uicore
 
 		void set_clipboard_text(const std::string &text);
 		std::string get_clipboard_text() const;
-		PixelBufferPtr get_clipboard_image() const;
-		void set_clipboard_image(const PixelBufferPtr &image);
-		static PixelBufferPtr create_bitmap_data(const PixelBufferPtr &image, const Rect &rect);
+		std::shared_ptr<PixelBuffer> get_clipboard_image() const;
+		void set_clipboard_image(const std::shared_ptr<PixelBuffer> &image);
+		static std::shared_ptr<PixelBuffer> create_bitmap_data(const std::shared_ptr<PixelBuffer> &image, const Rect &rect);
 
-		static HBITMAP create_bitmap(HDC hdc, const PixelBufferPtr &image);
-		HICON create_icon(const PixelBufferPtr &image) const;
+		static HBITMAP create_bitmap(HDC hdc, const std::shared_ptr<PixelBuffer> &image);
+		HICON create_icon(const std::shared_ptr<PixelBuffer> &image) const;
 
 		void request_repaint();
 
 		void set_modifier_keys(InputEvent &key);
 
-		void update_layered(PixelBufferPtr &image);
+		void update_layered(std::shared_ptr<PixelBuffer> &image);
 
 		void set_allow_drop_shadow(bool value) { allow_dropshadow = value; }
 
@@ -174,13 +174,13 @@ namespace uicore
 
 		void create_hid_devices();
 
-		PixelBufferPtr get_argb8888_from_png(uint8_t *data, size_t size) const;
-		PixelBufferPtr get_argb8888_from_rgb_dib(BITMAPV5HEADER *bitmapInfo, size_t size) const;
-		PixelBufferPtr get_argb8888_from_bitfields_dib(BITMAPV5HEADER *bitmapInfo, size_t size) const;
+		std::shared_ptr<PixelBuffer> get_argb8888_from_png(uint8_t *data, size_t size) const;
+		std::shared_ptr<PixelBuffer> get_argb8888_from_rgb_dib(BITMAPV5HEADER *bitmapInfo, size_t size) const;
+		std::shared_ptr<PixelBuffer> get_argb8888_from_bitfields_dib(BITMAPV5HEADER *bitmapInfo, size_t size) const;
 
-		void flip_pixelbuffer_vertical(const PixelBufferPtr &pbuf) const;
-		void add_png_to_clipboard(const PixelBufferPtr &image);
-		void add_dib_to_clipboard(const PixelBufferPtr &image);
+		void flip_pixelbuffer_vertical(const std::shared_ptr<PixelBuffer> &pbuf) const;
+		void add_png_to_clipboard(const std::shared_ptr<PixelBuffer> &image);
+		void add_dib_to_clipboard(const std::shared_ptr<PixelBuffer> &image);
 		void register_clipboard_formats();
 
 		InputDeviceProvider_Win32Keyboard *get_keyboard_provider();
@@ -193,8 +193,8 @@ namespace uicore
 		HICON small_icon;
 		bool cursor_set, cursor_hidden;
 		DisplayWindowProvider *site;
-		InputDevicePtr keyboard, mouse;
-		std::vector<InputDevicePtr> joysticks;
+		std::shared_ptr<InputDevice> keyboard, mouse;
+		std::vector<std::shared_ptr<InputDevice>> joysticks;
 		Point mouse_pos;
 		std::map<int, int> repeat_count;
 		std::function<void()> callback_on_resized;
@@ -215,7 +215,7 @@ namespace uicore
 
 		std::thread update_window_worker_thread;
 		bool update_window_worker_thread_started;
-		PixelBufferPtr update_window_image;
+		std::shared_ptr<PixelBuffer> update_window_image;
 		bool update_window_stop_flag = false;
 		bool update_window_start_flag = false;
 		bool update_window_completed_flag = false;

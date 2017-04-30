@@ -34,12 +34,12 @@
 
 namespace uicore
 {
-	std::shared_ptr<StagingBuffer> StagingBuffer::create(const GraphicContextPtr &gc, int size, BufferUsage usage)
+	std::shared_ptr<StagingBuffer> StagingBuffer::create(const std::shared_ptr<GraphicContext> &gc, int size, BufferUsage usage)
 	{
 		return static_cast<GraphicContextImpl*>(gc.get())->create_staging_buffer(size, usage);
 	}
 
-	std::shared_ptr<StagingBuffer> StagingBuffer::create(const GraphicContextPtr &gc, const void *data, int size, BufferUsage usage)
+	std::shared_ptr<StagingBuffer> StagingBuffer::create(const std::shared_ptr<GraphicContext> &gc, const void *data, int size, BufferUsage usage)
 	{
 		return static_cast<GraphicContextImpl*>(gc.get())->create_staging_buffer(data, size, usage);
 	}

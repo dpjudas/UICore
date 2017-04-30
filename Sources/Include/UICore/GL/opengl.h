@@ -88,7 +88,7 @@ namespace uicore
 		static TextureFormat_GL textureformat(TextureFormat format);
 
 		/// \brief Sets the thread's OpenGL context to the one used by the graphic context.
-		static void set_active(const GraphicContextPtr &gc);
+		static void set_active(const std::shared_ptr<GraphicContext> &gc);
 
 		/// \brief Sets the thread's OpenGL context to the one used by the graphic context.
 		static void set_active(const OpenGLContextProvider * const gc_provider);
@@ -114,7 +114,7 @@ namespace uicore
 		static std::vector<MessageLog_GL> get_message_log(GLuint numMsgs);
 
 		/// \brief Returns the OpenGL texture handle
-		static GLuint get_texture_handle(const TexturePtr &texture);
+		static GLuint get_texture_handle(const std::shared_ptr<Texture> &texture);
 
 		static GLenum to_enum(DrawBuffer buf);
 		static GLenum to_enum(CompareFunction func);

@@ -87,7 +87,7 @@ namespace uicore
 		return (status != GL_FALSE);
 	}
 
-	std::vector<ShaderObjectPtr> GL3ProgramObject::shaders() const
+	std::vector<std::shared_ptr<ShaderObject>> GL3ProgramObject::shaders() const
 	{
 		throw_if_disposed();
 		return _shaders;
@@ -164,7 +164,7 @@ namespace uicore
 		return glGetProgramResourceIndex(handle, GL_SHADER_STORAGE_BLOCK, name.c_str());
 	}
 
-	void GL3ProgramObject::attach(const ShaderObjectPtr &obj)
+	void GL3ProgramObject::attach(const std::shared_ptr<ShaderObject> &obj)
 	{
 		throw_if_disposed();
 		_shaders.push_back(obj);
@@ -172,7 +172,7 @@ namespace uicore
 		glAttachShader(handle, (GLuint)static_cast<GL3ShaderObject*>(obj.get())->get_handle());
 	}
 
-	void GL3ProgramObject::detach(const ShaderObjectPtr &obj)
+	void GL3ProgramObject::detach(const std::shared_ptr<ShaderObject> &obj)
 	{
 		throw_if_disposed();
 		for (std::vector<ShaderObject>::size_type i = 0; i < _shaders.size(); i++)

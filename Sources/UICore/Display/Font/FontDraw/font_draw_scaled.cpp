@@ -51,12 +51,12 @@ namespace uicore
 		scaled_height = new_scaled_height;
 	}
 
-	GlyphMetrics Font_DrawScaled::get_metrics(const CanvasPtr &canvas, unsigned int glyph)
+	GlyphMetrics Font_DrawScaled::get_metrics(const std::shared_ptr<Canvas> &canvas, unsigned int glyph)
 	{
 		return glyph_cache->get_metrics(font_engine, canvas, glyph);
 	}
 
-	void Font_DrawScaled::draw_text(const CanvasPtr &canvas, const Pointf &position, const std::string &text, const Colorf &color, float line_spacing)
+	void Font_DrawScaled::draw_text(const std::shared_ptr<Canvas> &canvas, const Pointf &position, const std::string &text, const Colorf &color, float line_spacing)
 	{
 		float offset_x = 0;
 		float offset_y = 0;

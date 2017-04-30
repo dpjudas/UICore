@@ -44,7 +44,7 @@
 
 namespace uicore
 {
-	Font_Impl::Font_Impl(const FontFamilyPtr &new_font_family, const FontDescription &description)
+	Font_Impl::Font_Impl(const std::shared_ptr<FontFamily> &new_font_family, const FontDescription &description)
 	{
 		font_family = std::static_pointer_cast<FontFamily_Impl>(new_font_family);
 
@@ -52,7 +52,7 @@ namespace uicore
 		selected_line_height = description.line_height();
 	}
 
-	void Font_Impl::select_font_family(const CanvasPtr &canvas)
+	void Font_Impl::select_font_family(const std::shared_ptr<Canvas> &canvas)
 	{
 		float pixel_ratio = canvas->gc()->pixel_ratio();
 		if (pixel_ratio == 0.0f)
@@ -131,7 +131,7 @@ namespace uicore
 	{
 	}
 
-	int Font_Impl::character_index(const CanvasPtr &canvas, const std::string &text, const Pointf &point)
+	int Font_Impl::character_index(const std::shared_ptr<Canvas> &canvas, const std::string &text, const Pointf &point)
 	{
 		select_font_family(canvas);
 
@@ -183,7 +183,7 @@ namespace uicore
 		return -1;	// Not found
 	}
 
-	std::vector<Rectf> Font_Impl::character_indices(const CanvasPtr &canvas, const std::string &text)
+	std::vector<Rectf> Font_Impl::character_indices(const std::shared_ptr<Canvas> &canvas, const std::string &text)
 	{
 		select_font_family(canvas);
 		std::vector<Rectf> index_store;
@@ -229,19 +229,19 @@ namespace uicore
 		return index_store;
 	}
 
-	const FontMetrics &Font_Impl::font_metrics(const CanvasPtr &canvas)
+	const FontMetrics &Font_Impl::font_metrics(const std::shared_ptr<Canvas> &canvas)
 	{
 		select_font_family(canvas);
 		return selected_metrics;
 	}
 
-	void Font_Impl::glyph_path(const CanvasPtr &canvas, unsigned int glyph_index, const PathPtr &out_path, GlyphMetrics &out_metrics)
+	void Font_Impl::glyph_path(const std::shared_ptr<Canvas> &canvas, unsigned int glyph_index, const std::shared_ptr<Path> &out_path, GlyphMetrics &out_metrics)
 	{
 		select_font_family(canvas);
 		return font_engine->load_glyph_path(glyph_index, out_path, out_metrics);
 	}
 
-	FontHandle *Font_Impl::handle(const CanvasPtr &canvas)
+	FontHandle *Font_Impl::handle(const std::shared_ptr<Canvas> &canvas)
 	{
 		select_font_family(canvas);
 		if (font_engine)
@@ -249,7 +249,7 @@ namespace uicore
 		return nullptr;
 	}
 
-	void Font_Impl::draw_text(const CanvasPtr &canvas, const Pointf &position, const std::string &text, const Colorf &color)
+	void Font_Impl::draw_text(const std::shared_ptr<Canvas> &canvas, const Pointf &position, const std::string &text, const Colorf &color)
 	{
 		select_font_family(canvas);
 
@@ -258,7 +258,7 @@ namespace uicore
 		font_draw->draw_text(canvas, pos, text, color, line_spacing);
 	}
 
-	GlyphMetrics Font_Impl::metrics(const CanvasPtr &canvas, unsigned int glyph)
+	GlyphMetrics Font_Impl::metrics(const std::shared_ptr<Canvas> &canvas, unsigned int glyph)
 	{
 		select_font_family(canvas);
 		GlyphMetrics metrics = font_draw->get_metrics(canvas, glyph);
@@ -269,7 +269,7 @@ namespace uicore
 	}
 
 
-	GlyphMetrics Font_Impl::measure_text(const CanvasPtr &canvas, const std::string &string)
+	GlyphMetrics Font_Impl::measure_text(const std::shared_ptr<Canvas> &canvas, const std::string &string)
 	{
 		select_font_family(canvas);
 		GlyphMetrics total_metrics;

@@ -47,16 +47,16 @@ namespace uicore
 	class RenderBatchPath : public RenderBatcher
 	{
 	public:
-		RenderBatchPath(const GraphicContextPtr &gc, RenderBatchBuffer *batch_buffer);
+		RenderBatchPath(const std::shared_ptr<GraphicContext> &gc, RenderBatchBuffer *batch_buffer);
 
-		void fill(const CanvasPtr &canvas, const PathImpl &path, const Brush &brush);
-		void stroke(const CanvasPtr &canvas, const PathImpl &path, const Pen &pen);
+		void fill(const std::shared_ptr<Canvas> &canvas, const PathImpl &path, const Brush &brush);
+		void stroke(const std::shared_ptr<Canvas> &canvas, const PathImpl &path, const Pen &pen);
 
 	private:
 		void render(const PathImpl &path, PathRenderer *renderer);
 
-		int set_batcher_active(const CanvasPtr &canvas);
-		void flush(const GraphicContextPtr &gc) override;
+		int set_batcher_active(const std::shared_ptr<Canvas> &canvas);
+		void flush(const std::shared_ptr<GraphicContext> &gc) override;
 		void matrix_changed(const Mat4f &modelview, const Mat4f &projection, TextureImageYAxis image_yaxis, float pixel_ratio) override;
 
 		inline Pointf to_position(const uicore::Pointf &point) const;

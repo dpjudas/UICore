@@ -36,14 +36,14 @@ namespace uicore
 	class XmlWriterImpl : public XmlWriter
 	{
 	public:
-		XmlWriterImpl(const IODevicePtr &output);
+		XmlWriterImpl(const std::shared_ptr<IODevice> &output);
 
 		bool insert_whitespace() const override;
 		void set_insert_whitespace(bool enable) override;
 		void write(const XmlToken &token) override;
 
 	private:
-		uicore::IODevicePtr output;
+		std::shared_ptr<IODevice> output;
 		bool _insert_whitespace = true;
 		int indent = 0;
 		std::string str;

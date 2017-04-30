@@ -65,7 +65,7 @@ namespace uicore
 		int swap_interval = -1;
 		int bpp = 0;
 		int refresh_rate = 0;
-		DisplayWindowPtr owner;
+		std::shared_ptr<DisplayWindow> owner;
 		bool layered = false;
 
 		DisplayWindowHandle handle;

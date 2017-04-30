@@ -46,7 +46,7 @@ namespace uicore
 		class Base64EncoderImpl : public Base64Encoder
 		{
 		public:
-			DataBufferPtr _result = DataBuffer::create(0);
+			std::shared_ptr<DataBuffer> _result = DataBuffer::create(0);
 			unsigned char chunk[3];
 			int chunk_filled = 0;
 
@@ -67,13 +67,13 @@ namespace uicore
 				}
 			}
 
-			const DataBufferPtr &result() const override;
+			const std::shared_ptr<DataBuffer> &result() const override;
 			void reset() override;
 			void feed(const void *data, int size, bool append_result = true) override;
 			void finalize(bool append_result = true) override;
 		};
 
-		const DataBufferPtr &Base64EncoderImpl::result() const
+		const std::shared_ptr<DataBuffer> &Base64EncoderImpl::result() const
 		{
 			return _result;
 		}
@@ -190,7 +190,7 @@ namespace uicore
 		return encode(data.data(), data.length());
 	}
 
-	std::string Base64Encoder::encode(const DataBufferPtr &data)
+	std::string Base64Encoder::encode(const std::shared_ptr<DataBuffer> &data)
 	{
 		return encode(data->data(), data->size());
 	}

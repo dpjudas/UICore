@@ -66,7 +66,7 @@ namespace uicore
 		bool is_automatic_recreation_allowed() const override { return false; }
 		const FontMetrics &get_metrics() const override { return font_metrics; }
 		FontPixelBuffer get_font_glyph(int glyph) override { return FontPixelBuffer(); }
-		void load_glyph_path(unsigned int glyph_index, const PathPtr &out_path, GlyphMetrics &out_metrics) override {}
+		void load_glyph_path(unsigned int glyph_index, const std::shared_ptr<Path> &out_path, GlyphMetrics &out_metrics) override {}
 		const FontDescription &get_desc() const override { return font_description; }
 
 	private:
@@ -99,7 +99,7 @@ namespace uicore
 		add(desc, !ttf_filename.empty() ? File::read_all_bytes(ttf_filename) : nullptr);
 	}
 
-	void FontFamily_Impl::add(const FontDescription &desc, const DataBufferPtr &font_databuffer)
+	void FontFamily_Impl::add(const FontDescription &desc, const std::shared_ptr<DataBuffer> &font_databuffer)
 	{
 		FontFamily_Definition definition;
 		definition.desc = desc.clone();
@@ -115,7 +115,7 @@ namespace uicore
 		font_definitions.push_back(definition);
 	}
 
-	void FontFamily_Impl::font_face_load(const FontDescription &desc, DataBufferPtr &font_databuffer, float pixel_ratio)
+	void FontFamily_Impl::font_face_load(const FontDescription &desc, std::shared_ptr<DataBuffer> &font_databuffer, float pixel_ratio)
 	{
 #if defined(WIN32)
 		std::shared_ptr<FontEngine> engine = std::make_shared<FontEngine_Win32>(desc, font_databuffer, pixel_ratio);

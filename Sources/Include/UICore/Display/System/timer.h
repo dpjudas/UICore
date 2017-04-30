@@ -55,6 +55,4 @@ namespace uicore
 		/// \brief Stop the timer.
 		virtual void stop() = 0;
 	};
-
-	typedef std::shared_ptr<Timer> TimerPtr;
 }

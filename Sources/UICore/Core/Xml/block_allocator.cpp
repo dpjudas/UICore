@@ -39,7 +39,7 @@ namespace uicore
 	class BlockAllocator_Impl
 	{
 	public:
-		std::vector<DataBufferPtr> blocks;
+		std::vector<std::shared_ptr<DataBuffer>> blocks;
 		int block_pos = 0;
 	};
 
@@ -52,7 +52,7 @@ namespace uicore
 	{
 		if (impl->blocks.empty())
 			impl->blocks.push_back(DataBuffer::create(size * 10));
-		DataBufferPtr &cur = impl->blocks.back();
+		std::shared_ptr<DataBuffer> &cur = impl->blocks.back();
 		if (impl->block_pos + size <= (int)cur->size())
 		{
 			void *data = cur->data() + impl->block_pos;

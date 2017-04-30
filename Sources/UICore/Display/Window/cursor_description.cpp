@@ -67,27 +67,27 @@ namespace uicore
 		return *this;
 	}
 
-	void CursorDescription::add_frame(const PixelBufferPtr &pixelbuffer)
+	void CursorDescription::add_frame(const std::shared_ptr<PixelBuffer> &pixelbuffer)
 	{
 		impl->frames.push_back(CursorDescriptionFrame(pixelbuffer, Rect(0, 0, pixelbuffer->width(), pixelbuffer->height())));
 	}
 
 	void CursorDescription::add_frame(const std::string &filename, const ImageImportDescription &import_desc)
 	{
-		PixelBufferPtr image = ImageFile::load(filename);
+		std::shared_ptr<PixelBuffer> image = ImageFile::load(filename);
 		image = import_desc.process(image);
 		add_frame(image);
 	}
 
-	void CursorDescription::add_frame(const IODevicePtr &file, const std::string &image_type, const ImageImportDescription &import_desc)
+	void CursorDescription::add_frame(const std::shared_ptr<IODevice> &file, const std::string &image_type, const ImageImportDescription &import_desc)
 	{
-		PixelBufferPtr image = ImageFile::load(file, image_type);
+		std::shared_ptr<PixelBuffer> image = ImageFile::load(file, image_type);
 		image = import_desc.process(image);
 		add_frame(image);
 	}
 
 	void CursorDescription::add_gridclipped_frames(
-		const PixelBufferPtr &pixelbuffer,
+		const std::shared_ptr<PixelBuffer> &pixelbuffer,
 		int xpos, int ypos,
 		int width, int height,
 		int xarray, int yarray,
@@ -114,11 +114,11 @@ namespace uicore
 	}
 
 	void CursorDescription::add_alphaclipped_frames(
-		const PixelBufferPtr &pixelbuffer,
+		const std::shared_ptr<PixelBuffer> &pixelbuffer,
 		int xpos, int ypos,
 		float trans_limit)
 	{
-		PixelBufferPtr alpha_buffer = pixelbuffer->to_format(tf_rgba8);
+		std::shared_ptr<PixelBuffer> alpha_buffer = pixelbuffer->to_format(tf_rgba8);
 
 		int begin = 0;
 		bool prev_trans = true;
@@ -197,11 +197,11 @@ namespace uicore
 	}
 
 	void CursorDescription::add_alphaclipped_frames_free(
-		const PixelBufferPtr &pixelbuffer,
+		const std::shared_ptr<PixelBuffer> &pixelbuffer,
 		int xpos, int ypos,
 		float trans_limit)
 	{
-		PixelBufferPtr alpha_buffer = pixelbuffer->to_format(tf_rgba8);
+		std::shared_ptr<PixelBuffer> alpha_buffer = pixelbuffer->to_format(tf_rgba8);
 
 		int width = alpha_buffer->width();
 		int height = alpha_buffer->height();

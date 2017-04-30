@@ -243,7 +243,7 @@ namespace uicore
 	{
 	}
 
-	PixelBufferPtr GL1TextureObject::get_pixeldata(const GraphicContextPtr &gc, TextureFormat texture_format, int level) const
+	std::shared_ptr<PixelBuffer> GL1TextureObject::get_pixeldata(const std::shared_ptr<GraphicContext> &gc, TextureFormat texture_format, int level) const
 	{
 		throw_if_disposed();
 
@@ -278,11 +278,11 @@ namespace uicore
 		}
 	}
 
-	void GL1TextureObject::copy_from(const GraphicContextPtr &gc, int x, int y, int slice, int level, const PixelBufferPtr &ximage, const Rect &src_rect)
+	void GL1TextureObject::copy_from(const std::shared_ptr<GraphicContext> &gc, int x, int y, int slice, int level, const std::shared_ptr<PixelBuffer> &ximage, const Rect &src_rect)
 	{
 		OpenGL::set_active(gc);
 
-		PixelBufferPtr image = ximage;
+		std::shared_ptr<PixelBuffer> image = ximage;
 
 		if (src_rect.left < 0 || src_rect.top < 0 || src_rect.right > image->width() || src_rect.bottom > image->height())
 			throw Exception("Rectangle out of bounds");
@@ -613,7 +613,7 @@ namespace uicore
 		throw Exception("OpenGL 1 does not support texture views");
 	}
 
-	void GL1TextureObject::set_texture_image2d(GLuint target, const PixelBufferPtr &image, int level)
+	void GL1TextureObject::set_texture_image2d(GLuint target, const std::shared_ptr<PixelBuffer> &image, int level)
 	{
 		throw_if_disposed();
 		GL1TextureStateTracker state_tracker(texture_type, handle);
@@ -723,7 +723,7 @@ namespace uicore
 		}
 	}
 
-	void GL1TextureObject::set_texture_image3d(GLuint target, const PixelBufferPtr &image, int image_depth, int level)
+	void GL1TextureObject::set_texture_image3d(GLuint target, const std::shared_ptr<PixelBuffer> &image, int image_depth, int level)
 	{
 		throw_if_disposed();
 		GL1TextureStateTracker state_tracker(texture_type, handle);
@@ -1296,7 +1296,7 @@ namespace uicore
 		return valid;
 	}
 
-	bool GL1TextureObject::to_opengl_pixelformat(const PixelBufferPtr &pbuffer, GLenum &format, GLenum &type)
+	bool GL1TextureObject::to_opengl_pixelformat(const std::shared_ptr<PixelBuffer> &pbuffer, GLenum &format, GLenum &type)
 	{
 		return to_opengl_pixelformat(pbuffer->format(), format, type);
 	}

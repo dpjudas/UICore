@@ -44,10 +44,10 @@ namespace uicore
 	{
 	public:
 		ImageImpl(const ImageImpl &other) { *this = other; }
-		ImageImpl(const CanvasPtr &canvas, const PixelBufferPtr &pb, const Rect &rect, float _pixel_ratio);
-		ImageImpl(Texture2DPtr texture, const Rect &rect, float _pixel_ratio);
+		ImageImpl(const std::shared_ptr<Canvas> &canvas, const std::shared_ptr<PixelBuffer> &pb, const Rect &rect, float _pixel_ratio);
+		ImageImpl(std::shared_ptr<Texture2D> texture, const Rect &rect, float _pixel_ratio);
 		ImageImpl(TextureGroupImage &sub_texture, float _pixel_ratio);
-		ImageImpl(const CanvasPtr &canvas, const std::string &filename, const ImageImportDescription &import_desc, float _pixel_ratio);
+		ImageImpl(const std::shared_ptr<Canvas> &canvas, const std::string &filename, const ImageImportDescription &import_desc, float _pixel_ratio);
 
 		float scale_x() const override { return _scale_x; }
 		float scale_y() const override { return _scale_y; }
@@ -58,11 +58,11 @@ namespace uicore
 		float width() const override;
 		float height() const override;
 		std::shared_ptr<Image> clone() const override;
-		void draw(const CanvasPtr &canvas, float x, float y) const override;
-		void draw(const CanvasPtr &canvas, const Rectf &src, const Rectf &dest) const override;
-		void draw(const CanvasPtr &canvas, const Rectf &dest) const override;
-		void draw(const CanvasPtr &canvas, const Rectf &src, const Quadf &dest) const override;
-		void draw(const CanvasPtr &canvas, const Quadf &dest) const override;
+		void draw(const std::shared_ptr<Canvas> &canvas, float x, float y) const override;
+		void draw(const std::shared_ptr<Canvas> &canvas, const Rectf &src, const Rectf &dest) const override;
+		void draw(const std::shared_ptr<Canvas> &canvas, const Rectf &dest) const override;
+		void draw(const std::shared_ptr<Canvas> &canvas, const Rectf &src, const Quadf &dest) const override;
+		void draw(const std::shared_ptr<Canvas> &canvas, const Quadf &dest) const override;
 		void set_scale(float x, float y) override;
 		void set_color(const Colorf &color) override;
 		void set_alignment(Origin origin, float x, float y) override;
@@ -82,12 +82,12 @@ namespace uicore
 
 		Pointf _translated_hotspot;	// Precalculated from calc_hotspot()
 
-		Texture2DPtr _texture;
+		std::shared_ptr<Texture2D> _texture;
 		Rect _texture_rect;
 		float _pixel_ratio = 1.0f;
 	};
 
-	std::shared_ptr<Image> Image::create(Texture2DPtr texture, const Rect &rect, float pixel_ratio)
+	std::shared_ptr<Image> Image::create(std::shared_ptr<Texture2D> texture, const Rect &rect, float pixel_ratio)
 	{
 		return std::make_shared<ImageImpl>(texture, rect, pixel_ratio);
 	}
@@ -97,17 +97,17 @@ namespace uicore
 		return std::make_shared<ImageImpl>(sub_texture, pixel_ratio);
 	}
 
-	std::shared_ptr<Image> Image::create(const CanvasPtr &canvas, const PixelBufferPtr &pixelbuffer, const Rect &rect, float pixel_ratio)
+	std::shared_ptr<Image> Image::create(const std::shared_ptr<Canvas> &canvas, const std::shared_ptr<PixelBuffer> &pixelbuffer, const Rect &rect, float pixel_ratio)
 	{
 		return std::make_shared<ImageImpl>(canvas, pixelbuffer, rect, pixel_ratio);
 	}
 
-	std::shared_ptr<Image> Image::create(const CanvasPtr &canvas, const std::string &filename, const ImageImportDescription &import_desc, float pixel_ratio)
+	std::shared_ptr<Image> Image::create(const std::shared_ptr<Canvas> &canvas, const std::string &filename, const ImageImportDescription &import_desc, float pixel_ratio)
 	{
 		return std::make_shared<ImageImpl>(canvas, filename, import_desc, pixel_ratio);
 	}
 
-	ImageImpl::ImageImpl(const CanvasPtr &canvas, const PixelBufferPtr &pb, const Rect &rect, float pixel_ratio)
+	ImageImpl::ImageImpl(const std::shared_ptr<Canvas> &canvas, const std::shared_ptr<PixelBuffer> &pb, const Rect &rect, float pixel_ratio)
 	{
 		_texture = Texture2D::create(canvas->gc(), pb->width(), pb->height(), pb->format());
 		_texture->set_subimage(canvas->gc(), 0, 0, pb, rect);
@@ -115,7 +115,7 @@ namespace uicore
 		_pixel_ratio = pixel_ratio;
 	}
 
-	ImageImpl::ImageImpl(Texture2DPtr texture, const Rect &rect, float pixel_ratio)
+	ImageImpl::ImageImpl(std::shared_ptr<Texture2D> texture, const Rect &rect, float pixel_ratio)
 	{
 		_texture = texture;
 		_texture_rect = rect;
@@ -129,7 +129,7 @@ namespace uicore
 		_pixel_ratio = pixel_ratio;
 	}
 
-	ImageImpl::ImageImpl(const CanvasPtr &canvas, const std::string &filename, const ImageImportDescription &import_desc, float pixel_ratio)
+	ImageImpl::ImageImpl(const std::shared_ptr<Canvas> &canvas, const std::string &filename, const ImageImportDescription &import_desc, float pixel_ratio)
 	{
 		_texture = Texture2D::create(canvas->gc(), filename, import_desc);
 		_texture_rect = _texture->size();
@@ -174,7 +174,7 @@ namespace uicore
 		return Sizef(width(), height());
 	}
 
-	void ImageImpl::draw(const CanvasPtr &canvas, float x, float y) const
+	void ImageImpl::draw(const std::shared_ptr<Canvas> &canvas, float x, float y) const
 	{
 		Rectf dest(
 			x + _translated_hotspot.x, y + _translated_hotspot.y,
@@ -184,7 +184,7 @@ namespace uicore
 		batcher->draw_image(canvas, _texture_rect, dest, _color, _texture);
 	}
 
-	void ImageImpl::draw(const CanvasPtr &canvas, const Rectf &src, const Rectf &dest) const
+	void ImageImpl::draw(const std::shared_ptr<Canvas> &canvas, const Rectf &src, const Rectf &dest) const
 	{
 		Rectf new_src = src;
 		new_src.translate(_texture_rect.left, _texture_rect.top);
@@ -196,7 +196,7 @@ namespace uicore
 		batcher->draw_image(canvas, new_src, new_dest, _color, _texture);
 	}
 
-	void ImageImpl::draw(const CanvasPtr &canvas, const Rectf &dest) const
+	void ImageImpl::draw(const std::shared_ptr<Canvas> &canvas, const Rectf &dest) const
 	{
 		Rectf new_dest = dest;
 		new_dest.translate(_translated_hotspot);
@@ -205,7 +205,7 @@ namespace uicore
 		batcher->draw_image(canvas, _texture_rect, new_dest, _color, _texture);
 	}
 
-	void ImageImpl::draw(const CanvasPtr &canvas, const Rectf &src, const Quadf &dest) const
+	void ImageImpl::draw(const std::shared_ptr<Canvas> &canvas, const Rectf &src, const Quadf &dest) const
 	{
 		Rectf new_src = src;
 		new_src.translate(_texture_rect.left, _texture_rect.top);
@@ -220,7 +220,7 @@ namespace uicore
 		batcher->draw_image(canvas, new_src, new_dest, _color, _texture);
 	}
 
-	void ImageImpl::draw(const CanvasPtr &canvas, const Quadf &dest) const
+	void ImageImpl::draw(const std::shared_ptr<Canvas> &canvas, const Quadf &dest) const
 	{
 		Quadf new_dest = dest;
 		new_dest.p += _translated_hotspot;

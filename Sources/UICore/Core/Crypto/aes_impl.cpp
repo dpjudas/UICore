@@ -158,7 +158,7 @@ namespace uicore
 
 		}
 	}
-	void AES_Impl::store_block(uint32_t s0, uint32_t s1, uint32_t s2, uint32_t s3, DataBufferPtr &databuffer)
+	void AES_Impl::store_block(uint32_t s0, uint32_t s1, uint32_t s2, uint32_t s3, std::shared_ptr<DataBuffer> &databuffer)
 	{
 		// (Note AES 128, 192 and 256 all have the same block size)
 

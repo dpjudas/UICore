@@ -44,9 +44,7 @@ namespace uicore
 	class PixelBuffer;
 	class IODevice;
 	class GraphicContext;
-	typedef std::shared_ptr<GraphicContext> GraphicContextPtr;
 	class PixelConverter;
-	typedef std::shared_ptr<PixelConverter> PixelConverterPtr;
 
 	/// \brief Pixel data container.
 	class PixelBuffer
@@ -180,7 +178,7 @@ namespace uicore
 		/// \brief Copy source pixel buffer into this buffer, doing a format conversion if needed
 		///
 		/// \param source Source pixel buffer.
-		void set_image(const std::shared_ptr<PixelBuffer> &source, const PixelConverterPtr &converter);
+		void set_image(const std::shared_ptr<PixelBuffer> &source, const std::shared_ptr<PixelConverter> &converter);
 
 		/// \brief Copy source pixel buffer into this buffer, doing a format conversion if needed
 		///
@@ -194,13 +192,13 @@ namespace uicore
 		/// \param source Source pixel buffer.
 		/// \param dest_rect Destination position for copy.
 		/// \param src_rect Source rectangle for copy.
-		void set_subimage(const std::shared_ptr<PixelBuffer> &source, const Point &dest_pos, const Rect &src_rect, const PixelConverterPtr &converter);
+		void set_subimage(const std::shared_ptr<PixelBuffer> &source, const Point &dest_pos, const Rect &src_rect, const std::shared_ptr<PixelConverter> &converter);
 
 		/// \brief Converts current buffer to a new pixel format and returns the result.
 		std::shared_ptr<PixelBuffer> to_format(TextureFormat texture_format) const;
 
 		/// \brief Converts current buffer to a new pixel format and returns the result.
-		std::shared_ptr<PixelBuffer> to_format(TextureFormat texture_format, const PixelConverterPtr &converter) const;
+		std::shared_ptr<PixelBuffer> to_format(TextureFormat texture_format, const std::shared_ptr<PixelConverter> &converter) const;
 
 		/// \brief Flip the entire image vertically (turn it upside down)
 		void flip_vertical();
@@ -222,6 +220,4 @@ namespace uicore
 		/// \brief Add a border around a pixelbuffer, duplicating the edge pixels
 		static std::shared_ptr<PixelBuffer> add_border(const std::shared_ptr<PixelBuffer> &pb, int border_size, const Rect &rect);
 	};
-
-	typedef std::shared_ptr<PixelBuffer> PixelBufferPtr;
 }

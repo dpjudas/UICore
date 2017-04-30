@@ -40,24 +40,24 @@
 
 namespace uicore
 {
-	PixelBufferPtr JPEGFormat::load(const std::string &filename, bool srgb)
+	std::shared_ptr<PixelBuffer> JPEGFormat::load(const std::string &filename, bool srgb)
 	{
 		auto file = File::open_existing(filename);
 		return JPEGLoader::load(file, srgb);
 	}
 
-	PixelBufferPtr JPEGFormat::load(const IODevicePtr &file, bool srgb)
+	std::shared_ptr<PixelBuffer> JPEGFormat::load(const std::shared_ptr<IODevice> &file, bool srgb)
 	{
 		return JPEGLoader::load(file, srgb);
 	}
 
-	void JPEGFormat::save(PixelBufferPtr buffer, const std::string &filename, int quality)
+	void JPEGFormat::save(std::shared_ptr<PixelBuffer> buffer, const std::string &filename, int quality)
 	{
 		auto file = File::create_always(filename);
 		return JPEGFormat::save(buffer, file, quality);
 	}
 
-	void JPEGFormat::save(PixelBufferPtr buffer, const IODevicePtr &file, int quality)
+	void JPEGFormat::save(std::shared_ptr<PixelBuffer> buffer, const std::shared_ptr<IODevice> &file, int quality)
 	{
 		if (buffer->format() != tf_rgb8)
 		{

@@ -44,7 +44,6 @@ namespace uicore
 	class TextureGroupImage;
 	class FontPixelBuffer;
 	class Path;
-	typedef std::shared_ptr<Path> PathPtr;
 	class RenderBatchTriangle;
 
 	class Font_PathGlyph
@@ -55,7 +54,7 @@ namespace uicore
 		/// \brief Glyph this buffer refers to.
 		unsigned int glyph;
 
-		PathPtr path;
+		std::shared_ptr<Path> path;
 		GlyphMetrics metrics;
 	};
 
@@ -66,9 +65,9 @@ namespace uicore
 		virtual ~PathCache();
 
 		/// \brief Get a glyph. Returns NULL if the glyph was not found
-		Font_PathGlyph *get_glyph(const CanvasPtr &canvas, FontEngine *font_engine, unsigned int glyph);
+		Font_PathGlyph *get_glyph(const std::shared_ptr<Canvas> &canvas, FontEngine *font_engine, unsigned int glyph);
 
-		GlyphMetrics get_metrics(FontEngine *font_engine, const CanvasPtr &canvas, unsigned int glyph);
+		GlyphMetrics get_metrics(FontEngine *font_engine, const std::shared_ptr<Canvas> &canvas, unsigned int glyph);
 
 	private:
 		std::vector<Font_PathGlyph* > glyph_list;

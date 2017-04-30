@@ -60,13 +60,6 @@ namespace uicore
 	class RasterizerStateDescription;
 	class BlendStateDescription;
 	class DepthStencilStateDescription;
-	typedef std::shared_ptr<ProgramObject> ProgramObjectPtr;
-	typedef std::shared_ptr<FrameBuffer> FrameBufferPtr;
-	typedef std::shared_ptr<StorageBuffer> StorageBufferPtr;
-	typedef std::shared_ptr<UniformBuffer> UniformBufferPtr;
-	typedef std::shared_ptr<PrimitivesArray> PrimitivesArrayPtr;
-	typedef std::shared_ptr<Texture> TexturePtr;
-	typedef std::shared_ptr<PixelBuffer> PixelBufferPtr;
 
 	/// Polygon culling modes.
 	enum CullMode
@@ -257,13 +250,8 @@ namespace uicore
 	};
 
 	class RasterizerState { };
-	typedef std::shared_ptr<RasterizerState> RasterizerStatePtr;
-
 	class BlendState { };
-	typedef std::shared_ptr<BlendState> BlendStatePtr;
-
 	class DepthStencilState { };
-	typedef std::shared_ptr<DepthStencilState> DepthStencilStatePtr;
 
 	/// Interface to drawing graphics.
 	class GraphicContext
@@ -300,15 +288,15 @@ namespace uicore
 		/** Returns the currently selected write frame buffer.
 		 *  \return The frame buffer.
 		 */
-		virtual FrameBufferPtr write_frame_buffer() const = 0;
+		virtual std::shared_ptr<FrameBuffer> write_frame_buffer() const = 0;
 
 		/// Returns the currently selected read frame buffer.
 		///
 		/// \return The frame buffer.
-		virtual FrameBufferPtr read_frame_buffer() const = 0;
+		virtual std::shared_ptr<FrameBuffer> read_frame_buffer() const = 0;
 
 		/// Returns the currently selected program object
-		virtual ProgramObjectPtr program_object() const = 0;
+		virtual std::shared_ptr<ProgramObject> program_object() const = 0;
 
 		/// Returns the current actual width of the context.
 		int width() const { return size().width; }
@@ -342,10 +330,10 @@ namespace uicore
 		virtual Size max_texture_size() const = 0;
 
 		/// Return the content of the read buffer into a pixel buffer.
-		virtual PixelBufferPtr pixeldata(const Rect& rect, TextureFormat texture_format = tf_rgba8, bool clamp = true) const = 0;
+		virtual std::shared_ptr<PixelBuffer> pixeldata(const Rect& rect, TextureFormat texture_format = tf_rgba8, bool clamp = true) const = 0;
 
 		/// Return the content of the read buffer into a pixel buffer.
-		PixelBufferPtr pixeldata(TextureFormat texture_format = tf_rgba8, bool clamp = true) { return pixeldata(Rect(Point(), size()), texture_format, clamp); }
+		std::shared_ptr<PixelBuffer> pixeldata(TextureFormat texture_format = tf_rgba8, bool clamp = true) { return pixeldata(Rect(Point(), size()), texture_format, clamp); }
 
 		/** Returns `true` if this frame buffer object is owned by this graphic
 		 *  context.
@@ -354,7 +342,7 @@ namespace uicore
 		 *  function will verify if the frame buffer object belongs to this graphic
 		 *  context.
 		 */
-		virtual bool is_frame_buffer_owner(const FrameBufferPtr &fb) = 0;
+		virtual bool is_frame_buffer_owner(const std::shared_ptr<FrameBuffer> &fb) = 0;
 
 		/// \brief Create rasterizer state object.
 		virtual std::shared_ptr<RasterizerState> create_rasterizer_state(const RasterizerStateDescription &desc) = 0;
@@ -366,20 +354,20 @@ namespace uicore
 		virtual std::shared_ptr<DepthStencilState> create_depth_stencil_state(const DepthStencilStateDescription &desc) = 0;
 
 		/// Sets the current frame buffer.
-		void set_frame_buffer(const FrameBufferPtr &write_buffer) { set_frame_buffer(write_buffer, write_buffer); }
-		virtual void set_frame_buffer(const FrameBufferPtr &write_buffer, const FrameBufferPtr &read_buffer) = 0;
+		void set_frame_buffer(const std::shared_ptr<FrameBuffer> &write_buffer) { set_frame_buffer(write_buffer, write_buffer); }
+		virtual void set_frame_buffer(const std::shared_ptr<FrameBuffer> &write_buffer, const std::shared_ptr<FrameBuffer> &read_buffer) = 0;
 
 		/// Resets the current frame buffer to be the initial frame buffer.
 		void reset_frame_buffer() { set_frame_buffer(nullptr); }
 
 		/// Select uniform buffer into index
-		virtual void set_uniform_buffer(int index, const UniformBufferPtr &buffer) = 0;
+		virtual void set_uniform_buffer(int index, const std::shared_ptr<UniformBuffer> &buffer) = 0;
 
 		/// Remove uniform buffer from index
 		void reset_uniform_buffer(int index) { set_uniform_buffer(index, nullptr); }
 
 		/// Select storage buffer into index
-		virtual void set_storage_buffer(int index, const StorageBufferPtr &buffer) = 0;
+		virtual void set_storage_buffer(int index, const std::shared_ptr<StorageBuffer> &buffer) = 0;
 
 		/// Remove storage buffer from index
 		void reset_storage_buffer(int index) { set_storage_buffer(index, nullptr); }
@@ -388,14 +376,14 @@ namespace uicore
 		///
 		/// \param unit_index = 0 to x, the index of this texture
 		/// \param texture = The texture to select. This can be a null texture to clear that unit
-		virtual void set_texture(int unit_index, const TexturePtr &texture) = 0;
+		virtual void set_texture(int unit_index, const std::shared_ptr<Texture> &texture) = 0;
 
 		/// Select textures
 		///
 		/// \param start_index = First unit to select the textures into
 		/// \param textures = The textures to select. These may contain null textures
-		void set_textures(const std::vector<TexturePtr> &textures) { set_textures(0, textures); }
-		void set_textures(int start_index, const std::vector<TexturePtr> &textures) { for (int i = 0; i < (int)textures.size(); i++) set_texture(start_index + i, textures[i]); }
+		void set_textures(const std::vector<std::shared_ptr<Texture>> &textures) { set_textures(0, textures); }
+		void set_textures(int start_index, const std::vector<std::shared_ptr<Texture>> &textures) { for (int i = 0; i < (int)textures.size(); i++) set_texture(start_index + i, textures[i]); }
 
 		/// Remove texture from index.
 		///
@@ -409,7 +397,7 @@ namespace uicore
 		///
 		/// \param unit_index = 0 to x, the index of this texture
 		/// \param texture = The texture to select. This can be a null texture to clear that unit
-		virtual void set_image_texture(int unit_index, const TexturePtr &texture) = 0;
+		virtual void set_image_texture(int unit_index, const std::shared_ptr<Texture> &texture) = 0;
 
 		/// Select texture images
 		///
@@ -417,8 +405,8 @@ namespace uicore
 		///
 		/// \param textures = The texture to select. These may contain null textures
 		/// \param start_index = First unit to select the textures into
-		void set_image_textures(const std::vector<TexturePtr> &textures) { set_image_textures(0, textures); }
-		void set_image_textures(int start_index, const std::vector<TexturePtr> &textures) { for (int i = 0; i < (int)textures.size(); i++) set_image_texture(start_index + i, textures[i]); }
+		void set_image_textures(const std::vector<std::shared_ptr<Texture>> &textures) { set_image_textures(0, textures); }
+		void set_image_textures(int start_index, const std::vector<std::shared_ptr<Texture>> &textures) { for (int i = 0; i < (int)textures.size(); i++) set_image_texture(start_index + i, textures[i]); }
 
 		/// Remove texture from index.
 		///
@@ -429,13 +417,13 @@ namespace uicore
 		void reset_image_textures(int start_index, size_t count) { for (int i = 0; i < (int)count; i++) set_image_texture(start_index + i, nullptr); }
 
 		/// Set active rasterizer state
-		virtual void set_rasterizer_state(const RasterizerStatePtr &state) = 0;
+		virtual void set_rasterizer_state(const std::shared_ptr<RasterizerState> &state) = 0;
 
 		/// Set active blend state
-		virtual void set_blend_state(const BlendStatePtr &state, const Colorf &blend_color = StandardColorf::white(), unsigned int sample_mask = 0xffffffff) = 0;
+		virtual void set_blend_state(const std::shared_ptr<BlendState> &state, const Colorf &blend_color = StandardColorf::white(), unsigned int sample_mask = 0xffffffff) = 0;
 
 		/// Set active depth stencil state
-		virtual void set_depth_stencil_state(const DepthStencilStatePtr &state, int stencil_ref = 0) = 0;
+		virtual void set_depth_stencil_state(const std::shared_ptr<DepthStencilState> &state, int stencil_ref = 0) = 0;
 
 		/// Set active rasterizer state
 		void reset_rasterizer_state() { set_rasterizer_state(nullptr); }
@@ -450,7 +438,7 @@ namespace uicore
 		virtual void set_program_object(StandardProgram standard_program) = 0;
 
 		/// Set active program object.
-		virtual void set_program_object(const ProgramObjectPtr &program) = 0;
+		virtual void set_program_object(const std::shared_ptr<ProgramObject> &program) = 0;
 
 		/// Remove active program object.
 		void reset_program_object() { set_program_object(nullptr); }
@@ -459,13 +447,13 @@ namespace uicore
 		///
 		/// Primitive array objects cannot be shared between graphic contexts.  This function verifies that the primitives array
 		/// belongs to this graphic context.
-		virtual bool is_primitives_array_owner(const PrimitivesArrayPtr &primitives_array) = 0;
+		virtual bool is_primitives_array_owner(const std::shared_ptr<PrimitivesArray> &primitives_array) = 0;
 
 		/// Draw primitives on gc
-		virtual void draw_primitives(PrimitivesType type, int num_vertices, const PrimitivesArrayPtr &array) = 0;
+		virtual void draw_primitives(PrimitivesType type, int num_vertices, const std::shared_ptr<PrimitivesArray> &array) = 0;
 
 		/// Set the primitives array on the gc
-		virtual void set_primitives_array(const PrimitivesArrayPtr &array) = 0;
+		virtual void set_primitives_array(const std::shared_ptr<PrimitivesArray> &array) = 0;
 
 		/// Draws primitives from the current assigned primitives array.
 		void draw_primitives_array(PrimitivesType type, int num_vertices) { draw_primitives_array(type, 0, num_vertices); }
@@ -486,7 +474,7 @@ namespace uicore
 		virtual void draw_primitives_array_instanced(PrimitivesType type, int offset, int num_vertices, int instance_count) = 0;
 
 		/// Sets current elements array buffer
-		virtual void set_primitives_elements(const ElementArrayBufferPtr &element_array) = 0;
+		virtual void set_primitives_elements(const std::shared_ptr<ElementArrayBuffer> &element_array) = 0;
 
 		/// Draw primitives elements
 		///
@@ -515,7 +503,7 @@ namespace uicore
 		/// \param element_array = Element Array Buffer
 		/// \param indices_type = Vertex Attribute Data Type
 		/// \param offset = void
-		virtual void draw_primitives_elements(PrimitivesType type, int count, const ElementArrayBufferPtr &element_array, VertexAttributeDataType indices_type, size_t offset = 0) = 0;
+		virtual void draw_primitives_elements(PrimitivesType type, int count, const std::shared_ptr<ElementArrayBuffer> &element_array, VertexAttributeDataType indices_type, size_t offset = 0) = 0;
 
 		/// Draw primitives elements instanced
 		///
@@ -525,7 +513,7 @@ namespace uicore
 		/// \param indices_type = Vertex Attribute Data Type
 		/// \param offset = void
 		/// \param instance_count = number of instances drawn
-		virtual void draw_primitives_elements_instanced(PrimitivesType type, int count, const ElementArrayBufferPtr &element_array, VertexAttributeDataType indices_type, size_t offset, int instance_count) = 0;
+		virtual void draw_primitives_elements_instanced(PrimitivesType type, int count, const std::shared_ptr<ElementArrayBuffer> &element_array, VertexAttributeDataType indices_type, size_t offset, int instance_count) = 0;
 
 		/// Reset the primitives arrays.
 		void reset_primitives_array() { set_primitives_array(nullptr); }
@@ -575,6 +563,4 @@ namespace uicore
 		/// Flush the command buffer
 		virtual void flush() = 0;
 	};
-
-	typedef std::shared_ptr<GraphicContext> GraphicContextPtr;
 }

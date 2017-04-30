@@ -35,19 +35,12 @@
 namespace uicore
 {
 	class Texture;
-	typedef std::shared_ptr<Texture> TexturePtr;
 	class PixelBuffer;
-	typedef std::shared_ptr<PixelBuffer> PixelBufferPtr;
 	class VertexArrayBuffer;
-	typedef std::shared_ptr<VertexArrayBuffer> VertexArrayBufferPtr;
 	class ElementArrayBuffer;
-	typedef std::shared_ptr<ElementArrayBuffer> ElementArrayBufferPtr;
 	class RenderBuffer;
-	typedef std::shared_ptr<RenderBuffer> RenderBufferPtr;
 	class UniformBuffer;
-	typedef std::shared_ptr<UniformBuffer> UniformBufferPtr;
 	class GraphicContext;
-	typedef std::shared_ptr<GraphicContext> GraphicContextPtr;
 
 	/// \brief Display target for uicoreDisplay.
 	class D3DTarget
@@ -61,57 +54,57 @@ namespace uicore
 		/// \brief Returns the Direct3D handle used by the texture object
 		///
 		/// The reference count on the COM object is not increased (AddRef is not called).
-		static ID3D11Texture2D *texture2d_handle(const GraphicContextPtr &gc, const TexturePtr &texture);
+		static ID3D11Texture2D *texture2d_handle(const std::shared_ptr<GraphicContext> &gc, const std::shared_ptr<Texture> &texture);
 
 		/// \brief Returns the Direct3D handle used by the pixel buffer object
 		///
 		/// The reference count on the COM object is not increased (AddRef is not called).
-		static ID3D11Texture2D *texture2d_handle(const GraphicContextPtr &gc, const PixelBufferPtr &pixel_buffer);
+		static ID3D11Texture2D *texture2d_handle(const std::shared_ptr<GraphicContext> &gc, const std::shared_ptr<PixelBuffer> &pixel_buffer);
 
 		/// \brief Returns the Direct3D handle used by the render buffer object
 		///
 		/// The reference count on the COM object is not increased (AddRef is not called).
-		static ID3D11Texture2D *texture2d_handle(const GraphicContextPtr &gc, const RenderBufferPtr &render_buffer);
+		static ID3D11Texture2D *texture2d_handle(const std::shared_ptr<GraphicContext> &gc, const std::shared_ptr<RenderBuffer> &render_buffer);
 
 		/// \brief Returns the Direct3D handle used by the buffer object
 		///
 		/// The reference count on the COM object is not increased (AddRef is not called).
-		static ID3D11Buffer *buffer_handle(const GraphicContextPtr &gc, const VertexArrayBufferPtr &buffer);
+		static ID3D11Buffer *buffer_handle(const std::shared_ptr<GraphicContext> &gc, const std::shared_ptr<VertexArrayBuffer> &buffer);
 
 		/// \brief Returns the Direct3D handle used by the buffer object
 		///
 		/// The reference count on the COM object is not increased (AddRef is not called).
-		static ID3D11Buffer *buffer_handle(const GraphicContextPtr &gc, const ElementArrayBufferPtr &buffer);
+		static ID3D11Buffer *buffer_handle(const std::shared_ptr<GraphicContext> &gc, const std::shared_ptr<ElementArrayBuffer> &buffer);
 
 		/// \brief Returns the Direct3D handle used by the buffer object
 		///
 		/// The reference count on the COM object is not increased (AddRef is not called).
-		static ID3D11Buffer *buffer_handle(const GraphicContextPtr &gc, const UniformBufferPtr &buffer);
+		static ID3D11Buffer *buffer_handle(const std::shared_ptr<GraphicContext> &gc, const std::shared_ptr<UniformBuffer> &buffer);
 
 		/// \brief Returns the Direct3D shader resource view handle used by the texture object
 		///
 		/// The reference count on the COM object is not increased (AddRef is not called).
-		static ID3D11ShaderResourceView *srv_handle(const GraphicContextPtr &gc, const TexturePtr &texture);
+		static ID3D11ShaderResourceView *srv_handle(const std::shared_ptr<GraphicContext> &gc, const std::shared_ptr<Texture> &texture);
 
 		/// \brief Returns the Direct3D device handle used by the graphic context
 		///
 		/// The reference count on the COM object is not increased (AddRef is not called).
-		static ID3D11Device *device_handle(const GraphicContextPtr &gc);
+		static ID3D11Device *device_handle(const std::shared_ptr<GraphicContext> &gc);
 
 		/// \brief Returns the Direct3D device context handle used by the graphic context
 		///
 		/// The reference count on the COM object is not increased (AddRef is not called).
-		static ID3D11DeviceContext *device_context_handle(const GraphicContextPtr &gc);
+		static ID3D11DeviceContext *device_context_handle(const std::shared_ptr<GraphicContext> &gc);
 
 		/// \brief Returns the Direct3D swap chain handle used by the graphic context
 		///
 		/// The reference count on the COM object is not increased (AddRef is not called).
-		static IDXGISwapChain *swap_chain_handle(const GraphicContextPtr &gc);
+		static IDXGISwapChain *swap_chain_handle(const std::shared_ptr<GraphicContext> &gc);
 
 		/// \brief Returns the Direct3D render target view for the swap chain back buffer
 		///
 		/// The reference count on the COM object is not increased (AddRef is not called).
-		static ID3D11RenderTargetView *back_buffer_rtv_handle(const GraphicContextPtr &gc);
+		static ID3D11RenderTargetView *back_buffer_rtv_handle(const std::shared_ptr<GraphicContext> &gc);
 
 		/// \brief Throws an exception with the specified text if the passed result is an error condition
 		static void throw_if_failed(const char *text, HRESULT result);

@@ -391,12 +391,12 @@ namespace uicore
 		win32_window.show_system_cursor();
 	}
 
-	CursorPtr OpenGLWindowProvider::create_cursor(const CursorDescription &cursor_description)
+	std::shared_ptr<Cursor> OpenGLWindowProvider::create_cursor(const CursorDescription &cursor_description)
 	{
 		return std::make_shared<CursorProvider_Win32>(cursor_description);
 	}
 
-	void OpenGLWindowProvider::set_cursor(const CursorPtr &cursor)
+	void OpenGLWindowProvider::set_cursor(const std::shared_ptr<Cursor> &cursor)
 	{
 		win32_window.set_cursor(static_cast<CursorProvider_Win32 *>(cursor.get()));
 	}
@@ -617,12 +617,12 @@ namespace uicore
 		win32_window.request_repaint();
 	}
 
-	void OpenGLWindowProvider::set_large_icon(const PixelBufferPtr &image)
+	void OpenGLWindowProvider::set_large_icon(const std::shared_ptr<PixelBuffer> &image)
 	{
 		win32_window.set_large_icon(image);
 	}
 
-	void OpenGLWindowProvider::set_small_icon(const PixelBufferPtr &image)
+	void OpenGLWindowProvider::set_small_icon(const std::shared_ptr<PixelBuffer> &image)
 	{
 		win32_window.set_small_icon(image);
 	}
@@ -666,12 +666,12 @@ namespace uicore
 		return share_context;
 	}
 
-	void OpenGLWindowProvider::set_clipboard_image(const PixelBufferPtr &buf)
+	void OpenGLWindowProvider::set_clipboard_image(const std::shared_ptr<PixelBuffer> &buf)
 	{
 		win32_window.set_clipboard_image(buf);
 	}
 
-	PixelBufferPtr OpenGLWindowProvider::clipboard_image() const
+	std::shared_ptr<PixelBuffer> OpenGLWindowProvider::clipboard_image() const
 	{
 		return win32_window.get_clipboard_image();
 	}

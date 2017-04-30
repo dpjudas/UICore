@@ -74,9 +74,9 @@ namespace uicore
 
 		void apply_transform(const Mat3f &transform) override;
 
-		void stroke(const CanvasPtr &canvas, const Pen &pen) override;
-		void fill(const CanvasPtr &canvas, const Brush &brush) override;
-		void fill_and_stroke(const CanvasPtr &canvas, const Pen &pen, const Brush &brush) override;
+		void stroke(const std::shared_ptr<Canvas> &canvas, const Pen &pen) override;
+		void fill(const std::shared_ptr<Canvas> &canvas, const Brush &brush) override;
+		void fill_and_stroke(const std::shared_ptr<Canvas> &canvas, const Pen &pen, const Brush &brush) override;
 
 		std::shared_ptr<Path> clone() const override;
 

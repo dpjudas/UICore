@@ -45,7 +45,7 @@ namespace uicore
 			set_content_view(std::make_shared<ColumnView>());
 		}
 		
-		void layout_children(const CanvasPtr &canvas) override
+		void layout_children(const std::shared_ptr<Canvas> &canvas) override
 		{
 			if (!content)
 				return;
@@ -98,7 +98,7 @@ namespace uicore
 			content->layout_children(canvas);
 		}
 		
-		float calculate_preferred_width(const CanvasPtr &canvas) override
+		float calculate_preferred_width(const std::shared_ptr<Canvas> &canvas) override
 		{
 			if (!content)
 				return 0.0f;
@@ -128,7 +128,7 @@ namespace uicore
 			return width + noncontent_left + noncontent_right;
 		}
 		
-		float calculate_preferred_height(const CanvasPtr &canvas, float container_width) override
+		float calculate_preferred_height(const std::shared_ptr<Canvas> &canvas, float container_width) override
 		{
 			if (!content)
 				return 0.0f;
@@ -178,7 +178,7 @@ namespace uicore
 			return height;
 		}
 		
-		float calculate_first_baseline_offset(const CanvasPtr &canvas, float container_width) override
+		float calculate_first_baseline_offset(const std::shared_ptr<Canvas> &canvas, float container_width) override
 		{
 			if (!content)
 				return 0.0f;
@@ -208,7 +208,7 @@ namespace uicore
 			return content->first_baseline_offset(canvas, width);
 		}
 		
-		float calculate_last_baseline_offset(const CanvasPtr &canvas, float container_width) override
+		float calculate_last_baseline_offset(const std::shared_ptr<Canvas> &canvas, float container_width) override
 		{
 			if (!content)
 				return 0.0f;
@@ -472,7 +472,7 @@ namespace uicore
 		impl->content_container->set_content_offset(offset, animated);
 	}
 	
-	void ScrollBaseView::layout_children(const CanvasPtr &canvas)
+	void ScrollBaseView::layout_children(const std::shared_ptr<Canvas> &canvas)
 	{
 		bool x_scroll_needed = false;
 		bool y_scroll_needed = false;
@@ -533,7 +533,7 @@ namespace uicore
 		set_content_offset(Pointf(impl->scroll_x->position(), impl->scroll_y->position()));
 	}
 	
-	float ScrollBaseView::calculate_preferred_width(const CanvasPtr &canvas)
+	float ScrollBaseView::calculate_preferred_width(const std::shared_ptr<Canvas> &canvas)
 	{
 		float width = impl->content_container->preferred_width(canvas);
 		if (impl->overflow_x == ContentOverflow::scroll)
@@ -541,7 +541,7 @@ namespace uicore
 		return width;
 	}
 	
-	float ScrollBaseView::calculate_preferred_height(const CanvasPtr &canvas, float width)
+	float ScrollBaseView::calculate_preferred_height(const std::shared_ptr<Canvas> &canvas, float width)
 	{
 		float height = impl->content_container->preferred_height(canvas, width);
 		if (impl->overflow_y == ContentOverflow::scroll)
@@ -549,12 +549,12 @@ namespace uicore
 		return height;
 	}
 	
-	float ScrollBaseView::calculate_first_baseline_offset(const CanvasPtr &canvas, float width)
+	float ScrollBaseView::calculate_first_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width)
 	{
 		return impl->content_container->first_baseline_offset(canvas, width);
 	}
 	
-	float ScrollBaseView::calculate_last_baseline_offset(const CanvasPtr &canvas, float width)
+	float ScrollBaseView::calculate_last_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width)
 	{
 		return impl->content_container->last_baseline_offset(canvas, width);
 	}

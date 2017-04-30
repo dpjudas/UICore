@@ -86,7 +86,7 @@ namespace uicore
 			return handles.front()->buffer;
 	}
 
-	void D3DVertexArrayBuffer::upload_data(const GraphicContextPtr &gc, int offset, const void *data, int data_size)
+	void D3DVertexArrayBuffer::upload_data(const std::shared_ptr<GraphicContext> &gc, int offset, const void *data, int data_size)
 	{
 		if ((offset < 0) || (data_size < 0) || ((data_size + offset) > size))
 			throw Exception("Vertex array buffer, invalid size");
@@ -106,7 +106,7 @@ namespace uicore
 		device_context->UpdateSubresource(get_handles(device).buffer, 0, &box, data, 0, 0);
 	}
 
-	void D3DVertexArrayBuffer::copy_from(const GraphicContextPtr &gc, const StagingBufferPtr &buffer, int dest_pos, int src_pos, int copy_size)
+	void D3DVertexArrayBuffer::copy_from(const std::shared_ptr<GraphicContext> &gc, const std::shared_ptr<StagingBuffer> &buffer, int dest_pos, int src_pos, int copy_size)
 	{
 		auto d3d_window = static_cast<D3DGraphicContext*>(gc.get())->get_window();
 		const auto &device = d3d_window->get_device();
@@ -131,7 +131,7 @@ namespace uicore
 		device_context->CopySubresourceRegion(get_handles(device).buffer, 0, dest_pos, 0, 0, staging_buffer, 0, &box);
 	}
 
-	void D3DVertexArrayBuffer::copy_to(const GraphicContextPtr &gc, const StagingBufferPtr &buffer, int dest_pos, int src_pos, int copy_size)
+	void D3DVertexArrayBuffer::copy_to(const std::shared_ptr<GraphicContext> &gc, const std::shared_ptr<StagingBuffer> &buffer, int dest_pos, int src_pos, int copy_size)
 	{
 		auto d3d_window = static_cast<D3DGraphicContext*>(gc.get())->get_window();
 		const auto &device = d3d_window->get_device();

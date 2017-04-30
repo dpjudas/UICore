@@ -41,7 +41,7 @@ namespace uicore
 	{
 	public:
 		FontEngine_Win32(const FontDescription &description, const std::string &typeface_name, float pixel_ratio);
-		FontEngine_Win32(const FontDescription &description, DataBufferPtr &font_databuffer, float pixel_ratio);
+		FontEngine_Win32(const FontDescription &description, std::shared_ptr<DataBuffer> &font_databuffer, float pixel_ratio);
 		~FontEngine_Win32();
 
 		bool is_automatic_recreation_allowed() const override { return true; }
@@ -50,7 +50,7 @@ namespace uicore
 		FontPixelBuffer get_font_glyph_standard(int glyph, bool anti_alias);
 		FontPixelBuffer get_font_glyph_subpixel(int glyph);
 		const FontDescription &get_desc() const override { return font_description; }
-		void load_glyph_path(unsigned int glyph_index, const PathPtr &out_path, GlyphMetrics &out_metrics) override;
+		void load_glyph_path(unsigned int glyph_index, const std::shared_ptr<Path> &out_path, GlyphMetrics &out_metrics) override;
 		FontHandle *get_handle() override;
 
 	private:
@@ -102,7 +102,7 @@ namespace uicore
 		void swap(USHORT &value) const { value = (value << 8) | (value >> 8); }
 		void swap(ULONG &value) const { value = ((value << 8) & 0xFF00FF00) | ((value >> 8) & 0xFF00FF); value = (value << 16) | (value >> 16); }
 
-		std::string get_ttf_typeface_name(DataBufferPtr &font_databuffer);
+		std::string get_ttf_typeface_name(std::shared_ptr<DataBuffer> &font_databuffer);
 
 		inline Pointf to_point(POINTFX &fx)
 		{
@@ -118,7 +118,7 @@ namespace uicore
 		FontPixelBuffer get_font_glyph_lcd(int glyph);
 		FontPixelBuffer get_font_glyph_gray8(int glyph);
 		FontPixelBuffer get_font_glyph_mono(int glyph);
-		bool try_load_glyph_bitmap(int glyph, UINT format, MAT2 &matrix, DataBufferPtr &glyph_bitmap, GLYPHMETRICS &glyph_metrics);
+		bool try_load_glyph_bitmap(int glyph, UINT format, MAT2 &matrix, std::shared_ptr<DataBuffer> &glyph_bitmap, GLYPHMETRICS &glyph_metrics);
 		FontPixelBuffer get_empty_font_glyph(int glyph);
 		int decode_charset(FontDescription::Charset selected_charset);
 		HFONT handle = 0;

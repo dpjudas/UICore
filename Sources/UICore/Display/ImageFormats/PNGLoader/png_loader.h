@@ -38,10 +38,10 @@ namespace uicore
 	class PNGLoader
 	{
 	public:
-		static PixelBufferPtr load(const IODevicePtr &iodevice, bool srgb);
+		static std::shared_ptr<PixelBuffer> load(const std::shared_ptr<IODevice> &iodevice, bool srgb);
 
 	private:
-		PNGLoader(const IODevicePtr &iodevice, bool force_srgb);
+		PNGLoader(const std::shared_ptr<IODevice> &iodevice, bool force_srgb);
 		~PNGLoader();
 		void read_magic();
 		void read_chunks();
@@ -90,21 +90,21 @@ namespace uicore
 			return (static_cast<unsigned int>(p[0]) << 8) | p[1];
 		}
 
-		IODevicePtr file;
+		std::shared_ptr<IODevice> file;
 		bool force_srgb;
 
-		PixelBufferPtr image;
+		std::shared_ptr<PixelBuffer> image;
 
-		DataBufferPtr ihdr; // image header, which is the first chunk in a PNG datastream.
-		DataBufferPtr plte; // palette table associated with indexed PNG images.
-		DataBufferPtr idat; // image data chunks.
+		std::shared_ptr<DataBuffer> ihdr; // image header, which is the first chunk in a PNG datastream.
+		std::shared_ptr<DataBuffer> plte; // palette table associated with indexed PNG images.
+		std::shared_ptr<DataBuffer> idat; // image data chunks.
 
-		DataBufferPtr trns; // Transparency information
-		DataBufferPtr chrm; // Colour space information (5 chunks)
-		DataBufferPtr gama;
-		DataBufferPtr iccp;
-		DataBufferPtr sbit;
-		DataBufferPtr srgb;
+		std::shared_ptr<DataBuffer> trns; // Transparency information
+		std::shared_ptr<DataBuffer> chrm; // Colour space information (5 chunks)
+		std::shared_ptr<DataBuffer> gama;
+		std::shared_ptr<DataBuffer> iccp;
+		std::shared_ptr<DataBuffer> sbit;
+		std::shared_ptr<DataBuffer> srgb;
 
 		unsigned int image_width;
 		unsigned int image_height;

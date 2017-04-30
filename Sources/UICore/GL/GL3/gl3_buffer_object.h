@@ -54,13 +54,13 @@ namespace uicore
 		GLenum get_binding() const { return binding; }
 		GLenum get_target() const { return target; }
 
-		void lock(const GraphicContextPtr &gc, BufferAccess access);
+		void lock(const std::shared_ptr<GraphicContext> &gc, BufferAccess access);
 		void unlock();
-		void upload_data(const GraphicContextPtr &gc, int offset, const void *data, int size);
+		void upload_data(const std::shared_ptr<GraphicContext> &gc, int offset, const void *data, int size);
 
-		void upload_data(const GraphicContextPtr &gc, const void *data, int size);
-		void copy_from(const GraphicContextPtr &gc, const StagingBufferPtr &buffer, int dest_pos, int src_pos, int size);
-		void copy_to(const GraphicContextPtr &gc, const StagingBufferPtr &buffer, int dest_pos, int src_pos, int size);
+		void upload_data(const std::shared_ptr<GraphicContext> &gc, const void *data, int size);
+		void copy_from(const std::shared_ptr<GraphicContext> &gc, const std::shared_ptr<StagingBuffer> &buffer, int dest_pos, int src_pos, int size);
+		void copy_to(const std::shared_ptr<GraphicContext> &gc, const std::shared_ptr<StagingBuffer> &buffer, int dest_pos, int src_pos, int size);
 
 	private:
 		void on_dispose() override;
@@ -71,6 +71,6 @@ namespace uicore
 
 		void *data_ptr = nullptr;
 		int size = 0;
-		GraphicContextPtr lock_gc;
+		std::shared_ptr<GraphicContext> lock_gc;
 	};
 }

@@ -181,12 +181,12 @@ namespace uicore
 			is_send_encrypted = false;
 			is_receive_encrypted = false;
 
-			client_write_mac_secret = SecretPtr();
-			server_write_mac_secret = SecretPtr();
-			client_write_key = SecretPtr();
-			server_write_key = SecretPtr();
-			client_write_iv = SecretPtr();
-			server_write_iv = SecretPtr();
+			client_write_mac_secret = std::shared_ptr<Secret>();
+			server_write_mac_secret = std::shared_ptr<Secret>();
+			client_write_key = std::shared_ptr<Secret>();
+			server_write_key = std::shared_ptr<Secret>();
+			client_write_iv = std::shared_ptr<Secret>();
+			server_write_iv = std::shared_ptr<Secret>();
 			read_sequence_number = 0;
 			write_sequence_number = 0;
 		}
@@ -201,16 +201,16 @@ namespace uicore
 		TLS_MACAlgorithm mac_algorithm;
 		uint8_t hash_size;
 		TLS_CompressionMethod compression_algorithm;
-		SecretPtr master_secret;
-		SecretPtr client_random;
-		SecretPtr server_random;
+		std::shared_ptr<Secret> master_secret;
+		std::shared_ptr<Secret> client_random;
+		std::shared_ptr<Secret> server_random;
 
-		SecretPtr client_write_mac_secret;
-		SecretPtr server_write_mac_secret;
-		SecretPtr client_write_key;
-		SecretPtr server_write_key;
-		SecretPtr client_write_iv;
-		SecretPtr server_write_iv;
+		std::shared_ptr<Secret> client_write_mac_secret;
+		std::shared_ptr<Secret> server_write_mac_secret;
+		std::shared_ptr<Secret> client_write_key;
+		std::shared_ptr<Secret> server_write_key;
+		std::shared_ptr<Secret> client_write_iv;
+		std::shared_ptr<Secret> server_write_iv;
 		uint64_t read_sequence_number;
 		uint64_t write_sequence_number;
 
@@ -260,10 +260,10 @@ namespace uicore
 
 		bool receive_record();
 
-		void change_cipher_spec_data(DataBufferPtr record_plaintext);
-		void alert_data(DataBufferPtr record_plaintext);
-		void handshake_data(DataBufferPtr record_plaintext);
-		void application_data(DataBufferPtr record_plaintext);
+		void change_cipher_spec_data(std::shared_ptr<DataBuffer> record_plaintext);
+		void alert_data(std::shared_ptr<DataBuffer> record_plaintext);
+		void handshake_data(std::shared_ptr<DataBuffer> record_plaintext);
+		void application_data(std::shared_ptr<DataBuffer> record_plaintext);
 
 		void handshake_hello_request_received(const void *data, int size);
 		void handshake_client_hello_received(const void *data, int size);
@@ -290,7 +290,7 @@ namespace uicore
 		void set_tls_handshake(unsigned char *dest_ptr, TLS_HandshakeType handshake_type, unsigned int length);
 		void set_tls_protocol_version(unsigned char *dest_ptr);
 		void create_security_parameters_client_random();
-		void set_tls_random(unsigned char *dest_ptr, SecretPtr &time_and_random_struct) const;
+		void set_tls_random(unsigned char *dest_ptr, std::shared_ptr<Secret> &time_and_random_struct) const;
 		int get_session_id_length() const;
 		void set_session_id(unsigned char *dest_ptr) const;
 		int get_compression_methods_length() const;
@@ -301,53 +301,53 @@ namespace uicore
 		void select_compression_method(uint8_t value);
 		void inspect_certificate(std::vector<unsigned char> &cert);
 		void set_server_public_key();
-		void PRF(void *output_ptr, unsigned int output_size, const SecretPtr &secret, const char *label_ptr, const SecretPtr &seed_part1, const SecretPtr &seed_part2);
+		void PRF(void *output_ptr, unsigned int output_size, const std::shared_ptr<Secret> &secret, const char *label_ptr, const std::shared_ptr<Secret> &seed_part1, const std::shared_ptr<Secret> &seed_part2);
 		void hash_handshake(const void *data_ptr, unsigned int data_size);
 
-		DataBufferPtr decrypt_record(TLS_Record &record, const DataBufferPtr &record_data);
-		DataBufferPtr decrypt_data(const void *data_ptr, unsigned int data_size);
+		std::shared_ptr<DataBuffer> decrypt_record(TLS_Record &record, const std::shared_ptr<DataBuffer> &record_data);
+		std::shared_ptr<DataBuffer> decrypt_data(const void *data_ptr, unsigned int data_size);
 
-		SecretPtr calculate_mac(const void *data_ptr, unsigned int data_size, const void *data2_ptr, unsigned int data2_size, uint64_t sequence_number, const SecretPtr &mac_secret);
-		DataBufferPtr encrypt_data(const void *data_ptr, unsigned int data_size, const void *mac_ptr, unsigned int mac_size);
+		std::shared_ptr<Secret> calculate_mac(const void *data_ptr, unsigned int data_size, const void *data2_ptr, unsigned int data2_size, uint64_t sequence_number, const std::shared_ptr<Secret> &mac_secret);
+		std::shared_ptr<DataBuffer> encrypt_data(const void *data_ptr, unsigned int data_size, const void *mac_ptr, unsigned int mac_size);
 
 		static const unsigned int max_record_length = 2 << 14;	// RFC 2246 (6.2.1)
 		static const unsigned int max_handshake_length = 2 << 24;	// RFC 2246 (implied by length in7.4)
 
 		static const int desired_buffer_size = 64 * 1024;
 
-		DataBufferPtr recv_in_data = DataBuffer::create(0);
+		std::shared_ptr<DataBuffer> recv_in_data = DataBuffer::create(0);
 		int recv_in_data_read_pos = 0;
 
-		DataBufferPtr recv_out_data = DataBuffer::create(0);
+		std::shared_ptr<DataBuffer> recv_out_data = DataBuffer::create(0);
 		int recv_out_data_read_pos = 0;
 
-		DataBufferPtr send_in_data = DataBuffer::create(0);
+		std::shared_ptr<DataBuffer> send_in_data = DataBuffer::create(0);
 		int send_in_data_read_pos = 0;
 
-		DataBufferPtr send_out_data = DataBuffer::create(0);
+		std::shared_ptr<DataBuffer> send_out_data = DataBuffer::create(0);
 		int send_out_data_read_pos = 0;
 
-		DataBufferPtr handshake_in_data = DataBuffer::create(0);
+		std::shared_ptr<DataBuffer> handshake_in_data = DataBuffer::create(0);
 		int handshake_in_read_pos = 0;
 
 		TLS_ConversationState conversation_state = cl_tls_state_send_client_hello;
 
-		DataBufferPtr record_data_buffer = DataBuffer::create(0); // local variable of receive_record(). Placed here to avoid allocating memory each time a record is processed
+		std::shared_ptr<DataBuffer> record_data_buffer = DataBuffer::create(0); // local variable of receive_record(). Placed here to avoid allocating memory each time a record is processed
 
 		TLS_SecurityParameters security_parameters;
 		TLS_ProtocolVersion protocol;
 
-		DataBufferPtr server_public_exponent = DataBuffer::create(0);
-		DataBufferPtr server_public_modulus = DataBuffer::create(0);
+		std::shared_ptr<DataBuffer> server_public_exponent = DataBuffer::create(0);
+		std::shared_ptr<DataBuffer> server_public_modulus = DataBuffer::create(0);
 
 		bool is_protocol_chosen = false;	// Set by the server hello response
 
-		RandomPtr m_Random = Random::create();
+		std::shared_ptr<Random> m_Random = Random::create();
 
-		MD5Ptr client_handshake_md5_hash = MD5::create();
-		SHA1Ptr client_handshake_sha1_hash = SHA1::create();
-		MD5Ptr server_handshake_md5_hash = MD5::create();
-		SHA1Ptr server_handshake_sha1_hash = SHA1::create();
+		std::shared_ptr<MD5> client_handshake_md5_hash = MD5::create();
+		std::shared_ptr<SHA1> client_handshake_sha1_hash = SHA1::create();
+		std::shared_ptr<MD5> server_handshake_md5_hash = MD5::create();
+		std::shared_ptr<SHA1> server_handshake_sha1_hash = SHA1::create();
 
 		std::vector<X509> certificate_chain;
 	};

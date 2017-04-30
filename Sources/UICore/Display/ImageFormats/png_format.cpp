@@ -41,24 +41,24 @@
 
 namespace uicore
 {
-	PixelBufferPtr PNGFormat::load(const std::string &filename, bool srgb)
+	std::shared_ptr<PixelBuffer> PNGFormat::load(const std::string &filename, bool srgb)
 	{
 		auto file = File::open_existing(filename);
 		return PNGLoader::load(file, srgb);
 	}
 
-	PixelBufferPtr PNGFormat::load(const IODevicePtr &file, bool srgb)
+	std::shared_ptr<PixelBuffer> PNGFormat::load(const std::shared_ptr<IODevice> &file, bool srgb)
 	{
 		return PNGLoader::load(file, srgb);
 	}
 
-	void PNGFormat::save(PixelBufferPtr buffer, const std::string &filename)
+	void PNGFormat::save(std::shared_ptr<PixelBuffer> buffer, const std::string &filename)
 	{
 		auto file = File::create_always(filename);
 		save(buffer, file);
 	}
 
-	void PNGFormat::save(PixelBufferPtr buffer, const IODevicePtr &iodev)
+	void PNGFormat::save(std::shared_ptr<PixelBuffer> buffer, const std::shared_ptr<IODevice> &iodev)
 	{
 		PNGWriter::save(iodev, buffer);
 		/*

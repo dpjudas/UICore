@@ -66,7 +66,7 @@ namespace uicore
 		class Base64DecoderImpl : public Base64Decoder
 		{
 		public:
-			DataBufferPtr _result = DataBuffer::create(0);
+			std::shared_ptr<DataBuffer> _result = DataBuffer::create(0);
 			unsigned char chunk[4];
 			int chunk_filled = 0;
 
@@ -87,12 +87,12 @@ namespace uicore
 				}
 			}
 
-			const DataBufferPtr &result() const override;
+			const std::shared_ptr<DataBuffer> &result() const override;
 			void reset() override;
 			void feed(const void *data, int size, bool append_result = true) override;
 		};
 
-		const DataBufferPtr &Base64DecoderImpl::result() const
+		const std::shared_ptr<DataBuffer> &Base64DecoderImpl::result() const
 		{
 			return _result;
 		}
@@ -175,19 +175,19 @@ namespace uicore
 		return std::make_shared<Base64DecoderImpl>();
 	}
 
-	DataBufferPtr Base64Decoder::decode(const void *data, int size)
+	std::shared_ptr<DataBuffer> Base64Decoder::decode(const void *data, int size)
 	{
 		Base64DecoderImpl decoder;
 		decoder.feed(data, size);
 		return decoder.result();
 	}
 
-	DataBufferPtr Base64Decoder::decode(const std::string &data)
+	std::shared_ptr<DataBuffer> Base64Decoder::decode(const std::string &data)
 	{
 		return decode(data.data(), data.length());
 	}
 
-	DataBufferPtr Base64Decoder::decode(const DataBufferPtr &data)
+	std::shared_ptr<DataBuffer> Base64Decoder::decode(const std::shared_ptr<DataBuffer> &data)
 	{
 		return decode(data->data(), data->size());
 	}

@@ -42,6 +42,4 @@ namespace uicore
 	protected:
 		DetectHang() { }
 	};
-
-	typedef std::shared_ptr<DetectHang> DetectHangPtr;
 }

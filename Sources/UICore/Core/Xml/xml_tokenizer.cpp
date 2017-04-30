@@ -39,14 +39,14 @@
 
 namespace uicore
 {
-	std::shared_ptr<XmlTokenizer> XmlTokenizer::create(const IODevicePtr &input)
+	std::shared_ptr<XmlTokenizer> XmlTokenizer::create(const std::shared_ptr<IODevice> &input)
 	{
 		return std::make_shared<XmlTokenizerImpl>(input);
 	}
 
 	/////////////////////////////////////////////////////////////////////////////
 
-	XmlTokenizerImpl::XmlTokenizerImpl(const IODevicePtr &input) : input(input)
+	XmlTokenizerImpl::XmlTokenizerImpl(const std::shared_ptr<IODevice> &input) : input(input)
 	{
 		size = (size_t)input->size();
 		pos = 0;

@@ -114,7 +114,7 @@ namespace uicore
 			return handles.front()->buffer;
 	}
 
-	void D3DStagingBuffer::lock(const GraphicContextPtr &gc, BufferAccess access)
+	void D3DStagingBuffer::lock(const std::shared_ptr<GraphicContext> &gc, BufferAccess access)
 	{
 		auto d3d_window = static_cast<D3DGraphicContext*>(gc.get())->get_window();
 		map_device = &d3d_window->get_device();
@@ -134,7 +134,7 @@ namespace uicore
 		map_data.DepthPitch = 0;
 	}
 
-	void D3DStagingBuffer::upload_data(const GraphicContextPtr &gc, int offset, const void *input, int input_size)
+	void D3DStagingBuffer::upload_data(const std::shared_ptr<GraphicContext> &gc, int offset, const void *input, int input_size)
 	{
 		D3D11_BUFFER_DESC desc;
 		handles.front()->buffer->GetDesc(&desc);

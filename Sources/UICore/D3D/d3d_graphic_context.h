@@ -105,33 +105,33 @@ namespace uicore
 		std::shared_ptr<TextureCubeArray> create_texture_cube_array(int width, int height, int array_size, TextureFormat texture_format, int levels) override;
 		std::shared_ptr<StagingTexture> create_staging_texture(const void *data, const Size &size, StagingDirection direction, TextureFormat new_format, BufferUsage usage) override;
 
-		FrameBufferPtr write_frame_buffer() const { return _write_frame_buffer; }
-		FrameBufferPtr read_frame_buffer() const { return _read_frame_buffer; }
-		ProgramObjectPtr program_object() const override { return _program_object; }
+		std::shared_ptr<FrameBuffer> write_frame_buffer() const { return _write_frame_buffer; }
+		std::shared_ptr<FrameBuffer> read_frame_buffer() const { return _read_frame_buffer; }
+		std::shared_ptr<ProgramObject> program_object() const override { return _program_object; }
 
-		void set_rasterizer_state(const RasterizerStatePtr &state) override;
-		void set_blend_state(const BlendStatePtr &state, const Colorf &blend_color, unsigned int sample_mask) override;
-		void set_depth_stencil_state(const DepthStencilStatePtr &state, int stencil_ref) override;
+		void set_rasterizer_state(const std::shared_ptr<RasterizerState> &state) override;
+		void set_blend_state(const std::shared_ptr<BlendState> &state, const Colorf &blend_color, unsigned int sample_mask) override;
+		void set_depth_stencil_state(const std::shared_ptr<DepthStencilState> &state, int stencil_ref) override;
 		void set_program_object(StandardProgram standard_program) override;
-		void set_program_object(const ProgramObjectPtr &program) override;
-		void set_uniform_buffer(int index, const UniformBufferPtr &buffer) override;
-		void set_storage_buffer(int index, const StorageBufferPtr &buffer) override;
-		void set_texture(int unit_index, const TexturePtr &texture) override;
-		void set_image_texture(int unit_index, const TexturePtr &texture) override;
-		bool is_frame_buffer_owner(const FrameBufferPtr &fb) override;
-		void set_frame_buffer(const FrameBufferPtr &write_buffer, const FrameBufferPtr &read_buffer) override;
+		void set_program_object(const std::shared_ptr<ProgramObject> &program) override;
+		void set_uniform_buffer(int index, const std::shared_ptr<UniformBuffer> &buffer) override;
+		void set_storage_buffer(int index, const std::shared_ptr<StorageBuffer> &buffer) override;
+		void set_texture(int unit_index, const std::shared_ptr<Texture> &texture) override;
+		void set_image_texture(int unit_index, const std::shared_ptr<Texture> &texture) override;
+		bool is_frame_buffer_owner(const std::shared_ptr<FrameBuffer> &fb) override;
+		void set_frame_buffer(const std::shared_ptr<FrameBuffer> &write_buffer, const std::shared_ptr<FrameBuffer> &read_buffer) override;
 		void set_draw_buffer(DrawBuffer buffer) override;
 
-		bool is_primitives_array_owner(const PrimitivesArrayPtr &primitives_array) override;
-		void draw_primitives(PrimitivesType type, int num_vertices, const PrimitivesArrayPtr &primitives_array) override;
-		void set_primitives_array(const PrimitivesArrayPtr &primitives_array) override;
+		bool is_primitives_array_owner(const std::shared_ptr<PrimitivesArray> &primitives_array) override;
+		void draw_primitives(PrimitivesType type, int num_vertices, const std::shared_ptr<PrimitivesArray> &primitives_array) override;
+		void set_primitives_array(const std::shared_ptr<PrimitivesArray> &primitives_array) override;
 		void draw_primitives_array(PrimitivesType type, int offset, int num_vertices) override;
 		void draw_primitives_array_instanced(PrimitivesType type, int offset, int num_vertices, int instance_count) override;
-		void set_primitives_elements(const ElementArrayBufferPtr &array_provider) override;
+		void set_primitives_elements(const std::shared_ptr<ElementArrayBuffer> &array_provider) override;
 		void draw_primitives_elements(PrimitivesType type, int count, VertexAttributeDataType indices_type, size_t offset = 0) override;
 		void draw_primitives_elements_instanced(PrimitivesType type, int count, VertexAttributeDataType indices_type, size_t offset, int instance_count) override;
-		void draw_primitives_elements(PrimitivesType type, int count, const ElementArrayBufferPtr &array_provider, VertexAttributeDataType indices_type, size_t offset) override;
-		void draw_primitives_elements_instanced(PrimitivesType type, int count, const ElementArrayBufferPtr &array_provider, VertexAttributeDataType indices_type, size_t offset, int instance_count) override;
+		void draw_primitives_elements(PrimitivesType type, int count, const std::shared_ptr<ElementArrayBuffer> &array_provider, VertexAttributeDataType indices_type, size_t offset) override;
+		void draw_primitives_elements_instanced(PrimitivesType type, int count, const std::shared_ptr<ElementArrayBuffer> &array_provider, VertexAttributeDataType indices_type, size_t offset, int instance_count) override;
 		void set_scissor(const Rect &rect) override;
 		void reset_scissor() override;
 		void dispatch(int x, int y, int z) override;
@@ -178,8 +178,8 @@ namespace uicore
 		ComPtr<ID3D11DepthStencilView> default_dsv;
 		int default_depth;
 
-		FrameBufferPtr _read_frame_buffer;
-		FrameBufferPtr _write_frame_buffer;
-		ProgramObjectPtr _program_object;
+		std::shared_ptr<FrameBuffer> _read_frame_buffer;
+		std::shared_ptr<FrameBuffer> _write_frame_buffer;
+		std::shared_ptr<ProgramObject> _program_object;
 	};
 }

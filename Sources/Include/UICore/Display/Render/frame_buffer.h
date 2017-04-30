@@ -45,14 +45,6 @@ namespace uicore
 	class GraphicContext;
 	class FrameBufferProvider;
 	class FrameBuffer_Impl;
-	typedef std::shared_ptr<GraphicContext> GraphicContextPtr;
-	typedef std::shared_ptr<Texture1D> Texture1DPtr;
-	typedef std::shared_ptr<Texture1DArray> Texture1DArrayPtr;
-	typedef std::shared_ptr<Texture2D> Texture2DPtr;
-	typedef std::shared_ptr<Texture2DArray> Texture2DArrayPtr;
-	typedef std::shared_ptr<Texture3D> Texture3DPtr;
-	typedef std::shared_ptr<TextureCube> TextureCubePtr;
-	typedef std::shared_ptr<RenderBuffer> RenderBufferPtr;
 
 	/// \brief Texture Subtype
 	enum TextureSubtype
@@ -79,7 +71,7 @@ namespace uicore
 		/// \brief Constructs a FrameBuffer
 		///
 		/// By default, the bind target is set to framebuffer_draw. See set_bind_target()
-		static std::shared_ptr<FrameBuffer> create(const GraphicContextPtr &context);
+		static std::shared_ptr<FrameBuffer> create(const std::shared_ptr<GraphicContext> &context);
 
 		/// \brief Get the minumum size of all the frame buffer attachments
 		virtual Size size() const = 0;
@@ -90,35 +82,35 @@ namespace uicore
 		virtual FrameBufferBindTarget bind_target() const = 0;
 
 		/// \brief Attach color buffer
-		virtual void attach_color(int attachment_index, const RenderBufferPtr &render_buffer) = 0;
-		virtual void attach_color(int attachment_index, const Texture1DPtr &texture, int level = 0) = 0;
-		virtual void attach_color(int attachment_index, const Texture1DArrayPtr &texture, int array_index = -1, int level = 0) = 0;
-		virtual void attach_color(int attachment_index, const Texture2DPtr &texture, int level = 0) = 0;
-		virtual void attach_color(int attachment_index, const Texture2DArrayPtr &texture, int array_index = -1, int level = 0) = 0;
-		virtual void attach_color(int attachment_index, const Texture3DPtr &texture, int depth, int level = 0) = 0;
-		virtual void attach_color(int attachment_index, const TextureCubePtr &texture, TextureSubtype subtype, int level = 0) = 0;
+		virtual void attach_color(int attachment_index, const std::shared_ptr<RenderBuffer> &render_buffer) = 0;
+		virtual void attach_color(int attachment_index, const std::shared_ptr<Texture1D> &texture, int level = 0) = 0;
+		virtual void attach_color(int attachment_index, const std::shared_ptr<Texture1DArray> &texture, int array_index = -1, int level = 0) = 0;
+		virtual void attach_color(int attachment_index, const std::shared_ptr<Texture2D> &texture, int level = 0) = 0;
+		virtual void attach_color(int attachment_index, const std::shared_ptr<Texture2DArray> &texture, int array_index = -1, int level = 0) = 0;
+		virtual void attach_color(int attachment_index, const std::shared_ptr<Texture3D> &texture, int depth, int level = 0) = 0;
+		virtual void attach_color(int attachment_index, const std::shared_ptr<TextureCube> &texture, TextureSubtype subtype, int level = 0) = 0;
 
 		/// Detach color buffer
 		virtual void detach_color(int attachment_index) = 0;
 
 		/// Attach stencil buffer
-		virtual void attach_stencil(const RenderBufferPtr &render_buffer) = 0;
-		virtual void attach_stencil(const Texture2DPtr &texture, int level = 0) = 0;
-		virtual void attach_stencil(const TextureCubePtr &texture, TextureSubtype subtype, int level = 0) = 0;
+		virtual void attach_stencil(const std::shared_ptr<RenderBuffer> &render_buffer) = 0;
+		virtual void attach_stencil(const std::shared_ptr<Texture2D> &texture, int level = 0) = 0;
+		virtual void attach_stencil(const std::shared_ptr<TextureCube> &texture, TextureSubtype subtype, int level = 0) = 0;
 		virtual void detach_stencil() = 0;
 
 		/// Attach depth buffer
-		virtual void attach_depth(const RenderBufferPtr &render_buffer) = 0;
-		virtual void attach_depth(const Texture2DPtr &texture, int level = 0) = 0;
-		virtual void attach_depth(const TextureCubePtr &texture, TextureSubtype subtype, int level = 0) = 0;
+		virtual void attach_depth(const std::shared_ptr<RenderBuffer> &render_buffer) = 0;
+		virtual void attach_depth(const std::shared_ptr<Texture2D> &texture, int level = 0) = 0;
+		virtual void attach_depth(const std::shared_ptr<TextureCube> &texture, TextureSubtype subtype, int level = 0) = 0;
 
 		/// Detach depth buffer
 		virtual void detach_depth() = 0;
 
 		// Attach combined depth and stencil buffer
-		virtual void attach_depth_stencil(const RenderBufferPtr &render_buffer) = 0;
-		virtual void attach_depth_stencil(const Texture2DPtr &texture, int level = 0) = 0;
-		virtual void attach_depth_stencil(const TextureCubePtr &texture, TextureSubtype subtype, int level = 0) = 0;
+		virtual void attach_depth_stencil(const std::shared_ptr<RenderBuffer> &render_buffer) = 0;
+		virtual void attach_depth_stencil(const std::shared_ptr<Texture2D> &texture, int level = 0) = 0;
+		virtual void attach_depth_stencil(const std::shared_ptr<TextureCube> &texture, TextureSubtype subtype, int level = 0) = 0;
 
 		// Detach combined depth and stencil buffer
 		virtual void detach_depth_stencil() = 0;
@@ -128,6 +120,4 @@ namespace uicore
 		/// Detach existing textures and renderbuffers before setting a new bind target
 		virtual void set_bind_target(FrameBufferBindTarget target) = 0;
 	};
-
-	typedef std::shared_ptr<FrameBuffer> FrameBufferPtr;
 }

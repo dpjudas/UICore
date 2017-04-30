@@ -74,7 +74,7 @@ namespace uicore
 		return segment_rects;
 	}
 
-	void TextBlockImpl::draw_layout(const CanvasPtr &canvas)
+	void TextBlockImpl::draw_layout(const std::shared_ptr<Canvas> &canvas)
 	{
 		float x = position.x;
 		float y = position.y;
@@ -116,7 +116,7 @@ namespace uicore
 		}
 	}
 
-	void TextBlockImpl::draw_layout_ellipsis(const CanvasPtr &canvas, const Rectf &content_rect)
+	void TextBlockImpl::draw_layout_ellipsis(const std::shared_ptr<Canvas> &canvas, const Rectf &content_rect)
 	{
 		is_ellipsis_draw = true;
 		ellipsis_content_rect = content_rect;
@@ -132,12 +132,12 @@ namespace uicore
 		}
 	}
 
-	void TextBlockImpl::draw_layout_image(const CanvasPtr &canvas, Line &line, LineSegment &segment, float x, float y)
+	void TextBlockImpl::draw_layout_image(const std::shared_ptr<Canvas> &canvas, Line &line, LineSegment &segment, float x, float y)
 	{
 		segment.image->draw(canvas, x + segment.x_position, y + line.ascender - segment.ascender);
 	}
 
-	void TextBlockImpl::draw_layout_text(const CanvasPtr &canvas, Line &line, LineSegment &segment, float x, float y)
+	void TextBlockImpl::draw_layout_text(const std::shared_ptr<Canvas> &canvas, Line &line, LineSegment &segment, float x, float y)
 	{
 		std::string segment_text = text.substr(segment.start, segment.end - segment.start);
 
@@ -197,7 +197,7 @@ namespace uicore
 		}
 	}
 
-	TextBlock::HitTestResult TextBlockImpl::hit_test(const CanvasPtr &canvas, const Pointf &pos)
+	TextBlock::HitTestResult TextBlockImpl::hit_test(const std::shared_ptr<Canvas> &canvas, const Pointf &pos)
 	{
 		TextBlock::HitTestResult result;
 
@@ -310,7 +310,7 @@ namespace uicore
 		return rect;
 	}
 
-	void TextBlockImpl::add_text(const std::string &more_text, const FontPtr &font, const Colorf &color, int id)
+	void TextBlockImpl::add_text(const std::string &more_text, const std::shared_ptr<Font> &font, const Colorf &color, int id)
 	{
 		SpanObject object;
 		object.type = object_text;
@@ -323,7 +323,7 @@ namespace uicore
 		text += more_text;
 	}
 
-	void TextBlockImpl::add_image(const ImagePtr &image, float baseline_offset, int id)
+	void TextBlockImpl::add_image(const std::shared_ptr<Image> &image, float baseline_offset, int id)
 	{
 		SpanObject object;
 		object.type = object_image;
@@ -349,7 +349,7 @@ namespace uicore
 		text += "*";
 	}
 
-	void TextBlockImpl::layout(const CanvasPtr &canvas, float max_width)
+	void TextBlockImpl::layout(const std::shared_ptr<Canvas> &canvas, float max_width)
 	{
 		layout_lines(canvas, max_width);
 
@@ -363,9 +363,9 @@ namespace uicore
 		}
 	}
 
-	TextBlockImpl::TextSizeResult TextBlockImpl::find_text_size(const CanvasPtr &canvas, const InlineBlock &block, unsigned int object_index)
+	TextBlockImpl::TextSizeResult TextBlockImpl::find_text_size(const std::shared_ptr<Canvas> &canvas, const InlineBlock &block, unsigned int object_index)
 	{
-		FontPtr font = objects[object_index].font;
+		std::shared_ptr<Font> font = objects[object_index].font;
 		if (layout_cache.object_index != object_index)
 		{
 			layout_cache.object_index = object_index;
@@ -495,7 +495,7 @@ namespace uicore
 		alignment = align;
 	}
 
-	void TextBlockImpl::layout_lines(const CanvasPtr &canvas, float max_width)
+	void TextBlockImpl::layout_lines(const std::shared_ptr<Canvas> &canvas, float max_width)
 	{
 		lines.clear();
 		if (objects.empty())
@@ -638,7 +638,7 @@ namespace uicore
 		return true;
 	}
 
-	void TextBlockImpl::layout_text(const CanvasPtr &canvas, std::vector<InlineBlock> blocks, std::vector<InlineBlock>::size_type block_index, CurrentLine &current_line, float max_width)
+	void TextBlockImpl::layout_text(const std::shared_ptr<Canvas> &canvas, std::vector<InlineBlock> blocks, std::vector<InlineBlock>::size_type block_index, CurrentLine &current_line, float max_width)
 	{
 		TextSizeResult text_size_result = find_text_size(canvas, blocks[block_index], current_line.object_index);
 		current_line.object_index += text_size_result.objects_traversed;
@@ -801,7 +801,7 @@ namespace uicore
 		}
 	}
 
-	Sizef TextBlockImpl::find_preferred_size(const CanvasPtr &canvas)
+	Sizef TextBlockImpl::find_preferred_size(const std::shared_ptr<Canvas> &canvas)
 	{
 		layout_lines(canvas, 0x70000000); // Feed it with a very long length so it ends up on one line
 		return rect().size();

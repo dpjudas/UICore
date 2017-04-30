@@ -34,7 +34,6 @@
 namespace uicore
 {
 	class DisplayWindow;
-	typedef std::shared_ptr<DisplayWindow> DisplayWindowPtr;
 	class Canvas;
 	class ViewTreeImpl;
 
@@ -51,10 +50,10 @@ namespace uicore
 		/// Gets the display window used
 		///
 		/// This may return a null DisplayWindow
-		virtual DisplayWindowPtr display_window() = 0;
+		virtual std::shared_ptr<DisplayWindow> display_window() = 0;
 
 		/// Gets the current canvas used to render
-		virtual CanvasPtr canvas() const = 0;
+		virtual std::shared_ptr<Canvas> canvas() const = 0;
 
 		/// Retrieves the root of the view tree
 		const std::shared_ptr<View> &root_view() const;
@@ -86,7 +85,7 @@ namespace uicore
 		void set_focus_view(View *view);
 
 		/// Renders view into the specified canvas
-		void render(const CanvasPtr &canvas, const Rectf &margin_box);
+		void render(const std::shared_ptr<Canvas> &canvas, const Rectf &margin_box);
 
 		/// Dispatch activation change event to all views
 		void dispatch_activation_change(ActivationChangeType type);

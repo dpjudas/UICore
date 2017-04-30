@@ -39,7 +39,7 @@
 
 namespace uicore
 {
-	TextureWindow::TextureWindow(const CanvasPtr &canvas) : impl(std::make_shared<TextureWindow_Impl>(this, canvas))
+	TextureWindow::TextureWindow(const std::shared_ptr<Canvas> &canvas) : impl(std::make_shared<TextureWindow_Impl>(this, canvas))
 	{
 	}
 
@@ -58,12 +58,12 @@ namespace uicore
 		impl->clear_background_enable = enable;
 	}
 
-	CanvasPtr TextureWindow::canvas() const
+	std::shared_ptr<Canvas> TextureWindow::canvas() const
 	{
 		return impl->canvas;
 	}
 
-	DisplayWindowPtr TextureWindow::display_window()
+	std::shared_ptr<DisplayWindow> TextureWindow::display_window()
 	{
 		return impl->display_window;
 	}
@@ -97,7 +97,7 @@ namespace uicore
 		}
 	}
 
-	void TextureWindow::set_window(const DisplayWindowPtr &window, bool enable_automatic_events, const Mat4f &transform_mouse_matrix)
+	void TextureWindow::set_window(const std::shared_ptr<DisplayWindow> &window, bool enable_automatic_events, const Mat4f &transform_mouse_matrix)
 	{
 		impl->set_window(window, enable_automatic_events, transform_mouse_matrix);
 	}

@@ -82,29 +82,29 @@ namespace uicore
 	class PathInstanceBuffer
 	{
 	public:
-		void reset(const GraphicContextPtr &gc, Vec4f *buffer, int max_entries);
-		int push(const CanvasPtr &canvas, const Brush &brush, const Mat4f &transform);
+		void reset(const std::shared_ptr<GraphicContext> &gc, Vec4f *buffer, int max_entries);
+		int push(const std::shared_ptr<Canvas> &canvas, const Brush &brush, const Mat4f &transform);
 
 		Vec4f *get_buffer() const { return buffer; }
 		int get_position() const { return end_position; }
 
-		Texture2DPtr get_texture() const { return current_texture; }
+		std::shared_ptr<Texture2D> get_texture() const { return current_texture; }
 
 	private:
 		static Pointf transform_point(Pointf point, const Mat3f &brush_transform, const Mat4f &fill_transform);
 
 		int next_position(int size);
 
-		int store_solid(const CanvasPtr &canvas, const Brush &brush, const Mat4f &transform);
-		int store_linear(const CanvasPtr &canvas, const Brush &brush, const Mat4f &transform);
-		int store_radial(const CanvasPtr &canvas, const Brush &brush, const Mat4f &transform);
-		int store_image(const CanvasPtr &canvas, const Brush &brush, const Mat4f &transform);
+		int store_solid(const std::shared_ptr<Canvas> &canvas, const Brush &brush, const Mat4f &transform);
+		int store_linear(const std::shared_ptr<Canvas> &canvas, const Brush &brush, const Mat4f &transform);
+		int store_radial(const std::shared_ptr<Canvas> &canvas, const Brush &brush, const Mat4f &transform);
+		int store_image(const std::shared_ptr<Canvas> &canvas, const Brush &brush, const Mat4f &transform);
 
 		Vec4f *buffer = nullptr;
 		int max_entries = 0;
 		int end_position = 0;		// The next free position
 
-		Texture2DPtr current_texture;
+		std::shared_ptr<Texture2D> current_texture;
 	};
 
 	class PathVertexBuffer
@@ -196,15 +196,15 @@ namespace uicore
 	class PathFillRenderer : public PathRenderer
 	{
 	public:
-		PathFillRenderer(const GraphicContextPtr &gc, RenderBatchBuffer *batch_buffer);
+		PathFillRenderer(const std::shared_ptr<GraphicContext> &gc, RenderBatchBuffer *batch_buffer);
 
 		void clear(int width, int height);
 
 		void line(float x, float y) override;
 		void end(bool close) override;
 
-		void fill(const CanvasPtr &canvas, PathFillMode mode, const Brush &brush, const Mat4f &transform);
-		void flush(const GraphicContextPtr &gc);
+		void fill(const std::shared_ptr<Canvas> &canvas, PathFillMode mode, const Brush &brush, const Mat4f &transform);
+		void flush(const std::shared_ptr<GraphicContext> &gc);
 
 		void set_yaxis(TextureImageYAxis yaxis) { image_yaxis = yaxis; }
 
@@ -213,7 +213,7 @@ namespace uicore
 	private:
 		void insert_sorted(PathScanline &scanline, const PathScanlineEdge &edge);
 
-		void initialise_buffers(const CanvasPtr &canvas);
+		void initialise_buffers(const std::shared_ptr<Canvas> &canvas);
 
 		TextureImageYAxis image_yaxis = y_axis_top_down;
 
@@ -250,12 +250,12 @@ namespace uicore
 
 		RenderBatchBuffer *batch_buffer;
 
-		StagingTexturePtr mask_buffer;
+		std::shared_ptr<StagingTexture> mask_buffer;
 		int mask_buffer_id;	// Buffer index of the mask buffer
-		Texture2DPtr mask_texture;
-		StagingTexturePtr instance_buffer;
-		Texture2DPtr instance_texture;
-		PrimitivesArrayPtr prim_array[RenderBatchBuffer::num_vertex_buffers];
-		BlendStatePtr blend_state;
+		std::shared_ptr<Texture2D> mask_texture;
+		std::shared_ptr<StagingTexture> instance_buffer;
+		std::shared_ptr<Texture2D> instance_texture;
+		std::shared_ptr<PrimitivesArray> prim_array[RenderBatchBuffer::num_vertex_buffers];
+		std::shared_ptr<BlendState> blend_state;
 	};
 }

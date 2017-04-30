@@ -45,19 +45,19 @@ namespace uicore
 		~TextBlockImpl();
 
 		void clear() override;
-		void add_text(const std::string &text, const FontPtr &font, const Colorf &color, int id) override;
-		void add_image(const ImagePtr &image, float baseline_offset, int id) override;
+		void add_text(const std::string &text, const std::shared_ptr<Font> &font, const Colorf &color, int id) override;
+		void add_image(const std::shared_ptr<Image> &image, float baseline_offset, int id) override;
 		void add_component(std::shared_ptr<SpanComponent> component, float baseline_offset, int id) override;
-		void layout(const CanvasPtr &canvas, float max_width) override;
+		void layout(const std::shared_ptr<Canvas> &canvas, float max_width) override;
 		void set_position(const Pointf &pos) override { position = pos; }
 		Sizef size() const override { return rect().size(); }
 		Rectf rect() const override;
 		std::vector<Rectf> rect_by_id(int id) const override;
-		HitTestResult hit_test(const CanvasPtr &canvas, const Pointf &pos) override;
-		void draw_layout(const CanvasPtr &canvas) override;
-		void draw_layout_ellipsis(const CanvasPtr &canvas, const Rectf &content_rect) override;
+		HitTestResult hit_test(const std::shared_ptr<Canvas> &canvas, const Pointf &pos) override;
+		void draw_layout(const std::shared_ptr<Canvas> &canvas) override;
+		void draw_layout_ellipsis(const std::shared_ptr<Canvas> &canvas, const Rectf &content_rect) override;
 		void set_component_geometry() override;
-		Sizef find_preferred_size(const CanvasPtr &canvas) override;
+		Sizef find_preferred_size(const std::shared_ptr<Canvas> &canvas) override;
 		void set_selection_range(std::string::size_type start, std::string::size_type end) override;
 		void set_selection_colors(const Colorf &foreground, const Colorf &background) override;
 		void show_cursor() override { cursor_visible = true; }
@@ -102,12 +102,12 @@ namespace uicore
 			ObjectType type = object_text;
 			FloatType float_type = float_none;
 
-			FontPtr font;
+			std::shared_ptr<Font> font;
 			Colorf color;
 			unsigned int start = 0;
 			unsigned int end = 0;
 
-			ImagePtr image;
+			std::shared_ptr<Image> image;
 			std::shared_ptr<SpanComponent> component;
 			float baseline_offset = 0;
 
@@ -120,7 +120,7 @@ namespace uicore
 
 			ObjectType type = object_text;
 
-			FontPtr font;
+			std::shared_ptr<Font> font;
 			Colorf color;
 			int start = 0, end = 0;
 			float ascender = 0;
@@ -129,7 +129,7 @@ namespace uicore
 			float x_position = 0;
 			float width = 0;
 
-			ImagePtr image;
+			std::shared_ptr<Image> image;
 			SpanComponent *component = nullptr;
 			float baseline_offset = 0;
 
@@ -173,15 +173,15 @@ namespace uicore
 
 			Rectf rect;
 			ObjectType type = object_image;
-			ImagePtr image;
+			std::shared_ptr<Image> image;
 			SpanComponent *component = nullptr;
 			int id = 1;
 		};
 
-		TextSizeResult find_text_size(const CanvasPtr &canvas, const InlineBlock &block, unsigned int object_index);
+		TextSizeResult find_text_size(const std::shared_ptr<Canvas> &canvas, const InlineBlock &block, unsigned int object_index);
 		std::vector<InlineBlock> find_text_blocks();
-		void layout_lines(const CanvasPtr &canvas, float max_width);
-		void layout_text(const CanvasPtr &canvas, std::vector<InlineBlock> blocks, std::vector<InlineBlock>::size_type block_index, CurrentLine &current_line, float max_width);
+		void layout_lines(const std::shared_ptr<Canvas> &canvas, float max_width);
+		void layout_text(const std::shared_ptr<Canvas> &canvas, std::vector<InlineBlock> blocks, std::vector<InlineBlock>::size_type block_index, CurrentLine &current_line, float max_width);
 		void layout_block(CurrentLine &current_line, float max_width, std::vector<InlineBlock> &blocks, std::vector<InlineBlock>::size_type block_index);
 		void layout_float_block(CurrentLine &current_line, float max_width);
 		void layout_inline_block(CurrentLine &current_line, float max_width, std::vector<InlineBlock> &blocks, std::vector<InlineBlock>::size_type block_index);
@@ -200,8 +200,8 @@ namespace uicore
 		void align_justify(float max_width);
 		void align_center(float max_width);
 		void align_right(float max_width);
-		void draw_layout_image(const CanvasPtr &canvas, Line &line, LineSegment &segment, float x, float y);
-		void draw_layout_text(const CanvasPtr &canvas, Line &line, LineSegment &segment, float x, float y);
+		void draw_layout_image(const std::shared_ptr<Canvas> &canvas, Line &line, LineSegment &segment, float x, float y);
+		void draw_layout_text(const std::shared_ptr<Canvas> &canvas, Line &line, LineSegment &segment, float x, float y);
 
 		std::string::size_type sel_start = 0, sel_end = 0;
 		Colorf sel_foreground = StandardColorf::white(), sel_background = StandardColorf::darkslateblue();

@@ -59,14 +59,14 @@ namespace uicore
 		Size backing_minimum_size(bool client_area) const override;
 		Size backing_maximum_size(bool client_area) const override;
 		DisplayWindowHandle handle() const override { DisplayWindowHandle handle; return handle; }
-		const GraphicContextPtr &gc() const override;
-		const InputDevicePtr &keyboard() const override;
-		const InputDevicePtr &mouse() const override;
-		const std::vector<InputDevicePtr> &game_controllers() const override;
+		const std::shared_ptr<GraphicContext> &gc() const override;
+		const std::shared_ptr<InputDevice> &keyboard() const override;
+		const std::shared_ptr<InputDevice> &mouse() const override;
+		const std::vector<std::shared_ptr<InputDevice>> &game_controllers() const override;
 		bool is_clipboard_text_available() const override;
 		bool is_clipboard_image_available() const override;
 		std::string clipboard_text() const override;
-		PixelBufferPtr clipboard_image() const override;
+		std::shared_ptr<PixelBuffer> clipboard_image() const override;
 		float pixel_ratio() const override;
 
 		bool is_double_buffered() const;
@@ -77,8 +77,8 @@ namespace uicore
 		Point backing_screen_to_client(const Point &screen) override;
 
 		void show_system_cursor() override;
-		CursorPtr create_cursor(const CursorDescription &cursor_description) override;
-		void set_cursor(const CursorPtr &cursor) override;
+		std::shared_ptr<Cursor> create_cursor(const CursorDescription &cursor_description) override;
+		void set_cursor(const std::shared_ptr<Cursor> &cursor) override;
 		void set_cursor(StandardCursor type) override;
 		void hide_system_cursor() override;
 		void set_title(const std::string &new_title) override;
@@ -97,10 +97,10 @@ namespace uicore
 		void backing_flip(int interval) override;
 		void capture_mouse(bool capture) override;
 		void set_clipboard_text(const std::string &text) override;
-		void set_clipboard_image(const PixelBufferPtr &buf) override;
+		void set_clipboard_image(const std::shared_ptr<PixelBuffer> &buf) override;
 		void request_repaint() override;
-		void set_large_icon(const PixelBufferPtr &image) override;
-		void set_small_icon(const PixelBufferPtr &image) override;
+		void set_large_icon(const std::shared_ptr<PixelBuffer> &image) override;
+		void set_small_icon(const std::shared_ptr<PixelBuffer> &image) override;
 
 		void backing_enable_alpha_channel(const Rect &blur_rect) override;
 		void backing_extend_frame_into_client_area(int left, int top, int right, int bottom) override;
@@ -110,7 +110,7 @@ namespace uicore
 		OpenGLWindowProvider_Impl *get_impl() { return impl.get(); }
 		
 	private:
-		InputDevicePtr _keyboard, _mouse;
+		std::shared_ptr<InputDevice> _keyboard, _mouse;
 
 		InputDeviceProvider_OSXKeyboard *get_keyboard_provider();
 		InputDeviceProvider_OSXMouse *get_mouse_provider();

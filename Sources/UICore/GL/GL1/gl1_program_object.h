@@ -59,7 +59,7 @@ namespace uicore
 		std::string info_log() const override;
 
 		/// \brief Returns the shaders used in this program.
-		std::vector<ShaderObjectPtr> shaders() const override;
+		std::vector<std::shared_ptr<ShaderObject>> shaders() const override;
 
 		/// \brief Returns the location of a named active attribute.
 		int attribute_location(const std::string &name) const override;
@@ -75,10 +75,10 @@ namespace uicore
 		int storage_buffer_index(const std::string &name) const override;
 
 		/// \brief Add shader to program object.
-		void attach(const ShaderObjectPtr &obj) override;
+		void attach(const std::shared_ptr<ShaderObject> &obj) override;
 
 		/// \brief Remove shader from program object.
-		void detach(const ShaderObjectPtr &obj) override;
+		void detach(const std::shared_ptr<ShaderObject> &obj) override;
 
 		/// \brief Bind attribute to specific location.
 		/** <p>This function must be called before linking.</p>*/
@@ -119,7 +119,7 @@ namespace uicore
 	private:
 		void on_dispose() override;
 
-		std::vector<ShaderObjectPtr> _shaders;
+		std::vector<std::shared_ptr<ShaderObject>> _shaders;
 
 		Mat4f modelview_matrix;
 		Mat4f projection_matrix;

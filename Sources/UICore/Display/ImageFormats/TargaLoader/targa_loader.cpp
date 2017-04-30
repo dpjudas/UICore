@@ -31,13 +31,13 @@
 
 namespace uicore
 {
-	PixelBufferPtr TargaLoader::load(const IODevicePtr &iodevice, bool srgb)
+	std::shared_ptr<PixelBuffer> TargaLoader::load(const std::shared_ptr<IODevice> &iodevice, bool srgb)
 	{
 		TargaLoader loader(iodevice, srgb);
 		return loader.image;
 	}
 
-	TargaLoader::TargaLoader(const IODevicePtr &iodevice, bool srgb)
+	TargaLoader::TargaLoader(const std::shared_ptr<IODevice> &iodevice, bool srgb)
 		: file(iodevice), srgb(srgb)
 	{
 		read_header();

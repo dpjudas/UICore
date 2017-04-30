@@ -49,7 +49,7 @@ namespace uicore
 		/// \param end_x = End x position of the noise
 		/// \param start_y = Start y position of the noise
 		/// \param end_y = End y position of the noise
-		virtual PixelBufferPtr create_noise1d(float start_x, float end_x) = 0;
+		virtual std::shared_ptr<PixelBuffer> create_noise1d(float start_x, float end_x) = 0;
 
 		/// \brief Create the perlin noise
 		///
@@ -59,7 +59,7 @@ namespace uicore
 		/// \param end_x = End x position of the noise
 		/// \param start_y = Start y position of the noise
 		/// \param end_y = End y position of the noise
-		virtual PixelBufferPtr create_noise2d(float start_x, float end_x, float start_y, float end_y) = 0;
+		virtual std::shared_ptr<PixelBuffer> create_noise2d(float start_x, float end_x, float start_y, float end_y) = 0;
 
 		/// \brief Create the perlin noise
 		///
@@ -70,7 +70,7 @@ namespace uicore
 		/// \param start_y = Start y position of the noise
 		/// \param end_y = End y position of the noise
 		/// \param z_position = The z position of the noise
-		virtual PixelBufferPtr create_noise3d(float start_x, float end_x, float start_y, float end_y, float z_position) = 0;
+		virtual std::shared_ptr<PixelBuffer> create_noise3d(float start_x, float end_x, float start_y, float end_y, float z_position) = 0;
 
 		/// \brief Create the perlin noise
 		///
@@ -82,7 +82,7 @@ namespace uicore
 		/// \param end_y = End y position of the noise
 		/// \param z_position = The z position of the noise
 		/// \param w_position = The w position of the noise
-		virtual PixelBufferPtr create_noise4d(float start_x, float end_x, float start_y, float end_y, float z_position, float w_position) = 0;
+		virtual std::shared_ptr<PixelBuffer> create_noise4d(float start_x, float end_x, float start_y, float end_y, float z_position, float w_position) = 0;
 
 		/// \brief Get the size of the output pixelbuffer
 		virtual Size size() const = 0;
@@ -143,6 +143,4 @@ namespace uicore
 		/// \param octaves = The number of octaves to set
 		virtual void set_octaves(int octaves = 1) = 0;
 	};
-
-	typedef std::shared_ptr<PerlinNoise> PerlinNoisePtr;
 }

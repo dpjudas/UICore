@@ -334,7 +334,7 @@ namespace uicore
 		return impl->sig_enter_pressed;
 	}
 
-	void TextFieldBaseView::render_content(const CanvasPtr &canvas)
+	void TextFieldBaseView::render_content(const std::shared_ptr<Canvas> &canvas)
 	{
 		std::string txt_before = impl->get_text_before_selection();
 		std::string txt_selected = impl->get_selected_text();
@@ -347,7 +347,7 @@ namespace uicore
 			txt_after = impl->create_password(Text::char_length(txt_after));
 		}
 
-		FontPtr font = impl->get_font();
+		std::shared_ptr<Font> font = impl->get_font();
 
 		float advance_before = font->measure_text(canvas, txt_before).advance.width;
 		float advance_selected = font->measure_text(canvas, txt_selected).advance.width;
@@ -393,32 +393,32 @@ namespace uicore
 		}
 	}
 
-	float TextFieldBaseView::calculate_preferred_width(const CanvasPtr &canvas)
+	float TextFieldBaseView::calculate_preferred_width(const std::shared_ptr<Canvas> &canvas)
 	{
-		FontPtr font = impl->get_font();
+		std::shared_ptr<Font> font = impl->get_font();
 		return font->measure_text(canvas, "X").advance.width * impl->preferred_size;
 	}
 
-	float TextFieldBaseView::calculate_preferred_height(const CanvasPtr &canvas, float width)
+	float TextFieldBaseView::calculate_preferred_height(const std::shared_ptr<Canvas> &canvas, float width)
 	{
-		FontPtr font = impl->get_font();
+		std::shared_ptr<Font> font = impl->get_font();
 		return font->font_metrics(canvas).line_height();
 	}
 
-	float TextFieldBaseView::calculate_first_baseline_offset(const CanvasPtr &canvas, float width)
+	float TextFieldBaseView::calculate_first_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width)
 	{
-		FontPtr font = impl->get_font();
+		std::shared_ptr<Font> font = impl->get_font();
 		return font->font_metrics(canvas).baseline_offset();
 	}
 
-	float TextFieldBaseView::calculate_last_baseline_offset(const CanvasPtr &canvas, float width)
+	float TextFieldBaseView::calculate_last_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width)
 	{
 		return first_baseline_offset(canvas, width);
 	}
 
 	/////////////////////////////////////////////////////////////////////////
 
-	const FontPtr &TextFieldBaseViewImpl::get_font()
+	const std::shared_ptr<Font> &TextFieldBaseViewImpl::get_font()
 	{
 		if (!font)
 			font = textfield->style_cascade().font();
@@ -806,7 +806,7 @@ namespace uicore
 			ViewTree *tree = textfield->view_tree();
 			if (tree)
 			{
-				DisplayWindowPtr window = tree->display_window();
+				std::shared_ptr<DisplayWindow> window = tree->display_window();
 				if (window)
 				{
 					if (selection.length() > 0)
@@ -823,7 +823,7 @@ namespace uicore
 		ViewTree *tree = textfield->view_tree();
 		if (tree)
 		{
-			DisplayWindowPtr window = tree->display_window();
+			std::shared_ptr<DisplayWindow> window = tree->display_window();
 			if (window)
 				add(window->clipboard_text());
 		}
@@ -1008,9 +1008,9 @@ namespace uicore
 		return last_measured_rects.size();
 	}
 
-	Size TextFieldBaseViewImpl::get_visual_text_size(const CanvasPtr &canvas, int pos, int npos)
+	Size TextFieldBaseViewImpl::get_visual_text_size(const std::shared_ptr<Canvas> &canvas, int pos, int npos)
 	{
-		FontPtr font = get_font();
+		std::shared_ptr<Font> font = get_font();
 
 		return password_mode ? 
 			Size(font->measure_text(canvas, create_password(Text::char_length(text.substr(pos, npos)))).bbox_size) :

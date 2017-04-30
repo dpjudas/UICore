@@ -64,6 +64,4 @@ namespace uicore
 		/// \brief Marks encrypted data as consumed.
 		virtual void encrypted_data_consumed(int size) = 0;
 	};
-
-	typedef std::shared_ptr<TLSClient> TLSClientPtr;
 }

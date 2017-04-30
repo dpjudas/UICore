@@ -51,7 +51,7 @@ namespace uicore
 		delete[] data;
 	}
 
-	void GL1UniformBuffer::upload_data(const GraphicContextPtr &gc, const void *data, int size)
+	void GL1UniformBuffer::upload_data(const std::shared_ptr<GraphicContext> &gc, const void *data, int size)
 	{
 		if ((size < 0) || (size > this->size))
 			throw Exception("Uniform buffer, invalid size");
@@ -59,14 +59,14 @@ namespace uicore
 		memcpy(this->data, data, size);
 	}
 
-	void GL1UniformBuffer::copy_from(const GraphicContextPtr &gc, const StagingBufferPtr &buffer, int dest_pos, int src_pos, int size)
+	void GL1UniformBuffer::copy_from(const std::shared_ptr<GraphicContext> &gc, const std::shared_ptr<StagingBuffer> &buffer, int dest_pos, int src_pos, int size)
 	{
 		buffer->lock(gc, access_read_only);
 		memcpy(this->data + dest_pos, (char *)buffer->data() + src_pos, size);
 		buffer->unlock();
 	}
 
-	void GL1UniformBuffer::copy_to(const GraphicContextPtr &gc, const StagingBufferPtr &buffer, int dest_pos, int src_pos, int size)
+	void GL1UniformBuffer::copy_to(const std::shared_ptr<GraphicContext> &gc, const std::shared_ptr<StagingBuffer> &buffer, int dest_pos, int src_pos, int size)
 	{
 		buffer->upload_data(gc, dest_pos, this->data + src_pos, size);
 	}

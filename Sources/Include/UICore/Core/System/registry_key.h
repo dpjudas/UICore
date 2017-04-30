@@ -71,19 +71,17 @@ namespace uicore
 		virtual std::vector<std::string> value_names() const = 0;
 
 		virtual int value_int(const std::string &name, int default_value = 0) const = 0;
-		virtual DataBufferPtr value_binary(const std::string &name, const DataBufferPtr &default_value = DataBufferPtr()) const = 0;
+		virtual std::shared_ptr<DataBuffer> value_binary(const std::string &name, const std::shared_ptr<DataBuffer> &default_value = std::shared_ptr<DataBuffer>()) const = 0;
 		virtual std::string value_string(const std::string &name, const std::string &default_value = std::string()) const = 0;
 		virtual std::vector<std::string> value_multi_string(const std::string &name, const std::vector<std::string> &default_value = std::vector<std::string>()) const = 0;
 
 		virtual void set_value_int(const std::string &name, int value) = 0;
-		virtual void set_value_binary(const std::string &name, const DataBufferPtr &value) = 0;
+		virtual void set_value_binary(const std::string &name, const std::shared_ptr<DataBuffer> &value) = 0;
 		virtual void set_value_string(const std::string &name, const std::string &value) = 0;
 
 		virtual void delete_key(const std::string &subkey, bool recursive) = 0;
 		virtual void delete_value(const std::string &name) = 0;
 	};
-
-	typedef std::shared_ptr<RegistryKey> RegistryKeyPtr;
 }
 
 #endif

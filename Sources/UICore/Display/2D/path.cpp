@@ -41,7 +41,7 @@ namespace uicore
 		return std::make_shared<PathImpl>();
 	}
 
-	std::shared_ptr<Path> Path::glyph(const CanvasPtr &canvas, const FontPtr &font, unsigned int glyph, GlyphMetrics &out_metrics)
+	std::shared_ptr<Path> Path::glyph(const std::shared_ptr<Canvas> &canvas, const std::shared_ptr<Font> &font, unsigned int glyph, GlyphMetrics &out_metrics)
 	{
 		auto path = Path::create();
 		static_cast<Font_Impl*>(font.get())->glyph_path(canvas, glyph, path, out_metrics);
@@ -182,19 +182,19 @@ namespace uicore
 		return std::make_shared<PathImpl>(*this);
 	}
 
-	void PathImpl::stroke(const CanvasPtr &canvas, const Pen &pen)
+	void PathImpl::stroke(const std::shared_ptr<Canvas> &canvas, const Pen &pen)
 	{
 		RenderBatchPath *batcher = static_cast<CanvasImpl*>(canvas.get())->batcher.get_path_batcher();
 		batcher->stroke(canvas, *this, pen);
 	}
 
-	void PathImpl::fill(const CanvasPtr &canvas, const Brush &brush)
+	void PathImpl::fill(const std::shared_ptr<Canvas> &canvas, const Brush &brush)
 	{
 		RenderBatchPath *batcher = static_cast<CanvasImpl*>(canvas.get())->batcher.get_path_batcher();
 		batcher->fill(canvas, *this, brush);
 	}
 
-	void PathImpl::fill_and_stroke(const CanvasPtr &canvas, const Pen &pen, const Brush &brush)
+	void PathImpl::fill_and_stroke(const std::shared_ptr<Canvas> &canvas, const Pen &pen, const Brush &brush)
 	{
 		RenderBatchPath *batcher = static_cast<CanvasImpl*>(canvas.get())->batcher.get_path_batcher();
 		batcher->fill(canvas, *this, brush);

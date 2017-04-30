@@ -48,7 +48,7 @@ namespace uicore
 	class PixelBufferImpl
 	{
 	public:
-		static void convert(const PixelBuffer *source, PixelBuffer *target, const Rect &dest_rect, const Rect &src_rect, const PixelConverterPtr &converter)
+		static void convert(const PixelBuffer *source, PixelBuffer *target, const Rect &dest_rect, const Rect &src_rect, const std::shared_ptr<PixelConverter> &converter)
 		{
 			if (dest_rect.size() != src_rect.size())
 			{
@@ -373,12 +373,12 @@ namespace uicore
 		PixelBufferImpl::convert(source.get(), this, Rect(dest_pos, src_rect.size()), src_rect, converter);
 	}
 
-	void PixelBuffer::set_image(const std::shared_ptr<PixelBuffer> &source, const PixelConverterPtr &converter)
+	void PixelBuffer::set_image(const std::shared_ptr<PixelBuffer> &source, const std::shared_ptr<PixelConverter> &converter)
 	{
 		set_subimage(source, Point(0, 0), Rect(Point(0, 0), source->size()), converter);
 	}
 
-	void PixelBuffer::set_subimage(const std::shared_ptr<PixelBuffer> &source, const Point &dest_pos, const Rect &src_rect, const PixelConverterPtr &converter)
+	void PixelBuffer::set_subimage(const std::shared_ptr<PixelBuffer> &source, const Point &dest_pos, const Rect &src_rect, const std::shared_ptr<PixelConverter> &converter)
 	{
 		PixelBufferImpl::convert(source.get(), this, Rect(dest_pos, src_rect.size()), src_rect, converter);
 	}
@@ -389,7 +389,7 @@ namespace uicore
 		return to_format(texture_format, converter);
 	}
 
-	std::shared_ptr<PixelBuffer> PixelBuffer::to_format(TextureFormat texture_format, const PixelConverterPtr &converter) const
+	std::shared_ptr<PixelBuffer> PixelBuffer::to_format(TextureFormat texture_format, const std::shared_ptr<PixelConverter> &converter) const
 	{
 		auto result = PixelBuffer::create(width(), height(), texture_format);
 		PixelBufferImpl::convert(this, result.get(), Rect(Point(), size()), Rect(Point(), size()), converter);
@@ -631,7 +631,7 @@ namespace uicore
 		}
 	}
 
-	PixelBufferPtr PixelBuffer::add_border(const PixelBufferPtr &pb, int border_size, const Rect &rect)
+	std::shared_ptr<PixelBuffer> PixelBuffer::add_border(const std::shared_ptr<PixelBuffer> &pb, int border_size, const Rect &rect)
 	{
 		if (rect.left < 0 || rect.top < 0 || rect.right > pb->width() || rect.bottom > pb->height())
 			throw Exception("Rectangle passed to PixelBuffer::add_border() out of bounds");
@@ -648,8 +648,8 @@ namespace uicore
 		int new_height = rect.height() + border_size * 2;
 
 		// Convert pixel buffer if in an unsupported format
-		PixelBufferPtr work_buffer;
-		PixelBufferPtr work_pb = pb;
+		std::shared_ptr<PixelBuffer> work_buffer;
+		std::shared_ptr<PixelBuffer> work_pb = pb;
 		if (work_pb->format() != tf_rgba8)
 		{
 			work_buffer = pb->to_format(tf_rgba8);

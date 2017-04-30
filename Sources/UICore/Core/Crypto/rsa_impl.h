@@ -72,8 +72,8 @@ namespace uicore
 	public:
 		RSA_Impl();
 
-		static DataBufferPtr encrypt(int block_type, Random &random, const void *in_public_exponent, unsigned int in_public_exponent_size, const void *in_modulus, unsigned int in_modulus_size, const void *in_data, unsigned int in_data_size);
-		static SecretPtr decrypt(const SecretPtr &in_private_exponent, const void *in_modulus, unsigned int in_modulus_size, const void *in_data, unsigned int in_data_size);
+		static std::shared_ptr<DataBuffer> encrypt(int block_type, Random &random, const void *in_public_exponent, unsigned int in_public_exponent_size, const void *in_modulus, unsigned int in_modulus_size, const void *in_data, unsigned int in_data_size);
+		static std::shared_ptr<Secret> decrypt(const std::shared_ptr<Secret> &in_private_exponent, const void *in_modulus, unsigned int in_modulus_size, const void *in_data, unsigned int in_data_size);
 
 		/// \brief Create the keypair
 		void create(Random &random, int key_size_in_bits, int public_exponent_value);
@@ -86,7 +86,7 @@ namespace uicore
 		/// \param out_modulus = Modulus
 		/// \param key_size_in_bits = key size in bits
 		/// \param public_exponent_value = public exponent value
-		void create_keypair(Random &random, SecretPtr &out_private_exponent, DataBufferPtr &out_public_exponent, DataBufferPtr &out_modulus, int key_size_in_bits, int public_exponent_value);
+		void create_keypair(Random &random, std::shared_ptr<Secret> &out_private_exponent, std::shared_ptr<DataBuffer> &out_public_exponent, std::shared_ptr<DataBuffer> &out_modulus, int key_size_in_bits, int public_exponent_value);
 
 	private:
 		void generate_prime(Random &random, BigInt &prime, int prime_len);
@@ -106,21 +106,21 @@ namespace uicore
 		// PKCS#1 v1.5 padded message decoding
 		// emsg      - encoded message
 		// emlen     - length of encoded message, in bytes
-		static SecretPtr pkcs1v15_decode(const char *emsg, int emlen);
+		static std::shared_ptr<Secret> pkcs1v15_decode(const char *emsg, int emlen);
 
 		// Encrypt a message using RSA and PKCS#1 v.1.5 padding
 		// msg       - input message
 		// mlen      - length of input message, in bytes
 		// e         - encryption exponent
 		// modulus   - encryption key modulus
-		static DataBufferPtr pkcs1v15_encrypt(int block_type, Random &random, const char *msg, int mlen, const BigInt *e, const BigInt *modulus);
+		static std::shared_ptr<DataBuffer> pkcs1v15_encrypt(int block_type, Random &random, const char *msg, int mlen, const BigInt *e, const BigInt *modulus);
 
 		// Decrypt a message using RSA and PKCS#1 v.1.5 padding
 		// msg       - input message (ciphertext)
 		// mlen      - length of input message, in bytes
 		// d         - decryption exponent
 		// modulus   - decryption key modulus
-		static SecretPtr pkcs1v15_decrypt(const char *msg, int mlen, const BigInt *d, const BigInt *modulus);
+		static std::shared_ptr<Secret> pkcs1v15_decrypt(const char *msg, int mlen, const BigInt *d, const BigInt *modulus);
 
 		RSAPrivateKey rsa_private_key;
 	};

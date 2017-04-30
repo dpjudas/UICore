@@ -37,6 +37,4 @@ namespace uicore
 
 		// To do: QOSAddSocketToFlow
 	};
-
-	typedef std::shared_ptr<TCPConnection> TCPConnectionPtr;
 }

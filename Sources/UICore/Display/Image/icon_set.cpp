@@ -38,15 +38,15 @@ namespace uicore
 	class IconSetImpl : public IconSet
 	{
 	public:
-		const std::vector<PixelBufferPtr> &images() const override { return _images; }
-		void add_image(const PixelBufferPtr &image) override { _images.push_back(image); }
-		DataBufferPtr create_win32_icon() override { return create_ico_helper(_images, 1, std::vector<Point>()); }
+		const std::vector<std::shared_ptr<PixelBuffer>> &images() const override { return _images; }
+		void add_image(const std::shared_ptr<PixelBuffer> &image) override { _images.push_back(image); }
+		std::shared_ptr<DataBuffer> create_win32_icon() override { return create_ico_helper(_images, 1, std::vector<Point>()); }
 
 	private:
-		std::vector<PixelBufferPtr> _images;
+		std::vector<std::shared_ptr<PixelBuffer>> _images;
 
-		static DataBufferPtr create_ico_helper(const std::vector<PixelBufferPtr> &images, int type, const std::vector<Point> &hotspots);
-		static PixelBufferPtr create_bitmap_data(const PixelBufferPtr &image);
+		static std::shared_ptr<DataBuffer> create_ico_helper(const std::vector<std::shared_ptr<PixelBuffer>> &images, int type, const std::vector<Point> &hotspots);
+		static std::shared_ptr<PixelBuffer> create_bitmap_data(const std::shared_ptr<PixelBuffer> &image);
 
 		struct IconHeader
 		{
@@ -109,7 +109,7 @@ namespace uicore
 		return std::make_shared<IconSetImpl>();
 	}
 
-	DataBufferPtr IconSetImpl::create_ico_helper(const std::vector<PixelBufferPtr> &images, int type, const std::vector<Point> &hotspots)
+	std::shared_ptr<DataBuffer> IconSetImpl::create_ico_helper(const std::vector<std::shared_ptr<PixelBuffer>> &images, int type, const std::vector<Point> &hotspots)
 	{
 		auto buf = DataBuffer::create(0);
 		buf->set_capacity(32 * 1024);
@@ -121,7 +121,7 @@ namespace uicore
 		header.idCount = images.size();
 		device->write(&header, sizeof(IconHeader));
 
-		std::vector<PixelBufferPtr> bmp_images;
+		std::vector<std::shared_ptr<PixelBuffer>> bmp_images;
 		for (auto & image : images)
 			bmp_images.push_back(create_bitmap_data(image));
 
@@ -163,11 +163,11 @@ namespace uicore
 		return device->buffer();
 	}
 
-	PixelBufferPtr IconSetImpl::create_bitmap_data(const PixelBufferPtr &image)
+	std::shared_ptr<PixelBuffer> IconSetImpl::create_bitmap_data(const std::shared_ptr<PixelBuffer> &image)
 	{
 		// Convert pixel buffer to DIB compatible format:
 
-		PixelBufferPtr bmp_image = image->to_format(tf_bgra8);
+		std::shared_ptr<PixelBuffer> bmp_image = image->to_format(tf_bgra8);
 
 		// Note that the APIs use pre-multiplied alpha, which means that the red,
 		// green and blue channel values in the bitmap must be pre-multiplied with

@@ -49,28 +49,28 @@ namespace uicore
 		Size size() const override;
 		FrameBufferBindTarget bind_target() const override;
 
-		void attach_color(int attachment_index, const RenderBufferPtr &render_buffer) override;
-		void attach_color(int attachment_index, const Texture1DPtr &texture, int level) override;
-		void attach_color(int attachment_index, const Texture1DArrayPtr &texture, int array_index, int level) override;
-		void attach_color(int attachment_index, const Texture2DPtr &texture, int level) override;
-		void attach_color(int attachment_index, const Texture2DArrayPtr &texture, int array_index, int level) override;
-		void attach_color(int attachment_index, const Texture3DPtr &texture, int depth, int level) override;
-		void attach_color(int attachment_index, const TextureCubePtr &texture, TextureSubtype subtype, int level) override;
+		void attach_color(int attachment_index, const std::shared_ptr<RenderBuffer> &render_buffer) override;
+		void attach_color(int attachment_index, const std::shared_ptr<Texture1D> &texture, int level) override;
+		void attach_color(int attachment_index, const std::shared_ptr<Texture1DArray> &texture, int array_index, int level) override;
+		void attach_color(int attachment_index, const std::shared_ptr<Texture2D> &texture, int level) override;
+		void attach_color(int attachment_index, const std::shared_ptr<Texture2DArray> &texture, int array_index, int level) override;
+		void attach_color(int attachment_index, const std::shared_ptr<Texture3D> &texture, int depth, int level) override;
+		void attach_color(int attachment_index, const std::shared_ptr<TextureCube> &texture, TextureSubtype subtype, int level) override;
 		void detach_color(int attachment_index) override;
 
-		void attach_stencil(const RenderBufferPtr &render_buffer) override;
-		void attach_stencil(const Texture2DPtr &texture, int level) override;
-		void attach_stencil(const TextureCubePtr &texture, TextureSubtype subtype, int level) override;
+		void attach_stencil(const std::shared_ptr<RenderBuffer> &render_buffer) override;
+		void attach_stencil(const std::shared_ptr<Texture2D> &texture, int level) override;
+		void attach_stencil(const std::shared_ptr<TextureCube> &texture, TextureSubtype subtype, int level) override;
 		void detach_stencil() override;
 
-		void attach_depth(const RenderBufferPtr &render_buffer) override;
-		void attach_depth(const Texture2DPtr &texture, int level) override;
-		void attach_depth(const TextureCubePtr &texture, TextureSubtype subtype, int level) override;
+		void attach_depth(const std::shared_ptr<RenderBuffer> &render_buffer) override;
+		void attach_depth(const std::shared_ptr<Texture2D> &texture, int level) override;
+		void attach_depth(const std::shared_ptr<TextureCube> &texture, TextureSubtype subtype, int level) override;
 		void detach_depth() override;
 
-		void attach_depth_stencil(const RenderBufferPtr &render_buffer) override;
-		void attach_depth_stencil(const Texture2DPtr &texture, int level) override;
-		void attach_depth_stencil(const TextureCubePtr &texture, TextureSubtype subtype, int level) override;
+		void attach_depth_stencil(const std::shared_ptr<RenderBuffer> &render_buffer) override;
+		void attach_depth_stencil(const std::shared_ptr<Texture2D> &texture, int level) override;
+		void attach_depth_stencil(const std::shared_ptr<TextureCube> &texture, TextureSubtype subtype, int level) override;
 		void detach_depth_stencil() override;
 
 		void set_bind_target(FrameBufferBindTarget target) override;
@@ -101,7 +101,7 @@ namespace uicore
 		std::map< std::weak_ptr<Texture>, PBuffer_GL1, WeakPtrCompare> texture_pbuffer_map;
 
 		PBuffer_GL1 pbuffer;
-		Texture2DPtr selected_surface;
+		std::shared_ptr<Texture2D> selected_surface;
 		GL1TextureObject *selected_texture_provider;
 
 		GL1State selected_state;

@@ -334,7 +334,7 @@ namespace uicore
 		return std::make_shared<D3DStagingTexture>(window->get_device(), data, size, direction, format, usage);
 	}
 
-	void D3DGraphicContext::set_rasterizer_state(const RasterizerStatePtr &state)
+	void D3DGraphicContext::set_rasterizer_state(const std::shared_ptr<RasterizerState> &state)
 	{
 		if (state)
 		{
@@ -347,7 +347,7 @@ namespace uicore
 		}
 	}
 
-	void D3DGraphicContext::set_blend_state(const BlendStatePtr &state, const Colorf &blend_color, unsigned int sample_mask)
+	void D3DGraphicContext::set_blend_state(const std::shared_ptr<BlendState> &state, const Colorf &blend_color, unsigned int sample_mask)
 	{
 		if (state)
 		{
@@ -361,7 +361,7 @@ namespace uicore
 		}
 	}
 
-	void D3DGraphicContext::set_depth_stencil_state(const DepthStencilStatePtr &state, int stencil_ref)
+	void D3DGraphicContext::set_depth_stencil_state(const std::shared_ptr<DepthStencilState> &state, int stencil_ref)
 	{
 		if (state)
 		{
@@ -376,11 +376,11 @@ namespace uicore
 
 	void D3DGraphicContext::set_program_object(StandardProgram standard_program)
 	{
-		ProgramObjectPtr program = standard_programs.get_program_object(standard_program);
+		std::shared_ptr<ProgramObject> program = standard_programs.get_program_object(standard_program);
 		set_program_object(program);
 	}
 
-	void D3DGraphicContext::set_program_object(const ProgramObjectPtr &program)
+	void D3DGraphicContext::set_program_object(const std::shared_ptr<ProgramObject> &program)
 	{
 		_program_object = program;
 
@@ -457,27 +457,27 @@ namespace uicore
 		}
 	}
 
-	void D3DGraphicContext::set_uniform_buffer(int index, const UniformBufferPtr &buffer)
+	void D3DGraphicContext::set_uniform_buffer(int index, const std::shared_ptr<UniformBuffer> &buffer)
 	{
 		unit_map.set_uniform_buffer(this, index, buffer);
 	}
 
-	void D3DGraphicContext::set_storage_buffer(int index, const StorageBufferPtr &buffer)
+	void D3DGraphicContext::set_storage_buffer(int index, const std::shared_ptr<StorageBuffer> &buffer)
 	{
 		unit_map.set_storage_buffer(this, index, buffer);
 	}
 
-	void D3DGraphicContext::set_texture(int unit_index, const TexturePtr &texture)
+	void D3DGraphicContext::set_texture(int unit_index, const std::shared_ptr<Texture> &texture)
 	{
 		unit_map.set_texture(this, unit_index, texture);
 	}
 
-	void D3DGraphicContext::set_image_texture(int unit_index, const TexturePtr &texture)
+	void D3DGraphicContext::set_image_texture(int unit_index, const std::shared_ptr<Texture> &texture)
 	{
 		unit_map.set_image(this, unit_index, texture);
 	}
 
-	bool D3DGraphicContext::is_frame_buffer_owner(const FrameBufferPtr &fb)
+	bool D3DGraphicContext::is_frame_buffer_owner(const std::shared_ptr<FrameBuffer> &fb)
 	{
 		D3DFrameBuffer *fb_provider = static_cast<D3DFrameBuffer *>(fb.get());
 		if (fb_provider)
@@ -486,7 +486,7 @@ namespace uicore
 			return false;
 	}
 
-	void D3DGraphicContext::set_frame_buffer(const FrameBufferPtr &write_buffer, const FrameBufferPtr &read_buffer)
+	void D3DGraphicContext::set_frame_buffer(const std::shared_ptr<FrameBuffer> &write_buffer, const std::shared_ptr<FrameBuffer> &read_buffer)
 	{
 		_write_frame_buffer = write_buffer;
 		_read_frame_buffer = read_buffer;
@@ -509,7 +509,7 @@ namespace uicore
 		// To do: what does this map to in D3D?
 	}
 
-	bool D3DGraphicContext::is_primitives_array_owner(const PrimitivesArrayPtr &primitives_array)
+	bool D3DGraphicContext::is_primitives_array_owner(const std::shared_ptr<PrimitivesArray> &primitives_array)
 	{
 		D3DPrimitivesArray *array_provider = static_cast<D3DPrimitivesArray *>(primitives_array.get());
 		if (array_provider)
@@ -536,14 +536,14 @@ namespace uicore
 		}
 	}
 
-	void D3DGraphicContext::draw_primitives(PrimitivesType type, int num_vertices, const PrimitivesArrayPtr &primitives_array)
+	void D3DGraphicContext::draw_primitives(PrimitivesType type, int num_vertices, const std::shared_ptr<PrimitivesArray> &primitives_array)
 	{
 		set_primitives_array(primitives_array);
 		draw_primitives_array(type, 0, num_vertices);
 		reset_primitives_array();
 	}
 
-	void D3DGraphicContext::set_primitives_array(const PrimitivesArrayPtr &primitives_array)
+	void D3DGraphicContext::set_primitives_array(const std::shared_ptr<PrimitivesArray> &primitives_array)
 	{
 		clear_input_layout();
 		if (current_prim_array_provider)
@@ -587,7 +587,7 @@ namespace uicore
 		window->get_device_context()->DrawInstanced(num_vertices, instance_count, offset, 0);
 	}
 
-	void D3DGraphicContext::set_primitives_elements(const ElementArrayBufferPtr &array_provider)
+	void D3DGraphicContext::set_primitives_elements(const std::shared_ptr<ElementArrayBuffer> &array_provider)
 	{
 		if (array_provider)
 		{
@@ -618,7 +618,7 @@ namespace uicore
 		window->get_device_context()->DrawIndexedInstanced(count, instance_count, to_d3d_index_location(indices_type, offset), 0, 0);
 	}
 
-	void D3DGraphicContext::draw_primitives_elements(PrimitivesType type, int count, const ElementArrayBufferPtr &array_provider, VertexAttributeDataType indices_type, size_t offset)
+	void D3DGraphicContext::draw_primitives_elements(PrimitivesType type, int count, const std::shared_ptr<ElementArrayBuffer> &array_provider, VertexAttributeDataType indices_type, size_t offset)
 	{
 		set_primitives_elements(array_provider);
 		apply_input_layout();
@@ -629,7 +629,7 @@ namespace uicore
 		reset_primitives_elements();
 	}
 
-	void D3DGraphicContext::draw_primitives_elements_instanced(PrimitivesType type, int count, const ElementArrayBufferPtr &array_provider, VertexAttributeDataType indices_type, size_t offset, int instance_count)
+	void D3DGraphicContext::draw_primitives_elements_instanced(PrimitivesType type, int count, const std::shared_ptr<ElementArrayBuffer> &array_provider, VertexAttributeDataType indices_type, size_t offset, int instance_count)
 	{
 		set_primitives_elements(array_provider);
 		apply_input_layout();

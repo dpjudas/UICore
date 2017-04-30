@@ -42,7 +42,7 @@ namespace uicore
 {
 	InputDeviceProvider_Win32Hid::InputDeviceProvider_Win32Hid(HANDLE rawinput_device) : rawinput_device(rawinput_device)
 	{
-		DataBufferPtr preparse_data = get_preparse_data();
+		std::shared_ptr<DataBuffer> preparse_data = get_preparse_data();
 		HANDLE device = open_device();
 		try
 		{
@@ -67,7 +67,7 @@ namespace uicore
 	{
 	}
 
-	void InputDeviceProvider_Win32Hid::update(const InputDevicePtr &joystick, RAWINPUT *raw_input)
+	void InputDeviceProvider_Win32Hid::update(const std::shared_ptr<InputDevice> &joystick, RAWINPUT *raw_input)
 	{
 		auto previous_buttons = buttons;
 		auto previous_axis = axis_values;
@@ -75,7 +75,7 @@ namespace uicore
 
 		if (raw_input->header.hDevice == rawinput_device)
 		{
-			DataBufferPtr preparse_data = get_preparse_data();
+			std::shared_ptr<DataBuffer> preparse_data = get_preparse_data();
 
 			for (DWORD i = 0; i < raw_input->data.hid.dwCount; i++)
 			{
@@ -206,7 +206,7 @@ namespace uicore
 		return device_handle;
 	}
 
-	DataBufferPtr InputDeviceProvider_Win32Hid::get_preparse_data()
+	std::shared_ptr<DataBuffer> InputDeviceProvider_Win32Hid::get_preparse_data()
 	{
 		UINT preparse_data_size = 0;
 		UINT result = GetRawInputDeviceInfo(rawinput_device, RIDI_PREPARSEDDATA, 0, &preparse_data_size);

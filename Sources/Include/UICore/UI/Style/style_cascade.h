@@ -38,9 +38,7 @@ namespace uicore
 	class Style;
 	class StyleGetValue;
 	class Canvas;
-	typedef std::shared_ptr<Canvas> CanvasPtr;
 	class Font;
-	typedef std::shared_ptr<Font> FontPtr;
 	class ViewGeometry;
 
 #if defined(MICROSOFT_FINALLY_IMPLEMENTED_CONSTEXPR_TEN_YEARS_AFTER_EVERYONE_ELSE)
@@ -110,12 +108,12 @@ namespace uicore
 		int array_size(const std::string &property_name) const { return array_size(property_name.c_str()); }
 		
 		/// Render styled background
-		void render_background(const CanvasPtr &canvas, const ViewGeometry &geometry) const;
+		void render_background(const std::shared_ptr<Canvas> &canvas, const ViewGeometry &geometry) const;
 
 		/// Render styled border
-		void render_border(const CanvasPtr &canvas, const ViewGeometry &geometry) const;
+		void render_border(const std::shared_ptr<Canvas> &canvas, const ViewGeometry &geometry) const;
 		
 		/// Font used by this style cascade
-		FontPtr font() const;
+		std::shared_ptr<Font> font() const;
 	};
 }

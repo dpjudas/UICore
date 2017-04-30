@@ -33,7 +33,7 @@
 
 namespace uicore
 {
-	void PositionedLayout::layout_children(const CanvasPtr &canvas, View *view)
+	void PositionedLayout::layout_children(const std::shared_ptr<Canvas> &canvas, View *view)
 	{
 		for (const std::shared_ptr<View> &child : view->children())
 		{
@@ -77,7 +77,7 @@ namespace uicore
 		}
 	}
 
-	ViewGeometry PositionedLayout::get_geometry(const CanvasPtr &canvas, View *view, const Rectf &containing_box)
+	ViewGeometry PositionedLayout::get_geometry(const std::shared_ptr<Canvas> &canvas, View *view, const Rectf &containing_box)
 	{
 		bool definite_left = !view->style_cascade().computed_value("left").is_keyword("auto");
 		bool definite_right = !view->style_cascade().computed_value("right").is_keyword("auto");
@@ -193,7 +193,7 @@ namespace uicore
 			return computed_value.number();
 	}
 
-	void PositionedLayout::layout_from_containing_box(const CanvasPtr &canvas, View *view, const Rectf &containing_box)
+	void PositionedLayout::layout_from_containing_box(const std::shared_ptr<Canvas> &canvas, View *view, const Rectf &containing_box)
 	{
 		view->set_geometry(get_geometry(canvas, view, containing_box));
 		view->layout_children(canvas);

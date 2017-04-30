@@ -61,10 +61,10 @@ namespace uicore
 	{
 	public:
 		/// \brief Constructs a PrimitivesArray
-		static std::shared_ptr<PrimitivesArray> create(const GraphicContextPtr &gc);
+		static std::shared_ptr<PrimitivesArray> create(const std::shared_ptr<GraphicContext> &gc);
 
 		/// \brief Set attributes
-		virtual void set_attributes(int index, const VertexArrayBufferPtr &buffer, int size, VertexAttributeDataType type, size_t offset = 0, int stride = 0, bool normalize = false) = 0;
+		virtual void set_attributes(int index, const std::shared_ptr<VertexArrayBuffer> &buffer, int size, VertexAttributeDataType type, size_t offset = 0, int stride = 0, bool normalize = false) = 0;
 
 		void set_attributes(int index, const VertexArrayVector<unsigned char> &buffer, int size, bool normalize = false)
 		{

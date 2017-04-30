@@ -36,7 +36,7 @@
 
 namespace uicore
 {
-	DataBufferPtr ZLibCompression::compress(const DataBufferPtr &data, bool raw, int compression_level, CompressionMode mode)
+	std::shared_ptr<DataBuffer> ZLibCompression::compress(const std::shared_ptr<DataBuffer> &data, bool raw, int compression_level, CompressionMode mode)
 	{
 		const int window_bits = 15;
 
@@ -92,7 +92,7 @@ namespace uicore
 		return output->buffer();
 	}
 
-	DataBufferPtr ZLibCompression::decompress(const DataBufferPtr &data, bool raw)
+	std::shared_ptr<DataBuffer> ZLibCompression::decompress(const std::shared_ptr<DataBuffer> &data, bool raw)
 	{
 		const int window_bits = 15;
 

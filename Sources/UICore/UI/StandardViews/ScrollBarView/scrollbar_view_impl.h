@@ -46,7 +46,7 @@ namespace uicore
 	public:
 		ScrollBarButtonBaseView(bool render_button_arrows);
 
-		void render_content(const CanvasPtr &canvas) override;
+		void render_content(const std::shared_ptr<Canvas> &canvas) override;
 		void set_direction(ScrollBarButtonDirection new_dir);
 
 	private:
@@ -136,7 +136,7 @@ namespace uicore
 		double timer_target_position = 0.0;
 		double thumb_move_start_position = 0.0;
 		Pointf mouse_drag_start_pos;
-		TimerPtr scroll_timer = Timer::create();
+		std::shared_ptr<Timer> scroll_timer = Timer::create();
 		bool _state_disabled = false;
 		bool _state_thumb_hot = false;
 		bool _state_thumb_pressed = false;

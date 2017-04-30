@@ -38,19 +38,19 @@
 
 namespace uicore
 {
-	std::shared_ptr<Texture2D> Texture2D::create(const GraphicContextPtr &context, int width, int height, TextureFormat format, int levels)
+	std::shared_ptr<Texture2D> Texture2D::create(const std::shared_ptr<GraphicContext> &context, int width, int height, TextureFormat format, int levels)
 	{
 		return static_cast<GraphicContextImpl*>(context.get())->create_texture_2d(width, height, format, levels);
 	}
 
-	std::shared_ptr<Texture2D> Texture2D::create(const GraphicContextPtr &context, const Size &size, TextureFormat texture_format, int levels)
+	std::shared_ptr<Texture2D> Texture2D::create(const std::shared_ptr<GraphicContext> &context, const Size &size, TextureFormat texture_format, int levels)
 	{
 		return create(context, size.width, size.height, texture_format, levels);
 	}
 
-	std::shared_ptr<Texture2D> Texture2D::create(const GraphicContextPtr &context, const std::string &filename, const ImageImportDescription &import_desc)
+	std::shared_ptr<Texture2D> Texture2D::create(const std::shared_ptr<GraphicContext> &context, const std::string &filename, const ImageImportDescription &import_desc)
 	{
-		PixelBufferPtr pb = ImageFile::load(filename, std::string());
+		std::shared_ptr<PixelBuffer> pb = ImageFile::load(filename, std::string());
 		pb = import_desc.process(pb);
 
 		auto texture = create(context, pb->width(), pb->height(), import_desc.is_srgb() ? tf_srgb8_alpha8 : tf_rgba8);
@@ -58,9 +58,9 @@ namespace uicore
 		return texture;
 	}
 
-	std::shared_ptr<Texture2D> Texture2D::create(const GraphicContextPtr &context, const IODevicePtr &file, const std::string &image_type, const ImageImportDescription &import_desc)
+	std::shared_ptr<Texture2D> Texture2D::create(const std::shared_ptr<GraphicContext> &context, const std::shared_ptr<IODevice> &file, const std::string &image_type, const ImageImportDescription &import_desc)
 	{
-		PixelBufferPtr pb = ImageFile::load(file, image_type);
+		std::shared_ptr<PixelBuffer> pb = ImageFile::load(file, image_type);
 		pb = import_desc.process(pb);
 
 		auto texture = create(context, pb->width(), pb->height(), import_desc.is_srgb() ? tf_srgb8_alpha8 : tf_rgba8);
@@ -68,12 +68,12 @@ namespace uicore
 		return texture;
 	}
 
-	std::shared_ptr<Texture2D> Texture2D::create(const GraphicContextPtr &context, const PixelBufferPtr &image, bool is_srgb)
+	std::shared_ptr<Texture2D> Texture2D::create(const std::shared_ptr<GraphicContext> &context, const std::shared_ptr<PixelBuffer> &image, bool is_srgb)
 	{
 		return create(context, image, image->size(), is_srgb);
 	}
 
-	std::shared_ptr<Texture2D> Texture2D::create(const GraphicContextPtr &context, const PixelBufferPtr &image, const Rect &src_rect, bool is_srgb)
+	std::shared_ptr<Texture2D> Texture2D::create(const std::shared_ptr<GraphicContext> &context, const std::shared_ptr<PixelBuffer> &image, const Rect &src_rect, bool is_srgb)
 	{
 		auto texture = create(context, src_rect.width(), src_rect.height(), is_srgb ? tf_srgb8_alpha8 : tf_rgba8);
 		texture->set_subimage(context, Point(0, 0), image, src_rect, 0);

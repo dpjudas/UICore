@@ -40,7 +40,6 @@ namespace uicore
 	class Point;
 	class PixelBuffer;
 	class PixelBufferSet;
-	typedef std::shared_ptr<PixelBufferSet> PixelBufferSetPtr;
 	class PixelFormat;
 	class TextureProvider;
 	class Texture1D;
@@ -95,7 +94,7 @@ namespace uicore
 	{
 	public:
 		/// \brief Constructs a texture as described by a pixelbuffer set
-		static std::shared_ptr<Texture> create(const GraphicContextPtr &gc, PixelBufferSetPtr pixelbuffer_set);
+		static std::shared_ptr<Texture> create(const std::shared_ptr<GraphicContext> &gc, std::shared_ptr<PixelBufferSet> pixelbuffer_set);
 
 		/// \brief Get the minimum level of detail.
 		virtual float min_lod() const = 0;
@@ -157,6 +156,4 @@ namespace uicore
 		/// \internal Returns the internal texture object
 		virtual TextureObject *texture_object() = 0;
 	};
-
-	typedef std::shared_ptr<Texture> TexturePtr;
 }

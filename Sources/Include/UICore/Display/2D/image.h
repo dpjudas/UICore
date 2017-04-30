@@ -40,11 +40,9 @@ namespace uicore
 	class Size;
 	class Rectf;
 	class Texture2D;
-	typedef std::shared_ptr<Texture2D> Texture2DPtr;
 	class TextureGroupImage;
 	class PixelBuffer;
 	class Canvas;
-	typedef std::shared_ptr<Canvas> CanvasPtr;
 	class Quadf;
 
 	/// \brief Image class.
@@ -52,10 +50,10 @@ namespace uicore
 	{
 	public:
 		/// \brief Constructs an image
-		static std::shared_ptr<Image> create(Texture2DPtr texture, const Rect &rect, float pixel_ratio = 1.0f);
+		static std::shared_ptr<Image> create(std::shared_ptr<Texture2D> texture, const Rect &rect, float pixel_ratio = 1.0f);
 		static std::shared_ptr<Image> create(TextureGroupImage &sub_texture, float pixel_ratio = 1.0f);
-		static std::shared_ptr<Image> create(const CanvasPtr &canvas, const PixelBufferPtr &pixelbuffer, const Rect &rect, float pixel_ratio = 1.0f);
-		static std::shared_ptr<Image> create(const CanvasPtr &canvas, const std::string &filename, const ImageImportDescription &import_desc = ImageImportDescription(), float pixel_ratio = 1.0f);
+		static std::shared_ptr<Image> create(const std::shared_ptr<Canvas> &canvas, const std::shared_ptr<PixelBuffer> &pixelbuffer, const Rect &rect, float pixel_ratio = 1.0f);
+		static std::shared_ptr<Image> create(const std::shared_ptr<Canvas> &canvas, const std::string &filename, const ImageImportDescription &import_desc = ImageImportDescription(), float pixel_ratio = 1.0f);
 
 		/// \brief Returns x scale.
 		virtual float scale_x() const = 0;
@@ -90,11 +88,11 @@ namespace uicore
 		/// \param x, y Anchor position of where to render image. Actual rendering position depends on the anchor and the alignment mode.
 		/// \param src Source rectangle to draw
 		/// \param dest Area to draw image in
-		virtual void draw(const CanvasPtr &canvas, float x, float y) const = 0;
-		virtual void draw(const CanvasPtr &canvas, const Rectf &src, const Rectf &dest) const = 0;
-		virtual void draw(const CanvasPtr &canvas, const Rectf &dest) const = 0;
-		virtual void draw(const CanvasPtr &canvas, const Rectf &src, const Quadf &dest) const = 0;
-		virtual void draw(const CanvasPtr &canvas, const Quadf &dest) const = 0;
+		virtual void draw(const std::shared_ptr<Canvas> &canvas, float x, float y) const = 0;
+		virtual void draw(const std::shared_ptr<Canvas> &canvas, const Rectf &src, const Rectf &dest) const = 0;
+		virtual void draw(const std::shared_ptr<Canvas> &canvas, const Rectf &dest) const = 0;
+		virtual void draw(const std::shared_ptr<Canvas> &canvas, const Rectf &src, const Quadf &dest) const = 0;
+		virtual void draw(const std::shared_ptr<Canvas> &canvas, const Quadf &dest) const = 0;
 
 		/// \brief Set scale factors
 		virtual void set_scale(float x, float y) = 0;
@@ -112,6 +110,4 @@ namespace uicore
 		/// \brief Set to true if a linear filter should be used for scaling up and down, false if a nearest-point filter should be used.
 		virtual void set_linear_filter(bool linear_filter = true) = 0;
 	};
-
-	typedef std::shared_ptr<Image> ImagePtr;
 }

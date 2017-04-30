@@ -39,11 +39,8 @@
 namespace uicore
 {
 	class DisplayWindow;
-	typedef std::shared_ptr<DisplayWindow> DisplayWindowPtr;
 	class GraphicContext;
-	typedef std::shared_ptr<GraphicContext> GraphicContextPtr;
 	class BlendState;
-	typedef std::shared_ptr<BlendState> BlendStatePtr;
 	class Path;
 	class Pen;
 	class Brush;
@@ -53,10 +50,10 @@ namespace uicore
 	{
 	public:
 		/// \brief Constructs a canvas
-		static std::shared_ptr<Canvas> create(const DisplayWindowPtr &window);
+		static std::shared_ptr<Canvas> create(const std::shared_ptr<DisplayWindow> &window);
 
 		/// \brief Returns the graphic context associated with this canvas
-		virtual const GraphicContextPtr &gc() const = 0;
+		virtual const std::shared_ptr<GraphicContext> &gc() const = 0;
 
 		/// \brief Returns the transform matrix
 		virtual const Mat4f &transform() const = 0;
@@ -122,6 +119,4 @@ namespace uicore
 		/// \brief Snaps the point to the nearest pixel corner
 		virtual Pointf grid_fit(const Pointf &pos) = 0;
 	};
-
-	typedef std::shared_ptr<Canvas> CanvasPtr;
 }

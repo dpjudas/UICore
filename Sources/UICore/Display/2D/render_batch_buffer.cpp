@@ -34,7 +34,7 @@
 
 namespace uicore
 {
-	RenderBatchBuffer::RenderBatchBuffer(const GraphicContextPtr &gc)
+	RenderBatchBuffer::RenderBatchBuffer(const std::shared_ptr<GraphicContext> &gc)
 	{
 		for (auto & elem : vertex_buffers)
 		{
@@ -42,7 +42,7 @@ namespace uicore
 		}
 	}
 
-	VertexArrayBufferPtr RenderBatchBuffer::get_vertex_buffer(const GraphicContextPtr &gc, int &out_index)
+	std::shared_ptr<VertexArrayBuffer> RenderBatchBuffer::get_vertex_buffer(const std::shared_ptr<GraphicContext> &gc, int &out_index)
 	{
 		out_index = current_vertex_buffer;
 
@@ -53,7 +53,7 @@ namespace uicore
 		return vertex_buffers[out_index];
 	}
 
-	Texture2DPtr RenderBatchBuffer::get_texture_rgba32f(const GraphicContextPtr &gc)
+	std::shared_ptr<Texture2D> RenderBatchBuffer::get_texture_rgba32f(const std::shared_ptr<GraphicContext> &gc)
 	{
 		current_rgba32f_texture++;
 		if (current_rgba32f_texture == num_r8_buffers)
@@ -70,7 +70,7 @@ namespace uicore
 		return textures_rgba32f[current_rgba32f_texture];
 	}
 
-	Texture2DPtr RenderBatchBuffer::get_texture_r8(const GraphicContextPtr &gc)
+	std::shared_ptr<Texture2D> RenderBatchBuffer::get_texture_r8(const std::shared_ptr<GraphicContext> &gc)
 	{
 		current_r8_texture++;
 		if (current_r8_texture == num_r8_buffers)
@@ -85,7 +85,7 @@ namespace uicore
 		return textures_r8[current_r8_texture];
 	}
 
-	StagingTexturePtr RenderBatchBuffer::get_transfer_rgba32f(const GraphicContextPtr &gc)
+	std::shared_ptr<StagingTexture> RenderBatchBuffer::get_transfer_rgba32f(const std::shared_ptr<GraphicContext> &gc)
 	{
 		current_rgba32f_transfer++;
 		if (current_rgba32f_transfer == num_r8_buffers)
@@ -97,7 +97,7 @@ namespace uicore
 		return transfers_rgba32f[current_rgba32f_transfer];
 	}
 
-	StagingTexturePtr RenderBatchBuffer::get_transfer_r8(const GraphicContextPtr &gc, int &out_index)
+	std::shared_ptr<StagingTexture> RenderBatchBuffer::get_transfer_r8(const std::shared_ptr<GraphicContext> &gc, int &out_index)
 	{
 		current_r8_transfer++;
 		if (current_r8_transfer == num_r8_buffers)

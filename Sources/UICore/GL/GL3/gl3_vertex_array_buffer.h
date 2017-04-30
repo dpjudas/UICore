@@ -46,9 +46,9 @@ namespace uicore
 
 		GLuint get_handle() const { return buffer.get_handle(); }
 
-		void upload_data(const GraphicContextPtr &gc, int offset, const void *data, int size) override { buffer.upload_data(gc, offset, data, size); }
-		void copy_from(const GraphicContextPtr &gc, const StagingBufferPtr &staging_buffer, int dest_pos, int src_pos, int size) override { buffer.copy_from(gc, staging_buffer, dest_pos, src_pos, size); }
-		void copy_to(const GraphicContextPtr &gc, const StagingBufferPtr &staging_buffer, int dest_pos, int src_pos, int size) override { buffer.copy_to(gc, staging_buffer, dest_pos, src_pos, size); }
+		void upload_data(const std::shared_ptr<GraphicContext> &gc, int offset, const void *data, int size) override { buffer.upload_data(gc, offset, data, size); }
+		void copy_from(const std::shared_ptr<GraphicContext> &gc, const std::shared_ptr<StagingBuffer> &staging_buffer, int dest_pos, int src_pos, int size) override { buffer.copy_from(gc, staging_buffer, dest_pos, src_pos, size); }
+		void copy_to(const std::shared_ptr<GraphicContext> &gc, const std::shared_ptr<StagingBuffer> &staging_buffer, int dest_pos, int src_pos, int size) override { buffer.copy_to(gc, staging_buffer, dest_pos, src_pos, size); }
 
 	private:
 		GL3BufferObject buffer;

@@ -53,7 +53,7 @@ namespace uicore
 			return &impl;
 		}
 
-		static Sizef auto_content_size(const std::shared_ptr<View> &root_view, const CanvasPtr &canvas)
+		static Sizef auto_content_size(const std::shared_ptr<View> &root_view, const std::shared_ptr<Canvas> &canvas)
 		{
 			auto css_width = root_view->style_cascade().computed_value("width");
 			auto css_height = root_view->style_cascade().computed_value("height");
@@ -127,14 +127,14 @@ namespace uicore
 		controller->impl->window = std::make_shared<TopLevelWindow>(desc);
 		controller->impl->window->set_root_view(controller->root_view());
 
-		DisplayWindowPtr display_window = controller->impl->window->display_window();
+		std::shared_ptr<DisplayWindow> display_window = controller->impl->window->display_window();
 		controller->impl->slots.connect(display_window->sig_window_close(), bind_member(controller.get(), &WindowController::dismiss));
 
 		WindowManagerImpl::instance()->windows[controller.get()] = controller;
 
 		if (controller->impl->initial_size == Sizef())
 		{
-			CanvasPtr canvas = controller->root_view()->canvas();
+			std::shared_ptr<Canvas> canvas = controller->root_view()->canvas();
 			Sizef content_size = WindowManagerImpl::auto_content_size(controller->root_view(), canvas);
 			Rectf content_box(content_size);
 			Rectf margin_box = ViewGeometry::from_content_box(controller->root_view()->style_cascade(), content_box).margin_box();
@@ -158,7 +158,7 @@ namespace uicore
 		desc.set_dialog_window();
 		desc.set_visible(false);
 
-		DisplayWindowPtr owner_display_window = owner->view_tree()->display_window();
+		std::shared_ptr<DisplayWindow> owner_display_window = owner->view_tree()->display_window();
 		if (owner_display_window)
 			desc.set_owner_window(owner_display_window);
 		desc.set_title(controller->title());
@@ -173,7 +173,7 @@ namespace uicore
 		controller->impl->window = std::make_shared<TopLevelWindow>(desc);
 		controller->impl->window->set_root_view(controller->root_view());
 
-		DisplayWindowPtr controller_display_window = controller->impl->window->display_window();
+		std::shared_ptr<DisplayWindow> controller_display_window = controller->impl->window->display_window();
 		if (controller_display_window)
 			controller->impl->slots.connect(controller_display_window->sig_window_close(), bind_member(controller.get(), &WindowController::dismiss));
 
@@ -181,7 +181,7 @@ namespace uicore
 
 		if (controller->impl->initial_size == Sizef())
 		{
-			CanvasPtr canvas = controller->root_view()->canvas();
+			std::shared_ptr<Canvas> canvas = controller->root_view()->canvas();
 			Sizef content_size = WindowManagerImpl::auto_content_size(controller->root_view(), canvas);
 			Rectf content_box(screen_pos.x - content_size.width * 0.5f, screen_pos.y - content_size.height * 0.5f, screen_pos.x + content_size.width * 0.5f, screen_pos.y + content_size.height * 0.5f);
 			Rectf margin_box = ViewGeometry::from_content_box(controller->root_view()->style_cascade(), content_box).margin_box();
@@ -221,7 +221,7 @@ namespace uicore
 		controller->impl->window = std::make_shared<TopLevelWindow>(desc);
 		controller->impl->window->set_root_view(controller->root_view());
 
-		DisplayWindowPtr owner_display_window = owner->view_tree()->display_window();
+		std::shared_ptr<DisplayWindow> owner_display_window = owner->view_tree()->display_window();
 		if (owner_display_window)
 			controller->impl->slots.connect(owner_display_window->sig_lost_focus(), bind_member(controller.get(), &WindowController::dismiss));
 
@@ -229,13 +229,13 @@ namespace uicore
 
 		if (controller->impl->initial_size == Sizef())
 		{
-			CanvasPtr canvas = controller->root_view()->canvas();
+			std::shared_ptr<Canvas> canvas = controller->root_view()->canvas();
 			Sizef content_size = WindowManagerImpl::auto_content_size(controller->root_view(), canvas);
 
 			Rectf content_box(screen_pos, content_size);
 			Rectf margin_box = ViewGeometry::from_content_box(controller->root_view()->style_cascade(), content_box).margin_box();
 
-			DisplayWindowPtr controller_display_window = controller->impl->window->display_window();
+			std::shared_ptr<DisplayWindow> controller_display_window = controller->impl->window->display_window();
 			if (controller_display_window)
 				controller_display_window->set_position(margin_box, false);
 		}
@@ -273,7 +273,7 @@ namespace uicore
 		impl->title = title;
 		if (impl->window)
 		{
-			DisplayWindowPtr display_window = impl->window->display_window();
+			std::shared_ptr<DisplayWindow> display_window = impl->window->display_window();
 			if (display_window)
 				display_window->set_title(title);
 		}
@@ -286,7 +286,7 @@ namespace uicore
 		impl->resizable = resizable;
 		if (impl->window)
 		{
-			DisplayWindowPtr display_window = impl->window->display_window();
+			std::shared_ptr<DisplayWindow> display_window = impl->window->display_window();
 			if (display_window)
 				display_window->set_size(size.width, size.height, false);
 		}
@@ -299,7 +299,7 @@ namespace uicore
 		impl->resizable = resizable;
 		if (impl->window)
 		{
-			DisplayWindowPtr display_window = impl->window->display_window();
+			std::shared_ptr<DisplayWindow> display_window = impl->window->display_window();
 			if (display_window)
 				display_window->set_size(size.width, size.height, true);
 		}
@@ -310,7 +310,7 @@ namespace uicore
 		impl->icon_images = icon_images;
 		if (impl->window)
 		{
-			DisplayWindowPtr display_window = impl->window->display_window();
+			std::shared_ptr<DisplayWindow> display_window = impl->window->display_window();
 			if (display_window && !icon_images.empty())
 			{
 				display_window->set_large_icon(ImageFile::load(FilePath::combine(UIThread::resource_path(), icon_images.front())));
@@ -324,7 +324,7 @@ namespace uicore
 		auto modal_owner = impl->modal_owner.lock();
 		if (modal_owner && modal_owner->view_tree())
 		{
-			DisplayWindowPtr display_window = modal_owner->view_tree()->display_window();
+			std::shared_ptr<DisplayWindow> display_window = modal_owner->view_tree()->display_window();
 			if (display_window)
 			{
 				display_window->set_enabled(true);

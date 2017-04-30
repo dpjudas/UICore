@@ -32,11 +32,11 @@
 
 namespace uicore
 {
-	PathStrokeRenderer::PathStrokeRenderer(const GraphicContextPtr &gc)
+	PathStrokeRenderer::PathStrokeRenderer(const std::shared_ptr<GraphicContext> &gc)
 	{
 	}
 
-	void PathStrokeRenderer::set_pen(const CanvasPtr &canvas, const Pen &pen)
+	void PathStrokeRenderer::set_pen(const std::shared_ptr<Canvas> &canvas, const Pen &pen)
 	{
 	}
 

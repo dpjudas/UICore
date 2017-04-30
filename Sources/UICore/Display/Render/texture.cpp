@@ -42,14 +42,14 @@
 
 namespace uicore
 {
-	std::shared_ptr<Texture> Texture::create(const GraphicContextPtr &gc, PixelBufferSetPtr pixelbuffer_set)
+	std::shared_ptr<Texture> Texture::create(const std::shared_ptr<GraphicContext> &gc, std::shared_ptr<PixelBufferSet> pixelbuffer_set)
 	{
 		if (pixelbuffer_set->dimensions() == texture_1d)
 		{
 			auto texture = Texture1D::create(gc, pixelbuffer_set->width(), pixelbuffer_set->format(), pixelbuffer_set->max_level() + 1);
 			for (int level = 0; level <= pixelbuffer_set->max_level(); level++)
 			{
-				PixelBufferPtr buffer = pixelbuffer_set->image(0, level);
+				std::shared_ptr<PixelBuffer> buffer = pixelbuffer_set->image(0, level);
 				texture->set_image(gc, buffer, level);
 			}
 			return texture;
@@ -61,7 +61,7 @@ namespace uicore
 			{
 				for (int level = 0; level <= pixelbuffer_set->max_level(); level++)
 				{
-					PixelBufferPtr buffer = pixelbuffer_set->image(slice, level);
+					std::shared_ptr<PixelBuffer> buffer = pixelbuffer_set->image(slice, level);
 					texture->set_image(gc, slice, buffer, level);
 				}
 			}
@@ -72,7 +72,7 @@ namespace uicore
 			auto texture = Texture2D::create(gc, pixelbuffer_set->width(), pixelbuffer_set->height(), pixelbuffer_set->format(), pixelbuffer_set->max_level() + 1);
 			for (int level = 0; level <= pixelbuffer_set->max_level(); level++)
 			{
-				PixelBufferPtr buffer = pixelbuffer_set->image(0, level);
+				std::shared_ptr<PixelBuffer> buffer = pixelbuffer_set->image(0, level);
 				texture->set_image(gc, buffer, level);
 			}
 			return texture;
@@ -84,7 +84,7 @@ namespace uicore
 			{
 				for (int level = 0; level <= pixelbuffer_set->max_level(); level++)
 				{
-					PixelBufferPtr buffer = pixelbuffer_set->image(slice, level);
+					std::shared_ptr<PixelBuffer> buffer = pixelbuffer_set->image(slice, level);
 					texture->set_image(gc, slice, buffer, level);
 				}
 			}
@@ -97,7 +97,7 @@ namespace uicore
 			{
 				for (int level = 0; level <= pixelbuffer_set->max_level(); level++)
 				{
-					PixelBufferPtr buffer = pixelbuffer_set->image(slice, level);
+					std::shared_ptr<PixelBuffer> buffer = pixelbuffer_set->image(slice, level);
 					texture->set_image(gc, buffer, slice, level);
 				}
 			}
@@ -110,7 +110,7 @@ namespace uicore
 			{
 				for (int level = 0; level <= pixelbuffer_set->max_level(); level++)
 				{
-					PixelBufferPtr buffer = pixelbuffer_set->image(slice, level);
+					std::shared_ptr<PixelBuffer> buffer = pixelbuffer_set->image(slice, level);
 					texture->set_image(gc, (TextureCubeDirection)slice, buffer, level);
 				}
 			}
@@ -123,7 +123,7 @@ namespace uicore
 			{
 				for (int level = 0; level <= pixelbuffer_set->max_level(); level++)
 				{
-					PixelBufferPtr buffer = pixelbuffer_set->image(slice, level);
+					std::shared_ptr<PixelBuffer> buffer = pixelbuffer_set->image(slice, level);
 					texture->set_image(gc, slice / 6, (TextureCubeDirection)(slice % 6), buffer, level);
 				}
 			}

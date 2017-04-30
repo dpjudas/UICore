@@ -47,11 +47,11 @@ namespace uicore
 		int texture_count() const override { return root_nodes.size(); }
 		TextureGroupAllocationPolicy allocation_policy() const override { return texture_allocation_policy; }
 		Size texture_size() const override { return initial_texture_size; }
-		std::vector<Texture2DPtr> textures() const override;
-		TextureGroupImage add(const GraphicContextPtr &context, const Size &size) override { return add_new_node(context, size); }
+		std::vector<std::shared_ptr<Texture2D>> textures() const override;
+		TextureGroupImage add(const std::shared_ptr<GraphicContext> &context, const Size &size) override { return add_new_node(context, size); }
 		void remove(const TextureGroupImage &subtexture) override;
 		void set_allocation_policy(TextureGroupAllocationPolicy policy) override { texture_allocation_policy = policy; }
-		void insert_texture(const Texture2DPtr &texture, const Rect &texture_rect) override;
+		void insert_texture(const std::shared_ptr<Texture2D> &texture, const Rect &texture_rect) override;
 
 	private:
 		class Node
@@ -78,12 +78,12 @@ namespace uicore
 		struct RootNode
 		{
 		public:
-			Texture2DPtr texture;
+			std::shared_ptr<Texture2D> texture;
 			Node node;
 		};
 
-		TextureGroupImage add_new_node(const GraphicContextPtr &context, const Size &texture_size);
-		RootNode *add_new_root(const GraphicContextPtr &context, const Size &texture_size);
+		TextureGroupImage add_new_node(const std::shared_ptr<GraphicContext> &context, const Size &texture_size);
+		RootNode *add_new_root(const std::shared_ptr<GraphicContext> &context, const Size &texture_size);
 
 		std::vector<RootNode *> root_nodes;
 

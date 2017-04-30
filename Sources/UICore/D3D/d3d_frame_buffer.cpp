@@ -99,43 +99,43 @@ namespace uicore
 		return views;
 	}
 
-	void D3DFrameBuffer::attach_color(int attachment_index, const RenderBufferPtr &render_buffer)
+	void D3DFrameBuffer::attach_color(int attachment_index, const std::shared_ptr<RenderBuffer> &render_buffer)
 	{
 		color_buffers.resize(max((size_t)attachment_index + 1, color_buffers.size()));
 		color_buffers[attachment_index] = AttachedBuffer(render_buffer);
 	}
 
-	void D3DFrameBuffer::attach_color(int attachment_index, const Texture1DPtr &texture, int level)
+	void D3DFrameBuffer::attach_color(int attachment_index, const std::shared_ptr<Texture1D> &texture, int level)
 	{
 		color_buffers.resize(max((size_t)attachment_index + 1, color_buffers.size()));
 		color_buffers[attachment_index] = AttachedBuffer(texture, level);
 	}
 
-	void D3DFrameBuffer::attach_color(int attachment_index, const Texture1DArrayPtr &texture, int array_index, int level)
+	void D3DFrameBuffer::attach_color(int attachment_index, const std::shared_ptr<Texture1DArray> &texture, int array_index, int level)
 	{
 		color_buffers.resize(max((size_t)attachment_index + 1, color_buffers.size()));
 		color_buffers[attachment_index] = AttachedBuffer(texture, level, array_index);
 	}
 
-	void D3DFrameBuffer::attach_color(int attachment_index, const Texture2DPtr &texture, int level)
+	void D3DFrameBuffer::attach_color(int attachment_index, const std::shared_ptr<Texture2D> &texture, int level)
 	{
 		color_buffers.resize(max((size_t)attachment_index + 1, color_buffers.size()));
 		color_buffers[attachment_index] = AttachedBuffer(texture, level);
 	}
 
-	void D3DFrameBuffer::attach_color(int attachment_index, const Texture2DArrayPtr &texture, int array_index, int level)
+	void D3DFrameBuffer::attach_color(int attachment_index, const std::shared_ptr<Texture2DArray> &texture, int array_index, int level)
 	{
 		color_buffers.resize(max((size_t)attachment_index + 1, color_buffers.size()));
 		color_buffers[attachment_index] = AttachedBuffer(texture, level, array_index);
 	}
 
-	void D3DFrameBuffer::attach_color(int attachment_index, const Texture3DPtr &texture, int depth, int level)
+	void D3DFrameBuffer::attach_color(int attachment_index, const std::shared_ptr<Texture3D> &texture, int depth, int level)
 	{
 		color_buffers.resize(max((size_t)attachment_index + 1, color_buffers.size()));
 		color_buffers[attachment_index] = AttachedBuffer(texture, level, depth);
 	}
 
-	void D3DFrameBuffer::attach_color(int attachment_index, const TextureCubePtr &texture, TextureSubtype subtype, int level)
+	void D3DFrameBuffer::attach_color(int attachment_index, const std::shared_ptr<TextureCube> &texture, TextureSubtype subtype, int level)
 	{
 		color_buffers.resize(max((size_t)attachment_index + 1, color_buffers.size()));
 		color_buffers[attachment_index] = AttachedBuffer(texture, level, 0, subtype);
@@ -147,17 +147,17 @@ namespace uicore
 		color_buffers[attachment_index] = AttachedBuffer();
 	}
 
-	void D3DFrameBuffer::attach_stencil(const RenderBufferPtr &render_buffer)
+	void D3DFrameBuffer::attach_stencil(const std::shared_ptr<RenderBuffer> &render_buffer)
 	{
 		stencil_buffer = AttachedBuffer(render_buffer);
 	}
 
-	void D3DFrameBuffer::attach_stencil(const Texture2DPtr &texture, int level)
+	void D3DFrameBuffer::attach_stencil(const std::shared_ptr<Texture2D> &texture, int level)
 	{
 		stencil_buffer = AttachedBuffer(texture, level);
 	}
 
-	void D3DFrameBuffer::attach_stencil(const TextureCubePtr &texture, TextureSubtype subtype, int level)
+	void D3DFrameBuffer::attach_stencil(const std::shared_ptr<TextureCube> &texture, TextureSubtype subtype, int level)
 	{
 		stencil_buffer = AttachedBuffer(texture, level, 0, subtype);
 	}
@@ -167,17 +167,17 @@ namespace uicore
 		stencil_buffer = AttachedBuffer();
 	}
 
-	void D3DFrameBuffer::attach_depth(const RenderBufferPtr &render_buffer)
+	void D3DFrameBuffer::attach_depth(const std::shared_ptr<RenderBuffer> &render_buffer)
 	{
 		depth_buffer = AttachedBuffer(render_buffer);
 	}
 
-	void D3DFrameBuffer::attach_depth(const Texture2DPtr &texture, int level)
+	void D3DFrameBuffer::attach_depth(const std::shared_ptr<Texture2D> &texture, int level)
 	{
 		depth_buffer = AttachedBuffer(texture, level);
 	}
 
-	void D3DFrameBuffer::attach_depth(const TextureCubePtr &texture, TextureSubtype subtype, int level)
+	void D3DFrameBuffer::attach_depth(const std::shared_ptr<TextureCube> &texture, TextureSubtype subtype, int level)
 	{
 		depth_buffer = AttachedBuffer(texture, level, 0, subtype);
 	}
@@ -187,19 +187,19 @@ namespace uicore
 		depth_buffer = AttachedBuffer();
 	}
 
-	void D3DFrameBuffer::attach_depth_stencil(const RenderBufferPtr &render_buffer)
+	void D3DFrameBuffer::attach_depth_stencil(const std::shared_ptr<RenderBuffer> &render_buffer)
 	{
 		depth_buffer = AttachedBuffer(render_buffer);
 		stencil_buffer = AttachedBuffer(render_buffer);
 	}
 
-	void D3DFrameBuffer::attach_depth_stencil(const Texture2DPtr &texture, int level)
+	void D3DFrameBuffer::attach_depth_stencil(const std::shared_ptr<Texture2D> &texture, int level)
 	{
 		depth_buffer = AttachedBuffer(texture, level);
 		stencil_buffer = AttachedBuffer(texture, level);
 	}
 
-	void D3DFrameBuffer::attach_depth_stencil(const TextureCubePtr &texture, TextureSubtype subtype, int level)
+	void D3DFrameBuffer::attach_depth_stencil(const std::shared_ptr<TextureCube> &texture, TextureSubtype subtype, int level)
 	{
 		depth_buffer = AttachedBuffer(texture, level, 0, subtype);
 		stencil_buffer = AttachedBuffer(texture, level, 0, subtype);

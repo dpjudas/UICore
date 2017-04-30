@@ -40,13 +40,13 @@ namespace uicore
 	{
 	public:
 		StandardPrograms();
-		StandardPrograms(const GraphicContextPtr &gc);
+		StandardPrograms(const std::shared_ptr<GraphicContext> &gc);
 
-		ProgramObjectPtr get_program_object(StandardProgram standard_program) const;
+		std::shared_ptr<ProgramObject> get_program_object(StandardProgram standard_program) const;
 
 	private:
-		ProgramObjectPtr compile(const GraphicContextPtr &gc, const void *vertex_code, int vertex_code_size, const void *fragment_code, int fragment_code_size);
-		void link(ProgramObjectPtr &program, const std::string &error_message);
+		std::shared_ptr<ProgramObject> compile(const std::shared_ptr<GraphicContext> &gc, const void *vertex_code, int vertex_code_size, const void *fragment_code, int fragment_code_size);
+		void link(std::shared_ptr<ProgramObject> &program, const std::string &error_message);
 
 		std::shared_ptr<StandardPrograms_Impl> impl;
 

@@ -169,13 +169,13 @@ namespace uicore
 		}
 	}
 
-	void StyleCascade::render_background(const CanvasPtr &canvas, const ViewGeometry &geometry) const
+	void StyleCascade::render_background(const std::shared_ptr<Canvas> &canvas, const ViewGeometry &geometry) const
 	{
 		StyleBackgroundRenderer renderer(canvas, geometry, *this);
 		renderer.render_background();
 	}
 
-	void StyleCascade::render_border(const CanvasPtr &canvas, const ViewGeometry &geometry) const
+	void StyleCascade::render_border(const std::shared_ptr<Canvas> &canvas, const ViewGeometry &geometry) const
 	{
 		StyleBackgroundRenderer renderer(canvas, geometry, *this);
 		renderer.render_border();
@@ -184,7 +184,7 @@ namespace uicore
 		image_renderer.render();
 	}
 
-	FontPtr StyleCascade::font() const
+	std::shared_ptr<Font> StyleCascade::font() const
 	{
 		auto font_size = computed_value("font-size");
 		auto line_height = computed_value("line-height");

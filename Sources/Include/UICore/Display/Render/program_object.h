@@ -36,32 +36,30 @@
 namespace uicore
 {
 	class IODevice;
-	typedef std::shared_ptr<IODevice> IODevicePtr;
 	class GraphicContext;
 	class ShaderObject;
-	typedef std::shared_ptr<ShaderObject> ShaderObjectPtr;
 
 	/// \brief Program Object
 	class ProgramObject
 	{
 	public:
 		/// \brief Constructs a ProgramObject
-		static std::shared_ptr<ProgramObject> create(const GraphicContextPtr &gc);
+		static std::shared_ptr<ProgramObject> create(const std::shared_ptr<GraphicContext> &gc);
 
 		/// \brief Load
-		static std::shared_ptr<ProgramObject> load(const GraphicContextPtr &gc, const std::string &vertex_fullname, const std::string &fragment_fullname);
-		static std::shared_ptr<ProgramObject> load(const GraphicContextPtr &gc, const std::string &vertex_fullname, const std::string &geometry_fullname, const std::string &fragment_fullname);
-		static std::shared_ptr<ProgramObject> load(const GraphicContextPtr &gc, const IODevicePtr &vertex_file, const IODevicePtr &fragment_file);
-		static std::shared_ptr<ProgramObject> load(const GraphicContextPtr &gc, const IODevicePtr &vertex_file, const IODevicePtr &geometry_file, const IODevicePtr &fragment_file);
+		static std::shared_ptr<ProgramObject> load(const std::shared_ptr<GraphicContext> &gc, const std::string &vertex_fullname, const std::string &fragment_fullname);
+		static std::shared_ptr<ProgramObject> load(const std::shared_ptr<GraphicContext> &gc, const std::string &vertex_fullname, const std::string &geometry_fullname, const std::string &fragment_fullname);
+		static std::shared_ptr<ProgramObject> load(const std::shared_ptr<GraphicContext> &gc, const std::shared_ptr<IODevice> &vertex_file, const std::shared_ptr<IODevice> &fragment_file);
+		static std::shared_ptr<ProgramObject> load(const std::shared_ptr<GraphicContext> &gc, const std::shared_ptr<IODevice> &vertex_file, const std::shared_ptr<IODevice> &geometry_file, const std::shared_ptr<IODevice> &fragment_file);
 
 		/// \brief Load and link
-		static std::shared_ptr<ProgramObject> load_and_link(const GraphicContextPtr &gc, const std::string &vertex_fullname, const std::string &fragment_fullname);
-		static std::shared_ptr<ProgramObject> load_and_link(const GraphicContextPtr &gc, const std::string &vertex_fullname, const std::string &geometry_fullname, const std::string &fragment_fullname);
-		static std::shared_ptr<ProgramObject> load_and_link(const GraphicContextPtr &gc, const IODevicePtr &vertex_file, const IODevicePtr &fragment_file);
-		static std::shared_ptr<ProgramObject> load_and_link(const GraphicContextPtr &gc, const IODevicePtr &vertex_file, const IODevicePtr &geometry_file, const IODevicePtr &fragment_file);
+		static std::shared_ptr<ProgramObject> load_and_link(const std::shared_ptr<GraphicContext> &gc, const std::string &vertex_fullname, const std::string &fragment_fullname);
+		static std::shared_ptr<ProgramObject> load_and_link(const std::shared_ptr<GraphicContext> &gc, const std::string &vertex_fullname, const std::string &geometry_fullname, const std::string &fragment_fullname);
+		static std::shared_ptr<ProgramObject> load_and_link(const std::shared_ptr<GraphicContext> &gc, const std::shared_ptr<IODevice> &vertex_file, const std::shared_ptr<IODevice> &fragment_file);
+		static std::shared_ptr<ProgramObject> load_and_link(const std::shared_ptr<GraphicContext> &gc, const std::shared_ptr<IODevice> &vertex_file, const std::shared_ptr<IODevice> &geometry_file, const std::shared_ptr<IODevice> &fragment_file);
 
 		/// \brief Returns the shaders attached to the program object.
-		virtual std::vector<ShaderObjectPtr> shaders() const = 0;
+		virtual std::vector<std::shared_ptr<ShaderObject>> shaders() const = 0;
 
 		/// \brief Returns the current info log for the program object.
 		virtual std::string info_log() const = 0;
@@ -97,10 +95,10 @@ namespace uicore
 		virtual int storage_buffer_index(const std::string &name) const = 0;
 
 		/// \brief Add shader to program object.
-		virtual void attach(const ShaderObjectPtr &obj) = 0;
+		virtual void attach(const std::shared_ptr<ShaderObject> &obj) = 0;
 
 		/// \brief Remove shader from program object.
-		virtual void detach(const ShaderObjectPtr &obj) = 0;
+		virtual void detach(const std::shared_ptr<ShaderObject> &obj) = 0;
 
 		/// \brief Bind attribute to specific location.
 		///
@@ -205,6 +203,4 @@ namespace uicore
 		virtual void set_storage_buffer_index(const std::string &block_name, int bind_index) = 0;
 		virtual void set_storage_buffer_index(int block_index, int bind_index) = 0;
 	};
-
-	typedef std::shared_ptr<ProgramObject> ProgramObjectPtr;
 }

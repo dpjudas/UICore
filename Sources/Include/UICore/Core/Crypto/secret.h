@@ -55,6 +55,4 @@ namespace uicore
 		/// \return The key
 		virtual unsigned char *data() const = 0;
 	};
-
-	typedef std::shared_ptr<Secret> SecretPtr;
 }

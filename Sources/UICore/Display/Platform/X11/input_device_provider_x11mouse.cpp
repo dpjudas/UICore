@@ -119,7 +119,7 @@ namespace uicore
 		XWarpPointer(window->get_display(), None, window->get_window(), 0, 0, 0, 0, x, y);
 	}
 
-	void InputDeviceProvider_X11Mouse::received_mouse_input(InputDevicePtr &mouse, XButtonEvent &event)
+	void InputDeviceProvider_X11Mouse::received_mouse_input(std::shared_ptr<InputDevice> &mouse, XButtonEvent &event)
 	{
 		int id;
 
@@ -195,7 +195,7 @@ namespace uicore
 			mouse->sig_key_up()(key);
 	}
 
-	void InputDeviceProvider_X11Mouse::received_mouse_move(InputDevicePtr &mouse, XMotionEvent &event)
+	void InputDeviceProvider_X11Mouse::received_mouse_move(std::shared_ptr<InputDevice> &mouse, XMotionEvent &event)
 	{
 		int x = event.x;
 		int y = event.y;

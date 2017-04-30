@@ -197,20 +197,20 @@ public:
 
 	std::string clipboard_text() const override { return x11_window.get_clipboard_text(); }
 
-	PixelBufferPtr clipboard_image() const override { return x11_window.get_clipboard_image(); }
+	std::shared_ptr<PixelBuffer> clipboard_image() const override { return x11_window.get_clipboard_image(); }
 
 	DisplayWindowHandle handle() const override { return x11_window.get_handle(); }
 
 	/// \brief Returns the GLX rendering context for this window.
 	GLXContext get_opengl_context() { return opengl_context; }
 
-	const GraphicContextPtr& gc() const override { return _gc; }
+	const std::shared_ptr<GraphicContext>& gc() const override { return _gc; }
 
-	const InputDevicePtr &keyboard() const override { return x11_window.get_keyboard(); }
-	const InputDevicePtr &mouse() const override { return x11_window.get_mouse(); }
-	const std::vector<InputDevicePtr> &game_controllers() const override { return x11_window.get_game_controllers(); }
+	const std::shared_ptr<InputDevice> &keyboard() const override { return x11_window.get_keyboard(); }
+	const std::shared_ptr<InputDevice> &mouse() const override { return x11_window.get_mouse(); }
+	const std::vector<std::shared_ptr<InputDevice>> &game_controllers() const override { return x11_window.get_game_controllers(); }
 
-	GraphicContextPtr _gc;
+	std::shared_ptr<GraphicContext> _gc;
 
 	GL_GLXFunctions glx;
 
@@ -228,8 +228,8 @@ public:
 	Point backing_screen_to_client(const Point &screen) override { return x11_window.screen_to_client(screen); }
 
 	void show_system_cursor() override { x11_window.show_system_cursor(); }
-	CursorPtr create_cursor(const CursorDescription &cursor_description) override;
-	void set_cursor(const CursorPtr &cursor) override;
+	std::shared_ptr<Cursor> create_cursor(const CursorDescription &cursor_description) override;
+	void set_cursor(const std::shared_ptr<Cursor> &cursor) override;
 	void set_cursor(StandardCursor type) override { x11_window.set_cursor(type); }
 	void hide_system_cursor() override  { x11_window.hide_system_cursor(); }
 
@@ -267,12 +267,12 @@ public:
 
 	void set_clipboard_text(const std::string &text) override { x11_window.set_clipboard_text(text); }
 
-	void set_clipboard_image(const PixelBufferPtr &buf) override { x11_window.set_clipboard_image(buf); }
+	void set_clipboard_image(const std::shared_ptr<PixelBuffer> &buf) override { x11_window.set_clipboard_image(buf); }
 
 	void request_repaint() override { x11_window.request_repaint(); }
 
-	void set_large_icon(const PixelBufferPtr &image) override;
-	void set_small_icon(const PixelBufferPtr &image) override;
+	void set_large_icon(const std::shared_ptr<PixelBuffer> &image) override;
+	void set_small_icon(const std::shared_ptr<PixelBuffer> &image) override;
 
 	void backing_enable_alpha_channel(const Rect &blur_rect) override;
 	void backing_extend_frame_into_client_area(int left, int top, int right, int bottom) override;

@@ -83,7 +83,7 @@ namespace uicore
 		std::vector<std::string> subkey_names() const override;
 		std::vector<std::string> value_names() const override;
 		int value_int(const std::string &name, int default_value) const override;
-		DataBufferPtr value_binary(const std::string &name, const DataBufferPtr &default_value) const override;
+		std::shared_ptr<DataBuffer> value_binary(const std::string &name, const std::shared_ptr<DataBuffer> &default_value) const override;
 		std::string value_string(const std::string &name, const std::string &default_value) const override;
 		std::vector<std::string> value_multi_string(const std::string &name, const std::vector<std::string> &default_value) const override;
 
@@ -91,7 +91,7 @@ namespace uicore
 		std::shared_ptr<RegistryKey> create_key(const std::string &subkey, unsigned int access_rights, CreateFlags create_flags) override;
 		void delete_key(const std::string &subkey, bool recursive) override;
 		void set_value_int(const std::string &name, int value) override;
-		void set_value_binary(const std::string &name, const DataBufferPtr &value) override;
+		void set_value_binary(const std::string &name, const std::shared_ptr<DataBuffer> &value) override;
 		void set_value_string(const std::string &name, const std::string &value) override;
 		void delete_value(const std::string &name) override;
 
@@ -190,7 +190,7 @@ namespace uicore
 			return data;
 	}
 
-	DataBufferPtr RegistryKey_Impl::value_binary(const std::string &name, const DataBufferPtr &default_value) const
+	std::shared_ptr<DataBuffer> RegistryKey_Impl::value_binary(const std::string &name, const std::shared_ptr<DataBuffer> &default_value) const
 	{
 		DWORD type = 0, size_data = 0;
 		LONG result = RegQueryValueEx(handle, Text::to_utf16(name).c_str(), 0, &type, 0, &size_data);
@@ -295,7 +295,7 @@ namespace uicore
 			throw Exception(string_format("Unable to set registry key value %1", name));
 	}
 
-	void RegistryKey_Impl::set_value_binary(const std::string &name, const DataBufferPtr &value)
+	void RegistryKey_Impl::set_value_binary(const std::string &name, const std::shared_ptr<DataBuffer> &value)
 	{
 		LONG result = RegSetValueEx(handle, name.empty() ? 0 : Text::to_utf16(name).c_str(), 0, REG_BINARY, (const BYTE *)value->data(), value->size());
 		if (result != ERROR_SUCCESS)

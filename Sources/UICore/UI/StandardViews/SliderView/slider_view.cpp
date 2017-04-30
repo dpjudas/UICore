@@ -183,7 +183,7 @@ namespace uicore
 		impl->_lock_to_ticks = lock;
 	}
 
-	void SliderBaseView::layout_children(const CanvasPtr &canvas)
+	void SliderBaseView::layout_children(const std::shared_ptr<Canvas> &canvas)
 	{
 		View::layout_children(canvas);
 

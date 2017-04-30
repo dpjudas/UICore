@@ -37,11 +37,11 @@ namespace uicore
 	class PositionedLayout
 	{
 	public:
-		static void layout_children(const CanvasPtr &canvas, View *view);
-		static ViewGeometry get_geometry(const CanvasPtr &canvas, View *view, const Rectf &containing_box);
+		static void layout_children(const std::shared_ptr<Canvas> &canvas, View *view);
+		static ViewGeometry get_geometry(const std::shared_ptr<Canvas> &canvas, View *view, const Rectf &containing_box);
 
 	private:
-		static void layout_from_containing_box(const CanvasPtr &canvas, View *view, const Rectf &containing_box);
+		static void layout_from_containing_box(const std::shared_ptr<Canvas> &canvas, View *view, const Rectf &containing_box);
 		static float resolve_percentage(const StyleGetValue &computed_value, float size);
 	};
 }

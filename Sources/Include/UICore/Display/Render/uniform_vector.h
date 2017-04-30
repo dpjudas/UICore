@@ -43,42 +43,42 @@ namespace uicore
 		{
 		}
 
-		UniformVector(const GraphicContextPtr &gc, int size, BufferUsage usage = usage_static_draw)
+		UniformVector(const std::shared_ptr<GraphicContext> &gc, int size, BufferUsage usage = usage_static_draw)
 			: _buffer(UniformBuffer::create(gc, size * sizeof(Type), usage))
 		{
 		}
 
-		UniformVector(const GraphicContextPtr &gc, Type *data, int size, BufferUsage usage = usage_static_draw)
+		UniformVector(const std::shared_ptr<GraphicContext> &gc, Type *data, int size, BufferUsage usage = usage_static_draw)
 			: _buffer(UniformBuffer::create(gc, data, size * sizeof(Type), usage))
 		{
 		}
 
-		UniformVector(const GraphicContextPtr &gc, const std::vector<Type> &data, BufferUsage usage = usage_static_draw)
+		UniformVector(const std::shared_ptr<GraphicContext> &gc, const std::vector<Type> &data, BufferUsage usage = usage_static_draw)
 			: _buffer(UniformBuffer::create(gc, data.empty() ? (Type*)0 : &data[0], data.size() * sizeof(Type), usage))
 		{
 		}
 
 		/// Returns the buffer used by the vector
-		const UniformBufferPtr &buffer() const { return _buffer; }
+		const std::shared_ptr<UniformBuffer> &buffer() const { return _buffer; }
 
-		operator const UniformBufferPtr &() const { return buffer(); }
+		operator const std::shared_ptr<UniformBuffer> &() const { return buffer(); }
 
 		/// \brief Uploads data to uniforms buffer.
 		///
 		/// The size specified must match the size of the buffer and is only included to help guard against buffer overruns.
-		void upload_data(const GraphicContextPtr &gc, const Type *data, int size)
+		void upload_data(const std::shared_ptr<GraphicContext> &gc, const Type *data, int size)
 		{
 			_buffer->upload_data(gc, data, size * sizeof(Type));
 		}
 
 		/// \brief Uploads data to uniforms buffer.
-		void upload_data(const GraphicContextPtr &gc, const std::vector<Type> &data)
+		void upload_data(const std::shared_ptr<GraphicContext> &gc, const std::vector<Type> &data)
 		{
 			_buffer->upload_data(gc, data.data(), data.size() * sizeof(Type));
 		}
 
 		/// \brief Copies data from transfer buffer
-		void copy_from(const GraphicContextPtr &gc, StagingVector<Type> &buffer, int dest_pos = 0, int src_pos = 0, int size = -1)
+		void copy_from(const std::shared_ptr<GraphicContext> &gc, StagingVector<Type> &buffer, int dest_pos = 0, int src_pos = 0, int size = -1)
 		{
 			if (size != -1)
 				size = size * sizeof(Type);
@@ -86,7 +86,7 @@ namespace uicore
 		}
 
 		/// \brief Copies data to transfer buffer
-		void copy_to(const GraphicContextPtr &gc, StagingVector<Type> &buffer, int dest_pos = 0, int src_pos = 0, int size = -1)
+		void copy_to(const std::shared_ptr<GraphicContext> &gc, StagingVector<Type> &buffer, int dest_pos = 0, int src_pos = 0, int size = -1)
 		{
 			if (size != -1)
 				size = size * sizeof(Type);
@@ -94,6 +94,6 @@ namespace uicore
 		}
 
 	private:
-		UniformBufferPtr _buffer;
+		std::shared_ptr<UniformBuffer> _buffer;
 	};
 }

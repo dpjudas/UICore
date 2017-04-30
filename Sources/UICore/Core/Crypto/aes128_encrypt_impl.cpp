@@ -41,7 +41,7 @@ namespace uicore
 		reset();
 	}
 
-	DataBufferPtr AES128_Encrypt_Impl::data() const
+	std::shared_ptr<DataBuffer> AES128_Encrypt_Impl::data() const
 	{
 		return databuffer;
 	}

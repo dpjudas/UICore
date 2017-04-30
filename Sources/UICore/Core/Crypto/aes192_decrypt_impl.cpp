@@ -41,7 +41,7 @@ namespace uicore
 		reset();
 	}
 
-	DataBufferPtr AES192_Decrypt_Impl::data() const
+	std::shared_ptr<DataBuffer> AES192_Decrypt_Impl::data() const
 	{
 		return databuffer;
 	}

@@ -64,14 +64,14 @@ namespace uicore
 		DisplayWindowHandle handle() const override { DisplayWindowHandle handle; handle.hwnd = win32_window.get_hwnd(); return handle; }
 		HDC get_device_context() const { return device_context; }
 		HGLRC get_opengl_context() const { return opengl_context; }
-		const GraphicContextPtr &gc() const { return _gc; }
-		const InputDevicePtr &keyboard() const override { return win32_window.get_keyboard(); }
-		const InputDevicePtr &mouse() const override { return win32_window.get_mouse(); }
-		const std::vector<InputDevicePtr> &game_controllers() const override { return win32_window.get_game_controllers(); }
+		const std::shared_ptr<GraphicContext> &gc() const { return _gc; }
+		const std::shared_ptr<InputDevice> &keyboard() const override { return win32_window.get_keyboard(); }
+		const std::shared_ptr<InputDevice> &mouse() const override { return win32_window.get_mouse(); }
+		const std::vector<std::shared_ptr<InputDevice>> &game_controllers() const override { return win32_window.get_game_controllers(); }
 		bool is_clipboard_text_available() const;
 		bool is_clipboard_image_available() const;
 		std::string clipboard_text() const;
-		PixelBufferPtr clipboard_image() const;
+		std::shared_ptr<PixelBuffer> clipboard_image() const;
 		float pixel_ratio() const override;
 
 		void make_current() const;
@@ -80,8 +80,8 @@ namespace uicore
 
 		HGLRC get_share_context();
 		void show_system_cursor();
-		CursorPtr create_cursor(const CursorDescription &cursor_description);
-		void set_cursor(const CursorPtr &cursor);
+		std::shared_ptr<Cursor> create_cursor(const CursorDescription &cursor_description);
+		void set_cursor(const std::shared_ptr<Cursor> &cursor);
 		void set_cursor(StandardCursor type);
 		void set_cursor_handle(HCURSOR cursor);
 		void hide_system_cursor();
@@ -108,13 +108,13 @@ namespace uicore
 		/// \brief Stores text in the clipboard.
 		void set_clipboard_text(const std::string &text);
 
-		void set_clipboard_image(const PixelBufferPtr &buf);
+		void set_clipboard_image(const std::shared_ptr<PixelBuffer> &buf);
 
 		/// \brief Invalidates a region of a screen, causing a repaint.
 		void request_repaint();
 
-		void set_large_icon(const PixelBufferPtr &image);
-		void set_small_icon(const PixelBufferPtr &image);
+		void set_large_icon(const std::shared_ptr<PixelBuffer> &image);
+		void set_small_icon(const std::shared_ptr<PixelBuffer> &image);
 
 		void backing_enable_alpha_channel(const Rect &blur_rect);
 		void backing_extend_frame_into_client_area(int left, int top, int right, int bottom);
@@ -128,7 +128,7 @@ namespace uicore
 		void on_window_resized();
 		void get_opengl_version(int &version_major, int &version_minor);
 
-		GraphicContextPtr _gc;
+		std::shared_ptr<GraphicContext> _gc;
 		Win32Window win32_window;
 
 		/// \brief OpenGL rendering context for this window.

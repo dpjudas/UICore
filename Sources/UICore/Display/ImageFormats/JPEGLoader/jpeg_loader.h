@@ -45,7 +45,7 @@ namespace uicore
 	class JPEGLoader
 	{
 	public:
-		static PixelBufferPtr load(const IODevicePtr &iodevice, bool srgb);
+		static std::shared_ptr<PixelBuffer> load(const std::shared_ptr<IODevice> &iodevice, bool srgb);
 
 	private:
 		enum ColorSpace
@@ -57,7 +57,7 @@ namespace uicore
 			colorspace_grayscale
 		};
 
-		JPEGLoader(const IODevicePtr &iodevice);
+		JPEGLoader(const std::shared_ptr<IODevice> &iodevice);
 
 		void process_app0(JPEGFileReader &reader);
 		void process_app14(JPEGFileReader &reader);

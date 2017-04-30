@@ -481,10 +481,10 @@ namespace uicore
 	class GL3StandardPrograms_Impl
 	{
 	public:
-		ProgramObjectPtr color_only_program;
-		ProgramObjectPtr single_texture_program;
-		ProgramObjectPtr sprite_program;
-		ProgramObjectPtr path_program;
+		std::shared_ptr<ProgramObject> color_only_program;
+		std::shared_ptr<ProgramObject> single_texture_program;
+		std::shared_ptr<ProgramObject> sprite_program;
+		std::shared_ptr<ProgramObject> path_program;
 	};
 
 	GL3StandardPrograms::GL3StandardPrograms()
@@ -620,7 +620,7 @@ namespace uicore
 	{
 	}
 
-	ProgramObjectPtr GL3StandardPrograms::get_program_object(StandardProgram standard_program) const
+	std::shared_ptr<ProgramObject> GL3StandardPrograms::get_program_object(StandardProgram standard_program) const
 	{
 		switch (standard_program)
 		{

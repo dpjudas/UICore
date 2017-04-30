@@ -231,7 +231,7 @@ namespace uicore
 		return window.is_visible();
 	}
 
-	const GraphicContextPtr &D3DDisplayWindow::gc() const
+	const std::shared_ptr<GraphicContext> &D3DDisplayWindow::gc() const
 	{
 		return _gc;
 	}
@@ -288,12 +288,12 @@ namespace uicore
 		window.show_system_cursor();
 	}
 
-	CursorPtr D3DDisplayWindow::create_cursor(const CursorDescription &cursor_description)
+	std::shared_ptr<Cursor> D3DDisplayWindow::create_cursor(const CursorDescription &cursor_description)
 	{
 		return std::make_shared<CursorProvider_Win32>(cursor_description);
 	}
 
-	void D3DDisplayWindow::set_cursor(const CursorPtr &cursor)
+	void D3DDisplayWindow::set_cursor(const std::shared_ptr<Cursor> &cursor)
 	{
 		window.set_cursor(static_cast<CursorProvider_Win32 *>(cursor.get()));
 	}
@@ -471,7 +471,7 @@ namespace uicore
 		window.set_clipboard_text(text);
 	}
 
-	void D3DDisplayWindow::set_clipboard_image(const PixelBufferPtr &buf)
+	void D3DDisplayWindow::set_clipboard_image(const std::shared_ptr<PixelBuffer> &buf)
 	{
 		window.set_clipboard_image(buf);
 	}
@@ -481,7 +481,7 @@ namespace uicore
 		return window.get_clipboard_text();
 	}
 
-	PixelBufferPtr D3DDisplayWindow::clipboard_image() const
+	std::shared_ptr<PixelBuffer> D3DDisplayWindow::clipboard_image() const
 	{
 		return window.get_clipboard_image();
 	}
@@ -491,12 +491,12 @@ namespace uicore
 		window.request_repaint();
 	}
 
-	void D3DDisplayWindow::set_large_icon(const PixelBufferPtr &image)
+	void D3DDisplayWindow::set_large_icon(const std::shared_ptr<PixelBuffer> &image)
 	{
 		window.set_large_icon(image);
 	}
 
-	void D3DDisplayWindow::set_small_icon(const PixelBufferPtr &image)
+	void D3DDisplayWindow::set_small_icon(const std::shared_ptr<PixelBuffer> &image)
 	{
 		window.set_small_icon(image);
 	}

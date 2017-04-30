@@ -65,7 +65,7 @@ class FontEngine_Freetype : public FontEngine
 /// \name Construction
 /// \{
 public:
-	FontEngine_Freetype(const FontDescription &description, DataBufferPtr &font_databuffer, float pixel_ratio);
+	FontEngine_Freetype(const FontDescription &description, std::shared_ptr<DataBuffer> &font_databuffer, float pixel_ratio);
 	~FontEngine_Freetype();
 
 /// \}
@@ -88,7 +88,7 @@ public:
 /// \{
 
 public:
-	void load_glyph_path(unsigned int glyph_index, const PathPtr &out_path, GlyphMetrics &out_metrics) override;
+	void load_glyph_path(unsigned int glyph_index, const std::shared_ptr<Path> &out_path, GlyphMetrics &out_metrics) override;
 
 /// \}
 /// \name Implementation
@@ -105,7 +105,7 @@ private:
 
 	std::vector<TaggedPoint> get_contour_points(int cont, FT_Outline *outline);
 
-	DataBufferPtr data_buffer;
+	std::shared_ptr<DataBuffer> data_buffer;
 	FontDescription font_description;
 	FontMetrics font_metrics;
 	float pixel_ratio;

@@ -33,9 +33,7 @@
 namespace uicore
 {
 	class Canvas;
-	typedef std::shared_ptr<Canvas> CanvasPtr;
 	class Image;
-	typedef std::shared_ptr<Image> ImagePtr;
 	class Colorf;
 	class Rectf;
 	class StyleCascade;
@@ -45,7 +43,7 @@ namespace uicore
 	class StyleBorderImageRenderer
 	{
 	public:
-		StyleBorderImageRenderer(const CanvasPtr &canvas, const ViewGeometry &geometry, const StyleCascade &style);
+		StyleBorderImageRenderer(const std::shared_ptr<Canvas> &canvas, const ViewGeometry &geometry, const StyleCascade &style);
 		void render();
 
 	private:
@@ -59,7 +57,7 @@ namespace uicore
 		
 		TileRepeatInfo repeat_info(float x, float w, int sw, const StyleGetValue &repeat_x);
 		
-		void draw_area(const ImagePtr &image, float x, float y, float w, float h, int sx, int sy, int sw, int sh, const StyleGetValue &repeat_x, const StyleGetValue &repeat_y);
+		void draw_area(const std::shared_ptr<Image> &image, float x, float y, float w, float h, int sx, int sy, int sw, int sh, const StyleGetValue &repeat_x, const StyleGetValue &repeat_y);
 		Rectf get_border_image_area() const;
 		float get_left_grid(float image_area_width, float auto_width) const;
 		float get_right_grid(float image_area_width, float auto_width) const;
@@ -70,7 +68,7 @@ namespace uicore
 		int get_top_slice_value(int image_height) const;
 		int get_bottom_slice_value(int image_height) const;
 
-		const CanvasPtr &canvas;
+		const std::shared_ptr<Canvas> &canvas;
 		const ViewGeometry &geometry;
 		const StyleCascade &style;
 	};

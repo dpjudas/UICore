@@ -62,6 +62,4 @@ namespace uicore
 		/// \brief Copy buffer to a new buffer
 		virtual std::shared_ptr<DataBuffer> copy(size_t pos, size_t size) = 0;
 	};
-
-	typedef std::shared_ptr<DataBuffer> DataBufferPtr;
 }

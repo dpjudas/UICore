@@ -49,15 +49,15 @@ namespace uicore
 		int base_level() const override { return _base_level; }
 		int max_level() const override { return _max_level; }
 
-		PixelBufferPtr image(int slice, int level) override;
-		void set_image(int slice, int level, const PixelBufferPtr &image) override;
+		std::shared_ptr<PixelBuffer> image(int slice, int level) override;
+		void set_image(int slice, int level, const std::shared_ptr<PixelBuffer> &image) override;
 
 	private:
 		TextureDimensions _dimensions;
 		TextureFormat _format;
 		int _width;
 		int _height;
-		std::vector<std::vector<PixelBufferPtr> > _slices;
+		std::vector<std::vector<std::shared_ptr<PixelBuffer>> > _slices;
 		int _base_level = -1;
 		int _max_level = -1;
 	};
@@ -67,14 +67,14 @@ namespace uicore
 		return std::make_shared<PixelBufferSetImpl>(dimensions, format, width, height, slices);
 	}
 
-	std::shared_ptr<PixelBufferSet> PixelBufferSet::create(const PixelBufferPtr &image)
+	std::shared_ptr<PixelBufferSet> PixelBufferSet::create(const std::shared_ptr<PixelBuffer> &image)
 	{
 		auto set = create(texture_2d, image->format(), image->width(), image->height(), 1);
 		set->set_image(0, 0, image);
 		return set;
 	}
 
-	PixelBufferPtr PixelBufferSetImpl::image(int slice, int level)
+	std::shared_ptr<PixelBuffer> PixelBufferSetImpl::image(int slice, int level)
 	{
 		if (slice < 0 || slice >= (int)_slices.size() || level < 0)
 			throw Exception("Out of bounds");
@@ -85,11 +85,11 @@ namespace uicore
 		}
 		else
 		{
-			return PixelBufferPtr();
+			return std::shared_ptr<PixelBuffer>();
 		}
 	}
 
-	void PixelBufferSetImpl::set_image(int slice, int level, const PixelBufferPtr &image)
+	void PixelBufferSetImpl::set_image(int slice, int level, const std::shared_ptr<PixelBuffer> &image)
 	{
 		if (slice < 0 || slice >= (int)_slices.size() || level < 0)
 			throw Exception("Out of bounds");

@@ -290,7 +290,7 @@ namespace uicore
 		glGenerateMipmap(texture_type);
 	}
 
-	PixelBufferPtr GL3TextureObject::get_pixeldata(const GraphicContextPtr &gc, TextureFormat texture_format, int level) const
+	std::shared_ptr<PixelBuffer> GL3TextureObject::get_pixeldata(const std::shared_ptr<GraphicContext> &gc, TextureFormat texture_format, int level) const
 	{
 		throw_if_disposed();
 
@@ -319,7 +319,7 @@ namespace uicore
 		}
 	}
 
-	void GL3TextureObject::copy_from(const GraphicContextPtr &gc, int x, int y, int slice, int level, const PixelBufferPtr &src, const Rect &src_rect)
+	void GL3TextureObject::copy_from(const std::shared_ptr<GraphicContext> &gc, int x, int y, int slice, int level, const std::shared_ptr<PixelBuffer> &src, const Rect &src_rect)
 	{
 		throw_if_disposed();
 		if (src_rect.left < 0 || src_rect.top < 0 || src_rect.right > src->width() || src_rect.bottom > src->height())
@@ -328,7 +328,7 @@ namespace uicore
 		TextureFormat_GL tf = OpenGL::textureformat(src->format());
 		bool conv_needed = !tf.valid;
 
-		PixelBufferPtr src_converted;
+		std::shared_ptr<PixelBuffer> src_converted;
 		if (conv_needed)
 		{
 			src_converted = src->to_format(tf_rgba8); // To do: it should use the internal format here (monkey function missing for this)

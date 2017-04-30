@@ -90,6 +90,4 @@ namespace uicore
 		/// \brief Convert some pixel data
 		virtual void convert(void *output, int output_pitch, TextureFormat output_format, const void *input, int input_pitch, TextureFormat input_format, int width, int height) = 0;
 	};
-
-	typedef std::shared_ptr<PixelConverter> PixelConverterPtr;
 }

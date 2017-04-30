@@ -34,13 +34,13 @@
 
 namespace uicore
 {
-	PixelBufferPtr PNGLoader::load(const IODevicePtr &iodevice, bool srgb)
+	std::shared_ptr<PixelBuffer> PNGLoader::load(const std::shared_ptr<IODevice> &iodevice, bool srgb)
 	{
 		PNGLoader loader(iodevice, srgb);
 		return loader.image;
 	}
 
-	PNGLoader::PNGLoader(const IODevicePtr &iodevice, bool force_srgb)
+	PNGLoader::PNGLoader(const std::shared_ptr<IODevice> &iodevice, bool force_srgb)
 		: file(iodevice), force_srgb(force_srgb), scanline(nullptr), prev_scanline(nullptr), scanline_4ub(nullptr), scanline_4us(nullptr), palette(nullptr)
 	{
 		read_magic();
@@ -73,9 +73,9 @@ namespace uicore
 	{
 		file->set_big_endian_mode();
 
-		std::map<std::string, DataBufferPtr> chunks;
+		std::map<std::string, std::shared_ptr<DataBuffer>> chunks;
 
-		std::vector<DataBufferPtr> idat_chunks;
+		std::vector<std::shared_ptr<DataBuffer>> idat_chunks;
 		uint64_t total_idat_size = 0;
 
 		while (true)
@@ -218,7 +218,7 @@ namespace uicore
 
 	void PNGLoader::decode_image()
 	{
-		DataBufferPtr image_data = ZLibCompression::decompress(idat, false);
+		std::shared_ptr<DataBuffer> image_data = ZLibCompression::decompress(idat, false);
 
 		create_image();
 		create_scanline_buffers();

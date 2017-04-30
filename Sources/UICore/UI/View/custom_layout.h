@@ -35,10 +35,10 @@ namespace uicore
 	class CustomLayout : public ViewLayout
 	{
 	public:
-		float preferred_width(const CanvasPtr &canvas, View *view) override { return 0.0f; }
-		float preferred_height(const CanvasPtr &canvas, View *view, float width) override { return 0.0f; }
-		float first_baseline_offset(const CanvasPtr &canvas, View *view, float width) override { return 0.0f; }
-		float last_baseline_offset(const CanvasPtr &canvas, View *view, float width) override { return 0.0f; }
-		void layout_children(const CanvasPtr &canvas, View *view) override { for (const auto &child : view->children()) child->layout_children(canvas); }
+		float preferred_width(const std::shared_ptr<Canvas> &canvas, View *view) override { return 0.0f; }
+		float preferred_height(const std::shared_ptr<Canvas> &canvas, View *view, float width) override { return 0.0f; }
+		float first_baseline_offset(const std::shared_ptr<Canvas> &canvas, View *view, float width) override { return 0.0f; }
+		float last_baseline_offset(const std::shared_ptr<Canvas> &canvas, View *view, float width) override { return 0.0f; }
+		void layout_children(const std::shared_ptr<Canvas> &canvas, View *view) override { for (const auto &child : view->children()) child->layout_children(canvas); }
 	};
 }

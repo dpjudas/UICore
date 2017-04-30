@@ -35,7 +35,6 @@ namespace uicore
 {
 	class GraphicContext;
 	class Canvas;
-	typedef std::shared_ptr<Canvas> CanvasPtr;
 	enum TextureImageYAxis;
 
 	/// \brief Render batching abstraction
@@ -47,7 +46,7 @@ namespace uicore
 		/** Flush render batcher contents.
 		 *  \param gc Graphic context to flush contents to.
 		 */
-		virtual void flush(const GraphicContextPtr &gc) = 0;
+		virtual void flush(const std::shared_ptr<GraphicContext> &gc) = 0;
 
 		/** Function to call when matrices are changed.
 		 *  \param modelview    New wodel view matrix.

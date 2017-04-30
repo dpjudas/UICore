@@ -122,6 +122,4 @@ namespace uicore
 		/// \brief Signal emitted when proximity is entered or exited
 		virtual Signal<void(const InputEvent &)> &sig_proximity_change() = 0;
 	};
-
-	typedef std::shared_ptr<InputDevice> InputDevicePtr;
 }

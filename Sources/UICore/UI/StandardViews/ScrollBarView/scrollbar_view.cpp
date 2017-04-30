@@ -271,7 +271,7 @@ namespace uicore
 		impl->update_pos(this, new_pos, impl->min_pos, impl->max_pos);
 	}
 
-	void ScrollBarBaseView::layout_children(const CanvasPtr &canvas)
+	void ScrollBarBaseView::layout_children(const std::shared_ptr<Canvas> &canvas)
 	{
 		// Place buttons and track:
 		if (vertical())
@@ -324,7 +324,7 @@ namespace uicore
 		impl->track->layout_children(canvas);
 	}
 
-	float ScrollBarBaseView::calculate_preferred_width(const CanvasPtr &canvas)
+	float ScrollBarBaseView::calculate_preferred_width(const std::shared_ptr<Canvas> &canvas)
 	{
 		float button_incr_size = impl->button_increment->preferred_margin_width(canvas);
 		float button_decr_size = impl->button_decrement->preferred_margin_width(canvas);
@@ -339,7 +339,7 @@ namespace uicore
 		}
 	}
 
-	float ScrollBarBaseView::calculate_preferred_height(const CanvasPtr &canvas, float width)
+	float ScrollBarBaseView::calculate_preferred_height(const std::shared_ptr<Canvas> &canvas, float width)
 	{
 		float button_incr_size = impl->button_increment->preferred_margin_height(canvas, width);
 		float button_decr_size = impl->button_decrement->preferred_margin_height(canvas, width);
@@ -354,12 +354,12 @@ namespace uicore
 		}
 	}
 
-	float ScrollBarBaseView::calculate_first_baseline_offset(const CanvasPtr &canvas, float width)
+	float ScrollBarBaseView::calculate_first_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width)
 	{
 		return 0.0f;
 	}
 
-	float ScrollBarBaseView::calculate_last_baseline_offset(const CanvasPtr &canvas, float width)
+	float ScrollBarBaseView::calculate_last_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width)
 	{
 		return 0.0f;
 	}

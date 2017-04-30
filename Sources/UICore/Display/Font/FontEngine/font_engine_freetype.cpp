@@ -81,7 +81,7 @@ FontEngine_Freetype_Library &FontEngine_Freetype_Library::instance()
 /////////////////////////////////////////////////////////////////////////////
 // FontEngine_Freetype Construction:
 
-FontEngine_Freetype::FontEngine_Freetype(const FontDescription &description, DataBufferPtr &font_databuffer, float new_pixel_ratio) : face(nullptr), pixel_ratio(new_pixel_ratio)
+FontEngine_Freetype::FontEngine_Freetype(const FontDescription &description, std::shared_ptr<DataBuffer> &font_databuffer, float new_pixel_ratio) : face(nullptr), pixel_ratio(new_pixel_ratio)
 {
 	font_description = description.clone();
 
@@ -141,7 +141,7 @@ FontPixelBuffer FontEngine_Freetype::get_font_glyph(int glyph)
 /////////////////////////////////////////////////////////////////////////////
 // FontEngine_Freetype Operations:
 
-void FontEngine_Freetype::load_glyph_path(unsigned int c, const PathPtr &out_path, GlyphMetrics &out_metrics)
+void FontEngine_Freetype::load_glyph_path(unsigned int c, const std::shared_ptr<Path> &out_path, GlyphMetrics &out_metrics)
 {
 	out_path->set_fill_mode(PathFillMode::winding);
 

@@ -37,13 +37,13 @@
 
 namespace uicore
 {
-	PixelBufferSetPtr DDSFormat::load(const std::string &filename)
+	std::shared_ptr<PixelBufferSet> DDSFormat::load(const std::string &filename)
 	{
 		auto file = File::open_existing(filename);
 		return load(file);
 	}
 
-	PixelBufferSetPtr DDSFormat::load(const IODevicePtr &file)
+	std::shared_ptr<PixelBufferSet> DDSFormat::load(const std::shared_ptr<IODevice> &file)
 	{
 #define fourccvalue(a,b,c,d) ((static_cast<unsigned int>(a)) | (static_cast<unsigned int>(b) << 8) | (static_cast<unsigned int>(c) << 16) | (static_cast<unsigned int>(d) << 24))
 #define isbitmask(r,g,b,a) (format_red_bit_mask == (r) && format_green_bit_mask == (g) && format_blue_bit_mask == (b) && format_alpha_bit_mask == (a))

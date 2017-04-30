@@ -40,9 +40,9 @@ namespace uicore
 		/// \brief Constructs a 1D texture
 		///
 		/// If levels is set to zero it will create a texture containing all mipmap levels
-		static std::shared_ptr<Texture1D> create(const GraphicContextPtr &context, int size, TextureFormat texture_format = tf_rgba8, int levels = 1);
-		static std::shared_ptr<Texture1D> create(const GraphicContextPtr &context, const PixelBufferPtr &image, bool is_srgb = false);
-		static std::shared_ptr<Texture1D> create(const GraphicContextPtr &context, const PixelBufferPtr &image, int src_x, int width, bool is_srgb = false);
+		static std::shared_ptr<Texture1D> create(const std::shared_ptr<GraphicContext> &context, int size, TextureFormat texture_format = tf_rgba8, int levels = 1);
+		static std::shared_ptr<Texture1D> create(const std::shared_ptr<GraphicContext> &context, const std::shared_ptr<PixelBuffer> &image, bool is_srgb = false);
+		static std::shared_ptr<Texture1D> create(const std::shared_ptr<GraphicContext> &context, const std::shared_ptr<PixelBuffer> &image, int src_x, int width, bool is_srgb = false);
 
 		/// \brief Get the texture width.
 		virtual int size() const = 0;
@@ -55,14 +55,14 @@ namespace uicore
 		/// \param context Graphic context to use for the request
 		/// \param image Image to upload.
 		/// \param level Mipmap level-of-detail number.
-		virtual void set_image(const GraphicContextPtr &context, const PixelBufferPtr &image, int level = 0) = 0;
+		virtual void set_image(const std::shared_ptr<GraphicContext> &context, const std::shared_ptr<PixelBuffer> &image, int level = 0) = 0;
 
 		/// \brief Upload image to sub texture.
 		///
 		/// \param context Graphic context to use for the request
 		/// \param image Image to upload.
 		/// \param level Mipmap level-of-detail number.
-		virtual void set_subimage(const GraphicContextPtr &context, int x, const PixelBufferPtr &image, const int src_x, const int src_width, int level = 0) = 0;
+		virtual void set_subimage(const std::shared_ptr<GraphicContext> &context, int x, const std::shared_ptr<PixelBuffer> &image, const int src_x, const int src_width, int level = 0) = 0;
 
 		virtual void set_wrap_mode(TextureWrapMode wrap_s) = 0;
 	};

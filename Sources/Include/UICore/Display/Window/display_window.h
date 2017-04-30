@@ -51,19 +51,15 @@ namespace uicore
 	class Rectf;
 	class Display;
 	class GraphicContext;
-	typedef std::shared_ptr<GraphicContext> GraphicContextPtr;
 	class DisplayWindowMode;
 	class DisplayWindowDescription;
 	struct DisplayWindowHandle;
 	class InputDevice;
-	typedef std::shared_ptr<InputDevice> InputDevicePtr;
 	class Pointf;
 	class Cursor;
-	typedef std::shared_ptr<Cursor> CursorPtr;
 	class DisplayWindowProvider;
 	class DisplayWindow_Impl;
 	class PixelBuffer;
-	typedef std::shared_ptr<PixelBuffer> PixelBufferPtr;
 
 	/// \brief Standard Cursor
 	enum class StandardCursor
@@ -126,19 +122,19 @@ namespace uicore
 		virtual bool has_focus() const = 0;
 
 		/// \brief Return the graphic context for the window.
-		virtual const GraphicContextPtr &gc() const = 0;
+		virtual const std::shared_ptr<GraphicContext> &gc() const = 0;
 
 		/// \brief Returns the keyboard input device.
-		virtual const InputDevicePtr &keyboard() const = 0;
+		virtual const std::shared_ptr<InputDevice> &keyboard() const = 0;
 
 		/// \brief Returns the mouse input device.
-		virtual const InputDevicePtr &mouse() const = 0;
+		virtual const std::shared_ptr<InputDevice> &mouse() const = 0;
 
 		/// \brief Returns the game controller input device.
-		virtual const std::vector<InputDevicePtr> &game_controllers() const = 0;
+		virtual const std::vector<std::shared_ptr<InputDevice>> &game_controllers() const = 0;
 
 		/// \brief Returns the input device with the given device name
-		const InputDevicePtr &input_device(const std::string &device_name) const;
+		const std::shared_ptr<InputDevice> &input_device(const std::string &device_name) const;
 
 		/// \brief Signal emitted when window lost focus.
 		virtual Signal<void()> &sig_lost_focus() = 0;
@@ -207,7 +203,7 @@ namespace uicore
 
 		/// \brief Returns an image stored in the clipboard.
 		/// Returns a null pixelbuffer if no image is available.
-		virtual PixelBufferPtr clipboard_image() const = 0;
+		virtual std::shared_ptr<PixelBuffer> clipboard_image() const = 0;
 
 		/// \brief Returns the minimum size the window can be resized to by the application user.
 		virtual Sizef minimum_size(bool client_area = false) = 0;
@@ -308,7 +304,7 @@ namespace uicore
 		virtual void show_cursor() = 0;
 
 		/// \brief Sets the current cursor icon.
-		virtual void set_cursor(const CursorPtr &cursor) = 0;
+		virtual void set_cursor(const std::shared_ptr<Cursor> &cursor) = 0;
 
 		/// \brief Set cursor
 		///
@@ -327,13 +323,13 @@ namespace uicore
 		virtual void set_clipboard_text(const std::string &text) = 0;
 
 		/// \brief Stores an image in the clipboard.
-		virtual void set_clipboard_image(const PixelBufferPtr &buf) = 0;
+		virtual void set_clipboard_image(const std::shared_ptr<PixelBuffer> &buf) = 0;
 
 		/// \brief Sets the large icon used for this window.
-		virtual void set_large_icon(const PixelBufferPtr &image) = 0;
+		virtual void set_large_icon(const std::shared_ptr<PixelBuffer> &image) = 0;
 
 		/// \brief Sets the small icon used for this window.
-		virtual void set_small_icon(const PixelBufferPtr &image) = 0;
+		virtual void set_small_icon(const std::shared_ptr<PixelBuffer> &image) = 0;
 
 		/// \brief Enable alpha channel for this window.
 		///
@@ -346,6 +342,4 @@ namespace uicore
 		/// Only implemented on win32
 		virtual void extend_frame_into_client_area(float left, float top, float right, float bottom) = 0;
 	};
-
-	typedef std::shared_ptr<DisplayWindow> DisplayWindowPtr;
 }

@@ -40,13 +40,13 @@ namespace uicore
 	// Warning: Ensure this number does not exceed RenderBatchTriangle::max_number_of_texture_coords
 	int RenderBatchTriangle::max_textures = 4;
 
-	RenderBatchTriangle::RenderBatchTriangle(const GraphicContextPtr &gc, RenderBatchBuffer *batch_buffer)
+	RenderBatchTriangle::RenderBatchTriangle(const std::shared_ptr<GraphicContext> &gc, RenderBatchBuffer *batch_buffer)
 		: batch_buffer(batch_buffer)
 	{
 		vertices = (SpriteVertex *)batch_buffer->buffer;
 	}
 
-	void RenderBatchTriangle::draw_sprite(const CanvasPtr &canvas, const Pointf texture_position[4], const Pointf dest_position[4], const Texture2DPtr &texture, const Colorf &color)
+	void RenderBatchTriangle::draw_sprite(const std::shared_ptr<Canvas> &canvas, const Pointf texture_position[4], const Pointf dest_position[4], const std::shared_ptr<Texture2D> &texture, const Colorf &color)
 	{
 		int texindex = set_batcher_active(canvas, texture);
 
@@ -58,7 +58,7 @@ namespace uicore
 		to_sprite_vertex(texture_position[2], dest_position[2], vertices[position++], texindex, color);
 	}
 
-	void RenderBatchTriangle::fill_triangle(const CanvasPtr &canvas, const Vec2f *triangle_positions, const Vec4f *triangle_colors, int num_vertices)
+	void RenderBatchTriangle::fill_triangle(const std::shared_ptr<Canvas> &canvas, const Vec2f *triangle_positions, const Vec4f *triangle_colors, int num_vertices)
 	{
 		int texindex = set_batcher_active(canvas, num_vertices);
 
@@ -74,7 +74,7 @@ namespace uicore
 		}
 	}
 
-	void RenderBatchTriangle::fill_triangle(const CanvasPtr &canvas, const Vec2f *triangle_positions, const Colorf &color, int num_vertices)
+	void RenderBatchTriangle::fill_triangle(const std::shared_ptr<Canvas> &canvas, const Vec2f *triangle_positions, const Colorf &color, int num_vertices)
 	{
 		int texindex = set_batcher_active(canvas, num_vertices);
 
@@ -90,7 +90,7 @@ namespace uicore
 		}
 	}
 
-	void RenderBatchTriangle::fill_triangles(const CanvasPtr &canvas, const Vec2f *positions, const Vec2f *texture_positions, int num_vertices, const Texture2DPtr &texture, const Colorf &color)
+	void RenderBatchTriangle::fill_triangles(const std::shared_ptr<Canvas> &canvas, const Vec2f *positions, const Vec2f *texture_positions, int num_vertices, const std::shared_ptr<Texture2D> &texture, const Colorf &color)
 	{
 		int texindex = set_batcher_active(canvas, texture);
 
@@ -106,7 +106,7 @@ namespace uicore
 
 	}
 
-	void RenderBatchTriangle::fill_triangles(const CanvasPtr &canvas, const Vec2f *positions, const Vec2f *texture_positions, int num_vertices, const Texture2DPtr &texture, const Colorf *colors)
+	void RenderBatchTriangle::fill_triangles(const std::shared_ptr<Canvas> &canvas, const Vec2f *positions, const Vec2f *texture_positions, int num_vertices, const std::shared_ptr<Texture2D> &texture, const Colorf *colors)
 	{
 		int texindex = set_batcher_active(canvas, texture);
 
@@ -129,7 +129,7 @@ namespace uicore
 		v.texindex = texindex;
 	}
 
-	void RenderBatchTriangle::draw_image(const CanvasPtr &canvas, const Rectf &src, const Rectf &dest, const Colorf &color, const Texture2DPtr &texture)
+	void RenderBatchTriangle::draw_image(const std::shared_ptr<Canvas> &canvas, const Rectf &src, const Rectf &dest, const Colorf &color, const std::shared_ptr<Texture2D> &texture)
 	{
 		int texindex = set_batcher_active(canvas, texture);
 
@@ -157,7 +157,7 @@ namespace uicore
 		position += 6;
 	}
 
-	void RenderBatchTriangle::draw_image(const CanvasPtr &canvas, const Rectf &src, const Quadf &dest, const Colorf &color, const Texture2DPtr &texture)
+	void RenderBatchTriangle::draw_image(const std::shared_ptr<Canvas> &canvas, const Rectf &src, const Quadf &dest, const Colorf &color, const std::shared_ptr<Texture2D> &texture)
 	{
 		int texindex = set_batcher_active(canvas, texture);
 
@@ -185,7 +185,7 @@ namespace uicore
 		position += 6;
 	}
 
-	void RenderBatchTriangle::draw_glyph_subpixel(const CanvasPtr &canvas, const Rectf &src, const Rectf &dest, const Colorf &color, const Texture2DPtr &texture)
+	void RenderBatchTriangle::draw_glyph_subpixel(const std::shared_ptr<Canvas> &canvas, const Rectf &src, const Rectf &dest, const Colorf &color, const std::shared_ptr<Texture2D> &texture)
 	{
 		int texindex = set_batcher_active(canvas, texture, true, color);
 
@@ -213,7 +213,7 @@ namespace uicore
 		position += 6;
 	}
 
-	void RenderBatchTriangle::fill(const CanvasPtr &canvas, float x1, float y1, float x2, float y2, const Colorf &color)
+	void RenderBatchTriangle::fill(const std::shared_ptr<Canvas> &canvas, float x1, float y1, float x2, float y2, const Colorf &color)
 	{
 		int texindex = set_batcher_active(canvas);
 
@@ -242,7 +242,7 @@ namespace uicore
 	}
 
 
-	int RenderBatchTriangle::set_batcher_active(const CanvasPtr &canvas, const Texture2DPtr &texture, bool glyph_program, const Colorf &new_constant_color)
+	int RenderBatchTriangle::set_batcher_active(const std::shared_ptr<Canvas> &canvas, const std::shared_ptr<Texture2D> &texture, bool glyph_program, const Colorf &new_constant_color)
 	{
 		if (use_glyph_program != glyph_program || constant_color != new_constant_color)
 		{
@@ -279,7 +279,7 @@ namespace uicore
 		return texindex;
 	}
 
-	int RenderBatchTriangle::set_batcher_active(const CanvasPtr &canvas)
+	int RenderBatchTriangle::set_batcher_active(const std::shared_ptr<Canvas> &canvas)
 	{
 		if (use_glyph_program != false)
 		{
@@ -293,7 +293,7 @@ namespace uicore
 		return RenderBatchTriangle::max_textures;
 	}
 
-	int RenderBatchTriangle::set_batcher_active(const CanvasPtr &canvas, int num_vertices)
+	int RenderBatchTriangle::set_batcher_active(const std::shared_ptr<Canvas> &canvas, int num_vertices)
 	{
 		if (use_glyph_program != false)
 		{
@@ -311,7 +311,7 @@ namespace uicore
 		return RenderBatchTriangle::max_textures;
 	}
 
-	void RenderBatchTriangle::flush(const GraphicContextPtr &gc)
+	void RenderBatchTriangle::flush(const std::shared_ptr<GraphicContext> &gc)
 	{
 		if (position > 0)
 		{
@@ -375,7 +375,7 @@ namespace uicore
 
 			position = 0;
 			for (int i = 0; i < num_current_textures; i++)
-				current_textures[i] = Texture2DPtr();
+				current_textures[i] = std::shared_ptr<Texture2D>();
 			num_current_textures = 0;
 
 		}

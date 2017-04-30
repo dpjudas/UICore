@@ -58,6 +58,4 @@ namespace uicore
 		// \brief Add standard font
 		virtual void add(const FontDescription &desc, const std::string &ttf_filename) = 0;
 	};
-
-	typedef std::shared_ptr<FontFamily> FontFamilyPtr;
 }

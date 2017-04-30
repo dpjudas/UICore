@@ -33,7 +33,7 @@ namespace uicore
 	class Font_Draw
 	{
 	public:
-		virtual GlyphMetrics get_metrics(const CanvasPtr &canvas, unsigned int glyph) = 0;
-		virtual void draw_text(const CanvasPtr &canvas, const Pointf &position, const std::string &text, const Colorf &color, float line_spacing) = 0;
+		virtual GlyphMetrics get_metrics(const std::shared_ptr<Canvas> &canvas, unsigned int glyph) = 0;
+		virtual void draw_text(const std::shared_ptr<Canvas> &canvas, const Pointf &position, const std::string &text, const Colorf &color, float line_spacing) = 0;
 	};
 }

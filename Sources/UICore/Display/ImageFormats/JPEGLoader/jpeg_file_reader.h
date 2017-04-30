@@ -44,7 +44,7 @@ namespace uicore
 	class JPEGFileReader
 	{
 	public:
-		JPEGFileReader(const IODevicePtr &iodevice);
+		JPEGFileReader(const std::shared_ptr<IODevice> &iodevice);
 
 		JPEGMarker read_marker();
 		void skip_unknown();
@@ -60,6 +60,6 @@ namespace uicore
 		int read_entropy_data(void *d, int size);
 
 	private:
-		IODevicePtr iodevice;
+		std::shared_ptr<IODevice> iodevice;
 	};
 }

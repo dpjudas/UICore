@@ -45,7 +45,7 @@ namespace uicore
 	{
 	public:
 		FontEngine_Cocoa(const FontDescription &description, const std::string &typeface_name, float pixel_ratio);
-		FontEngine_Cocoa(const FontDescription &description, DataBufferPtr &font_databuffer, float pixel_ratio);
+		FontEngine_Cocoa(const FontDescription &description, std::shared_ptr<DataBuffer> &font_databuffer, float pixel_ratio);
 		~FontEngine_Cocoa();
 
 		bool is_automatic_recreation_allowed() const override { return true; }
@@ -53,17 +53,17 @@ namespace uicore
 		const FontDescription &get_desc() const override { return font_description; }
 		FontPixelBuffer get_font_glyph(int glyph) override;
 
-		void load_glyph_path(unsigned int glyph_index, const PathPtr &out_path, GlyphMetrics &out_metrics) override;
+		void load_glyph_path(unsigned int glyph_index, const std::shared_ptr<Path> &out_path, GlyphMetrics &out_metrics) override;
 
 	private:
 		static Pointf to_pointf(const CGPoint &p);
 		
 		struct LoadGlyphPathInfo
 		{
-			LoadGlyphPathInfo(const PathPtr &path, float pixel_ratio)
+			LoadGlyphPathInfo(const std::shared_ptr<Path> &path, float pixel_ratio)
 			: path(path), pixel_ratio(pixel_ratio) { }
 			
-			const PathPtr &path;
+			const std::shared_ptr<Path> &path;
 			float pixel_ratio;
 		};
 		

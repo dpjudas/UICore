@@ -35,17 +35,17 @@
 
 namespace uicore
 {
-	std::shared_ptr<UniformBuffer> UniformBuffer::create(const GraphicContextPtr &gc, int size, BufferUsage usage)
+	std::shared_ptr<UniformBuffer> UniformBuffer::create(const std::shared_ptr<GraphicContext> &gc, int size, BufferUsage usage)
 	{
 		return static_cast<GraphicContextImpl*>(gc.get())->create_uniform_buffer(size, usage);
 	}
 
-	std::shared_ptr<UniformBuffer> UniformBuffer::create(const GraphicContextPtr &gc, const void *data, int size, BufferUsage usage)
+	std::shared_ptr<UniformBuffer> UniformBuffer::create(const std::shared_ptr<GraphicContext> &gc, const void *data, int size, BufferUsage usage)
 	{
 		return static_cast<GraphicContextImpl*>(gc.get())->create_uniform_buffer(data, size, usage);
 	}
 
-	std::shared_ptr<UniformBuffer> UniformBuffer::create(const GraphicContextPtr &gc, const ProgramObjectPtr &program, const std::string &name, int num_blocks, BufferUsage usage)
+	std::shared_ptr<UniformBuffer> UniformBuffer::create(const std::shared_ptr<GraphicContext> &gc, const std::shared_ptr<ProgramObject> &program, const std::string &name, int num_blocks, BufferUsage usage)
 	{
 		return create(gc, program->uniform_buffer_size(name) * num_blocks, usage);
 	}

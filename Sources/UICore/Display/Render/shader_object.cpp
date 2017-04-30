@@ -39,22 +39,22 @@
 
 namespace uicore
 {
-	std::shared_ptr<ShaderObject> ShaderObject::create(const GraphicContextPtr &gc, ShaderType type, const std::string &source)
+	std::shared_ptr<ShaderObject> ShaderObject::create(const std::shared_ptr<GraphicContext> &gc, ShaderType type, const std::string &source)
 	{
 		return static_cast<GraphicContextImpl*>(gc.get())->create_shader(type, source);
 	}
 
-	std::shared_ptr<ShaderObject> ShaderObject::create(const GraphicContextPtr &gc, ShaderType type, const void *bytecode, int bytecode_size)
+	std::shared_ptr<ShaderObject> ShaderObject::create(const std::shared_ptr<GraphicContext> &gc, ShaderType type, const void *bytecode, int bytecode_size)
 	{
 		return static_cast<GraphicContextImpl*>(gc.get())->create_shader(type, bytecode, bytecode_size);
 	}
 
-	std::shared_ptr<ShaderObject> ShaderObject::load(const GraphicContextPtr &gc, ShaderType shader_type, const std::string &filename)
+	std::shared_ptr<ShaderObject> ShaderObject::load(const std::shared_ptr<GraphicContext> &gc, ShaderType shader_type, const std::string &filename)
 	{
 		return create(gc, shader_type, File::read_all_text(filename));
 	}
 
-	std::shared_ptr<ShaderObject> ShaderObject::load(const GraphicContextPtr &gc, ShaderType shader_type, const IODevicePtr &file)
+	std::shared_ptr<ShaderObject> ShaderObject::load(const std::shared_ptr<GraphicContext> &gc, ShaderType shader_type, const std::shared_ptr<IODevice> &file)
 	{
 		int size = file->size();
 		std::string source(size, 0);
@@ -63,7 +63,7 @@ namespace uicore
 		return create(gc, shader_type, source);
 	}
 
-	std::shared_ptr<ShaderObject> ShaderObject::load_and_compile(const GraphicContextPtr &gc, ShaderType shader_type, const std::string &filename)
+	std::shared_ptr<ShaderObject> ShaderObject::load_and_compile(const std::shared_ptr<GraphicContext> &gc, ShaderType shader_type, const std::string &filename)
 	{
 		auto shader_object = ShaderObject::load(gc, shader_type, filename);
 
@@ -73,7 +73,7 @@ namespace uicore
 		return shader_object;
 	}
 
-	std::shared_ptr<ShaderObject> ShaderObject::load_and_compile(const GraphicContextPtr &gc, ShaderType shader_type, const IODevicePtr &file)
+	std::shared_ptr<ShaderObject> ShaderObject::load_and_compile(const std::shared_ptr<GraphicContext> &gc, ShaderType shader_type, const std::shared_ptr<IODevice> &file)
 	{
 		auto shader_object = ShaderObject::load(gc, shader_type, file);
 

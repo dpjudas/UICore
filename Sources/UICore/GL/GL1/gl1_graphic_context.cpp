@@ -414,7 +414,7 @@ namespace uicore
 		throw Exception("Transfer textures are not supported for OpenGL 1.3");
 	}
 
-	void GL1GraphicContext::set_rasterizer_state(const RasterizerStatePtr &state)
+	void GL1GraphicContext::set_rasterizer_state(const std::shared_ptr<RasterizerState> &state)
 	{
 		if (state)
 		{
@@ -434,7 +434,7 @@ namespace uicore
 		}
 	}
 
-	void GL1GraphicContext::set_blend_state(const BlendStatePtr &state, const Colorf &blend_color, unsigned int sample_mask)
+	void GL1GraphicContext::set_blend_state(const std::shared_ptr<BlendState> &state, const Colorf &blend_color, unsigned int sample_mask)
 	{
 		if (state)
 		{
@@ -452,7 +452,7 @@ namespace uicore
 		}
 	}
 
-	void GL1GraphicContext::set_depth_stencil_state(const DepthStencilStatePtr &state, int stencil_ref)
+	void GL1GraphicContext::set_depth_stencil_state(const std::shared_ptr<DepthStencilState> &state, int stencil_ref)
 	{
 		if (state)
 		{
@@ -470,7 +470,7 @@ namespace uicore
 		}
 	}
 
-	PixelBufferPtr GL1GraphicContext::pixeldata(const Rect& rect, TextureFormat texture_format, bool clamp) const
+	std::shared_ptr<PixelBuffer> GL1GraphicContext::pixeldata(const Rect& rect, TextureFormat texture_format, bool clamp) const
 	{
 		GLenum format;
 		GLenum type;
@@ -496,16 +496,16 @@ namespace uicore
 		return pbuf;
 	}
 
-	void GL1GraphicContext::set_uniform_buffer(int index, const UniformBufferPtr &buffer)
+	void GL1GraphicContext::set_uniform_buffer(int index, const std::shared_ptr<UniformBuffer> &buffer)
 	{
 		//GL1UniformBuffer *provider = static_cast<GL1UniformBuffer*>(buffer.get_provider());
 	}
 
-	void GL1GraphicContext::set_storage_buffer(int index, const StorageBufferPtr &buffer)
+	void GL1GraphicContext::set_storage_buffer(int index, const std::shared_ptr<StorageBuffer> &buffer)
 	{
 	}
 
-	void GL1GraphicContext::set_texture(int unit_index, const TexturePtr &texture)
+	void GL1GraphicContext::set_texture(int unit_index, const std::shared_ptr<Texture> &texture)
 	{
 		if (texture)
 		{
@@ -576,16 +576,16 @@ namespace uicore
 		}
 	}
 
-	void GL1GraphicContext::set_image_texture(int unit_index, const TexturePtr &texture)
+	void GL1GraphicContext::set_image_texture(int unit_index, const std::shared_ptr<Texture> &texture)
 	{
 	}
 
-	bool GL1GraphicContext::is_frame_buffer_owner(const FrameBufferPtr &fb)
+	bool GL1GraphicContext::is_frame_buffer_owner(const std::shared_ptr<FrameBuffer> &fb)
 	{
 		return true;
 	}
 
-	void GL1GraphicContext::set_frame_buffer(const FrameBufferPtr &w_buffer, const FrameBufferPtr &r_buffer)
+	void GL1GraphicContext::set_frame_buffer(const std::shared_ptr<FrameBuffer> &w_buffer, const std::shared_ptr<FrameBuffer> &r_buffer)
 	{
 		_write_frame_buffer = w_buffer;
 		_read_frame_buffer = r_buffer;
@@ -617,29 +617,29 @@ namespace uicore
 	{
 	}
 
-	ProgramObjectPtr GL1GraphicContext::program_object() const
+	std::shared_ptr<ProgramObject> GL1GraphicContext::program_object() const
 	{
 		return internal_program;
 	}
 
-	void GL1GraphicContext::set_program_object(const ProgramObjectPtr &program)
+	void GL1GraphicContext::set_program_object(const std::shared_ptr<ProgramObject> &program)
 	{
 		throw Exception("GLSL program objects are not supported on OpenGL 1.3");
 	}
 
-	bool GL1GraphicContext::is_primitives_array_owner(const PrimitivesArrayPtr &primitives_array)
+	bool GL1GraphicContext::is_primitives_array_owner(const std::shared_ptr<PrimitivesArray> &primitives_array)
 	{
 		return true;
 	}
 
-	void GL1GraphicContext::draw_primitives(PrimitivesType type, int num_vertices, const PrimitivesArrayPtr &primitives_array)
+	void GL1GraphicContext::draw_primitives(PrimitivesType type, int num_vertices, const std::shared_ptr<PrimitivesArray> &primitives_array)
 	{
 		set_primitives_array(primitives_array);
 		draw_primitives_array(type, 0, num_vertices);
 		reset_primitives_array();
 	}
 
-	void GL1GraphicContext::set_primitives_array(const PrimitivesArrayPtr &primitives_array)
+	void GL1GraphicContext::set_primitives_array(const std::shared_ptr<PrimitivesArray> &primitives_array)
 	{
 		if (primitives_array)
 		{
@@ -818,7 +818,7 @@ namespace uicore
 		throw Exception("Cannot draw instanced for the OpenGL 1.3 target");
 	}
 
-	void GL1GraphicContext::set_primitives_elements(const ElementArrayBufferPtr &array_provider)
+	void GL1GraphicContext::set_primitives_elements(const std::shared_ptr<ElementArrayBuffer> &array_provider)
 	{
 		throw Exception("Cannot draw Element Array Buffers for the OpenGL 1.3 target");
 	}
@@ -836,7 +836,7 @@ namespace uicore
 	void GL1GraphicContext::draw_primitives_elements(
 		PrimitivesType type,
 		int count,
-		const ElementArrayBufferPtr &array_provider,
+		const std::shared_ptr<ElementArrayBuffer> &array_provider,
 		VertexAttributeDataType indices_type,
 		size_t offset)
 	{
@@ -846,7 +846,7 @@ namespace uicore
 	void GL1GraphicContext::draw_primitives_elements_instanced(
 		PrimitivesType type,
 		int count,
-		const ElementArrayBufferPtr &array_provider,
+		const std::shared_ptr<ElementArrayBuffer> &array_provider,
 		VertexAttributeDataType indices_type,
 		size_t offset,
 		int instance_count)

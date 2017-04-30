@@ -61,7 +61,7 @@ namespace uicore
 	public:
 		FontDescription desc;
 		std::string typeface_name;	// Empty = use font_databuffer instead
-		DataBufferPtr font_databuffer;	// Empty = use typeface_name instead
+		std::shared_ptr<DataBuffer> font_databuffer;	// Empty = use typeface_name instead
 	};
 
 	class FontFamily_Impl : public FontFamily
@@ -77,7 +77,7 @@ namespace uicore
 		const std::string &family_name() const override { return _family_name; }
 
 		void add_system(const FontDescription &desc, const std::string &typeface_name);
-		void add(const FontDescription &desc, const DataBufferPtr &font_databuffer);
+		void add(const FontDescription &desc, const std::shared_ptr<DataBuffer> &font_databuffer);
 
 		// Returns null engine if font not found
 		Font_Cache get_font(const FontDescription &desc, float pixel_ratio);
@@ -87,10 +87,10 @@ namespace uicore
 
 	private:
 		void font_face_load(const FontDescription &desc, const std::string &typeface_name, float pixel_ratio);
-		void font_face_load(const FontDescription &desc, DataBufferPtr &font_databuffer, float pixel_ratio);
+		void font_face_load(const FontDescription &desc, std::shared_ptr<DataBuffer> &font_databuffer, float pixel_ratio);
 
 		std::string _family_name;
-		TextureGroupPtr texture_group;		// Shared texture group between glyph cache's
+		std::shared_ptr<TextureGroup> texture_group;		// Shared texture group between glyph cache's
 		std::vector<Font_Cache> font_cache;
 		std::vector<FontFamily_Definition> font_definitions;
 	};

@@ -82,7 +82,7 @@ namespace uicore
 		~D3DProgramObject();
 
 		std::string info_log() const override;
-		std::vector<ShaderObjectPtr> shaders() const override;
+		std::vector<std::shared_ptr<ShaderObject>> shaders() const override;
 		int attribute_location(const std::string &name) const override;
 		int uniform_location(const std::string &name) const override;
 
@@ -90,7 +90,7 @@ namespace uicore
 		int uniform_buffer_index(const std::string &block_name) const override;
 		int storage_buffer_index(const std::string &name) const override;
 
-		DataBufferPtr &get_shader_bytecode(ShaderType shader_type);
+		std::shared_ptr<DataBuffer> &get_shader_bytecode(ShaderType shader_type);
 		D3DShaderObject *get_shader_provider(ShaderType shader_type);
 
 		struct AttributeBinding
@@ -110,8 +110,8 @@ namespace uicore
 		std::vector<D3DStorageBlock> storage_blocks;
 		std::map<std::string, int> storage_block_names;
 
-		void attach(const ShaderObjectPtr &obj) override;
-		void detach(const ShaderObjectPtr &obj) override;
+		void attach(const std::shared_ptr<ShaderObject> &obj) override;
+		void detach(const std::shared_ptr<ShaderObject> &obj) override;
 		void bind_attribute_location(int index, const std::string &name) override;
 		void bind_frag_data_location(int color_number, const std::string &name) override;
 		bool try_link() override;
@@ -134,6 +134,6 @@ namespace uicore
 	private:
 		ComPtr<ID3D11Device> device;
 		ComPtr<ID3D11DeviceContext> device_context;
-		ShaderObjectPtr _shaders[(int)ShaderType::num_types];
+		std::shared_ptr<ShaderObject> _shaders[(int)ShaderType::num_types];
 	};
 }

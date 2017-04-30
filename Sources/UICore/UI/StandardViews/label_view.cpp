@@ -47,10 +47,10 @@ namespace uicore
 	public:
 		std::string _text;
 		TextAlignment text_alignment = TextAlignment::left;
-		FontPtr font;
+		std::shared_ptr<Font> font;
 		LineBreakMode _line_break_mode = LineBreakMode::truncating_tail;
 
-		const FontPtr &get_font(LabelBaseView *view)
+		const std::shared_ptr<Font> &get_font(LabelBaseView *view)
 		{
 			if (!font)
 				font = view->style_cascade().font();
@@ -62,7 +62,7 @@ namespace uicore
 	{
 	}
 
-	void LabelBaseView::layout_children(const CanvasPtr &canvas)
+	void LabelBaseView::layout_children(const std::shared_ptr<Canvas> &canvas)
 	{
 		View::layout_children(canvas);
 		impl->font = style_cascade().font();	// Reset the font on new layout
@@ -100,9 +100,9 @@ namespace uicore
 		set_needs_layout();
 	}
 
-	void LabelBaseView::render_content(const CanvasPtr &canvas)
+	void LabelBaseView::render_content(const std::shared_ptr<Canvas> &canvas)
 	{
-		FontPtr font = impl->get_font(this);
+		std::shared_ptr<Font> font = impl->get_font(this);
 		FontMetrics font_metrics = font->font_metrics(canvas);
 		float baseline = font_metrics.baseline_offset();
 
@@ -158,25 +158,25 @@ namespace uicore
 		}
 	}
 
-	float LabelBaseView::calculate_preferred_width(const CanvasPtr &canvas)
+	float LabelBaseView::calculate_preferred_width(const std::shared_ptr<Canvas> &canvas)
 	{
-		FontPtr font = impl->get_font(this);
+		std::shared_ptr<Font> font = impl->get_font(this);
 		return font->measure_text(canvas, impl->_text).advance.width + 1.0f;
 	}
 
-	float LabelBaseView::calculate_preferred_height(const CanvasPtr &canvas, float width)
+	float LabelBaseView::calculate_preferred_height(const std::shared_ptr<Canvas> &canvas, float width)
 	{
-		FontPtr font = impl->get_font(this);
+		std::shared_ptr<Font> font = impl->get_font(this);
 		return font->font_metrics(canvas).line_height();
 	}
 
-	float LabelBaseView::calculate_first_baseline_offset(const CanvasPtr &canvas, float width)
+	float LabelBaseView::calculate_first_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width)
 	{
-		FontPtr font = impl->get_font(this);
+		std::shared_ptr<Font> font = impl->get_font(this);
 		return font->font_metrics(canvas).baseline_offset();
 	}
 
-	float LabelBaseView::calculate_last_baseline_offset(const CanvasPtr &canvas, float width)
+	float LabelBaseView::calculate_last_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width)
 	{
 		return first_baseline_offset(canvas, width);
 	}

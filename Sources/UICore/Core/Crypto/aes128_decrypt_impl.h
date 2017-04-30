@@ -45,7 +45,7 @@ namespace uicore
 		/// This is the databuffer used internally to store the decrypted data.
 		/// You may call "set_size()" to clear the buffer, inbetween calls to "add()"
 		/// You may call "set_capacity()" to optimise storage requirements before the add() call
-		DataBufferPtr data() const override;
+		std::shared_ptr<DataBuffer> data() const override;
 
 		/// \brief Resets the decryption
 		void reset() override;
@@ -74,7 +74,7 @@ namespace uicore
 		/// \brief Add data to be decrypted
 		///
 		/// \param data = Data Buffer
-		void add(const DataBufferPtr &data) override { add(data->data(), data->size()); }
+		void add(const std::shared_ptr<DataBuffer> &data) override { add(data->data(), data->size()); }
 
 		/// \brief Finalize decryption
 		///
@@ -102,6 +102,6 @@ namespace uicore
 		bool padding_enabled;
 		bool padding_pkcs7;
 
-		DataBufferPtr databuffer = DataBuffer::create(0);
+		std::shared_ptr<DataBuffer> databuffer = DataBuffer::create(0);
 	};
 }

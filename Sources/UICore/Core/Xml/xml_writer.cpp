@@ -34,14 +34,14 @@
 
 namespace uicore
 {
-	std::shared_ptr<XmlWriter> XmlWriter::create(const IODevicePtr &output)
+	std::shared_ptr<XmlWriter> XmlWriter::create(const std::shared_ptr<IODevice> &output)
 	{
 		return std::make_shared<XmlWriterImpl>(output);
 	}
 
 	/////////////////////////////////////////////////////////////////////////////
 
-	XmlWriterImpl::XmlWriterImpl(const IODevicePtr &output) : output(output)
+	XmlWriterImpl::XmlWriterImpl(const std::shared_ptr<IODevice> &output) : output(output)
 	{
 		str.reserve(4096);
 		escaped_string.reserve(4096);

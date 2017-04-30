@@ -698,7 +698,7 @@ namespace uicore
 		D3DTarget::throw_if_failed("ID3D11Device.CreateTexture3D failed", result);
 	}
 
-	PixelBufferPtr D3DTextureObject::get_pixeldata(const GraphicContextPtr &gc, TextureFormat texture_format, int level) const
+	std::shared_ptr<PixelBuffer> D3DTextureObject::get_pixeldata(const std::shared_ptr<GraphicContext> &gc, TextureFormat texture_format, int level) const
 	{
 		D3DGraphicContext *gc_provider = static_cast<D3DGraphicContext*>(gc.get());
 		D3DTextureData::DeviceHandles &data_handles = data->get_handles(gc_provider->get_window()->get_device());
@@ -748,7 +748,7 @@ namespace uicore
 		return pixels;
 	}
 
-	void D3DTextureObject::copy_from(const GraphicContextPtr &gc, int x, int y, int slice, int level, const PixelBufferPtr &source_image, const Rect &src_rect)
+	void D3DTextureObject::copy_from(const std::shared_ptr<GraphicContext> &gc, int x, int y, int slice, int level, const std::shared_ptr<PixelBuffer> &source_image, const Rect &src_rect)
 	{
 		D3DGraphicContext *gc_provider = static_cast<D3DGraphicContext*>(gc.get());
 		D3DTextureData::DeviceHandles &data_handles = data->get_handles(gc_provider->get_window()->get_device());
@@ -816,7 +816,7 @@ namespace uicore
 		{
 			TextureFormat dest_format = from_d3d_format(format);
 
-			PixelBufferPtr src_image_converted;
+			std::shared_ptr<PixelBuffer> src_image_converted;
 			if (dest_format == source_image->format())
 				src_image_converted = source_image;
 			else

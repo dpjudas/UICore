@@ -79,7 +79,7 @@ namespace uicore
 	public:
 		ViewLayout *active_layout(View *self);
 
-		void render(View *self, const CanvasPtr &canvas);
+		void render(View *self, const std::shared_ptr<Canvas> &canvas);
 		void process_event(View *self, EventUI *e, bool use_capture);
 		void process_event_handler(ViewEventHandler *handler, EventUI *e);
 		void update_style_cascade() const;
@@ -149,7 +149,7 @@ namespace uicore
 
 		StandardCursor cursor_type = StandardCursor::arrow;
 		CursorDescription cursor_desc;
-		CursorPtr cursor;
+		std::shared_ptr<Cursor> cursor;
 		bool is_custom_cursor = false;
 		bool is_cursor_inherited = true;
 

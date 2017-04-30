@@ -41,8 +41,8 @@ namespace uicore
 		TopLevelWindow_Impl(TopLevelWindow *view, const DisplayWindowDescription &desc);
 
 		TopLevelWindow *window_view;
-		DisplayWindowPtr window;
-		CanvasPtr canvas;
+		std::shared_ptr<DisplayWindow> window;
+		std::shared_ptr<Canvas> canvas;
 		SlotContainer slots;
 
 		std::shared_ptr<View> captured_view;

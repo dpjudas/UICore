@@ -248,9 +248,9 @@ namespace uicore
 		return impl->sig_enter_pressed;
 	}
 
-	void TextAreaBaseView::render_content(const CanvasPtr &canvas)
+	void TextAreaBaseView::render_content(const std::shared_ptr<Canvas> &canvas)
 	{
-		FontPtr font = impl->get_font(canvas);
+		std::shared_ptr<Font> font = impl->get_font(canvas);
 		FontMetrics font_metrics = font->font_metrics(canvas);
 		float baseline = font_metrics.baseline_offset();
 		float top_y = baseline - font_metrics.ascent();
@@ -308,32 +308,32 @@ namespace uicore
 		}
 	}
 
-	float TextAreaBaseView::calculate_preferred_width(const CanvasPtr &canvas)
+	float TextAreaBaseView::calculate_preferred_width(const std::shared_ptr<Canvas> &canvas)
 	{
-		FontPtr font = impl->get_font(canvas);
+		std::shared_ptr<Font> font = impl->get_font(canvas);
 		return font->measure_text(canvas, "X").advance.width * impl->preferred_size.width;
 	}
 
-	float TextAreaBaseView::calculate_preferred_height(const CanvasPtr &canvas, float width)
+	float TextAreaBaseView::calculate_preferred_height(const std::shared_ptr<Canvas> &canvas, float width)
 	{
-		FontPtr font = impl->get_font(canvas);
+		std::shared_ptr<Font> font = impl->get_font(canvas);
 		return font->font_metrics(canvas).line_height() * impl->preferred_size.height;
 	}
 
-	float TextAreaBaseView::calculate_first_baseline_offset(const CanvasPtr &canvas, float width)
+	float TextAreaBaseView::calculate_first_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width)
 	{
-		FontPtr font = impl->get_font(canvas);
+		std::shared_ptr<Font> font = impl->get_font(canvas);
 		return font->font_metrics(canvas).baseline_offset();
 	}
 
-	float TextAreaBaseView::calculate_last_baseline_offset(const CanvasPtr &canvas, float width)
+	float TextAreaBaseView::calculate_last_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width)
 	{
 		return first_baseline_offset(canvas, width);
 	}
 
 	/////////////////////////////////////////////////////////////////////////
 
-	FontPtr &TextAreaBaseViewImpl::get_font(const CanvasPtr &canvas)
+	std::shared_ptr<Font> &TextAreaBaseViewImpl::get_font(const std::shared_ptr<Canvas> &canvas)
 	{
 		if (!font)
 			font = textfield->style_cascade().font();
@@ -856,7 +856,7 @@ namespace uicore
 		ViewTree *tree = textfield->view_tree();
 		if (tree)
 		{
-			DisplayWindowPtr window = tree->display_window();
+			std::shared_ptr<DisplayWindow> window = tree->display_window();
 			if (window)
 			{
 				if (selection.start() != selection.end())
@@ -872,7 +872,7 @@ namespace uicore
 		ViewTree *tree = textfield->view_tree();
 		if (tree)
 		{
-			DisplayWindowPtr window = tree->display_window();
+			std::shared_ptr<DisplayWindow> window = tree->display_window();
 			if (window)
 				add(window->clipboard_text());
 		}

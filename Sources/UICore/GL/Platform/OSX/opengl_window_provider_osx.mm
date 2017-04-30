@@ -197,24 +197,24 @@ namespace uicore
 		return Size(32768, 32768);
 	}
 
-	const GraphicContextPtr &OpenGLWindowProvider::gc() const
+	const std::shared_ptr<GraphicContext> &OpenGLWindowProvider::gc() const
 	{
 		return impl->gc;
 	}
 	
-	const InputDevicePtr &OpenGLWindowProvider::keyboard() const
+	const std::shared_ptr<InputDevice> &OpenGLWindowProvider::keyboard() const
 	{
 		return _keyboard;
 	}
 	
-	const InputDevicePtr &OpenGLWindowProvider::mouse() const
+	const std::shared_ptr<InputDevice> &OpenGLWindowProvider::mouse() const
 	{
 		return _mouse;
 	}
 	
-	const std::vector<InputDevicePtr> &OpenGLWindowProvider::game_controllers() const
+	const std::vector<std::shared_ptr<InputDevice>> &OpenGLWindowProvider::game_controllers() const
 	{
-		static std::vector<InputDevicePtr> empty;
+		static std::vector<std::shared_ptr<InputDevice>> empty;
 		return empty;
 	}
 
@@ -270,12 +270,12 @@ namespace uicore
 	{
 	}
 
-	CursorPtr OpenGLWindowProvider::create_cursor(const CursorDescription &cursor_description)
+	std::shared_ptr<Cursor> OpenGLWindowProvider::create_cursor(const CursorDescription &cursor_description)
 	{
 		throw Exception("Custom cursors not supported yet by OS X target");
 	}
 
-	void OpenGLWindowProvider::set_cursor(const CursorPtr &cursor)
+	void OpenGLWindowProvider::set_cursor(const std::shared_ptr<Cursor> &cursor)
 	{
 	}
 
@@ -420,11 +420,11 @@ namespace uicore
 		[impl->window.contentView setNeedsDisplay:TRUE];
 	}
 
-	void OpenGLWindowProvider::set_large_icon(const PixelBufferPtr &image)
+	void OpenGLWindowProvider::set_large_icon(const std::shared_ptr<PixelBuffer> &image)
 	{
 	}
 
-	void OpenGLWindowProvider::set_small_icon(const PixelBufferPtr &image)
+	void OpenGLWindowProvider::set_small_icon(const std::shared_ptr<PixelBuffer> &image)
 	{
 	}
 
@@ -436,11 +436,11 @@ namespace uicore
 	{
 	}
 
-	void OpenGLWindowProvider::set_clipboard_image(const PixelBufferPtr &buf)
+	void OpenGLWindowProvider::set_clipboard_image(const std::shared_ptr<PixelBuffer> &buf)
 	{
 	}
 
-	PixelBufferPtr OpenGLWindowProvider::clipboard_image() const
+	std::shared_ptr<PixelBuffer> OpenGLWindowProvider::clipboard_image() const
 	{
 		return nullptr;
 	}

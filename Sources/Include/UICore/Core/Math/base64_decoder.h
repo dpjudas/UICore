@@ -41,7 +41,7 @@ namespace uicore
 		static std::shared_ptr<Base64Decoder> create();
 
 		/// \brief Returns the decoded data.
-		virtual const DataBufferPtr &result() const = 0;
+		virtual const std::shared_ptr<DataBuffer> &result() const = 0;
 
 		/// \brief Resets the decoder.
 		virtual void reset() = 0;
@@ -50,8 +50,8 @@ namespace uicore
 		virtual void feed(const void *data, int size, bool append_result = true) = 0;
 
 		/// \brief Decode base64 data and return it in a buffer.
-		static DataBufferPtr decode(const void *data, int size);
-		static DataBufferPtr decode(const std::string &data);
-		static DataBufferPtr decode(const DataBufferPtr &data);
+		static std::shared_ptr<DataBuffer> decode(const void *data, int size);
+		static std::shared_ptr<DataBuffer> decode(const std::string &data);
+		static std::shared_ptr<DataBuffer> decode(const std::shared_ptr<DataBuffer> &data);
 	};
 }

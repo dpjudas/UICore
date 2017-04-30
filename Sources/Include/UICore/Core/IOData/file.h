@@ -53,13 +53,11 @@ namespace uicore
 		static std::string read_all_text(const std::string &filename);
 		static void write_all_text(const std::string &filename, const std::string &text);
 
-		static DataBufferPtr read_all_bytes(const std::string &filename);
-		static void write_all_bytes(const std::string &filename, const DataBufferPtr &data);
+		static std::shared_ptr<DataBuffer> read_all_bytes(const std::string &filename);
+		static void write_all_bytes(const std::string &filename, const std::shared_ptr<DataBuffer> &data);
 
 		static void copy(const std::string &from, const std::string &to, bool copy_always);
 		static void remove(const std::string &filename);
 		static bool exists(const std::string &filename);
 	};
-
-	typedef std::shared_ptr<File> FilePtr;
 }

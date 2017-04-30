@@ -81,8 +81,8 @@ namespace uicore
 
 		int size() const override { return texture.width(); }
 		TextureWrapMode wrap_mode_s() const override { return _wrap_mode_s; }
-		void set_image(const GraphicContextPtr &context, const PixelBufferPtr &image, int level) override { texture.copy_from(context, 0, 0, 0, level, image, image->size()); }
-		void set_subimage(const GraphicContextPtr &context, int x, const PixelBufferPtr &image, const int src_x, const int src_width, int level) override { texture.copy_from(context, x, 0, 0, level, image, Rect(src_x, 0, src_x + src_width, 1)); }
+		void set_image(const std::shared_ptr<GraphicContext> &context, const std::shared_ptr<PixelBuffer> &image, int level) override { texture.copy_from(context, 0, 0, 0, level, image, image->size()); }
+		void set_subimage(const std::shared_ptr<GraphicContext> &context, int x, const std::shared_ptr<PixelBuffer> &image, const int src_x, const int src_width, int level) override { texture.copy_from(context, x, 0, 0, level, image, Rect(src_x, 0, src_x + src_width, 1)); }
 		void set_wrap_mode(TextureWrapMode wrap_s) override { _wrap_mode_s = wrap_s; texture.set_wrap_mode(wrap_s); }
 
 	private:
@@ -131,8 +131,8 @@ namespace uicore
 		int size() const override { return texture.width(); }
 		int array_size() const override { return texture.array_size(); }
 		TextureWrapMode wrap_mode_s() const override { return _wrap_mode_s; }
-		void set_image(const GraphicContextPtr &context, int array_index, const PixelBufferPtr &image, int level) override { texture.copy_from(context, 0, 0, array_index, level, image, image->size()); }
-		void set_subimage(const GraphicContextPtr &context, int array_index, int x, const PixelBufferPtr &image, const int src_x, const int src_width, int level) override { texture.copy_from(context, x, 0, array_index, level, image, Rect(src_x, 0, src_x + src_width, 1)); }
+		void set_image(const std::shared_ptr<GraphicContext> &context, int array_index, const std::shared_ptr<PixelBuffer> &image, int level) override { texture.copy_from(context, 0, 0, array_index, level, image, image->size()); }
+		void set_subimage(const std::shared_ptr<GraphicContext> &context, int array_index, int x, const std::shared_ptr<PixelBuffer> &image, const int src_x, const int src_width, int level) override { texture.copy_from(context, x, 0, array_index, level, image, Rect(src_x, 0, src_x + src_width, 1)); }
 		void set_wrap_mode(TextureWrapMode wrap_s) override { _wrap_mode_s = wrap_s; texture.set_wrap_mode(wrap_s); }
 
 	private:
@@ -182,13 +182,13 @@ namespace uicore
 		int height() const override { return texture.height(); }
 		TextureWrapMode wrap_mode_s() const override { return _wrap_mode_s; }
 		TextureWrapMode wrap_mode_t() const override { return _wrap_mode_t; }
-		PixelBufferPtr pixeldata(const GraphicContextPtr &gc, int level = 0) const override { return texture.get_pixeldata(gc, tf_rgba8, level); }
-		PixelBufferPtr pixeldata(const GraphicContextPtr &gc, TextureFormat texture_format, int level = 0) const override { return texture.get_pixeldata(gc, texture_format, level); }
-		void set_image(const GraphicContextPtr &context, const PixelBufferPtr &image, int level) override { texture.copy_from(context, 0, 0, 0, level, image, image->size()); }
-		void set_subimage(const GraphicContextPtr &context, int x, int y, const PixelBufferPtr &image, const Rect &src_rect, int level) override { texture.copy_from(context, x, y, 0, level, image, src_rect); }
-		void copy_image_from(const GraphicContextPtr &context, int level, TextureFormat texture_format) override { texture.copy_image_from(0, 0, width(), height(), level, texture_format, static_cast<GraphicContextImpl*>(context.get())); }
-		void copy_image_from(const GraphicContextPtr &context, int x, int y, int width, int height, int level, TextureFormat texture_format) override { texture.copy_image_from(x, y, width, height, level, texture_format, static_cast<GraphicContextImpl*>(context.get())); }
-		void copy_subimage_from(const GraphicContextPtr &context, int offset_x, int offset_y, int x, int y, int width, int height, int level) override { texture.copy_subimage_from(offset_x, offset_y, x, y, width, height, level, static_cast<GraphicContextImpl*>(context.get())); }
+		std::shared_ptr<PixelBuffer> pixeldata(const std::shared_ptr<GraphicContext> &gc, int level = 0) const override { return texture.get_pixeldata(gc, tf_rgba8, level); }
+		std::shared_ptr<PixelBuffer> pixeldata(const std::shared_ptr<GraphicContext> &gc, TextureFormat texture_format, int level = 0) const override { return texture.get_pixeldata(gc, texture_format, level); }
+		void set_image(const std::shared_ptr<GraphicContext> &context, const std::shared_ptr<PixelBuffer> &image, int level) override { texture.copy_from(context, 0, 0, 0, level, image, image->size()); }
+		void set_subimage(const std::shared_ptr<GraphicContext> &context, int x, int y, const std::shared_ptr<PixelBuffer> &image, const Rect &src_rect, int level) override { texture.copy_from(context, x, y, 0, level, image, src_rect); }
+		void copy_image_from(const std::shared_ptr<GraphicContext> &context, int level, TextureFormat texture_format) override { texture.copy_image_from(0, 0, width(), height(), level, texture_format, static_cast<GraphicContextImpl*>(context.get())); }
+		void copy_image_from(const std::shared_ptr<GraphicContext> &context, int x, int y, int width, int height, int level, TextureFormat texture_format) override { texture.copy_image_from(x, y, width, height, level, texture_format, static_cast<GraphicContextImpl*>(context.get())); }
+		void copy_subimage_from(const std::shared_ptr<GraphicContext> &context, int offset_x, int offset_y, int x, int y, int width, int height, int level) override { texture.copy_subimage_from(offset_x, offset_y, x, y, width, height, level, static_cast<GraphicContextImpl*>(context.get())); }
 		void set_wrap_mode(TextureWrapMode wrap_s, TextureWrapMode wrap_t) override { _wrap_mode_s = wrap_s; _wrap_mode_t = wrap_t; texture.set_wrap_mode(wrap_s, wrap_t); }
 
 	private:
@@ -240,8 +240,8 @@ namespace uicore
 		int array_size() const override { return texture.array_size(); }
 		TextureWrapMode wrap_mode_s() const override { return _wrap_mode_s; }
 		TextureWrapMode wrap_mode_t() const override { return _wrap_mode_t; }
-		void set_image(const GraphicContextPtr &context, int array_index, const PixelBufferPtr &image, int level) override { texture.copy_from(context, 0, 0, array_index, level, image, image->size()); }
-		void set_subimage(const GraphicContextPtr &context, int array_index, int x, int y, const PixelBufferPtr &image, const Rect &src_rect, int level) override { texture.copy_from(context, x, y, array_index, level, image, src_rect); }
+		void set_image(const std::shared_ptr<GraphicContext> &context, int array_index, const std::shared_ptr<PixelBuffer> &image, int level) override { texture.copy_from(context, 0, 0, array_index, level, image, image->size()); }
+		void set_subimage(const std::shared_ptr<GraphicContext> &context, int array_index, int x, int y, const std::shared_ptr<PixelBuffer> &image, const Rect &src_rect, int level) override { texture.copy_from(context, x, y, array_index, level, image, src_rect); }
 		void set_wrap_mode(TextureWrapMode wrap_s, TextureWrapMode wrap_t) override { _wrap_mode_s = wrap_s; _wrap_mode_t = wrap_t; texture.set_wrap_mode(wrap_s, wrap_t); }
 
 		std::shared_ptr<Texture2D> create_2d_view(int array_index, TextureFormat texture_format, int min_level, int num_levels) override { return std::dynamic_pointer_cast<Texture2D>(texture.create_view(texture_2d, texture_format, min_level, num_levels, array_index, 1)); }
@@ -296,8 +296,8 @@ namespace uicore
 		TextureWrapMode wrap_mode_s() const override { return _wrap_mode_s; }
 		TextureWrapMode wrap_mode_t() const override { return _wrap_mode_t; }
 		TextureWrapMode wrap_mode_r() const override { return _wrap_mode_r; }
-		void set_image(const GraphicContextPtr &context, const PixelBufferPtr &image, int depth, int level) override { texture.copy_from(context, 0, 0, depth, level, image, image->size()); }
-		void set_subimage(const GraphicContextPtr &context, int x, int y, int z, const PixelBufferPtr &image, const Rect &src_rect, int level) override { texture.copy_from(context, x, y, z, level, image, src_rect); }
+		void set_image(const std::shared_ptr<GraphicContext> &context, const std::shared_ptr<PixelBuffer> &image, int depth, int level) override { texture.copy_from(context, 0, 0, depth, level, image, image->size()); }
+		void set_subimage(const std::shared_ptr<GraphicContext> &context, int x, int y, int z, const std::shared_ptr<PixelBuffer> &image, const Rect &src_rect, int level) override { texture.copy_from(context, x, y, z, level, image, src_rect); }
 		void set_wrap_mode(TextureWrapMode wrap_s, TextureWrapMode wrap_t, TextureWrapMode wrap_r) override { _wrap_mode_s = wrap_s; _wrap_mode_t = wrap_t; _wrap_mode_r = wrap_r; texture.set_wrap_mode(wrap_s, wrap_t); texture.set_wrap_mode(wrap_s, wrap_t, wrap_r); }
 
 	private:
@@ -347,8 +347,8 @@ namespace uicore
 
 		int width() const override { return texture.width(); }
 		int height() const override { return texture.height(); }
-		void set_image(const GraphicContextPtr &context, TextureCubeDirection cube_direction, const PixelBufferPtr &image, int level) override { texture.copy_from(context, 0, 0, static_cast<int>(cube_direction), level, image, image->size()); }
-		void set_subimage(const GraphicContextPtr &context, TextureCubeDirection cube_direction, int x, int y, const PixelBufferPtr &image, const Rect &src_rect, int level) override { texture.copy_from(context, x, y, static_cast<int>(cube_direction), level, image, src_rect); }
+		void set_image(const std::shared_ptr<GraphicContext> &context, TextureCubeDirection cube_direction, const std::shared_ptr<PixelBuffer> &image, int level) override { texture.copy_from(context, 0, 0, static_cast<int>(cube_direction), level, image, image->size()); }
+		void set_subimage(const std::shared_ptr<GraphicContext> &context, TextureCubeDirection cube_direction, int x, int y, const std::shared_ptr<PixelBuffer> &image, const Rect &src_rect, int level) override { texture.copy_from(context, x, y, static_cast<int>(cube_direction), level, image, src_rect); }
 
 	private:
 		float _min_lod = 0.0f;
@@ -395,8 +395,8 @@ namespace uicore
 		int width() const override { return texture.width(); }
 		int height() const override { return texture.height(); }
 		int array_size() const override { return texture.array_size(); }
-		void set_image(const GraphicContextPtr &context, int array_index, TextureCubeDirection cube_direction, const PixelBufferPtr &image, int level) override { texture.copy_from(context, 0, 0, array_index * 6 + static_cast<int>(cube_direction), level, image, image->size()); }
-		void set_subimage(const GraphicContextPtr &context, int array_index, TextureCubeDirection cube_direction, int x, int y, const PixelBufferPtr &image, const Rect &src_rect, int level) override { texture.copy_from(context, x, y, array_index * 6 + static_cast<int>(cube_direction), level, image, src_rect); }
+		void set_image(const std::shared_ptr<GraphicContext> &context, int array_index, TextureCubeDirection cube_direction, const std::shared_ptr<PixelBuffer> &image, int level) override { texture.copy_from(context, 0, 0, array_index * 6 + static_cast<int>(cube_direction), level, image, image->size()); }
+		void set_subimage(const std::shared_ptr<GraphicContext> &context, int array_index, TextureCubeDirection cube_direction, int x, int y, const std::shared_ptr<PixelBuffer> &image, const Rect &src_rect, int level) override { texture.copy_from(context, x, y, array_index * 6 + static_cast<int>(cube_direction), level, image, src_rect); }
 
 	private:
 		float _min_lod = 0.0f;

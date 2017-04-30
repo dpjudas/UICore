@@ -34,7 +34,6 @@
 namespace uicore
 {
 	class IODevice;
-	typedef std::shared_ptr<IODevice> IODevicePtr;
 	class XmlToken;
 
 	/// \brief The XML Tokenizer breaks a XML file into XML tokens.
@@ -42,7 +41,7 @@ namespace uicore
 	{
 	public:
 		/// \brief Constructs a XmlTokenizer
-		static std::shared_ptr<XmlTokenizer> create(const IODevicePtr &input);
+		static std::shared_ptr<XmlTokenizer> create(const std::shared_ptr<IODevice> &input);
 
 		/// \brief Returns true if eat whitespace flag is set.
 		virtual bool eat_whitespace() const = 0;
@@ -54,6 +53,4 @@ namespace uicore
 		XmlToken next() { XmlToken token; next(&token); return token; }
 		virtual void next(XmlToken *out_token) = 0;
 	};
-
-	typedef std::shared_ptr<XmlTokenizer> XmlTokenizerPtr;
 }

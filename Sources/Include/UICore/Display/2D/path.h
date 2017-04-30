@@ -37,11 +37,9 @@
 namespace uicore
 {
 	class Font;
-	typedef std::shared_ptr<Font> FontPtr;
 	class PathImpl;
 	class GlyphMetrics;
 	class Canvas;
-	typedef std::shared_ptr<Canvas> CanvasPtr;
 	class Pen;
 	class Brush;
 
@@ -69,7 +67,7 @@ namespace uicore
 		static std::shared_ptr<Path> ellipse(const Pointf &center, const Sizef &radius) { auto path = create(); path->add_ellipse(center, radius); return path; }
 
 		// This function is to assist in debugging, it has not been decided if it will be removed. Don't use at the moment.
-		static std::shared_ptr<Path> glyph(const CanvasPtr &canvas, const FontPtr &font, unsigned int glyph, GlyphMetrics &out_metrics);
+		static std::shared_ptr<Path> glyph(const std::shared_ptr<Canvas> &canvas, const std::shared_ptr<Font> &font, unsigned int glyph, GlyphMetrics &out_metrics);
 
 		virtual PathFillMode fill_mode() const = 0;
 		virtual void set_fill_mode(PathFillMode fill_mode) = 0;
@@ -101,17 +99,15 @@ namespace uicore
 		virtual void apply_transform(const Mat3f &transform) = 0;
 
 		/// \brief Strokes a path
-		virtual void stroke(const CanvasPtr &canvas, const Pen &pen) = 0;
+		virtual void stroke(const std::shared_ptr<Canvas> &canvas, const Pen &pen) = 0;
 
 		/// \brief Fills a path
-		virtual void fill(const CanvasPtr &canvas, const Brush &brush) = 0;
+		virtual void fill(const std::shared_ptr<Canvas> &canvas, const Brush &brush) = 0;
 
 		/// \brief First fills a path, then strokes on top
-		virtual void fill_and_stroke(const CanvasPtr &canvas, const Pen &pen, const Brush &brush) = 0;
+		virtual void fill_and_stroke(const std::shared_ptr<Canvas> &canvas, const Pen &pen, const Brush &brush) = 0;
 
 		// \brief Make a copy of the path
 		virtual std::shared_ptr<Path> clone() const = 0;
 	};
-
-	typedef std::shared_ptr<Path> PathPtr;
 }

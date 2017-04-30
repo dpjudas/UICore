@@ -62,6 +62,4 @@ namespace uicore
 		/// num_bytes = Number of bytes to copy
 		virtual bool random_bool() = 0;
 	};
-
-	typedef std::shared_ptr<Random> RandomPtr;
 }

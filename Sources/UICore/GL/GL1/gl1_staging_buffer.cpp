@@ -50,7 +50,7 @@ namespace uicore
 		delete[] data_ptr;
 	}
 
-	void GL1StagingBuffer::upload_data(const GraphicContextPtr &gc, int offset, const void *data, int size)
+	void GL1StagingBuffer::upload_data(const std::shared_ptr<GraphicContext> &gc, int offset, const void *data, int size)
 	{
 		if ((size < 0) || (offset < 0) || ((size + offset) > this->size))
 			throw Exception("Transfer buffer, invalid size");

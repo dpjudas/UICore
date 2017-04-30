@@ -122,7 +122,7 @@ namespace uicore
 		return impl->allow_alt_enter;
 	}
 
-	DisplayWindowPtr DisplayWindowDescription::owner() const
+	std::shared_ptr<DisplayWindow> DisplayWindowDescription::owner() const
 	{
 		return impl->owner;
 	}
@@ -293,7 +293,7 @@ namespace uicore
 		impl->drop_shadow = value;
 	}
 
-	void DisplayWindowDescription::set_owner_window(const DisplayWindowPtr &owner)
+	void DisplayWindowDescription::set_owner_window(const std::shared_ptr<DisplayWindow> &owner)
 	{
 		impl->owner = owner;
 	}

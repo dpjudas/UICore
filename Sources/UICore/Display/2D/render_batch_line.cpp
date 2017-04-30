@@ -34,7 +34,7 @@
 
 namespace uicore
 {
-	RenderBatchLine::RenderBatchLine(const GraphicContextPtr &gc, RenderBatchBuffer *batch_buffer)
+	RenderBatchLine::RenderBatchLine(const std::shared_ptr<GraphicContext> &gc, RenderBatchBuffer *batch_buffer)
 		: batch_buffer(batch_buffer), position(0)
 	{
 		vertices = (LineVertex *)batch_buffer->buffer;
@@ -49,7 +49,7 @@ namespace uicore
 			modelview_projection_matrix.matrix[0 * 4 + 3] * x + modelview_projection_matrix.matrix[1 * 4 + 3] * y + modelview_projection_matrix.matrix[3 * 4 + 3]);
 	}
 
-	void RenderBatchLine::draw_lines(const CanvasPtr &canvas, const Vec2f *line_positions, const Vec4f &line_color, int num_vertices)
+	void RenderBatchLine::draw_lines(const std::shared_ptr<Canvas> &canvas, const Vec2f *line_positions, const Vec4f &line_color, int num_vertices)
 	{
 		if (num_vertices < 2)
 		{
@@ -69,7 +69,7 @@ namespace uicore
 		}
 	}
 
-	void RenderBatchLine::draw_line_strip(const CanvasPtr &canvas, const Vec2f *line_positions, const Vec4f &line_color, int num_vertices)
+	void RenderBatchLine::draw_line_strip(const std::shared_ptr<Canvas> &canvas, const Vec2f *line_positions, const Vec4f &line_color, int num_vertices)
 	{
 		if (num_vertices < 2)
 		{
@@ -97,7 +97,7 @@ namespace uicore
 		}
 	}
 
-	void RenderBatchLine::set_batcher_active(const CanvasPtr &canvas, int num_vertices)
+	void RenderBatchLine::set_batcher_active(const std::shared_ptr<Canvas> &canvas, int num_vertices)
 	{
 		if (position + num_vertices > max_vertices)
 			static_cast<CanvasImpl*>(canvas.get())->batcher.flush();
@@ -108,7 +108,7 @@ namespace uicore
 		static_cast<CanvasImpl*>(canvas.get())->set_batcher(this);
 	}
 
-	void RenderBatchLine::flush(const GraphicContextPtr &gc)
+	void RenderBatchLine::flush(const std::shared_ptr<GraphicContext> &gc)
 	{
 		if (position > 0)
 		{

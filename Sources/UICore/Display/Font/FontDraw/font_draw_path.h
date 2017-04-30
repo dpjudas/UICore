@@ -39,8 +39,8 @@ namespace uicore
 	public:
 		void init(PathCache *cache, FontEngine *engine, float new_scaled_height);
 
-		GlyphMetrics get_metrics(const CanvasPtr &canvas, unsigned int glyph) override;
-		void draw_text(const CanvasPtr &canvas, const Pointf &position, const std::string &text, const Colorf &color, float line_spacing) override;
+		GlyphMetrics get_metrics(const std::shared_ptr<Canvas> &canvas, unsigned int glyph) override;
+		void draw_text(const std::shared_ptr<Canvas> &canvas, const Pointf &position, const std::string &text, const Colorf &color, float line_spacing) override;
 
 	private:
 		PathCache *path_cache = nullptr;

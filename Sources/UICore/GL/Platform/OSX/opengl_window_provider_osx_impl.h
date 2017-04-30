@@ -58,7 +58,7 @@ namespace uicore
 		void on_input_event(NSEvent *theEvent);
 
 		OpenGLWindowProvider *self;
-		GraphicContextPtr gc;
+		std::shared_ptr<GraphicContext> gc;
 		DisplayWindowProvider *site;
 		OpenGLContextDescription opengl_desc;
 

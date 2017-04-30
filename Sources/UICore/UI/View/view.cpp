@@ -318,7 +318,7 @@ namespace uicore
 			set_needs_render();
 	}
 
-	CanvasPtr View::canvas() const
+	std::shared_ptr<Canvas> View::canvas() const
 	{
 		const ViewTree *tree = view_tree();
 		if (tree)
@@ -392,7 +392,7 @@ namespace uicore
 		}
 	}
 
-	float View::preferred_margin_width(const CanvasPtr &canvas)
+	float View::preferred_margin_width(const std::shared_ptr<Canvas> &canvas)
 	{
 		float margin_left = style_cascade().computed_value("margin-left").number();
 		float margin_right = style_cascade().computed_value("margin-right").number();
@@ -403,7 +403,7 @@ namespace uicore
 			return margin_left + preferred_width(canvas) + margin_right;
 	}
 
-	float View::preferred_margin_height(const CanvasPtr &canvas, float margin_box_width)
+	float View::preferred_margin_height(const std::shared_ptr<Canvas> &canvas, float margin_box_width)
 	{
 		float margin_left = style_cascade().computed_value("margin-left").number();
 		float margin_right = style_cascade().computed_value("margin-right").number();
@@ -460,7 +460,7 @@ namespace uicore
 		return impl->layout_cache.is_height_definite;
 	}
 
-	float View::preferred_width(const CanvasPtr &canvas)
+	float View::preferred_width(const std::shared_ptr<Canvas> &canvas)
 	{
 		if (!impl->layout_cache.preferred_width_calculated)
 		{
@@ -470,7 +470,7 @@ namespace uicore
 		return impl->layout_cache.preferred_width;
 	}
 
-	float View::preferred_height(const CanvasPtr &canvas, float width)
+	float View::preferred_height(const std::shared_ptr<Canvas> &canvas, float width)
 	{
 		auto it = impl->layout_cache.preferred_height.find(width);
 		if (it != impl->layout_cache.preferred_height.end())
@@ -481,7 +481,7 @@ namespace uicore
 		return height;
 	}
 
-	float View::first_baseline_offset(const CanvasPtr &canvas, float width)
+	float View::first_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width)
 	{
 		auto it = impl->layout_cache.first_baseline_offset.find(width);
 		if (it != impl->layout_cache.first_baseline_offset.end())
@@ -492,7 +492,7 @@ namespace uicore
 		return baseline_offset;
 	}
 
-	float View::last_baseline_offset(const CanvasPtr &canvas, float width)
+	float View::last_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width)
 	{
 		auto it = impl->layout_cache.last_baseline_offset.find(width);
 		if (it != impl->layout_cache.last_baseline_offset.end())
@@ -503,27 +503,27 @@ namespace uicore
 		return baseline_offset;
 	}
 
-	float View::calculate_preferred_width(const CanvasPtr &canvas)
+	float View::calculate_preferred_width(const std::shared_ptr<Canvas> &canvas)
 	{
 		return impl->active_layout(this)->preferred_width(canvas, this);
 	}
 
-	float View::calculate_preferred_height(const CanvasPtr &canvas, float width)
+	float View::calculate_preferred_height(const std::shared_ptr<Canvas> &canvas, float width)
 	{
 		return impl->active_layout(this)->preferred_height(canvas, this, width);
 	}
 
-	float View::calculate_first_baseline_offset(const CanvasPtr &canvas, float width)
+	float View::calculate_first_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width)
 	{
 		return impl->active_layout(this)->first_baseline_offset(canvas, this, width);
 	}
 
-	float View::calculate_last_baseline_offset(const CanvasPtr &canvas, float width)
+	float View::calculate_last_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width)
 	{
 		return impl->active_layout(this)->last_baseline_offset(canvas, this, width);
 	}
 
-	void View::layout_children(const CanvasPtr &canvas)
+	void View::layout_children(const std::shared_ptr<Canvas> &canvas)
 	{
 		return impl->active_layout(this)->layout_children(canvas, this);
 	}
@@ -763,7 +763,7 @@ namespace uicore
 		}
 	}
 
-	void View::update_cursor(const DisplayWindowPtr &window)
+	void View::update_cursor(const std::shared_ptr<DisplayWindow> &window)
 	{
 		if (impl->is_cursor_inherited)
 		{
@@ -1012,7 +1012,7 @@ namespace uicore
 		}
 	}
 
-	void ViewImpl::render(View *self, const CanvasPtr &canvas)
+	void ViewImpl::render(View *self, const std::shared_ptr<Canvas> &canvas)
 	{
 		style_cascade.render_background(canvas, _geometry);
 		style_cascade.render_border(canvas, _geometry);

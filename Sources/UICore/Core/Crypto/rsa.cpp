@@ -34,28 +34,28 @@
 
 namespace uicore
 {
-	void RSA::create_keypair(Random &random, SecretPtr &out_private_exponent, DataBufferPtr &out_public_exponent, DataBufferPtr &out_modulus, int key_size_in_bits, int public_exponent_value)
+	void RSA::create_keypair(Random &random, std::shared_ptr<Secret> &out_private_exponent, std::shared_ptr<DataBuffer> &out_public_exponent, std::shared_ptr<DataBuffer> &out_modulus, int key_size_in_bits, int public_exponent_value)
 	{
 		RSA_Impl rsa_impl;
 		rsa_impl.create_keypair(random, out_private_exponent, out_public_exponent, out_modulus, key_size_in_bits, public_exponent_value);
 	}
 
-	DataBufferPtr RSA::encrypt(int block_type, Random &random, const DataBufferPtr &in_public_exponent, const DataBufferPtr &in_modulus, const SecretPtr &in_data)
+	std::shared_ptr<DataBuffer> RSA::encrypt(int block_type, Random &random, const std::shared_ptr<DataBuffer> &in_public_exponent, const std::shared_ptr<DataBuffer> &in_modulus, const std::shared_ptr<Secret> &in_data)
 	{
 		return RSA_Impl::encrypt(block_type, random, in_public_exponent->data(), in_public_exponent->size(), in_modulus->data(), in_modulus->size(), in_data->data(), in_data->size());
 	}
 
-	SecretPtr RSA::decrypt(const SecretPtr &in_private_exponent, const DataBufferPtr &in_modulus, const DataBufferPtr &in_data)
+	std::shared_ptr<Secret> RSA::decrypt(const std::shared_ptr<Secret> &in_private_exponent, const std::shared_ptr<DataBuffer> &in_modulus, const std::shared_ptr<DataBuffer> &in_data)
 	{
 		return RSA_Impl::decrypt(in_private_exponent, in_modulus->data(), in_modulus->size(), in_data->data(), in_data->size());
 	}
 
-	DataBufferPtr RSA::encrypt(int block_type, Random &random, const void *in_public_exponent, unsigned int in_public_exponent_size, const void *in_modulus, unsigned int in_modulus_size, const void *in_data, unsigned int in_data_size)
+	std::shared_ptr<DataBuffer> RSA::encrypt(int block_type, Random &random, const void *in_public_exponent, unsigned int in_public_exponent_size, const void *in_modulus, unsigned int in_modulus_size, const void *in_data, unsigned int in_data_size)
 	{
 		return RSA_Impl::encrypt(block_type, random, in_public_exponent, in_public_exponent_size, in_modulus, in_modulus_size, in_data, in_data_size);
 	}
 
-	SecretPtr RSA::decrypt(const SecretPtr &in_private_exponent, const void *in_modulus, unsigned int in_modulus_size, const void *in_data, unsigned int in_data_size)
+	std::shared_ptr<Secret> RSA::decrypt(const std::shared_ptr<Secret> &in_private_exponent, const void *in_modulus, unsigned int in_modulus_size, const void *in_data, unsigned int in_data_size)
 	{
 		return RSA_Impl::decrypt(in_private_exponent, in_modulus, in_modulus_size, in_data, in_data_size);
 	}

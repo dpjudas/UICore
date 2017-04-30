@@ -40,11 +40,9 @@ namespace uicore
 	{
 	public:
 		static std::shared_ptr<MemoryDevice> create();
-		static std::shared_ptr<MemoryDevice> open(const DataBufferPtr &buffer);
+		static std::shared_ptr<MemoryDevice> open(const std::shared_ptr<DataBuffer> &buffer);
 
-		virtual const DataBufferPtr &buffer() const = 0;
-		virtual void set_buffer(const DataBufferPtr &buffer) = 0;
+		virtual const std::shared_ptr<DataBuffer> &buffer() const = 0;
+		virtual void set_buffer(const std::shared_ptr<DataBuffer> &buffer) = 0;
 	};
-
-	typedef std::shared_ptr<MemoryDevice> MemoryDevicePtr;
 }

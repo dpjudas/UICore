@@ -34,7 +34,7 @@
 
 namespace uicore
 {
-	CanvasImpl::CanvasImpl(const DisplayWindowPtr &window)
+	CanvasImpl::CanvasImpl(const std::shared_ptr<DisplayWindow> &window)
 	{
 		current_window = window;
 		_gc = window->gc();
@@ -306,7 +306,7 @@ namespace uicore
 		}
 	}
 
-	void CanvasImpl::texture_coords(const Vec2f *triangles, int num_vertex, const Texture2DPtr &texture, const Rect &texture_rect, std::vector<Vec2f> &out_texture_positions)
+	void CanvasImpl::texture_coords(const Vec2f *triangles, int num_vertex, const std::shared_ptr<Texture2D> &texture, const Rect &texture_rect, std::vector<Vec2f> &out_texture_positions)
 	{
 		out_texture_positions.clear();
 		out_texture_positions.reserve(num_vertex);

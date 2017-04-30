@@ -35,7 +35,6 @@ namespace uicore
 {
 	class Canvas;
 	class Image;
-	typedef std::shared_ptr<Image> ImagePtr;
 	class ImageBaseViewImpl;
 
 	class ImageBaseView : public View
@@ -45,11 +44,11 @@ namespace uicore
 
 		std::shared_ptr<ImageSource> image();
 		void set_image(const std::shared_ptr<ImageSource> &image);
-		void set_image(const ImagePtr &image);
+		void set_image(const std::shared_ptr<Image> &image);
 
 		std::shared_ptr<ImageSource> highlighted_image();
 		void set_highlighted_image(const std::shared_ptr<ImageSource> &image);
-		void set_highlighted_image(const ImagePtr &image);
+		void set_highlighted_image(const std::shared_ptr<Image> &image);
 
 		/*
 		std::vector<std::shared_ptr<ImageSource>> animation_images();
@@ -70,9 +69,9 @@ namespace uicore
 		*/
 
 	protected:
-		void render_content(const CanvasPtr &canvas) override;
-		float calculate_preferred_width(const CanvasPtr &canvas) override;
-		float calculate_preferred_height(const CanvasPtr &canvas, float width) override;
+		void render_content(const std::shared_ptr<Canvas> &canvas) override;
+		float calculate_preferred_width(const std::shared_ptr<Canvas> &canvas) override;
+		float calculate_preferred_height(const std::shared_ptr<Canvas> &canvas, float width) override;
 
 	private:
 		std::shared_ptr<ImageBaseViewImpl> impl;

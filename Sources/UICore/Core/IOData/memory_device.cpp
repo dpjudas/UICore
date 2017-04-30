@@ -42,10 +42,10 @@ namespace uicore
 	{
 	public:
 		MemoryDeviceImpl() : _buffer(DataBuffer::create(0)) { }
-		MemoryDeviceImpl(const DataBufferPtr &buffer) : _buffer(buffer) { }
+		MemoryDeviceImpl(const std::shared_ptr<DataBuffer> &buffer) : _buffer(buffer) { }
 
-		const DataBufferPtr &buffer() const override { return _buffer; }
-		void set_buffer(const DataBufferPtr &buffer) override { _buffer = buffer; _pos = 0; }
+		const std::shared_ptr<DataBuffer> &buffer() const override { return _buffer; }
+		void set_buffer(const std::shared_ptr<DataBuffer> &buffer) override { _buffer = buffer; _pos = 0; }
 
 		long long size() const override { return _buffer->size(); }
 
@@ -85,7 +85,7 @@ namespace uicore
 		MemoryDeviceImpl(const MemoryDeviceImpl &) = delete;
 		MemoryDeviceImpl &operator=(const MemoryDeviceImpl &) = delete;
 
-		DataBufferPtr _buffer;
+		std::shared_ptr<DataBuffer> _buffer;
 		long long _pos = 0;
 	};
 
@@ -94,7 +94,7 @@ namespace uicore
 		return std::make_shared<MemoryDeviceImpl>();
 	}
 
-	std::shared_ptr<MemoryDevice> MemoryDevice::open(const DataBufferPtr &buffer)
+	std::shared_ptr<MemoryDevice> MemoryDevice::open(const std::shared_ptr<DataBuffer> &buffer)
 	{
 		return std::make_shared<MemoryDeviceImpl>(buffer);
 	}

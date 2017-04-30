@@ -33,7 +33,6 @@
 namespace uicore
 {
 	class IODevice;
-	typedef std::shared_ptr<IODevice> IODevicePtr;
 	class XmlToken;
 
 	/// \brief The XML Writer writes a XML file based on XML tokens.
@@ -41,7 +40,7 @@ namespace uicore
 	{
 	public:
 		/// \brief Constructs a XmlWriter
-		static std::shared_ptr<XmlWriter> create(const IODevicePtr &output);
+		static std::shared_ptr<XmlWriter> create(const std::shared_ptr<IODevice> &output);
 
 		/// \brief Returns the insert whitespace flag.
 		virtual bool insert_whitespace() const = 0;
@@ -52,6 +51,4 @@ namespace uicore
 		/// \brief Write token to file.
 		virtual void write(const XmlToken &token) = 0;
 	};
-
-	typedef std::shared_ptr<XmlWriter> XmlWriterPtr;
 }

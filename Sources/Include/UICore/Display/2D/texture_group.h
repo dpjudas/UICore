@@ -36,24 +36,22 @@
 namespace uicore
 {
 	class Texture2D;
-	typedef std::shared_ptr<Texture2D> Texture2DPtr;
 	class GraphicContext;
-	typedef std::shared_ptr<GraphicContext> GraphicContextPtr;
 
 	/// \brief Image position in a TextureGroup
 	class TextureGroupImage
 	{
 	public:
 		TextureGroupImage() { }
-		TextureGroupImage(const Texture2DPtr &texture, const Rect &geometry) : _texture(texture), _geometry(geometry) { }
+		TextureGroupImage(const std::shared_ptr<Texture2D> &texture, const Rect &geometry) : _texture(texture), _geometry(geometry) { }
 
 		explicit operator bool() { return (bool)texture(); }
 
-		const Texture2DPtr &texture() const { return _texture; }
+		const std::shared_ptr<Texture2D> &texture() const { return _texture; }
 		const Rect &geometry() const { return _geometry; }
 
 	private:
-		Texture2DPtr _texture;
+		std::shared_ptr<Texture2D> _texture;
 		Rect _geometry;
 	};
 
@@ -87,10 +85,10 @@ namespace uicore
 		virtual Size texture_size() const = 0;
 
 		/// \brief Returns the textures.
-		virtual std::vector<Texture2DPtr> textures() const = 0;
+		virtual std::vector<std::shared_ptr<Texture2D>> textures() const = 0;
 
 		/// \brief Allocate space for another sub texture.
-		virtual TextureGroupImage add(const GraphicContextPtr &context, const Size &size) = 0;
+		virtual TextureGroupImage add(const std::shared_ptr<GraphicContext> &context, const Size &size) = 0;
 
 		/// \brief Deallocate space, from a previously allocated texture
 		///
@@ -106,8 +104,6 @@ namespace uicore
 		///
 		/// \param texture = Texture to insert
 		/// \param texture_rect = Free space within the texture that the texture group can use
-		virtual void insert_texture(const Texture2DPtr &texture, const Rect &texture_rect) = 0;
+		virtual void insert_texture(const std::shared_ptr<Texture2D> &texture, const Rect &texture_rect) = 0;
 	};
-
-	typedef std::shared_ptr<TextureGroup> TextureGroupPtr;
 }

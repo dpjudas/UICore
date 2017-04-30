@@ -36,10 +36,10 @@ namespace uicore
 	class TargaFormat
 	{
 	public:
-		static PixelBufferPtr load(const std::string &filename, bool srgb = false);
-		static PixelBufferPtr load(const IODevicePtr &file, bool srgb = false);
+		static std::shared_ptr<PixelBuffer> load(const std::string &filename, bool srgb = false);
+		static std::shared_ptr<PixelBuffer> load(const std::shared_ptr<IODevice> &file, bool srgb = false);
 
-		static void save(PixelBufferPtr buffer, const std::string &filename);
-		static void save(PixelBufferPtr buffer, const IODevicePtr &file);
+		static void save(std::shared_ptr<PixelBuffer> buffer, const std::string &filename);
+		static void save(std::shared_ptr<PixelBuffer> buffer, const std::shared_ptr<IODevice> &file);
 	};
 }

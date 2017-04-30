@@ -47,10 +47,10 @@ namespace uicore
 		Type object;
 	};
 
-	typedef D3DUnit<TexturePtr> D3DSamplerUnit;
-	typedef D3DUnit<TexturePtr> D3DTextureUnit;
-	typedef D3DUnit<TexturePtr> D3DImageUnit;
-	typedef D3DUnit<UniformBufferPtr> D3DUniformUnit;
+	typedef D3DUnit<std::shared_ptr<Texture>> D3DSamplerUnit;
+	typedef D3DUnit<std::shared_ptr<Texture>> D3DTextureUnit;
+	typedef D3DUnit<std::shared_ptr<Texture>> D3DImageUnit;
+	typedef D3DUnit<std::shared_ptr<UniformBuffer>> D3DUniformUnit;
 
 	class D3DStorageUnit
 	{
@@ -58,7 +58,7 @@ namespace uicore
 		D3DStorageUnit() { for (int i = 0; i < (int)ShaderType::num_types; i++) { shader_srv_index[i] = -1; shader_uav_index[i] = -1; } }
 		int shader_srv_index[(int)ShaderType::num_types];
 		int shader_uav_index[(int)ShaderType::num_types];
-		StorageBufferPtr object;
+		std::shared_ptr<StorageBuffer> object;
 	};
 
 	class D3DUnitMap
@@ -66,11 +66,11 @@ namespace uicore
 	public:
 		void bind_program(D3DGraphicContext *gc, D3DProgramObject *program);
 		void unbind_program(D3DGraphicContext *gc, D3DProgramObject *program);
-		void set_sampler(D3DGraphicContext *gc, int index, const TexturePtr &texture);
-		void set_texture(D3DGraphicContext *gc, int index, const TexturePtr &texture);
-		void set_image(D3DGraphicContext *gc, int index, const TexturePtr &texture);
-		void set_uniform_buffer(D3DGraphicContext *gc, int index, const UniformBufferPtr &buffer);
-		void set_storage_buffer(D3DGraphicContext *gc, int index, const StorageBufferPtr &buffer);
+		void set_sampler(D3DGraphicContext *gc, int index, const std::shared_ptr<Texture> &texture);
+		void set_texture(D3DGraphicContext *gc, int index, const std::shared_ptr<Texture> &texture);
+		void set_image(D3DGraphicContext *gc, int index, const std::shared_ptr<Texture> &texture);
+		void set_uniform_buffer(D3DGraphicContext *gc, int index, const std::shared_ptr<UniformBuffer> &buffer);
+		void set_storage_buffer(D3DGraphicContext *gc, int index, const std::shared_ptr<StorageBuffer> &buffer);
 
 	private:
 		void bind_sampler(D3DGraphicContext *gc, int index);

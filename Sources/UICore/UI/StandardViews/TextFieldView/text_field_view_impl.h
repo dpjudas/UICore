@@ -120,8 +120,8 @@ namespace uicore
 
 		TextAlignment alignment = TextAlignment::left;
 
-		const FontPtr &get_font();
-		FontPtr font; // Do not use directly. Use get_font.
+		const std::shared_ptr<Font> &get_font();
+		std::shared_ptr<Font> font; // Do not use directly. Use get_font.
 
 		int preferred_size = 20;
 		std::string text;
@@ -145,9 +145,9 @@ namespace uicore
 		float scroll_pos = 0.0f;
 
 		bool cursor_blink_visible = false;
-		TimerPtr blink_timer = Timer::create();
+		std::shared_ptr<Timer> blink_timer = Timer::create();
 		bool mouse_moves_left = false;
-		TimerPtr scroll_timer = Timer::create();
+		std::shared_ptr<Timer> scroll_timer = Timer::create();
 		bool ignore_mouse_events = false;
 		bool mouse_selecting = false;
 
@@ -183,6 +183,6 @@ namespace uicore
 
 		bool input_mask_accepts_input(const std::string &str) const;
 		unsigned int get_character_index(int mouse_x_wincoords);
-		Size get_visual_text_size(const CanvasPtr &canvas, int pos, int npos);
+		Size get_visual_text_size(const std::shared_ptr<Canvas> &canvas, int pos, int npos);
 	};
 }

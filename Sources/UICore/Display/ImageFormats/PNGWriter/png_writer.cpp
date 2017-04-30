@@ -32,13 +32,13 @@
 
 namespace uicore
 {
-	void PNGWriter::save(const IODevicePtr &iodevice, PixelBufferPtr image)
+	void PNGWriter::save(const std::shared_ptr<IODevice> &iodevice, std::shared_ptr<PixelBuffer> image)
 	{
 		PNGWriter writer(iodevice, image);
 		writer.save();
 	}
 	
-	PNGWriter::PNGWriter(const IODevicePtr &iodevice, PixelBufferPtr src_image) : device(iodevice)
+	PNGWriter::PNGWriter(const std::shared_ptr<IODevice> &iodevice, std::shared_ptr<PixelBuffer> src_image) : device(iodevice)
 	{
 		// This writer only supports RGBA format
 		if (src_image->bytes_per_pixel() < 8)
@@ -159,7 +159,7 @@ namespace uicore
 			memcpy(idat_uncompressed->data<unsigned char>() + y * scanline_filtered.size(), scanline_filtered.data(), scanline_filtered.size());
 		}
 		
-		DataBufferPtr idat = ZLibCompression::compress(idat_uncompressed, false);
+		std::shared_ptr<DataBuffer> idat = ZLibCompression::compress(idat_uncompressed, false);
 		
 		write_chunk("IDAT", idat->data(), idat->size());
 	}

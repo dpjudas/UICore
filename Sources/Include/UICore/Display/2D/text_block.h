@@ -36,14 +36,11 @@
 namespace uicore
 {
 	class Font;
-	typedef std::shared_ptr<Font> FontPtr;
 	class GraphicContext;
 	class Pointf;
 	class Sizef;
 	class Image;
-	typedef std::shared_ptr<Image> ImagePtr;
 	class Canvas;
-	typedef std::shared_ptr<Canvas> CanvasPtr;
 
 	/// \brief Span Align
 	enum class SpanAlign
@@ -92,16 +89,16 @@ namespace uicore
 		virtual void clear() = 0;
 
 		/// \brief Add text object
-		virtual void add_text(const std::string &text, const FontPtr &font, const Colorf &color = StandardColorf::white(), int id = -1) = 0;
+		virtual void add_text(const std::string &text, const std::shared_ptr<Font> &font, const Colorf &color = StandardColorf::white(), int id = -1) = 0;
 
 		/// \brief Add image object
-		virtual void add_image(const ImagePtr &image, float baseline_offset = 0.0f, int id = -1) = 0;
+		virtual void add_image(const std::shared_ptr<Image> &image, float baseline_offset = 0.0f, int id = -1) = 0;
 
 		/// \brief Add component object
 		virtual void add_component(std::shared_ptr<SpanComponent> component, float baseline_offset = 0.0f, int id = -1) = 0;
 
 		/// \brief Layout objects
-		virtual void layout(const CanvasPtr &canvas, float max_width) = 0;
+		virtual void layout(const std::shared_ptr<Canvas> &canvas, float max_width) = 0;
 
 		/// \brief Set position of layout
 		virtual void set_position(const Pointf &pos) = 0;
@@ -116,19 +113,19 @@ namespace uicore
 		virtual std::vector<Rectf> rect_by_id(int id) const = 0;
 
 		/// \brief Hit test which object is located at the specified position
-		virtual HitTestResult hit_test(const CanvasPtr &canvas, const Pointf &pos) = 0;
+		virtual HitTestResult hit_test(const std::shared_ptr<Canvas> &canvas, const Pointf &pos) = 0;
 
 		/// \brief Draw layout
-		virtual void draw_layout(const CanvasPtr &canvas) = 0;
+		virtual void draw_layout(const std::shared_ptr<Canvas> &canvas) = 0;
 
 		/// \brief Draw layout generating ellipsis for clipped text
-		virtual void draw_layout_ellipsis(const CanvasPtr &canvas, const Rectf &content_rect) = 0;
+		virtual void draw_layout_ellipsis(const std::shared_ptr<Canvas> &canvas, const Rectf &content_rect) = 0;
 
 		/// \brief Set component geometry
 		virtual void set_component_geometry() = 0;
 
 		/// \brief Find the preferred size for the given layout
-		virtual Sizef find_preferred_size(const CanvasPtr &canvas) = 0;
+		virtual Sizef find_preferred_size(const std::shared_ptr<Canvas> &canvas) = 0;
 
 		/// \brief Set selection range
 		virtual void set_selection_range(std::string::size_type start, std::string::size_type end) = 0;
@@ -171,6 +168,4 @@ namespace uicore
 		/// \brief Returns the baseline offset for the last baseline
 		virtual float last_baseline_offset() = 0;
 	};
-
-	typedef std::shared_ptr<TextBlock> TextBlockPtr;
 }

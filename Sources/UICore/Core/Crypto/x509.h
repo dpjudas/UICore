@@ -53,7 +53,7 @@ namespace uicore
 		/// \brief Throw an exception if this object is invalid.
 		void throw_if_null() const;
 
-		void get_rsa_public_key(DataBufferPtr &output_exponent, DataBufferPtr &output_modulus) const;
+		void get_rsa_public_key(std::shared_ptr<DataBuffer> &output_exponent, std::shared_ptr<DataBuffer> &output_modulus) const;
 
 	private:
 		std::shared_ptr<X509_Impl> impl;

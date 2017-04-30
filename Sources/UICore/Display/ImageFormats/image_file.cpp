@@ -39,7 +39,7 @@
 
 namespace uicore
 {
-	PixelBufferPtr ImageFile::try_load(const std::string &filename, const std::string &type, std::string *out_failure_reason, bool srgb)
+	std::shared_ptr<PixelBuffer> ImageFile::try_load(const std::string &filename, const std::string &type, std::string *out_failure_reason, bool srgb)
 	{
 		SetupDisplay::start();
 		try
@@ -50,11 +50,11 @@ namespace uicore
 		{
 			if (out_failure_reason)
 				*out_failure_reason = e.message;
-			return PixelBufferPtr();
+			return std::shared_ptr<PixelBuffer>();
 		}
 	}
 
-	PixelBufferPtr ImageFile::load(const std::string &filename, const std::string &type, bool srgb)
+	std::shared_ptr<PixelBuffer> ImageFile::load(const std::string &filename, const std::string &type, bool srgb)
 	{
 		SetupDisplay::start();
 		auto &types = *SetupDisplay::get_image_provider_factory_types();
@@ -75,7 +75,7 @@ namespace uicore
 		return factory->load(filename, srgb);
 	}
 
-	PixelBufferPtr ImageFile::load(const IODevicePtr &file, const std::string &type, bool srgb)
+	std::shared_ptr<PixelBuffer> ImageFile::load(const std::shared_ptr<IODevice> &file, const std::string &type, bool srgb)
 	{
 		SetupDisplay::start();
 		auto &types = *SetupDisplay::get_image_provider_factory_types();
@@ -85,14 +85,14 @@ namespace uicore
 		return factory->load(file, srgb);
 	}
 
-	void ImageFile::save(PixelBufferPtr buffer, const std::string &filename, const std::string &type)
+	void ImageFile::save(std::shared_ptr<PixelBuffer> buffer, const std::string &filename, const std::string &type)
 	{
 		SetupDisplay::start();
 		auto file = File::open_existing(filename);
 		return ImageFile::save(buffer, file, type);
 	}
 
-	void ImageFile::save(PixelBufferPtr buffer, const IODevicePtr &file, const std::string &type)
+	void ImageFile::save(std::shared_ptr<PixelBuffer> buffer, const std::shared_ptr<IODevice> &file, const std::string &type)
 	{
 		SetupDisplay::start();
 

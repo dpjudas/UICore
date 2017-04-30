@@ -109,7 +109,7 @@ namespace uicore
 		return map_data.RowPitch;
 	}
 
-	void D3DStagingTexture::lock(const GraphicContextPtr &gc, BufferAccess access)
+	void D3DStagingTexture::lock(const std::shared_ptr<GraphicContext> &gc, BufferAccess access)
 	{
 		map_gc_provider = static_cast<D3DGraphicContext *>(gc.get());
 		DeviceHandles &handle = get_handles(map_gc_provider->get_window()->get_device());
@@ -130,7 +130,7 @@ namespace uicore
 		data_locked = false;
 	}
 
-	void D3DStagingTexture::upload_data(const GraphicContextPtr &gc, const Rect &dest_rect, const void *data)
+	void D3DStagingTexture::upload_data(const std::shared_ptr<GraphicContext> &gc, const Rect &dest_rect, const void *data)
 	{
 		D3DGraphicContext *gc_provider = static_cast<D3DGraphicContext *>(gc.get());
 		DeviceHandles &handle = get_handles(gc_provider->get_window()->get_device());

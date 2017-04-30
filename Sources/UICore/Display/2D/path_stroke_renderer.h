@@ -40,9 +40,9 @@ namespace uicore
 	class PathStrokeRenderer : public PathRenderer
 	{
 	public:
-		PathStrokeRenderer(const GraphicContextPtr &gc);
+		PathStrokeRenderer(const std::shared_ptr<GraphicContext> &gc);
 
-		void set_pen(const CanvasPtr &canvas, const Pen &pen);
+		void set_pen(const std::shared_ptr<Canvas> &canvas, const Pen &pen);
 		void line(float x, float y) override;
 		void end(bool close) override;
 	};

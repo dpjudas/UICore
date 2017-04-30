@@ -64,7 +64,7 @@ namespace uicore
 		return target->create_display_window(description);
 	}
 
-	const InputDevicePtr &DisplayWindow::input_device(const std::string &device_name) const
+	const std::shared_ptr<InputDevice> &DisplayWindow::input_device(const std::string &device_name) const
 	{
 		if (device_name == keyboard()->device_name())
 			return keyboard();
@@ -78,7 +78,7 @@ namespace uicore
 				return elem;
 		}
 
-		static InputDevicePtr null_device;
+		static std::shared_ptr<InputDevice> null_device;
 		return null_device;
 	}
 

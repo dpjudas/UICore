@@ -69,7 +69,7 @@ namespace uicore
 		Type type = no_key;
 
 		/// \brief Device that event originates from.
-		InputDevicePtr device;
+		std::shared_ptr<InputDevice> device;
 
 		/// \brief Mouse position at event time.
 		Pointf mouse_pos;

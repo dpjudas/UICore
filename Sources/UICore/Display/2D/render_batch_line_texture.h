@@ -40,8 +40,8 @@ namespace uicore
 	class RenderBatchLineTexture : public RenderBatcher
 	{
 	public:
-		RenderBatchLineTexture(const GraphicContextPtr &gc, RenderBatchBuffer *batch_buffer);
-		void draw_lines(const CanvasPtr &canvas, const Vec2f *line_positions, const Vec2f *texture_positions, int num_vertices, const Texture2DPtr &texture, const Vec4f &line_color);
+		RenderBatchLineTexture(const std::shared_ptr<GraphicContext> &gc, RenderBatchBuffer *batch_buffer);
+		void draw_lines(const std::shared_ptr<Canvas> &canvas, const Vec2f *line_positions, const Vec2f *texture_positions, int num_vertices, const std::shared_ptr<Texture2D> &texture, const Vec4f &line_color);
 
 	private:
 		struct LineTextureVertex
@@ -52,18 +52,18 @@ namespace uicore
 		};
 
 		inline Vec4f to_position(float x, float y) const;
-		void set_batcher_active(const CanvasPtr &canvas, int num_vertices, const Texture2DPtr &texture);
-		void flush(const GraphicContextPtr &gc) override;
+		void set_batcher_active(const std::shared_ptr<Canvas> &canvas, int num_vertices, const std::shared_ptr<Texture2D> &texture);
+		void flush(const std::shared_ptr<GraphicContext> &gc) override;
 		void matrix_changed(const Mat4f &modelview, const Mat4f &projection, TextureImageYAxis image_yaxis, float pixel_ratio) override;
 
 		enum { max_vertices = RenderBatchBuffer::vertex_buffer_size / sizeof(LineTextureVertex) };
 		LineTextureVertex *vertices;
 		RenderBatchBuffer *batch_buffer;
 
-		PrimitivesArrayPtr prim_array[RenderBatchBuffer::num_vertex_buffers];
+		std::shared_ptr<PrimitivesArray> prim_array[RenderBatchBuffer::num_vertex_buffers];
 		int position = 0;
 		Mat4f modelview_projection_matrix;
-		Texture2DPtr current_texture;
+		std::shared_ptr<Texture2D> current_texture;
 
 	};
 }

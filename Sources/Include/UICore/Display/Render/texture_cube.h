@@ -51,8 +51,8 @@ namespace uicore
 		/// \brief Constructs a cube texture
 		///
 		/// If levels is set to zero it will create a texture containing all mipmap levels
-		static std::shared_ptr<TextureCube> create(const GraphicContextPtr &context, int width, int height, TextureFormat texture_format = tf_rgba8, int levels = 1);
-		static std::shared_ptr<TextureCube> create(const GraphicContextPtr &context, const Size &size, TextureFormat texture_format = tf_rgba8, int levels = 1);
+		static std::shared_ptr<TextureCube> create(const std::shared_ptr<GraphicContext> &context, int width, int height, TextureFormat texture_format = tf_rgba8, int levels = 1);
+		static std::shared_ptr<TextureCube> create(const std::shared_ptr<GraphicContext> &context, const Size &size, TextureFormat texture_format = tf_rgba8, int levels = 1);
 
 		/// \brief Get the texture width.
 		virtual int width() const = 0;
@@ -68,15 +68,15 @@ namespace uicore
 		/// \param context Graphic context to use for the request
 		/// \param image Image to upload.
 		/// \param level Mipmap level-of-detail number.
-		virtual void set_image(const GraphicContextPtr &context, TextureCubeDirection cube_direction, const PixelBufferPtr &image, int level = 0) = 0;
+		virtual void set_image(const std::shared_ptr<GraphicContext> &context, TextureCubeDirection cube_direction, const std::shared_ptr<PixelBuffer> &image, int level = 0) = 0;
 
 		/// \brief Upload image to sub texture.
 		///
 		/// \param context Graphic context to use for the request
 		/// \param image Image to upload.
 		/// \param level Mipmap level-of-detail number.
-		virtual void set_subimage(const GraphicContextPtr &context, TextureCubeDirection cube_direction, int x, int y, const PixelBufferPtr &image, const Rect &src_rect, int level = 0) = 0;
-		void set_subimage(const GraphicContextPtr &context, TextureCubeDirection cube_direction, const Point &point, const PixelBufferPtr &image, const Rect &src_rect, int level = 0)
+		virtual void set_subimage(const std::shared_ptr<GraphicContext> &context, TextureCubeDirection cube_direction, int x, int y, const std::shared_ptr<PixelBuffer> &image, const Rect &src_rect, int level = 0) = 0;
+		void set_subimage(const std::shared_ptr<GraphicContext> &context, TextureCubeDirection cube_direction, const Point &point, const std::shared_ptr<PixelBuffer> &image, const Rect &src_rect, int level = 0)
 		{
 			set_subimage(context, cube_direction, point.x, point.y, image, src_rect, level);
 		}

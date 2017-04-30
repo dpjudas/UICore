@@ -39,7 +39,6 @@ namespace uicore
 	class FontPixelBuffer;
 	class Colorf;
 	class Path;
-	typedef std::shared_ptr<Path> PathPtr;
 	class FontDescription;
 	class FontHandle;
 
@@ -56,7 +55,7 @@ namespace uicore
 		bool empty_buffer;
 
 		/// \brief The pixel buffer containing the glyph
-		PixelBufferPtr buffer;
+		std::shared_ptr<PixelBuffer> buffer;
 
 		/// \brief The rect containing the image inside "buffer"
 		Rect buffer_rect;
@@ -81,7 +80,7 @@ namespace uicore
 		virtual const FontMetrics &get_metrics() const = 0;
 		virtual FontPixelBuffer get_font_glyph(int glyph) = 0;
 		virtual const FontDescription &get_desc() const = 0;
-		virtual void load_glyph_path(unsigned int glyph_index, const PathPtr &out_path, GlyphMetrics &out_metrics) = 0;
+		virtual void load_glyph_path(unsigned int glyph_index, const std::shared_ptr<Path> &out_path, GlyphMetrics &out_metrics) = 0;
 		virtual FontHandle *get_handle() { return nullptr; }
 	};
 }

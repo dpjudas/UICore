@@ -98,6 +98,6 @@ namespace uicore
 
 	private:
 		std::vector<Animation> active_animations;
-		TimerPtr timer = Timer::create();
+		std::shared_ptr<Timer> timer = Timer::create();
 	};
 }

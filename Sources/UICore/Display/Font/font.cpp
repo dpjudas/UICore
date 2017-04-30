@@ -40,12 +40,12 @@
 
 namespace uicore
 {
-	std::shared_ptr<Font> Font::create(const FontFamilyPtr &font_family, const FontDescription &desc)
+	std::shared_ptr<Font> Font::create(const std::shared_ptr<FontFamily> &font_family, const FontDescription &desc)
 	{
 		return std::make_shared<Font_Impl>(font_family, desc);
 	}
 
-	std::shared_ptr<Font> Font::create(const FontFamilyPtr &font_family, float height)
+	std::shared_ptr<Font> Font::create(const std::shared_ptr<FontFamily> &font_family, float height)
 	{
 		FontDescription desc;
 		desc.set_height(height);
@@ -74,7 +74,7 @@ namespace uicore
 		return create(font_family, desc);
 	}
 
-	size_t Font::clip_from_left(const CanvasPtr &canvas, const std::string &text, float width)
+	size_t Font::clip_from_left(const std::shared_ptr<Canvas> &canvas, const std::string &text, float width)
 	{
 		float x = 0.0f;
 		UTF8_Reader reader(text.data(), text.length());
@@ -93,7 +93,7 @@ namespace uicore
 		return text.size();
 	}
 
-	size_t Font::clip_from_right(const CanvasPtr &canvas, const std::string &text, float width)
+	size_t Font::clip_from_right(const std::shared_ptr<Canvas> &canvas, const std::string &text, float width)
 	{
 		float x = 0.0f;
 		UTF8_Reader reader(text.data(), text.length());
@@ -117,7 +117,7 @@ namespace uicore
 		return 0;
 	}
 
-	std::string Font::clipped_text(const CanvasPtr &canvas, const Sizef &box_size, const std::string &text, const std::string &ellipsis_text)
+	std::string Font::clipped_text(const std::shared_ptr<Canvas> &canvas, const Sizef &box_size, const std::string &text, const std::string &ellipsis_text)
 	{
 		std::string out_string;
 		out_string.reserve(text.length());

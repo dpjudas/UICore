@@ -29,6 +29,4 @@ namespace uicore
 		/// \return Bytes read or 0 if no packet was available
 		virtual int read(void *data, int size, SocketName &endpoint) = 0;
 	};
-
-	typedef std::shared_ptr<UDPSocket> UDPSocketPtr;
 }

@@ -53,9 +53,9 @@ namespace uicore
 	class CanvasImpl : public Canvas, public std::enable_shared_from_this<CanvasImpl>
 	{
 	public:
-		CanvasImpl(const DisplayWindowPtr &window);
+		CanvasImpl(const std::shared_ptr<DisplayWindow> &window);
 
-		const GraphicContextPtr &gc() const override { return _gc; }
+		const std::shared_ptr<GraphicContext> &gc() const override { return _gc; }
 
 		float width() const override { return gc()->dip_width(); }
 		float height() const override { return gc()->dip_height(); }
@@ -95,7 +95,7 @@ namespace uicore
 		void set_viewport(const Rectf &viewport);
 
 		static Rectf triangles_bounding_box(const Vec2f *triangles, int num_vertex);
-		static void texture_coords(const Vec2f *triangles, int num_vertex, const Texture2DPtr &texture, const Rect &texture_rect, std::vector<Vec2f> &out_texture_positions);
+		static void texture_coords(const Vec2f *triangles, int num_vertex, const std::shared_ptr<Texture2D> &texture, const Rect &texture_rect, std::vector<Vec2f> &out_texture_positions);
 
 		std::vector<Rectf> cliprects;
 		CanvasBatcher batcher;
@@ -106,7 +106,7 @@ namespace uicore
 		void update_batcher_matrix();
 		void write_clip(const Rectf &rect);
 
-		GraphicContextPtr _gc;
+		std::shared_ptr<GraphicContext> _gc;
 
 		Mat4f canvas_transform;
 		mutable bool canvas_inverse_transform_set = false;
@@ -115,11 +115,11 @@ namespace uicore
 		MapMode canvas_map_mode = map_2d_upper_left;
 		Rectf viewport_rect;
 
-		DisplayWindowPtr current_window;
+		std::shared_ptr<DisplayWindow> current_window;
 
-		RasterizerStatePtr rasterizer_state;
-		BlendStatePtr opaque_blend;
-		DepthStencilStatePtr depth_stencil_state;
+		std::shared_ptr<RasterizerState> rasterizer_state;
+		std::shared_ptr<BlendState> opaque_blend;
+		std::shared_ptr<DepthStencilState> depth_stencil_state;
 
 		TextureImageYAxis canvas_y_axis;
 

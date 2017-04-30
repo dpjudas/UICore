@@ -131,7 +131,7 @@ namespace uicore
 		}
 	}
 
-	void D3DUnitMap::set_sampler(D3DGraphicContext *gc, int index, const TexturePtr &texture)
+	void D3DUnitMap::set_sampler(D3DGraphicContext *gc, int index, const std::shared_ptr<Texture> &texture)
 	{
 		if (sampler_units.size() < index + 1)
 			sampler_units.resize(index + 1);
@@ -139,7 +139,7 @@ namespace uicore
 		bind_sampler(gc, index);
 	}
 
-	void D3DUnitMap::set_texture(D3DGraphicContext *gc, int index, const TexturePtr &texture)
+	void D3DUnitMap::set_texture(D3DGraphicContext *gc, int index, const std::shared_ptr<Texture> &texture)
 	{
 		if (texture_units.size() < index + 1)
 			texture_units.resize(index + 1);
@@ -149,7 +149,7 @@ namespace uicore
 		set_sampler(gc, index, texture);
 	}
 
-	void D3DUnitMap::set_image(D3DGraphicContext *gc, int index, const TexturePtr &texture)
+	void D3DUnitMap::set_image(D3DGraphicContext *gc, int index, const std::shared_ptr<Texture> &texture)
 	{
 		if (image_units.size() < index + 1)
 			image_units.resize(index + 1);
@@ -157,7 +157,7 @@ namespace uicore
 		bind_image(gc, index);
 	}
 
-	void D3DUnitMap::set_uniform_buffer(D3DGraphicContext *gc, int index, const UniformBufferPtr &buffer)
+	void D3DUnitMap::set_uniform_buffer(D3DGraphicContext *gc, int index, const std::shared_ptr<UniformBuffer> &buffer)
 	{
 		if (uniform_units.size() < index + 1)
 			uniform_units.resize(index + 1);
@@ -165,7 +165,7 @@ namespace uicore
 		bind_uniform_buffer(gc, index);
 	}
 
-	void D3DUnitMap::set_storage_buffer(D3DGraphicContext *gc, int index, const StorageBufferPtr &buffer)
+	void D3DUnitMap::set_storage_buffer(D3DGraphicContext *gc, int index, const std::shared_ptr<StorageBuffer> &buffer)
 	{
 		if (storage_units.size() < index + 1)
 			storage_units.resize(index + 1);

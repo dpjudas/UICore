@@ -56,7 +56,7 @@ namespace uicore
 			delete elem;
 	}
 
-	Font_PathGlyph *PathCache::get_glyph(const CanvasPtr &canvas, FontEngine *font_engine, unsigned int glyph)
+	Font_PathGlyph *PathCache::get_glyph(const std::shared_ptr<Canvas> &canvas, FontEngine *font_engine, unsigned int glyph)
 	{
 		std::vector< Font_PathGlyph * >::size_type size = glyph_list.size();
 		for (int cnt = 0; cnt < size; cnt++)
@@ -81,7 +81,7 @@ namespace uicore
 		return nullptr;
 	}
 
-	GlyphMetrics PathCache::get_metrics(FontEngine *font_engine, const CanvasPtr &canvas, unsigned int glyph)
+	GlyphMetrics PathCache::get_metrics(FontEngine *font_engine, const std::shared_ptr<Canvas> &canvas, unsigned int glyph)
 	{
 		Font_PathGlyph *gptr = get_glyph(canvas, font_engine, glyph);
 		if (gptr)

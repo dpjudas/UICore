@@ -36,7 +36,7 @@
 
 namespace uicore
 {
-	JPEGFileReader::JPEGFileReader(const IODevicePtr &iodevice)
+	JPEGFileReader::JPEGFileReader(const std::shared_ptr<IODevice> &iodevice)
 		: iodevice(iodevice)
 	{
 		iodevice->set_big_endian_mode();

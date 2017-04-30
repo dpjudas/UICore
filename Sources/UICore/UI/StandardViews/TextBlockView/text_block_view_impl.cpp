@@ -94,7 +94,7 @@ namespace uicore
 		}
 	}
 
-	void TextBlockBaseViewImpl::render_content(const CanvasPtr &canvas, float width)
+	void TextBlockBaseViewImpl::render_content(const std::shared_ptr<Canvas> &canvas, float width)
 	{
 		float y = 0.0f;
 		size_t obj_start = 0;
@@ -146,7 +146,7 @@ namespace uicore
 		}
 	}
 
-	void TextBlockBaseViewImpl::layout_views(const CanvasPtr &canvas, float width)
+	void TextBlockBaseViewImpl::layout_views(const std::shared_ptr<Canvas> &canvas, float width)
 	{
 		float y = 0.0f;
 		size_t obj_start = 0;
@@ -225,7 +225,7 @@ namespace uicore
 		}
 	}
 
-	float TextBlockBaseViewImpl::preferred_width(const CanvasPtr &canvas)
+	float TextBlockBaseViewImpl::preferred_width(const std::shared_ptr<Canvas> &canvas)
 	{
 		float x = 0.0f;
 		for (SpanObject &object : objects)
@@ -243,7 +243,7 @@ namespace uicore
 		return x;
 	}
 
-	float TextBlockBaseViewImpl::preferred_height(const CanvasPtr &canvas, float width)
+	float TextBlockBaseViewImpl::preferred_height(const std::shared_ptr<Canvas> &canvas, float width)
 	{
 		float y = 0.0f;
 		size_t obj_start = 0;
@@ -259,12 +259,12 @@ namespace uicore
 		return y;
 	}
 
-	float TextBlockBaseViewImpl::first_baseline_offset(const CanvasPtr &canvas, float width)
+	float TextBlockBaseViewImpl::first_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width)
 	{
 		return find_line_metrics(canvas, 0, 0, width).ascent;
 	}
 
-	float TextBlockBaseViewImpl::last_baseline_offset(const CanvasPtr &canvas, float width)
+	float TextBlockBaseViewImpl::last_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width)
 	{
 		float y = 0.0f;
 		size_t obj_start = 0;
@@ -282,7 +282,7 @@ namespace uicore
 		}
 	}
 
-	SpanLineMetrics TextBlockBaseViewImpl::find_line_metrics(const CanvasPtr &canvas, size_t obj_start, size_t text_start, float width)
+	SpanLineMetrics TextBlockBaseViewImpl::find_line_metrics(const std::shared_ptr<Canvas> &canvas, size_t obj_start, size_t text_start, float width)
 	{
 		float line_ascent = 0.0f;
 		float line_descent = 0.0f;

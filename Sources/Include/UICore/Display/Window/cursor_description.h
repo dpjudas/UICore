@@ -47,9 +47,9 @@ namespace uicore
 		///
 		/// \param pixelbuffer = Pixel Buffer
 		/// \param rect = Rect
-		CursorDescriptionFrame(PixelBufferPtr pixelbuffer, Rect rect) : pixelbuffer(pixelbuffer), rect(rect), delay(1.0) { }
+		CursorDescriptionFrame(std::shared_ptr<PixelBuffer> pixelbuffer, Rect rect) : pixelbuffer(pixelbuffer), rect(rect), delay(1.0) { }
 
-		PixelBufferPtr pixelbuffer;
+		std::shared_ptr<PixelBuffer> pixelbuffer;
 		Rect rect;
 		double delay;
 
@@ -96,7 +96,7 @@ namespace uicore
 		/// \param pixelbuffer Image source.
 		/// \param filename Filename of image.
 		/// \param vfs Virtual File System to load image from.
-		void add_frame(const PixelBufferPtr &pixelbuffer);
+		void add_frame(const std::shared_ptr<PixelBuffer> &pixelbuffer);
 
 		/// \brief Add frame
 		void add_frame(const std::string &filename, const ImageImportDescription &import_desc = ImageImportDescription());
@@ -105,7 +105,7 @@ namespace uicore
 		///
 		/// \param file = IODevice
 		/// \param image_type = String
-		void add_frame(const IODevicePtr &file, const std::string &image_type, const ImageImportDescription &import_desc = ImageImportDescription());
+		void add_frame(const std::shared_ptr<IODevice> &file, const std::string &image_type, const ImageImportDescription &import_desc = ImageImportDescription());
 
 		/// \brief Adds images formed in a grid.
 		/** <p>This function will cut out a grid of frames from one image.</p>
@@ -117,7 +117,7 @@ namespace uicore
 			\param array_skipframes Number of frames to skip at last gridline.
 			\param xspacing, yspacing Pixel interspacing between grid frames.*/
 		void add_gridclipped_frames(
-			const PixelBufferPtr &pixelbuffer,
+			const std::shared_ptr<PixelBuffer> &pixelbuffer,
 			int xpos, int ypos,
 			int width, int height,
 			int xarray = 1, int yarray = 1,
@@ -135,7 +135,7 @@ namespace uicore
 			\param xpos, ypos Upper left position where alpha cutting should begin.
 			\param trans_limit Amount of non-transparent alpha allowed before a pixel is not considered transparent.*/
 		void add_alphaclipped_frames(
-			const PixelBufferPtr &pixelbuffer,
+			const std::shared_ptr<PixelBuffer> &pixelbuffer,
 			int xpos = 0, int ypos = 0,
 			float trans_limit = 0.05f);
 
@@ -149,7 +149,7 @@ namespace uicore
 			\param xpos, ypos Upper left position where alpha cutting should begin.
 			\param trans_limit Amount of non-transparent alpha allowed before a pixel is not considered transparent.*/
 		void add_alphaclipped_frames_free(
-			const PixelBufferPtr &pixelbuffer,
+			const std::shared_ptr<PixelBuffer> &pixelbuffer,
 			int xpos = 0, int ypos = 0,
 			float trans_limit = 0.05f);
 

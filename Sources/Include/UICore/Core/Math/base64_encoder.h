@@ -42,7 +42,7 @@ namespace uicore
 		static std::shared_ptr<Base64Encoder> create();
 
 		/// \brief Returns the data in encoded form.
-		virtual const DataBufferPtr &result() const = 0;
+		virtual const std::shared_ptr<DataBuffer> &result() const = 0;
 
 		/// \brief Resets the encoder.
 		virtual void reset() = 0;
@@ -56,6 +56,6 @@ namespace uicore
 		/// \brief Base64 encodes data and returns it as a string.
 		static std::string encode(const void *data, int size);
 		static std::string encode(const std::string &data);
-		static std::string encode(const DataBufferPtr &data);
+		static std::string encode(const std::shared_ptr<DataBuffer> &data);
 	};
 }

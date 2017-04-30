@@ -134,7 +134,7 @@ namespace uicore
 
 	ComPtr<ID3D11InputLayout> D3DPrimitivesArray::create_input_layout(D3DProgramObject *program)
 	{
-		DataBufferPtr shader_bytecode = program->get_shader_bytecode(ShaderType::vertex);
+		std::shared_ptr<DataBuffer> shader_bytecode = program->get_shader_bytecode(ShaderType::vertex);
 
 		std::vector<D3D11_INPUT_ELEMENT_DESC> elements;
 		for (std::map<int, D3DProgramObject::AttributeBinding>::iterator it = program->attribute_bindings.begin(); it != program->attribute_bindings.end(); ++it)

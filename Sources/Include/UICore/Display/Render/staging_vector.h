@@ -42,53 +42,53 @@ namespace uicore
 		{
 		}
 
-		StagingVector(const StagingBufferPtr &staging_buffer)
+		StagingVector(const std::shared_ptr<StagingBuffer> &staging_buffer)
 			: _buffer(staging_buffer)
 		{
 		}
 
-		StagingVector(const GraphicContextPtr &gc, int size, BufferUsage usage = usage_dynamic_copy)
+		StagingVector(const std::shared_ptr<GraphicContext> &gc, int size, BufferUsage usage = usage_dynamic_copy)
 			: _buffer(StagingBuffer::create(gc, size * sizeof(Type), usage))
 		{
 		}
 
-		StagingVector(const GraphicContextPtr &gc, Type *data, int size, BufferUsage usage = usage_dynamic_copy)
+		StagingVector(const std::shared_ptr<GraphicContext> &gc, Type *data, int size, BufferUsage usage = usage_dynamic_copy)
 			: _buffer(StagingBuffer::create(gc, data, size * sizeof(Type), usage))
 		{
 		}
 
-		StagingVector(const GraphicContextPtr &gc, const std::vector<Type> &data, BufferUsage usage = usage_dynamic_copy)
+		StagingVector(const std::shared_ptr<GraphicContext> &gc, const std::vector<Type> &data, BufferUsage usage = usage_dynamic_copy)
 			: _buffer(StagingBuffer::create(gc, data.empty() ? (Type*)0 : &data[0], data.size() * sizeof(Type), usage))
 		{
 		}
 
 		/// Returns the buffer used by the vector
-		const StagingBufferPtr &buffer() const { return _buffer; }
+		const std::shared_ptr<StagingBuffer> &buffer() const { return _buffer; }
 
-		operator const StagingBufferPtr &() const { return buffer(); }
+		operator const std::shared_ptr<StagingBuffer> &() const { return buffer(); }
 
 		/// \brief Retrieves a pointer to the mapped buffer.
 		Type *data() { return reinterpret_cast<Type*>(_buffer->data()); }
 
 		/// \brief Maps buffer into system memory.
-		void lock(const GraphicContextPtr &gc, BufferAccess access) { _buffer->lock(gc, access); }
+		void lock(const std::shared_ptr<GraphicContext> &gc, BufferAccess access) { _buffer->lock(gc, access); }
 
 		/// \brief Unmaps buffer.
 		void unlock() { _buffer->unlock(); }
 
 		/// \brief Uploads data to transfer buffer.
-		void upload_data(const GraphicContextPtr &gc, int offset, const Type *data, int size)
+		void upload_data(const std::shared_ptr<GraphicContext> &gc, int offset, const Type *data, int size)
 		{
 			_buffer->upload_data(gc, offset * sizeof(Type), data, size * sizeof(Type));
 		}
 
 		/// \brief Uploads data to transfer buffer.
-		void upload_data(const GraphicContextPtr &gc, int offset, const std::vector<Type> &data)
+		void upload_data(const std::shared_ptr<GraphicContext> &gc, int offset, const std::vector<Type> &data)
 		{
 			_buffer->upload_data(gc, offset * sizeof(Type), data.data(), data.size() * sizeof(Type));
 		}
 
 	private:
-		StagingBufferPtr _buffer;
+		std::shared_ptr<StagingBuffer> _buffer;
 	};
 }

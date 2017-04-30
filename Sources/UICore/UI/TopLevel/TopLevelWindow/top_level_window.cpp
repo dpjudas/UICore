@@ -44,7 +44,7 @@ namespace uicore
 	{
 	}
 
-	DisplayWindowPtr TopLevelWindow::display_window()
+	std::shared_ptr<DisplayWindow> TopLevelWindow::display_window()
 	{
 		return impl->window;
 	}
@@ -93,7 +93,7 @@ namespace uicore
 		impl->window->hide();
 	}
 
-	CanvasPtr TopLevelWindow::canvas() const
+	std::shared_ptr<Canvas> TopLevelWindow::canvas() const
 	{
 		return impl->canvas;
 	}

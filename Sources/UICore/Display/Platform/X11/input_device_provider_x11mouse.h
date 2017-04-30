@@ -55,8 +55,8 @@ namespace uicore
 		void set_position(float x, float y) override;
 		void set_device_position(int x, int y) override;
 
-		void received_mouse_input(InputDevicePtr &mouse, XButtonEvent &event);
-		void received_mouse_move(InputDevicePtr &mouse, XMotionEvent &event);
+		void received_mouse_input(std::shared_ptr<InputDevice> &mouse, XButtonEvent &event);
+		void received_mouse_move(std::shared_ptr<InputDevice> &mouse, XMotionEvent &event);
 
 	private:
 		void on_dispose() override;

@@ -87,32 +87,32 @@ namespace uicore
 		impl->remove_child(view);
 	}
 
-	void TextBlockBaseView::render_content(const CanvasPtr &canvas)
+	void TextBlockBaseView::render_content(const std::shared_ptr<Canvas> &canvas)
 	{
 		return impl->render_content(canvas, geometry().content_width);
 	}
 
-	float TextBlockBaseView::calculate_preferred_width(const CanvasPtr &canvas)
+	float TextBlockBaseView::calculate_preferred_width(const std::shared_ptr<Canvas> &canvas)
 	{
 		return impl->preferred_width(canvas);
 	}
 
-	float TextBlockBaseView::calculate_preferred_height(const CanvasPtr &canvas, float width)
+	float TextBlockBaseView::calculate_preferred_height(const std::shared_ptr<Canvas> &canvas, float width)
 	{
 		return impl->preferred_height(canvas, width);
 	}
 
-	float TextBlockBaseView::calculate_first_baseline_offset(const CanvasPtr &canvas, float width)
+	float TextBlockBaseView::calculate_first_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width)
 	{
 		return impl->first_baseline_offset(canvas, width);
 	}
 
-	float TextBlockBaseView::calculate_last_baseline_offset(const CanvasPtr &canvas, float width)
+	float TextBlockBaseView::calculate_last_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width)
 	{
 		return impl->last_baseline_offset(canvas, width);
 	}
 
-	void TextBlockBaseView::layout_children(const CanvasPtr &canvas)
+	void TextBlockBaseView::layout_children(const std::shared_ptr<Canvas> &canvas)
 	{
 		View::layout_children(canvas);
 		impl->layout_views(canvas, geometry().content_width);

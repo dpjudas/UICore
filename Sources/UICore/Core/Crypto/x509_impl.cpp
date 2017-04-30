@@ -238,7 +238,7 @@ namespace uicore
 		throw Exception("X509 - Invalid certificate");
 	}
 
-	void X509_Impl::get_rsa_public_key(DataBufferPtr &output_exponent, DataBufferPtr &output_modulus) const
+	void X509_Impl::get_rsa_public_key(std::shared_ptr<DataBuffer> &output_exponent, std::shared_ptr<DataBuffer> &output_modulus) const
 	{
 		if (public_key.empty())
 			throw Exception("Public key not set");

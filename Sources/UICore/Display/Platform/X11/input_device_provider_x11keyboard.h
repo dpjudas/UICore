@@ -56,7 +56,7 @@ namespace uicore
 
 		void get_keyboard_modifiers(bool &key_shift, bool &key_alt, bool &key_ctrl) const;
 
-		void received_keyboard_input(InputDevicePtr &keyboard, XKeyEvent &event);
+		void received_keyboard_input(std::shared_ptr<InputDevice> &keyboard, XKeyEvent &event);
 
 	private:
 		void on_dispose() override;

@@ -40,7 +40,7 @@ namespace uicore
 	class TextureWindow : public ViewTree
 	{
 	public:
-		TextureWindow(const CanvasPtr &canvas);
+		TextureWindow(const std::shared_ptr<Canvas> &canvas);
 
 		/// \brief Set position and size within the canvas
 		///
@@ -65,7 +65,7 @@ namespace uicore
 		/// \param event_window = The window to use
 		/// \param enable_automatic_events = Automatically control the window events, passing to the on_...() functions
 		/// \param transform_mouse_matrix = Transform the mouse coordinates when enable_automatic_events is true
-		void set_window(const DisplayWindowPtr &window, bool enable_automatic_events = true, const Mat4f &transform_mouse_matrix = Mat4f::identity());
+		void set_window(const std::shared_ptr<DisplayWindow> &window, bool enable_automatic_events = true, const Mat4f &transform_mouse_matrix = Mat4f::identity());
 
 		/// User defined events. Call these if set_event_window() is not used
 		void on_window_close();
@@ -78,8 +78,8 @@ namespace uicore
 		void on_mouse_up(const uicore::InputEvent &);
 		void on_mouse_move(const uicore::InputEvent &);
 
-		DisplayWindowPtr display_window() override;
-		CanvasPtr canvas() const override;
+		std::shared_ptr<DisplayWindow> display_window() override;
+		std::shared_ptr<Canvas> canvas() const override;
 
 		void removing_view(View *view) override;
 

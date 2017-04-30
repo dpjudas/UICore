@@ -82,7 +82,7 @@ namespace uicore
 		impl->cached = enable;
 	}
 
-	PixelBufferPtr ImageImportDescription::process(PixelBufferPtr image) const
+	std::shared_ptr<PixelBuffer> ImageImportDescription::process(std::shared_ptr<PixelBuffer> image) const
 	{
 		if (impl->premultiply_alpha)
 			image->premultiply_alpha();
@@ -96,7 +96,7 @@ namespace uicore
 		return image;
 	}
 
-	std::function<PixelBufferPtr(PixelBufferPtr)> &ImageImportDescription::func_process()
+	std::function<std::shared_ptr<PixelBuffer>(std::shared_ptr<PixelBuffer>)> &ImageImportDescription::func_process()
 	{
 		return impl->func_process;
 	}

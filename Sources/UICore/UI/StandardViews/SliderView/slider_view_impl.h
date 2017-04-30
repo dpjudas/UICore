@@ -61,7 +61,7 @@ namespace uicore
 		std::shared_ptr<View> track;
 		std::shared_ptr<View> thumb;
 		Pointf mouse_drag_start_pos;
-		TimerPtr scroll_timer = Timer::create();
+		std::shared_ptr<Timer> scroll_timer = Timer::create();
 
 		int _min_position = 0;
 		int _max_position = 100;

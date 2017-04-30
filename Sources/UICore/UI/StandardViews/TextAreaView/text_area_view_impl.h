@@ -117,8 +117,8 @@ namespace uicore
 
 		TextAlignment alignment = TextAlignment::left;
 
-		FontPtr &get_font(const CanvasPtr &canvas);
-		FontPtr font; // Do not use directly. Use get_font.
+		std::shared_ptr<Font> &get_font(const std::shared_ptr<Canvas> &canvas);
+		std::shared_ptr<Font> font; // Do not use directly. Use get_font.
 
 		Size preferred_size = Size(20, 5);
 		std::vector<std::string> text_lines;
@@ -133,9 +133,9 @@ namespace uicore
 		Vec2f scroll_pos;
 
 		bool cursor_blink_visible = false;
-		TimerPtr blink_timer = Timer::create();
+		std::shared_ptr<Timer> blink_timer = Timer::create();
 		bool mouse_moves_left = false;
-		TimerPtr scroll_timer = Timer::create();
+		std::shared_ptr<Timer> scroll_timer = Timer::create();
 		bool ignore_mouse_events = false;
 		bool mouse_selecting = false;
 

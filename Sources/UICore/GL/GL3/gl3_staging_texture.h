@@ -60,9 +60,9 @@ namespace uicore
 		GLenum get_binding() const { return buffer.get_binding(); }
 		GLenum get_target() const { return buffer.get_target(); }
 
-		void lock(const GraphicContextPtr &gc, BufferAccess access) override { data_locked = true; buffer.lock(gc, access); }
+		void lock(const std::shared_ptr<GraphicContext> &gc, BufferAccess access) override { data_locked = true; buffer.lock(gc, access); }
 		void unlock() override { data_locked = false; buffer.unlock(); }
-		void upload_data(const GraphicContextPtr &gc, const Rect &dest_rect, const void *data) override;
+		void upload_data(const std::shared_ptr<GraphicContext> &gc, const Rect &dest_rect, const void *data) override;
 
 	private:
 		GL3BufferObject buffer;

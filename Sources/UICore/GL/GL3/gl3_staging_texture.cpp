@@ -62,7 +62,7 @@ namespace uicore
 	{
 	}
 
-	void GL3StagingTexture::upload_data(const GraphicContextPtr &gc, const Rect &dest_rect, const void *data)
+	void GL3StagingTexture::upload_data(const std::shared_ptr<GraphicContext> &gc, const Rect &dest_rect, const void *data)
 	{
 		// Handle the simple base
 		if (dest_rect.left == 0 && dest_rect.width() == _size.width)

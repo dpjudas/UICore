@@ -86,12 +86,12 @@ namespace uicore
 		font_description = desc.clone();
 	}
 
-	FontEngine_Cocoa::FontEngine_Cocoa(const FontDescription &desc, DataBufferPtr &font_databuffer, float pixel_ratio)
+	FontEngine_Cocoa::FontEngine_Cocoa(const FontDescription &desc, std::shared_ptr<DataBuffer> &font_databuffer, float pixel_ratio)
 	: pixel_ratio(pixel_ratio)
 	{
-		DataBufferPtr *cgdata_databuffer = new DataBufferPtr(font_databuffer);
+		std::shared_ptr<DataBuffer> *cgdata_databuffer = new std::shared_ptr<DataBuffer>(font_databuffer);
 		
-		CGDataProviderRef cg_fontdata = CGDataProviderCreateWithData(cgdata_databuffer, (*cgdata_databuffer)->data(), (*cgdata_databuffer)->size(),[](void *info, const void *data, size_t size) { delete (DataBufferPtr *)info; });
+		CGDataProviderRef cg_fontdata = CGDataProviderCreateWithData(cgdata_databuffer, (*cgdata_databuffer)->data(), (*cgdata_databuffer)->size(),[](void *info, const void *data, size_t size) { delete (std::shared_ptr<DataBuffer> *)info; });
 		
 		if (cg_fontdata == 0)
 		{
@@ -245,7 +245,7 @@ namespace uicore
 		return font_buffer;
 	}
 
-	void FontEngine_Cocoa::load_glyph_path(unsigned int glyph_index, const PathPtr &path, GlyphMetrics &metrics)
+	void FontEngine_Cocoa::load_glyph_path(unsigned int glyph_index, const std::shared_ptr<Path> &path, GlyphMetrics &metrics)
 	{
 		// Retrieve glyph black box information:
 		

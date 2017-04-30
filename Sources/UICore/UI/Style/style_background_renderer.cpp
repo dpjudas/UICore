@@ -42,7 +42,7 @@
 
 namespace uicore
 {
-	StyleBackgroundRenderer::StyleBackgroundRenderer(const CanvasPtr &canvas, const ViewGeometry &geometry, const StyleCascade &style) : canvas(canvas), geometry(geometry), style(style)
+	StyleBackgroundRenderer::StyleBackgroundRenderer(const std::shared_ptr<Canvas> &canvas, const ViewGeometry &geometry, const StyleCascade &style) : canvas(canvas), geometry(geometry), style(style)
 	{
 	}
 
@@ -72,7 +72,7 @@ namespace uicore
 
 			// To do: take get_layer_clip(num_layers - 1) into account
 
-			PathPtr background_area = get_border_area_path(border_points);
+			std::shared_ptr<Path> background_area = get_border_area_path(border_points);
 			background_area->fill(canvas, Brush(bg_color.color()));
 		}
 
@@ -107,7 +107,7 @@ namespace uicore
 
 	void StyleBackgroundRenderer::render_background_image(const StyleGetValue &layer_image, int index)
 	{
-		ImagePtr image;
+		std::shared_ptr<Image> image;
 
 		if (layer_image.is_url())
 			image = ImageSource::from_resource(layer_image.text())->image(canvas);
@@ -286,7 +286,7 @@ namespace uicore
 		if (gradient_length <= 0.0f)
 			return;
 
-		PathPtr border_area_path = get_border_area_path(get_border_points());
+		std::shared_ptr<Path> border_area_path = get_border_area_path(get_border_points());
 
 		float last_position = 0.0f;
 		for (int stop_index = 0; stop_index < num_stops; stop_index++)
@@ -363,7 +363,7 @@ namespace uicore
 						points_calculated = true;
 					}
 
-					PathPtr border_path = get_border_stroke_path(border_points, padding_points, i, i + 1);
+					std::shared_ptr<Path> border_path = get_border_stroke_path(border_points, padding_points, i, i + 1);
 					border_path->fill(canvas, Brush(color));
 				}
 			}
@@ -448,7 +448,7 @@ namespace uicore
 		return y;
 	}
 
-	Sizef StyleBackgroundRenderer::get_image_size(int index, const ImagePtr &image, Rectf origin_box)
+	Sizef StyleBackgroundRenderer::get_image_size(int index, const std::shared_ptr<Image> &image, Rectf origin_box)
 	{
 		Sizef size;
 		StyleGetValue size_x = get_layer_size_x(index);
@@ -674,7 +674,7 @@ namespace uicore
 		return padding_points;
 	}
 
-	PathPtr StyleBackgroundRenderer::get_border_area_path(const std::array<Pointf, 2 * 4> &border_points)
+	std::shared_ptr<Path> StyleBackgroundRenderer::get_border_area_path(const std::array<Pointf, 2 * 4> &border_points)
 	{
 		float kappa = 0.551784f;
 
@@ -724,7 +724,7 @@ namespace uicore
 		return border_area_path;
 	}
 
-	PathPtr StyleBackgroundRenderer::get_border_stroke_path(const std::array<Pointf, 2 * 4> &border_points, const std::array<Pointf, 2 * 4> &padding_points, int start, int end)
+	std::shared_ptr<Path> StyleBackgroundRenderer::get_border_stroke_path(const std::array<Pointf, 2 * 4> &border_points, const std::array<Pointf, 2 * 4> &padding_points, int start, int end)
 	{
 		// Border path (the path defining the actual border)
 
@@ -829,7 +829,7 @@ namespace uicore
 		return border_path;
 	}
 
-	PathPtr StyleBackgroundRenderer::get_border_stroke_path(const std::array<Pointf, 2 * 4> &border_points, const std::array<Pointf, 2 * 4> &padding_points)
+	std::shared_ptr<Path> StyleBackgroundRenderer::get_border_stroke_path(const std::array<Pointf, 2 * 4> &border_points, const std::array<Pointf, 2 * 4> &padding_points)
 	{
 		// Border path (the path defining the actual border)
 

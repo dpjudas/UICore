@@ -38,10 +38,10 @@ namespace uicore
 	class TargaLoader
 	{
 	public:
-		static PixelBufferPtr load(const IODevicePtr &iodevice, bool srgb);
+		static std::shared_ptr<PixelBuffer> load(const std::shared_ptr<IODevice> &iodevice, bool srgb);
 
 	private:
-		TargaLoader(const IODevicePtr &iodevice, bool srgb);
+		TargaLoader(const std::shared_ptr<IODevice> &iodevice, bool srgb);
 		void read_header();
 		void read_image_id();
 		void read_color_map();
@@ -52,7 +52,7 @@ namespace uicore
 		void decode_true_color();
 		void decode_grayscale();
 
-		IODevicePtr file;
+		std::shared_ptr<IODevice> file;
 		bool srgb;
 
 		unsigned char id_length;
@@ -77,11 +77,11 @@ namespace uicore
 		bool right_to_left;
 		bool top_down;
 
-		DataBufferPtr image_id;
-		DataBufferPtr colormap_data;
+		std::shared_ptr<DataBuffer> image_id;
+		std::shared_ptr<DataBuffer> colormap_data;
 		std::vector<Vec4ub> palette;
-		DataBufferPtr image_data;
+		std::shared_ptr<DataBuffer> image_data;
 
-		PixelBufferPtr image;
+		std::shared_ptr<PixelBuffer> image;
 	};
 }

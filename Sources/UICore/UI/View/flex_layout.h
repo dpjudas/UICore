@@ -138,26 +138,26 @@ namespace uicore
 	class FlexLayout : public ViewLayout
 	{
 	public:
-		float preferred_width(const CanvasPtr &canvas, View *view) override;
-		float preferred_height(const CanvasPtr &canvas, View *view, float width) override;
-		float first_baseline_offset(const CanvasPtr &canvas, View *view, float width) override;
-		float last_baseline_offset(const CanvasPtr &canvas, View *view, float width) override;
-		void layout_children(const CanvasPtr &canvas, View *view) override;
+		float preferred_width(const std::shared_ptr<Canvas> &canvas, View *view) override;
+		float preferred_height(const std::shared_ptr<Canvas> &canvas, View *view, float width) override;
+		float first_baseline_offset(const std::shared_ptr<Canvas> &canvas, View *view, float width) override;
+		float last_baseline_offset(const std::shared_ptr<Canvas> &canvas, View *view, float width) override;
+		void layout_children(const std::shared_ptr<Canvas> &canvas, View *view) override;
 
 	private:
-		void calculate_layout(const CanvasPtr &canvas, View *view, FlexLayoutMode mode = FlexLayoutMode::normal, float layout_width = 0.0f);
+		void calculate_layout(const std::shared_ptr<Canvas> &canvas, View *view, FlexLayoutMode mode = FlexLayoutMode::normal, float layout_width = 0.0f);
 
-		void create_items(const CanvasPtr &canvas, View *view);
-		void create_row_items(const CanvasPtr &canvas, View *view);
-		void create_column_items(const CanvasPtr &canvas, View *view);
-		void create_lines(const CanvasPtr &canvas, View *view);
-		void flex_lines(const CanvasPtr &canvas, View *view);
+		void create_items(const std::shared_ptr<Canvas> &canvas, View *view);
+		void create_row_items(const std::shared_ptr<Canvas> &canvas, View *view);
+		void create_column_items(const std::shared_ptr<Canvas> &canvas, View *view);
+		void create_lines(const std::shared_ptr<Canvas> &canvas, View *view);
+		void flex_lines(const std::shared_ptr<Canvas> &canvas, View *view);
 
-		void calculate_items_preferred_cross_size(const CanvasPtr &canvas, View *view);
-		void calculate_lines_cross_size(const CanvasPtr &canvas, View *view);
+		void calculate_items_preferred_cross_size(const std::shared_ptr<Canvas> &canvas, View *view);
+		void calculate_lines_cross_size(const std::shared_ptr<Canvas> &canvas, View *view);
 
-		void main_axis_alignment(const CanvasPtr &canvas, View *view);
-		void cross_axis_alignment(const CanvasPtr &canvas, View *view);
+		void main_axis_alignment(const std::shared_ptr<Canvas> &canvas, View *view);
+		void cross_axis_alignment(const std::shared_ptr<Canvas> &canvas, View *view);
 
 		FlexLayoutMode layout_mode = FlexLayoutMode::normal;
 		float layout_width = 0.0f;

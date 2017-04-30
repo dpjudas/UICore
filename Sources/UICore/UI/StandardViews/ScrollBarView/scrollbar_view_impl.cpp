@@ -43,7 +43,7 @@ namespace uicore
 	{
 	}
 
-	void ScrollBarButtonBaseView::render_content(const CanvasPtr &canvas)
+	void ScrollBarButtonBaseView::render_content(const std::shared_ptr<Canvas> &canvas)
 	{
 		if (!_render_button_arrows)
 			return;

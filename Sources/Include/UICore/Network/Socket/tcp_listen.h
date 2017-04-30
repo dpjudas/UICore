@@ -25,6 +25,4 @@ namespace uicore
 		/// \return A TcpConnection for the accepted connection, or null if no incoming connections are available
 		virtual std::shared_ptr<TCPConnection> accept(SocketName &end_point) = 0;
 	};
-
-	typedef std::shared_ptr<TCPListen> TCPListenPtr;
 }

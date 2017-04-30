@@ -46,7 +46,7 @@ namespace uicore
 		/// This is the databuffer used internally to store the decrypted data.
 		/// You may call "set_size()" to clear the buffer, inbetween calls to "add()"
 		/// You may call "set_capacity()" to optimise storage requirements before the add() call
-		virtual DataBufferPtr data() const = 0;
+		virtual std::shared_ptr<DataBuffer> data() const = 0;
 
 		static const int iv_size = 16;
 		static const int key_size = 16;
@@ -80,7 +80,7 @@ namespace uicore
 		/// \brief Add data to be decrypted
 		///
 		/// \param data = Data Buffer
-		virtual void add(const DataBufferPtr &data) = 0;
+		virtual void add(const std::shared_ptr<DataBuffer> &data) = 0;
 
 		/// \brief Finalize decryption
 		///
@@ -89,6 +89,4 @@ namespace uicore
 		/// \return false = AES Padding value is invalid.
 		virtual bool calculate() = 0;
 	};
-
-	typedef std::shared_ptr<AES128_Decrypt> AES128_DecryptPtr;
 }

@@ -72,9 +72,9 @@ namespace uicore
 		return count;
 	}
 
-	std::vector<Texture2DPtr> TextureGroupImpl::textures() const
+	std::vector<std::shared_ptr<Texture2D>> TextureGroupImpl::textures() const
 	{
-		std::vector<Texture2DPtr> textures;
+		std::vector<std::shared_ptr<Texture2D>> textures;
 
 		std::vector<RootNode *>::size_type index, size;
 		size = root_nodes.size();
@@ -86,7 +86,7 @@ namespace uicore
 		return textures;
 	}
 
-	TextureGroupImage TextureGroupImpl::add_new_node(const GraphicContextPtr &context, const Size &texture_size)
+	TextureGroupImage TextureGroupImpl::add_new_node(const std::shared_ptr<GraphicContext> &context, const Size &texture_size)
 	{
 		// Try inserting in current active texture
 		Node *node;
@@ -138,7 +138,7 @@ namespace uicore
 		return TextureGroupImage(active_root->texture, node->image_rect);
 	}
 
-	TextureGroupImpl::RootNode *TextureGroupImpl::add_new_root(const GraphicContextPtr &context, const Size &texture_size)
+	TextureGroupImpl::RootNode *TextureGroupImpl::add_new_root(const std::shared_ptr<GraphicContext> &context, const Size &texture_size)
 	{
 		Rect rect(Point(0, 0), texture_size);
 		Node node(rect);
@@ -152,7 +152,7 @@ namespace uicore
 		return active_root;
 	}
 
-	void TextureGroupImpl::insert_texture(const Texture2DPtr &texture, const Rect &texture_rect)
+	void TextureGroupImpl::insert_texture(const std::shared_ptr<Texture2D> &texture, const Rect &texture_rect)
 	{
 		Node node(texture_rect);
 
@@ -167,7 +167,7 @@ namespace uicore
 	{
 		// Find the texture
 		Node *node = nullptr;
-		Texture2DPtr texture = subtexture.texture();
+		std::shared_ptr<Texture2D> texture = subtexture.texture();
 		Rect rect = subtexture.geometry();
 
 		std::vector<RootNode *>::size_type index, size;

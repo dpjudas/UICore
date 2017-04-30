@@ -67,7 +67,7 @@ namespace uicore
 		};
 
 		void parse(const unsigned char *base_ptr, unsigned int length);
-		void get_rsa_public_key(DataBufferPtr &output_exponent, DataBufferPtr &output_modulus) const;
+		void get_rsa_public_key(std::shared_ptr<DataBuffer> &output_exponent, std::shared_ptr<DataBuffer> &output_modulus) const;
 
 	private:
 		void set_string(const ASN1 &input, std::string &output);
