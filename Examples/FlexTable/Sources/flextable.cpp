@@ -65,10 +65,9 @@ FlexTableController::FlexTableController()
 		border: 8px solid yellow;
 		padding: 15px;
 		margin: 0px;
-		display:flex;
-		align-items:flex-start;
-		flex-direction:column;
-		height:400px;
+		align-items: flex-start;
+		flex-direction: column;
+		height: 400px;
 		background-color: #666666;
 	)");
 
@@ -76,16 +75,15 @@ FlexTableController::FlexTableController()
 		border: 8px solid red;
 		padding: 15px;
 		margin: 0px;
-		width:100%;
+		width: 100%;
 		box-sizing: border-box;
-		display:flex;
 		align-items:flex-start;
 		background-color: #444444;
 	)";
 
 	std::string row_view_style = R"(
 		color: white;
-		height:60px;
+		height: 60px;
 		border: 8px solid white;
 		background: black;
 	)";

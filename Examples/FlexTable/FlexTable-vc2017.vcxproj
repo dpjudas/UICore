@@ -147,6 +147,9 @@
     <ClInclude Include="Sources\flextable.h" />
     <ClInclude Include="Sources\precomp.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="flex.html" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
