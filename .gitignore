@@ -87,3 +87,4 @@ xcshareddata
 /Documentation/Html/
 *.db
 /.vs
+/Examples/FlexTable/.vs/FlexTable-vc2017/v15/*.opendb

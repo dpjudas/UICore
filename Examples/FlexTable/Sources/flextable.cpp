@@ -45,20 +45,50 @@ FlexTableController::FlexTableController()
 	set_title("UICore: Flex Table");
 	set_content_size(Sizef(1400, 800), true);
 
-	auto root = std::make_shared<View>();
-	root->set_focus();
+	auto root = std::make_shared<ColumnView>();
 	set_root_view(root);
 
 	root_view()->style()->set("background-color: white;");
 
 	auto outer_view = root_view()->add_child<View>();
-	outer_view->style()->set("border: 20px solid blue; padding: 15px; margin: 0px; background-color: black; width: 1000px; height: 500px;");
+	outer_view->style()->set(R"(
+		border: 20px solid blue;
+		padding: 15px;
+		margin: 0px;
+		background-color: black;
+		width: 1000px;
+		height: 500px;
+	)");
 
 	auto column_flex_view = outer_view->add_child<View>();
-	column_flex_view->style()->set("border: 8px solid yellow; padding: 15px; margin: 0px; display:flex; align-items:flex-start; flex-direction:column; height:400px; background-color: #666666;");
+	column_flex_view->style()->set(R"(
+		border: 8px solid yellow;
+		padding: 15px;
+		margin: 0px;
+		display:flex;
+		align-items:flex-start;
+		flex-direction:column;
+		height:400px;
+		background-color: #666666;
+	)");
 
-	std::string row_flex_style("border: 8px solid red; padding: 15px; margin: 0px; width:100%; box-sizing: border-box;	display:flex; align-items:flex-start; background-color: #444444;");
-	std::string row_view_style("color: white; height:60px; border: 8px solid white;	background: black;");
+	std::string row_flex_style = R"(
+		border: 8px solid red;
+		padding: 15px;
+		margin: 0px;
+		width:100%;
+		box-sizing: border-box;
+		display:flex;
+		align-items:flex-start;
+		background-color: #444444;
+	)";
+
+	std::string row_view_style = R"(
+		color: white;
+		height:60px;
+		border: 8px solid white;
+		background: black;
+	)";
 
 	for (int cnt = 0; cnt < 2; cnt++)
 	{
