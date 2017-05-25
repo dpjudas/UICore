@@ -86,3 +86,4 @@ xcshareddata
 /*.opendb
 /Documentation/Html/
 *.db
+/.vs
