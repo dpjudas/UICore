@@ -36,6 +36,7 @@ namespace uicore
 	{
 	}
 
+	StylePropertyDefault style_default_box_sizing("box-sizing", StyleGetValue::from_keyword("content-box"), false);
 	StylePropertyDefault style_default_width("width", StyleGetValue::from_keyword("auto"), false);
 	StylePropertyDefault style_default_height("height", StyleGetValue::from_keyword("auto"), false);
 	StylePropertyDefault style_default_min_width("min-width", StyleGetValue::from_keyword("auto"), false);
@@ -43,12 +44,40 @@ namespace uicore
 	StylePropertyDefault style_default_max_width("max-width", StyleGetValue::from_keyword("none"), false);
 	StylePropertyDefault style_default_max_height("max-height", StyleGetValue::from_keyword("none"), false);
 
+	BoxSizingPropertyParser style_parser_box_sizing;
 	WidthPropertyParser style_parser_width;
 	HeightPropertyParser style_parser_height;
 	MinWidthPropertyParser style_parser_min_width;
 	MinHeightPropertyParser style_parser_min_height;
 	MaxWidthPropertyParser style_parser_max_width;
 	MaxHeightPropertyParser style_parser_max_height;
+
+	void BoxSizingPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
+	{
+		auto &tokens = parser.tokens;
+
+		StyleSetValue box_sizing;
+
+		size_t pos = 0;
+		StyleToken token = next_token(pos, tokens);
+		if (token.type == StyleTokenType::ident && pos == tokens.size())
+		{
+			if (equals(token.value, "content-box"))
+				box_sizing = StyleSetValue::from_keyword("content-box");
+			else if (equals(token.value, "border-box"))
+				box_sizing = StyleSetValue::from_keyword("border-box");
+			else if (equals(token.value, "inherit"))
+				box_sizing = StyleSetValue::from_keyword("inherit");
+			else
+				return;
+		}
+		else
+		{
+			return;
+		}
+
+		setter->set_value("box-sizing", box_sizing);
+	}
 
 	void WidthPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
 	{

@@ -531,40 +531,70 @@ namespace uicore
 	float View::calculate_definite_width(bool &is_definite)
 	{
 		auto css_width = style_cascade().computed_value("width");
+		float specified_width = 0.0f;
 		if (css_width.is_length())
 		{
-			is_definite = true;
-			return css_width.number();
+			specified_width = css_width.number();
 		}
 		else if (css_width.is_percentage() && parent() && parent()->is_width_definite())
 		{
-			is_definite = true;
-			return css_width.number() * parent()->definite_width() / 100.0f;
+			specified_width = css_width.number() * parent()->definite_width() / 100.0f;
 		}
 		else
 		{
 			is_definite = false;
 			return 0.0f;
+		}
+
+		is_definite = true;
+
+		if (style_cascade().computed_value("box-sizing").is_keyword("border-box"))
+		{
+			float noncontent_width = 0.0f;
+			noncontent_width += style_cascade().computed_value("border-left-width").number();
+			noncontent_width += style_cascade().computed_value("padding-left").number();
+			noncontent_width += style_cascade().computed_value("padding-right").number();
+			noncontent_width += style_cascade().computed_value("border-right-width").number();
+			return std::max(specified_width - noncontent_width, 0.0f);
+		}
+		else
+		{
+			return specified_width;
 		}
 	}
 
 	float View::calculate_definite_height(bool &is_definite)
 	{
 		auto css_height = style_cascade().computed_value("height");
+		float specified_height = 0.0f;
 		if (css_height.is_length())
 		{
-			is_definite = true;
-			return css_height.number();
+			specified_height = css_height.number();
 		}
 		else if (css_height.is_percentage() && parent() && parent()->is_height_definite())
 		{
-			is_definite = true;
-			return css_height.number() * parent()->definite_height() / 100.0f;
+			specified_height = css_height.number() * parent()->definite_height() / 100.0f;
 		}
 		else
 		{
 			is_definite = false;
 			return 0.0f;
+		}
+
+		is_definite = true;
+
+		if (style_cascade().computed_value("box-sizing").is_keyword("border-box"))
+		{
+			float noncontent_height = 0.0f;
+			noncontent_height += style_cascade().computed_value("border-top-height").number();
+			noncontent_height += style_cascade().computed_value("padding-top").number();
+			noncontent_height += style_cascade().computed_value("padding-bottom").number();
+			noncontent_height += style_cascade().computed_value("border-bottom-height").number();
+			return std::max(specified_height - noncontent_height, 0.0f);
+		}
+		else
+		{
+			return specified_height;
 		}
 	}
 

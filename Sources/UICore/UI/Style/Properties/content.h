@@ -34,6 +34,13 @@ namespace uicore
 {
 	void force_link_style_parser_content();
 
+	class BoxSizingPropertyParser : public StylePropertyParser
+	{
+	public:
+		BoxSizingPropertyParser() : StylePropertyParser({ "box-sizing" }) { }
+		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser) override;
+	};
+
 	class WidthPropertyParser : public StylePropertyParser
 	{
 	public:
