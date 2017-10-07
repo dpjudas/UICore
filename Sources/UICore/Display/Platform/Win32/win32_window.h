@@ -196,7 +196,6 @@ namespace uicore
 		std::shared_ptr<InputDevice> keyboard, mouse;
 		std::vector<std::shared_ptr<InputDevice>> joysticks;
 		Point mouse_pos;
-		std::map<int, int> repeat_count;
 		std::function<void()> callback_on_resized;
 		Size minimum_size;
 		Size maximum_size;

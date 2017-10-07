@@ -80,10 +80,8 @@ namespace uicore
 		/// \brief Axis position.
 		double axis_pos = 0.0;
 
-		/// \brief The repeat count for this event.
-		/// Contains the number of times the keystroke has auto-repeated as a
-		/// result of the user holding down the key.
-		int repeat_count = 0;
+		/// \brief True if the is a keyboard repeat event (as a result of the user holding down the key)
+		bool key_repeat = false;
 
 		/// \brief State of modifier keys.
 		bool alt = false;

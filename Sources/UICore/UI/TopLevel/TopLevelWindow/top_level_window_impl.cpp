@@ -196,14 +196,14 @@ namespace uicore
 	{
 		KeyEventType type = KeyEventType::press;
 		Key key = decode_ic(e.id);
-		int repeat_count = e.repeat_count;
+		bool key_repeat = e.key_repeat;
 		const std::string text = e.str;
 		const Pointf pointer_pos = to_root_pos(e.mouse_pos);
 		bool alt_down = e.alt;
 		bool shift_down = e.shift;
 		bool ctrl_down = e.ctrl;
 		bool cmd_down = false;
-		KeyEvent key_event(type, key, repeat_count, text, pointer_pos, alt_down, shift_down, ctrl_down, cmd_down);
+		KeyEvent key_event(type, key, key_repeat, text, pointer_pos, alt_down, shift_down, ctrl_down, cmd_down);
 		window_key_event(key_event);
 	}
 
@@ -211,7 +211,7 @@ namespace uicore
 	{
 		KeyEventType type = KeyEventType::release;
 		Key key = decode_ic(e.id);
-		int repeat_count = e.repeat_count;
+		bool repeat_count = e.key_repeat;
 		const std::string text = e.str;
 		const Pointf pointer_pos = to_root_pos(e.mouse_pos);
 		bool alt_down = e.alt;

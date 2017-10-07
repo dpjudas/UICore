@@ -131,7 +131,6 @@ namespace uicore
 		InputEvent input_event;
 		input_event.mouse_pos = Pointf(window->get_mouse_position()) / window->get_pixel_ratio();
 		input_event.mouse_device_pos = window->get_mouse_position();
-		input_event.repeat_count = 0;
 
 		// We don't threat JS_EVENT_INIT special, so this should do
 		if (event.type & JS_EVENT_BUTTON)

@@ -127,7 +127,7 @@ namespace uicore
 				repeat_count[key_symbol]++;
 		}
 
-		key.repeat_count = repeat_count[key_symbol];
+		key.key_repeat = repeat_count[key_symbol] > 1;
 
 		if (!keydown && !keypressed)
 		{

@@ -638,7 +638,7 @@ namespace uicore
 		}
 
 		static InputEvent prevInput;
-		key.repeat_count = 0;  // TODO: Implement.
+		key.key_repeat = false;  // TODO: Implement.
 		if(type == NSKeyDown || type == NSKeyUp) // Can only call this on NSKeyUp or NSKeyDown type events
 		{
 			NSString* text = [theEvent charactersIgnoringModifiers];

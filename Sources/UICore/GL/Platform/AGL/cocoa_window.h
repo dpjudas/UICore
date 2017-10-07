@@ -133,7 +133,6 @@ private:
 	DisplayWindowSite *site;
 	InputDevice keyboard, mouse;
 	Point mouse_pos;
-	std::map<int,int> repeat_count;
 	std::function<void()> callback_on_resized;
 	InputContext ic;
     UIWindow *window;

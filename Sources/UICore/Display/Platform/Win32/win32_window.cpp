@@ -790,17 +790,6 @@ namespace uicore
 		// Update the ctrl/alt/shift hints:
 		InputCode key_id = static_cast<InputCode>(wparam);
 
-		// Add to repeat count
-		if(keydown)
-		{
-			// bit 30 is "The previous key state. The value is 1 if the key is down before the message is sent, or it is zero if the key is up."
-			// We check this because during certain scenarious (e.g. using the debugger) WM_KEYUP is not received, thus repeat_count isn't reset
-			if (repeat_count.find(key_id) == repeat_count.end() || ((lparam & 1 << 30) == 0))
-				repeat_count[key_id] = 0;
-			else
-				repeat_count[key_id]++;
-		}
-
 		// Prepare event to be emitted:
 		InputEvent key;
 		if (keydown)
@@ -810,12 +799,7 @@ namespace uicore
 		key.mouse_pos = Pointf(mouse_pos.x / pixel_ratio, mouse_pos.y / pixel_ratio);
 		key.mouse_device_pos = mouse_pos;
 		key.id = key_id;
-		key.repeat_count = repeat_count[key_id];
-
-		if( !keydown )
-		{
-			repeat_count[key_id] = -1;
-		}
+		key.key_repeat = keydown ? ((lparam & 1 << 30) != 0) : 0;
 
 		if (keydown)
 		{
