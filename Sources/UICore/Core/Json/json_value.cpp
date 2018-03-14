@@ -47,6 +47,7 @@ namespace uicore
 		static std::string read_string(const std::string &json, size_t &pos);
 		static JsonValue read_number(const std::string &json, size_t &pos);
 		static JsonValue read_boolean(const std::string &json, size_t &pos);
+		static JsonValue read_null(const std::string &json, size_t &pos);
 		static void read_whitespace(const std::string &json, size_t &pos);
 	};
 
@@ -244,6 +245,8 @@ namespace uicore
 		case 'f':
 		case 't':
 			return read_boolean(json, pos);
+		case 'n':
+			return read_null(json, pos);
 		default:
 			throw Exception("Unexpected character in JSON data");
 		}
@@ -483,6 +486,14 @@ namespace uicore
 			pos += 5;
 			return JsonValue::boolean(false);
 		}
+	}
+
+	JsonValue JsonValueImpl::read_null(const std::string &json, size_t &pos)
+	{
+		if (pos + 4 > json.length() || memcmp(&json[pos], "null", 4) != 0)
+			throw Exception("Unexpected character in JSON data");
+		pos += 4;
+		return JsonValue::null();
 	}
 
 	void JsonValueImpl::read_whitespace(const std::string &json, size_t &pos)
