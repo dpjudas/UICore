@@ -88,8 +88,16 @@ namespace uicore
 	void ImageFile::save(std::shared_ptr<PixelBuffer> buffer, const std::string &filename, const std::string &type)
 	{
 		SetupDisplay::start();
-		auto file = File::open_existing(filename);
-		return ImageFile::save(buffer, file, type);
+
+		std::string ext = type;
+		if (ext.empty())
+		{
+			ext = FilePath::extension(filename);
+			ext = Text::to_lower(ext);
+		}
+
+		auto file = File::create_always(filename);
+		return ImageFile::save(buffer, file, ext);
 	}
 
 	void ImageFile::save(std::shared_ptr<PixelBuffer> buffer, const std::shared_ptr<IODevice> &file, const std::string &type)
