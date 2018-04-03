@@ -504,7 +504,7 @@ namespace uicore
 		{
 			glFramebufferTexture1D(target, opengl_attachment, texture_target, texture_handle, level);
 		}
-		else if (texture_type == GL_TEXTURE_2D)
+		else if (texture_type == GL_TEXTURE_2D || texture_type == GL_TEXTURE_CUBE_MAP)
 		{
 			glFramebufferTexture2D(target, opengl_attachment, texture_target, texture_handle, level);
 		}
@@ -512,7 +512,7 @@ namespace uicore
 		{
 			glFramebufferTexture3D(target, opengl_attachment, texture_target, texture_handle, level, zoffset);
 		}
-		else if (texture_type == GL_TEXTURE_2D_ARRAY || texture_type == GL_TEXTURE_1D_ARRAY)
+		else if (texture_type == GL_TEXTURE_2D_ARRAY || texture_type == GL_TEXTURE_1D_ARRAY || texture_type == GL_TEXTURE_CUBE_MAP_ARRAY)
 		{
 			glFramebufferTextureLayer(target, opengl_attachment, texture_handle, level, zoffset);
 		}

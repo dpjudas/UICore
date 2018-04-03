@@ -262,7 +262,7 @@ namespace uicore
 		glTexParameteri(texture_type, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		if (texture_type != GL_TEXTURE_1D)
 			glTexParameteri(texture_type, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		if (texture_type == GL_TEXTURE_3D)
+		if (texture_type == GL_TEXTURE_3D || texture_type == GL_TEXTURE_CUBE_MAP || texture_type == GL_TEXTURE_CUBE_MAP_ARRAY)
 			glTexParameteri(texture_type, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 	}
 
@@ -415,7 +415,7 @@ namespace uicore
 			}
 			else if (texture_type == GL_TEXTURE_CUBE_MAP)
 			{
-				glTexSubImage2D(OpenGL::to_cube_target(slice), level, x, y, src_rect.width(), src_rect.height(), tf.pixel_datatype, tf.pixel_datatype, data);
+				glTexSubImage2D(OpenGL::to_cube_target(slice), level, x, y, src_rect.width(), src_rect.height(), tf.pixel_format, tf.pixel_datatype, data);
 			}
 			else if (texture_type == GL_TEXTURE_CUBE_MAP_ARRAY)
 			{
