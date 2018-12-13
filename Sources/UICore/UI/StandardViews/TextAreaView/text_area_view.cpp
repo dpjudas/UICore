@@ -49,6 +49,7 @@
 
 namespace uicore
 {
+#if 0
 	TextAreaBaseView::TextAreaBaseView() : impl(new TextAreaBaseViewImpl())
 	{
 		impl->textfield = this;
@@ -1081,4 +1082,5 @@ namespace uicore
 	}
 
 	const std::string TextAreaBaseViewImpl::break_characters = " ::;,.-";
+#endif
 }

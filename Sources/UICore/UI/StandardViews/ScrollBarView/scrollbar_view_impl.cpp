@@ -39,6 +39,7 @@
 
 namespace uicore
 {
+#if 0
 	ScrollBarButtonBaseView::ScrollBarButtonBaseView(bool render_button_arrows) : _render_button_arrows(render_button_arrows)
 	{
 	}
@@ -348,4 +349,5 @@ namespace uicore
 			view->set_needs_layout();
 		}
 	}
+#endif
 }

@@ -32,8 +32,6 @@
 #include "UICore/Display/Window/display_window.h"
 #include "UICore/Display/Window/cursor.h"
 #include "UICore/Display/Window/cursor_description.h"
-#include "../Animation/animation_group.h"
-#include "view_layout.h"
 #include "flex_layout.h"
 #include <map>
 
@@ -77,20 +75,15 @@ namespace uicore
 	class ViewImpl
 	{
 	public:
-		ViewLayout *active_layout(View *self);
-
 		void render(View *self, const std::shared_ptr<Canvas> &canvas);
 		void process_event(View *self, EventUI *e, bool use_capture);
 		void process_event_handler(ViewEventHandler *handler, EventUI *e);
-		void update_style_cascade() const;
 
 		unsigned int find_next_tab_index(unsigned int tab_index) const;
 		unsigned int find_prev_tab_index(unsigned int tab_index) const;
 		unsigned int find_highest_tab_index() const;
 		View *find_next_with_tab_index(unsigned int tab_index, const ViewImpl *search_from = nullptr, bool also_search_ancestors = true) const;
 		View *find_prev_with_tab_index(unsigned int tab_index, const ViewImpl *search_from = nullptr, bool also_search_ancestors = true) const;
-
-		void set_state_cascade_siblings(const std::string &name, bool value);
 
 		void inverse_bubble(EventUI *e, const View *until_parent_view);
 
@@ -120,19 +113,6 @@ namespace uicore
 		unsigned int tab_index = 0;
 		FocusPolicy focus_policy = FocusPolicy::reject;
 
-		mutable StyleCascade style_cascade;
-		mutable std::map<std::string, std::shared_ptr<Style>> styles;
-
-		struct StyleState
-		{
-			StyleState(){}
-			StyleState(bool is_inherited, bool is_enabled) : inherited(is_inherited), enabled(is_enabled){}
-			bool inherited = true;	// Set to true by set_state_cascade(), else false
-			bool enabled = false;
-		};
-
-		std::map<std::string, StyleState> states;
-		
 		ViewGeometry _geometry;
 		bool hidden = false;
 
@@ -145,17 +125,13 @@ namespace uicore
 
 		ViewTree *view_tree = nullptr;
 
-		AnimationGroup animation_group;
-
 		StandardCursor cursor_type = StandardCursor::arrow;
 		CursorDescription cursor_desc;
 		std::shared_ptr<Cursor> cursor;
 		bool is_custom_cursor = false;
 		bool is_cursor_inherited = true;
 
-		ViewLayoutCache layout_cache;
-
-		FlexLayout flex;
+		std::unique_ptr<ViewLayout> layout;
 
 	private:
 		unsigned int find_prev_tab_index_helper(unsigned int tab_index) const;

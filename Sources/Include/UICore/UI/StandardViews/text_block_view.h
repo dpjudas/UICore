@@ -35,6 +35,7 @@
 
 namespace uicore
 {
+#if 0
 	class TextBlockBaseViewImpl;
 
 	class TextBlockBaseView : public View
@@ -64,4 +65,5 @@ namespace uicore
 	private:
 		std::shared_ptr<TextBlockBaseViewImpl> impl;
 	};
+#endif
 }

@@ -33,6 +33,7 @@
 
 namespace uicore
 {
+#if 0
 	enum class ScrollBarButtonDirection
 	{
 		left,
@@ -159,5 +160,5 @@ namespace uicore
 
 		void update_pos(ScrollBarBaseView *view, double new_pos, double new_min, double new_max);
 	};
-
+#endif
 }

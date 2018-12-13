@@ -32,6 +32,7 @@
 
 namespace uicore
 {
+#if 0
 	class Image;
 
 	class ProgressBaseView : public View
@@ -49,4 +50,5 @@ namespace uicore
 		Colorf progress_color() const;
 		void set_progress_color(const Colorf &value);
 	};
+#endif
 }

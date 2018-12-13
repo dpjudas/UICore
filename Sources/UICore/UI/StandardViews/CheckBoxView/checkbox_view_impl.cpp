@@ -40,6 +40,7 @@
 
 namespace uicore
 {
+#if 0
 	void CheckBoxBaseView_Impl::update_state()
 	{
 		bool target_checked = false;
@@ -121,4 +122,5 @@ namespace uicore
 		}
 		update_state();
 	}
+#endif
 }

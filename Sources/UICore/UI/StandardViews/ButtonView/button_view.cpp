@@ -35,7 +35,7 @@
 
 namespace uicore
 {
-
+#if 0
 	ButtonBaseView::ButtonBaseView() : impl(new ButtonBaseViewImpl())
 	{
 		impl->button = this;
@@ -115,4 +115,5 @@ namespace uicore
 	{
 		return impl->sig_clicked;
 	}
+#endif
 }

@@ -33,20 +33,16 @@
 #include "../../Core/Math/easing.h"
 #include "../../Core/Signals/signal.h"
 #include "../../UI/Events/event.h"
-#include "../Style/style.h"
-#include "../Style/style_cascade.h"
-#include "../Style/style_get_value.h"
 #include "view_event_handler.h"
 #include "view_geometry.h"
 #include "focus_policy.h"
+#include "view_layout.h"
 #include <vector>
 #include <memory>
 #include <functional>
 
 namespace uicore
 {
-	class Style;
-	class StyleCascade;
 	class Canvas;
 	class EventUI;
 	class ActivationChangeEvent;
@@ -63,27 +59,15 @@ namespace uicore
 	class ViewAction;
 
 	/// View for an area of the user interface
-	class View : public std::enable_shared_from_this<View>, public ViewEventHandler
+	class View : public std::enable_shared_from_this<View>, public ViewEventHandler, public SlotContainer
 	{
 	public:
 		View();
 		virtual ~View();
+
+		ViewLayout *layout() const;
+		void set_layout(std::unique_ptr<ViewLayout> layout);
 		
-		/// Style cascade currently active for this view
-		const StyleCascade &style_cascade() const;
-
-		/// Style properties for the specified state
-		const std::shared_ptr<Style> &style(const std::string &state = std::string()) const;
-		
-		/// Test if a style state is currently set
-		bool state(const std::string &name) const;
-
-		/// Set or clear style state
-		void set_state(const std::string &name, bool value);
-
-		/// Sets the state for this view and all siblings recursively, until a manually set state of the same name is found
-		void set_state_cascade(const std::string &name, bool value);
-
 		/// Parent view node or nullptr if the view is the current root node
 		View *parent() const;
 		
@@ -173,9 +157,6 @@ namespace uicore
 		/// Hides a view from layout and rendering
 		void set_hidden(bool value = true);
 
-		/// Test if view should participate in static layout calculations (layout_children)
-		bool is_static_position_and_visible() const;
-
 		/// Test if view geometry needs to be recalculated
 		bool needs_layout() const;
 
@@ -189,11 +170,6 @@ namespace uicore
 		///
 		/// This function should only be called by layout_children.
 		void set_geometry(const ViewGeometry &geometry);
-
-		/// Sets the view position and size using simplified layout rules
-		///
-		/// This function should only be called by layout_children.
-		void set_margin_geometry(const Rectf &margin_box);
 
 		/// Gets the current canvas used to render this view
 		///
@@ -222,39 +198,6 @@ namespace uicore
 
 		/// Specifies if content should be clipped during rendering
 		void set_content_clipped(bool clipped);
-
-		/// Calculates the preferred margin box width using simplified layout rules
-		float preferred_margin_width(const std::shared_ptr<Canvas> &canvas);
-
-		/// Calculates the perferred margin box height using simplified layout rules
-		float preferred_margin_height(const std::shared_ptr<Canvas> &canvas, float margin_box_width);
-
-		/// The content width used for percentages or other definite calculations
-		float definite_width();
-
-		/// The content height used for percentages or other definite calculations
-		float definite_height();
-
-		/// Test if the view has a definite width
-		bool is_width_definite();
-
-		/// Test if the view has a definite height
-		bool is_height_definite();
-
-		/// Calculates the preferred width of this view
-		float preferred_width(const std::shared_ptr<Canvas> &canvas);
-
-		/// Calculates the preferred height of this view
-		float preferred_height(const std::shared_ptr<Canvas> &canvas, float width);
-
-		/// Calculates the offset to the first baseline
-		float first_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width);
-
-		/// Calculates the offset to the last baseline
-		float last_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width);
-
-		/// Sets the view geometry for all children of this view
-		virtual void layout_children(const std::shared_ptr<Canvas> &canvas);
 
 		/// Tree in view hierachy
 		const ViewTree *view_tree() const;
@@ -298,12 +241,6 @@ namespace uicore
 
 		/// Give focus to the next view in the keyboard tab index order
 		void next_focus();
-
-		/// Continously call an animation function for the specified duration
-		void animate(float from, float to, const std::function<void(float)> &setter, int duration_ms = 400, const std::function<float(float)> &easing = Easing::linear, std::function<void()> animation_end = std::function<void()>());
-
-		/// Stop all activate animation functions
-		void stop_animations();
 
 		/// Set the cursor icon used when cursor is above this view
 		void set_cursor(const CursorDescription &cursor);
@@ -366,9 +303,6 @@ namespace uicore
 		/// Map from root content to local content coordinates
 		Pointf from_root_pos(const Pointf &pos);
 
-		/// Slot container helping with automatic disconnection of connected slots when the view is destroyed
-		SlotContainer slots;
-
 	protected:
 		/// Renders the content of a view
 		virtual void render_content(const std::shared_ptr<Canvas> &canvas) { }
@@ -378,24 +312,6 @@ namespace uicore
 
 		/// Child view was removed from this view
 		virtual void child_removed(const std::shared_ptr<View> &view) { }
-
-		/// Calculates the preferred width of this view
-		virtual float calculate_preferred_width(const std::shared_ptr<Canvas> &canvas);
-
-		/// Calculates the preferred height of this view
-		virtual float calculate_preferred_height(const std::shared_ptr<Canvas> &canvas, float width);
-
-		/// Calculates the offset to the first baseline
-		virtual float calculate_first_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width);
-
-		/// Calculates the offset to the last baseline
-		virtual float calculate_last_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width);
-
-		/// The content width used for percentages or other definite calculations
-		virtual float calculate_definite_width(bool &out_is_definite);
-
-		/// The content height used for percentages or other definite calculations
-		virtual float calculate_definite_height(bool &out_is_definite);
 
 	private:
 		View(const View &) = delete;

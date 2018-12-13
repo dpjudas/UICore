@@ -32,6 +32,7 @@
 
 namespace uicore
 {
+#if 0
 	class ScrollBarBaseViewImpl;
 
 	class ScrollBarBaseView : public View
@@ -82,4 +83,5 @@ namespace uicore
 	private:
 		std::shared_ptr<ScrollBarBaseViewImpl> impl;
 	};
+#endif
 }

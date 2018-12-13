@@ -29,7 +29,6 @@
 #pragma once
 
 #include "UICore/UI/View/view.h"
-#include "view_layout.h"
 
 namespace uicore
 {
@@ -38,6 +37,17 @@ namespace uicore
 		none,
 		min_violation,
 		max_violation
+	};
+
+	enum class FlexAlign
+	{
+		flex_start,
+		flex_end,
+		baseline,
+		center,
+		stretch,
+		space_between,
+		space_around
 	};
 
 	class FlexLayoutItem
@@ -92,6 +102,42 @@ namespace uicore
 
 		float strut_size = 0.0f;
 		bool collapsed = false;
+
+		FlexAlign align_self = FlexAlign::flex_start;
+		bool visibility_collapse = false;
+
+		float margin_left = 0.0f;
+		float margin_top = 0.0f;
+		float margin_right = 0.0f;
+		float margin_bottom = 0.0f;
+		float border_left = 0.0f;
+		float border_top = 0.0f;
+		float border_right = 0.0f;
+		float border_bottom = 0.0f;
+		float padding_left = 0.0f;
+		float padding_top = 0.0f;
+		float padding_right = 0.0f;
+		float padding_bottom = 0.0f;
+
+#if 0
+		void set_box_sizes(const StyleCascade &style_cascade)
+		{
+			margin_left = style_cascade.computed_value("margin-left").number();
+			margin_top = style_cascade.computed_value("margin-top").number();
+			margin_right = style_cascade.computed_value("margin-right").number();
+			margin_bottom = style_cascade.computed_value("margin-bottom").number();
+
+			border_left = style_cascade.computed_value("border-left-width").number();
+			border_top = style_cascade.computed_value("border-top-width").number();
+			border_right = style_cascade.computed_value("border-right-width").number();
+			border_bottom = style_cascade.computed_value("border-bottom-width").number();
+
+			padding_left = style_cascade.computed_value("padding-left").number();
+			padding_top = style_cascade.computed_value("padding-top").number();
+			padding_right = style_cascade.computed_value("padding-right").number();
+			padding_bottom = style_cascade.computed_value("padding-bottom").number();
+		}
+#endif
 	};
 
 	class FlexLayoutLine
@@ -138,18 +184,21 @@ namespace uicore
 	class FlexLayout : public ViewLayout
 	{
 	public:
-		float preferred_width(const std::shared_ptr<Canvas> &canvas, View *view) override;
-		float preferred_height(const std::shared_ptr<Canvas> &canvas, View *view, float width) override;
-		float first_baseline_offset(const std::shared_ptr<Canvas> &canvas, View *view, float width) override;
-		float last_baseline_offset(const std::shared_ptr<Canvas> &canvas, View *view, float width) override;
-		void layout_children(const std::shared_ptr<Canvas> &canvas, View *view) override;
+		float preferred_width(const std::shared_ptr<Canvas> &canvas) override;
+		float preferred_height(const std::shared_ptr<Canvas> &canvas, float width) override;
+		float first_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width) override;
+		float last_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width) override;
+		void layout_children(const std::shared_ptr<Canvas> &canvas) override;
 
 	private:
 		void calculate_layout(const std::shared_ptr<Canvas> &canvas, View *view, FlexLayoutMode mode = FlexLayoutMode::normal, float layout_width = 0.0f);
 
+#if 0
 		void create_items(const std::shared_ptr<Canvas> &canvas, View *view);
 		void create_row_items(const std::shared_ptr<Canvas> &canvas, View *view);
 		void create_column_items(const std::shared_ptr<Canvas> &canvas, View *view);
+#endif
+
 		void create_lines(const std::shared_ptr<Canvas> &canvas, View *view);
 		void flex_lines(const std::shared_ptr<Canvas> &canvas, View *view);
 
@@ -164,6 +213,8 @@ namespace uicore
 
 		FlexDirection direction = FlexDirection::row;
 		FlexWrap wrap = FlexWrap::nowrap;
+		FlexAlign align_content = FlexAlign::flex_start;
+		FlexAlign justify_content = FlexAlign::flex_start;
 
 		float container_main_size = 0.0f;
 		float container_cross_size = 0.0f;

@@ -36,6 +36,7 @@
 
 namespace uicore
 {
+#if 0
 	ListBoxBaseView::ListBoxBaseView() : impl(new ListBoxBaseViewImpl())
 	{
 		impl->listbox = this;
@@ -103,4 +104,5 @@ namespace uicore
 	{
 		return impl->sig_selection_changed;
 	}
+#endif
 }

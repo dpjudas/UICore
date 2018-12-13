@@ -30,6 +30,7 @@
 
 namespace uicore
 {
+#if 0
 	class ButtonBaseViewImpl
 	{
 	public:
@@ -47,4 +48,5 @@ namespace uicore
 
 		Signal<void()> sig_clicked;
 	};
+#endif
 }

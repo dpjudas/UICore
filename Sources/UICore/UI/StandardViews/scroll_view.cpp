@@ -30,12 +30,12 @@
 #include "UICore/precomp.h"
 #include "UICore/UI/StandardViews/scroll_view.h"
 #include "UICore/UI/StandardViews/scrollbar_view.h"
-#include "UICore/UI/StandardViews/layout_views.h"
 #include "UICore/UI/Events/pointer_event.h"
 #include <algorithm>
 
 namespace uicore
 {
+#if 0
 	class ScrollBaseViewContentContainer : public View
 	{
 	public:
@@ -558,4 +558,5 @@ namespace uicore
 	{
 		return impl->content_container->last_baseline_offset(canvas, width);
 	}
+#endif
 }

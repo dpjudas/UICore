@@ -40,6 +40,7 @@
 
 namespace uicore
 {
+#if 0
 	CheckBoxBaseView::CheckBoxBaseView() : impl(new CheckBoxBaseView_Impl())
 	{
 		impl->checkbox = this;
@@ -91,5 +92,6 @@ namespace uicore
 	{
 		return impl->sig_changed;
 	}
+#endif
 }
 

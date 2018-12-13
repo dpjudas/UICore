@@ -32,6 +32,7 @@
 
 namespace uicore
 {
+#if 0
 	TextBlockBaseView::TextBlockBaseView() : impl(new TextBlockBaseViewImpl())
 	{
 		impl->view = this;
@@ -117,4 +118,5 @@ namespace uicore
 		View::layout_children(canvas);
 		impl->layout_views(canvas, geometry().content_width);
 	}
+#endif
 }

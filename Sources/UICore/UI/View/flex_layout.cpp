@@ -34,9 +34,9 @@
 
 namespace uicore
 {
-	float FlexLayout::preferred_width(const std::shared_ptr<Canvas> &canvas, View *view)
+	float FlexLayout::preferred_width(const std::shared_ptr<Canvas> &canvas)
 	{
-		calculate_layout(canvas, view, FlexLayoutMode::preferred_width);
+		calculate_layout(canvas, view(), FlexLayoutMode::preferred_width);
 
 		if (direction == FlexDirection::row)
 			return container_main_size;
@@ -44,9 +44,9 @@ namespace uicore
 			return container_cross_size;
 	}
 
-	float FlexLayout::preferred_height(const std::shared_ptr<Canvas> &canvas, View *view, float width)
+	float FlexLayout::preferred_height(const std::shared_ptr<Canvas> &canvas, float width)
 	{
-		calculate_layout(canvas, view, FlexLayoutMode::preferred_height, width);
+		calculate_layout(canvas, view(), FlexLayoutMode::preferred_height, width);
 
 		if (direction == FlexDirection::row)
 			return container_cross_size;
@@ -54,21 +54,21 @@ namespace uicore
 			return container_main_size;
 	}
 
-	float FlexLayout::first_baseline_offset(const std::shared_ptr<Canvas> &canvas, View *view, float width)
+	float FlexLayout::first_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width)
 	{
-		//calculate_layout(canvas, view, FlexLayoutMode::preferred_height, width);
+		//calculate_layout(canvas, view(), FlexLayoutMode::preferred_height, width);
 		return 0.0f;
 	}
 
-	float FlexLayout::last_baseline_offset(const std::shared_ptr<Canvas> &canvas, View *view, float width)
+	float FlexLayout::last_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width)
 	{
-		//calculate_layout(canvas, view, FlexLayoutMode::preferred_height, width);
+		//calculate_layout(canvas, view(), FlexLayoutMode::preferred_height, width);
 		return 0.0f;
 	}
 
-	void FlexLayout::layout_children(const std::shared_ptr<Canvas> &canvas, View *view)
+	void FlexLayout::layout_children(const std::shared_ptr<Canvas> &canvas)
 	{
-		calculate_layout(canvas, view);
+		calculate_layout(canvas, view());
 
 		if (direction == FlexDirection::row)
 		{
@@ -80,8 +80,26 @@ namespace uicore
 					auto br = canvas->grid_fit(Pointf(item.used_main_pos + item.used_main_size, item.used_cross_pos + item.used_cross_size));
 					Rectf box = Rectf(tl.x, tl.y, br.x, br.y);
 
-					item.view->set_geometry(ViewGeometry::from_content_box(item.view->style_cascade(), box));
-					item.view->layout_children(canvas);
+					ViewGeometry geometry;
+					geometry.margin_left = item.margin_left;
+					geometry.margin_top = item.margin_top;
+					geometry.margin_right = item.margin_right;
+					geometry.margin_bottom = item.margin_bottom;
+					geometry.border_left = item.border_left;
+					geometry.border_top = item.border_top;
+					geometry.border_right = item.border_right;
+					geometry.border_bottom = item.border_bottom;
+					geometry.padding_left = item.padding_left;
+					geometry.padding_top = item.padding_top;
+					geometry.padding_right = item.padding_right;
+					geometry.padding_bottom = item.padding_bottom;
+					geometry.content_x = box.left;
+					geometry.content_y = box.top;
+					geometry.content_width = box.width();
+					geometry.content_height = box.height();
+
+					item.view->set_geometry(geometry);
+					item.view->layout()->layout_children(canvas);
 				}
 			}
 		}
@@ -95,8 +113,26 @@ namespace uicore
 					auto br = canvas->grid_fit(Pointf(item.used_cross_pos + item.used_cross_size, item.used_main_pos + item.used_main_size));
 					Rectf box = Rectf(tl.x, tl.y, br.x, br.y);
 
-					item.view->set_geometry(ViewGeometry::from_content_box(item.view->style_cascade(), box));
-					item.view->layout_children(canvas);
+					ViewGeometry geometry;
+					geometry.margin_left = item.margin_left;
+					geometry.margin_top = item.margin_top;
+					geometry.margin_right = item.margin_right;
+					geometry.margin_bottom = item.margin_bottom;
+					geometry.border_left = item.border_left;
+					geometry.border_top = item.border_top;
+					geometry.border_right = item.border_right;
+					geometry.border_bottom = item.border_bottom;
+					geometry.padding_left = item.padding_left;
+					geometry.padding_top = item.padding_top;
+					geometry.padding_right = item.padding_right;
+					geometry.padding_bottom = item.padding_bottom;
+					geometry.content_x = box.left;
+					geometry.content_y = box.top;
+					geometry.content_width = box.width();
+					geometry.content_height = box.height();
+
+					item.view->set_geometry(geometry);
+					item.view->layout()->layout_children(canvas);
 				}
 			}
 		}
@@ -107,7 +143,7 @@ namespace uicore
 		layout_mode = new_layout_mode;
 		layout_width = new_layout_width;
 
-		create_items(canvas, view);
+		//create_items(canvas, view);
 		create_lines(canvas, view);
 		flex_lines(canvas, view);
 		calculate_items_preferred_cross_size(canvas, view);
@@ -116,6 +152,7 @@ namespace uicore
 		cross_axis_alignment(canvas, view);
 	}
 
+#if 0
 	void FlexLayout::create_items(const std::shared_ptr<Canvas> &canvas, View *view)
 	{
 		const auto &container_style = view->style_cascade();
@@ -124,6 +161,34 @@ namespace uicore
 		auto computed_wrap = container_style.computed_value("flex-wrap");
 
 		direction = computed_direction.is_keyword("row") ? FlexDirection::row : FlexDirection::column;
+
+		auto css_align_content = container_style.computed_value("align-content");
+		if (css_align_content.is_keyword("flex-start"))
+			align_content = FlexAlign::flex_start;
+		else if (css_align_content.is_keyword("stretch"))
+			align_content = FlexAlign::stretch;
+		else if (css_align_content.is_keyword("space-between"))
+			align_content = FlexAlign::space_between;
+		else if (css_align_content.is_keyword("flex-end"))
+			align_content = FlexAlign::flex_end;
+		else if (css_align_content.is_keyword("center"))
+			align_content = FlexAlign::center;
+		else if (css_align_content.is_keyword("space-between"))
+			align_content = FlexAlign::space_between;
+		else if (css_align_content.is_keyword("space-around"))
+			align_content = FlexAlign::space_around;
+
+		auto css_justify_content = container_style.computed_value("justify-content");
+		if (css_justify_content.is_keyword("flex-start"))
+			justify_content = FlexAlign::flex_start;
+		else if (css_justify_content.is_keyword("flex-end"))
+			justify_content = FlexAlign::flex_end;
+		else if (css_justify_content.is_keyword("center"))
+			justify_content = FlexAlign::center;
+		else if (css_justify_content.is_keyword("space-between"))
+			justify_content = FlexAlign::space_between;
+		else if (css_justify_content.is_keyword("space-around"))
+			justify_content = FlexAlign::space_around;
 
 		if (computed_wrap.is_keyword("nowrap"))
 			wrap = FlexWrap::nowrap;
@@ -272,6 +337,28 @@ namespace uicore
 
 			item.flex_grow = item.view->style_cascade().computed_value("flex-grow").number();
 			item.flex_shrink = item.view->style_cascade().computed_value("flex-shrink").number();
+
+			item.set_box_sizes(item.view->style_cascade());
+
+			auto css_align_self = item.view->style_cascade().computed_value("align-self");
+			if (css_align_self.is_keyword("auto"))
+				item.align_self = align_items;
+			if (css_align_self.is_keyword("flex-start"))
+				item.align_self = FlexAlign::flex_start;
+			else if (css_align_self.is_keyword("stretch"))
+				item.align_self = FlexAlign::stretch;
+			else if (css_align_self.is_keyword("space-between"))
+				item.align_self = FlexAlign::space_between;
+			else if (css_align_self.is_keyword("flex-end"))
+				item.align_self = FlexAlign::flex_end;
+			else if (css_align_self.is_keyword("center"))
+				item.align_self = FlexAlign::center;
+			else if (css_align_self.is_keyword("space-between"))
+				item.align_self = FlexAlign::space_between;
+			else if (css_align_self.is_keyword("space-around"))
+				item.align_self = FlexAlign::space_around;
+
+			item.visibility_collapse = item.view->style_cascade().computed_value("visibility").is_keyword("collapse");
 
 			items.push_back(item);
 		}
@@ -434,9 +521,32 @@ namespace uicore
 			item.flex_grow = item.view->style_cascade().computed_value("flex-grow").number();
 			item.flex_shrink = item.view->style_cascade().computed_value("flex-shrink").number();
 
+			item.set_box_sizes(item.view->style_cascade());
+
+			auto css_align_self = item.view->style_cascade().computed_value("align-self");
+			if (css_align_self.is_keyword("auto"))
+				item.align_self = align_items;
+			if (css_align_self.is_keyword("flex-start"))
+				item.align_self = FlexAlign::flex_start;
+			else if (css_align_self.is_keyword("stretch"))
+				item.align_self = FlexAlign::stretch;
+			else if (css_align_self.is_keyword("space-between"))
+				item.align_self = FlexAlign::space_between;
+			else if (css_align_self.is_keyword("flex-end"))
+				item.align_self = FlexAlign::flex_end;
+			else if (css_align_self.is_keyword("center"))
+				item.align_self = FlexAlign::center;
+			else if (css_align_self.is_keyword("space-between"))
+				item.align_self = FlexAlign::space_between;
+			else if (css_align_self.is_keyword("space-around"))
+				item.align_self = FlexAlign::space_around;
+
+			item.visibility_collapse = item.view->style_cascade().computed_value("visibility").is_keyword("collapse");
+
 			items.push_back(item);
 		}
 	}
+#endif
 
 	void FlexLayout::create_lines(const std::shared_ptr<Canvas> &canvas, View *view)
 	{
@@ -700,11 +810,11 @@ namespace uicore
 				if (item.definite_cross_size)
 					item.flex_preferred_cross_size = item.cross_size;
 				else if (direction == FlexDirection::row)
-					item.flex_preferred_cross_size = item.view->preferred_height(canvas, item.used_main_size);
+					item.flex_preferred_cross_size = item.view->layout()->preferred_height(canvas, item.used_main_size);
 				else if (known_container_cross_size)
-					item.flex_preferred_cross_size = std::min(item.view->preferred_width(canvas/*, item.used_main_size*/), container_cross_size);
+					item.flex_preferred_cross_size = std::min(item.view->layout()->preferred_width(canvas/*, item.used_main_size*/), container_cross_size);
 				else
-					item.flex_preferred_cross_size = item.view->preferred_width(canvas/*, item.used_main_size*/);
+					item.flex_preferred_cross_size = item.view->layout()->preferred_width(canvas/*, item.used_main_size*/);
 
 				// Note: This clamping is not specified in the CSS-flexbox-1 "Cross Size Determination" section
 				//
@@ -796,7 +906,7 @@ namespace uicore
 			}
 		}
 
-		if (view->style_cascade().computed_value("align-content").is_keyword("stretch") && known_container_cross_size && lines.size() > 0)
+		if (align_content == FlexAlign::stretch && known_container_cross_size && lines.size() > 0)
 		{
 			float total_cross_size = 0.0f;
 			for (auto &line : lines)
@@ -817,7 +927,7 @@ namespace uicore
 		{
 			for (auto &item : line)
 			{
-				if (item.view->style_cascade().computed_value("visibility").is_keyword("collapse"))
+				if (item.visibility_collapse)
 				{
 					item.collapsed = true;
 					item.strut_size = line.cross_size;
@@ -839,15 +949,7 @@ namespace uicore
 		{
 			for (auto &item : line)
 			{
-				auto &item_style = item.view->style_cascade();
-
-				auto align_self = item_style.computed_value("align-self");
-				if (align_self.is_keyword("auto")) // To do: computed_value should have done this for us
-				{
-					align_self = view->style_cascade().computed_value("align-items");
-				}
-
-				if (align_self.is_keyword("stretch") && !item.definite_cross_size && !item.cross_auto_margin_start && !item.cross_auto_margin_end)
+				if (item.align_self == FlexAlign::stretch && !item.definite_cross_size && !item.cross_auto_margin_start && !item.cross_auto_margin_end)
 				{
 					item.used_cross_size = line.cross_size - item.cross_noncontent_start - item.cross_noncontent_end;
 
@@ -863,7 +965,7 @@ namespace uicore
 				}
 
 #if 0 // We do not support percentage sizing at the moment
-				if (align_self.is_keyword("stretch"))
+				if (item.align_self == FlexAlign::stretch)
 				{
 					// redo layout for its contents, treating this used size as its definite cross size so that percentage-sized children can be resolved:
 
@@ -913,8 +1015,7 @@ namespace uicore
 				space_available = 0.0f;
 			}
 
-			auto justify_content = view->style_cascade().computed_value("justify-content");
-			if (justify_content.is_keyword("flex-start") || ((item_count < 2 || space_available < 0.0f) && justify_content.is_keyword("space-between")))
+			if (justify_content == FlexAlign::flex_start || ((item_count < 2 || space_available < 0.0f) && justify_content == FlexAlign::space_between))
 			{
 				float pos = 0.0f;
 				for (auto &item : line)
@@ -928,7 +1029,7 @@ namespace uicore
 					pos += item.main_noncontent_end;
 				}
 			}
-			else if (justify_content.is_keyword("flex-end"))
+			else if (justify_content == FlexAlign::flex_end)
 			{
 				float pos = container_main_size;
 				auto it = line.end();
@@ -944,7 +1045,7 @@ namespace uicore
 					pos -= item.main_noncontent_start;
 				}
 			}
-			else if (justify_content.is_keyword("center") || ((item_count < 2 || space_available < 0.0f) && justify_content.is_keyword("space-around")))
+			else if (justify_content == FlexAlign::center || ((item_count < 2 || space_available < 0.0f) && justify_content == FlexAlign::space_around))
 			{
 				float pos = (container_main_size - space_consumed) / 2.0f;
 				for (auto &item : line)
@@ -958,7 +1059,7 @@ namespace uicore
 					pos += item.main_noncontent_end;
 				}
 			}
-			else if (justify_content.is_keyword("space-between") && item_count > 1)
+			else if (justify_content == FlexAlign::space_between && item_count > 1)
 			{
 				float space_extra = space_available / (float)(item_count - 1);
 				float pos = 0.0f;
@@ -975,7 +1076,7 @@ namespace uicore
 					pos += space_extra;
 				}
 			}
-			else if (justify_content.is_keyword("space-around") && item_count > 0)
+			else if (justify_content == FlexAlign::space_around && item_count > 0)
 			{
 				float space_extra = space_available / (float)item_count;
 				float pos = space_extra / 2.0f;
@@ -1036,28 +1137,22 @@ namespace uicore
 				}
 				else
 				{
-					auto align_self = item.view->style_cascade().computed_value("align-self");
-					if (align_self.is_keyword("auto")) // To do: computed_value should have done this for us
-					{
-						align_self = view->style_cascade().computed_value("align-items");
-					}
-
-					if (align_self.is_keyword("flex-start") || (direction == FlexDirection::column && align_self.is_keyword("baseline")) || align_self.is_keyword("stretch"))
+					if (item.align_self == FlexAlign::flex_start || (direction == FlexDirection::column && item.align_self == FlexAlign::baseline) || item.align_self == FlexAlign::stretch)
 					{
 						item.used_cross_pos = item.cross_noncontent_start;
 					}
-					else if (align_self.is_keyword("flex-end"))
+					else if (item.align_self == FlexAlign::flex_end)
 					{
 						item.used_cross_pos = line.cross_size - item.cross_noncontent_end - item.used_cross_size;
 					}
-					else if (align_self.is_keyword("center"))
+					else if (item.align_self == FlexAlign::center)
 					{
 						item.used_cross_pos = (line.cross_size - item.cross_noncontent_start - item.used_cross_size - item.cross_noncontent_end) * 0.5f + item.cross_noncontent_start;
 					}
-					else if (align_self.is_keyword("baseline"))
+					else if (item.align_self == FlexAlign::baseline)
 					{
 						item.used_cross_pos = item.cross_noncontent_start;
-						baseline_offset = std::max(baseline_offset, item.cross_noncontent_start + item.view->first_baseline_offset(canvas, item.used_main_size));
+						baseline_offset = std::max(baseline_offset, item.cross_noncontent_start + item.view->layout()->first_baseline_offset(canvas, item.used_main_size));
 					}
 				}
 			}
@@ -1069,15 +1164,9 @@ namespace uicore
 					if (item.collapsed || item.cross_auto_margin_start || item.cross_auto_margin_end)
 						continue;
 
-					auto align_self = item.view->style_cascade().computed_value("align-self");
-					if (align_self.is_keyword("auto")) // To do: computed_value should have done this for us
+					if (item.align_self == FlexAlign::baseline)
 					{
-						align_self = view->style_cascade().computed_value("align-items");
-					}
-
-					if (align_self.is_keyword("baseline"))
-					{
-						item.used_cross_pos = baseline_offset - item.view->first_baseline_offset(canvas, item.used_main_size);
+						item.used_cross_pos = baseline_offset - item.view->layout()->first_baseline_offset(canvas, item.used_main_size);
 					}
 				}
 			}
@@ -1095,23 +1184,22 @@ namespace uicore
 			float line_pos = 0.0f;
 			float line_extra = 0.0f;
 
-			auto align_content = view->style_cascade().computed_value("align-content");
-			if (align_content.is_keyword("flex-start") || align_content.is_keyword("stretch") || (free_space < 0.0f && align_content.is_keyword("space-between")))
+			if (align_content == FlexAlign::flex_start || align_content == FlexAlign::stretch || (free_space < 0.0f && align_content == FlexAlign::space_between))
 			{
 			}
-			else if (align_content.is_keyword("flex-end"))
+			else if (align_content == FlexAlign::flex_end)
 			{
 				line_pos = container_cross_size - total_cross_size;
 			}
-			else if (align_content.is_keyword("center") || (free_space < 0.0f && align_content.is_keyword("space-around")))
+			else if (align_content == FlexAlign::center || (free_space < 0.0f && align_content == FlexAlign::space_around))
 			{
 				line_pos = (container_cross_size - total_cross_size) * 0.5f;
 			}
-			else if (align_content.is_keyword("space-between") && lines.size() > 1)
+			else if (align_content == FlexAlign::space_between && lines.size() > 1)
 			{
 				line_extra = free_space / (lines.size() - 1.0f);
 			}
-			else if (align_content.is_keyword("space-around") && lines.size() > 0)
+			else if (align_content == FlexAlign::space_around && lines.size() > 0)
 			{
 				line_extra = free_space / (float)lines.size();
 				line_pos = line_extra * 0.5f;

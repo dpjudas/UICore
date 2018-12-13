@@ -41,6 +41,7 @@
 
 namespace uicore
 {
+#if 0
 	ScrollBarBaseView::ScrollBarBaseView(bool render_button_arrows) : impl(std::make_shared<ScrollBarBaseViewImpl>())
 	{
 		impl->scrollbar = this;
@@ -368,4 +369,5 @@ namespace uicore
 	{
 		return impl->sig_scroll;
 	}
+#endif
 }

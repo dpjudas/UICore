@@ -31,7 +31,6 @@
 #include "UICore/UI/Events/event.h"
 #include "UICore/UI/Events/focus_change_event.h"
 #include "../View/view_impl.h"
-#include "../View/positioned_layout.h"
 #include <algorithm>
 
 namespace uicore
@@ -116,12 +115,18 @@ namespace uicore
 	{
 		View *view = impl->root.get();
 
-		view->set_geometry(ViewGeometry::from_margin_box(view->style_cascade(), margin_box));
+		ViewGeometry g;
+		g.content_x = margin_box.left;
+		g.content_y = margin_box.top;
+		g.content_width = margin_box.right - margin_box.left;
+		g.content_height = margin_box.bottom - margin_box.top;
+		view->set_geometry(g);
+		//view->set_geometry(ViewGeometry::from_margin_box(view->style_cascade(), margin_box));
 
 		if (view->needs_layout())
 		{
-			view->layout_children(canvas);
-			PositionedLayout::layout_children(canvas, view);
+			view->layout()->layout_children(canvas);
+			//PositionedLayout::layout_children(canvas, view);
 		}
 		view->impl->needs_layout = false;
 

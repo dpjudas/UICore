@@ -35,6 +35,7 @@
 
 namespace uicore
 {
+#if 0
 	void ListBoxBaseViewImpl::on_key_press(KeyEvent &e)
 	{
 		/*
@@ -127,5 +128,5 @@ namespace uicore
 	{
 		set_hot_item(-1);
 	}
-
+#endif
 }

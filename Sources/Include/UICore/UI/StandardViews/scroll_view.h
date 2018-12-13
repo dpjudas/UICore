@@ -32,6 +32,7 @@
 
 namespace uicore
 {
+#if 0
 	enum class ContentOverflow
 	{
 		hidden,
@@ -79,4 +80,5 @@ namespace uicore
 	private:
 		std::unique_ptr<ScrollBaseViewImpl> impl;
 	};
+#endif
 }

@@ -39,6 +39,7 @@
 
 namespace uicore
 {
+#if 0
 	void SliderBaseViewImpl::update_state()
 	{
 		bool target_hot = false;
@@ -251,5 +252,5 @@ namespace uicore
 		scroll_timer->start(100, false);
 
 	}
-
+#endif
 }

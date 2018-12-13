@@ -31,6 +31,7 @@
 
 namespace uicore
 {
+#if 0
 	class SliderBaseViewImpl
 	{
 	public:
@@ -84,4 +85,5 @@ namespace uicore
 		void update_pos(SliderBaseView *view, int new_pos, int new_min, int new_max);
 		void update_state();
 	};
+#endif
 }

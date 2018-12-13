@@ -33,6 +33,7 @@
 
 namespace uicore
 {
+#if 0
 	class Font;
 	class TextFieldBaseViewImpl;
 
@@ -107,4 +108,5 @@ namespace uicore
 	private:
 		std::unique_ptr<TextFieldBaseViewImpl> impl;
 	};
+#endif
 }

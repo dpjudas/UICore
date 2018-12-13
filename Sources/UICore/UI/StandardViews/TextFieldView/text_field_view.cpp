@@ -49,6 +49,7 @@
 
 namespace uicore
 {
+#if 0
 	TextFieldBaseView::TextFieldBaseView() : impl(new TextFieldBaseViewImpl())
 	{
 		impl->textfield = this;
@@ -1018,4 +1019,5 @@ namespace uicore
 	}
 	const std::string TextFieldBaseViewImpl::numeric_mode_characters = "0123456789";
 	const std::string TextFieldBaseViewImpl::break_characters = " ::;,.-";
+#endif
 }

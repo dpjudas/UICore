@@ -35,7 +35,7 @@
 
 namespace uicore
 {
-
+#if 0
 	/////////////////////////////////////////////////////////////////////////
 
 	class ImageBaseViewImpl
@@ -132,4 +132,5 @@ namespace uicore
 		else
 			return 0.0f;
 	}
+#endif
 }

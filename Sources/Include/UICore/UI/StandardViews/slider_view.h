@@ -33,6 +33,7 @@
 
 namespace uicore
 {
+#if 0
 	class SliderBaseViewImpl;
 
 	class SliderBaseView : public View
@@ -72,4 +73,5 @@ namespace uicore
 	private:
 		std::shared_ptr<SliderBaseViewImpl> impl;
 	};
+#endif
 }

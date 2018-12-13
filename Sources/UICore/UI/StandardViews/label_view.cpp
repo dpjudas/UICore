@@ -42,6 +42,7 @@
 
 namespace uicore
 {
+#if 0
 	class LabelBaseViewImpl
 	{
 	public:
@@ -180,4 +181,5 @@ namespace uicore
 	{
 		return first_baseline_offset(canvas, width);
 	}
+#endif
 }

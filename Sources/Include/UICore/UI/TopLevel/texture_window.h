@@ -31,6 +31,7 @@
 #include "view_tree.h"
 #include "../../Display/Window/display_window.h"
 #include "../../Display/Window/keys.h"
+#include "../../Core/Math/color.h"
 
 namespace uicore
 {

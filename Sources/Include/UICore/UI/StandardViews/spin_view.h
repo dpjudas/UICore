@@ -36,6 +36,7 @@
 
 namespace uicore
 {
+#if 0
 	class SpinBaseView_Impl;
 
 	/// \brief SpinBaseView component.
@@ -91,5 +92,5 @@ namespace uicore
 	private:
 		std::shared_ptr<SpinBaseView_Impl> impl;
 	};
-
+#endif
 }

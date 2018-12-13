@@ -33,6 +33,7 @@
 
 namespace uicore
 {
+#if 0
 	class ListBoxBaseViewImpl;
 
 	class ListBoxBaseView : public ScrollBaseView
@@ -63,4 +64,5 @@ namespace uicore
 	private:
 		std::unique_ptr<ListBoxBaseViewImpl> impl;
 	};
+#endif
 }

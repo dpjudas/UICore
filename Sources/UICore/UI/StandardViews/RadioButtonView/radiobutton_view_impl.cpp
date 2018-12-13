@@ -40,6 +40,7 @@
 
 namespace uicore
 {
+#if 0
 	void RadioButtonBaseView_Impl::update_state()
 	{
 		bool target_checked = false;
@@ -149,5 +150,6 @@ namespace uicore
 			}
 		}
 	}
+#endif
 }
 

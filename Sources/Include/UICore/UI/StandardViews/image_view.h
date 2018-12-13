@@ -33,6 +33,7 @@
 
 namespace uicore
 {
+#if 0
 	class Canvas;
 	class Image;
 	class ImageBaseViewImpl;
@@ -76,4 +77,5 @@ namespace uicore
 	private:
 		std::shared_ptr<ImageBaseViewImpl> impl;
 	};
+#endif
 }

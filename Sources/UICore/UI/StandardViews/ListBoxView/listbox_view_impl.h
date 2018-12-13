@@ -30,6 +30,7 @@
 
 namespace uicore
 {
+#if 0
 	class ListBoxBaseViewImpl
 	{
 	public:
@@ -51,4 +52,5 @@ namespace uicore
 	private:
 		int get_selection_index(PointerEvent &e);
 	};
+#endif
 }

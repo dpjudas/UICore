@@ -43,6 +43,7 @@
 
 namespace uicore
 {
+#if 0
 	SpinBaseView::SpinBaseView() : impl(std::make_shared<SpinBaseView_Impl>())
 	{
 		impl->spin = this;
@@ -156,4 +157,5 @@ namespace uicore
 			impl->_decimal_places = decimal_places;
 		}
 	}
+#endif
 }

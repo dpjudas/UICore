@@ -41,6 +41,7 @@
 
 namespace uicore
 {
+#if 0
 	class WindowManagerImpl
 	{
 	public:
@@ -345,4 +346,5 @@ namespace uicore
 		if (WindowManagerImpl::instance()->exit_on_last_close && windows.empty())
 			RunLoop::exit();
 	}
+#endif
 }

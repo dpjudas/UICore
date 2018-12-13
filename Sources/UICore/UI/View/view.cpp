@@ -46,7 +46,6 @@
 #include "view_impl.h"
 #include "view_action_impl.h"
 #include "flex_layout.h"
-#include "custom_layout.h"
 #include <algorithm>
 #include <set>
 
@@ -54,7 +53,6 @@ namespace uicore
 {
 	View::View() : impl(new ViewImpl())
 	{
-		//box_style.set_style_changed(bind_member(this, &View::set_needs_layout));
 	}
 
 	View::~View()
@@ -62,7 +60,6 @@ namespace uicore
 		for (auto &child : children())
 		{
 			child->impl->_parent = nullptr;
-			child->impl->update_style_cascade();
 		}
 
 		for (auto &action : actions())
@@ -71,70 +68,19 @@ namespace uicore
 		}
 	}
 
-	const StyleCascade &View::style_cascade() const
-	{
-		return impl->style_cascade;
-	}
-
-	const std::shared_ptr<Style> &View::style(const std::string &state) const
-	{
-		const auto it = impl->styles.find(state);
-		if (it != impl->styles.end())
-			return it->second;
-
-		auto &style = impl->styles[state];
-		style = std::make_shared<Style>();
-		impl->update_style_cascade();
-		return style;
-	}
-
-	bool View::state(const std::string &name) const
-	{
-		const auto it = impl->states.find(name);
-		if (it != impl->states.end())
-			return it->second.enabled;
-		else
-			return false;
-	}
-	
-	void View::set_state(const std::string &name, bool value)
-	{
-		if (impl->states[name].enabled != value)
-		{
-			impl->states[name] = ViewImpl::StyleState(false, value);
-			impl->update_style_cascade();
-			set_needs_layout();
-		}
-	}
-	void View::set_state_cascade(const std::string &name, bool value)
-	{
-		if (impl->states[name].enabled != value)
-		{
-			impl->states[name] = ViewImpl::StyleState(false, value);
-			impl->update_style_cascade();
-			set_needs_layout();
-			impl->set_state_cascade_siblings(name, value);
-		}
-	}
-
-	void ViewImpl::set_state_cascade_siblings(const std::string &name, bool value)
-	{
-		for (auto view = _first_child; view != nullptr; view = view->next_sibling())
-		{
-			ViewImpl *impl = view->impl.get();
-			if (impl->states[name].inherited)
-			{
-				impl->states[name] = ViewImpl::StyleState(true, value);
-				impl->update_style_cascade();
-				view->set_needs_layout();
-				impl->set_state_cascade_siblings(name, value);
-			}
-		}
-	}
-
 	View *View::parent() const
 	{
 		return impl->_parent;
+	}
+
+	ViewLayout *View::layout() const
+	{
+		return impl->layout.get();
+	}
+
+	void View::set_layout(std::unique_ptr<ViewLayout> layout)
+	{
+		impl->layout = std::move(layout);
 	}
 
 	std::shared_ptr<View> View::first_child() const
@@ -181,7 +127,6 @@ namespace uicore
 			impl->_first_child = new_child;
 
 		new_child->impl->_parent = this;
-		new_child->impl->update_style_cascade();
 		new_child->set_needs_layout();
 		set_needs_layout();
 		
@@ -226,7 +171,6 @@ namespace uicore
 		}
 		
 		new_child->impl->_parent = this;
-		new_child->impl->update_style_cascade();
 		new_child->set_needs_layout();
 		set_needs_layout();
 		
@@ -296,11 +240,6 @@ namespace uicore
 		}
 	}
 
-	bool View::is_static_position_and_visible() const
-	{
-		return style_cascade().computed_value("position").is_keyword("static") && !hidden();
-	}
-
 	bool View::needs_layout() const
 	{
 		return impl->needs_layout;
@@ -309,7 +248,7 @@ namespace uicore
 	void View::set_needs_layout()
 	{
 		impl->needs_layout = true;
-		impl->layout_cache.clear();
+		impl->layout->invalidate_layout();
 
 		View *super = parent();
 		if (super)
@@ -348,11 +287,6 @@ namespace uicore
 		}
 	}
 
-	void View::set_margin_geometry(const Rectf &margin_box)
-	{
-		set_geometry(ViewGeometry::from_margin_box(style_cascade(), margin_box));
-	}
-
 	bool View::render_exception_encountered() const
 	{
 		return impl->exception_encountered;
@@ -389,212 +323,6 @@ namespace uicore
 		{
 			impl->content_clipped = clipped;
 			set_needs_render();
-		}
-	}
-
-	float View::preferred_margin_width(const std::shared_ptr<Canvas> &canvas)
-	{
-		float margin_left = style_cascade().computed_value("margin-left").number();
-		float margin_right = style_cascade().computed_value("margin-right").number();
-		auto width = style_cascade().computed_value("width");
-		if (width.is_length())
-			return margin_left + width.number() + margin_right;
-		else
-			return margin_left + preferred_width(canvas) + margin_right;
-	}
-
-	float View::preferred_margin_height(const std::shared_ptr<Canvas> &canvas, float margin_box_width)
-	{
-		float margin_left = style_cascade().computed_value("margin-left").number();
-		float margin_right = style_cascade().computed_value("margin-right").number();
-		float margin_top = style_cascade().computed_value("margin-left").number();
-		float margin_bottom = style_cascade().computed_value("margin-right").number();
-		auto width = style_cascade().computed_value("width");
-		if (width.is_length())
-			return margin_left + width.number() + margin_right;
-		else
-			return margin_top + preferred_height(canvas, margin_box_width - margin_left - margin_right) + margin_bottom;
-	}
-
-	float View::definite_width()
-	{
-		if (!impl->layout_cache.definite_width_calculated)
-		{
-			impl->layout_cache.is_width_definite = false;
-			impl->layout_cache.definite_width = calculate_definite_width(impl->layout_cache.is_width_definite);
-			impl->layout_cache.definite_width_calculated = true;
-		}
-		return impl->layout_cache.definite_width;
-	}
-
-	float View::definite_height()
-	{
-		if (!impl->layout_cache.definite_height_calculated)
-		{
-			impl->layout_cache.is_height_definite = false;
-			impl->layout_cache.definite_height = calculate_definite_height(impl->layout_cache.is_height_definite);
-			impl->layout_cache.definite_height_calculated = true;
-		}
-		return impl->layout_cache.definite_height;
-	}
-
-	bool View::is_width_definite()
-	{
-		if (!impl->layout_cache.definite_width_calculated)
-		{
-			impl->layout_cache.is_width_definite = false;
-			impl->layout_cache.definite_width = calculate_definite_width(impl->layout_cache.is_width_definite);
-			impl->layout_cache.definite_width_calculated = true;
-		}
-		return impl->layout_cache.is_width_definite;
-	}
-
-	bool View::is_height_definite()
-	{
-		if (!impl->layout_cache.definite_height_calculated)
-		{
-			impl->layout_cache.is_height_definite = false;
-			impl->layout_cache.definite_height = calculate_definite_height(impl->layout_cache.is_height_definite);
-			impl->layout_cache.definite_height_calculated = true;
-		}
-		return impl->layout_cache.is_height_definite;
-	}
-
-	float View::preferred_width(const std::shared_ptr<Canvas> &canvas)
-	{
-		if (!impl->layout_cache.preferred_width_calculated)
-		{
-			impl->layout_cache.preferred_width = calculate_preferred_width(canvas);
-			impl->layout_cache.preferred_width_calculated = true;
-		}
-		return impl->layout_cache.preferred_width;
-	}
-
-	float View::preferred_height(const std::shared_ptr<Canvas> &canvas, float width)
-	{
-		auto it = impl->layout_cache.preferred_height.find(width);
-		if (it != impl->layout_cache.preferred_height.end())
-			return it->second;
-
-		float height = calculate_preferred_height(canvas, width);
-		impl->layout_cache.preferred_height[width] = height;
-		return height;
-	}
-
-	float View::first_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width)
-	{
-		auto it = impl->layout_cache.first_baseline_offset.find(width);
-		if (it != impl->layout_cache.first_baseline_offset.end())
-			return it->second;
-
-		float baseline_offset = calculate_first_baseline_offset(canvas, width);
-		impl->layout_cache.first_baseline_offset[width] = baseline_offset;
-		return baseline_offset;
-	}
-
-	float View::last_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width)
-	{
-		auto it = impl->layout_cache.last_baseline_offset.find(width);
-		if (it != impl->layout_cache.last_baseline_offset.end())
-			return it->second;
-
-		float baseline_offset = calculate_last_baseline_offset(canvas, width);
-		impl->layout_cache.last_baseline_offset[width] = baseline_offset;
-		return baseline_offset;
-	}
-
-	float View::calculate_preferred_width(const std::shared_ptr<Canvas> &canvas)
-	{
-		return impl->active_layout(this)->preferred_width(canvas, this);
-	}
-
-	float View::calculate_preferred_height(const std::shared_ptr<Canvas> &canvas, float width)
-	{
-		return impl->active_layout(this)->preferred_height(canvas, this, width);
-	}
-
-	float View::calculate_first_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width)
-	{
-		return impl->active_layout(this)->first_baseline_offset(canvas, this, width);
-	}
-
-	float View::calculate_last_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width)
-	{
-		return impl->active_layout(this)->last_baseline_offset(canvas, this, width);
-	}
-
-	void View::layout_children(const std::shared_ptr<Canvas> &canvas)
-	{
-		return impl->active_layout(this)->layout_children(canvas, this);
-	}
-
-	float View::calculate_definite_width(bool &is_definite)
-	{
-		auto css_width = style_cascade().computed_value("width");
-		float specified_width = 0.0f;
-		if (css_width.is_length())
-		{
-			specified_width = css_width.number();
-		}
-		else if (css_width.is_percentage() && parent() && parent()->is_width_definite())
-		{
-			specified_width = css_width.number() * parent()->definite_width() / 100.0f;
-		}
-		else
-		{
-			is_definite = false;
-			return 0.0f;
-		}
-
-		is_definite = true;
-
-		if (style_cascade().computed_value("box-sizing").is_keyword("border-box"))
-		{
-			float noncontent_width = 0.0f;
-			noncontent_width += style_cascade().computed_value("border-left-width").number();
-			noncontent_width += style_cascade().computed_value("padding-left").number();
-			noncontent_width += style_cascade().computed_value("padding-right").number();
-			noncontent_width += style_cascade().computed_value("border-right-width").number();
-			return std::max(specified_width - noncontent_width, 0.0f);
-		}
-		else
-		{
-			return specified_width;
-		}
-	}
-
-	float View::calculate_definite_height(bool &is_definite)
-	{
-		auto css_height = style_cascade().computed_value("height");
-		float specified_height = 0.0f;
-		if (css_height.is_length())
-		{
-			specified_height = css_height.number();
-		}
-		else if (css_height.is_percentage() && parent() && parent()->is_height_definite())
-		{
-			specified_height = css_height.number() * parent()->definite_height() / 100.0f;
-		}
-		else
-		{
-			is_definite = false;
-			return 0.0f;
-		}
-
-		is_definite = true;
-
-		if (style_cascade().computed_value("box-sizing").is_keyword("border-box"))
-		{
-			float noncontent_height = 0.0f;
-			noncontent_height += style_cascade().computed_value("border-top-height").number();
-			noncontent_height += style_cascade().computed_value("padding-top").number();
-			noncontent_height += style_cascade().computed_value("padding-bottom").number();
-			noncontent_height += style_cascade().computed_value("border-bottom-height").number();
-			return std::max(specified_height - noncontent_height, 0.0f);
-		}
-		else
-		{
-			return specified_height;
 		}
 	}
 
@@ -747,16 +475,6 @@ namespace uicore
 
 		if (next_focus)
 			next_focus->set_focus();
-	}
-
-	void View::animate(float from, float to, const std::function<void(float)> &setter, int duration, const std::function<float(float)> &easing, std::function<void()> animation_end)
-	{
-		impl->animation_group.start(Animation(from, to, setter, duration, easing, animation_end));
-	}
-
-	void View::stop_animations()
-	{
-		impl->animation_group.stop();
 	}
 
 	void View::set_cursor(const CursorDescription &cursor)
@@ -1029,23 +747,10 @@ namespace uicore
 
 	/////////////////////////////////////////////////////////////////////////
 
-	ViewLayout *ViewImpl::active_layout(View *self)
-	{
-		if (self->style_cascade().computed_value("layout").is_keyword("flex"))
-		{
-			return &flex;
-		}
-		else
-		{
-			static CustomLayout custom;
-			return &custom;
-		}
-	}
-
 	void ViewImpl::render(View *self, const std::shared_ptr<Canvas> &canvas)
 	{
-		style_cascade.render_background(canvas, _geometry);
-		style_cascade.render_border(canvas, _geometry);
+		//style_cascade.render_background(canvas, _geometry);
+		//style_cascade.render_border(canvas, _geometry);
 
 		Mat4f old_transform = canvas->transform();
 		Pointf translate = _geometry.content_pos();
@@ -1103,41 +808,6 @@ namespace uicore
 			canvas->pop_clip();
 
 		canvas->set_transform(old_transform);
-	}
-
-	void ViewImpl::update_style_cascade() const
-	{
-		std::vector<std::pair<Style *, size_t>> matches;
-
-		for (auto it : styles)
-		{
-			auto &style_list = it.first;
-			auto &style = it.second;
-
-			auto style_classes = Text::split(style_list, " ");
-
-			bool match = true;
-			for (const auto &state : style_classes)
-			{
-				auto search_it = states.find(state);
-				if (search_it == states.end() || !search_it->second.enabled)
-					match = false;
-			}
-
-			if (match)
-				matches.push_back({ style.get(), style_classes.size() });
-		}
-
-		std::stable_sort(matches.begin(), matches.end(), [](const std::pair<Style *, size_t> &a, const std::pair<Style *, size_t> &b) { return a.second != b.second ? a.second > b.second : a.first > b.first; });
-
-		if (_parent)
-			style_cascade.parent = &_parent->style_cascade();
-		else
-			style_cascade.parent = nullptr;
-
-		style_cascade.cascade.clear();
-		for (auto &match : matches)
-			style_cascade.cascade.push_back(match.first);
 	}
 
 	void ViewImpl::process_event_handler(ViewEventHandler *handler, EventUI *e)
@@ -1353,5 +1023,4 @@ namespace uicore
 
 		return _parent->impl->find_prev_with_tab_index(search_index, this, true);
 	}
-
 }

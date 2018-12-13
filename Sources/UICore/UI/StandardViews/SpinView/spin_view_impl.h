@@ -33,7 +33,7 @@
 
 namespace uicore
 {
-
+#if 0
 	class SpinBaseView_Impl
 	{
 	public:
@@ -80,4 +80,5 @@ namespace uicore
 
 		void set_standard_state(View *view, bool state_disabled, bool state_hot, bool state_pressed);
 	};
+#endif
 }

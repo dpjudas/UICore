@@ -31,14 +31,24 @@
 namespace uicore
 {
 	class Canvas;
+	class View;
 
 	class ViewLayout
 	{
 	public:
-		virtual float preferred_width(const std::shared_ptr<Canvas> &canvas, View *view) = 0;
-		virtual float preferred_height(const std::shared_ptr<Canvas> &canvas, View *view, float width) = 0;
-		virtual float first_baseline_offset(const std::shared_ptr<Canvas> &canvas, View *view, float width) = 0;
-		virtual float last_baseline_offset(const std::shared_ptr<Canvas> &canvas, View *view, float width) = 0;
-		virtual void layout_children(const std::shared_ptr<Canvas> &canvas, View *view) = 0;
+		ViewLayout(View *view) : _view(view) { }
+		virtual ~ViewLayout() { }
+
+		View *view() const { return _view; }
+
+		virtual void invalidate_layout(){ }
+		virtual float preferred_width(const std::shared_ptr<Canvas> &canvas) = 0;
+		virtual float preferred_height(const std::shared_ptr<Canvas> &canvas, float width) = 0;
+		virtual float first_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width) = 0;
+		virtual float last_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width) = 0;
+		virtual void layout_children(const std::shared_ptr<Canvas> &canvas) = 0;
+
+	private:
+		View *_view;
 	};
 }

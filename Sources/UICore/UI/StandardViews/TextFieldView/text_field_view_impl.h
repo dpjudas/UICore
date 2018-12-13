@@ -34,6 +34,7 @@
 
 namespace uicore
 {
+#if 0
 	class TextFieldBaseViewSelection
 	{
 	public:
@@ -185,4 +186,5 @@ namespace uicore
 		unsigned int get_character_index(int mouse_x_wincoords);
 		Size get_visual_text_size(const std::shared_ptr<Canvas> &canvas, int pos, int npos);
 	};
+#endif
 }

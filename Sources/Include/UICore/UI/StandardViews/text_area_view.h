@@ -35,6 +35,7 @@
 
 namespace uicore
 {
+#if 0
 	class TextAreaBaseViewImpl;
 
 	class TextAreaBaseView : public View
@@ -85,4 +86,5 @@ namespace uicore
 	private:
 		std::unique_ptr<TextAreaBaseViewImpl> impl;
 	};
+#endif
 }

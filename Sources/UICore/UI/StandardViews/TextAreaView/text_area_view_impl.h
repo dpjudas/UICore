@@ -34,6 +34,7 @@
 
 namespace uicore
 {
+#if 0
 	class TextAreaBaseViewSelection
 	{
 	public:
@@ -170,4 +171,5 @@ namespace uicore
 
 		Vec2i get_character_index(const Pointf &pos);
 	};
+#endif
 }

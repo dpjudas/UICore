@@ -34,6 +34,7 @@
 
 namespace uicore
 {
+#if 0
 	class ButtonBaseViewImpl;
 
 	class ButtonBaseView : public View
@@ -57,4 +58,5 @@ namespace uicore
 	private:
 		std::unique_ptr<ButtonBaseViewImpl> impl;
 	};
+#endif
 }

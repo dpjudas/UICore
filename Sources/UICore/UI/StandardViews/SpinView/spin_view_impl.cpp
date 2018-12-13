@@ -41,7 +41,7 @@
 
 namespace uicore
 {
-
+#if 0
 	void SpinBaseView_Impl::update_decrement_state()
 	{
 		set_standard_state(button_decrement.get(), _state_disabled, _state_decrement_hot, _state_decrement_pressed);
@@ -146,6 +146,5 @@ namespace uicore
 		timer->start(100, false);
 
 	}
-
+#endif
 }
-

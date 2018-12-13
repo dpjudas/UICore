@@ -40,6 +40,7 @@
 
 namespace uicore
 {
+#if 0
 	RadioButtonBaseView::RadioButtonBaseView() : impl(new RadioButtonBaseView_Impl())
 	{
 		impl->radio = this;
@@ -115,5 +116,6 @@ namespace uicore
 	{
 		return impl->sig_selected;
 	}
+#endif
 }
 

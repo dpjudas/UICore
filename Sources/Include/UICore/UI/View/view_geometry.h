@@ -38,14 +38,6 @@ namespace uicore
 	class ViewGeometry
 	{
 	public:
-		ViewGeometry() { }
-		ViewGeometry(const StyleCascade &style);
-
-		static ViewGeometry from_margin_box(const StyleCascade &style, const Rectf &box);
-		static ViewGeometry from_border_box(const StyleCascade &style, const Rectf &box);
-		static ViewGeometry from_padding_box(const StyleCascade &style, const Rectf &box);
-		static ViewGeometry from_content_box(const StyleCascade &style, const Rectf &box);
-
 		// \brief Margin box relative to parent view
 		Rectf margin_box() const;
 

@@ -34,6 +34,7 @@
 
 namespace uicore
 {
+#if 0
 	enum class TextAlignment
 	{
 		left,
@@ -82,5 +83,5 @@ namespace uicore
 	private:
 		std::shared_ptr<LabelBaseViewImpl> impl;
 	};
-
+#endif
 }

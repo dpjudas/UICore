@@ -34,6 +34,7 @@
 
 namespace uicore
 {
+#if 0
 	enum class SpanObjectType
 	{
 		text,
@@ -128,4 +129,5 @@ namespace uicore
 		std::vector<SpanObject> objects;
 		TextAlignment alignment = TextAlignment::left;
 	};
+#endif
 }

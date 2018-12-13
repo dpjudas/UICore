@@ -41,6 +41,7 @@
 
 namespace uicore
 {
+#if 0
 	SliderBaseView::SliderBaseView() : impl(std::make_shared<SliderBaseViewImpl>())
 	{
 		impl->slider = this;
@@ -209,4 +210,5 @@ namespace uicore
 	{
 		return impl->sig_value_changed;
 	}
+#endif
 }

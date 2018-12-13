@@ -37,6 +37,7 @@
 
 namespace uicore
 {
+#if 0
 	TextBlockBaseViewImpl::TextBlockBaseViewImpl()
 	{
 	}
@@ -391,4 +392,5 @@ namespace uicore
 
 		return SpanLineMetrics(obj_start, objects.size(), text_start, 0, line_ascent, line_descent, x);
 	}
+#endif
 }
