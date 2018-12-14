@@ -32,7 +32,6 @@
 
 namespace uicore
 {
-#if 0
 	class RadioButtonBaseView_Impl
 	{
 	public:
@@ -53,5 +52,4 @@ namespace uicore
 
 		Signal<void()> sig_selected;
 	};
-#endif
 }

@@ -49,25 +49,24 @@
 
 namespace uicore
 {
-#if 0
 	TextFieldBaseView::TextFieldBaseView() : impl(new TextFieldBaseViewImpl())
 	{
 		impl->textfield = this;
 		impl->selection.set_view(this);
 
-		set_focus_policy(FocusPolicy::accept);
+		//set_focus_policy(FocusPolicy::accept);
 		set_cursor(StandardCursor::ibeam);
 		set_content_clipped(true);
 
-		slots.connect(sig_key_press(), [this](KeyEvent *e) { impl->on_key_press(*e); });
-		slots.connect(sig_key_release(), [this](KeyEvent *e) { impl->on_key_release(*e); });
-		slots.connect(sig_pointer_press(), [this](PointerEvent *e) { impl->on_pointer_press(*e); });
-		slots.connect(sig_pointer_release(), [this](PointerEvent *e) { impl->on_pointer_release(*e); });
-		slots.connect(sig_pointer_move(), [this](PointerEvent *e) { impl->on_pointer_move(*e); });
-		slots.connect(sig_focus_gained(), [this](FocusChangeEvent *e) { impl->on_focus_gained(*e); });
-		slots.connect(sig_focus_lost(), [this](FocusChangeEvent *e) { impl->on_focus_lost(*e); });
-		slots.connect(sig_activated(), [this](ActivationChangeEvent *e) { impl->on_activated(*e); });
-		slots.connect(sig_deactivated(), [this](ActivationChangeEvent *e) { return impl->on_deactivated(*e); });
+		connect(sig_key_press(), [this](KeyEvent *e) { impl->on_key_press(*e); });
+		connect(sig_key_release(), [this](KeyEvent *e) { impl->on_key_release(*e); });
+		connect(sig_pointer_press(), [this](PointerEvent *e) { impl->on_pointer_press(*e); });
+		connect(sig_pointer_release(), [this](PointerEvent *e) { impl->on_pointer_release(*e); });
+		connect(sig_pointer_move(), [this](PointerEvent *e) { impl->on_pointer_move(*e); });
+		connect(sig_focus_gained(), [this](FocusChangeEvent *e) { impl->on_focus_gained(*e); });
+		connect(sig_focus_lost(), [this](FocusChangeEvent *e) { impl->on_focus_lost(*e); });
+		connect(sig_activated(), [this](ActivationChangeEvent *e) { impl->on_activated(*e); });
+		connect(sig_deactivated(), [this](ActivationChangeEvent *e) { return impl->on_deactivated(*e); });
 
 		impl->scroll_timer->func_expired() = [&]()
 		{
@@ -374,7 +373,7 @@ namespace uicore
 			Path::rect(selection_rect)->fill(canvas, focus_view() == this ? Brush::solid_rgb8(51, 153, 255) : Brush::solid_rgb8(200, 200, 200));
 		}
 
-		Colorf color = style_cascade().computed_value("color").color();
+		Colorf color = impl->color;
 		font->draw_text(canvas, -impl->scroll_pos, baseline, txt_before, color);
 		font->draw_text(canvas, advance_before - impl->scroll_pos, baseline, txt_selected, focus_view() == this ? Colorf(255, 255, 255) : color);
 		font->draw_text(canvas, advance_before + advance_selected - impl->scroll_pos, baseline, txt_after, color);
@@ -394,25 +393,25 @@ namespace uicore
 		}
 	}
 
-	float TextFieldBaseView::calculate_preferred_width(const std::shared_ptr<Canvas> &canvas)
+	float TextFieldBaseView::preferred_width(const std::shared_ptr<Canvas> &canvas)
 	{
 		std::shared_ptr<Font> font = impl->get_font();
 		return font->measure_text(canvas, "X").advance.width * impl->preferred_size;
 	}
 
-	float TextFieldBaseView::calculate_preferred_height(const std::shared_ptr<Canvas> &canvas, float width)
+	float TextFieldBaseView::preferred_height(const std::shared_ptr<Canvas> &canvas, float width)
 	{
 		std::shared_ptr<Font> font = impl->get_font();
 		return font->font_metrics(canvas).line_height();
 	}
 
-	float TextFieldBaseView::calculate_first_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width)
+	float TextFieldBaseView::first_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width)
 	{
 		std::shared_ptr<Font> font = impl->get_font();
 		return font->font_metrics(canvas).baseline_offset();
 	}
 
-	float TextFieldBaseView::calculate_last_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width)
+	float TextFieldBaseView::last_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width)
 	{
 		return first_baseline_offset(canvas, width);
 	}
@@ -421,8 +420,8 @@ namespace uicore
 
 	const std::shared_ptr<Font> &TextFieldBaseViewImpl::get_font()
 	{
-		if (!font)
-			font = textfield->style_cascade().font();
+		//if (!font)
+		//	font = textfield->style_cascade().font();
 		return font;
 	}
 
@@ -1019,5 +1018,4 @@ namespace uicore
 	}
 	const std::string TextFieldBaseViewImpl::numeric_mode_characters = "0123456789";
 	const std::string TextFieldBaseViewImpl::break_characters = " ::;,.-";
-#endif
 }

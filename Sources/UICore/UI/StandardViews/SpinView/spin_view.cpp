@@ -43,7 +43,6 @@
 
 namespace uicore
 {
-#if 0
 	SpinBaseView::SpinBaseView() : impl(std::make_shared<SpinBaseView_Impl>())
 	{
 		impl->spin = this;
@@ -51,23 +50,23 @@ namespace uicore
 		impl->button_decrement = std::make_shared<View>();
 		impl->button_increment = std::make_shared<View>();
 
-		add_child(impl->button_decrement);
-		add_child(impl->button_increment);
+		add_child(impl->button_decrement, "");
+		add_child(impl->button_increment, "");
 
-		slots.connect(impl->button_decrement->sig_pointer_press(), [this](PointerEvent *e) { impl->on_pointer_decrement_press(*e); });
-		slots.connect(impl->button_decrement->sig_pointer_release(), [this](PointerEvent *e) { impl->on_pointer_decrement_release(*e); });
-		slots.connect(impl->button_increment->sig_pointer_press(), [this](PointerEvent *e) { impl->on_pointer_increment_press(*e); });
-		slots.connect(impl->button_increment->sig_pointer_release(), [this](PointerEvent *e) { impl->on_pointer_increment_release(*e); });
+		connect(impl->button_decrement->sig_pointer_press(), [this](PointerEvent *e) { impl->on_pointer_decrement_press(*e); });
+		connect(impl->button_decrement->sig_pointer_release(), [this](PointerEvent *e) { impl->on_pointer_decrement_release(*e); });
+		connect(impl->button_increment->sig_pointer_press(), [this](PointerEvent *e) { impl->on_pointer_increment_press(*e); });
+		connect(impl->button_increment->sig_pointer_release(), [this](PointerEvent *e) { impl->on_pointer_increment_release(*e); });
 
-		slots.connect(sig_focus_gained(), [this](FocusChangeEvent *e) { impl->on_focus_gained(*e); });
-		slots.connect(sig_focus_lost(), [this](FocusChangeEvent *e) { impl->on_focus_lost(*e); });
-		slots.connect(sig_activated(), [this](ActivationChangeEvent *e) { impl->on_activated(*e); });
-		slots.connect(sig_deactivated(), [this](ActivationChangeEvent *e) { impl->on_deactivated(*e); });
+		connect(sig_focus_gained(), [this](FocusChangeEvent *e) { impl->on_focus_gained(*e); });
+		connect(sig_focus_lost(), [this](FocusChangeEvent *e) { impl->on_focus_lost(*e); });
+		connect(sig_activated(), [this](ActivationChangeEvent *e) { impl->on_activated(*e); });
+		connect(sig_deactivated(), [this](ActivationChangeEvent *e) { impl->on_deactivated(*e); });
 
-		slots.connect(impl->button_decrement->sig_pointer_enter(), [&](PointerEvent *e) {impl->_state_decrement_hot = true; impl->update_decrement_state(); });
-		slots.connect(impl->button_decrement->sig_pointer_leave(), [&](PointerEvent *e) {impl->_state_decrement_hot = false; impl->update_decrement_state(); });
-		slots.connect(impl->button_increment->sig_pointer_enter(), [&](PointerEvent *e) {impl->_state_increment_hot = true; impl->update_increment_state(); });
-		slots.connect(impl->button_increment->sig_pointer_leave(), [&](PointerEvent *e) {impl->_state_increment_hot = false; impl->update_increment_state(); });
+		connect(impl->button_decrement->sig_pointer_enter(), [&](PointerEvent *e) {impl->_state_decrement_hot = true; impl->update_decrement_state(); });
+		connect(impl->button_decrement->sig_pointer_leave(), [&](PointerEvent *e) {impl->_state_decrement_hot = false; impl->update_decrement_state(); });
+		connect(impl->button_increment->sig_pointer_enter(), [&](PointerEvent *e) {impl->_state_increment_hot = true; impl->update_increment_state(); });
+		connect(impl->button_increment->sig_pointer_leave(), [&](PointerEvent *e) {impl->_state_increment_hot = false; impl->update_increment_state(); });
 
 		impl->timer->func_expired() = uicore::bind_member(impl.get(), &SpinBaseView_Impl::timer_expired);
 	}
@@ -157,5 +156,4 @@ namespace uicore
 			impl->_decimal_places = decimal_places;
 		}
 	}
-#endif
 }

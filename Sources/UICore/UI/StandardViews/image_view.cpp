@@ -35,9 +35,6 @@
 
 namespace uicore
 {
-#if 0
-	/////////////////////////////////////////////////////////////////////////
-
 	class ImageBaseViewImpl
 	{
 	public:
@@ -113,7 +110,7 @@ namespace uicore
 		}
 	}
 
-	float ImageBaseView::calculate_preferred_width(const std::shared_ptr<Canvas> &canvas)
+	float ImageBaseView::preferred_width(const std::shared_ptr<Canvas> &canvas)
 	{
 		impl->get_images(canvas);
 
@@ -123,7 +120,7 @@ namespace uicore
 			return 0.0f;
 	}
 
-	float ImageBaseView::calculate_preferred_height(const std::shared_ptr<Canvas> &canvas, float width)
+	float ImageBaseView::preferred_height(const std::shared_ptr<Canvas> &canvas, float width)
 	{
 		impl->get_images(canvas);
 
@@ -132,5 +129,4 @@ namespace uicore
 		else
 			return 0.0f;
 	}
-#endif
 }

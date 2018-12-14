@@ -34,7 +34,6 @@
 
 namespace uicore
 {
-#if 0
 	class RadioButtonBaseView_Impl;
 
 	/// \brief Radio button component.
@@ -83,5 +82,4 @@ namespace uicore
 
 		friend class RadioButtonBaseView_Impl;
 	};
-#endif
 }

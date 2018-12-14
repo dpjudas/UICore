@@ -31,11 +31,9 @@
 
 namespace uicore
 {
-#if 0
 	class SliderBaseViewImpl
 	{
 	public:
-
 		void on_pointer_track_press(PointerEvent &e);
 		void on_pointer_track_release(PointerEvent &e);
 		void on_pointer_thumb_press(PointerEvent &e);
@@ -85,5 +83,4 @@ namespace uicore
 		void update_pos(SliderBaseView *view, int new_pos, int new_min, int new_max);
 		void update_state();
 	};
-#endif
 }

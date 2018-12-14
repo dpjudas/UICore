@@ -41,7 +41,6 @@
 
 namespace uicore
 {
-#if 0
 	SliderBaseView::SliderBaseView() : impl(std::make_shared<SliderBaseViewImpl>())
 	{
 		impl->slider = this;
@@ -49,24 +48,24 @@ namespace uicore
 		impl->track = std::make_shared<View>();
 		impl->thumb = std::make_shared<View>();
 
-		add_child(impl->track);
-		add_child(impl->thumb);
+		//add_child(impl->track);
+		//add_child(impl->thumb);
 	
-		slots.connect(sig_pointer_press(), [this](PointerEvent *e) { impl->on_pointer_track_press(*e); });
-		slots.connect(sig_pointer_release(), [this](PointerEvent *e) { impl->on_pointer_track_release(*e); });
+		connect(sig_pointer_press(), [this](PointerEvent *e) { impl->on_pointer_track_press(*e); });
+		connect(sig_pointer_release(), [this](PointerEvent *e) { impl->on_pointer_track_release(*e); });
 
-		slots.connect(sig_pointer_press(), [this](PointerEvent *e) { impl->on_pointer_thumb_press(*e); });
-		slots.connect(sig_pointer_release(), [this](PointerEvent *e) { impl->on_pointer_thumb_release(*e); });
+		connect(sig_pointer_press(), [this](PointerEvent *e) { impl->on_pointer_thumb_press(*e); });
+		connect(sig_pointer_release(), [this](PointerEvent *e) { impl->on_pointer_thumb_release(*e); });
 
-		slots.connect(sig_pointer_enter(), [&](PointerEvent *e) { impl->_state_hot = true;  impl->update_state(); });
-		slots.connect(sig_pointer_leave(), [&](PointerEvent *e) { impl->_state_hot = false;  impl->update_state(); });
+		connect(sig_pointer_enter(), [&](PointerEvent *e) { impl->_state_hot = true;  impl->update_state(); });
+		connect(sig_pointer_leave(), [&](PointerEvent *e) { impl->_state_hot = false;  impl->update_state(); });
 
-		slots.connect(impl->thumb->sig_pointer_move(), [this](PointerEvent *e) { impl->on_pointer_move(*e); });
+		connect(impl->thumb->sig_pointer_move(), [this](PointerEvent *e) { impl->on_pointer_move(*e); });
 
-		slots.connect(sig_focus_gained(), [this](FocusChangeEvent *e) { impl->on_focus_gained(*e); });
-		slots.connect(sig_focus_lost(), [this](FocusChangeEvent *e) { impl->on_focus_lost(*e); });
-		slots.connect(sig_activated(), [this](ActivationChangeEvent *e) { impl->on_activated(*e); });
-		slots.connect(sig_deactivated(), [this](ActivationChangeEvent *e) { impl->on_deactivated(*e); });
+		connect(sig_focus_gained(), [this](FocusChangeEvent *e) { impl->on_focus_gained(*e); });
+		connect(sig_focus_lost(), [this](FocusChangeEvent *e) { impl->on_focus_lost(*e); });
+		connect(sig_activated(), [this](ActivationChangeEvent *e) { impl->on_activated(*e); });
+		connect(sig_deactivated(), [this](ActivationChangeEvent *e) { impl->on_deactivated(*e); });
 
 		impl->scroll_timer->func_expired() = uicore::bind_member(impl.get(), &SliderBaseViewImpl::scroll_timer_expired);
 
@@ -120,15 +119,14 @@ namespace uicore
 	void SliderBaseView::set_vertical()
 	{
 		impl->_vertical = true;
-		impl->thumb->style()->set("position: absolute; top: 0px; left: auto");
+		//impl->thumb->style()->set("position: absolute; top: 0px; left: auto");
 		set_needs_layout();
-
 	}
 
 	void SliderBaseView::set_horizontal()
 	{
 		impl->_vertical = false;
-		impl->thumb->style()->set("position: absolute; left: 0px; top: auto");
+		//impl->thumb->style()->set("position: absolute; left: 0px; top: auto");
 		set_needs_layout();
 	}
 
@@ -184,6 +182,7 @@ namespace uicore
 		impl->_lock_to_ticks = lock;
 	}
 
+	/*
 	void SliderBaseView::layout_children(const std::shared_ptr<Canvas> &canvas)
 	{
 		View::layout_children(canvas);
@@ -205,10 +204,10 @@ namespace uicore
 			impl->thumb->style()->set("left: %1px;", thumb_pos);
 		}
 	}
+	*/
 
 	Signal<void()> &SliderBaseView::sig_value_changed()
 	{
 		return impl->sig_value_changed;
 	}
-#endif
 }

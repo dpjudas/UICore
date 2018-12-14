@@ -34,10 +34,9 @@
 
 namespace uicore
 {
-#if 0
 	class ButtonBaseViewImpl;
 
-	class ButtonBaseView : public View
+	class ButtonBaseView : public RowView
 	{
 	public:
 		ButtonBaseView();
@@ -58,5 +57,4 @@ namespace uicore
 	private:
 		std::unique_ptr<ButtonBaseViewImpl> impl;
 	};
-#endif
 }

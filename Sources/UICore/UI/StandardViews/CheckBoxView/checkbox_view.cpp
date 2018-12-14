@@ -40,16 +40,15 @@
 
 namespace uicore
 {
-#if 0
 	CheckBoxBaseView::CheckBoxBaseView() : impl(new CheckBoxBaseView_Impl())
 	{
 		impl->checkbox = this;
 
-		slots.connect(sig_pointer_press(), [this](PointerEvent *e) { impl->on_pointer_press(*e); });
-		slots.connect(sig_pointer_release(), [this](PointerEvent *e) { impl->on_pointer_release(*e); });
+		connect(sig_pointer_press(), [this](PointerEvent *e) { impl->on_pointer_press(*e); });
+		connect(sig_pointer_release(), [this](PointerEvent *e) { impl->on_pointer_release(*e); });
 
-		slots.connect(sig_pointer_enter(), [this](PointerEvent *e) { impl->_state_hot = true; impl->update_state(); });
-		slots.connect(sig_pointer_leave(), [this](PointerEvent *e) { impl->_state_hot = false; impl->update_state(); });
+		connect(sig_pointer_enter(), [this](PointerEvent *e) { impl->_state_hot = true; impl->update_state(); });
+		connect(sig_pointer_leave(), [this](PointerEvent *e) { impl->_state_hot = false; impl->update_state(); });
 	}
 
 	void CheckBoxBaseView::set_disabled()
@@ -92,6 +91,4 @@ namespace uicore
 	{
 		return impl->sig_changed;
 	}
-#endif
 }
-

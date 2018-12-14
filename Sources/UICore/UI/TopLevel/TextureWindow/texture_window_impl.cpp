@@ -108,15 +108,6 @@ namespace uicore
 		{
 			view->dispatch_event(&e);
 		}
-
-		if (!e.default_prevented() && e.type() == KeyEventType::press && e.shift_down() && e.key() == Key::tab)
-		{
-			window_view->root_view()->prev_focus();
-		}
-		else if (!e.default_prevented() && e.type() == KeyEventType::press && e.key() == Key::tab)
-		{
-			window_view->root_view()->next_focus();
-		}
 	}
 
 	void TextureWindow_Impl::dispatch_hot_event(std::shared_ptr<View> &view, PointerEvent &e)

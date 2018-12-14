@@ -42,7 +42,6 @@
 
 namespace uicore
 {
-#if 0
 	class LabelBaseViewImpl
 	{
 	public:
@@ -51,10 +50,12 @@ namespace uicore
 		std::shared_ptr<Font> font;
 		LineBreakMode _line_break_mode = LineBreakMode::truncating_tail;
 
+		Colorf color;
+
 		const std::shared_ptr<Font> &get_font(LabelBaseView *view)
 		{
-			if (!font)
-				font = view->style_cascade().font();
+			//if (!font)
+			//	font = view->style_cascade().font();
 			return font;
 		}
 	};
@@ -63,11 +64,13 @@ namespace uicore
 	{
 	}
 
+	/*
 	void LabelBaseView::layout_children(const std::shared_ptr<Canvas> &canvas)
 	{
 		View::layout_children(canvas);
 		impl->font = style_cascade().font();	// Reset the font on new layout
 	}
+	*/
 
 	std::string LabelBaseView::text() const
 	{
@@ -143,7 +146,7 @@ namespace uicore
 				return; // Still no room.  Draw nothing!
 		}
 
-		Colorf color = style_cascade().computed_value("color").color();
+		Colorf color = impl->color;// style_cascade().computed_value("color").color();
 
 		if (impl->text_alignment == TextAlignment::left)
 		{
@@ -159,27 +162,26 @@ namespace uicore
 		}
 	}
 
-	float LabelBaseView::calculate_preferred_width(const std::shared_ptr<Canvas> &canvas)
+	float LabelBaseView::preferred_width(const std::shared_ptr<Canvas> &canvas)
 	{
 		std::shared_ptr<Font> font = impl->get_font(this);
 		return font->measure_text(canvas, impl->_text).advance.width + 1.0f;
 	}
 
-	float LabelBaseView::calculate_preferred_height(const std::shared_ptr<Canvas> &canvas, float width)
+	float LabelBaseView::preferred_height(const std::shared_ptr<Canvas> &canvas, float width)
 	{
 		std::shared_ptr<Font> font = impl->get_font(this);
 		return font->font_metrics(canvas).line_height();
 	}
 
-	float LabelBaseView::calculate_first_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width)
+	float LabelBaseView::first_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width)
 	{
 		std::shared_ptr<Font> font = impl->get_font(this);
 		return font->font_metrics(canvas).baseline_offset();
 	}
 
-	float LabelBaseView::calculate_last_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width)
+	float LabelBaseView::last_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width)
 	{
 		return first_baseline_offset(canvas, width);
 	}
-#endif
 }

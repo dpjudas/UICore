@@ -34,7 +34,6 @@
 
 namespace uicore
 {
-#if 0
 	enum class TextAlignment
 	{
 		left,
@@ -71,17 +70,14 @@ namespace uicore
 		LineBreakMode line_break_mode() const;
 		void set_line_break_mode(LineBreakMode value);
 
-		void layout_children(const std::shared_ptr<Canvas> &canvas) override;
-
 	protected:
 		void render_content(const std::shared_ptr<Canvas> &canvas) override;
-		float calculate_preferred_width(const std::shared_ptr<Canvas> &canvas) override;
-		float calculate_preferred_height(const std::shared_ptr<Canvas> &canvas, float width) override;
-		float calculate_first_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width) override;
-		float calculate_last_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width) override;
+		float preferred_width(const std::shared_ptr<Canvas> &canvas) override;
+		float preferred_height(const std::shared_ptr<Canvas> &canvas, float width) override;
+		float first_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width) override;
+		float last_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width) override;
 
 	private:
 		std::shared_ptr<LabelBaseViewImpl> impl;
 	};
-#endif
 }

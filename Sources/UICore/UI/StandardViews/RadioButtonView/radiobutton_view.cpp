@@ -40,16 +40,15 @@
 
 namespace uicore
 {
-#if 0
 	RadioButtonBaseView::RadioButtonBaseView() : impl(new RadioButtonBaseView_Impl())
 	{
 		impl->radio = this;
 
-		slots.connect(sig_pointer_press(), [this](PointerEvent *e) { impl->on_pointer_press(*e); });
-		slots.connect(sig_pointer_release(), [this](PointerEvent *e) { impl->on_pointer_release(*e); });
+		connect(sig_pointer_press(), [this](PointerEvent *e) { impl->on_pointer_press(*e); });
+		connect(sig_pointer_release(), [this](PointerEvent *e) { impl->on_pointer_release(*e); });
 
-		slots.connect(sig_pointer_enter(), [&](PointerEvent *e) { impl->_state_hot = true; impl->update_state(); });
-		slots.connect(sig_pointer_leave(), [&](PointerEvent *e) { impl->_state_hot = false; impl->update_state(); });
+		connect(sig_pointer_enter(), [&](PointerEvent *e) { impl->_state_hot = true; impl->update_state(); });
+		connect(sig_pointer_leave(), [&](PointerEvent *e) { impl->_state_hot = false; impl->update_state(); });
 	}
 
 	void RadioButtonBaseView::set_disabled()
@@ -116,6 +115,4 @@ namespace uicore
 	{
 		return impl->sig_selected;
 	}
-#endif
 }
-

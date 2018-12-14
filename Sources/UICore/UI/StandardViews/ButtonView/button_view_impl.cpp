@@ -35,9 +35,9 @@
 
 namespace uicore
 {
-#if 0
 	void ButtonBaseViewImpl::update_state()
 	{
+#if 0
 		bool target_hot = false;
 		bool target_disabled = false;
 		bool target_pressed = false;
@@ -58,6 +58,7 @@ namespace uicore
 		button->set_state_cascade("hot", target_hot);
 		button->set_state_cascade("pressed", target_pressed);
 		button->set_state_cascade("disabled", target_disabled);
+#endif
 	}
 
 	void ButtonBaseViewImpl::on_pointer_press(PointerEvent &e)
@@ -78,5 +79,4 @@ namespace uicore
 		if (button->geometry().border_box().contains(e.pos(button) + button->geometry().content_box().position()))	// Only allow click when mouse released over component
 			sig_clicked();
 	}
-#endif
 }

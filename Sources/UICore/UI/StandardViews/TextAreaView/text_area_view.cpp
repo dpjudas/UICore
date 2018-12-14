@@ -49,26 +49,25 @@
 
 namespace uicore
 {
-#if 0
 	TextAreaBaseView::TextAreaBaseView() : impl(new TextAreaBaseViewImpl())
 	{
 		impl->textfield = this;
 		impl->text_lines.resize(1);
 		impl->selection.set_view(this);
 
-		set_focus_policy(FocusPolicy::accept);
+		//set_focus_policy(FocusPolicy::accept);
 		set_cursor(StandardCursor::ibeam);
 		set_content_clipped(true);
 
-		slots.connect(sig_key_press(), [this](KeyEvent *e) { impl->on_key_press(*e); });
-		slots.connect(sig_key_release(), [this](KeyEvent *e) { impl->on_key_release(*e); });
-		slots.connect(sig_pointer_press(), [this](PointerEvent *e) { impl->on_pointer_press(*e); });
-		slots.connect(sig_pointer_release(), [this](PointerEvent *e) { impl->on_pointer_release(*e); });
-		slots.connect(sig_pointer_move(), [this](PointerEvent *e) { impl->on_pointer_move(*e); });
-		slots.connect(sig_focus_gained(), [this](FocusChangeEvent *e) { impl->on_focus_gained(*e); });
-		slots.connect(sig_focus_lost(), [this](FocusChangeEvent *e) { impl->on_focus_lost(*e); });
-		slots.connect(sig_activated(), [this](ActivationChangeEvent *e) { impl->on_activated(*e); });
-		slots.connect(sig_deactivated(), [this](ActivationChangeEvent *e) { return impl->on_deactivated(*e); });
+		connect(sig_key_press(), [this](KeyEvent *e) { impl->on_key_press(*e); });
+		connect(sig_key_release(), [this](KeyEvent *e) { impl->on_key_release(*e); });
+		connect(sig_pointer_press(), [this](PointerEvent *e) { impl->on_pointer_press(*e); });
+		connect(sig_pointer_release(), [this](PointerEvent *e) { impl->on_pointer_release(*e); });
+		connect(sig_pointer_move(), [this](PointerEvent *e) { impl->on_pointer_move(*e); });
+		connect(sig_focus_gained(), [this](FocusChangeEvent *e) { impl->on_focus_gained(*e); });
+		connect(sig_focus_lost(), [this](FocusChangeEvent *e) { impl->on_focus_lost(*e); });
+		connect(sig_activated(), [this](ActivationChangeEvent *e) { impl->on_activated(*e); });
+		connect(sig_deactivated(), [this](ActivationChangeEvent *e) { return impl->on_deactivated(*e); });
 
 		impl->scroll_timer->func_expired() = [&]()
 		{
@@ -257,7 +256,7 @@ namespace uicore
 		float top_y = baseline - font_metrics.ascent();
 		float bottom_y = baseline + font_metrics.descent();
 
-		Colorf color = style_cascade().computed_value("color").color();
+		Colorf color = impl->color;
 
 		float cursor_advance = canvas->grid_fit({ font->measure_text(canvas, impl->text_lines[impl->cursor_pos.y].substr(0, impl->cursor_pos.x)).advance.width, 0.0f }).x;
 
@@ -309,25 +308,25 @@ namespace uicore
 		}
 	}
 
-	float TextAreaBaseView::calculate_preferred_width(const std::shared_ptr<Canvas> &canvas)
+	float TextAreaBaseView::preferred_width(const std::shared_ptr<Canvas> &canvas)
 	{
 		std::shared_ptr<Font> font = impl->get_font(canvas);
 		return font->measure_text(canvas, "X").advance.width * impl->preferred_size.width;
 	}
 
-	float TextAreaBaseView::calculate_preferred_height(const std::shared_ptr<Canvas> &canvas, float width)
+	float TextAreaBaseView::preferred_height(const std::shared_ptr<Canvas> &canvas, float width)
 	{
 		std::shared_ptr<Font> font = impl->get_font(canvas);
 		return font->font_metrics(canvas).line_height() * impl->preferred_size.height;
 	}
 
-	float TextAreaBaseView::calculate_first_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width)
+	float TextAreaBaseView::first_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width)
 	{
 		std::shared_ptr<Font> font = impl->get_font(canvas);
 		return font->font_metrics(canvas).baseline_offset();
 	}
 
-	float TextAreaBaseView::calculate_last_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width)
+	float TextAreaBaseView::last_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width)
 	{
 		return first_baseline_offset(canvas, width);
 	}
@@ -336,8 +335,10 @@ namespace uicore
 
 	std::shared_ptr<Font> &TextAreaBaseViewImpl::get_font(const std::shared_ptr<Canvas> &canvas)
 	{
+#if 0
 		if (!font)
 			font = textfield->style_cascade().font();
+#endif
 		return font;
 	}
 
@@ -1082,5 +1083,4 @@ namespace uicore
 	}
 
 	const std::string TextAreaBaseViewImpl::break_characters = " ::;,.-";
-#endif
 }

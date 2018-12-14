@@ -41,7 +41,6 @@
 
 namespace uicore
 {
-#if 0
 	void SpinBaseView_Impl::update_decrement_state()
 	{
 		set_standard_state(button_decrement.get(), _state_disabled, _state_decrement_hot, _state_decrement_pressed);
@@ -70,9 +69,9 @@ namespace uicore
 			target_hot = true;
 		}
 
-		view->set_state_cascade("hot", target_hot);
-		view->set_state_cascade("pressed", target_pressed);
-		view->set_state_cascade("disabled", target_disabled);
+		//view->set_state_cascade("hot", target_hot);
+		//view->set_state_cascade("pressed", target_pressed);
+		//view->set_state_cascade("disabled", target_disabled);
 	}
 
 	void SpinBaseView_Impl::on_focus_gained(FocusChangeEvent &e)
@@ -146,5 +145,4 @@ namespace uicore
 		timer->start(100, false);
 
 	}
-#endif
 }

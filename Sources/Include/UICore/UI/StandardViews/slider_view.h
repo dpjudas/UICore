@@ -33,7 +33,6 @@
 
 namespace uicore
 {
-#if 0
 	class SliderBaseViewImpl;
 
 	class SliderBaseView : public View
@@ -68,10 +67,7 @@ namespace uicore
 
 		Signal<void()> &sig_value_changed();
 
-		void layout_children(const std::shared_ptr<Canvas> &canvas) override;
-
 	private:
 		std::shared_ptr<SliderBaseViewImpl> impl;
 	};
-#endif
 }

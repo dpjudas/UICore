@@ -40,9 +40,9 @@
 
 namespace uicore
 {
-#if 0
 	void RadioButtonBaseView_Impl::update_state()
 	{
+#if 0
 		bool target_checked = false;
 		bool target_checked_hot = false;
 		bool target_checked_disabled = false;
@@ -100,6 +100,7 @@ namespace uicore
 		radio->set_state_cascade("unchecked_hot", target_unchecked_hot);
 		radio->set_state_cascade("unchecked_pressed", target_unchecked_pressed);
 		radio->set_state_cascade("unchecked_disabled", target_unchecked_disabled);
+#endif
 	}
 
 	void RadioButtonBaseView_Impl::on_pointer_press(PointerEvent &e)
@@ -131,6 +132,7 @@ namespace uicore
 
 	void RadioButtonBaseView_Impl::release_group_checked()
 	{
+#if 0
 		auto parent = radio->parent();
 		if (parent)
 		{
@@ -149,7 +151,6 @@ namespace uicore
 				}
 			}
 		}
-	}
 #endif
+	}
 }
-

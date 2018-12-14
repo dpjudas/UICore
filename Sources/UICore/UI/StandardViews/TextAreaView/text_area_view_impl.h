@@ -34,7 +34,6 @@
 
 namespace uicore
 {
-#if 0
 	class TextAreaBaseViewSelection
 	{
 	public:
@@ -121,6 +120,8 @@ namespace uicore
 		std::shared_ptr<Font> &get_font(const std::shared_ptr<Canvas> &canvas);
 		std::shared_ptr<Font> font; // Do not use directly. Use get_font.
 
+		Colorf color = StandardColorf::black();
+
 		Size preferred_size = Size(20, 5);
 		std::vector<std::string> text_lines;
 		std::string placeholder;
@@ -171,5 +172,4 @@ namespace uicore
 
 		Vec2i get_character_index(const Pointf &pos);
 	};
-#endif
 }

@@ -36,7 +36,6 @@
 #include "view_event_handler.h"
 #include "view_geometry.h"
 #include "focus_policy.h"
-#include "view_layout.h"
 #include <vector>
 #include <memory>
 #include <functional>
@@ -65,78 +64,14 @@ namespace uicore
 		View();
 		virtual ~View();
 
-		ViewLayout *layout() const;
-		void set_layout(std::unique_ptr<ViewLayout> layout);
-		
+		virtual float preferred_width(const std::shared_ptr<Canvas> &canvas) { return 0.0f; }
+		virtual float preferred_height(const std::shared_ptr<Canvas> &canvas, float width) { return 0.0f; }
+		virtual float first_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width) { return 0.0f; }
+		virtual float last_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width) { return 0.0f; }
+
 		/// Parent view node or nullptr if the view is the current root node
 		View *parent() const;
 		
-		/// Returns the first child view
-		std::shared_ptr<View> first_child() const;
-		
-		/// Returns the last child ivew
-		std::shared_ptr<View> last_child() const;
-		
-		/// Returns the previous sibling view
-		std::shared_ptr<View> previous_sibling() const;
-		
-		/// Returns the next sibling view
-		std::shared_ptr<View> next_sibling() const;
-		
-		/// Inserts a view before the specified reference child
-		std::shared_ptr<View> insert_before(const std::shared_ptr<View> &new_child, const std::shared_ptr<View> &ref_child);
-		
-		/// Replaces a child view with another view
-		std::shared_ptr<View> replace_child(const std::shared_ptr<View> &new_child, const std::shared_ptr<View> &old_child);
-
-		struct Children
-		{
-			Children(const View *v) : view(v) { }
-			
-			struct iterator
-			{
-				iterator() { }
-				iterator(std::shared_ptr<View> v) : _view(v) { }
-				const std::shared_ptr<View> &operator*() const { return _view; }
-				iterator &operator++() { _view = _view->next_sibling(); return *this; }
-				bool operator==(const iterator &other) const { return _view == other._view; }
-				bool operator!=(const iterator &other) const { return _view != other._view; }
-			private:
-				std::shared_ptr<View> _view;
-			};
-			typedef iterator const_iterator;
-			
-			iterator begin() { return view->first_child(); }
-			const_iterator begin() const { return view->first_child(); }
-			iterator end() { return iterator(); }
-			const_iterator end() const { return const_iterator(); }
-
-		private:
-			const View *view;
-		};
-		
-		/// List of all immediate child views
-		Children children() const { return this; }
-
-		/// Add a child view
-		std::shared_ptr<View> add_child(const std::shared_ptr<View> &view);
-
-		template<typename T, typename... Types>
-		std::shared_ptr<T> add_child(Types &&... args)
-		{
-			auto child = std::make_shared<T>(std::forward<Types>(args)...);
-			add_child(child);
-			return child;
-		}
-
-		std::shared_ptr<View> add_child()
-		{
-			return add_child<View>();
-		}
-
-		/// Remove view from parent
-		void remove_from_parent();
-
 		/// Add an action recognizer
 		void add_action(const std::shared_ptr<ViewAction> &action);
 
@@ -158,10 +93,10 @@ namespace uicore
 		void set_hidden(bool value = true);
 
 		/// Test if view geometry needs to be recalculated
-		bool needs_layout() const;
+		virtual bool needs_layout() const { return false; }
 
 		/// Forces recalculation of view geometry before next rendering
-		void set_needs_layout();
+		virtual void set_needs_layout();
 
 		/// Actual view position and size after layout
 		const ViewGeometry &geometry() const;
@@ -207,25 +142,13 @@ namespace uicore
 		View *focus_view() const;
 
 		/// Find descendant view at the specified content relative position
-		std::shared_ptr<View> find_view_at(const Pointf &pos) const;
+		virtual std::shared_ptr<View> find_view_at(const Pointf &pos) const { return nullptr; }
 
 		/// Checks if another view is the ancestor of this view
 		bool has_ancestor(const View *ancestor_view) const;
 
 		/// Checks if a view is a child of this view
 		bool has_child(const View *child_view) const;
-
-		/// Focus policy active for this view
-		FocusPolicy focus_policy() const;
-
-		/// Set if this view automatically can gain focus
-		void set_focus_policy(FocusPolicy policy);
-
-		/// Tab index for keyboard focus changes
-		unsigned int tab_index() const;
-
-		/// Sets the tab index used for keyboard focus changes
-		void set_tab_index(unsigned int index);
 
 		/// Set this view as the focused view
 		void set_focus();
@@ -235,12 +158,6 @@ namespace uicore
 
 		/// Test if this view is receiving keyboard input
 		bool has_focus() const { return focus_view() == this; }
-
-		/// Give focus to the previous view in the keyboard tab index order
-		void prev_focus();
-
-		/// Give focus to the next view in the keyboard tab index order
-		void next_focus();
 
 		/// Set the cursor icon used when cursor is above this view
 		void set_cursor(const CursorDescription &cursor);
@@ -307,12 +224,6 @@ namespace uicore
 		/// Renders the content of a view
 		virtual void render_content(const std::shared_ptr<Canvas> &canvas) { }
 
-		/// Child view was added to this view
-		virtual void child_added(const std::shared_ptr<View> &view) { }
-
-		/// Child view was removed from this view
-		virtual void child_removed(const std::shared_ptr<View> &view) { }
-
 	private:
 		View(const View &) = delete;
 		View &operator=(const View &) = delete;
@@ -322,5 +233,19 @@ namespace uicore
 		friend class ViewTree;
 		friend class ViewImpl;
 		friend class ViewAction;
+	};
+
+	class RowView : public View
+	{
+	public:
+		void add_child(std::shared_ptr<View> view, const char *style) { }
+		void remove_child(std::shared_ptr<View> view) { }
+	};
+
+	class ColumnView : public View
+	{
+	public:
+		void add_child(std::shared_ptr<View> view, const char *style) { }
+		void remove_child(std::shared_ptr<View> view) { }
 	};
 }

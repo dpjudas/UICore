@@ -34,7 +34,6 @@
 
 namespace uicore
 {
-#if 0
 	class TextFieldBaseViewSelection
 	{
 	public:
@@ -124,6 +123,8 @@ namespace uicore
 		const std::shared_ptr<Font> &get_font();
 		std::shared_ptr<Font> font; // Do not use directly. Use get_font.
 
+		Colorf color = StandardColorf::black();
+
 		int preferred_size = 20;
 		std::string text;
 		std::string placeholder;
@@ -186,5 +187,4 @@ namespace uicore
 		unsigned int get_character_index(int mouse_x_wincoords);
 		Size get_visual_text_size(const std::shared_ptr<Canvas> &canvas, int pos, int npos);
 	};
-#endif
 }

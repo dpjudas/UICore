@@ -32,7 +32,6 @@
 
 namespace uicore
 {
-#if 0
 	class CheckBoxBaseView_Impl
 	{
 	public:
@@ -49,6 +48,4 @@ namespace uicore
 
 		Signal<void()> sig_changed;
 	};
-#endif
 }
-

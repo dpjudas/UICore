@@ -32,6 +32,8 @@
 #include <algorithm>
 #include <cmath>
 
+#if 0
+
 namespace uicore
 {
 	float FlexLayout::preferred_width(const std::shared_ptr<Canvas> &canvas)
@@ -1219,3 +1221,5 @@ namespace uicore
 		}
 	}
 }
+
+#endif

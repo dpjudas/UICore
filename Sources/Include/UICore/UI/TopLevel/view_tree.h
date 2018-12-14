@@ -61,25 +61,6 @@ namespace uicore
 		/// Sets a new root view controller for the view tree
 		void set_root_view(std::shared_ptr<View> root_view);
 
-		/// Add a child view
-		void add_child(const std::shared_ptr<View> &view)
-		{
-			root_view()->add_child(view);
-		}
-
-		template<typename T, typename... Types>
-		std::shared_ptr<T> add_child(Types &&... args)
-		{
-			auto child = std::make_shared<T>(std::forward<Types>(args)...);
-			add_child(child);
-			return child;
-		}
-
-		std::shared_ptr<View> add_child()
-		{
-			return add_child<View>();
-		}
-
 	protected:
 		/// Set or clears the focus
 		void set_focus_view(View *view);

@@ -33,7 +33,6 @@
 
 namespace uicore
 {
-#if 0
 	class Canvas;
 	class Image;
 	class ImageBaseViewImpl;
@@ -71,11 +70,10 @@ namespace uicore
 
 	protected:
 		void render_content(const std::shared_ptr<Canvas> &canvas) override;
-		float calculate_preferred_width(const std::shared_ptr<Canvas> &canvas) override;
-		float calculate_preferred_height(const std::shared_ptr<Canvas> &canvas, float width) override;
+		float preferred_width(const std::shared_ptr<Canvas> &canvas) override;
+		float preferred_height(const std::shared_ptr<Canvas> &canvas, float width) override;
 
 	private:
 		std::shared_ptr<ImageBaseViewImpl> impl;
 	};
-#endif
 }

@@ -30,6 +30,8 @@
 
 #include "UICore/UI/View/view.h"
 
+#if 0
+
 namespace uicore
 {
 	enum class FlexViolation
@@ -228,3 +230,5 @@ namespace uicore
 		bool restarted_layout = false;
 	};
 }
+
+#endif

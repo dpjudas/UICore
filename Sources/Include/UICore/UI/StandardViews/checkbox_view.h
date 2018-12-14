@@ -34,7 +34,6 @@
 
 namespace uicore
 {
-#if 0
 	class CheckBoxBaseView_Impl;
 
 	class CheckBoxBaseView : public View
@@ -55,5 +54,4 @@ namespace uicore
 		std::shared_ptr<CheckBoxBaseView_Impl> impl;
 
 	};
-#endif
 }

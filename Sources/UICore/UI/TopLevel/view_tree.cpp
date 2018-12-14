@@ -42,10 +42,10 @@ namespace uicore
 		{
 			ActivationChangeEvent change(type);
 			view->dispatch_event(&change, true);
-			for (const auto &child : view->children())
+			/*for (const auto &child : view->children())
 			{
 				dispatch_activation_change(child.get(), type);
-			}
+			}*/
 		}
 
 		View *focus_view = nullptr;
@@ -122,13 +122,6 @@ namespace uicore
 		g.content_height = margin_box.bottom - margin_box.top;
 		view->set_geometry(g);
 		//view->set_geometry(ViewGeometry::from_margin_box(view->style_cascade(), margin_box));
-
-		if (view->needs_layout())
-		{
-			view->layout()->layout_children(canvas);
-			//PositionedLayout::layout_children(canvas, view);
-		}
-		view->impl->needs_layout = false;
 
 		view->impl->render(view, canvas);
 	}

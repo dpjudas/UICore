@@ -36,14 +36,12 @@
 
 namespace uicore
 {
-#if 0
 	class SpinBaseView_Impl;
 
 	/// \brief SpinBaseView component.
-	class SpinBaseView : public View
+	class SpinBaseView : public ColumnView
 	{
 	public:
-
 		SpinBaseView();
 
 		std::shared_ptr<View> button_decrement() const;
@@ -92,5 +90,4 @@ namespace uicore
 	private:
 		std::shared_ptr<SpinBaseView_Impl> impl;
 	};
-#endif
 }

@@ -45,7 +45,6 @@
 #include "UICore/Core/Text/text.h"
 #include "view_impl.h"
 #include "view_action_impl.h"
-#include "flex_layout.h"
 #include <algorithm>
 #include <set>
 
@@ -57,11 +56,6 @@ namespace uicore
 
 	View::~View()
 	{
-		for (auto &child : children())
-		{
-			child->impl->_parent = nullptr;
-		}
-
 		for (auto &action : actions())
 		{
 			action->impl->view = nullptr;
@@ -71,144 +65,6 @@ namespace uicore
 	View *View::parent() const
 	{
 		return impl->_parent;
-	}
-
-	ViewLayout *View::layout() const
-	{
-		return impl->layout.get();
-	}
-
-	void View::set_layout(std::unique_ptr<ViewLayout> layout)
-	{
-		impl->layout = std::move(layout);
-	}
-
-	std::shared_ptr<View> View::first_child() const
-	{
-		return impl->_first_child;
-	}
-	
-	std::shared_ptr<View> View::last_child() const
-	{
-		return impl->_last_child;
-	}
-	
-	std::shared_ptr<View> View::previous_sibling() const
-	{
-		return impl->_prev_sibling.lock();
-	}
-	
-	std::shared_ptr<View> View::next_sibling() const
-	{
-		return impl->_next_sibling;
-	}
-	
-	std::shared_ptr<View> View::insert_before(const std::shared_ptr<View> &new_child, const std::shared_ptr<View> &ref_child)
-	{
-		if (!ref_child)
-			return add_child(new_child);
-		
-		if (!new_child)
-			throw Exception("instance not set to an object");
-		
-		if (ref_child->parent() != this)
-			throw Exception("not parent of reference child view");
-		
-		new_child->remove_from_parent();
-
-		new_child->impl->_prev_sibling = ref_child->impl->_prev_sibling;
-		new_child->impl->_next_sibling = ref_child;
-		ref_child->impl->_prev_sibling = new_child;
-
-		if (new_child->previous_sibling())
-			new_child->previous_sibling()->impl->_next_sibling = new_child;
-
-		if (impl->_first_child == ref_child)
-			impl->_first_child = new_child;
-
-		new_child->impl->_parent = this;
-		new_child->set_needs_layout();
-		set_needs_layout();
-		
-		child_added(new_child);
-
-		return new_child;
-	}
-	
-	std::shared_ptr<View> View::replace_child(const std::shared_ptr<View> &new_child, const std::shared_ptr<View> &old_child)
-	{
-		if (!new_child || !old_child)
-			throw Exception("instance not set to an object");
-		
-		if (old_child->parent() != this)
-			throw Exception("not parent of old child node");
-		
-		insert_before(new_child, old_child);
-		old_child->remove_from_parent();
-		
-		return old_child;
-	}
-	
-	std::shared_ptr<View> View::add_child(const std::shared_ptr<View> &new_child)
-	{
-		if (!new_child)
-			throw Exception("instance not set to an object");
-		
-		if (new_child->parent())
-			new_child->remove_from_parent();
-		
-		if (impl->_first_child)
-		{
-			auto last = last_child();
-			last->impl->_next_sibling = new_child;
-			new_child->impl->_prev_sibling = last;
-			impl->_last_child = new_child;
-		}
-		else
-		{
-			impl->_first_child = new_child;
-			impl->_last_child = new_child;
-		}
-		
-		new_child->impl->_parent = this;
-		new_child->set_needs_layout();
-		set_needs_layout();
-		
-		child_added(new_child);
-
-		return new_child;
-	}
-
-	void View::remove_from_parent()
-	{
-		if (!impl->_parent)
-			return;
-		
-		auto tree = view_tree();
-		if (tree)
-			tree->removing_view(this);
-		
-		impl->_parent->set_needs_layout();
-		
-		auto old_child = shared_from_this();
-		
-		if (impl->_parent->impl->_first_child == old_child)
-			impl->_parent->impl->_first_child = old_child->next_sibling();
-		if (impl->_parent->impl->_last_child == old_child)
-			impl->_parent->impl->_last_child = old_child->previous_sibling();
-		
-		auto prev = old_child->previous_sibling();
-		if (prev)
-			prev->impl->_next_sibling = old_child->impl->_next_sibling;
-		if (old_child->impl->_next_sibling)
-			old_child->impl->_next_sibling->impl->_prev_sibling = prev;
-		
-		old_child->impl->_prev_sibling.reset();
-		old_child->impl->_next_sibling.reset();
-		
-		old_child->impl->_parent = nullptr;
-		
-		child_removed(old_child);
 	}
 
 	const std::vector<std::shared_ptr<ViewAction>> &View::actions() const
@@ -240,16 +96,8 @@ namespace uicore
 		}
 	}
 
-	bool View::needs_layout() const
-	{
-		return impl->needs_layout;
-	}
-
 	void View::set_needs_layout()
 	{
-		impl->needs_layout = true;
-		impl->layout->invalidate_layout();
-
 		View *super = parent();
 		if (super)
 			super->set_needs_layout();
@@ -353,6 +201,7 @@ namespace uicore
 			return nullptr;
 	}
 
+#if 0
 	std::shared_ptr<View> View::find_view_at(const Pointf &pos) const
 	{
 		// Search the children in reverse order, as we want to search the view that was "last drawn" first
@@ -369,9 +218,9 @@ namespace uicore
 					return child;
 			}
 		}
-
 		return std::shared_ptr<View>();
 	}
+#endif
 
 	bool View::has_ancestor(const View *ancestor_view) const
 	{
@@ -386,26 +235,6 @@ namespace uicore
 	bool View::has_child(const View *child_view) const
 	{
 		return child_view->has_ancestor(this);
-	}
-
-	FocusPolicy View::focus_policy() const
-	{
-		return impl->focus_policy;
-	}
-
-	void View::set_focus_policy(FocusPolicy policy)
-	{
-		impl->focus_policy = policy;
-	}
-
-	unsigned int View::tab_index() const
-	{
-		return impl->tab_index;
-	}
-
-	void View::set_tab_index(unsigned int index)
-	{
-		impl->tab_index = index;
 	}
 
 	void View::set_focus()
@@ -427,54 +256,6 @@ namespace uicore
 			return;
 
 		tree->set_focus_view(nullptr);
-	}
-
-	void View::prev_focus()
-	{
-		ViewTree *tree = view_tree();
-		if (!tree)
-			return;
-
-		View *cur_focus = tree->focus_view();
-		View *prev_focus = nullptr;
-
-		if (cur_focus)
-		{
-			prev_focus = cur_focus->impl->find_prev_with_tab_index(cur_focus->tab_index());
-			if (prev_focus == nullptr)
-				prev_focus = cur_focus->impl->find_prev_with_tab_index(tree->root_view()->impl->find_prev_tab_index(cur_focus->tab_index()));
-		}
-		else
-		{
-			prev_focus = tree->root_view()->impl->find_prev_with_tab_index(tree->root_view()->impl->find_prev_tab_index(0));
-		}
-
-		if (prev_focus)
-			prev_focus->set_focus();
-	}
-
-	void View::next_focus()
-	{
-		ViewTree *tree = view_tree();
-		if (!tree)
-			return;
-
-		View *cur_focus = tree->focus_view();
-		View *next_focus = nullptr;
-
-		if (cur_focus)
-		{
-			next_focus = cur_focus->impl->find_next_with_tab_index(cur_focus->tab_index());
-			if (next_focus == nullptr)
-				next_focus = cur_focus->impl->find_next_with_tab_index(tree->root_view()->impl->find_next_tab_index(cur_focus->tab_index()));
-		}
-		else
-		{
-			next_focus = tree->root_view()->impl->find_next_with_tab_index(tree->root_view()->impl->find_next_tab_index(0));
-		}
-
-		if (next_focus)
-			next_focus->set_focus();
 	}
 
 	void View::set_cursor(const CursorDescription &cursor)
@@ -787,6 +568,7 @@ namespace uicore
 			Path::line(_geometry.content_width, 0.0f, 0.0f, _geometry.content_height)->stroke(canvas, StandardColorf::black());
 		}
 
+		/*
 		Rectf clip_box = canvas->clip();
 		for (auto view = _first_child; view != nullptr; view = view->next_sibling())
 		{
@@ -803,6 +585,7 @@ namespace uicore
 				}
 			}
 		}
+		*/
 
 		if (clipped)
 			canvas->pop_clip();
@@ -900,127 +683,5 @@ namespace uicore
 					e->_current_target->impl->process_event(e->_current_target.get(), e, true);
 			}
 		}
-	}
-
-	unsigned int ViewImpl::find_next_tab_index(unsigned int start_index) const
-	{
-		unsigned int next_index = tab_index > start_index ? tab_index : 0;
-		for (auto child = _first_child; child != nullptr; child = child->next_sibling())
-		{
-			if (child->hidden()) continue;
-
-			unsigned int next_child_index = child->impl->find_next_tab_index(start_index);
-			if (next_child_index != 0)
-			{
-				if (next_index != 0)
-					next_index = uicore::min(next_index, next_child_index);
-				else
-					next_index = next_child_index;
-			}
-		}
-		return next_index;
-	}
-
-	unsigned int ViewImpl::find_prev_tab_index(unsigned int start_index) const
-	{
-		unsigned int index = find_prev_tab_index_helper(start_index);
-		if (index == 0 && start_index > 0)
-			index = find_highest_tab_index();
-		return index;
-	}
-
-	unsigned int ViewImpl::find_prev_tab_index_helper(unsigned int start_index) const
-	{
-		unsigned int prev_index = tab_index < start_index ? tab_index : 0;
-		for (auto child = _first_child; child != nullptr; child = child->next_sibling())
-		{
-			if (child->hidden()) continue;
-
-			unsigned int prev_child_index = child->impl->find_prev_tab_index_helper(start_index);
-			if (prev_child_index != 0)
-			{
-				if (prev_index != 0)
-					prev_index = uicore::max(prev_index, prev_child_index);
-				else
-					prev_index = prev_child_index;
-			}
-		}
-		return prev_index;
-	}
-
-	unsigned int ViewImpl::find_highest_tab_index() const
-	{
-		unsigned int index = tab_index;
-		for (auto child = _first_child; child != nullptr; child = child->next_sibling())
-		{
-			if (!child->hidden())
-				index = uicore::max(child->impl->find_highest_tab_index(), index);
-		}
-		return index;
-	}
-
-	View *ViewImpl::find_next_with_tab_index(unsigned int search_index, const ViewImpl *search_from, bool also_search_ancestors) const
-	{
-		bool search_from_found = search_from ? false : true;
-		for (auto child = _first_child; child != nullptr; child = child->next_sibling())
-		{
-			if (child->hidden())
-				continue;
-
-			if (search_from_found)
-			{
-				if (child->tab_index() == search_index && child->focus_policy() == FocusPolicy::accept)
-				{
-					return child.get();
-				}
-				else
-				{
-					View *next = child->impl->find_next_with_tab_index(search_index, nullptr, false);
-					if (next)
-						return next;
-				}
-			}
-			else if (child->impl.get() == search_from)
-			{
-				search_from_found = true;
-			}
-		}
-
-		if (!also_search_ancestors || !_parent)
-			return nullptr;
-
-		return _parent->impl->find_next_with_tab_index(search_index, this, true);
-	}
-
-	View *ViewImpl::find_prev_with_tab_index(unsigned int search_index, const ViewImpl *search_from, bool also_search_ancestors) const
-	{
-		bool search_from_found = search_from ? false : true;
-		for (auto child = _last_child; child != nullptr; child = child->previous_sibling())
-		{
-			if (child->hidden()) continue;
-
-			if (search_from_found)
-			{
-				if (child->tab_index() == search_index && child->focus_policy() == FocusPolicy::accept)
-				{
-					return child.get();
-				}
-				else
-				{
-					View *next = child->impl->find_prev_with_tab_index(search_index, nullptr, false);
-					if (next)
-						return next;
-				}
-			}
-			else if (child->impl.get() == search_from)
-			{
-				search_from_found = true;
-			}
-		}
-
-		if (!also_search_ancestors || !_parent)
-			return nullptr;
-
-		return _parent->impl->find_prev_with_tab_index(search_index, this, true);
 	}
 }

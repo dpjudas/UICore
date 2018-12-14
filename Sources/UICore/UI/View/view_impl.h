@@ -32,13 +32,13 @@
 #include "UICore/Display/Window/display_window.h"
 #include "UICore/Display/Window/cursor.h"
 #include "UICore/Display/Window/cursor_description.h"
-#include "flex_layout.h"
 #include <map>
 
 namespace uicore
 {
 	class ViewLayout;
 
+	/*
 	class ViewLayoutCache
 	{
 	public:
@@ -71,6 +71,7 @@ namespace uicore
 			definite_height = 0.0f;
 		}
 	};
+	*/
 
 	class ViewImpl
 	{
@@ -79,18 +80,9 @@ namespace uicore
 		void process_event(View *self, EventUI *e, bool use_capture);
 		void process_event_handler(ViewEventHandler *handler, EventUI *e);
 
-		unsigned int find_next_tab_index(unsigned int tab_index) const;
-		unsigned int find_prev_tab_index(unsigned int tab_index) const;
-		unsigned int find_highest_tab_index() const;
-		View *find_next_with_tab_index(unsigned int tab_index, const ViewImpl *search_from = nullptr, bool also_search_ancestors = true) const;
-		View *find_prev_with_tab_index(unsigned int tab_index, const ViewImpl *search_from = nullptr, bool also_search_ancestors = true) const;
-
 		void inverse_bubble(EventUI *e, const View *until_parent_view);
 
 		View *_parent = nullptr;
-		std::shared_ptr<View> _first_child, _last_child;
-		std::shared_ptr<View> _next_sibling;
-		std::weak_ptr<View> _prev_sibling;
 
 		std::vector<std::shared_ptr<ViewAction>> _actions;
 		ViewAction *_active_action = nullptr;
@@ -110,8 +102,8 @@ namespace uicore
 		Signal<void(KeyEvent *)> sig_key_release;
 		Signal<void(CloseEvent *)> sig_close;
 
-		unsigned int tab_index = 0;
-		FocusPolicy focus_policy = FocusPolicy::reject;
+		//unsigned int tab_index = 0;
+		//FocusPolicy focus_policy = FocusPolicy::reject;
 
 		ViewGeometry _geometry;
 		bool hidden = false;
@@ -121,8 +113,6 @@ namespace uicore
 
 		bool exception_encountered = false;
 
-		bool needs_layout = true;
-
 		ViewTree *view_tree = nullptr;
 
 		StandardCursor cursor_type = StandardCursor::arrow;
@@ -130,10 +120,5 @@ namespace uicore
 		std::shared_ptr<Cursor> cursor;
 		bool is_custom_cursor = false;
 		bool is_cursor_inherited = true;
-
-		std::unique_ptr<ViewLayout> layout;
-
-	private:
-		unsigned int find_prev_tab_index_helper(unsigned int tab_index) const;
 	};
 }
