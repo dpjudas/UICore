@@ -27,6 +27,7 @@
 */
 
 #include "UICore/UI/View/view.h"
+#include "UICore/UI/View/view_theme.h"
 #include "UICore/UI/View/focus_policy.h"
 #include "UICore/UI/Style/style.h"
 #include "UICore/Display/Window/display_window.h"
@@ -83,6 +84,8 @@ namespace uicore
 		void inverse_bubble(EventUI *e, const View *until_parent_view);
 
 		View *_parent = nullptr;
+
+		std::unique_ptr<ViewTheme> theme = std::make_unique<ViewTheme>();
 
 		std::vector<std::shared_ptr<ViewAction>> _actions;
 		ViewAction *_active_action = nullptr;

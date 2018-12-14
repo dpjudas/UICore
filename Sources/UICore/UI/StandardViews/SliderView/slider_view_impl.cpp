@@ -59,9 +59,9 @@ namespace uicore
 			target_hot = true;
 		}
 
-		slider->set_state_cascade("hot", target_hot);
-		slider->set_state_cascade("pressed", target_pressed);
-		slider->set_state_cascade("disabled", target_disabled);
+		slider->theme()->set_state("hot", target_hot);
+		slider->theme()->set_state("pressed", target_pressed);
+		slider->theme()->set_state("disabled", target_disabled);
 	}
 
 	void SliderBaseViewImpl::update_pos(SliderBaseView *view, int new_pos, int new_min, int new_max)

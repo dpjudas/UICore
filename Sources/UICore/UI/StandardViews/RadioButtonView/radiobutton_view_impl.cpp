@@ -42,7 +42,6 @@ namespace uicore
 {
 	void RadioButtonBaseView_Impl::update_state()
 	{
-#if 0
 		bool target_checked = false;
 		bool target_checked_hot = false;
 		bool target_checked_disabled = false;
@@ -92,15 +91,14 @@ namespace uicore
 
 		}
 
-		radio->set_state_cascade("checked", target_checked);
-		radio->set_state_cascade("checked_hot", target_checked_hot);
-		radio->set_state_cascade("checked_pressed", target_checked_pressed);
-		radio->set_state_cascade("checked_disabled", target_checked_disabled);
-		//radio->set_state_cascade("unchecked", target_unchecked);	(The default state)
-		radio->set_state_cascade("unchecked_hot", target_unchecked_hot);
-		radio->set_state_cascade("unchecked_pressed", target_unchecked_pressed);
-		radio->set_state_cascade("unchecked_disabled", target_unchecked_disabled);
-#endif
+		radio->theme()->set_state("checked", target_checked);
+		radio->theme()->set_state("checked_hot", target_checked_hot);
+		radio->theme()->set_state("checked_pressed", target_checked_pressed);
+		radio->theme()->set_state("checked_disabled", target_checked_disabled);
+		//radio->theme()->set_state("unchecked", target_unchecked);	(The default state)
+		radio->theme()->set_state("unchecked_hot", target_unchecked_hot);
+		radio->theme()->set_state("unchecked_pressed", target_unchecked_pressed);
+		radio->theme()->set_state("unchecked_disabled", target_unchecked_disabled);
 	}
 
 	void RadioButtonBaseView_Impl::on_pointer_press(PointerEvent &e)

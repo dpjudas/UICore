@@ -347,7 +347,7 @@ namespace uicore
 			txt_after = impl->create_password(Text::char_length(txt_after));
 		}
 
-		std::shared_ptr<Font> font = impl->get_font();
+		std::shared_ptr<Font> font = theme()->font(canvas);
 
 		float advance_before = font->measure_text(canvas, txt_before).advance.width;
 		float advance_selected = font->measure_text(canvas, txt_selected).advance.width;
@@ -373,7 +373,7 @@ namespace uicore
 			Path::rect(selection_rect)->fill(canvas, focus_view() == this ? Brush::solid_rgb8(51, 153, 255) : Brush::solid_rgb8(200, 200, 200));
 		}
 
-		Colorf color = impl->color;
+		Colorf color = theme()->text_color();
 		font->draw_text(canvas, -impl->scroll_pos, baseline, txt_before, color);
 		font->draw_text(canvas, advance_before - impl->scroll_pos, baseline, txt_selected, focus_view() == this ? Colorf(255, 255, 255) : color);
 		font->draw_text(canvas, advance_before + advance_selected - impl->scroll_pos, baseline, txt_after, color);
@@ -395,19 +395,19 @@ namespace uicore
 
 	float TextFieldBaseView::preferred_width(const std::shared_ptr<Canvas> &canvas)
 	{
-		std::shared_ptr<Font> font = impl->get_font();
+		std::shared_ptr<Font> font = theme()->font(canvas);
 		return font->measure_text(canvas, "X").advance.width * impl->preferred_size;
 	}
 
 	float TextFieldBaseView::preferred_height(const std::shared_ptr<Canvas> &canvas, float width)
 	{
-		std::shared_ptr<Font> font = impl->get_font();
+		std::shared_ptr<Font> font = theme()->font(canvas);
 		return font->font_metrics(canvas).line_height();
 	}
 
 	float TextFieldBaseView::first_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width)
 	{
-		std::shared_ptr<Font> font = impl->get_font();
+		std::shared_ptr<Font> font = theme()->font(canvas);
 		return font->font_metrics(canvas).baseline_offset();
 	}
 
@@ -417,13 +417,6 @@ namespace uicore
 	}
 
 	/////////////////////////////////////////////////////////////////////////
-
-	const std::shared_ptr<Font> &TextFieldBaseViewImpl::get_font()
-	{
-		//if (!font)
-		//	font = textfield->style_cascade().font();
-		return font;
-	}
 
 	void TextFieldBaseViewImpl::start_blink()
 	{
@@ -1010,7 +1003,7 @@ namespace uicore
 
 	Size TextFieldBaseViewImpl::get_visual_text_size(const std::shared_ptr<Canvas> &canvas, int pos, int npos)
 	{
-		std::shared_ptr<Font> font = get_font();
+		std::shared_ptr<Font> font = textfield->theme()->font(canvas);
 
 		return password_mode ? 
 			Size(font->measure_text(canvas, create_password(Text::char_length(text.substr(pos, npos)))).bbox_size) :

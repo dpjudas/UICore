@@ -117,11 +117,6 @@ namespace uicore
 
 		TextAlignment alignment = TextAlignment::left;
 
-		std::shared_ptr<Font> &get_font(const std::shared_ptr<Canvas> &canvas);
-		std::shared_ptr<Font> font; // Do not use directly. Use get_font.
-
-		Colorf color = StandardColorf::black();
-
 		Size preferred_size = Size(20, 5);
 		std::vector<std::string> text_lines;
 		std::string placeholder;

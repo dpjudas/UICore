@@ -49,15 +49,6 @@ namespace uicore
 		TextAlignment text_alignment = TextAlignment::left;
 		std::shared_ptr<Font> font;
 		LineBreakMode _line_break_mode = LineBreakMode::truncating_tail;
-
-		Colorf color;
-
-		const std::shared_ptr<Font> &get_font(LabelBaseView *view)
-		{
-			//if (!font)
-			//	font = view->style_cascade().font();
-			return font;
-		}
 	};
 
 	LabelBaseView::LabelBaseView() : impl(new LabelBaseViewImpl())
@@ -106,7 +97,7 @@ namespace uicore
 
 	void LabelBaseView::render_content(const std::shared_ptr<Canvas> &canvas)
 	{
-		std::shared_ptr<Font> font = impl->get_font(this);
+		std::shared_ptr<Font> font = theme()->font(canvas);
 		FontMetrics font_metrics = font->font_metrics(canvas);
 		float baseline = font_metrics.baseline_offset();
 
@@ -146,7 +137,7 @@ namespace uicore
 				return; // Still no room.  Draw nothing!
 		}
 
-		Colorf color = impl->color;// style_cascade().computed_value("color").color();
+		Colorf color = theme()->text_color();
 
 		if (impl->text_alignment == TextAlignment::left)
 		{
@@ -164,19 +155,19 @@ namespace uicore
 
 	float LabelBaseView::preferred_width(const std::shared_ptr<Canvas> &canvas)
 	{
-		std::shared_ptr<Font> font = impl->get_font(this);
+		std::shared_ptr<Font> font = theme()->font(canvas);
 		return font->measure_text(canvas, impl->_text).advance.width + 1.0f;
 	}
 
 	float LabelBaseView::preferred_height(const std::shared_ptr<Canvas> &canvas, float width)
 	{
-		std::shared_ptr<Font> font = impl->get_font(this);
+		std::shared_ptr<Font> font = theme()->font(canvas);
 		return font->font_metrics(canvas).line_height();
 	}
 
 	float LabelBaseView::first_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width)
 	{
-		std::shared_ptr<Font> font = impl->get_font(this);
+		std::shared_ptr<Font> font = theme()->font(canvas);
 		return font->font_metrics(canvas).baseline_offset();
 	}
 

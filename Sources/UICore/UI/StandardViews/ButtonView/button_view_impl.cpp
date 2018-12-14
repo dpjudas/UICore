@@ -37,7 +37,6 @@ namespace uicore
 {
 	void ButtonBaseViewImpl::update_state()
 	{
-#if 0
 		bool target_hot = false;
 		bool target_disabled = false;
 		bool target_pressed = false;
@@ -55,10 +54,9 @@ namespace uicore
 			target_hot = true;
 		}
 
-		button->set_state_cascade("hot", target_hot);
-		button->set_state_cascade("pressed", target_pressed);
-		button->set_state_cascade("disabled", target_disabled);
-#endif
+		button->theme()->set_state("hot", target_hot);
+		button->theme()->set_state("pressed", target_pressed);
+		button->theme()->set_state("disabled", target_disabled);
 	}
 
 	void ButtonBaseViewImpl::on_pointer_press(PointerEvent &e)

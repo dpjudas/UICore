@@ -129,9 +129,9 @@ namespace uicore
 			target_hot = true;
 		}
 
-		view->set_state_cascade("hot", target_hot);
-		view->set_state_cascade("pressed", target_pressed);
-		view->set_state_cascade("disabled", target_disabled);
+		view->theme()->set_state("hot", target_hot);
+		view->theme()->set_state("pressed", target_pressed);
+		view->theme()->set_state("disabled", target_disabled);
 	}
 
 	void ScrollBarBaseViewImpl::on_focus_gained(FocusChangeEvent &e)

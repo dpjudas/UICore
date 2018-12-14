@@ -42,7 +42,6 @@ namespace uicore
 {
 	void CheckBoxBaseView_Impl::update_state()
 	{
-#if 0
 		bool target_checked = false;
 		bool target_checked_hot = false;
 		bool target_checked_disabled = false;
@@ -92,15 +91,14 @@ namespace uicore
 
 		}
 
-		checkbox->set_state_cascade("checked", target_checked);
-		checkbox->set_state_cascade("checked_hot", target_checked_hot);
-		checkbox->set_state_cascade("checked_pressed", target_checked_pressed);
-		checkbox->set_state_cascade("checked_disabled", target_checked_disabled);
-		//checkbox->set_state_cascade("unchecked", target_unchecked);	(The default state)
-		checkbox->set_state_cascade("unchecked_hot", target_unchecked_hot);
-		checkbox->set_state_cascade("unchecked_pressed", target_unchecked_pressed);
-		checkbox->set_state_cascade("unchecked_disabled", target_unchecked_disabled);
-#endif
+		checkbox->theme()->set_state("checked", target_checked);
+		checkbox->theme()->set_state("checked_hot", target_checked_hot);
+		checkbox->theme()->set_state("checked_pressed", target_checked_pressed);
+		checkbox->theme()->set_state("checked_disabled", target_checked_disabled);
+		//checkbox->theme()->set_state("unchecked", target_unchecked);	(The default state)
+		checkbox->theme()->set_state("unchecked_hot", target_unchecked_hot);
+		checkbox->theme()->set_state("unchecked_pressed", target_unchecked_pressed);
+		checkbox->theme()->set_state("unchecked_disabled", target_unchecked_disabled);
 	}
 
 	void CheckBoxBaseView_Impl::on_pointer_press(PointerEvent &e)

@@ -250,13 +250,13 @@ namespace uicore
 
 	void TextAreaBaseView::render_content(const std::shared_ptr<Canvas> &canvas)
 	{
-		std::shared_ptr<Font> font = impl->get_font(canvas);
+		std::shared_ptr<Font> font = theme()->font(canvas);
 		FontMetrics font_metrics = font->font_metrics(canvas);
 		float baseline = font_metrics.baseline_offset();
 		float top_y = baseline - font_metrics.ascent();
 		float bottom_y = baseline + font_metrics.descent();
 
-		Colorf color = impl->color;
+		Colorf color = theme()->text_color();
 
 		float cursor_advance = canvas->grid_fit({ font->measure_text(canvas, impl->text_lines[impl->cursor_pos.y].substr(0, impl->cursor_pos.x)).advance.width, 0.0f }).x;
 
@@ -310,19 +310,19 @@ namespace uicore
 
 	float TextAreaBaseView::preferred_width(const std::shared_ptr<Canvas> &canvas)
 	{
-		std::shared_ptr<Font> font = impl->get_font(canvas);
+		std::shared_ptr<Font> font = theme()->font(canvas);
 		return font->measure_text(canvas, "X").advance.width * impl->preferred_size.width;
 	}
 
 	float TextAreaBaseView::preferred_height(const std::shared_ptr<Canvas> &canvas, float width)
 	{
-		std::shared_ptr<Font> font = impl->get_font(canvas);
+		std::shared_ptr<Font> font = theme()->font(canvas);
 		return font->font_metrics(canvas).line_height() * impl->preferred_size.height;
 	}
 
 	float TextAreaBaseView::first_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width)
 	{
-		std::shared_ptr<Font> font = impl->get_font(canvas);
+		std::shared_ptr<Font> font = theme()->font(canvas);
 		return font->font_metrics(canvas).baseline_offset();
 	}
 
@@ -332,15 +332,6 @@ namespace uicore
 	}
 
 	/////////////////////////////////////////////////////////////////////////
-
-	std::shared_ptr<Font> &TextAreaBaseViewImpl::get_font(const std::shared_ptr<Canvas> &canvas)
-	{
-#if 0
-		if (!font)
-			font = textfield->style_cascade().font();
-#endif
-		return font;
-	}
 
 	void TextAreaBaseViewImpl::start_blink()
 	{

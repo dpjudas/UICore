@@ -62,6 +62,16 @@ namespace uicore
 		}
 	}
 
+	ViewTheme *View::theme() const
+	{
+		return impl->theme.get();
+	}
+
+	void View::set_theme(std::unique_ptr<ViewTheme> theme)
+	{
+		impl->theme = std::move(theme);
+	}
+
 	View *View::parent() const
 	{
 		return impl->_parent;
@@ -530,8 +540,7 @@ namespace uicore
 
 	void ViewImpl::render(View *self, const std::shared_ptr<Canvas> &canvas)
 	{
-		//style_cascade.render_background(canvas, _geometry);
-		//style_cascade.render_border(canvas, _geometry);
+		theme->render(canvas, _geometry);
 
 		Mat4f old_transform = canvas->transform();
 		Pointf translate = _geometry.content_pos();

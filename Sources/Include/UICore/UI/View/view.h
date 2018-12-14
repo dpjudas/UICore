@@ -35,6 +35,7 @@
 #include "../../UI/Events/event.h"
 #include "view_event_handler.h"
 #include "view_geometry.h"
+#include "view_theme.h"
 #include "focus_policy.h"
 #include <vector>
 #include <memory>
@@ -56,6 +57,7 @@ namespace uicore
 	class DisplayWindow;
 	class ViewTree;
 	class ViewAction;
+	class ViewTheme;
 
 	/// View for an area of the user interface
 	class View : public std::enable_shared_from_this<View>, public ViewEventHandler, public SlotContainer
@@ -63,6 +65,9 @@ namespace uicore
 	public:
 		View();
 		virtual ~View();
+
+		ViewTheme *theme() const;
+		void set_theme(std::unique_ptr<ViewTheme> theme);
 
 		virtual float preferred_width(const std::shared_ptr<Canvas> &canvas) { return 0.0f; }
 		virtual float preferred_height(const std::shared_ptr<Canvas> &canvas, float width) { return 0.0f; }
