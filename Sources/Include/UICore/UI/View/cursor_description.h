@@ -30,7 +30,7 @@
 
 #include "UICore/Display/Render/graphic_context.h"
 #include "UICore/Display/Render/texture_2d.h"
-#include "../Image/pixel_buffer.h"
+#include "../../Display/Image/pixel_buffer.h"
 #include <vector>
 
 namespace uicore

@@ -30,7 +30,7 @@
 
 #include "event.h"
 #include "../../Core/Math/point.h"
-#include "../../Display/Window/keys.h"
+#include "keys.h"
 #include <string>
 
 namespace uicore

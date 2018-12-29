@@ -29,8 +29,8 @@
 
 #pragma once
 
-#include "../../Core/Signals/signal.h"
-#include "../../Core/Math/point.h"
+#include "UICore/Core/Signals/signal.h"
+#include "UICore/Core/Math/point.h"
 #include <memory>
 
 namespace uicore

@@ -27,7 +27,7 @@
  */
 
 #include "UICore/precomp.h"
-#include "UICore/Display/Window/keys.h"
+#include "UICore/UI/Events/keys.h"
 
 namespace uicore
 {

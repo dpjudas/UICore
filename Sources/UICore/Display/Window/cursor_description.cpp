@@ -31,7 +31,7 @@
 #include "UICore/Core/IOData/path_help.h"
 #include "UICore/Core/Text/string_format.h"
 #include "UICore/Core/Text/text.h"
-#include "UICore/Display/Window/cursor_description.h"
+#include "UICore/UI/View/cursor_description.h"
 #include "UICore/Display/ImageFormats/image_file.h"
 #include "cursor_description_impl.h"
 

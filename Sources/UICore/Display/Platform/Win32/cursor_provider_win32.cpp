@@ -31,7 +31,7 @@
 #include "UICore/Core/System/databuffer.h"
 #include "UICore/Core/IOData/memory_device.h"
 #include "UICore/Display/Image/pixel_buffer.h"
-#include "UICore/Display/Window/cursor_description.h"
+#include "UICore/UI/View/cursor_description.h"
 #ifdef __MINGW32__
 #include "UICore/Display/Window/display_window.h"
 #endif

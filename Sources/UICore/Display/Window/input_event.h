@@ -30,8 +30,8 @@
 #pragma once
 
 #include "input_device.h"
-#include "keys.h"
-#include "../../Core/Math/point.h"
+#include "UICore/UI/Events/keys.h"
+#include "UICore/Core/Math/point.h"
 
 namespace uicore
 {

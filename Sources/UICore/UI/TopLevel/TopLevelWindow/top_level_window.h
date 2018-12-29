@@ -30,7 +30,7 @@
 
 #include "UICore/UI/TopLevel/view_tree.h"
 #include "UICore/Display/Window/display_window.h"
-#include "UICore/Display/Window/keys.h"
+#include "UICore/UI/Events/keys.h"
 
 namespace uicore
 {

@@ -30,8 +30,8 @@
 
 #pragma once
 
-#include "../../Core/Signals/signal.h"
-#include "../display_target.h"
+#include "UICore/Core/Signals/signal.h"
+#include "UICore/Display/display_target.h"
 #include <memory>
 
 #if !defined(WIN32) && !defined(__ANDROID__) && !defined(__APPLE__)

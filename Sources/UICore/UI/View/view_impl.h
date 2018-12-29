@@ -29,10 +29,9 @@
 #include "UICore/UI/View/view.h"
 #include "UICore/UI/View/view_theme.h"
 #include "UICore/UI/View/focus_policy.h"
-#include "UICore/UI/Style/style.h"
+#include "UICore/UI/View/cursor_description.h"
 #include "UICore/Display/Window/display_window.h"
 #include "UICore/Display/Window/cursor.h"
-#include "UICore/Display/Window/cursor_description.h"
 #include <map>
 
 namespace uicore

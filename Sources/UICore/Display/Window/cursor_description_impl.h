@@ -29,7 +29,7 @@
 
 #pragma once
 
-#include "UICore/Display/Window/cursor_description.h"
+#include "UICore/UI/View/cursor_description.h"
 
 namespace uicore
 {

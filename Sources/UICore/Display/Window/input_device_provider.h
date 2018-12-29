@@ -30,7 +30,7 @@
 #pragma once
 
 #include "UICore/Display/Window/input_device.h"
-#include "UICore/Display/Window/keys.h"
+#include "UICore/UI/Events/keys.h"
 #include "UICore/Core/System/disposable_object.h"
 #include "UICore/Core/Text/string_format.h"
 #include "UICore/Core/Text/text.h"
