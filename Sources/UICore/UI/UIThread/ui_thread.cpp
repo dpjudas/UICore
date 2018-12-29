@@ -139,6 +139,11 @@ namespace uicore
 			return Font::create(family, desc);
 	}
 
+	void UIThread::set_exception_handler(const std::function<void(const std::exception_ptr &)> &exception_handler)
+	{
+		UIThreadImpl::instance()->exception_handler = exception_handler;
+	}
+
 	bool UIThread::try_catch(const std::function<void()> &block)
 	{
 		try
