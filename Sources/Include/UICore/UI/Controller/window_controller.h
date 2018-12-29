@@ -37,7 +37,7 @@ namespace uicore
 	class WindowControllerImpl;
 
 	/// Base class for controllers managing windows
-	class WindowController
+	class WindowController : public SlotContainer
 	{
 	public:
 		WindowController();
@@ -66,9 +66,6 @@ namespace uicore
 
 		/// Closes the window
 		void dismiss();
-
-		/// Slot container helping with automatic disconnection of connected slots when the controller is destroyed
-		SlotContainer slots;
 
 	private:
 		WindowController(const WindowController &) = delete;
