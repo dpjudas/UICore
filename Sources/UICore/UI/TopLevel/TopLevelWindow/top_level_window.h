@@ -28,9 +28,9 @@
 
 #pragma once
 
-#include "view_tree.h"
-#include "../../Display/Window/display_window.h"
-#include "../../Display/Window/keys.h"
+#include "UICore/UI/TopLevel/view_tree.h"
+#include "UICore/Display/Window/display_window.h"
+#include "UICore/Display/Window/keys.h"
 
 namespace uicore
 {

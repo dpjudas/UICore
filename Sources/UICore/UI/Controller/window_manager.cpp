@@ -28,7 +28,7 @@
 
 #include "UICore/precomp.h"
 #include "UICore/UI/Controller/window_manager.h"
-#include "UICore/UI/TopLevel/top_level_window.h"
+#include "UICore/UI/TopLevel/TopLevelWindow/top_level_window.h"
 #include "UICore/UI/UIThread/ui_thread.h"
 #include "UICore/Display/Window/display_window_description.h"
 #include "UICore/Display/Window/display_window.h"

@@ -27,13 +27,13 @@
 */
 
 #include "UICore/precomp.h"
-#include "UICore/UI/TopLevel/top_level_window.h"
 #include "UICore/UI/Events/key_event.h"
 #include "UICore/UI/Events/pointer_event.h"
 #include "UICore/UI/Events/close_event.h"
 #include "UICore/UI/Events/activation_change_event.h"
 #include "UICore/Display/Window/input_event.h"
 #include "UICore/Display/2D/canvas.h"
+#include "top_level_window.h"
 #include "top_level_window_impl.h"
 
 namespace uicore

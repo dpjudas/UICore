@@ -28,8 +28,8 @@
 
 #pragma once
 
-#include "../View/view.h"
-#include "../Events/activation_change_event.h"
+#include "UICore/UI/View/view.h"
+#include "UICore/UI/Events/activation_change_event.h"
 
 namespace uicore
 {
