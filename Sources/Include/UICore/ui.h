@@ -68,7 +68,6 @@
 #include "UI/SystemDialogs/save_file_dialog.h"
 #include "UI/SystemDialogs/folder_browse_dialog.h"
 #include "UI/TopLevel/top_level_window.h"
-#include "UI/TopLevel/texture_window.h"
 #include "UI/TopLevel/view_tree.h"
 #include "UI/View/focus_policy.h"
 #include "UI/View/view.h"
