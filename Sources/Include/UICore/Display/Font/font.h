@@ -30,7 +30,7 @@
 #pragma once
 
 #include <memory>
-#include "UICore/Display/Render/graphic_context.h"
+#include "../../Core/Math/color.h"
 #include "../Image/pixel_buffer.h"
 #include "font_description.h"
 #include "glyph_metrics.h"
@@ -41,6 +41,7 @@ namespace uicore
 	class FontFamily;
 	class Canvas;
 	class GlyphMetrics;
+	class FontMetrics;
 
 	class FontHandle
 	{

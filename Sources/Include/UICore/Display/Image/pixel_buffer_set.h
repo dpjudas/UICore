@@ -30,7 +30,6 @@
 
 #include <memory>
 #include "../../Core/Math/rect.h"
-#include "UICore/Display/Render/texture.h"
 #include "texture_format.h"
 
 namespace uicore

@@ -7,9 +7,6 @@ using namespace uicore;
 
 ApplicationController::ApplicationController()
 {
-	// Force this example to always pick the OpenGL target
-	OpenGLTarget::set_current();
-
 	WindowManager::set_exit_on_last_close();
 	WindowManager::present_main<MainWindowController>();
 }

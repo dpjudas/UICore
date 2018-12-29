@@ -133,4 +133,16 @@ namespace uicore
 		tf_compressed_srgb_alpha_s3tc_dxt3,
 		tf_compressed_srgb_alpha_s3tc_dxt5
 	};
+
+	/// \brief Texture dimensions.
+	enum TextureDimensions
+	{
+		texture_1d,
+		texture_1d_array,
+		texture_2d,
+		texture_2d_array,
+		texture_3d,
+		texture_cube,
+		texture_cube_array
+	};
 }

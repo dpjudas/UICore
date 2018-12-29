@@ -28,9 +28,8 @@
 
 #pragma once
 
-#include "UICore/Display/Render/graphic_context.h"
-#include "UICore/Display/Render/texture_2d.h"
 #include "../../Display/Image/pixel_buffer.h"
+#include "../../Display/2D/image.h"
 #include <vector>
 
 namespace uicore

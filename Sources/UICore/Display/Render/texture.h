@@ -77,18 +77,6 @@ namespace uicore
 		comparemode_compare_r_to_texture
 	};
 
-	/// \brief Texture dimensions.
-	enum TextureDimensions
-	{
-		texture_1d,
-		texture_1d_array,
-		texture_2d,
-		texture_2d_array,
-		texture_3d,
-		texture_cube,
-		texture_cube_array
-	};
-
 	/// \brief Texture object class.
 	class Texture
 	{
