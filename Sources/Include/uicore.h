@@ -39,7 +39,6 @@
 #include "UICore/core.h"
 #include "UICore/display.h"
 #include "UICore/ui.h"
-#include "UICore/network.h"
 #include "UICore/application.h"
 
 #if defined(_MSC_VER)
