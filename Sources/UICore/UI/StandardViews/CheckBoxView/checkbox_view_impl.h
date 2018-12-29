@@ -39,7 +39,7 @@ namespace uicore
 		void on_pointer_release(PointerEvent &e);
 		void update_state();
 
-		CheckBoxBaseView *checkbox = nullptr;
+		CheckBoxView *checkbox = nullptr;
 		bool _state_disabled = false;
 		bool _state_hot = false;
 		bool _state_pressed = false;

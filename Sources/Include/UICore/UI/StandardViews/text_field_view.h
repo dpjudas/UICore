@@ -36,11 +36,11 @@ namespace uicore
 	class Font;
 	class TextFieldBaseViewImpl;
 
-	class TextFieldBaseView : public View
+	class TextFieldView : public View
 	{
 	public:
-		TextFieldBaseView();
-		~TextFieldBaseView();
+		TextFieldView();
+		~TextFieldView();
 
 		int preferred_size() const;
 		void set_preferred_size(int num_characters);

@@ -49,7 +49,7 @@
 
 namespace uicore
 {
-	TextFieldBaseView::TextFieldBaseView() : impl(new TextFieldBaseViewImpl())
+	TextFieldView::TextFieldView() : impl(new TextFieldBaseViewImpl())
 	{
 		impl->textfield = this;
 		impl->selection.set_view(this);
@@ -77,16 +77,16 @@ namespace uicore
 		};
 	}
 
-	TextFieldBaseView::~TextFieldBaseView()
+	TextFieldView::~TextFieldView()
 	{
 	}
 
-	int TextFieldBaseView::preferred_size() const
+	int TextFieldView::preferred_size() const
 	{
 		return impl->preferred_size;
 	}
 
-	void TextFieldBaseView::set_preferred_size(int num_characters)
+	void TextFieldView::set_preferred_size(int num_characters)
 	{
 		if (impl->preferred_size != num_characters)
 		{
@@ -95,12 +95,12 @@ namespace uicore
 		}
 	}
 
-	std::string TextFieldBaseView::text() const
+	std::string TextFieldView::text() const
 	{
 		return impl->text;
 	}
 
-	void TextFieldBaseView::set_text(const std::string &text)
+	void TextFieldView::set_text(const std::string &text)
 	{
 		if (impl->lowercase)
 			impl->text = Text::to_lower(text);
@@ -119,23 +119,23 @@ namespace uicore
 		set_needs_render();
 	}
 
-	std::string TextFieldBaseView::placeholder() const
+	std::string TextFieldView::placeholder() const
 	{
 		return impl->placeholder;
 	}
 
-	void TextFieldBaseView::set_placeholder(const std::string &value)
+	void TextFieldView::set_placeholder(const std::string &value)
 	{
 		impl->placeholder = value;
 		set_needs_render();
 	}
 
-	TextAlignment TextFieldBaseView::text_alignment() const
+	TextAlignment TextFieldView::text_alignment() const
 	{
 		return impl->alignment;
 	}
 
-	void TextFieldBaseView::set_text_alignment(TextAlignment alignment)
+	void TextFieldView::set_text_alignment(TextAlignment alignment)
 	{
 		if (impl->alignment != alignment)
 		{
@@ -144,12 +144,12 @@ namespace uicore
 		}
 	}
 
-	bool TextFieldBaseView::is_read_only() const
+	bool TextFieldView::is_read_only() const
 	{
 		return impl->readonly;
 	}
 
-	void TextFieldBaseView::set_read_only(bool value)
+	void TextFieldView::set_read_only(bool value)
 	{
 		if (impl->readonly != value)
 		{
@@ -158,12 +158,12 @@ namespace uicore
 		}
 	}
 
-	bool TextFieldBaseView::is_lowercase() const
+	bool TextFieldView::is_lowercase() const
 	{
 		return impl->lowercase;
 	}
 
-	void TextFieldBaseView::set_lowercase(bool value)
+	void TextFieldView::set_lowercase(bool value)
 	{
 		if (impl->lowercase != value)
 		{
@@ -173,12 +173,12 @@ namespace uicore
 		}
 	}
 
-	bool TextFieldBaseView::is_uppercase() const
+	bool TextFieldView::is_uppercase() const
 	{
 		return impl->uppercase;
 	}
 
-	void TextFieldBaseView::set_uppercase(bool value)
+	void TextFieldView::set_uppercase(bool value)
 	{
 		if (impl->uppercase != value)
 		{
@@ -188,12 +188,12 @@ namespace uicore
 		}
 	}
 
-	bool TextFieldBaseView::is_password_mode() const
+	bool TextFieldView::is_password_mode() const
 	{
 		return impl->password_mode;
 	}
 
-	void TextFieldBaseView::set_password_mode(bool value)
+	void TextFieldView::set_password_mode(bool value)
 	{
 		if (impl->password_mode != value)
 		{
@@ -202,12 +202,12 @@ namespace uicore
 		}
 	}
 
-	int TextFieldBaseView::max_length() const
+	int TextFieldView::max_length() const
 	{
 		return impl->max_length;
 	}
 
-	void TextFieldBaseView::set_max_length(int length)
+	void TextFieldView::set_max_length(int length)
 	{
 		if (impl->max_length != length)
 		{
@@ -216,22 +216,22 @@ namespace uicore
 		}
 	}
 
-	std::string TextFieldBaseView::selection() const
+	std::string TextFieldView::selection() const
 	{
 		return impl->get_selected_text();
 	}
 
-	size_t TextFieldBaseView::selection_start() const
+	size_t TextFieldView::selection_start() const
 	{
 		return impl->selection.start();
 	}
 
-	size_t TextFieldBaseView::selection_length() const
+	size_t TextFieldView::selection_length() const
 	{
 		return impl->selection.length();
 	}
 
-	void TextFieldBaseView::set_selection(size_t start, size_t length)
+	void TextFieldView::set_selection(size_t start, size_t length)
 	{
 		start = std::min(start, impl->text.length());
 		length = std::min(length, impl->text.length() - start);
@@ -241,100 +241,100 @@ namespace uicore
 		set_needs_render();
 	}
 
-	void TextFieldBaseView::clear_selection()
+	void TextFieldView::clear_selection()
 	{
 		set_selection(0, 0);
 	}
 
-	void TextFieldBaseView::delete_selected_text()
+	void TextFieldView::delete_selected_text()
 	{
 		if (impl->selection.length() > 0)
 			impl->del();
 	}
 
-	void TextFieldBaseView::select_all()
+	void TextFieldView::select_all()
 	{
 		set_selection(0, impl->text.size());
 	}
 
-	void TextFieldBaseView::set_select_all_on_focus_gain(bool value)
+	void TextFieldView::set_select_all_on_focus_gain(bool value)
 	{
 		impl->select_all_on_focus_gain = value;
 	}
 
-	int TextFieldBaseView::cursor_pos() const
+	int TextFieldView::cursor_pos() const
 	{
 		return impl->cursor_pos;
 	}
 
-	void TextFieldBaseView::set_cursor_pos(int pos)
+	void TextFieldView::set_cursor_pos(int pos)
 	{
 		impl->cursor_pos = pos;
 		set_needs_render();
 	}
 
-	void TextFieldBaseView::set_cursor_drawing_enabled(bool value)
+	void TextFieldView::set_cursor_drawing_enabled(bool value)
 	{
 		impl->cursor_drawing_enabled_when_parent_focused = value;
 	}
 
-	int TextFieldBaseView::text_int() const
+	int TextFieldView::text_int() const
 	{
 		return Text::parse_int32(impl->text);
 	}
 
-	void TextFieldBaseView::set_text(int number)
+	void TextFieldView::set_text(int number)
 	{
 		set_text(Text::to_string(number));
 	}
 
-	float TextFieldBaseView::text_float() const
+	float TextFieldView::text_float() const
 	{
 		return Text::parse_float(impl->text);
 	}
 
-	void TextFieldBaseView::set_text(float number, int num_decimal_places)
+	void TextFieldView::set_text(float number, int num_decimal_places)
 	{
 		set_text(Text::to_string(number, num_decimal_places));
 	}
 
-	void TextFieldBaseView::set_numeric_mode(bool enable, bool decimals)
+	void TextFieldView::set_numeric_mode(bool enable, bool decimals)
 	{
 		impl->numeric_mode = enable;
 		impl->numeric_mode_decimals = decimals;
 	}
 
-	void TextFieldBaseView::set_input_mask(const std::string &mask)
+	void TextFieldView::set_input_mask(const std::string &mask)
 	{
 		impl->input_mask = mask;
 	}
 
-	void TextFieldBaseView::set_decimal_character(const std::string &decimal_char)
+	void TextFieldView::set_decimal_character(const std::string &decimal_char)
 	{
 		impl->decimal_char = decimal_char;
 	}
 
-	Signal<void(KeyEvent *)> &TextFieldBaseView::sig_before_edit_changed()
+	Signal<void(KeyEvent *)> &TextFieldView::sig_before_edit_changed()
 	{
 		return impl->sig_before_edit_changed;
 	}
 
-	Signal<void(KeyEvent *)> &TextFieldBaseView::sig_after_edit_changed()
+	Signal<void(KeyEvent *)> &TextFieldView::sig_after_edit_changed()
 	{
 		return impl->sig_after_edit_changed;
 	}
 
-	Signal<void()> &TextFieldBaseView::sig_selection_changed()
+	Signal<void()> &TextFieldView::sig_selection_changed()
 	{
 		return impl->selection.sig_selection_changed;
 	}
 
-	Signal<void(KeyEvent *)> &TextFieldBaseView::sig_enter_pressed()
+	Signal<void(KeyEvent *)> &TextFieldView::sig_enter_pressed()
 	{
 		return impl->sig_enter_pressed;
 	}
 
-	void TextFieldBaseView::render_content(const std::shared_ptr<Canvas> &canvas)
+	void TextFieldView::render_content(const std::shared_ptr<Canvas> &canvas)
 	{
 		std::string txt_before = impl->get_text_before_selection();
 		std::string txt_selected = impl->get_selected_text();
@@ -393,25 +393,25 @@ namespace uicore
 		}
 	}
 
-	float TextFieldBaseView::preferred_width(const std::shared_ptr<Canvas> &canvas)
+	float TextFieldView::preferred_width(const std::shared_ptr<Canvas> &canvas)
 	{
 		std::shared_ptr<Font> font = theme()->font(canvas);
 		return font->measure_text(canvas, "X").advance.width * impl->preferred_size;
 	}
 
-	float TextFieldBaseView::preferred_height(const std::shared_ptr<Canvas> &canvas, float width)
+	float TextFieldView::preferred_height(const std::shared_ptr<Canvas> &canvas, float width)
 	{
 		std::shared_ptr<Font> font = theme()->font(canvas);
 		return font->font_metrics(canvas).line_height();
 	}
 
-	float TextFieldBaseView::first_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width)
+	float TextFieldView::first_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width)
 	{
 		std::shared_ptr<Font> font = theme()->font(canvas);
 		return font->font_metrics(canvas).baseline_offset();
 	}
 
-	float TextFieldBaseView::last_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width)
+	float TextFieldView::last_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width)
 	{
 		return first_baseline_offset(canvas, width);
 	}

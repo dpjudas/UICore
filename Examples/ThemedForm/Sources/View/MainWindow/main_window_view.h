@@ -162,11 +162,11 @@ public:
 
 		set_theme(UITheme::get()->create_view_theme("form"));
 
-		auto button = std::make_shared<ButtonBaseView>();
+		auto button = std::make_shared<ButtonView>();
 		add_child(button, "button");
 		button->label()->set_text("Test Button");
 
-		button = std::make_shared<ButtonBaseView>();
+		button = std::make_shared<ButtonView>();
 		add_child(button, "button");
 		button->label()->set_text("Test Button 2");
 

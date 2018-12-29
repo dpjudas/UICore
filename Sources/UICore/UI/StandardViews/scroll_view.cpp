@@ -36,10 +36,10 @@
 namespace uicore
 {
 #if 0
-	class ScrollBaseViewContentContainer : public View
+	class ScrollViewContentContainer : public View
 	{
 	public:
-		ScrollBaseViewContentContainer()
+		ScrollViewContentContainer()
 		{
 			set_content_clipped(true);
 			set_content_view(std::make_shared<ColumnView>());
@@ -309,13 +309,13 @@ namespace uicore
 		bool infinite_height = true;
 	};
 
-	class ScrollBaseViewImpl
+	class ScrollViewImpl
 	{
 	public:
-		ScrollBaseView *view = nullptr;
-		std::shared_ptr<ScrollBarBaseView> scroll_x = std::make_shared<ScrollBarBaseView>();
-		std::shared_ptr<ScrollBarBaseView> scroll_y = std::make_shared<ScrollBarBaseView>();
-		std::shared_ptr<ScrollBaseViewContentContainer> content_container = std::make_shared<ScrollBaseViewContentContainer>();
+		ScrollView *view = nullptr;
+		std::shared_ptr<ScrollBarView> scroll_x = std::make_shared<ScrollBarView>();
+		std::shared_ptr<ScrollBarView> scroll_y = std::make_shared<ScrollBarView>();
+		std::shared_ptr<ScrollViewContentContainer> content_container = std::make_shared<ScrollViewContentContainer>();
 		ContentOverflow overflow_x = ContentOverflow::hidden;
 		ContentOverflow overflow_y = ContentOverflow::automatic;
 
@@ -323,7 +323,7 @@ namespace uicore
 		float num_steps_on_mouse_wheel = 3.0f;
 	};
 
-	ScrollBaseView::ScrollBaseView() : impl(new ScrollBaseViewImpl())
+	ScrollView::ScrollView() : impl(new ScrollViewImpl())
 	{
 		impl->view = this;
 		
@@ -382,41 +382,41 @@ namespace uicore
 		});
 	}
 
-	ScrollBaseView::~ScrollBaseView()
+	ScrollView::~ScrollView()
 	{
 	}
 
-	std::shared_ptr<View> ScrollBaseView::content_view() const
+	std::shared_ptr<View> ScrollView::content_view() const
 	{
 		return impl->content_container->content_view();
 	}
 	
-	void ScrollBaseView::set_content_view(std::shared_ptr<View> view)
+	void ScrollView::set_content_view(std::shared_ptr<View> view)
 	{
 		impl->content_container->set_content_view(view);
 	}
 
-	std::shared_ptr<ScrollBarBaseView> ScrollBaseView::scrollbar_x_view() const
+	std::shared_ptr<ScrollBarView> ScrollView::scrollbar_x_view() const
 	{
 		return impl->scroll_x;
 	}
 
-	std::shared_ptr<ScrollBarBaseView> ScrollBaseView::scrollbar_y_view() const
+	std::shared_ptr<ScrollBarView> ScrollView::scrollbar_y_view() const
 	{
 		return impl->scroll_y;
 	}
 	
-	ContentOverflow ScrollBaseView::overflow_x() const
+	ContentOverflow ScrollView::overflow_x() const
 	{
 		return impl->overflow_x;
 	}
 	
-	ContentOverflow ScrollBaseView::overflow_y() const
+	ContentOverflow ScrollView::overflow_y() const
 	{
 		return impl->overflow_y;
 	}
 	
-	void ScrollBaseView::set_overflow_x(ContentOverflow value)
+	void ScrollView::set_overflow_x(ContentOverflow value)
 	{
 		if (impl->overflow_x == value)
 			return;
@@ -425,7 +425,7 @@ namespace uicore
 		set_needs_layout();
 	}
 	
-	void ScrollBaseView::set_overflow_y(ContentOverflow value)
+	void ScrollView::set_overflow_y(ContentOverflow value)
 	{
 		if (impl->overflow_y == value)
 			return;
@@ -434,45 +434,45 @@ namespace uicore
 		set_needs_layout();
 	}
 	
-	void ScrollBaseView::set_overflow(ContentOverflow value_x, ContentOverflow value_y)
+	void ScrollView::set_overflow(ContentOverflow value_x, ContentOverflow value_y)
 	{
 		set_overflow_x(value_x);
 		set_overflow_y(value_y);
 	}
 	
-	bool ScrollBaseView::infinite_content_width() const
+	bool ScrollView::infinite_content_width() const
 	{
 		return impl->content_container->infinite_content_width();
 	}
 	
-	bool ScrollBaseView::infinite_content_height() const
+	bool ScrollView::infinite_content_height() const
 	{
 		return impl->content_container->infinite_content_height();
 	}
 	
-	void ScrollBaseView::set_infinite_content_width(bool enable)
+	void ScrollView::set_infinite_content_width(bool enable)
 	{
 		impl->content_container->set_infinite_content_width(enable);
 		set_needs_layout();
 	}
 	
-	void ScrollBaseView::set_infinite_content_height(bool enable)
+	void ScrollView::set_infinite_content_height(bool enable)
 	{
 		impl->content_container->set_infinite_content_height(enable);
 		set_needs_layout();
 	}
 	
-	Pointf ScrollBaseView::content_offset() const
+	Pointf ScrollView::content_offset() const
 	{
 		return impl->content_container->content_offset();
 	}
 	
-	void ScrollBaseView::set_content_offset(const Pointf &offset, bool animated)
+	void ScrollView::set_content_offset(const Pointf &offset, bool animated)
 	{
 		impl->content_container->set_content_offset(offset, animated);
 	}
 	
-	void ScrollBaseView::layout_children(const std::shared_ptr<Canvas> &canvas)
+	void ScrollView::layout_children(const std::shared_ptr<Canvas> &canvas)
 	{
 		bool x_scroll_needed = false;
 		bool y_scroll_needed = false;
@@ -533,7 +533,7 @@ namespace uicore
 		set_content_offset(Pointf(impl->scroll_x->position(), impl->scroll_y->position()));
 	}
 	
-	float ScrollBaseView::calculate_preferred_width(const std::shared_ptr<Canvas> &canvas)
+	float ScrollView::calculate_preferred_width(const std::shared_ptr<Canvas> &canvas)
 	{
 		float width = impl->content_container->preferred_width(canvas);
 		if (impl->overflow_x == ContentOverflow::scroll)
@@ -541,7 +541,7 @@ namespace uicore
 		return width;
 	}
 	
-	float ScrollBaseView::calculate_preferred_height(const std::shared_ptr<Canvas> &canvas, float width)
+	float ScrollView::calculate_preferred_height(const std::shared_ptr<Canvas> &canvas, float width)
 	{
 		float height = impl->content_container->preferred_height(canvas, width);
 		if (impl->overflow_y == ContentOverflow::scroll)
@@ -549,12 +549,12 @@ namespace uicore
 		return height;
 	}
 	
-	float ScrollBaseView::calculate_first_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width)
+	float ScrollView::calculate_first_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width)
 	{
 		return impl->content_container->first_baseline_offset(canvas, width);
 	}
 	
-	float ScrollBaseView::calculate_last_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width)
+	float ScrollView::calculate_last_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width)
 	{
 		return impl->content_container->last_baseline_offset(canvas, width);
 	}

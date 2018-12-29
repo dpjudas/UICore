@@ -51,51 +51,51 @@ namespace uicore
 		LineBreakMode _line_break_mode = LineBreakMode::truncating_tail;
 	};
 
-	LabelBaseView::LabelBaseView() : impl(new LabelBaseViewImpl())
+	LabelView::LabelView() : impl(new LabelBaseViewImpl())
 	{
 	}
 
 	/*
-	void LabelBaseView::layout_children(const std::shared_ptr<Canvas> &canvas)
+	void LabelView::layout_children(const std::shared_ptr<Canvas> &canvas)
 	{
 		View::layout_children(canvas);
 		impl->font = style_cascade().font();	// Reset the font on new layout
 	}
 	*/
 
-	std::string LabelBaseView::text() const
+	std::string LabelView::text() const
 	{
 		return impl->_text;
 	}
 
-	void LabelBaseView::set_text(const std::string &value)
+	void LabelView::set_text(const std::string &value)
 	{
 		impl->_text = value;
 		set_needs_layout();
 	}
 
-	TextAlignment LabelBaseView::text_alignment() const
+	TextAlignment LabelView::text_alignment() const
 	{
 		return impl->text_alignment;
 	}
 
-	void LabelBaseView::set_text_alignment(TextAlignment alignment)
+	void LabelView::set_text_alignment(TextAlignment alignment)
 	{
 		impl->text_alignment = alignment;
 	}
 
-	LineBreakMode LabelBaseView::line_break_mode() const
+	LineBreakMode LabelView::line_break_mode() const
 	{
 		return impl->_line_break_mode;
 	}
 
-	void LabelBaseView::set_line_break_mode(LineBreakMode value)
+	void LabelView::set_line_break_mode(LineBreakMode value)
 	{
 		impl->_line_break_mode = value;
 		set_needs_layout();
 	}
 
-	void LabelBaseView::render_content(const std::shared_ptr<Canvas> &canvas)
+	void LabelView::render_content(const std::shared_ptr<Canvas> &canvas)
 	{
 		std::shared_ptr<Font> font = theme()->font(canvas);
 		FontMetrics font_metrics = font->font_metrics(canvas);
@@ -153,25 +153,25 @@ namespace uicore
 		}
 	}
 
-	float LabelBaseView::preferred_width(const std::shared_ptr<Canvas> &canvas)
+	float LabelView::preferred_width(const std::shared_ptr<Canvas> &canvas)
 	{
 		std::shared_ptr<Font> font = theme()->font(canvas);
 		return font->measure_text(canvas, impl->_text).advance.width + 1.0f;
 	}
 
-	float LabelBaseView::preferred_height(const std::shared_ptr<Canvas> &canvas, float width)
+	float LabelView::preferred_height(const std::shared_ptr<Canvas> &canvas, float width)
 	{
 		std::shared_ptr<Font> font = theme()->font(canvas);
 		return font->font_metrics(canvas).line_height();
 	}
 
-	float LabelBaseView::first_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width)
+	float LabelView::first_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width)
 	{
 		std::shared_ptr<Font> font = theme()->font(canvas);
 		return font->font_metrics(canvas).baseline_offset();
 	}
 
-	float LabelBaseView::last_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width)
+	float LabelView::last_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width)
 	{
 		return first_baseline_offset(canvas, width);
 	}

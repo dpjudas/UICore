@@ -56,10 +56,10 @@ namespace uicore
 
 	class LabelBaseViewImpl;
 
-	class LabelBaseView : public View
+	class LabelView : public View
 	{
 	public:
-		LabelBaseView();
+		LabelView();
 
 		std::string text() const;
 		void set_text(const std::string &value);

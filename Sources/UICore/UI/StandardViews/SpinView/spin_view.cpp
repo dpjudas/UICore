@@ -43,7 +43,7 @@
 
 namespace uicore
 {
-	SpinBaseView::SpinBaseView() : impl(std::make_shared<SpinBaseView_Impl>())
+	SpinView::SpinView() : impl(std::make_shared<SpinBaseView_Impl>())
 	{
 		impl->spin = this;
 
@@ -71,22 +71,22 @@ namespace uicore
 		impl->timer->func_expired() = uicore::bind_member(impl.get(), &SpinBaseView_Impl::timer_expired);
 	}
 
-	std::shared_ptr<View> SpinBaseView::button_decrement() const
+	std::shared_ptr<View> SpinView::button_decrement() const
 	{
 		return impl->button_decrement;
 	}
 
-	std::shared_ptr<View> SpinBaseView::button_increment() const
+	std::shared_ptr<View> SpinView::button_increment() const
 	{
 		return impl->button_increment;
 	}
 
-	bool SpinBaseView::disabled() const
+	bool SpinView::disabled() const
 	{
 		return impl->_state_disabled;
 	}
 
-	void SpinBaseView::set_disabled()
+	void SpinView::set_disabled()
 	{
 		if (!impl->_state_disabled)
 		{
@@ -99,7 +99,7 @@ namespace uicore
 		}
 	}
 
-	void SpinBaseView::set_enabled()
+	void SpinView::set_enabled()
 	{
 		if (impl->_state_disabled)
 		{
@@ -109,22 +109,22 @@ namespace uicore
 		}
 	}
 
-	double SpinBaseView::value() const
+	double SpinView::value() const
 	{
 		return impl->_value;
 	}
 
-	double SpinBaseView::minimum() const
+	double SpinView::minimum() const
 	{
 		return impl->_minimum;
 	}
 
-	double SpinBaseView::maximum() const
+	double SpinView::maximum() const
 	{
 		return impl->_maximum;
 	}
 
-	void SpinBaseView::set_value(double value)
+	void SpinView::set_value(double value)
 	{
 		if (impl->_value != value)
 		{
@@ -132,7 +132,7 @@ namespace uicore
 		}
 	}
 
-	void SpinBaseView::set_ranges(double min, double max)
+	void SpinView::set_ranges(double min, double max)
 	{
 		if ((impl->_minimum != min) || (impl->_maximum != max))
 		{
@@ -141,7 +141,7 @@ namespace uicore
 		}
 	}
 
-	void SpinBaseView::set_step_size(double step_size)
+	void SpinView::set_step_size(double step_size)
 	{
 		if (impl->_step_size != step_size)
 		{
@@ -149,7 +149,7 @@ namespace uicore
 		}
 	}
 
-	void SpinBaseView::set_number_of_decimal_places(int decimal_places)
+	void SpinView::set_number_of_decimal_places(int decimal_places)
 	{
 		if (impl->_decimal_places != decimal_places)
 		{

@@ -49,7 +49,7 @@
 
 namespace uicore
 {
-	TextAreaBaseView::TextAreaBaseView() : impl(new TextAreaBaseViewImpl())
+	TextAreaView::TextAreaView() : impl(new TextAreaBaseViewImpl())
 	{
 		impl->textfield = this;
 		impl->text_lines.resize(1);
@@ -78,16 +78,16 @@ namespace uicore
 		};
 	}
 
-	TextAreaBaseView::~TextAreaBaseView()
+	TextAreaView::~TextAreaView()
 	{
 	}
 
-	Size TextAreaBaseView::preferred_size() const
+	Size TextAreaView::preferred_size() const
 	{
 		return impl->preferred_size;
 	}
 
-	void TextAreaBaseView::set_preferred_size(Size num_characters)
+	void TextAreaView::set_preferred_size(Size num_characters)
 	{
 		if (impl->preferred_size != num_characters)
 		{
@@ -96,7 +96,7 @@ namespace uicore
 		}
 	}
 
-	std::string TextAreaBaseView::text() const
+	std::string TextAreaView::text() const
 	{
 		size_t length = 0;
 		for (const auto &line : impl->text_lines) length += line.length() + 1;
@@ -113,7 +113,7 @@ namespace uicore
 		return all_text;
 	}
 
-	void TextAreaBaseView::set_text(const std::string &text)
+	void TextAreaView::set_text(const std::string &text)
 	{
 		impl->text_lines = Text::split(text, "\n", false);
 		if (impl->text_lines.empty())
@@ -129,23 +129,23 @@ namespace uicore
 		set_needs_render();
 	}
 
-	std::string TextAreaBaseView::placeholder() const
+	std::string TextAreaView::placeholder() const
 	{
 		return impl->placeholder;
 	}
 
-	void TextAreaBaseView::set_placeholder(const std::string &value)
+	void TextAreaView::set_placeholder(const std::string &value)
 	{
 		impl->placeholder = value;
 		set_needs_render();
 	}
 
-	TextAlignment TextAreaBaseView::text_alignment() const
+	TextAlignment TextAreaView::text_alignment() const
 	{
 		return impl->alignment;
 	}
 
-	void TextAreaBaseView::set_text_alignment(TextAlignment alignment)
+	void TextAreaView::set_text_alignment(TextAlignment alignment)
 	{
 		if (impl->alignment != alignment)
 		{
@@ -154,12 +154,12 @@ namespace uicore
 		}
 	}
 
-	bool TextAreaBaseView::is_read_only() const
+	bool TextAreaView::is_read_only() const
 	{
 		return impl->readonly;
 	}
 
-	void TextAreaBaseView::set_read_only(bool value)
+	void TextAreaView::set_read_only(bool value)
 	{
 		if (impl->readonly != value)
 		{
@@ -168,22 +168,22 @@ namespace uicore
 		}
 	}
 
-	std::string TextAreaBaseView::selection() const
+	std::string TextAreaView::selection() const
 	{
 		return impl->get_all_selected_text();
 	}
 
-	Vec2i TextAreaBaseView::selection_start() const
+	Vec2i TextAreaView::selection_start() const
 	{
 		return impl->selection.start();
 	}
 
-	Vec2i TextAreaBaseView::selection_end() const
+	Vec2i TextAreaView::selection_end() const
 	{
 		return impl->selection.end();
 	}
 
-	void TextAreaBaseView::set_selection(Vec2i head, Vec2i tail)
+	void TextAreaView::set_selection(Vec2i head, Vec2i tail)
 	{
 		// Bounds check: (to do: should we throw an out of bounds exception instead?)
 		head.y = std::max(std::min(head.y, (int)impl->text_lines.size() - 1), 0);
@@ -196,59 +196,59 @@ namespace uicore
 		set_needs_render();
 	}
 
-	void TextAreaBaseView::clear_selection()
+	void TextAreaView::clear_selection()
 	{
 		set_selection(Vec2i(), Vec2i());
 	}
 
-	void TextAreaBaseView::delete_selected_text()
+	void TextAreaView::delete_selected_text()
 	{
 		if (impl->selection.start() != impl->selection.end())
 			impl->del();
 	}
 
-	void TextAreaBaseView::select_all()
+	void TextAreaView::select_all()
 	{
 		set_selection(Vec2i(0, 0), Vec2i(impl->text_lines.back().size(), impl->text_lines.size() - 1));
 	}
 
-	Vec2i TextAreaBaseView::cursor_pos() const
+	Vec2i TextAreaView::cursor_pos() const
 	{
 		return impl->cursor_pos;
 	}
 
-	void TextAreaBaseView::set_cursor_pos(Vec2i pos)
+	void TextAreaView::set_cursor_pos(Vec2i pos)
 	{
 		impl->cursor_pos = pos;
 		set_needs_render();
 	}
 
-	void TextAreaBaseView::set_cursor_drawing_enabled(bool value)
+	void TextAreaView::set_cursor_drawing_enabled(bool value)
 	{
 		impl->cursor_drawing_enabled_when_parent_focused = value;
 	}
 
-	Signal<void(KeyEvent *)> &TextAreaBaseView::sig_before_edit_changed()
+	Signal<void(KeyEvent *)> &TextAreaView::sig_before_edit_changed()
 	{
 		return impl->sig_before_edit_changed;
 	}
 
-	Signal<void(KeyEvent *)> &TextAreaBaseView::sig_after_edit_changed()
+	Signal<void(KeyEvent *)> &TextAreaView::sig_after_edit_changed()
 	{
 		return impl->sig_after_edit_changed;
 	}
 
-	Signal<void()> &TextAreaBaseView::sig_selection_changed()
+	Signal<void()> &TextAreaView::sig_selection_changed()
 	{
 		return impl->selection.sig_selection_changed;
 	}
 
-	Signal<void(KeyEvent *)> &TextAreaBaseView::sig_enter_pressed()
+	Signal<void(KeyEvent *)> &TextAreaView::sig_enter_pressed()
 	{
 		return impl->sig_enter_pressed;
 	}
 
-	void TextAreaBaseView::render_content(const std::shared_ptr<Canvas> &canvas)
+	void TextAreaView::render_content(const std::shared_ptr<Canvas> &canvas)
 	{
 		std::shared_ptr<Font> font = theme()->font(canvas);
 		FontMetrics font_metrics = font->font_metrics(canvas);
@@ -308,25 +308,25 @@ namespace uicore
 		}
 	}
 
-	float TextAreaBaseView::preferred_width(const std::shared_ptr<Canvas> &canvas)
+	float TextAreaView::preferred_width(const std::shared_ptr<Canvas> &canvas)
 	{
 		std::shared_ptr<Font> font = theme()->font(canvas);
 		return font->measure_text(canvas, "X").advance.width * impl->preferred_size.width;
 	}
 
-	float TextAreaBaseView::preferred_height(const std::shared_ptr<Canvas> &canvas, float width)
+	float TextAreaView::preferred_height(const std::shared_ptr<Canvas> &canvas, float width)
 	{
 		std::shared_ptr<Font> font = theme()->font(canvas);
 		return font->font_metrics(canvas).line_height() * impl->preferred_size.height;
 	}
 
-	float TextAreaBaseView::first_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width)
+	float TextAreaView::first_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width)
 	{
 		std::shared_ptr<Font> font = theme()->font(canvas);
 		return font->font_metrics(canvas).baseline_offset();
 	}
 
-	float TextAreaBaseView::last_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width)
+	float TextAreaView::last_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width)
 	{
 		return first_baseline_offset(canvas, width);
 	}

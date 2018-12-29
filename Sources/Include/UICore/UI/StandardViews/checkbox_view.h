@@ -36,10 +36,10 @@ namespace uicore
 {
 	class CheckBoxBaseView_Impl;
 
-	class CheckBoxBaseView : public View
+	class CheckBoxView : public View
 	{
 	public:
-		CheckBoxBaseView();
+		CheckBoxView();
 
 		bool disabled() const;
 		void set_disabled();

@@ -37,7 +37,7 @@
 namespace uicore
 {
 #if 0
-	ListBoxBaseView::ListBoxBaseView() : impl(new ListBoxBaseViewImpl())
+	ListBoxView::ListBoxView() : impl(new ListBoxViewImpl())
 	{
 		impl->listbox = this;
 		content_view()->style()->set("flex-direction: column");
@@ -49,11 +49,11 @@ namespace uicore
 		slots.connect(sig_pointer_release(), [this](PointerEvent *e) { impl->on_pointer_release(*e); });
 	}
 
-	ListBoxBaseView::~ListBoxBaseView()
+	ListBoxView::~ListBoxView()
 	{
 	}
 	
-	void ListBoxBaseView::set_items(const std::vector<std::shared_ptr<View>> &items)
+	void ListBoxView::set_items(const std::vector<std::shared_ptr<View>> &items)
 	{
 		impl->selected_item = -1;
 		
@@ -68,12 +68,12 @@ namespace uicore
 		}
 	}
 	
-	int ListBoxBaseView::selected_item() const
+	int ListBoxView::selected_item() const
 	{
 		return impl->selected_item;
 	}
 	
-	void ListBoxBaseView::set_selected_item(int index)
+	void ListBoxView::set_selected_item(int index)
 	{
 		/*
 		if (index == impl->selected_item)
@@ -93,14 +93,14 @@ namespace uicore
 			auto new_selected_item = content_view()->children().at(index);
 			new_selected_item->set_state("selected", true);
 			
-			// To do: call set_content_offset() if new_selected_item is not within range (maybe add a helper on ScrollBaseView for this?)
+			// To do: call set_content_offset() if new_selected_item is not within range (maybe add a helper on ScrollView for this?)
 		}
 		
 		impl->selected_item = index;
 		*/
 	}
 
-	Signal<void()> &ListBoxBaseView::sig_selection_changed()
+	Signal<void()> &ListBoxView::sig_selection_changed()
 	{
 		return impl->sig_selection_changed;
 	}

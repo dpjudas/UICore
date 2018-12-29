@@ -39,11 +39,11 @@ namespace uicore
 {
 	class SpinBaseView_Impl;
 
-	/// \brief SpinBaseView component.
-	class SpinBaseView : public ColumnView
+	/// \brief SpinView component.
+	class SpinView : public ColumnView
 	{
 	public:
-		SpinBaseView();
+		SpinView();
 
 		std::shared_ptr<View> button_decrement() const;
 		std::shared_ptr<View> button_increment() const;

@@ -37,11 +37,11 @@ namespace uicore
 {
 	class TextAreaBaseViewImpl;
 
-	class TextAreaBaseView : public View
+	class TextAreaView : public View
 	{
 	public:
-		TextAreaBaseView();
-		~TextAreaBaseView();
+		TextAreaView();
+		~TextAreaView();
 
 		Size preferred_size() const;
 		void set_preferred_size(Size num_characters);

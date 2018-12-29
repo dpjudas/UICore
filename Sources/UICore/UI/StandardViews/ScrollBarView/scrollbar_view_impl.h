@@ -55,7 +55,7 @@ namespace uicore
 		bool _render_button_arrows = true;
 	};
 
-	class ScrollBarBaseViewImpl
+	class ScrollBarViewImpl
 	{
 	public:
 
@@ -121,7 +121,7 @@ namespace uicore
 			mouse_down_thumb_drag
 		} mouse_down_mode = mouse_down_none;
 
-		ScrollBarBaseView *scrollbar = nullptr;
+		ScrollBarView *scrollbar = nullptr;
 
 		std::shared_ptr<ScrollBarButtonBaseView> button_decrement;
 		std::shared_ptr<ScrollBarButtonBaseView> button_increment;
@@ -158,7 +158,7 @@ namespace uicore
 
 		void set_standard_state(View *view, bool state_disabled, bool state_hot, bool state_pressed);
 
-		void update_pos(ScrollBarBaseView *view, double new_pos, double new_min, double new_max);
+		void update_pos(ScrollBarView *view, double new_pos, double new_min, double new_max);
 	};
 #endif
 }

@@ -40,7 +40,7 @@
 
 namespace uicore
 {
-	CheckBoxBaseView::CheckBoxBaseView() : impl(new CheckBoxBaseView_Impl())
+	CheckBoxView::CheckBoxView() : impl(new CheckBoxBaseView_Impl())
 	{
 		impl->checkbox = this;
 
@@ -51,7 +51,7 @@ namespace uicore
 		connect(sig_pointer_leave(), [this](PointerEvent *e) { impl->_state_hot = false; impl->update_state(); });
 	}
 
-	void CheckBoxBaseView::set_disabled()
+	void CheckBoxView::set_disabled()
 	{
 		if (!impl->_state_disabled)
 		{
@@ -59,7 +59,7 @@ namespace uicore
 			impl->update_state();
 		}
 	}
-	void CheckBoxBaseView::set_enabled()
+	void CheckBoxView::set_enabled()
 	{
 		if (impl->_state_disabled)
 		{
@@ -68,17 +68,17 @@ namespace uicore
 		}
 	}
 
-	bool CheckBoxBaseView::disabled() const
+	bool CheckBoxView::disabled() const
 	{
 		return impl->_state_disabled;
 	}
 
-	bool CheckBoxBaseView::checked() const
+	bool CheckBoxView::checked() const
 	{
 		return impl->_checked_state;
 	}
 
-	void CheckBoxBaseView::set_check(bool checked_state)
+	void CheckBoxView::set_check(bool checked_state)
 	{
 		if (impl->_checked_state != checked_state)
 		{
@@ -87,7 +87,7 @@ namespace uicore
 		}
 	}
 
-	Signal<void()> &CheckBoxBaseView::sig_changed()
+	Signal<void()> &CheckBoxView::sig_changed()
 	{
 		return impl->sig_changed;
 	}

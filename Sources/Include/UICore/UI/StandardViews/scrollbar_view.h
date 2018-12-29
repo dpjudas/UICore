@@ -33,13 +33,13 @@
 namespace uicore
 {
 #if 0
-	class ScrollBarBaseViewImpl;
+	class ScrollBarViewImpl;
 
-	class ScrollBarBaseView : public View
+	class ScrollBarView : public View
 	{
 	public:
 		// TODO: decide if "render_button_arrows" is this the best way of controlling rendering
-		ScrollBarBaseView(bool render_button_arrows = true);
+		ScrollBarView(bool render_button_arrows = true);
 
 		std::shared_ptr<View> button_decrement() const;
 		std::shared_ptr<View> button_increment() const;
@@ -81,7 +81,7 @@ namespace uicore
 		float calculate_last_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width) override;
 
 	private:
-		std::shared_ptr<ScrollBarBaseViewImpl> impl;
+		std::shared_ptr<ScrollBarViewImpl> impl;
 	};
 #endif
 }

@@ -64,7 +64,7 @@ namespace uicore
 		slider->theme()->set_state("disabled", target_disabled);
 	}
 
-	void SliderBaseViewImpl::update_pos(SliderBaseView *view, int new_pos, int new_min, int new_max)
+	void SliderBaseViewImpl::update_pos(SliderView *view, int new_pos, int new_min, int new_max)
 	{
 		bool changed = new_min != _min_position || new_max != _max_position || new_pos != _position;
 		if (changed)

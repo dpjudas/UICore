@@ -37,11 +37,11 @@ namespace uicore
 	class RadioButtonBaseView_Impl;
 
 	/// \brief Radio button component.
-	class RadioButtonBaseView : public View
+	class RadioButtonView : public View
 	{
 	public:
 
-		RadioButtonBaseView();
+		RadioButtonView();
 
 		bool disabled() const;
 		void set_disabled();

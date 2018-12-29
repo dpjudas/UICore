@@ -38,22 +38,22 @@
 namespace uicore
 {
 #if 0
-	TextBlockBaseViewImpl::TextBlockBaseViewImpl()
+	TextBlockViewImpl::TextBlockViewImpl()
 	{
 	}
 
-	void TextBlockBaseViewImpl::set_text_alignment(TextAlignment text_alignment)
+	void TextBlockViewImpl::set_text_alignment(TextAlignment text_alignment)
 	{
 		alignment = text_alignment;
 	}
 
-	void TextBlockBaseViewImpl::clear()
+	void TextBlockViewImpl::clear()
 	{
 		objects.clear();
 		text.clear();
 	}
 
-	void TextBlockBaseViewImpl::add_text(const std::string &more_text, const std::shared_ptr<Style> &style, int id)
+	void TextBlockViewImpl::add_text(const std::string &more_text, const std::shared_ptr<Style> &style, int id)
 	{
 		SpanObject object;
 		object.type = SpanObjectType::text;
@@ -65,7 +65,7 @@ namespace uicore
 		text += more_text;
 	}
 
-	void TextBlockBaseViewImpl::add_child(const std::shared_ptr<View> &view, float baseline_offset, int id)
+	void TextBlockViewImpl::add_child(const std::shared_ptr<View> &view, float baseline_offset, int id)
 	{
 		SpanObject object;
 		object.type = SpanObjectType::view;
@@ -78,12 +78,12 @@ namespace uicore
 		text += "*";
 	}
 
-	void TextBlockBaseViewImpl::set_last_baseline_offset(float baseline_offset)
+	void TextBlockViewImpl::set_last_baseline_offset(float baseline_offset)
 	{
 		objects.back().baseline_offset = baseline_offset;
 	}
 
-	void TextBlockBaseViewImpl::remove_child(const std::shared_ptr<View> &view)
+	void TextBlockViewImpl::remove_child(const std::shared_ptr<View> &view)
 	{
 		for (auto it = objects.begin(); it != objects.end(); ++it)
 		{
@@ -95,7 +95,7 @@ namespace uicore
 		}
 	}
 
-	void TextBlockBaseViewImpl::render_content(const std::shared_ptr<Canvas> &canvas, float width)
+	void TextBlockViewImpl::render_content(const std::shared_ptr<Canvas> &canvas, float width)
 	{
 		float y = 0.0f;
 		size_t obj_start = 0;
@@ -147,7 +147,7 @@ namespace uicore
 		}
 	}
 
-	void TextBlockBaseViewImpl::layout_views(const std::shared_ptr<Canvas> &canvas, float width)
+	void TextBlockViewImpl::layout_views(const std::shared_ptr<Canvas> &canvas, float width)
 	{
 		float y = 0.0f;
 		size_t obj_start = 0;
@@ -226,7 +226,7 @@ namespace uicore
 		}
 	}
 
-	float TextBlockBaseViewImpl::preferred_width(const std::shared_ptr<Canvas> &canvas)
+	float TextBlockViewImpl::preferred_width(const std::shared_ptr<Canvas> &canvas)
 	{
 		float x = 0.0f;
 		for (SpanObject &object : objects)
@@ -244,7 +244,7 @@ namespace uicore
 		return x;
 	}
 
-	float TextBlockBaseViewImpl::preferred_height(const std::shared_ptr<Canvas> &canvas, float width)
+	float TextBlockViewImpl::preferred_height(const std::shared_ptr<Canvas> &canvas, float width)
 	{
 		float y = 0.0f;
 		size_t obj_start = 0;
@@ -260,12 +260,12 @@ namespace uicore
 		return y;
 	}
 
-	float TextBlockBaseViewImpl::first_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width)
+	float TextBlockViewImpl::first_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width)
 	{
 		return find_line_metrics(canvas, 0, 0, width).ascent;
 	}
 
-	float TextBlockBaseViewImpl::last_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width)
+	float TextBlockViewImpl::last_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width)
 	{
 		float y = 0.0f;
 		size_t obj_start = 0;
@@ -283,7 +283,7 @@ namespace uicore
 		}
 	}
 
-	SpanLineMetrics TextBlockBaseViewImpl::find_line_metrics(const std::shared_ptr<Canvas> &canvas, size_t obj_start, size_t text_start, float width)
+	SpanLineMetrics TextBlockViewImpl::find_line_metrics(const std::shared_ptr<Canvas> &canvas, size_t obj_start, size_t text_start, float width)
 	{
 		float line_ascent = 0.0f;
 		float line_descent = 0.0f;

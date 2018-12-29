@@ -35,10 +35,10 @@ namespace uicore
 {
 	class SliderBaseViewImpl;
 
-	class SliderBaseView : public View
+	class SliderView : public View
 	{
 	public:
-		SliderBaseView();
+		SliderView();
 
 		std::shared_ptr<View> track() const;
 		std::shared_ptr<View> thumb() const;

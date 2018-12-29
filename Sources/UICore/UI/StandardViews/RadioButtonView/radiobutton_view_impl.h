@@ -40,7 +40,7 @@ namespace uicore
 		void update_state();
 		void release_group_checked();
 
-		RadioButtonBaseView *radio = nullptr;
+		RadioButtonView *radio = nullptr;
 		bool _state_disabled = false;
 		bool _state_hot = false;
 		bool _state_pressed = false;

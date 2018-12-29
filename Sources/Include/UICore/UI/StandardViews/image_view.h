@@ -37,10 +37,10 @@ namespace uicore
 	class Image;
 	class ImageBaseViewImpl;
 
-	class ImageBaseView : public View
+	class ImageView : public View
 	{
 	public:
-		ImageBaseView();
+		ImageView();
 
 		std::shared_ptr<ImageSource> image();
 		void set_image(const std::shared_ptr<ImageSource> &image);
@@ -49,24 +49,6 @@ namespace uicore
 		std::shared_ptr<ImageSource> highlighted_image();
 		void set_highlighted_image(const std::shared_ptr<ImageSource> &image);
 		void set_highlighted_image(const std::shared_ptr<Image> &image);
-
-		/*
-		std::vector<std::shared_ptr<ImageSource>> animation_images();
-		void set_animation_images(const std::vector<std::shared_ptr<ImageSource>> &images);
-
-		std::vector<std::shared_ptr<ImageSource>> highlighted_animation_images();
-		void set_highlighted_animation_images(const std::vector<std::shared_ptr<ImageSource>> &images);
-
-		float animation_duration() const;
-		void set_animation_duration(float value);
-
-		float animation_repeat_count() const;
-		void set_animation_repeat_count(float value);
-
-		void start_animating();
-		void stop_animating();
-		bool is_animating() const;
-		*/
 
 	protected:
 		void render_content(const std::shared_ptr<Canvas> &canvas) override;

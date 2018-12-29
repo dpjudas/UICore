@@ -35,14 +35,14 @@
 
 namespace uicore
 {
-	ButtonBaseView::ButtonBaseView() : impl(new ButtonBaseViewImpl())
+	ButtonView::ButtonView() : impl(new ButtonBaseViewImpl())
 	{
 		impl->button = this;
 
-		impl->image_view = std::make_shared<ImageBaseView>();
+		impl->image_view = std::make_shared<ImageView>();
 		add_child(impl->image_view, "flex: 0 0 auto");
 
-		impl->label = std::make_shared<LabelBaseView>();
+		impl->label = std::make_shared<LabelView>();
 		add_child(impl->label, "margin: auto; flex: 1 1 auto");
 
 		connect(sig_pointer_press(), [this](PointerEvent *e) { impl->on_pointer_press(*e); });
@@ -52,16 +52,16 @@ namespace uicore
 		connect(sig_pointer_leave(), [&](PointerEvent *e) { impl->_state_hot = false; impl->update_state(); });
 	}
 
-	ButtonBaseView::~ButtonBaseView()
+	ButtonView::~ButtonView()
 	{
 	}
 
-	bool ButtonBaseView::disabled() const
+	bool ButtonView::disabled() const
 	{
 		return impl->_state_disabled;
 	}
 
-	void ButtonBaseView::set_disabled()
+	void ButtonView::set_disabled()
 	{
 		if (!impl->_state_disabled)
 		{
@@ -69,7 +69,7 @@ namespace uicore
 			impl->update_state();
 		}
 	}
-	void ButtonBaseView::set_enabled()
+	void ButtonView::set_enabled()
 	{
 		if (impl->_state_disabled)
 		{
@@ -78,17 +78,17 @@ namespace uicore
 		}
 	}
 
-	std::shared_ptr<LabelBaseView> ButtonBaseView::label()
+	std::shared_ptr<LabelView> ButtonView::label()
 	{
 		return impl->label;
 	}
 
-	std::shared_ptr<ImageBaseView> ButtonBaseView::image_view()
+	std::shared_ptr<ImageView> ButtonView::image_view()
 	{
 		return impl->image_view;
 	}
 
-	void ButtonBaseView::move_label_before_image()
+	void ButtonView::move_label_before_image()
 	{
 		remove_child(impl->label);
 		remove_child(impl->image_view);
@@ -97,7 +97,7 @@ namespace uicore
 		add_child(impl->image_view, "flex: 0 0 auto");
 	}
 
-	void ButtonBaseView::move_label_after_image()
+	void ButtonView::move_label_after_image()
 	{
 		remove_child(impl->label);
 		remove_child(impl->image_view);
@@ -106,7 +106,7 @@ namespace uicore
 		add_child(impl->label, "margin: auto; flex: 1 1 auto");
 	}
 
-	Signal<void()> &ButtonBaseView::sig_clicked()
+	Signal<void()> &ButtonView::sig_clicked()
 	{
 		return impl->sig_clicked;
 	}

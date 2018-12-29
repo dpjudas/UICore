@@ -53,16 +53,16 @@ namespace uicore
 		}
 	};
 
-	ImageBaseView::ImageBaseView() : impl(std::make_shared<ImageBaseViewImpl>())
+	ImageView::ImageView() : impl(std::make_shared<ImageBaseViewImpl>())
 	{
 	}
 
-	std::shared_ptr<ImageSource> ImageBaseView::image()
+	std::shared_ptr<ImageSource> ImageView::image()
 	{
 		return impl->image;
 	}
 
-	void ImageBaseView::set_image(const std::shared_ptr<ImageSource> &image)
+	void ImageView::set_image(const std::shared_ptr<ImageSource> &image)
 	{
 		impl->image = image;
 		impl->canvas_image = nullptr;
@@ -70,17 +70,17 @@ namespace uicore
 		set_needs_layout();
 	}
 
-	void ImageBaseView::set_image(const std::shared_ptr<Image> &image)
+	void ImageView::set_image(const std::shared_ptr<Image> &image)
 	{
 		set_image(ImageSource::from_image(image));
 	}
 
-	std::shared_ptr<ImageSource> ImageBaseView::highlighted_image()
+	std::shared_ptr<ImageSource> ImageView::highlighted_image()
 	{
 		return impl->highlighted_image;
 	}
 
-	void ImageBaseView::set_highlighted_image(const std::shared_ptr<ImageSource> &image)
+	void ImageView::set_highlighted_image(const std::shared_ptr<ImageSource> &image)
 	{
 		impl->highlighted_image = image;
 		impl->canvas_highlighted_image = nullptr;
@@ -88,12 +88,12 @@ namespace uicore
 		set_needs_layout();
 	}
 
-	void ImageBaseView::set_highlighted_image(const std::shared_ptr<Image> &image)
+	void ImageView::set_highlighted_image(const std::shared_ptr<Image> &image)
 	{
 		set_highlighted_image(ImageSource::from_image(image));
 	}
 
-	void ImageBaseView::render_content(const std::shared_ptr<Canvas> &canvas)
+	void ImageView::render_content(const std::shared_ptr<Canvas> &canvas)
 	{
 		impl->get_images(canvas);
 
@@ -110,7 +110,7 @@ namespace uicore
 		}
 	}
 
-	float ImageBaseView::preferred_width(const std::shared_ptr<Canvas> &canvas)
+	float ImageView::preferred_width(const std::shared_ptr<Canvas> &canvas)
 	{
 		impl->get_images(canvas);
 
@@ -120,7 +120,7 @@ namespace uicore
 			return 0.0f;
 	}
 
-	float ImageBaseView::preferred_height(const std::shared_ptr<Canvas> &canvas, float width)
+	float ImageView::preferred_height(const std::shared_ptr<Canvas> &canvas, float width)
 	{
 		impl->get_images(canvas);
 

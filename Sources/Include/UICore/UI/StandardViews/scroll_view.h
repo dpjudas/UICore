@@ -40,17 +40,17 @@ namespace uicore
 		automatic
 	};
 	
-	class ScrollBarBaseView;
-	class ScrollBaseViewImpl;
+	class ScrollBarView;
+	class ScrollViewImpl;
 	
-	class ScrollBaseView : public View
+	class ScrollView : public View
 	{
 	public:
-		ScrollBaseView();
-		~ScrollBaseView();
+		ScrollView();
+		~ScrollView();
 		
-		std::shared_ptr<ScrollBarBaseView> scrollbar_x_view() const;
-		std::shared_ptr<ScrollBarBaseView> scrollbar_y_view() const;
+		std::shared_ptr<ScrollBarView> scrollbar_x_view() const;
+		std::shared_ptr<ScrollBarView> scrollbar_y_view() const;
 		
 		std::shared_ptr<View> content_view() const;
 		void set_content_view(std::shared_ptr<View> view);
@@ -78,7 +78,7 @@ namespace uicore
 		float calculate_last_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width) override;
 		
 	private:
-		std::unique_ptr<ScrollBaseViewImpl> impl;
+		std::unique_ptr<ScrollViewImpl> impl;
 	};
 #endif
 }

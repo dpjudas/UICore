@@ -40,7 +40,7 @@
 
 namespace uicore
 {
-	RadioButtonBaseView::RadioButtonBaseView() : impl(new RadioButtonBaseView_Impl())
+	RadioButtonView::RadioButtonView() : impl(new RadioButtonBaseView_Impl())
 	{
 		impl->radio = this;
 
@@ -51,7 +51,7 @@ namespace uicore
 		connect(sig_pointer_leave(), [&](PointerEvent *e) { impl->_state_hot = false; impl->update_state(); });
 	}
 
-	void RadioButtonBaseView::set_disabled()
+	void RadioButtonView::set_disabled()
 	{
 		if (!impl->_state_disabled)
 		{
@@ -59,7 +59,7 @@ namespace uicore
 			impl->update_state();
 		}
 	}
-	void RadioButtonBaseView::set_enabled()
+	void RadioButtonView::set_enabled()
 	{
 		if (impl->_state_disabled)
 		{
@@ -68,32 +68,32 @@ namespace uicore
 		}
 	}
 
-	bool RadioButtonBaseView::disabled() const
+	bool RadioButtonView::disabled() const
 	{
 		return impl->_state_disabled;
 	}
 
-	int RadioButtonBaseView::radio_id() const
+	int RadioButtonView::radio_id() const
 	{
 		return impl->_id;
 	}
 
-	bool RadioButtonBaseView::selected() const
+	bool RadioButtonView::selected() const
 	{
 		return impl->_state_selected;
 	}
 
-	std::string RadioButtonBaseView::group_name() const
+	std::string RadioButtonView::group_name() const
 	{
 		return impl->_group;
 	}
 
-	void RadioButtonBaseView::set_radio_id(int id)
+	void RadioButtonView::set_radio_id(int id)
 	{
 		impl->_id = id;
 	}
 
-	void RadioButtonBaseView::set_selected(bool selected)
+	void RadioButtonView::set_selected(bool selected)
 	{
 		if (impl->_state_selected != selected)
 		{
@@ -106,12 +106,12 @@ namespace uicore
 		}
 	}
 
-	void RadioButtonBaseView::set_group_name(const std::string &str)
+	void RadioButtonView::set_group_name(const std::string &str)
 	{
 		impl->_group = str;
 	}
 
-	Signal<void()> &RadioButtonBaseView::sig_selected()
+	Signal<void()> &RadioButtonView::sig_selected()
 	{
 		return impl->sig_selected;
 	}

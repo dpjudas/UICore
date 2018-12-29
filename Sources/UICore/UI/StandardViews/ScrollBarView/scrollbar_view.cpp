@@ -42,7 +42,7 @@
 namespace uicore
 {
 #if 0
-	ScrollBarBaseView::ScrollBarBaseView(bool render_button_arrows) : impl(std::make_shared<ScrollBarBaseViewImpl>())
+	ScrollBarView::ScrollBarView(bool render_button_arrows) : impl(std::make_shared<ScrollBarViewImpl>())
 	{
 		impl->scrollbar = this;
 
@@ -105,47 +105,47 @@ namespace uicore
 		slots.connect(impl->button_increment->sig_pointer_enter(), [&](PointerEvent *e) { impl->_state_increment_hot = true; impl->update_increment_state(); });
 		slots.connect(impl->button_increment->sig_pointer_leave(), [&](PointerEvent *e) { impl->_state_increment_hot = false;  impl->update_increment_state(); });
 
-		impl->scroll_timer->func_expired() = uicore::bind_member(impl.get(), &ScrollBarBaseViewImpl::scroll_timer_expired);
+		impl->scroll_timer->func_expired() = uicore::bind_member(impl.get(), &ScrollBarViewImpl::scroll_timer_expired);
 
 		set_vertical();
 	}
 
-	std::shared_ptr<View> ScrollBarBaseView::button_decrement() const
+	std::shared_ptr<View> ScrollBarView::button_decrement() const
 	{
 		return impl->button_decrement;
 	}
 
-	std::shared_ptr<View> ScrollBarBaseView::button_increment() const
+	std::shared_ptr<View> ScrollBarView::button_increment() const
 	{
 		return impl->button_increment;
 	}
 
-	std::shared_ptr<View> ScrollBarBaseView::track() const
+	std::shared_ptr<View> ScrollBarView::track() const
 	{
 		return impl->track;
 	}
 
-	std::shared_ptr<View> ScrollBarBaseView::thumb() const
+	std::shared_ptr<View> ScrollBarView::thumb() const
 	{
 		return impl->thumb;
 	}
 
-	std::shared_ptr<View> ScrollBarBaseView::thumb_grip() const
+	std::shared_ptr<View> ScrollBarView::thumb_grip() const
 	{
 		return impl->thumb_grip;
 	}
 
-	bool ScrollBarBaseView::vertical() const
+	bool ScrollBarView::vertical() const
 	{
 		return impl->_vertical;
 	}
 
-	bool ScrollBarBaseView::horizontal() const
+	bool ScrollBarView::horizontal() const
 	{
 		return !vertical();
 	}
 
-	void ScrollBarBaseView::set_vertical()
+	void ScrollBarView::set_vertical()
 	{
 		if (impl->_vertical)
 			return;
@@ -160,7 +160,7 @@ namespace uicore
 		impl->button_increment->set_direction(ScrollBarButtonDirection::down);
 	}
 
-	void ScrollBarBaseView::set_horizontal()
+	void ScrollBarView::set_horizontal()
 	{
 		if (!impl->_vertical)
 			return;
@@ -175,47 +175,47 @@ namespace uicore
 		impl->button_increment->set_direction(ScrollBarButtonDirection::right);
 	}
 
-	double ScrollBarBaseView::line_step() const
+	double ScrollBarView::line_step() const
 	{
 		return impl->line_step;
 	}
 
-	double ScrollBarBaseView::page_step() const
+	double ScrollBarView::page_step() const
 	{
 		return impl->page_step;
 	}
 
-	void ScrollBarBaseView::set_line_step(double value)
+	void ScrollBarView::set_line_step(double value)
 	{
 		impl->line_step = value;
 	}
 
-	void ScrollBarBaseView::set_page_step(double value)
+	void ScrollBarView::set_page_step(double value)
 	{
 		impl->page_step = value;
 	}
 
-	double ScrollBarBaseView::min_position() const
+	double ScrollBarView::min_position() const
 	{
 		return impl->min_pos;
 	}
 
-	double ScrollBarBaseView::max_position() const
+	double ScrollBarView::max_position() const
 	{
 		return impl->max_pos;
 	}
 
-	double ScrollBarBaseView::position() const
+	double ScrollBarView::position() const
 	{
 		return impl->pos;
 	}
 
-	bool ScrollBarBaseView::disabled() const
+	bool ScrollBarView::disabled() const
 	{
 		return impl->_state_disabled;
 	}
 
-	void ScrollBarBaseView::set_disabled()
+	void ScrollBarView::set_disabled()
 	{
 		if (!impl->_state_disabled)
 		{
@@ -225,12 +225,12 @@ namespace uicore
 			impl->update_increment_state();
 			impl->update_decrement_state();
 
-			impl->mouse_down_mode = ScrollBarBaseViewImpl::mouse_down_none;
+			impl->mouse_down_mode = ScrollBarViewImpl::mouse_down_none;
 			impl->scroll_timer->stop();
 
 		}
 	}
-	void ScrollBarBaseView::set_enabled()
+	void ScrollBarView::set_enabled()
 	{
 		if (impl->_state_disabled)
 		{
@@ -242,7 +242,7 @@ namespace uicore
 		}
 	}
 
-	void ScrollBarBaseView::set_min_position(double value)
+	void ScrollBarView::set_min_position(double value)
 	{
 		double new_min = value;
 		double new_max = std::max(impl->max_pos, value);
@@ -250,7 +250,7 @@ namespace uicore
 		impl->update_pos(this, new_pos, new_min, new_max);
 	}
 
-	void ScrollBarBaseView::set_max_position(double value)
+	void ScrollBarView::set_max_position(double value)
 	{
 		double new_min = std::min(impl->min_pos, value);
 		double new_max = value;
@@ -258,7 +258,7 @@ namespace uicore
 		impl->update_pos(this, new_pos, new_min, new_max);
 	}
 
-	void ScrollBarBaseView::set_range(double min_value, double max_value)
+	void ScrollBarView::set_range(double min_value, double max_value)
 	{
 		double new_min = min_value;
 		double new_max = max_value;
@@ -266,13 +266,13 @@ namespace uicore
 		impl->update_pos(this, new_pos, new_min, new_max);
 	}
 
-	void ScrollBarBaseView::set_position(double value)
+	void ScrollBarView::set_position(double value)
 	{
 		double new_pos = std::max(std::min(value, impl->max_pos), impl->min_pos);
 		impl->update_pos(this, new_pos, impl->min_pos, impl->max_pos);
 	}
 
-	void ScrollBarBaseView::layout_children(const std::shared_ptr<Canvas> &canvas)
+	void ScrollBarView::layout_children(const std::shared_ptr<Canvas> &canvas)
 	{
 		// Place buttons and track:
 		if (vertical())
@@ -325,7 +325,7 @@ namespace uicore
 		impl->track->layout_children(canvas);
 	}
 
-	float ScrollBarBaseView::calculate_preferred_width(const std::shared_ptr<Canvas> &canvas)
+	float ScrollBarView::calculate_preferred_width(const std::shared_ptr<Canvas> &canvas)
 	{
 		float button_incr_size = impl->button_increment->preferred_margin_width(canvas);
 		float button_decr_size = impl->button_decrement->preferred_margin_width(canvas);
@@ -340,7 +340,7 @@ namespace uicore
 		}
 	}
 
-	float ScrollBarBaseView::calculate_preferred_height(const std::shared_ptr<Canvas> &canvas, float width)
+	float ScrollBarView::calculate_preferred_height(const std::shared_ptr<Canvas> &canvas, float width)
 	{
 		float button_incr_size = impl->button_increment->preferred_margin_height(canvas, width);
 		float button_decr_size = impl->button_decrement->preferred_margin_height(canvas, width);
@@ -355,17 +355,17 @@ namespace uicore
 		}
 	}
 
-	float ScrollBarBaseView::calculate_first_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width)
+	float ScrollBarView::calculate_first_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width)
 	{
 		return 0.0f;
 	}
 
-	float ScrollBarBaseView::calculate_last_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width)
+	float ScrollBarView::calculate_last_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width)
 	{
 		return 0.0f;
 	}
 
-	Signal<void()> &ScrollBarBaseView::sig_scroll()
+	Signal<void()> &ScrollBarView::sig_scroll()
 	{
 		return impl->sig_scroll;
 	}

@@ -41,7 +41,7 @@
 
 namespace uicore
 {
-	SliderBaseView::SliderBaseView() : impl(std::make_shared<SliderBaseViewImpl>())
+	SliderView::SliderView() : impl(std::make_shared<SliderBaseViewImpl>())
 	{
 		impl->slider = this;
 
@@ -72,12 +72,12 @@ namespace uicore
 		set_vertical();
 	}
 
-	bool SliderBaseView::disabled() const
+	bool SliderView::disabled() const
 	{
 		return impl->_state_disabled;
 	}
 
-	void SliderBaseView::set_disabled()
+	void SliderView::set_disabled()
 	{
 		if (!impl->_state_disabled)
 		{
@@ -87,7 +87,7 @@ namespace uicore
 			impl->scroll_timer->stop();
 		}
 	}
-	void SliderBaseView::set_enabled()
+	void SliderView::set_enabled()
 	{
 		if (impl->_state_disabled)
 		{
@@ -96,54 +96,54 @@ namespace uicore
 		}
 	}
 
-	std::shared_ptr<View> SliderBaseView::track() const
+	std::shared_ptr<View> SliderView::track() const
 	{
 		return impl->track;
 	}
 
-	std::shared_ptr<View> SliderBaseView::thumb() const
+	std::shared_ptr<View> SliderView::thumb() const
 	{
 		return impl->thumb;
 	}
 
-	bool SliderBaseView::vertical() const
+	bool SliderView::vertical() const
 	{
 		return impl->_vertical;
 	}
 
-	bool SliderBaseView::horizontal() const
+	bool SliderView::horizontal() const
 	{
 		return !impl->_vertical;
 	}
 
-	void SliderBaseView::set_vertical()
+	void SliderView::set_vertical()
 	{
 		impl->_vertical = true;
 		//impl->thumb->style()->set("position: absolute; top: 0px; left: auto");
 		set_needs_layout();
 	}
 
-	void SliderBaseView::set_horizontal()
+	void SliderView::set_horizontal()
 	{
 		impl->_vertical = false;
 		//impl->thumb->style()->set("position: absolute; left: 0px; top: auto");
 		set_needs_layout();
 	}
 
-	int SliderBaseView::max_position() const
+	int SliderView::max_position() const
 	{
 		return impl->_max_position;
 	}
-	int SliderBaseView::position() const
+	int SliderView::position() const
 	{
 		return impl->_position;
 	}
-	int SliderBaseView::min_position() const
+	int SliderView::min_position() const
 	{
 		return impl->_min_position;
 	}
 
-	void SliderBaseView::set_max_position(int value)
+	void SliderView::set_max_position(int value)
 	{
 		int new_min = std::min(impl->_min_position, value);
 		int new_max = value;
@@ -151,13 +151,13 @@ namespace uicore
 		impl->update_pos(this, new_pos, new_min, new_max);
 
 	}
-	void SliderBaseView::set_position(int value)
+	void SliderView::set_position(int value)
 	{
 		int new_pos = std::max(std::min(value, impl->_max_position), impl->_min_position);
 		impl->update_pos(this, new_pos, impl->_min_position, impl->_max_position);
 	}
 
-	void SliderBaseView::set_min_position(int value)
+	void SliderView::set_min_position(int value)
 	{
 		int new_min = value;
 		int new_max = std::max(impl->_max_position, value);
@@ -165,25 +165,25 @@ namespace uicore
 		impl->update_pos(this, new_pos, new_min, new_max);
 	}
 
-	void SliderBaseView::set_tick_count(int tick_count)
+	void SliderView::set_tick_count(int tick_count)
 	{
 		impl->_tick_count = tick_count;
 		set_needs_layout();
 	}
 
-	void SliderBaseView::set_page_step(int page_step)
+	void SliderView::set_page_step(int page_step)
 	{
 		impl->_page_step = page_step;
 		set_needs_layout();
 	}
 
-	void SliderBaseView::set_lock_to_ticks(bool lock)
+	void SliderView::set_lock_to_ticks(bool lock)
 	{
 		impl->_lock_to_ticks = lock;
 	}
 
 	/*
-	void SliderBaseView::layout_children(const std::shared_ptr<Canvas> &canvas)
+	void SliderView::layout_children(const std::shared_ptr<Canvas> &canvas)
 	{
 		View::layout_children(canvas);
 
@@ -206,7 +206,7 @@ namespace uicore
 	}
 	*/
 
-	Signal<void()> &SliderBaseView::sig_value_changed()
+	Signal<void()> &SliderView::sig_value_changed()
 	{
 		return impl->sig_value_changed;
 	}

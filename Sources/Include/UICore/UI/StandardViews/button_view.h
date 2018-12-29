@@ -37,14 +37,14 @@ namespace uicore
 {
 	class ButtonBaseViewImpl;
 
-	class ButtonBaseView : public RowView
+	class ButtonView : public RowView
 	{
 	public:
-		ButtonBaseView();
-		~ButtonBaseView();
+		ButtonView();
+		~ButtonView();
 
-		std::shared_ptr<LabelBaseView> label();
-		std::shared_ptr<ImageBaseView> image_view();
+		std::shared_ptr<LabelView> label();
+		std::shared_ptr<ImageView> image_view();
 
 		bool disabled() const;
 		void set_disabled();

@@ -56,7 +56,7 @@ namespace uicore
 			mouse_down_button_incr,
 		} mouse_down_mode = mouse_down_none;
 
-		SpinBaseView *spin = nullptr;
+		SpinView *spin = nullptr;
 
 		std::shared_ptr<View> button_decrement;
 		std::shared_ptr<View> button_increment;

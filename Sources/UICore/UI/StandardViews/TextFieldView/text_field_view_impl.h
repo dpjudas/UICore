@@ -116,7 +116,7 @@ namespace uicore
 
 		void save_undo();
 
-		TextFieldBaseView *textfield = nullptr;
+		TextFieldView *textfield = nullptr;
 
 		TextAlignment alignment = TextAlignment::left;
 

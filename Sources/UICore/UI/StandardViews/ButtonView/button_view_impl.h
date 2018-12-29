@@ -37,13 +37,13 @@ namespace uicore
 		void on_pointer_release(PointerEvent &e);
 		void update_state();
 
-		ButtonBaseView *button = nullptr;
+		ButtonView *button = nullptr;
 		bool _state_disabled = false;
 		bool _state_hot = false;
 		bool _state_pressed = false;
 
-		std::shared_ptr<LabelBaseView> label;
-		std::shared_ptr<ImageBaseView> image_view;
+		std::shared_ptr<LabelView> label;
+		std::shared_ptr<ImageView> image_view;
 
 		Signal<void()> sig_clicked;
 	};

@@ -138,7 +138,7 @@ namespace uicore
 			{
 				if (view.get() != radio)
 				{
-					RadioButtonBaseView *alt_radio = dynamic_cast<RadioButtonBaseView*>(view.get());
+					RadioButtonView *alt_radio = dynamic_cast<RadioButtonView*>(view.get());
 					if (alt_radio)
 					{
 						if (alt_radio->impl->_group == _group)

@@ -36,12 +36,12 @@
 namespace uicore
 {
 #if 0
-	class TextBlockBaseViewImpl;
+	class TextBlockViewImpl;
 
-	class TextBlockBaseView : public View
+	class TextBlockView : public View
 	{
 	public:
-		TextBlockBaseView();
+		TextBlockView();
 
 		const std::shared_ptr<Style> &text_style(const std::string &text_class = std::string()) const;
 
@@ -63,7 +63,7 @@ namespace uicore
 		void child_removed(const std::shared_ptr<View> &view) override;
 
 	private:
-		std::shared_ptr<TextBlockBaseViewImpl> impl;
+		std::shared_ptr<TextBlockViewImpl> impl;
 	};
 #endif
 }
