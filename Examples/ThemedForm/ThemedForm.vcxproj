@@ -35,19 +35,6 @@
     <ClInclude Include="Sources\Model\app_model.h" />
     <ClInclude Include="Sources\precomp.h" />
     <ClInclude Include="Sources\View\MainWindow\main_window_view.h" />
-    <ClInclude Include="Sources\View\Theme\button_view.h" />
-    <ClInclude Include="Sources\View\Theme\checkbox_view.h" />
-    <ClInclude Include="Sources\View\Theme\form_view.h" />
-    <ClInclude Include="Sources\View\Theme\image_view.h" />
-    <ClInclude Include="Sources\View\Theme\label_view.h" />
-    <ClInclude Include="Sources\View\Theme\listbox_view.h" />
-    <ClInclude Include="Sources\View\Theme\radio_button_view.h" />
-    <ClInclude Include="Sources\View\Theme\scroll_view.h" />
-    <ClInclude Include="Sources\View\Theme\slider_view.h" />
-    <ClInclude Include="Sources\View\Theme\spin_view.h" />
-    <ClInclude Include="Sources\View\Theme\text_area_view.h" />
-    <ClInclude Include="Sources\View\Theme\text_block_view.h" />
-    <ClInclude Include="Sources\View\Theme\text_field_view.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{8D785238-A03C-40CA-9541-C9A091E1EEF9}</ProjectGuid>

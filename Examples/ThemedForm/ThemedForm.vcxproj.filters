@@ -19,9 +19,6 @@
     <Filter Include="View\MainWindow">
       <UniqueIdentifier>{6947515a-7ba2-47ea-b917-dcec5fb40ca4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="View\Theme">
-      <UniqueIdentifier>{68392425-f4e7-4d7a-b2e6-91113b7f4344}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sources\precomp.cpp" />
@@ -48,45 +45,6 @@
     </ClInclude>
     <ClInclude Include="Sources\Model\app_model.h">
       <Filter>Model</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\View\Theme\button_view.h">
-      <Filter>View\Theme</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\View\Theme\checkbox_view.h">
-      <Filter>View\Theme</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\View\Theme\form_view.h">
-      <Filter>View\Theme</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\View\Theme\image_view.h">
-      <Filter>View\Theme</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\View\Theme\label_view.h">
-      <Filter>View\Theme</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\View\Theme\listbox_view.h">
-      <Filter>View\Theme</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\View\Theme\radio_button_view.h">
-      <Filter>View\Theme</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\View\Theme\scroll_view.h">
-      <Filter>View\Theme</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\View\Theme\slider_view.h">
-      <Filter>View\Theme</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\View\Theme\spin_view.h">
-      <Filter>View\Theme</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\View\Theme\text_area_view.h">
-      <Filter>View\Theme</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\View\Theme\text_block_view.h">
-      <Filter>View\Theme</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\View\Theme\text_field_view.h">
-      <Filter>View\Theme</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

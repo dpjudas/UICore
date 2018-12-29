@@ -1,23 +1,6 @@
 
 #pragma once
 
-/*
-#include "View/Theme/form_view.h"
-#include "View/Theme/button_view.h"
-#include "View/Theme/checkbox_view.h"
-#include "View/Theme/radio_button_view.h"
-#include "View/Theme/form_view.h"
-#include "View/Theme/image_view.h"
-#include "View/Theme/label_view.h"
-#include "View/Theme/listbox_view.h"
-#include "View/Theme/scroll_view.h"
-#include "View/Theme/slider_view.h"
-#include "View/Theme/spin_view.h"
-#include "View/Theme/text_block_view.h"
-#include "View/Theme/text_area_view.h"
-#include "View/Theme/text_field_view.h"
-*/
-
 class BorderImage
 {
 public:
@@ -36,6 +19,24 @@ public:
 	WindowsUITheme()
 	{
 		border_images["button"] = { 6, 6, 5, 5, "button_normal.png" };
+		border_images["button.hot"] = { 6, 6, 5, 5, "button_hot.png" };
+		border_images["button.pressed"] = { 6, 6, 5, 5, "button_pressed.png" };
+		border_images["button.disabled"] = { 6, 6, 5, 5, "button_disabled.png" };
+		border_images["checkbox"] = { 4, 4, 4, 4, "checkbox_unchecked_normal.png" }; // width=13, height=13
+		border_images["checkbox.pressed"] = { 4, 4, 4, 4, "checkbox_unchecked_pressed.png" };
+		border_images["checkbox.disabled"] = { 4, 4, 4, 4, "checkbox_unchecked_disabled.png" };
+		border_images["checkbox.normal"] = { 4, 4, 4, 4, "checkbox_checked_normal.png" };
+		border_images["checkbox.hot"] = { 4, 4, 4, 4, "checkbox_checked_hot.png" };
+		border_images["checkbox.pressed"] = { 4, 4, 4, 4, "checkbox_checked_pressed.png" };
+		border_images["checkbox.disabled"] = { 4, 4, 4, 4, "checkbox_checked_disabled.png" };
+		border_images["radiobutton"] = { 4, 4, 4, 4, "radio_unchecked_normal.png" }; // width=13, height=13
+		border_images["radiobutton.hot"] = { 4, 4, 4, 4, "radio_unchecked_hot.png" };
+		border_images["radiobutton.pressed"] = { 4, 4, 4, 4, "radio_unchecked_pressed.png" };
+		border_images["radiobutton.disabled"] = { 4, 4, 4, 4, "radio_unchecked_disabled.png" };
+		border_images["radiobutton.checked"] = { 4, 4, 4, 4, "radio_checked_normal.png" };
+		border_images["radiobutton.checked.hot"] = { 4, 4, 4, 4, "radio_checked_hot.png" };
+		border_images["radiobutton.checked.pressed"] = { 4, 4, 4, 4, "radio_checked_pressed.png" };
+		border_images["radiobutton.checked.disabled"] = { 4, 4, 4, 4, "radio_checked_disabled.png" };
 	}
 
 	std::unique_ptr<uicore::ViewTheme> create_view_theme(const char *styleclass) override;
