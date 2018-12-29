@@ -307,30 +307,6 @@ namespace uicore
 		}
 	}
 
-	void View::update_cursor(const std::shared_ptr<DisplayWindow> &window)
-	{
-		if (impl->is_cursor_inherited)
-		{
-			View *super = parent();
-			if (super)
-				super->update_cursor(window);
-			else
-				window->set_cursor(StandardCursor::arrow);
-		}
-		else if (impl->is_custom_cursor)
-		{
-			if (!impl->cursor)
-			{
-				impl->cursor = Cursor::create(window, impl->cursor_desc);
-			}
-			window->set_cursor(impl->cursor);
-		}
-		else
-		{
-			window->set_cursor(impl->cursor_type);
-		}
-	}
-
 	Pointf View::to_screen_pos(const Pointf &pos)
 	{
 		ViewTree *tree = view_tree();
@@ -701,6 +677,29 @@ namespace uicore
 				if (e->_current_target)
 					e->_current_target->impl->process_event(e->_current_target.get(), e, true);
 			}
+		}
+	}
+
+	void ViewImpl::update_cursor(const std::shared_ptr<DisplayWindow> &window)
+	{
+		if (is_cursor_inherited)
+		{
+			if (_parent)
+				_parent->impl->update_cursor(window);
+			else
+				window->set_cursor(StandardCursor::arrow);
+		}
+		else if (is_custom_cursor)
+		{
+			if (!cursor)
+			{
+				cursor = DisplayCursor::create(window, cursor_desc);
+			}
+			window->set_cursor(cursor);
+		}
+		else
+		{
+			window->set_cursor(cursor_type);
 		}
 	}
 

@@ -36,15 +36,15 @@ namespace uicore
 	class CursorDescription;
 
 	/// \brief Mouse cursor class.
-	class Cursor
+	class DisplayCursor
 	{
 	public:
 		/// \brief Constructs a mouse cursor
-		static std::shared_ptr<Cursor> create(const std::shared_ptr<DisplayWindow> &window, const CursorDescription &cursor_description);
+		static std::shared_ptr<DisplayCursor> create(const std::shared_ptr<DisplayWindow> &window, const CursorDescription &cursor_description);
 
-		virtual ~Cursor() { } // To force a virtual table as we have no public virtual functions
+		virtual ~DisplayCursor() { } // To force a virtual table as we have no public virtual functions
 
 	protected:
-		Cursor() { }
+		DisplayCursor() { }
 	};
 }

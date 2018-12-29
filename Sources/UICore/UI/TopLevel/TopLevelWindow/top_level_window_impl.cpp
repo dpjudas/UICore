@@ -31,6 +31,7 @@
 #include "UICore/UI/Events/pointer_event.h"
 #include "UICore/UI/Events/close_event.h"
 #include "UICore/UI/Events/activation_change_event.h"
+#include "UICore/UI/View/view_impl.h"
 #include "UICore/Display/Window/input_event.h"
 #include "UICore/Display/2D/canvas.h"
 #include "top_level_window.h"
@@ -117,7 +118,7 @@ namespace uicore
 		}
 
 		if (hot_view)
-			hot_view->update_cursor(window);
+			hot_view->impl->update_cursor(window);
 	}
 
 	void TopLevelWindow_Impl::release_capture()

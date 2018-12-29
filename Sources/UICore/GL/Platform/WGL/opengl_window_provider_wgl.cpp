@@ -391,12 +391,12 @@ namespace uicore
 		win32_window.show_system_cursor();
 	}
 
-	std::shared_ptr<Cursor> OpenGLWindowProvider::create_cursor(const CursorDescription &cursor_description)
+	std::shared_ptr<DisplayCursor> OpenGLWindowProvider::create_cursor(const CursorDescription &cursor_description)
 	{
 		return std::make_shared<CursorProvider_Win32>(cursor_description);
 	}
 
-	void OpenGLWindowProvider::set_cursor(const std::shared_ptr<Cursor> &cursor)
+	void OpenGLWindowProvider::set_cursor(const std::shared_ptr<DisplayCursor> &cursor)
 	{
 		win32_window.set_cursor(static_cast<CursorProvider_Win32 *>(cursor.get()));
 	}

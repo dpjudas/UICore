@@ -36,7 +36,7 @@ namespace uicore
 	class Point;
 	class CursorDescription;
 
-	class CursorProvider_X11 : public Cursor
+	class CursorProvider_X11 : public DisplayCursor
 	{
 	public:
 		CursorProvider_X11(const CursorDescription &cursor_description, const Point &hotspot);

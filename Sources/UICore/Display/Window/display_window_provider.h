@@ -43,7 +43,7 @@ namespace uicore
 	class DisplayWindowDescription;
 	class GraphicContext;
 	class InputDevice;
-	class Cursor;
+	class DisplayCursor;
 	class CursorDescription;
 
 	class DisplayWindowProvider : public DisplayWindow
@@ -64,7 +64,7 @@ namespace uicore
 		virtual float pixel_ratio() const = 0;
 		virtual void backing_flip(int interval) = 0;
 
-		virtual std::shared_ptr<Cursor> create_cursor(const CursorDescription &cursor_description) = 0;
+		virtual std::shared_ptr<DisplayCursor> create_cursor(const CursorDescription &cursor_description) = 0;
 
 		Signal<void()> &sig_lost_focus() override { return _sig_lost_focus; }
 		Signal<void()> &sig_got_focus() override { return _sig_got_focus; }

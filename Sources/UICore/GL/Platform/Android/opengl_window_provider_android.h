@@ -91,8 +91,8 @@ namespace uicore
 		Pointf screen_to_client(const Pointf &screen);
 
 		void show_system_cursor();
-		std::shared_ptr<Cursor> create_cursor(const CursorDescription &cursor_description);
-		void set_cursor(const std::shared_ptr<Cursor> &cursor);
+		std::shared_ptr<DisplayCursor> create_cursor(const CursorDescription &cursor_description);
+		void set_cursor(const std::shared_ptr<DisplayCursor> &cursor);
 		void set_cursor(StandardCursor type);
 		void hide_system_cursor();
 		void set_title(const std::string &new_title);

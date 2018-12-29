@@ -212,9 +212,6 @@ namespace uicore
 		/// Find the common parent view for the specified views
 		static View *common_parent(View *view1, View *view2);
 
-		/// Update window cursor to the cursor used by this view
-		void update_cursor(const std::shared_ptr<DisplayWindow> &window);
-
 		/// Map from local content to screen coordinates
 		Pointf to_screen_pos(const Pointf &pos);
 
@@ -242,5 +239,6 @@ namespace uicore
 		friend class ViewTree;
 		friend class ViewImpl;
 		friend class ViewAction;
+		friend class TopLevelWindow_Impl;
 	};
 }

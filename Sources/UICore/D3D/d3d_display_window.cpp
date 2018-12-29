@@ -288,12 +288,12 @@ namespace uicore
 		window.show_system_cursor();
 	}
 
-	std::shared_ptr<Cursor> D3DDisplayWindow::create_cursor(const CursorDescription &cursor_description)
+	std::shared_ptr<DisplayCursor> D3DDisplayWindow::create_cursor(const CursorDescription &cursor_description)
 	{
 		return std::make_shared<CursorProvider_Win32>(cursor_description);
 	}
 
-	void D3DDisplayWindow::set_cursor(const std::shared_ptr<Cursor> &cursor)
+	void D3DDisplayWindow::set_cursor(const std::shared_ptr<DisplayCursor> &cursor)
 	{
 		window.set_cursor(static_cast<CursorProvider_Win32 *>(cursor.get()));
 	}

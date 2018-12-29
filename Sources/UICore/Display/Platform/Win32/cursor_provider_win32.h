@@ -39,7 +39,7 @@ namespace uicore
 	class Rect;
 	class CursorDescription;
 
-	class CursorProvider_Win32 : public Cursor
+	class CursorProvider_Win32 : public DisplayCursor
 	{
 	public:
 		CursorProvider_Win32(const CursorDescription &cursor_description);

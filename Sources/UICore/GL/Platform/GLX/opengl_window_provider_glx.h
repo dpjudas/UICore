@@ -228,8 +228,8 @@ public:
 	Point backing_screen_to_client(const Point &screen) override { return x11_window.screen_to_client(screen); }
 
 	void show_system_cursor() override { x11_window.show_system_cursor(); }
-	std::shared_ptr<Cursor> create_cursor(const CursorDescription &cursor_description) override;
-	void set_cursor(const std::shared_ptr<Cursor> &cursor) override;
+	std::shared_ptr<DisplayCursor> create_cursor(const CursorDescription &cursor_description) override;
+	void set_cursor(const std::shared_ptr<DisplayCursor> &cursor) override;
 	void set_cursor(StandardCursor type) override { x11_window.set_cursor(type); }
 	void hide_system_cursor() override  { x11_window.hide_system_cursor(); }
 

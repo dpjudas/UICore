@@ -56,7 +56,7 @@ namespace uicore
 	struct DisplayWindowHandle;
 	class InputDevice;
 	class Pointf;
-	class Cursor;
+	class DisplayCursor;
 	class DisplayWindowProvider;
 	class DisplayWindow_Impl;
 	class PixelBuffer;
@@ -304,7 +304,7 @@ namespace uicore
 		virtual void show_cursor() = 0;
 
 		/// \brief Sets the current cursor icon.
-		virtual void set_cursor(const std::shared_ptr<Cursor> &cursor) = 0;
+		virtual void set_cursor(const std::shared_ptr<DisplayCursor> &cursor) = 0;
 
 		/// \brief Set cursor
 		///

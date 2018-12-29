@@ -84,8 +84,8 @@ namespace uicore
 		void capture_mouse(bool capture);
 
 		void show_system_cursor();
-		std::shared_ptr<Cursor> create_cursor(const CursorDescription &cursor_description);
-		void set_cursor(const std::shared_ptr<Cursor> &cursor);
+		std::shared_ptr<DisplayCursor> create_cursor(const CursorDescription &cursor_description);
+		void set_cursor(const std::shared_ptr<DisplayCursor> &cursor);
 		void set_cursor(StandardCursor type);
 		void set_cursor_handle(HCURSOR cursor);
 		void hide_system_cursor();

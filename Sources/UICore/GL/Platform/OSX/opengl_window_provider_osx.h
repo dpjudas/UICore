@@ -77,8 +77,8 @@ namespace uicore
 		Point backing_screen_to_client(const Point &screen) override;
 
 		void show_system_cursor() override;
-		std::shared_ptr<Cursor> create_cursor(const CursorDescription &cursor_description) override;
-		void set_cursor(const std::shared_ptr<Cursor> &cursor) override;
+		std::shared_ptr<DisplayCursor> create_cursor(const CursorDescription &cursor_description) override;
+		void set_cursor(const std::shared_ptr<DisplayCursor> &cursor) override;
 		void set_cursor(StandardCursor type) override;
 		void hide_system_cursor() override;
 		void set_title(const std::string &new_title) override;

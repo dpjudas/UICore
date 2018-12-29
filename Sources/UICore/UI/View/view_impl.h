@@ -83,6 +83,8 @@ namespace uicore
 
 		void inverse_bubble(EventUI *e, const View *until_parent_view);
 
+		void update_cursor(const std::shared_ptr<DisplayWindow> &window);
+
 		View *_parent = nullptr;
 
 		std::unique_ptr<ViewTheme> theme;
@@ -120,7 +122,7 @@ namespace uicore
 
 		StandardCursor cursor_type = StandardCursor::arrow;
 		CursorDescription cursor_desc;
-		std::shared_ptr<Cursor> cursor;
+		std::shared_ptr<DisplayCursor> cursor;
 		bool is_custom_cursor = false;
 		bool is_cursor_inherited = true;
 	};
