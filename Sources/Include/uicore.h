@@ -28,10 +28,6 @@
 
 #pragma once
 
-#ifdef __cplusplus_cli
-#pragma managed(push, off)
-#endif
-
 #ifdef _MSC_VER
 #pragma warning( disable : 4786)
 #endif
@@ -42,10 +38,6 @@
 
 #include "UICore/core.h"
 #include "UICore/display.h"
-#ifdef WIN32
-#include "UICore/d3d.h"
-#endif
-#include "UICore/gl.h"
 #include "UICore/ui.h"
 #include "UICore/network.h"
 #include "UICore/application.h"
@@ -75,8 +67,4 @@
 	#pragma comment(lib, "GLU32.lib")
 	#pragma comment(lib, "ws2_32.lib")
 	#pragma comment(lib, "iphlpapi.lib")
-#endif
-
-#ifdef __cplusplus_cli
-#pragma managed(pop)
 #endif

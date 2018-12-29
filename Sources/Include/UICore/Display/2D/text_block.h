@@ -36,7 +36,6 @@
 namespace uicore
 {
 	class Font;
-	class GraphicContext;
 	class Pointf;
 	class Sizef;
 	class Image;

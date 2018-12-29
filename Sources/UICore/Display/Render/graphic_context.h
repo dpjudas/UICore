@@ -30,12 +30,12 @@
 
 #pragma once
 
-#include "../../Core/Math/color.h"
-#include "../Image/texture_format.h"
+#include "UICore/Core/Math/color.h"
+#include "UICore/Display/Image/texture_format.h"
 #include <memory>
-#include "../../Core/Math/mat4.h"
-#include "../../Core/Math/rect.h"
-#include "../../Core/Signals/signal.h"
+#include "UICore/Core/Math/mat4.h"
+#include "UICore/Core/Math/rect.h"
+#include "UICore/Core/Signals/signal.h"
 #include "primitives_array.h"
 #include "frame_buffer.h"
 #include "element_array_vector.h"

@@ -33,7 +33,6 @@
 
 namespace uicore
 {
-	class DisplayWindow;
 	class FontDescription_Impl;
 
 	enum class FontWeight : int

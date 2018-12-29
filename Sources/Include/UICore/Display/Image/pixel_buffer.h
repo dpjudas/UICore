@@ -43,7 +43,6 @@ namespace uicore
 	class Colorf;
 	class PixelBuffer;
 	class IODevice;
-	class GraphicContext;
 	class PixelConverter;
 
 	/// \brief Pixel data container.

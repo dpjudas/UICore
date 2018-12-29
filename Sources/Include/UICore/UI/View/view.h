@@ -54,7 +54,6 @@ namespace uicore
 	class ViewImpl;
 	class CursorDescription;
 	enum class StandardCursor;
-	class DisplayWindow;
 	class ViewTree;
 	class ViewAction;
 	class ViewTheme;

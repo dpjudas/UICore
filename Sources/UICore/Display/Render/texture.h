@@ -31,8 +31,8 @@
 
 #include <memory>
 #include "graphic_context.h"
-#include "../Image/image_import_description.h"
-#include "../Image/texture_format.h"
+#include "UICore/Display/Image/image_import_description.h"
+#include "UICore/Display/Image/texture_format.h"
 
 namespace uicore
 {

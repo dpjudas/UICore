@@ -31,9 +31,9 @@
 
 #include <memory>
 #include "graphic_context.h"
-#include "../Image/image_import_description.h"
-#include "../Image/texture_format.h"
-#include "../Image/pixel_buffer.h"
+#include "UICore/Display/Image/image_import_description.h"
+#include "UICore/Display/Image/texture_format.h"
+#include "UICore/Display/Image/pixel_buffer.h"
 #include "buffer_usage.h"
 
 namespace uicore

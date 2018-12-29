@@ -33,8 +33,8 @@
 #pragma once
 
 #include <memory>
-#include "../../Core/Math/vec3.h"
-#include "../../Core/Math/color.h"
+#include "UICore/Core/Math/vec3.h"
+#include "UICore/Core/Math/color.h"
 #include "vertex_array_vector.h"
 
 namespace uicore
