@@ -28,6 +28,7 @@
 
 #include "precomp.h"
 #include "workspace_generator_msvc8.h"
+#include <algorithm>
 
 /////////////////////////////////////////////////////////////////////////////
 // Workspace generator class:
@@ -1035,6 +1036,35 @@ void MSVC8_Project::write(OutputWriter &output, int indent) const
 		output.write_line(indent, "		<Keyword>Android</Keyword>");
 		output.write_line(indent, "		<ApplicationType>Android</ApplicationType>");
 		output.write_line(indent, "		<ApplicationTypeRevision>1.0</ApplicationTypeRevision>");
+	}
+
+	if (target_version > 1400)
+	{
+		HKEY hKey = 0;
+		LONG result = RegOpenKeyEx(HKEY_LOCAL_MACHINE, TEXT("SOFTWARE\\Microsoft\\Windows Kits\\Installed Roots"), 0, KEY_READ, &hKey);
+		if (result == ERROR_SUCCESS)
+		{
+			std::vector<std::string> sdknames;
+			int index = 0;
+			while (index < 25)
+			{
+				CHAR sdkname[1024];
+				DWORD length = 1024;
+				result = RegEnumKeyExA(hKey, index++, sdkname, &length, 0, 0, 0, 0);
+				if (result != ERROR_SUCCESS)
+					break;
+				sdknames.push_back(std::string(sdkname, length));
+			}
+			RegCloseKey(hKey);
+
+			std::stable_sort(sdknames.begin(), sdknames.end()); // Not a very clever way to sort, but should make it at least select some 10 sdk over 8
+
+			if (!sdknames.empty())
+			{
+				std::string sdkversion = sdknames.back();
+				output.write_line(indent, "    <WindowsTargetPlatformVersion>" + sdkversion + "</WindowsTargetPlatformVersion>");
+			}
+		}
 	}
 
   	output.write_line(indent, "  </PropertyGroup>");
