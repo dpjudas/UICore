@@ -28,42 +28,31 @@
 
 #pragma once
 
-#include "UICore/Core/Math/color.h"
+#include "../View/view.h"
 
 namespace uicore
 {
-	class Canvas;
-	class Font;
-	class ViewGeometry;
-	class ViewTheme;
+	class RowViewImpl;
 
-	class UITheme
+	class RowView : public View
 	{
 	public:
-		virtual ~UITheme() { }
-		virtual std::unique_ptr<ViewTheme> create_view_theme(const char *styleclass) = 0;
+		RowView();
+		~RowView();
 
-		static const std::shared_ptr<UITheme> &get();
-		static void set(std::shared_ptr<UITheme> theme);
-	};
+		void add_child(std::shared_ptr<View> view, const char *style);
+		void remove_child(std::shared_ptr<View> view);
 
-	class ViewThemeBorder
-	{
-	public:
-		float left = 0.0f;
-		float top = 0.0f;
-		float right = 0.0f;
-		float bottom = 0.0f;
-	};
+		float preferred_width(const std::shared_ptr<Canvas> &canvas) override;
+		float preferred_height(const std::shared_ptr<Canvas> &canvas, float width) override;
+		float first_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width) override;
+		float last_baseline_offset(const std::shared_ptr<Canvas> &canvas, float width) override;
+		bool needs_layout() const override;
+		void set_needs_layout() override;
+		std::shared_ptr<View> find_view_at(const Pointf &pos) const override;
+		void render_content(const std::shared_ptr<Canvas> &canvas) override;
 
-	class ViewTheme
-	{
-	public:
-		virtual ~ViewTheme() { }
-		virtual ViewThemeBorder border() { return ViewThemeBorder(); }
-		virtual void render(const std::shared_ptr<Canvas> &canvas, const ViewGeometry &geometry) { }
-		virtual std::shared_ptr<Font> font(const std::shared_ptr<Canvas> &canvas) { return nullptr; }
-		virtual Colorf text_color() { return StandardColorf::black(); }
-		virtual void set_state(const std::string &name, bool value) { }
+	private:
+		std::unique_ptr<RowViewImpl> impl;
 	};
 }

@@ -77,6 +77,11 @@ namespace uicore
 		return impl->_parent;
 	}
 
+	void View::set_parent(View *view)
+	{
+		impl->_parent = view;
+	}
+
 	const std::vector<std::shared_ptr<ViewAction>> &View::actions() const
 	{
 		return impl->_actions;
@@ -536,6 +541,11 @@ namespace uicore
 		return impl->sig_close;
 	}
 
+	void View::render(const std::shared_ptr<Canvas> &canvas)
+	{
+		impl->render(this, canvas);
+	}
+
 	/////////////////////////////////////////////////////////////////////////
 
 	void ViewImpl::render(View *self, const std::shared_ptr<Canvas> &canvas)
@@ -692,5 +702,22 @@ namespace uicore
 					e->_current_target->impl->process_event(e->_current_target.get(), e, true);
 			}
 		}
+	}
+
+	/////////////////////////////////////////////////////////////////////////
+
+	namespace
+	{
+		std::shared_ptr<UITheme> theme;
+	}
+
+	const std::shared_ptr<UITheme> &UITheme::get()
+	{
+		return theme;
+	}
+
+	void UITheme::set(std::shared_ptr<UITheme> new_theme)
+	{
+		theme = new_theme;
 	}
 }

@@ -76,6 +76,8 @@ namespace uicore
 
 		/// Parent view node or nullptr if the view is the current root node
 		View *parent() const;
+
+		void set_parent(View *view);
 		
 		/// Add an action recognizer
 		void add_action(const std::shared_ptr<ViewAction> &action);
@@ -225,6 +227,8 @@ namespace uicore
 		/// Map from root content to local content coordinates
 		Pointf from_root_pos(const Pointf &pos);
 
+		void render(const std::shared_ptr<Canvas> &canvas);
+
 	protected:
 		/// Renders the content of a view
 		virtual void render_content(const std::shared_ptr<Canvas> &canvas) { }
@@ -238,19 +242,5 @@ namespace uicore
 		friend class ViewTree;
 		friend class ViewImpl;
 		friend class ViewAction;
-	};
-
-	class RowView : public View
-	{
-	public:
-		void add_child(std::shared_ptr<View> view, const char *style) { }
-		void remove_child(std::shared_ptr<View> view) { }
-	};
-
-	class ColumnView : public View
-	{
-	public:
-		void add_child(std::shared_ptr<View> view, const char *style) { }
-		void remove_child(std::shared_ptr<View> view) { }
 	};
 }

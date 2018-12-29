@@ -85,7 +85,7 @@ namespace uicore
 
 		View *_parent = nullptr;
 
-		std::unique_ptr<ViewTheme> theme = std::make_unique<ViewTheme>();
+		std::unique_ptr<ViewTheme> theme;
 
 		std::vector<std::shared_ptr<ViewAction>> _actions;
 		ViewAction *_active_action = nullptr;

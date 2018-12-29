@@ -37,6 +37,8 @@
 #include "UI/Events/key_event.h"
 #include "UI/Events/pointer_event.h"
 #include "UI/Events/resize_event.h"
+#include "UI/StandardViews/row_view.h"
+#include "UI/StandardViews/column_view.h"
 #include "UI/StandardViews/button_view.h"
 #include "UI/StandardViews/image_view.h"
 #include "UI/StandardViews/label_view.h"

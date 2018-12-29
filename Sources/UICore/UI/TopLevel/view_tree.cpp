@@ -115,15 +115,21 @@ namespace uicore
 	{
 		View *view = impl->root.get();
 
+		ViewThemeBorder border = view->theme()->border();
+
 		ViewGeometry g;
-		g.content_x = margin_box.left;
-		g.content_y = margin_box.top;
-		g.content_width = margin_box.right - margin_box.left;
-		g.content_height = margin_box.bottom - margin_box.top;
+		g.border_left = border.left;
+		g.border_top = border.top;
+		g.border_right = border.right;
+		g.border_bottom = border.bottom;
+		g.content_x = margin_box.left + border.left;
+		g.content_y = margin_box.top + border.top;
+		g.content_width = margin_box.right - margin_box.left - border.right - border.left;
+		g.content_height = margin_box.bottom - margin_box.top - border.bottom - border.top;
 		view->set_geometry(g);
 		//view->set_geometry(ViewGeometry::from_margin_box(view->style_cascade(), margin_box));
 
-		view->impl->render(view, canvas);
+		view->render(canvas);
 	}
 
 	void ViewTree::dispatch_activation_change(ActivationChangeType type)

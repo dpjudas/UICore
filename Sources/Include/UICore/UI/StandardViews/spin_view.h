@@ -33,6 +33,7 @@
 #pragma once
 
 #include "../View/view.h"
+#include "column_view.h"
 
 namespace uicore
 {

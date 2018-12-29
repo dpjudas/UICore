@@ -41,7 +41,6 @@
 
 namespace uicore
 {
-#if 0
 	class WindowManagerImpl
 	{
 	public:
@@ -54,7 +53,7 @@ namespace uicore
 			return &impl;
 		}
 
-		static Sizef auto_content_size(const std::shared_ptr<View> &root_view, const std::shared_ptr<Canvas> &canvas)
+		/*static Sizef auto_content_size(const std::shared_ptr<View> &root_view, const std::shared_ptr<Canvas> &canvas)
 		{
 			auto css_width = root_view->style_cascade().computed_value("width");
 			auto css_height = root_view->style_cascade().computed_value("height");
@@ -86,7 +85,7 @@ namespace uicore
 				height = std::min(height, css_max_height.number());
 
 			return Sizef(width, height);
-		}
+		}*/
 	};
 
 	/////////////////////////////////////////////////////////////////////////
@@ -133,14 +132,14 @@ namespace uicore
 
 		WindowManagerImpl::instance()->windows[controller.get()] = controller;
 
-		if (controller->impl->initial_size == Sizef())
+		/*if (controller->impl->initial_size == Sizef())
 		{
 			std::shared_ptr<Canvas> canvas = controller->root_view()->canvas();
 			Sizef content_size = WindowManagerImpl::auto_content_size(controller->root_view(), canvas);
 			Rectf content_box(content_size);
 			Rectf margin_box = ViewGeometry::from_content_box(controller->root_view()->style_cascade(), content_box).margin_box();
 			display_window->set_size(margin_box.width(), margin_box.height(), true);
-		}
+		}*/
 
 		if (!controller->impl->icon_images.empty())
 		{
@@ -180,7 +179,7 @@ namespace uicore
 
 		WindowManagerImpl::instance()->windows[controller.get()] = controller;
 
-		if (controller->impl->initial_size == Sizef())
+		/*if (controller->impl->initial_size == Sizef())
 		{
 			std::shared_ptr<Canvas> canvas = controller->root_view()->canvas();
 			Sizef content_size = WindowManagerImpl::auto_content_size(controller->root_view(), canvas);
@@ -188,7 +187,7 @@ namespace uicore
 			Rectf margin_box = ViewGeometry::from_content_box(controller->root_view()->style_cascade(), content_box).margin_box();
 			if (controller_display_window)
 				controller_display_window->set_position(margin_box, true);
-		}
+		}*/
 
 		if (!controller->impl->icon_images.empty())
 		{
@@ -228,7 +227,7 @@ namespace uicore
 
 		WindowManagerImpl::instance()->windows[controller.get()] = controller;
 
-		if (controller->impl->initial_size == Sizef())
+		/*if (controller->impl->initial_size == Sizef())
 		{
 			std::shared_ptr<Canvas> canvas = controller->root_view()->canvas();
 			Sizef content_size = WindowManagerImpl::auto_content_size(controller->root_view(), canvas);
@@ -239,7 +238,7 @@ namespace uicore
 			std::shared_ptr<DisplayWindow> controller_display_window = controller->impl->window->display_window();
 			if (controller_display_window)
 				controller_display_window->set_position(margin_box, false);
-		}
+		}*/
 
 		controller->impl->window->show(WindowShowType::show_no_activate);
 	}
@@ -346,5 +345,4 @@ namespace uicore
 		if (WindowManagerImpl::instance()->exit_on_last_close && windows.empty())
 			RunLoop::exit();
 	}
-#endif
 }

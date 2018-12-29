@@ -31,6 +31,7 @@
 #include "../View/view.h"
 #include "label_view.h"
 #include "image_view.h"
+#include "row_view.h"
 
 namespace uicore
 {
