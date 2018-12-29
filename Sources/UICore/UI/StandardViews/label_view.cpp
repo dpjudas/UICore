@@ -29,7 +29,6 @@
 #include "UICore/precomp.h"
 #include "UICore/UI/StandardViews/label_view.h"
 #include "UICore/UI/UIThread/ui_thread.h"
-#include "UICore/UI/Style/style.h"
 #include "UICore/Display/2D/canvas.h"
 #include "UICore/Display/2D/path.h"
 #include "UICore/Display/2D/pen.h"

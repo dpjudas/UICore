@@ -36,7 +36,6 @@
 #include "UICore/Core/ErrorReporting/exception_dialog.h"
 #include "UICore/Core/IOData/path_help.h"
 #include "UICore/Core/IOData/directory.h"
-#include "UICore/UI/Style/style.h"
 #include <map>
 
 namespace uicore
@@ -69,6 +68,7 @@ namespace uicore
 		}
 	};
 
+#if 0
 	void UIThread::add_font_face(const std::string &properties, const std::string &src)
 	{
 		auto style = std::make_shared<Style>();
@@ -111,6 +111,7 @@ namespace uicore
 
 		family->add(font_desc, FilePath::combine(UIThreadImpl::instance()->resource_path, src));
 	}
+#endif
 
 	std::string UIThread::resource_path()
 	{

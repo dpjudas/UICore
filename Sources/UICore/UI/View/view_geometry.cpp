@@ -28,8 +28,6 @@
 
 #include "UICore/precomp.h"
 #include "UICore/UI/View/view_geometry.h"
-#include "UICore/UI/Style/style_cascade.h"
-#include "UICore/UI/Style/style_get_value.h"
 
 namespace uicore
 {

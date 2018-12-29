@@ -29,7 +29,6 @@
 #pragma once
 
 #include "UICore/UI/StandardViews/text_block_view.h"
-#include "UICore/UI/Style/style.h"
 #include <map>
 
 namespace uicore

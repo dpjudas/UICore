@@ -40,7 +40,7 @@ namespace uicore
 	class UIThread
 	{
 	public:
-		static void add_font_face(const std::string &properties, const std::string &src);
+		//static void add_font_face(const std::string &properties, const std::string &src);
 
 		static std::string resource_path();
 		static void set_resource_path(const std::string &path);

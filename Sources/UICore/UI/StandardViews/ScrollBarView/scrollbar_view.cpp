@@ -29,7 +29,6 @@
 
 #include "UICore/precomp.h"
 #include "UICore/UI/StandardViews/scrollbar_view.h"
-#include "UICore/UI/Style/style_property_parser.h"
 #include "UICore/Display/2D/path.h"
 #include "UICore/Display/System/timer.h"
 #include "UICore/Display/2D/brush.h"

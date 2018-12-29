@@ -28,7 +28,6 @@
 
 #include "UICore/precomp.h"
 #include "UICore/UI/StandardViews/text_area_view.h"
-#include "UICore/UI/Style/style.h"
 #include "UICore/UI/TopLevel/view_tree.h"
 #include "UICore/UI/Events/pointer_event.h"
 #include "UICore/UI/Events/focus_change_event.h"
