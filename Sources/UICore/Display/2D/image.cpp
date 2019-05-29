@@ -109,9 +109,9 @@ namespace uicore
 
 	ImageImpl::ImageImpl(const std::shared_ptr<Canvas> &canvas, const std::shared_ptr<PixelBuffer> &pb, const Rect &rect, float pixel_ratio)
 	{
-		_texture = Texture2D::create(canvas->gc(), pb->width(), pb->height(), pb->format());
+		_texture = Texture2D::create(canvas->gc(), rect.width(), rect.height(), pb->format());
 		_texture->set_subimage(canvas->gc(), 0, 0, pb, rect);
-		_texture_rect = Rect(0, 0, pb->width(), pb->height());
+		_texture_rect = Rect(0, 0, rect.width(), rect.height());
 		_pixel_ratio = pixel_ratio;
 	}
 
